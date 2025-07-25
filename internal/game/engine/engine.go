@@ -2,7 +2,6 @@ package engine
 
 import (
 	"fmt"
-	"sync"
 	"time"
 	promptbuilder "tragedylooper/internal/llm/prompt"
 
@@ -12,18 +11,33 @@ import (
 	"tragedylooper/internal/llm"
 )
 
+// engineRequest is an interface for all requests handled by the game engine loop.
+type engineRequest interface{}
+
+// getPlayerViewRequest is a request to get a filtered view of the game state for a player.
+type getPlayerViewRequest struct {
+	playerID     string
+	responseChan chan model.PlayerView
+}
+
+// llmActionCompleteRequest is sent when an LLM player has decided on an action.
+type llmActionCompleteRequest struct {
+	playerID string
+	action   model.PlayerAction
+}
+
 // GameEngine 管理单个游戏实例的状态和逻辑。
 type GameEngine struct {
 	GameState *model.GameState
-	// 用于传入玩家动作和内部游戏事件的通道
-	playerActionChan chan model.PlayerAction
-	gameEventChan    chan model.GameEvent
+	// Unified channel for all incoming requests to ensure serialized state access.
+	requestChan chan engineRequest
+	// 用于发出游戏事件以进行广播的通道
+	gameEventChan chan model.GameEvent
 	// 用于发出游戏结束或循环结束信号的通道
 	gameControlChan chan struct{}
 	// LLM 客户端用于 AI 玩家
 	llmClient llm.Client
-	// 保护 GameState 访问的互斥锁（尽管事件循环最小化了直接争用）
-	mu sync.Mutex
+	// No mutex needed, all state access is serialized in the runGameLoop.
 	// 跟踪玩家准备进入下一阶段的映射
 	playerReady map[string]bool
 	// 主谋玩家 ID
@@ -76,13 +90,13 @@ func NewGameEngine(gameID string, logger *zap.Logger, script model.Script, playe
 	}
 
 	ge := &GameEngine{
-		GameState:        gs,
-		playerActionChan: make(chan model.PlayerAction, 100), // 带缓冲通道
-		gameEventChan:    make(chan model.GameEvent, 100),
-		gameControlChan:  make(chan struct{}),
-		llmClient:        llmClient,
-		playerReady:      make(map[string]bool),
-		logger:           logger.With(zap.String("gameID", gameID)),
+		GameState:       gs,
+		requestChan:     make(chan engineRequest, 100), // Use the unified request channel
+		gameEventChan:   make(chan model.GameEvent, 100),
+		gameControlChan: make(chan struct{}),
+		llmClient:       llmClient,
+		playerReady:     make(map[string]bool),
+		logger:          logger.With(zap.String("gameID", gameID)),
 	}
 
 	// 识别主谋和主角
@@ -110,10 +124,10 @@ func (ge *GameEngine) StopGameLoop() {
 // SubmitPlayerAction 允许外部组件（例如 WebSocket 处理程序）提交玩家动作。
 func (ge *GameEngine) SubmitPlayerAction(action model.PlayerAction) {
 	select {
-	case ge.playerActionChan <- action:
+	case ge.requestChan <- action: // Send the action directly as a request
 		// 动作提交成功
 	default:
-		ge.logger.Warn("Player action channel full, dropping action", zap.String("playerID", action.PlayerID))
+		ge.logger.Warn("Request channel full, dropping action", zap.String("playerID", action.PlayerID))
 	}
 }
 
@@ -123,13 +137,26 @@ func (ge *GameEngine) GetGameEvents() <-chan model.GameEvent {
 }
 
 // GetPlayerView 为特定玩家生成游戏状态的过滤视图。
+// It is thread-safe as it communicates with the main game loop via a channel.
 func (ge *GameEngine) GetPlayerView(playerID string) model.PlayerView {
-	ge.mu.Lock()
-	defer ge.mu.Unlock()
+	responseChan := make(chan model.PlayerView)
+	req := getPlayerViewRequest{
+		playerID:     playerID,
+		responseChan: responseChan,
+	}
 
+	// Send the request to the game loop and wait for the response.
+	ge.requestChan <- req
+	view := <-responseChan
+	return view
+}
+
+// generatePlayerView creates a filtered view of the game state for a specific player.
+// This method is NOT thread-safe and must only be called from within the runGameLoop goroutine.
+func (ge *GameEngine) generatePlayerView(playerID string) model.PlayerView {
 	player := ge.GameState.Players[playerID]
 	if player == nil {
-		return model.PlayerView{} // 或处理错误
+		return model.PlayerView{} // Or handle error
 	}
 
 	view := model.PlayerView{
@@ -140,30 +167,30 @@ func (ge *GameEngine) GetPlayerView(playerID string) model.PlayerView {
 		CurrentPhase:       ge.GameState.CurrentPhase,
 		ActiveTragedies:    ge.GameState.ActiveTragedies,
 		PreventedTragedies: ge.GameState.PreventedTragedies,
-		PublicEvents:       ge.GameState.DayEvents, // 或 LoopEvents，取决于上下文
+		PublicEvents:       ge.GameState.DayEvents, // Or LoopEvents, depending on context
 	}
 
-	// 过滤角色：主谋看到所有，主角看不到 HiddenRole
+	// Filter characters: Mastermind sees all, Protagonists don't see HiddenRole
 	view.Characters = make(map[string]*model.Character)
 	for id, char := range ge.GameState.Characters {
-		charCopy := *char // 创建一个副本以避免修改原始数据
+		charCopy := *char // Create a copy to avoid modifying original data
 		if player.Role == model.PlayerRoleProtagonist {
-			charCopy.HiddenRole = "" // 隐藏角色
+			charCopy.HiddenRole = "" // Hide role
 		}
 		view.Characters[id] = &charCopy
 	}
 
-	// 过滤玩家：隐藏其他玩家的手牌
+	// Filter players: Hide other players' hands
 	view.Players = make(map[string]*model.Player)
 	for id, p := range ge.GameState.Players {
 		playerCopy := *p
 		if id != playerID {
-			playerCopy.Hand = nil // 隐藏其他玩家的手牌
+			playerCopy.Hand = nil // Hide other players' hands
 		}
 		view.Players[id] = &playerCopy
 	}
 
-	// 添加玩家特定信息
+	// Add player-specific info
 	view.YourHand = player.Hand
 	if player.Role == model.PlayerRoleProtagonist {
 		view.YourDeductions = player.DeductionKnowledge
@@ -177,17 +204,30 @@ func (ge *GameEngine) runGameLoop() {
 	ge.logger.Info("Game loop started.")
 	defer ge.logger.Info("Game loop stopped.")
 
+	timer := time.NewTimer(100 * time.Millisecond)
+	defer timer.Stop()
+
 	for {
 		select {
 		case <-ge.gameControlChan:
-			return // 收到停止信号
-		case action := <-ge.playerActionChan:
-			ge.handlePlayerAction(action)
-		default:
-			// 处理游戏阶段
-			ge.mu.Lock() // 锁定以修改状态
+			return // Stop signal received
+
+		case req := <-ge.requestChan:
+			switch r := req.(type) {
+			case model.PlayerAction:
+				ge.handlePlayerAction(r)
+			case getPlayerViewRequest:
+				playerView := ge.generatePlayerView(r.playerID)
+				r.responseChan <- playerView
+			case llmActionCompleteRequest:
+				// The LLM has finished. Process its action and mark it as ready.
+				ge.handlePlayerAction(r.action)
+				ge.playerReady[r.playerID] = true
+			}
+
+		case <-timer.C:
+			// Game phase handling, no locks needed here anymore.
 			currentPhase := ge.GameState.CurrentPhase
-			ge.mu.Unlock()
 
 			switch currentPhase {
 			case model.PhaseMorning:
@@ -209,10 +249,9 @@ func (ge *GameEngine) runGameLoop() {
 			case model.PhaseProtagonistGuess:
 				ge.handleProtagonistGuessPhase()
 			case model.PhaseGameOver:
-				// 游戏结束，等待停止信号
+				// Game over, wait for stop signal
 				time.Sleep(time.Second)
 			}
-			time.Sleep(100 * time.Millisecond) // 防止忙等待
 		}
 	}
 }
@@ -220,8 +259,6 @@ func (ge *GameEngine) runGameLoop() {
 // --- 游戏阶段处理函数（示例） ---
 
 func (ge *GameEngine) handleMorningPhase() {
-	ge.mu.Lock()
-	defer ge.mu.Unlock()
 	ge.logger.Info("Morning Phase", zap.Int("loop", ge.GameState.CurrentLoop), zap.Int("day", ge.GameState.CurrentDay))
 	// 重置玩家准备状态
 	for playerID := range ge.playerReady {
@@ -246,8 +283,6 @@ func (ge *GameEngine) handleMorningPhase() {
 }
 
 func (ge *GameEngine) handleCardPlayPhase() {
-	ge.mu.Lock()
-	defer ge.mu.Unlock()
 	// 检查所有玩家（人类和 LLM）是否已打出牌或已准备好
 	allPlayersReady := true
 	for playerID, player := range ge.GameState.Players {
@@ -271,8 +306,6 @@ func (ge *GameEngine) handleCardPlayPhase() {
 }
 
 func (ge *GameEngine) handleCardRevealPhase() {
-	ge.mu.Lock()
-	defer ge.mu.Unlock()
 	ge.logger.Info("Card Reveal Phase")
 	// 广播当天所有打出的牌
 	ge.publishGameEvent(model.EventCardPlayed, ge.GameState.PlayedCardsThisDay)
@@ -280,8 +313,6 @@ func (ge *GameEngine) handleCardRevealPhase() {
 }
 
 func (ge *GameEngine) handleCardResolvePhase() {
-	ge.mu.Lock()
-	defer ge.mu.Unlock()
 	ge.logger.Info("Card Resolve Phase")
 	// 按顺序解析所有打出的牌
 	for playerID, cards := range ge.GameState.PlayedCardsThisDay {
@@ -307,8 +338,6 @@ func (ge *GameEngine) handleCardResolvePhase() {
 }
 
 func (ge *GameEngine) handleAbilitiesPhase() {
-	ge.mu.Lock()
-	defer ge.mu.Unlock()
 	ge.logger.Info("Abilities Phase")
 	// 主谋能力（如果有）
 	mastermindPlayer := ge.GameState.Players[ge.mastermindPlayerID]
@@ -332,8 +361,6 @@ func (ge *GameEngine) handleAbilitiesPhase() {
 }
 
 func (ge *GameEngine) handleIncidentsPhase() {
-	ge.mu.Lock()
-	defer ge.mu.Unlock()
 	ge.logger.Info("Incidents Phase")
 	// 检查悲剧是否发生
 	tragedyOccurred := false
@@ -355,8 +382,6 @@ func (ge *GameEngine) handleIncidentsPhase() {
 }
 
 func (ge *GameEngine) handleDayEndPhase() {
-	ge.mu.Lock()
-	defer ge.mu.Unlock()
 	ge.logger.Info("Day End Phase", zap.Int("day", ge.GameState.CurrentDay))
 	ge.GameState.CurrentDay++
 	if ge.GameState.CurrentDay > ge.GameState.Script.DaysPerLoop {
@@ -367,8 +392,6 @@ func (ge *GameEngine) handleDayEndPhase() {
 }
 
 func (ge *GameEngine) handleLoopEndPhase() {
-	ge.mu.Lock()
-	defer ge.mu.Unlock()
 	ge.logger.Info("Loop End Phase", zap.Int("loop", ge.GameState.CurrentLoop))
 
 	mastermindWins := false
@@ -404,8 +427,6 @@ func (ge *GameEngine) handleLoopEndPhase() {
 }
 
 func (ge *GameEngine) handleProtagonistGuessPhase() {
-	ge.mu.Lock()
-	defer ge.mu.Unlock()
 	ge.logger.Info("Protagonist Guess Phase")
 	// 这个阶段由主角决定进行最终猜测时触发。
 	// 它需要一个特定的玩家动作 (ActionMakeGuess)。
@@ -416,8 +437,6 @@ func (ge *GameEngine) handleProtagonistGuessPhase() {
 
 // applyCardEffect 将卡牌效果应用于游戏状态。
 func (ge *GameEngine) applyCardEffect(effect model.AbilityEffect, targetCharacterID string, targetLocation model.LocationType) error {
-	ge.mu.Lock()
-	defer ge.mu.Unlock()
 	switch effect.Type {
 	case model.EffectTypeMoveCharacter:
 		char, ok := ge.GameState.Characters[targetCharacterID]
@@ -479,8 +498,6 @@ func (ge *GameEngine) applyAbilityEffect(effect model.AbilityEffect, targetChara
 
 // checkTragedyConditions 检查给定悲剧的条件是否满足。
 func (ge *GameEngine) checkTragedyConditions(tragedy model.TragedyCondition) bool {
-	ge.mu.Lock()
-	defer ge.mu.Unlock()
 	for _, cond := range tragedy.Conditions {
 		char, ok := ge.GameState.Characters[cond.CharacterID]
 		if !ok || !char.IsAlive {
@@ -491,7 +508,7 @@ func (ge *GameEngine) checkTragedyConditions(tragedy model.TragedyCondition) boo
 		} // 检查位置
 		if char.Paranoia < cond.MinParanoia {
 			return false
-		} // 检查偏执
+		}                 // 检查偏执
 		if cond.IsAlone { // 检查是否独自在地点
 			countAtLocation := 0
 			for _, otherChar := range ge.GameState.Characters {
@@ -544,8 +561,6 @@ func (ge *GameEngine) resetLoop() {
 
 // endGame 处理游戏结束状态。
 func (ge *GameEngine) endGame(winner model.PlayerRole) {
-	ge.mu.Lock()
-	defer ge.mu.Unlock()
 	ge.logger.Info("Game Over!", zap.String("winner", string(winner)))
 	ge.GameState.CurrentPhase = model.PhaseGameOver
 	ge.publishGameEvent(model.EventGameOver, map[string]string{"winner": string(winner)})
@@ -590,9 +605,6 @@ func (ge *GameEngine) resetPlayerReadiness() {
 // --- 玩家动作处理 ---
 
 func (ge *GameEngine) handlePlayerAction(action model.PlayerAction) {
-	ge.mu.Lock()
-	defer ge.mu.Unlock()
-
 	player := ge.GameState.Players[action.PlayerID]
 	if player == nil {
 		ge.logger.Warn("Action from unknown player", zap.String("playerID", action.PlayerID))
@@ -743,6 +755,7 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID string) {
 	}
 
 	ge.logger.Info("Triggering LLM for player", zap.String("player", player.Name), zap.String("role", string(player.Role)))
+	// We need to get the player view by sending a request to the main loop, not directly.
 	playerView := ge.GetPlayerView(playerID)
 	pBuilder := promptbuilder.NewPromptBuilder()
 	prompt := ""
@@ -756,9 +769,10 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID string) {
 		llmResponse, err := ge.llmClient.GenerateResponse(prompt, player.LLMSessionID)
 		if err != nil {
 			ge.logger.Error("LLM call failed", zap.String("player", player.Name), zap.Error(err))
-			ge.SubmitPlayerAction(model.PlayerAction{
+			// Submit a default action to unblock the game
+			ge.requestChan <- model.PlayerAction{
 				PlayerID: playerID, GameID: ge.GameState.GameID, Type: model.ActionReadyForNextPhase, Payload: nil,
-			})
+			}
 			return
 		}
 
@@ -766,36 +780,41 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID string) {
 		llmAction, err := responseParser.ParseLLMAction(llmResponse)
 		if err != nil {
 			ge.logger.Error("Failed to parse LLM response", zap.String("player", player.Name), zap.Error(err))
-			ge.SubmitPlayerAction(model.PlayerAction{
+			// Submit a default action to unblock the game
+			ge.requestChan <- model.PlayerAction{
 				PlayerID: playerID, GameID: ge.GameState.GameID, Type: model.ActionReadyForNextPhase, Payload: nil,
-			})
+			}
 			return
 		}
 
-		// --- 混合 AI 逻辑 (符号 AI 组件) ---
-		// 在这里，符号 AI 组件将细化或验证 LLM 的建议。
-		// 例如：
-		// 1. LLM 建议对角色 Y 打出卡牌 X。
-		// 2. 符号 AI (Go 代码) 检查卡牌 X 是否在手牌中，角色 Y 是否是有效目标，
-		//    是否满足卡牌的“每循环一次”条件等。
-		// 3. 如果 LLM 的建议无效，符号 AI 可能会：
-		//    a. 将其更正为有效动作。
-		//    b. 要求 LLM 重新评估（如果 API 支持对话轮次）。
-		//    c. 回退到默认的有效动作（例如，“跳过回合”）。
-		// 4. 对于战略深度，特别是主谋：
-		//    符号 AI 可以运行一个小型搜索（例如，蒙特卡洛树搜索，简单决策树）
-		//    以找到在给定当前状态和主谋目标下的最佳动作。
-		//    然后 LLM 将用于“叙述”或“证明”这个最佳动作，
-		//    或者以“类人”的方式在战略上等效的动作之间进行选择。
-		//    对于主角，符号 AI 可以根据观察到的事件执行逻辑推理，
-		//    在提示 LLM 之前更新 `player.DeductionKnowledge`。
+		// --- Hybrid AI Logic (Symbolic AI Component) ---
+		// Here, a symbolic AI component would refine or validate the LLM's suggestion.
+		// For example:
+		// 1. LLM suggests playing Card X on Character Y.
+		// 2. Symbolic AI (Go code) checks if Card X is in hand, if Character Y is a valid target,
+		//    if the "once per loop" condition is met, etc.
+		// 3. If the LLM's suggestion is invalid, the symbolic AI might:
+		//    a. Correct it to a valid action.
+		//    b. Ask the LLM to re-evaluate (if the API supports conversational turns).
+		//    c. Fallback to a default, valid action (e.g., "pass turn").
+		// 4. For strategic depth, especially for the Mastermind:
+		//    The symbolic AI could run a small search (e.g., Monte Carlo Tree Search, simple decision tree)
+		//    to find the optimal move given the current state and mastermind goals.
+		//    The LLM would then be used to "narrate" or "justify" this optimal move,
+		//    or to choose between strategically equivalent moves in a "human-like" way.
+		//    For Protagonists, the symbolic AI could perform logical deduction based on observed events,
+		//    updating `player.DeductionKnowledge` before prompting the LLM.
 
-		// 此示例中，我们假设 LLM 的动作在解析后直接提交。
-		ge.SubmitPlayerAction(model.PlayerAction{
-			PlayerID: playerID, GameID: ge.GameState.GameID, Type: llmAction.Type, Payload: llmAction.Payload,
-		})
-		ge.mu.Lock()
-		ge.playerReady[playerID] = true
-		ge.mu.Unlock()
+		// Instead of modifying state directly, send a request back to the main loop.
+		ge.requestChan <- llmActionCompleteRequest{
+			playerID: playerID,
+			action: model.PlayerAction{
+				PlayerID: playerID,
+				GameID:   ge.GameState.GameID,
+				Type:     llmAction.Type,
+				Payload:  llmAction.Payload,
+			},
+		}
 	}()
 }
+
