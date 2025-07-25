@@ -16,7 +16,6 @@ import (
 
 func main() {
 	logger := logger.New()
-	_ = logger.Sync() // Flushes buffer, important for production
 	defer func() {
 		_ = logger.Sync() // Flushes buffer, important for production
 	}()

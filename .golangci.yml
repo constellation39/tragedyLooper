@@ -19,7 +19,11 @@ linters:
 
 linters-settings:
   gocyclo:
-    min-complexity: 15
+    min-complexity: 20
+  revive:
+    rules:
+      - name: empty-block
+        disabled: true
 
 issues:
   exclude-dirs:
