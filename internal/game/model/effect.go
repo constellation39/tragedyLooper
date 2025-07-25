@@ -5,12 +5,23 @@ import (
 	"fmt"
 )
 
-// Effect 是所有能力效果都必须实现的接口。
-// 它使用策略模式，将每种效果的逻辑封装到自己的类型中。
+// EffectContext 是一个由引擎创建的、只读的上下文，
+// 包含了效果决策所需的所有信息。
+type EffectContext struct {
+	GameState *GameState
+}
+
+// TargetChoice 代表一个可供玩家选择的有效目标。
+type TargetChoice struct {
+	ID          string `json:"id"`
+	Type        string `json:"type"`
+	Description string `json:"description"`
+}
+
+// Effect 接口定义了一个效果的核心行为。
 type Effect interface {
-	// Apply 将效果应用到游戏状态。
-	// 它接收一个 GameMutator 接口来修改状态，以及一个包含上下文的 payload。
-	Apply(mutator GameMutator, payload UseAbilityPayload) error
+	ResolveChoices(ctx EffectContext, self *Ability) ([]TargetChoice, error)
+	Execute(ctx EffectContext, self *Ability, payload UseAbilityPayload) ([]Event, error)
 }
 
 // --- 具体效果实现 ---
@@ -18,15 +29,20 @@ type Effect interface {
 // MoveCharacterEffect 移动一个角色到指定地点。
 type MoveCharacterEffect struct{}
 
-func (e *MoveCharacterEffect) Apply(mutator GameMutator, payload UseAbilityPayload) error {
-	if payload.TargetCharacterID == "" {
-		return fmt.Errorf("MoveCharacterEffect requires a TargetCharacterID")
+func (e *MoveCharacterEffect) ResolveChoices(ctx EffectContext, self *Ability) ([]TargetChoice, error) {
+	return nil, nil
+}
+
+func (e *MoveCharacterEffect) Execute(ctx EffectContext, self *Ability, payload UseAbilityPayload) ([]Event, error) {
+	if payload.TargetCharacterID == "" || payload.TargetLocation == "" {
+		return nil, fmt.Errorf("MoveCharacterEffect requires a TargetCharacterID and TargetLocation")
 	}
-	if payload.TargetLocation == "" {
-		return fmt.Errorf("MoveCharacterEffect requires a TargetLocation")
+	event := CharacterMovedEvent{
+		CharacterID: payload.TargetCharacterID,
+		NewLocation: payload.TargetLocation,
+		Reason:      fmt.Sprintf("Ability: %s", self.Name),
 	}
-	mutator.SetCharacterLocation(payload.TargetCharacterID, payload.TargetLocation)
-	return nil
+	return []Event{event}, nil
 }
 
 // AdjustParanoiaEffect 调整角色的妄想值。
@@ -34,12 +50,19 @@ type AdjustParanoiaEffect struct {
 	Amount int `json:"amount"`
 }
 
-func (e *AdjustParanoiaEffect) Apply(mutator GameMutator, payload UseAbilityPayload) error {
+func (e *AdjustParanoiaEffect) ResolveChoices(ctx EffectContext, self *Ability) ([]TargetChoice, error) {
+	return nil, nil
+}
+
+func (e *AdjustParanoiaEffect) Execute(ctx EffectContext, self *Ability, payload UseAbilityPayload) ([]Event, error) {
 	if payload.TargetCharacterID == "" {
-		return fmt.Errorf("AdjustParanoiaEffect requires a TargetCharacterID")
+		return nil, fmt.Errorf("AdjustParanoiaEffect requires a TargetCharacterID")
 	}
-	mutator.AdjustCharacterParanoia(payload.TargetCharacterID, e.Amount)
-	return nil
+	event := ParanoiaAdjustedEvent{
+		CharacterID: payload.TargetCharacterID,
+		Amount:      e.Amount,
+	}
+	return []Event{event}, nil
 }
 
 // AdjustGoodwillEffect 调整角色的好感度。
@@ -47,12 +70,19 @@ type AdjustGoodwillEffect struct {
 	Amount int `json:"amount"`
 }
 
-func (e *AdjustGoodwillEffect) Apply(mutator GameMutator, payload UseAbilityPayload) error {
+func (e *AdjustGoodwillEffect) ResolveChoices(ctx EffectContext, self *Ability) ([]TargetChoice, error) {
+	return nil, nil
+}
+
+func (e *AdjustGoodwillEffect) Execute(ctx EffectContext, self *Ability, payload UseAbilityPayload) ([]Event, error) {
 	if payload.TargetCharacterID == "" {
-		return fmt.Errorf("AdjustGoodwillEffect requires a TargetCharacterID")
+		return nil, fmt.Errorf("AdjustGoodgilEffect requires a TargetCharacterID")
 	}
-	mutator.AdjustCharacterGoodwill(payload.TargetCharacterID, e.Amount)
-	return nil
+	event := GoodwillAdjustedEvent{
+		CharacterID: payload.TargetCharacterID,
+		Amount:      e.Amount,
+	}
+	return []Event{event}, nil
 }
 
 // AdjustIntrigueEffect 调整角色的阴谋值。
@@ -60,23 +90,29 @@ type AdjustIntrigueEffect struct {
 	Amount int `json:"amount"`
 }
 
-func (e *AdjustIntrigueEffect) Apply(mutator GameMutator, payload UseAbilityPayload) error {
-	if payload.TargetCharacterID == "" {
-		return fmt.Errorf("AdjustIntrigueEffect requires a TargetCharacterID")
-	}
-	mutator.AdjustCharacterIntrigue(payload.TargetCharacterID, e.Amount)
-	return nil
+func (e *AdjustIntrigueEffect) ResolveChoices(ctx EffectContext, self *Ability) ([]TargetChoice, error) {
+	return nil, nil
 }
+
+func (e *AdjustIntrigueEffect) Execute(ctx EffectContext, self *Ability, payload UseAbilityPayload) ([]Event, error) {
+	if payload.TargetCharacterID == "" {
+		return nil, fmt.Errorf("AdjustIntrigueEffect requires a TargetCharacterID")
+	}
+	event := IntrigueAdjustedEvent{
+		CharacterID: payload.TargetCharacterID,
+		Amount:      e.Amount,
+	}
+	return []Event{event}, nil
+}
+
 
 // --- 自定义反序列化 ---
 
-// effectWrapper 是一个辅助结构体，用于在反序列化时识别效果类型。
 type effectWrapper struct {
 	Type   EffectType      `json:"type"`
 	Params json.RawMessage `json:"params"`
 }
 
-// UnmarshalEffect 是一个辅助函数，用于将 JSON 数据反序列化为正确的 Effect 类型。
 func UnmarshalEffect(data []byte) (Effect, error) {
 	var wrapper effectWrapper
 	if err := json.Unmarshal(data, &wrapper); err != nil {
@@ -93,12 +129,10 @@ func UnmarshalEffect(data []byte) (Effect, error) {
 		effect = &AdjustGoodwillEffect{}
 	case EffectTypeAdjustIntrigue:
 		effect = &AdjustIntrigueEffect{}
-	// TODO: 为其他效果类型添加 case
 	default:
 		return nil, fmt.Errorf("unknown effect type: '%s'", wrapper.Type)
 	}
 
-	// 将 params 部分反序列化到具体的 effect 结构体中
 	if len(wrapper.Params) > 0 && string(wrapper.Params) != "null" {
 		if err := json.Unmarshal(wrapper.Params, effect); err != nil {
 			return nil, fmt.Errorf("failed to unmarshal params for type '%s': %w", wrapper.Type, err)

@@ -31,6 +31,10 @@ const (
 	AbilityTriggerPassive         AbilityTriggerType = "Passive"         // 被动
 )
 
+const (
+	EventChoiceRequired EventType = "ChoiceRequired" // 需要玩家进行选择
+)
+
 // Ability 定义角色的特殊技能。
 type Ability struct {
 	Name         string             `json:"name"`                   // 能力名称
