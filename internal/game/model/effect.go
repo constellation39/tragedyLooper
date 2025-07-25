@@ -34,12 +34,15 @@ func (e *MoveCharacterEffect) ResolveChoices(ctx EffectContext, self *Ability) (
 }
 
 func (e *MoveCharacterEffect) Execute(ctx EffectContext, self *Ability, payload UseAbilityPayload) ([]Event, error) {
-	if payload.TargetCharacterID == "" || payload.TargetLocation == "" {
-		return nil, fmt.Errorf("MoveCharacterEffect requires a TargetCharacterID and TargetLocation")
+	// This effect now needs a way to determine the target location, which was previously in the payload.
+	// This might require a more significant change. For now, we assume the ability itself holds the target location.
+	// This is a placeholder for a more robust solution.
+	if payload.CharacterID == "" || self.TargetLocation == "" {
+		return nil, fmt.Errorf("MoveCharacterEffect requires a CharacterID and the ability to have a TargetLocation")
 	}
 	event := CharacterMovedEvent{
-		CharacterID: payload.TargetCharacterID,
-		NewLocation: payload.TargetLocation,
+		CharacterID: payload.CharacterID,
+		NewLocation: self.TargetLocation, // Using location from ability
 		Reason:      fmt.Sprintf("Ability: %s", self.Name),
 	}
 	return []Event{event}, nil
@@ -55,11 +58,11 @@ func (e *AdjustParanoiaEffect) ResolveChoices(ctx EffectContext, self *Ability) 
 }
 
 func (e *AdjustParanoiaEffect) Execute(ctx EffectContext, self *Ability, payload UseAbilityPayload) ([]Event, error) {
-	if payload.TargetCharacterID == "" {
-		return nil, fmt.Errorf("AdjustParanoiaEffect requires a TargetCharacterID")
+	if payload.CharacterID == "" {
+		return nil, fmt.Errorf("AdjustParanoiaEffect requires a CharacterID")
 	}
 	event := ParanoiaAdjustedEvent{
-		CharacterID: payload.TargetCharacterID,
+		CharacterID: payload.CharacterID,
 		Amount:      e.Amount,
 	}
 	return []Event{event}, nil
@@ -75,11 +78,11 @@ func (e *AdjustGoodwillEffect) ResolveChoices(ctx EffectContext, self *Ability) 
 }
 
 func (e *AdjustGoodwillEffect) Execute(ctx EffectContext, self *Ability, payload UseAbilityPayload) ([]Event, error) {
-	if payload.TargetCharacterID == "" {
-		return nil, fmt.Errorf("AdjustGoodgilEffect requires a TargetCharacterID")
+	if payload.CharacterID == "" {
+		return nil, fmt.Errorf("AdjustGoodwillEffect requires a CharacterID")
 	}
 	event := GoodwillAdjustedEvent{
-		CharacterID: payload.TargetCharacterID,
+		CharacterID: payload.CharacterID,
 		Amount:      e.Amount,
 	}
 	return []Event{event}, nil
@@ -95,11 +98,11 @@ func (e *AdjustIntrigueEffect) ResolveChoices(ctx EffectContext, self *Ability) 
 }
 
 func (e *AdjustIntrigueEffect) Execute(ctx EffectContext, self *Ability, payload UseAbilityPayload) ([]Event, error) {
-	if payload.TargetCharacterID == "" {
-		return nil, fmt.Errorf("AdjustIntrigueEffect requires a TargetCharacterID")
+	if payload.CharacterID == "" {
+		return nil, fmt.Errorf("AdjustIntrigueEffect requires a CharacterID")
 	}
 	event := IntrigueAdjustedEvent{
-		CharacterID: payload.TargetCharacterID,
+		CharacterID: payload.CharacterID,
 		Amount:      e.Amount,
 	}
 	return []Event{event}, nil

@@ -90,9 +90,8 @@ type PlayCardPayload struct {
 
 // UseAbilityPayload 定义了使用能力动作所需的数据。
 type UseAbilityPayload struct {
-	AbilityName       string       `json:"ability_name"`
-	TargetCharacterID string       `json:"target_character_id,omitempty"`
-	TargetLocation    LocationType `json:"target_location,omitempty"`
+	CharacterID string `json:"character_id"`
+	AbilityID   string `json:"ability_id"`
 }
 
 // MakeGuessPayload 定义了主角进行最终猜测时提交的数据结构。

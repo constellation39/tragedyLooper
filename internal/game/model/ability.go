@@ -37,13 +37,15 @@ const (
 
 // Ability 定义角色的特殊技能。
 type Ability struct {
-	Name         string             `json:"name"`                   // 能力名称
-	Description  string             `json:"description"`            // 能力描述
-	TriggerType  AbilityTriggerType `json:"trigger_type"`           // 触发时机
-	Effect       Effect             `json:"effect"`                 // 实际效果
-	OncePerLoop  bool               `json:"once_per_loop"`          // 每循环只能使用一次
-	RefusalRole  RoleType           `json:"refusal_role,omitempty"` // 如果有，指定拒绝此善意能力的特定角色身份
-	UsedThisLoop bool               `json:"-"`                      // 运行时状态，不用于配置
+	ID             string             `json:"id"`
+	Name           string             `json:"name"`                   // 能力名称
+	Description    string             `json:"description"`            // 能力描述
+	TriggerType    AbilityTriggerType `json:"trigger_type"`           // 触发时机
+	Effect         Effect             `json:"effect"`                 // 实际效果
+	OncePerLoop    bool               `json:"once_per_loop"`          // 每循环只能使用一次
+	RefusalRole    RoleType           `json:"refusal_role,omitempty"` // 如果有，指定拒绝此善意能力的特定角色身份
+	UsedThisLoop   bool               `json:"-"`                      // 运行时状态，不用于配置
+	TargetLocation LocationType       `json:"target_location,omitempty"`
 }
 
 // UnmarshalJSON for Ability to handle the polymorphic Effect interface.
