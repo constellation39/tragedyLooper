@@ -619,8 +619,6 @@ func (ge *GameEngine) handlePlayerAction(action model.PlayerAction) {
 		if !ok {
 			return
 		}
-		targetCharID, _ := payload["target_character_id"].(string)
-		targetLoc, _ := payload["target_location"].(string)
 
 		var playedCard model.Card
 		cardFound := false
@@ -660,7 +658,7 @@ func (ge *GameEngine) handlePlayerAction(action model.PlayerAction) {
 		var usedAbility model.Ability
 		abilityFound := false
 		for _, char := range ge.GameState.Characters {
-			if char.HiddenRole == player.Role || player.Role == model.PlayerRoleMastermind {
+			if string(char.HiddenRole) == string(player.Role) || player.Role == model.PlayerRoleMastermind {
 				for i, ab := range char.Abilities {
 					if ab.Name == abilityName {
 						usedAbility = ab

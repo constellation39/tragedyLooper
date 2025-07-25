@@ -36,14 +36,16 @@ type Character struct {
 
 // Card 表示一张行动卡。
 type Card struct {
-	ID           string        `json:"id"`
-	Name         string        `json:"name"`
-	CardType     CardType      `json:"card_type"`
-	OwnerRole    PlayerRole    `json:"owner_role"`    // 主谋或主角卡
-	TargetType   string        `json:"target_type"`   // "Character" 或 "Location"
-	Effect       AbilityEffect `json:"effect"`        // 卡牌效果，结构与 AbilityEffect 相同
-	OncePerLoop  bool          `json:"once_per_loop"` // 每循环只能使用一次
-	UsedThisLoop bool          `json:"-"`             // 运行时状态
+	ID                string        `json:"id"`
+	Name              string        `json:"name"`
+	CardType          CardType      `json:"card_type"`
+	OwnerRole         PlayerRole    `json:"owner_role"`    // 主谋或主角卡
+	TargetType        string        `json:"target_type"`   // "Character" 或 "Location"
+	Effect            AbilityEffect `json:"effect"`        // 卡牌效果，结构与 AbilityEffect 相同
+	OncePerLoop       bool          `json:"once_per_loop"` // 每循环只能使用一次
+	UsedThisLoop      bool          `json:"-"`             // 运行时状态
+	TargetCharacterID string        `json:"target_character_id,omitempty"`
+	TargetLocation    LocationType  `json:"target_location,omitempty"`
 }
 
 // TragedyCondition 定义悲剧发生的条件。
