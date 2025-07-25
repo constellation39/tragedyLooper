@@ -107,10 +107,3 @@ func (a *Ability) MarshalJSON() ([]byte, error) {
 
 	return json.Marshal(aux)
 }
-
-// UseAbilityPayload for ActionUseAbility
-type UseAbilityPayload struct {
-	AbilityName       string       `json:"ability_name"`                  // 使用的能力名称
-	TargetCharacterID string       `json:"target_character_id,omitempty"` // 目标角色ID
-	TargetLocation    LocationType `json:"target_location,omitempty"`     // 目标位置
-}

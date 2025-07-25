@@ -1,16 +1,5 @@
 package model
 
-// PlayerActionType 定义玩家可以采取的行动类型。
-type PlayerActionType string
-
-const (
-	ActionPlayCard          PlayerActionType = "PlayCard"          // 出牌
-	ActionUseAbility        PlayerActionType = "UseAbility"        // 使用能力
-	ActionMakeGuess         PlayerActionType = "MakeGuess"         // 主角最终猜测
-	ActionEndTurn           PlayerActionType = "EndTurn"           // 结束回合
-	ActionReadyForNextPhase PlayerActionType = "ReadyForNextPhase" // 准备好进入下一阶段
-)
-
 // PlayerRole 定义连接玩家的角色（人类或 LLM）。
 type PlayerRole string
 
@@ -45,17 +34,4 @@ type PlayerView struct {
 	YourHand           []Card                 `json:"your_hand,omitempty"`       // 你的手牌（仅对请求玩家可见）
 	YourDeductions     map[string]interface{} `json:"your_deductions,omitempty"` // 你的推理（仅对主角可见）
 	PublicEvents       []GameEvent            `json:"public_events"`             // 公开事件
-}
-
-// PlayerAction 表示从玩家客户端发送到服务器的动作。
-type PlayerAction struct {
-	PlayerID string           `json:"player_id"` // 玩家ID
-	GameID   string           `json:"game_id"`   // 游戏ID
-	Type     PlayerActionType `json:"type"`      // 动作类型
-	Payload  interface{}      `json:"payload"`   // 动作负载
-}
-
-// MakeGuessPayload for ActionMakeGuess
-type MakeGuessPayload struct {
-	GuessedRoles map[string]RoleType `json:"guessed_roles"` // 猜测的角色身份映射 (CharacterID -> GuessedRole)
 }

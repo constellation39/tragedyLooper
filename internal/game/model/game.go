@@ -62,3 +62,41 @@ type GameEvent struct {
 	Payload   interface{} `json:"payload"`   // 事件负载
 	Timestamp time.Time   `json:"timestamp"` // 事件时间戳
 }
+
+// ActionType 定义了玩家可以执行的操作类型。
+type ActionType string
+
+const (
+	ActionPlayCard          ActionType = "PlayCard"          // 出牌
+	ActionUseAbility        ActionType = "UseAbility"        // 使用能力
+	ActionMakeGuess         ActionType = "MakeGuess"         // 作出猜测
+	ActionReadyForNextPhase ActionType = "ReadyForNextPhase" // 准备好进入下一阶段
+)
+
+// PlayerAction 代表单个玩家提交的动作。
+type PlayerAction struct {
+	PlayerID string      `json:"player_id"`
+	GameID   string      `json:"game_id"`
+	Type     ActionType  `json:"type"`
+	Payload  interface{} `json:"payload"` // e.g., PlayCardPayload, UseAbilityPayload
+}
+
+// PlayCardPayload 定义了打出卡牌动作所需的数据。
+type PlayCardPayload struct {
+	CardID            string       `json:"card_id"`
+	TargetCharacterID string       `json:"target_character_id,omitempty"`
+	TargetLocation    LocationType `json:"target_location,omitempty"`
+}
+
+// UseAbilityPayload 定义了使用能力动作所需的数据。
+type UseAbilityPayload struct {
+	AbilityName       string       `json:"ability_name"`
+	TargetCharacterID string       `json:"target_character_id,omitempty"`
+	TargetLocation    LocationType `json:"target_location,omitempty"`
+}
+
+// MakeGuessPayload 定义了主角进行最终猜测时提交的数据结构。
+type MakeGuessPayload struct {
+	// GuessedRoles 是一个映射，键是角色ID，值是猜测的角色身份 (e.g., "KeyPerson", "Killer")。
+	GuessedRoles map[string]RoleType `json:"guessed_roles"`
+}

@@ -52,10 +52,3 @@ func (c *Card) UnmarshalJSON(data []byte) error {
 
 	return nil
 }
-
-// PlayCardPayload for ActionPlayCard
-type PlayCardPayload struct {
-	CardID            string       `json:"card_id"`                       // 打出的卡牌ID
-	TargetCharacterID string       `json:"target_character_id,omitempty"` // 目标角色ID
-	TargetLocation    LocationType `json:"target_location,omitempty"`     // 目标位置
-}
