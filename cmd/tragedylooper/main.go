@@ -1,18 +1,22 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"go.uber.org/zap"
 	"tragedylooper/internal/game/model"
 	"tragedylooper/internal/llm"
+	"tragedylooper/internal/logger"
 	"tragedylooper/internal/server"
 )
 
 func main() {
+	logger := logger.New()
+	defer logger.Sync() // Flushes buffer, important for production
+
 	// 1. 加载游戏剧本和资源
 	// 在实际应用中，这些将从文件或数据库加载。
 	// 为简单起见，我们使用占位符。
@@ -48,21 +52,25 @@ func main() {
 	// llmClient := llm.NewOpenAIClient(os.Getenv("OPENAI_API_KEY")) // 用于实际的 OpenAI 集成
 
 	// 2. 初始化游戏服务器
-	gameServer := server.NewServer(scripts, llmClient)
+	gameServer := server.NewServer(scripts, llmClient, logger)
 
-	// 设置 WebSocket 连接的 HTTP 服务器
-	http.HandleFunc("/ws", gameServer.HandleWebSocket)
-	http.HandleFunc("/create_room", gameServer.HandleCreateRoom)
-	http.HandleFunc("/join_room", gameServer.HandleJoinRoom)
-	http.HandleFunc("/list_rooms", gameServer.HandleListRooms)
+	// Create a new ServeMux to apply middleware
+	mux := http.NewServeMux()
+	mux.HandleFunc("/ws", gameServer.HandleWebSocket)
+	mux.HandleFunc("/create_room", gameServer.HandleCreateRoom)
+	mux.HandleFunc("/join_room", gameServer.HandleJoinRoom)
+	mux.HandleFunc("/list_rooms", gameServer.HandleListRooms)
+
+	// Apply the logging middleware
+	loggedMux := gameServer.LoggingMiddleware(mux)
 
 	port := ":8080"
-	log.Printf("Server starting on port %s", port)
+	logger.Info("Server starting on port " + port)
 
-	// 在协程中启动 HTTP 服务器
+	// In a goroutine, start the HTTP server
 	go func() {
-		if err := http.ListenAndServe(port, nil); err != nil {
-			log.Fatalf("HTTP server failed: %v", err)
+		if err := http.ListenAndServe(port, loggedMux); err != nil {
+			logger.Fatal("HTTP server failed", zap.Error(err))
 		}
 	}()
 
@@ -70,7 +78,7 @@ func main() {
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	<-sigChan // 阻塞直到收到信号
-	log.Println("Shutting down server...")
+	logger.Info("Shutting down server...")
 	gameServer.Shutdown() // 执行任何清理
-	log.Println("Server gracefully stopped.")
+	logger.Info("Server gracefully stopped.")
 }
