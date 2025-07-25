@@ -666,7 +666,11 @@ func (ge *GameEngine) runGameLoop() {
 			switch r := req.(type) {
 			case model.PlayerAction:
 				ge.handlePlayerAction(r)
+			case getPlayerViewRequest:
+				playerView := ge.generatePlayerView(r.playerID)
+				r.responseChan <- playerView
 			case llmActionCompleteRequest:
+				// The LLM has finished. Process its action and mark it as ready.
 				ge.handlePlayerAction(r.action)
 				ge.playerReady[r.playerID] = true
 			}
@@ -763,9 +767,17 @@ func (ge *GameEngine) handlePlayerAction(action model.PlayerAction) {
 
 	ge.logger.Info("Handling player action", zap.String("player", player.Name), zap.String("actionType", string(action.Type)))
 
-	if action.Type == model.ActionUseAbility {
+	switch action.Type {
+	case model.ActionPlayCard:
+		ge.handlePlayCardAction(player, action)
+	case model.ActionUseAbility:
 		ge.handleUseAbilityAction(player, action)
-		// ... other actions
+	case model.ActionReadyForNextPhase:
+		ge.handleReadyForNextPhaseAction(player)
+	case model.ActionMakeGuess:
+		ge.handleMakeGuessAction(action)
+	default:
+		ge.logger.Warn("Unknown action type", zap.String("actionType", string(action.Type)))
 	}
 }
 
