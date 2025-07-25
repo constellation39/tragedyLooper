@@ -8,6 +8,7 @@ import (
 
 	"tragedylooper/internal/game/model"
 	"tragedylooper/internal/llm"
+	"tragedylooper/internal/llm/prompt"
 )
 
 // GameEngine 管理单个游戏实例的状态和逻辑。
@@ -496,7 +497,7 @@ func (ge *GameEngine) checkTragedyConditions(tragedy model.TragedyCondition) boo
 		} // 检查位置
 		if char.Paranoia < cond.MinParanoia {
 			return false
-		} // 检查偏执
+		}                 // 检查偏执
 		if cond.IsAlone { // 检查是否独自在地点
 			countAtLocation := 0
 			for _, otherChar := range ge.GameState.Characters {
@@ -735,12 +736,12 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID string) {
 
 	log.Printf("Game %s: Triggering LLM for player %s (%s)", ge.GameState.GameID, player.Name, player.Role)
 	playerView := ge.GetPlayerView(playerID)
-	promptBuilder := llm.NewPromptBuilder()
+	pBuilder := promptBuilder.NewPromptBuilder()
 	prompt := ""
 	if player.Role == model.PlayerRoleMastermind {
-		prompt = promptBuilder.BuildMastermindPrompt(playerView, ge.GameState.Script, ge.GameState.Characters)
+		prompt = pBuilder.BuildMastermindPrompt(playerView, ge.GameState.Script, ge.GameState.Characters)
 	} else {
-		prompt = promptBuilder.BuildProtagonistPrompt(playerView, player.DeductionKnowledge)
+		prompt = pBuilder.BuildProtagonistPrompt(playerView, player.DeductionKnowledge)
 	}
 
 	go func() {
