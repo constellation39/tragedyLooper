@@ -313,14 +313,12 @@ func (ge *GameEngine) handleUseAbilityAction(player *model.Player, action model.
 	}
 
 	var ability *model.Ability
-	var character *model.Character
 	abilityFound := false
 	char, ok := ge.GameState.Characters[payload.CharacterID]
 	if !ok {
 		ge.logger.Warn("Character not found for ability use", zap.String("characterID", payload.CharacterID))
 		return
 	}
-	character = char
 
 	for i := range char.Abilities {
 		if char.Abilities[i].ID == payload.AbilityID {
@@ -395,13 +393,13 @@ func (ge *GameEngine) handleMorningPhase() {
 	for _, char := range ge.GameState.Characters {
 		for i, ability := range char.Abilities {
 			if ability.TriggerType == model.AbilityTriggerDayStart && !ability.UsedThisLoop {
-					payload := model.UseAbilityPayload{CharacterID: char.ID, AbilityID: ability.ID} // Assuming self-target for simplicity
-					if err := ge.applyEffect(ability.Effect, &ability, payload); err != nil {
-						ge.logger.Error("Error applying DayStart ability effect", zap.Error(err), zap.String("character", char.Name), zap.String("ability", ability.Name))
-					}
-					ge.GameState.Characters[char.ID].Abilities[i].UsedThisLoop = true // Mark as used
-					ge.publishGameEvent(model.EventAbilityUsed, map[string]string{"character_id": char.ID, "ability_name": ability.Name})
+				payload := model.UseAbilityPayload{CharacterID: char.ID, AbilityID: ability.ID} // Assuming self-target for simplicity
+				if err := ge.applyEffect(ability.Effect, &ability, payload); err != nil {
+					ge.logger.Error("Error applying DayStart ability effect", zap.Error(err), zap.String("character", char.Name), zap.String("ability", ability.Name))
 				}
+				ge.GameState.Characters[char.ID].Abilities[i].UsedThisLoop = true // Mark as used
+				ge.publishGameEvent(model.EventAbilityUsed, map[string]string{"character_id": char.ID, "ability_name": ability.Name})
+			}
 		}
 	}
 
