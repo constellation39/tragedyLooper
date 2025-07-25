@@ -1,3 +1,3 @@
-module tragedyLooper
+module tragedylooper
 
 go 1.24
