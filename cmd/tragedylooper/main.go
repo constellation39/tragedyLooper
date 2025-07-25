@@ -7,9 +7,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"tragedylooper/pkg/game/model"
-	"tragedylooper/pkg/llm"
-	"tragedylooper/pkg/server"
+	"tragedylooper/internal/game/model"
+	"tragedylooper/internal/llm"
+	"tragedylooper/internal/server"
 )
 
 func main() {
