@@ -1,15 +1,67 @@
 package engine
 
 import (
-	"fmt"
 	"time"
 	promptbuilder "tragedylooper/internal/llm/prompt"
 
+	"github.com/mitchellh/mapstructure"
 	"go.uber.org/zap"
 
 	"tragedylooper/internal/game/model"
 	"tragedylooper/internal/llm"
 )
+
+// --- GameMutator Implementation ---
+
+// Statically assert that *GameEngine implements the model.GameMutator interface.
+var _ model.GameMutator = (*GameEngine)(nil)
+
+func (ge *GameEngine) GetCharacter(id string) (*model.Character, bool) {
+	char, ok := ge.GameState.Characters[id]
+	return char, ok
+}
+
+func (ge *GameEngine) SetCharacterLocation(id string, location model.LocationType) {
+	if char, ok := ge.GameState.Characters[id]; ok {
+		char.CurrentLocation = location
+		ge.logger.Info("Character moved", zap.String("characterID", id), zap.String("location", string(location)))
+		ge.publishGameEvent(model.EventCharacterMoved, map[string]string{"character_id": id, "new_location": string(location)})
+	}
+}
+
+func (ge *GameEngine) AdjustCharacterParanoia(id string, amount int) int {
+	if char, ok := ge.GameState.Characters[id]; ok {
+		char.Paranoia += amount
+		ge.logger.Info("Character paranoia adjusted", zap.String("characterID", id), zap.Int("amount", amount), zap.Int("newParanoia", char.Paranoia))
+		ge.publishGameEvent(model.EventParanoiaAdjusted, map[string]interface{}{"character_id": id, "amount": amount, "new_paranoia": char.Paranoia})
+		return char.Paranoia
+	}
+	return 0
+}
+
+func (ge *GameEngine) AdjustCharacterGoodwill(id string, amount int) int {
+	if char, ok := ge.GameState.Characters[id]; ok {
+		char.Goodwill += amount
+		ge.logger.Info("Character goodwill adjusted", zap.String("characterID", id), zap.Int("amount", amount), zap.Int("newGoodwill", char.Goodwill))
+		ge.publishGameEvent(model.EventGoodwillAdjusted, map[string]interface{}{"character_id": id, "amount": amount, "new_goodwill": char.Goodwill})
+		return char.Goodwill
+	}
+	return 0
+}
+
+func (ge *GameEngine) AdjustCharacterIntrigue(id string, amount int) int {
+	if char, ok := ge.GameState.Characters[id]; ok {
+		char.Intrigue += amount
+		ge.logger.Info("Character intrigue adjusted", zap.String("characterID", id), zap.Int("amount", amount), zap.Int("newIntrigue", char.Intrigue))
+		ge.publishGameEvent(model.EventIntrigueAdjusted, map[string]interface{}{"character_id": id, "amount": amount, "new_intrigue": char.Intrigue})
+		return char.Intrigue
+	}
+	return 0
+}
+
+func (ge *GameEngine) PublishEvent(eventType model.EventType, payload interface{}) {
+	ge.publishGameEvent(eventType, payload)
+}
 
 // engineRequest is an interface for all requests handled by the game engine loop.
 type engineRequest interface{}
@@ -270,7 +322,8 @@ func (ge *GameEngine) handleMorningPhase() {
 		for i, ability := range char.Abilities {
 			if ability.TriggerType == model.AbilityTriggerDayStart && !ability.UsedThisLoop {
 				// 假设能力效果直接应用，没有目标。如果能力需要目标，则需要更复杂的逻辑。
-				if err := ge.applyAbilityEffect(ability.Effect, char.ID); err != nil {
+				payload := model.UseAbilityPayload{TargetCharacterID: char.ID}
+				if err := ge.applyEffect(ability.Effect, payload); err != nil {
 					ge.logger.Error("Error applying DayStart ability effect", zap.Error(err), zap.String("character", char.Name), zap.String("ability", ability.Name))
 				}
 				ge.GameState.Characters[char.ID].Abilities[i].UsedThisLoop = true // 标记为已使用
@@ -322,10 +375,11 @@ func (ge *GameEngine) handleCardResolvePhase() {
 			// 在当前结构中，我们可能需要调整 PlayerAction 来包含这些信息，
 			// 或者在 PlayedCardsThisDay 中存储更丰富的对象。
 			// 为简单起见，我们假设目标信息在卡牌效果中可用或可以推断。
-			targetCharID := card.TargetCharacterID // 假设卡牌结构中有这个字段
-			targetLocation := card.TargetLocation  // 假设卡牌结构中有这个字段
-
-			if err := ge.applyCardEffect(card.Effect, targetCharID, targetLocation); err != nil {
+			payload := model.UseAbilityPayload{
+				TargetCharacterID: card.TargetCharacterID,
+				TargetLocation:    card.TargetLocation,
+			}
+			if err := ge.applyEffect(card.Effect, payload); err != nil {
 				ge.logger.Error("Error applying card effect",
 					zap.Error(err),
 					zap.String("playerID", playerID),
@@ -435,65 +489,10 @@ func (ge *GameEngine) handleProtagonistGuessPhase() {
 
 // --- 核心游戏逻辑函数 ---
 
-// applyCardEffect 将卡牌效果应用于游戏状态。
-func (ge *GameEngine) applyCardEffect(effect model.AbilityEffect, targetCharacterID string, targetLocation model.LocationType) error {
-	switch effect.Type {
-	case model.EffectTypeMoveCharacter:
-		char, ok := ge.GameState.Characters[targetCharacterID]
-		if !ok {
-			return fmt.Errorf("character %s not found for move effect", targetCharacterID)
-		}
-		if targetLocation == "" {
-			return fmt.Errorf("target location not specified for move effect")
-		}
-		char.CurrentLocation = targetLocation
-		ge.publishGameEvent(model.EventCharacterMoved, map[string]string{"character_id": targetCharacterID, "new_location": string(targetLocation)})
-		ge.logger.Info("Character moved", zap.String("characterID", targetCharacterID), zap.String("location", string(targetLocation)))
-	case model.EffectTypeAdjustParanoia:
-		char, ok := ge.GameState.Characters[targetCharacterID]
-		if !ok {
-			return fmt.Errorf("character %s not found for paranoia effect", targetCharacterID)
-		}
-		amount, ok := effect.Params["amount"].(float64) // JSON Unmarshals numbers to float64
-		if !ok {
-			return fmt.Errorf("invalid amount parameter for paranoia effect")
-		}
-		char.Paranoia += int(amount)
-		ge.publishGameEvent(model.EventParanoiaAdjusted, map[string]interface{}{"character_id": targetCharacterID, "amount": int(amount), "new_paranoia": char.Paranoia})
-		ge.logger.Info("Character paranoia adjusted", zap.String("characterID", targetCharacterID), zap.Int("amount", int(amount)), zap.Int("newParanoia", char.Paranoia))
-	case model.EffectTypeAdjustGoodwill:
-		char, ok := ge.GameState.Characters[targetCharacterID]
-		if !ok {
-			return fmt.Errorf("character %s not found for goodwill effect", targetCharacterID)
-		}
-		amount, ok := effect.Params["amount"].(float64)
-		if !ok {
-			return fmt.Errorf("invalid amount parameter for goodwill effect")
-		}
-		char.Goodwill += int(amount)
-		ge.publishGameEvent(model.EventGoodwillAdjusted, map[string]interface{}{"character_id": targetCharacterID, "amount": int(amount), "new_goodwill": char.Goodwill})
-		ge.logger.Info("Character goodwill adjusted", zap.String("characterID", targetCharacterID), zap.Int("amount", int(amount)), zap.Int("newGoodwill", char.Goodwill))
-	case model.EffectTypeAdjustIntrigue:
-		char, ok := ge.GameState.Characters[targetCharacterID]
-		if !ok {
-			return fmt.Errorf("character %s not found for intrigue effect", targetCharacterID)
-		}
-		amount, ok := effect.Params["amount"].(float64)
-		if !ok {
-			return fmt.Errorf("invalid amount parameter for intrigue effect")
-		}
-		char.Intrigue += int(amount)
-		ge.publishGameEvent(model.EventIntrigueAdjusted, map[string]interface{}{"character_id": targetCharacterID, "amount": int(amount), "new_intrigue": char.Intrigue})
-		ge.logger.Info("Character intrigue adjusted", zap.String("characterID", targetCharacterID), zap.Int("amount", int(amount)), zap.Int("newIntrigue", char.Intrigue))
-	default:
-		return fmt.Errorf("unsupported effect type: %s", effect.Type)
-	}
-	return nil
-}
-
-// applyAbilityEffect 将能力效果应用于游戏状态。
-func (ge *GameEngine) applyAbilityEffect(effect model.AbilityEffect, targetCharacterID string) error {
-	return ge.applyCardEffect(effect, targetCharacterID, "") // 传递空位置（如果不适用）
+// applyEffect 将效果应用于游戏状态。
+func (ge *GameEngine) applyEffect(effect model.Effect, payload model.UseAbilityPayload) error {
+	// Pass the engine itself as the GameMutator.
+	return effect.Apply(ge, payload)
 }
 
 // checkTragedyConditions 检查给定悲剧的条件是否满足。
@@ -628,22 +627,16 @@ func (ge *GameEngine) handlePlayerAction(action model.PlayerAction) {
 }
 
 func (ge *GameEngine) handlePlayCardAction(player *model.Player, action model.PlayerAction) {
-	if ge.GameState.CurrentPhase != model.PhaseCardPlay {
-		return
-	}
-	payload, ok := action.Payload.(map[string]interface{})
-	if !ok {
-		return
-	}
-	cardID, ok := payload["card_id"].(string)
-	if !ok {
+	var payload model.PlayCardPayload
+	if err := mapstructure.Decode(action.Payload, &payload); err != nil {
+		ge.logger.Error("Failed to decode PlayCardPayload", zap.Error(err))
 		return
 	}
 
 	var playedCard model.Card
 	cardFound := false
 	for i, card := range player.Hand {
-		if card.ID == cardID {
+		if card.ID == payload.CardID {
 			playedCard = card
 			player.Hand = append(player.Hand[:i], player.Hand[i+1:]...)
 			cardFound = true
@@ -657,6 +650,10 @@ func (ge *GameEngine) handlePlayCardAction(player *model.Player, action model.Pl
 		return
 	}
 
+	// Add target info to the card instance before storing it
+	playedCard.TargetCharacterID = payload.TargetCharacterID
+	playedCard.TargetLocation = payload.TargetLocation
+
 	ge.GameState.PlayedCardsThisDay[player.ID] = append(ge.GameState.PlayedCardsThisDay[player.ID], playedCard)
 	ge.GameState.PlayedCardsThisLoop[player.ID] = append(ge.GameState.PlayedCardsThisLoop[player.ID], playedCard)
 	ge.playerReady[player.ID] = true
@@ -666,22 +663,18 @@ func (ge *GameEngine) handleUseAbilityAction(player *model.Player, action model.
 	if ge.GameState.CurrentPhase != model.PhaseAbilities {
 		return
 	}
-	payload, ok := action.Payload.(map[string]interface{})
-	if !ok {
+	var payload model.UseAbilityPayload
+	if err := mapstructure.Decode(action.Payload, &payload); err != nil {
+		ge.logger.Error("Failed to decode UseAbilityPayload", zap.Error(err))
 		return
 	}
-	abilityName, ok := payload["ability_name"].(string)
-	if !ok {
-		return
-	}
-	targetCharID, _ := payload["target_character_id"].(string)
 
 	var usedAbility model.Ability
 	abilityFound := false
 	for _, char := range ge.GameState.Characters {
 		if string(char.HiddenRole) == string(player.Role) || player.Role == model.PlayerRoleMastermind {
 			for i, ab := range char.Abilities {
-				if ab.Name == abilityName {
+				if ab.Name == payload.AbilityName {
 					usedAbility = ab
 					if ab.OncePerLoop {
 						char.Abilities[i].UsedThisLoop = true
@@ -699,7 +692,7 @@ func (ge *GameEngine) handleUseAbilityAction(player *model.Player, action model.
 		return
 	}
 
-	if err := ge.applyAbilityEffect(usedAbility.Effect, targetCharID); err != nil {
+	if err := ge.applyEffect(usedAbility.Effect, payload); err != nil {
 		ge.logger.Error("Error applying ability effect", zap.Error(err))
 	}
 	ge.playerReady[player.ID] = true
@@ -817,4 +810,3 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID string) {
 		}
 	}()
 }
-
