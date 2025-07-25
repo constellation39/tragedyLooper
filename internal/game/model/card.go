@@ -18,16 +18,16 @@ const (
 
 // Card 表示一张行动卡。
 type Card struct {
-	ID                string        `json:"id"`                            // 唯一标识符
-	Name              string        `json:"name"`                          // 卡牌名称
-	CardType          CardType      `json:"card_type"`                     // 卡牌类型
-	OwnerRole         PlayerRole    `json:"owner_role"`                    // 所属玩家角色（主谋或主角）
-	TargetType        string        `json:"target_type"`                   // 目标类型（"Character" 或 "Location"）
-	Effect            Effect `json:"effect"`                        // 卡牌效果
-	OncePerLoop       bool          `json:"once_per_loop"`                 // 每循环只能使用一次
-	UsedThisLoop      bool          `json:"-"`                             // 运行时状态
-	TargetCharacterID string        `json:"target_character_id,omitempty"` // 目标角色ID
-	TargetLocation    LocationType  `json:"target_location,omitempty"`     // 目标位置
+	ID                string       `json:"id"`                            // 唯一标识符
+	Name              string       `json:"name"`                          // 卡牌名称
+	CardType          CardType     `json:"card_type"`                     // 卡牌类型
+	OwnerRole         PlayerRole   `json:"owner_role"`                    // 所属玩家角色（主谋或主角）
+	TargetType        string       `json:"target_type"`                   // 目标类型（"Character" 或 "Location"）
+	Effect            Effect       `json:"effect"`                        // 卡牌效果
+	OncePerLoop       bool         `json:"once_per_loop"`                 // 每循环只能使用一次
+	UsedThisLoop      bool         `json:"-"`                             // 运行时状态
+	TargetCharacterID string       `json:"target_character_id,omitempty"` // 目标角色ID
+	TargetLocation    LocationType `json:"target_location,omitempty"`     // 目标位置
 }
 
 // UnmarshalJSON for Card to handle the polymorphic Effect interface.

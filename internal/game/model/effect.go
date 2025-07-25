@@ -105,7 +105,6 @@ func (e *AdjustIntrigueEffect) Execute(ctx EffectContext, self *Ability, payload
 	return []Event{event}, nil
 }
 
-
 // --- 自定义反序列化 ---
 
 type effectWrapper struct {

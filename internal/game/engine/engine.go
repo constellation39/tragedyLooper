@@ -148,7 +148,7 @@ func (ge *GameEngine) handleMorningPhase() {
 			if ability.TriggerType == model.AbilityTriggerDayStart && !ability.UsedThisLoop {
 				// 假设能力效果直接应用，没有目标。如果能力需要目标，则需要更复杂的逻辑。
 				payload := model.UseAbilityPayload{TargetCharacterID: char.ID}
-				if err := ge.applyEffect(ability.Effect, payload); err != nil {
+				if err := ge.applyEffect(ability.Effect, &ability, payload); err != nil {
 					ge.logger.Error("Error applying DayStart ability effect", zap.Error(err), zap.String("character", char.Name), zap.String("ability", ability.Name))
 				}
 				ge.GameState.Characters[char.ID].Abilities[i].UsedThisLoop = true // 标记为已使用
@@ -204,7 +204,7 @@ func (ge *GameEngine) handleCardResolvePhase() {
 				TargetCharacterID: card.TargetCharacterID,
 				TargetLocation:    card.TargetLocation,
 			}
-			if err := ge.applyEffect(card.Effect, payload); err != nil {
+			if err := ge.applyEffect(card.Effect, nil, payload); err != nil {
 				ge.logger.Error("Error applying card effect",
 					zap.Error(err),
 					zap.String("playerID", playerID),
@@ -673,6 +673,29 @@ func (ge *GameEngine) runGameLoop() {
 
 		case <-timer.C:
 			// Phase handling logic would be here
+			currentPhase := ge.GameState.CurrentPhase
+
+			switch currentPhase {
+			case model.PhaseMorning:
+				ge.handleMorningPhase()
+			case model.PhaseCardPlay:
+				ge.handleCardPlayPhase()
+			case model.PhaseCardReveal:
+				ge.handleCardRevealPhase()
+			case model.PhaseCardResolve:
+				ge.handleCardResolvePhase()
+			case model.PhaseAbilities:
+				ge.handleAbilitiesPhase()
+			case model.PhaseIncidents:
+				ge.handleIncidentsPhase()
+			case model.PhaseDayEnd:
+				ge.handleDayEndPhase()
+			case model.PhaseLoopEnd:
+				ge.handleLoopEndPhase()
+			case model.PhaseProtagonistGuess:
+				ge.handleProtagonistGuessPhase()
+			case model.PhaseGameOver:
+			}
 		}
 	}
 }
@@ -740,8 +763,7 @@ func (ge *GameEngine) handlePlayerAction(action model.PlayerAction) {
 
 	ge.logger.Info("Handling player action", zap.String("player", player.Name), zap.String("actionType", string(action.Type)))
 
-	switch action.Type {
-	case model.ActionUseAbility:
+	if action.Type == model.ActionUseAbility {
 		ge.handleUseAbilityAction(player, action)
 		// ... other actions
 	}
