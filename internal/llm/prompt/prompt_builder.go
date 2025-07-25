@@ -1,4 +1,4 @@
-package promptBuilder
+package promptbuilder
 
 import (
 	"encoding/json"

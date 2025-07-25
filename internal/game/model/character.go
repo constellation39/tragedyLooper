@@ -31,8 +31,8 @@ type Character struct {
 
 // CharacterConfig 定义特定剧本中角色的初始状态。
 type CharacterConfig struct {
-	CharacterID     string       `json:"character_id"`           // 引用基础角色定义
-	InitialLocation LocationType `json:"initial_location"`       // 初始位置
-	HiddenRole      RoleType     `json:"hidden_role"`            // 此剧本中角色的秘密身份
+	CharacterID     string       `json:"character_id"`             // 引用基础角色定义
+	InitialLocation LocationType `json:"initial_location"`         // 初始位置
+	HiddenRole      RoleType     `json:"hidden_role"`              // 此剧本中角色的秘密身份
 	IsCulpritFor    TragedyType  `json:"is_culprit_for,omitempty"` // 如果此角色是特定悲剧的嫌疑犯
 }

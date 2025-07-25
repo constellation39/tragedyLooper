@@ -1,7 +1,6 @@
 package server
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -28,17 +27,17 @@ type Server struct {
 	// 可用游戏剧本的映射
 	scripts map[string]model.Script
 	// LLM 客户端用于 AI 玩家
-	llmClient llm.LLMClient
+	llmClient llm.Client
 	logger    *zap.Logger
 }
 
 // NewServer 创建一个新的游戏服务器实例。
-func NewServer(scripts map[string]model.Script, llmClient llm.LLMClient, logger *zap.Logger) *Server {
+func NewServer(scripts map[string]model.Script, llmClient llm.Client, logger *zap.Logger) *Server {
 	return &Server{
 		upgrader: websocket.Upgrader{
 			ReadBufferSize:  1024,
 			WriteBufferSize: 1024,
-			CheckOrigin: func(r *http.Request) bool {
+			CheckOrigin: func(_ *http.Request) bool {
 				return true // 允许所有来源进行开发，在生产环境中限制
 			},
 		},
@@ -59,7 +58,7 @@ func (s *Server) Shutdown() {
 		room.Stop() // 发送信号给每个房间停止其游戏循环
 	}
 	time.Sleep(2 * time.Second) // 给予房间一些时间关闭
-	
+
 }
 
 // LoggingMiddleware creates a new logger with a request_id and adds it to the context.
@@ -86,7 +85,9 @@ func (s *Server) HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 	playerID := r.URL.Query().Get("player_id")
 	if playerID == "" {
 		ctxLogger.Warn("WebSocket connection: Missing player_id query parameter.")
-		conn.WriteMessage(websocket.TextMessage, []byte("Error: player_id required."))
+		if err := conn.WriteMessage(websocket.TextMessage, []byte("Error: player_id required.")); err != nil {
+			ctxLogger.Error("Error writing message", zap.Error(err))
+		}
 		return
 	}
 
@@ -158,7 +159,9 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 
 	ctxLogger.Info("Room created", zap.String("gameID", gameID), zap.String("playerID", req.PlayerID), zap.String("scriptID", req.ScriptID))
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(map[string]string{"game_id": gameID})
+	if err := json.NewEncoder(w).Encode(map[string]string{"game_id": gameID}); err != nil {
+		ctxLogger.Error("Error encoding response", zap.Error(err))
+	}
 }
 
 // HandleJoinRoom 处理加入现有游戏房间的请求。
@@ -201,11 +204,13 @@ func (s *Server) HandleJoinRoom(w http.ResponseWriter, r *http.Request) {
 
 	ctxLogger.Info("Player joined room", zap.String("playerID", req.PlayerID), zap.String("gameID", req.GameID), zap.String("role", string(req.PlayerRole)))
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"message": "Joined room successfully"})
+	if err := json.NewEncoder(w).Encode(map[string]string{"message": "Joined room successfully"}); err != nil {
+		ctxLogger.Error("Error encoding response", zap.Error(err))
+	}
 }
 
 // HandleListRooms 处理列出可用游戏房间的请求。
-func (s *Server) HandleListRooms(w http.ResponseWriter, r *http.Request) {
+func (s *Server) HandleListRooms(w http.ResponseWriter, _ *http.Request) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
@@ -223,7 +228,9 @@ func (s *Server) HandleListRooms(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(roomList)
+	if err := json.NewEncoder(w).Encode(roomList); err != nil {
+		s.logger.Error("Error encoding room list", zap.Error(err))
+	}
 }
 
 // Client 表示单个 WebSocket 连接。
@@ -236,12 +243,10 @@ type Client struct {
 }
 
 // readPump 从 WebSocket 连接中抽取消息到房间。
-func (c *Client) readPump(s *Server) {
+func (c *Client) readPump(_ *Server) {
 	defer func() {
 		c.logger.Info("Player disconnected.")
-		if c.room != nil {
-			// Optional: Notify room of disconnection
-		}
+
 		c.conn.Close()
 	}()
 
@@ -274,17 +279,10 @@ func (c *Client) writePump() {
 	defer func() {
 		c.conn.Close()
 	}()
-	for {
-		select {
-		case message, ok := <-c.send:
-			if !ok {
-				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
-				return
-			}
-			if err := c.conn.WriteMessage(websocket.TextMessage, message); err != nil {
-				c.logger.Error("WebSocket write error", zap.Error(err))
-				return
-			}
+	for message := range c.send {
+		if err := c.conn.WriteMessage(websocket.TextMessage, message); err != nil {
+			c.logger.Error("WebSocket write error", zap.Error(err))
+			return
 		}
 	}
 }

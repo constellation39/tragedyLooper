@@ -38,7 +38,7 @@ func New() *zap.Logger {
 	} else {
 		config = zap.NewDevelopmentConfig()
 		config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder // Human-readable, colored level
-		config.EncoderConfig.EncodeCaller = relativeCallerEncoder      // Use custom relative path encoder
+		config.EncoderConfig.EncodeCaller = relativeCallerEncoder           // Use custom relative path encoder
 		core = zapcore.NewCore(zapcore.NewConsoleEncoder(config.EncoderConfig), zapcore.AddSync(os.Stdout), config.Level)
 	}
 

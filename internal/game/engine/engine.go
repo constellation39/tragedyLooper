@@ -5,10 +5,10 @@ import (
 	"log"
 	"sync"
 	"time"
+	promptbuilder "tragedylooper/internal/llm/prompt"
 
 	"tragedylooper/internal/game/model"
 	"tragedylooper/internal/llm"
-	"tragedylooper/internal/llm/prompt"
 )
 
 // GameEngine 管理单个游戏实例的状态和逻辑。
@@ -20,7 +20,7 @@ type GameEngine struct {
 	// 用于发出游戏结束或循环结束信号的通道
 	gameControlChan chan struct{}
 	// LLM 客户端用于 AI 玩家
-	llmClient llm.LLMClient
+	llmClient llm.Client
 	// 保护 GameState 访问的互斥锁（尽管事件循环最小化了直接争用）
 	mu sync.Mutex
 	// 跟踪玩家准备进入下一阶段的映射
@@ -32,7 +32,7 @@ type GameEngine struct {
 }
 
 // NewGameEngine 创建一个新的游戏引擎实例。
-func NewGameEngine(gameID string, script model.Script, players map[string]*model.Player, llmClient llm.LLMClient) *GameEngine {
+func NewGameEngine(gameID string, script model.Script, players map[string]*model.Player, llmClient llm.Client) *GameEngine {
 	// 根据剧本配置初始化角色
 	characters := make(map[string]*model.Character)
 	for _, charConfig := range script.Characters {
@@ -229,8 +229,10 @@ func (ge *GameEngine) handleMorningPhase() {
 	for _, char := range ge.GameState.Characters {
 		for _, ability := range char.Abilities {
 			if ability.TriggerType == model.AbilityTriggerDayStart && !ability.UsedThisLoop {
-				ge.applyAbilityEffect(ability.Effect, char.ID) // 应用效果
-				ability.UsedThisLoop = true                    // 如果是每循环一次，则标记为已使用
+				if err := ge.applyAbilityEffect(ability.Effect, char.ID); err != nil { // 应用效果
+					log.Printf("Error applying ability effect: %v", err)
+				}
+				ability.UsedThisLoop = true // 如果是每循环一次，则标记为已使用
 				ge.publishGameEvent(model.EventAbilityUsed, map[string]string{"character_id": char.ID, "ability_name": ability.Name})
 			}
 		}
@@ -261,9 +263,6 @@ func (ge *GameEngine) handleCardPlayPhase() {
 	if allPlayersReady {
 		log.Printf("Game %s: All players ready for Card Reveal.", ge.GameState.GameID)
 		ge.GameState.CurrentPhase = model.PhaseCardReveal
-	} else {
-		// 仍在等待玩家。保持阶段为 CardPlay。
-		// 考虑在此处添加超时机制。
 	}
 }
 
@@ -284,7 +283,9 @@ func (ge *GameEngine) handleCardResolvePhase() {
 	for _, playerPlayedCards := range ge.GameState.PlayedCardsThisDay {
 		for _, card := range playerPlayedCards {
 			if card.CardType == model.CardTypeMovement {
-				ge.applyCardEffect(card.Effect, card.TargetCharacterID, card.TargetLocation)
+				if err := ge.applyCardEffect(card.Effect, card.TargetCharacterID, card.TargetLocation); err != nil {
+					log.Printf("Error applying card effect: %v", err)
+				}
 				if card.OncePerLoop {
 					ge.markCardUsed(card.ID)
 				}
@@ -295,7 +296,9 @@ func (ge *GameEngine) handleCardResolvePhase() {
 	for _, playerPlayedCards := range ge.GameState.PlayedCardsThisDay {
 		for _, card := range playerPlayedCards {
 			if card.CardType != model.CardTypeMovement {
-				ge.applyCardEffect(card.Effect, card.TargetCharacterID, card.TargetLocation)
+				if err := ge.applyCardEffect(card.Effect, card.TargetCharacterID, card.TargetLocation); err != nil {
+					log.Printf("Error applying card effect: %v", err)
+				}
 				if card.OncePerLoop {
 					ge.markCardUsed(card.ID)
 				}
@@ -325,13 +328,7 @@ func (ge *GameEngine) handleAbilitiesPhase() {
 	// 这是一个复杂的阶段：领导者选择，主谋批准/拒绝（如果适用）
 	// 为简单起见，我们假设一个基本流程。
 	// 在实际游戏中，这将涉及更多的玩家动作和状态。
-	for _, playerID := range ge.protagonistPlayerIDs {
-		player := ge.GameState.Players[playerID]
-		if player.IsLLM {
-			// 触发 LLM 主角提出善意能力
-			// 这将是 LLM 当天决策的一部分。
-		}
-	}
+
 	ge.resetPlayerReadiness()
 	ge.GameState.CurrentPhase = model.PhaseIncidents
 }
@@ -388,10 +385,9 @@ func (ge *GameEngine) handleLoopEndPhase() {
 		if mastermindWins {
 			ge.endGame(model.PlayerRoleMastermind)
 			return
-		} else {
-			ge.endGame(model.PlayerRoleProtagonist)
-			return
 		}
+		ge.endGame(model.PlayerRoleProtagonist)
+		return
 	}
 
 	for _, tragedy := range ge.GameState.Script.Tragedies {
@@ -497,7 +493,7 @@ func (ge *GameEngine) checkTragedyConditions(tragedy model.TragedyCondition) boo
 		} // 检查位置
 		if char.Paranoia < cond.MinParanoia {
 			return false
-		}                 // 检查偏执
+		} // 检查偏执
 		if cond.IsAlone { // 检查是否独自在地点
 			countAtLocation := 0
 			for _, otherChar := range ge.GameState.Characters {
@@ -679,7 +675,9 @@ func (ge *GameEngine) handlePlayerAction(action model.PlayerAction) {
 			return
 		}
 
-		ge.applyAbilityEffect(usedAbility.Effect, targetCharID)
+		if err := ge.applyAbilityEffect(usedAbility.Effect, targetCharID); err != nil {
+			log.Printf("Error applying ability effect: %v", err)
+		}
 		ge.playerReady[player.ID] = true
 
 	case model.ActionReadyForNextPhase:
@@ -736,7 +734,7 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID string) {
 
 	log.Printf("Game %s: Triggering LLM for player %s (%s)", ge.GameState.GameID, player.Name, player.Role)
 	playerView := ge.GetPlayerView(playerID)
-	pBuilder := promptBuilder.NewPromptBuilder()
+	pBuilder := promptbuilder.NewPromptBuilder()
 	prompt := ""
 	if player.Role == model.PlayerRoleMastermind {
 		prompt = pBuilder.BuildMastermindPrompt(playerView, ge.GameState.Script, ge.GameState.Characters)

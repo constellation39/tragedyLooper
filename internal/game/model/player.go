@@ -21,13 +21,13 @@ const (
 
 // Player 表示一个连接的玩家（人类或 LLM）。
 type Player struct {
-	ID                 string                 `json:"id"`                          // 唯一标识符
-	Name               string                 `json:"name"`                        // 玩家名称
-	Role               PlayerRole             `json:"role"`                        // 玩家角色（主谋或主角）
-	IsLLM              bool                   `json:"is_llm"`                      // 是否为LLM玩家
-	Hand               []Card                 `json:"hand"`                        // 玩家手牌
-	DeductionKnowledge map[string]interface{} `json:"deduction_knowledge"`        // 主角的推理知识
-	LLMSessionID       string                 `json:"llm_session_id,omitempty"`    // LLM玩家的会话ID
+	ID                 string                 `json:"id"`                       // 唯一标识符
+	Name               string                 `json:"name"`                     // 玩家名称
+	Role               PlayerRole             `json:"role"`                     // 玩家角色（主谋或主角）
+	IsLLM              bool                   `json:"is_llm"`                   // 是否为LLM玩家
+	Hand               []Card                 `json:"hand"`                     // 玩家手牌
+	DeductionKnowledge map[string]interface{} `json:"deduction_knowledge"`      // 主角的推理知识
+	LLMSessionID       string                 `json:"llm_session_id,omitempty"` // LLM玩家的会话ID
 }
 
 // PlayerView 表示特定玩家的游戏状态过滤视图。

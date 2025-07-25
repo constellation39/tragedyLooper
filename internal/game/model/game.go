@@ -39,20 +39,20 @@ const (
 // GameState 表示游戏实例的权威当前状态。
 // 这包含所有信息，包括主谋的隐藏信息。
 type GameState struct {
-	GameID              string                `json:"game_id"`                  // 游戏唯一标识符
-	Script              Script                `json:"script"`                   // 当前使用的剧本
+	GameID              string                `json:"game_id"`                // 游戏唯一标识符
+	Script              Script                `json:"script"`                 // 当前使用的剧本
 	Characters          map[string]*Character `json:"characters"`             // 游戏中所有角色的映射
 	Players             map[string]*Player    `json:"players"`                // 游戏中所有玩家的映射
-	CurrentDay          int                   `json:"current_day"`              // 当前天数
-	CurrentLoop         int                   `json:"current_loop"`             // 当前循环次数
-	CurrentPhase        GamePhase             `json:"current_phase"`            // 当前游戏阶段
+	CurrentDay          int                   `json:"current_day"`            // 当前天数
+	CurrentLoop         int                   `json:"current_loop"`           // 当前循环次数
+	CurrentPhase        GamePhase             `json:"current_phase"`          // 当前游戏阶段
 	ActiveTragedies     map[TragedyType]bool  `json:"active_tragedies"`       // 此剧本中活跃的悲剧
 	PreventedTragedies  map[TragedyType]bool  `json:"prevented_tragedies"`    // 此循环中已被阻止的悲剧
 	PlayedCardsThisDay  map[string][]Card     `json:"played_cards_this_day"`  // 当天玩家打出的牌
 	PlayedCardsThisLoop map[string][]Card     `json:"played_cards_this_loop"` // 本循环玩家打出的牌
-	LastUpdateTime      time.Time             `json:"last_update_time"`        // 最后更新时间
-	DayEvents           []GameEvent           `json:"day_events"`              // 当天发生的事件
-	LoopEvents          []GameEvent           `json:"loop_events"`             // 本循环发生的事件
+	LastUpdateTime      time.Time             `json:"last_update_time"`       // 最后更新时间
+	DayEvents           []GameEvent           `json:"day_events"`             // 当天发生的事件
+	LoopEvents          []GameEvent           `json:"loop_events"`            // 本循环发生的事件
 }
 
 // GameEvent 表示游戏中发生的事件。

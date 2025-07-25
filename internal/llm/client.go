@@ -10,7 +10,7 @@ import (
 )
 
 // LLMClient 定义与 LLM 交互的接口。
-type LLMClient interface {
+type Client interface {
 	GenerateResponse(prompt string, sessionID string) (string, error)
 }
 

@@ -6,16 +6,20 @@ import (
 	"os/signal"
 	"syscall"
 
-	"go.uber.org/zap"
 	"tragedylooper/internal/game/model"
 	"tragedylooper/internal/llm"
 	"tragedylooper/internal/logger"
 	"tragedylooper/internal/server"
+
+	"go.uber.org/zap"
 )
 
 func main() {
 	logger := logger.New()
-	defer logger.Sync() // Flushes buffer, important for production
+	_ = logger.Sync() // Flushes buffer, important for production
+	defer func() {
+		_ = logger.Sync() // Flushes buffer, important for production
+	}()
 
 	// 1. 加载游戏剧本和资源
 	// 在实际应用中，这些将从文件或数据库加载。
