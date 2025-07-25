@@ -4,8 +4,8 @@ package model
 type LocationType string
 
 const (
-	LocationHospital LocationType = "Hospital"
-	LocationShrine   LocationType = "Shrine"
-	LocationCity     LocationType = "City"
-	LocationSchool   LocationType = "School"
+	LocationHospital LocationType = "Hospital" // 医院
+	LocationShrine   LocationType = "Shrine"   // 神社
+	LocationCity     LocationType = "City"     // 城市
+	LocationSchool   LocationType = "School"   // 学校
 )

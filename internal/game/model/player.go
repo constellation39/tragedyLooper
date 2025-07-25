@@ -4,19 +4,19 @@ package model
 type PlayerActionType string
 
 const (
-	ActionPlayCard          PlayerActionType = "PlayCard"
-	ActionUseAbility        PlayerActionType = "UseAbility"
-	ActionMakeGuess         PlayerActionType = "MakeGuess" // 主角最终猜测
-	ActionEndTurn           PlayerActionType = "EndTurn"
-	ActionReadyForNextPhase PlayerActionType = "ReadyForNextPhase"
+	ActionPlayCard          PlayerActionType = "PlayCard"          // 出牌
+	ActionUseAbility        PlayerActionType = "UseAbility"        // 使用能力
+	ActionMakeGuess         PlayerActionType = "MakeGuess"         // 主角最终猜测
+	ActionEndTurn           PlayerActionType = "EndTurn"           // 结束回合
+	ActionReadyForNextPhase PlayerActionType = "ReadyForNextPhase" // 准备好进入下一阶段
 )
 
 // PlayerRole 定义连接玩家的角色（人类或 LLM）。
 type PlayerRole string
 
 const (
-	PlayerRoleMastermind  PlayerRole = "Mastermind"
-	PlayerRoleProtagonist PlayerRole = "Protagonist"
+	PlayerRoleMastermind  PlayerRole = "Mastermind"  // 主谋
+	PlayerRoleProtagonist PlayerRole = "Protagonist" // 主角
 )
 
 // Player 表示一个连接的玩家（人类或 LLM）。

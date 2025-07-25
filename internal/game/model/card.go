@@ -4,11 +4,11 @@ package model
 type CardType string
 
 const (
-	CardTypeMovement CardType = "Movement"
-	CardTypeParanoia CardType = "Paranoia"
-	CardTypeGoodwill CardType = "Goodwill"
-	CardTypeIntrigue CardType = "Intrigue"
-	CardTypeSpecial  CardType = "Special" // 用于特殊卡牌效果
+	CardTypeMovement CardType = "Movement" // 移动
+	CardTypeParanoia CardType = "Paranoia" // 妄想
+	CardTypeGoodwill CardType = "Goodwill" // 好感
+	CardTypeIntrigue CardType = "Intrigue" // 阴谋
+	CardTypeSpecial  CardType = "Special"  // 用于特殊卡牌效果
 )
 
 // Card 表示一张行动卡。

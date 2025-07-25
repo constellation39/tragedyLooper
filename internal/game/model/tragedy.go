@@ -4,17 +4,17 @@ package model
 type TragedyType string
 
 const (
-	TragedyMurder  TragedyType = "Murder"
-	TragedySuicide TragedyType = "Suicide"
-	TragedySealed  TragedyType = "Sealed" // 例如：封印物品剧情
+	TragedyMurder  TragedyType = "Murder"  // 谋杀
+	TragedySuicide TragedyType = "Suicide" // 自杀
+	TragedySealed  TragedyType = "Sealed"  // 例如：封印物品剧情
 )
 
 // TargetRuleType 定义悲剧如何选择目标角色。
 type TargetRuleType string
 
 const (
-	TargetRuleSpecificCharacter      TargetRuleType = "SpecificCharacter"
-	TargetRuleAnyCharacterAtLocation TargetRuleType = "AnyCharacterAtLocation"
+	TargetRuleSpecificCharacter      TargetRuleType = "SpecificCharacter"      // 特定角色
+	TargetRuleAnyCharacterAtLocation TargetRuleType = "AnyCharacterAtLocation" // 在某个地点的任何角色
 )
 
 // TragedyCondition 定义悲剧发生的条件。

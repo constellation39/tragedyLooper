@@ -6,15 +6,15 @@ import "time"
 type GamePhase string
 
 const (
-	PhaseMorning          GamePhase = "Morning"
-	PhaseCardPlay         GamePhase = "CardPlay"
-	PhaseCardReveal       GamePhase = "CardReveal"
-	PhaseCardResolve      GamePhase = "CardResolve"
-	PhaseAbilities        GamePhase = "Abilities"
-	PhaseIncidents        GamePhase = "Incidents"
-	PhaseDayEnd           GamePhase = "DayEnd"
-	PhaseLoopEnd          GamePhase = "LoopEnd"
-	PhaseGameOver         GamePhase = "GameOver"
+	PhaseMorning          GamePhase = "Morning"          // 早晨
+	PhaseCardPlay         GamePhase = "CardPlay"         // 出牌阶段
+	PhaseCardReveal       GamePhase = "CardReveal"       // 牌揭示阶段
+	PhaseCardResolve      GamePhase = "CardResolve"      // 牌结算阶段
+	PhaseAbilities        GamePhase = "Abilities"        // 能力阶段
+	PhaseIncidents        GamePhase = "Incidents"        // 事件阶段
+	PhaseDayEnd           GamePhase = "DayEnd"           // 天结束
+	PhaseLoopEnd          GamePhase = "LoopEnd"          // 循环结束
+	PhaseGameOver         GamePhase = "GameOver"         // 游戏结束
 	PhaseProtagonistGuess GamePhase = "ProtagonistGuess" // 最终猜测阶段
 )
 
@@ -22,18 +22,18 @@ const (
 type EventType string
 
 const (
-	EventCardPlayed       EventType = "CardPlayed"
-	EventCharacterMoved   EventType = "CharacterMoved"
-	EventParanoiaAdjusted EventType = "ParanoiaAdjusted"
-	EventGoodwillAdjusted EventType = "GoodwillAdjusted"
-	EventIntrigueAdjusted EventType = "IntrigueAdjusted"
-	EventAbilityUsed      EventType = "AbilityUsed"
-	EventTragedyTriggered EventType = "TragedyTriggered"
-	EventTragedyPrevented EventType = "TragedyPrevented"
-	EventDayAdvanced      EventType = "DayAdvanced"
-	EventLoopReset        EventType = "LoopReset"
-	EventGameOver         EventType = "GameOver"
-	EventPlayerGuess      EventType = "PlayerGuess"
+	EventCardPlayed       EventType = "CardPlayed"       // 打出卡牌
+	EventCharacterMoved   EventType = "CharacterMoved"   // 角色移动
+	EventParanoiaAdjusted EventType = "ParanoiaAdjusted" // 妄想调整
+	EventGoodwillAdjusted EventType = "GoodwillAdjusted" // 好感调整
+	EventIntrigueAdjusted EventType = "IntrigueAdjusted" // 阴谋调整
+	EventAbilityUsed      EventType = "AbilityUsed"      // 使用能力
+	EventTragedyTriggered EventType = "TragedyTriggered" // 悲剧触发
+	EventTragedyPrevented EventType = "TragedyPrevented" // 悲剧阻止
+	EventDayAdvanced      EventType = "DayAdvanced"      // 天数推进
+	EventLoopReset        EventType = "LoopReset"        // 循环重置
+	EventGameOver         EventType = "GameOver"         // 游戏结束
+	EventPlayerGuess      EventType = "PlayerGuess"      // 玩家猜测
 )
 
 // GameState 表示游戏实例的权威当前状态。

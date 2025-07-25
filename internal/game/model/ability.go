@@ -5,25 +5,25 @@ package model
 type EffectType string
 
 const (
-	EffectTypeMoveCharacter        EffectType = "MoveCharacter"
-	EffectTypeAdjustParanoia       EffectType = "AdjustParanoia"
-	EffectTypeAdjustGoodwill       EffectType = "AdjustGoodwill"
-	EffectTypeAdjustIntrigue       EffectType = "AdjustIntrigue"
-	EffectTypeRevealRole           EffectType = "RevealRole" // 用于特定能力
-	EffectTypePreventTragedy       EffectType = "PreventTragedy"
-	EffectTypeGrantAbility         EffectType = "GrantAbility"
-	EffectTypeCheckLocationAlone   EffectType = "CheckLocationAlone"   // 用于悲剧条件
-	EffectTypeCheckCharacterStatus EffectType = "CheckCharacterStatus" // 用于悲剧条件
+	EffectTypeMoveCharacter        EffectType = "MoveCharacter"        // 移动角色
+	EffectTypeAdjustParanoia       EffectType = "AdjustParanoia"       // 调整妄想
+	EffectTypeAdjustGoodwill       EffectType = "AdjustGoodwill"       // 调整好感
+	EffectTypeAdjustIntrigue       EffectType = "AdjustIntrigue"       // 调整阴谋
+	EffectTypeRevealRole           EffectType = "RevealRole"           // 用于特定能力，揭示角色
+	EffectTypePreventTragedy       EffectType = "PreventTragedy"       // 阻止悲剧
+	EffectTypeGrantAbility         EffectType = "GrantAbility"         // 授予能力
+	EffectTypeCheckLocationAlone   EffectType = "CheckLocationAlone"   // 用于悲剧条件，检查地点是否有人独处
+	EffectTypeCheckCharacterStatus EffectType = "CheckCharacterStatus" // 用于悲剧条件，检查角色状态
 )
 
 // AbilityTriggerType 定义能力何时可以被触发。
 type AbilityTriggerType string
 
 const (
-	AbilityTriggerDayStart        AbilityTriggerType = "DayStart"
-	AbilityTriggerMastermindPhase AbilityTriggerType = "MastermindPhase"
-	AbilityTriggerGoodwillPhase   AbilityTriggerType = "GoodwillPhase"
-	AbilityTriggerPassive         AbilityTriggerType = "Passive"
+	AbilityTriggerDayStart        AbilityTriggerType = "DayStart"        // 天开始时
+	AbilityTriggerMastermindPhase AbilityTriggerType = "MastermindPhase" // 主谋阶段
+	AbilityTriggerGoodwillPhase   AbilityTriggerType = "GoodwillPhase"   // 好感阶段
+	AbilityTriggerPassive         AbilityTriggerType = "Passive"         // 被动
 )
 
 // AbilityEffect 定义能力或卡牌的具体效果。

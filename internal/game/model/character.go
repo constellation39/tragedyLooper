@@ -4,15 +4,15 @@ package model
 type RoleType string
 
 const (
-	RoleInnocent           RoleType = "Innocent"
-	RoleKiller             RoleType = "Killer"
-	RoleBrain              RoleType = "Brain"
-	RoleKeyPerson          RoleType = "KeyPerson"
-	RoleFriend             RoleType = "Friend"
-	RoleConspiracyTheorist RoleType = "ConspiracyTheorist"
-	RoleCultist            RoleType = "Cultist"     // 例如：具有善意拒绝的角色
-	RoleMastermind         RoleType = "Mastermind"  // LLM 玩家角色
-	RoleProtagonist        RoleType = "Protagonist" // LLM 玩家角色
+	RoleInnocent           RoleType = "Innocent"           // 无辜者
+	RoleKiller             RoleType = "Killer"             // 杀手
+	RoleBrain              RoleType = "Brain"              // 大脑
+	RoleKeyPerson          RoleType = "KeyPerson"          // 关键人物
+	RoleFriend             RoleType = "Friend"             // 朋友
+	RoleConspiracyTheorist RoleType = "ConspiracyTheorist" // 阴谋论者
+	RoleCultist            RoleType = "Cultist"            // 例如：具有善意拒绝的角色
+	RoleMastermind         RoleType = "Mastermind"         // LLM 玩家角色
+	RoleProtagonist        RoleType = "Protagonist"        // LLM 玩家角色
 )
 
 // Character 表示游戏中的一个角色。
