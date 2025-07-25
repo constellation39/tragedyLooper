@@ -2,10 +2,11 @@ package engine
 
 import (
 	"fmt"
-	"log"
 	"sync"
 	"time"
 	promptbuilder "tragedylooper/internal/llm/prompt"
+
+	"go.uber.org/zap"
 
 	"tragedylooper/internal/game/model"
 	"tragedylooper/internal/llm"
@@ -29,10 +30,11 @@ type GameEngine struct {
 	mastermindPlayerID string
 	// 主角玩家 ID 列表
 	protagonistPlayerIDs []string
+	logger               *zap.Logger
 }
 
 // NewGameEngine 创建一个新的游戏引擎实例。
-func NewGameEngine(gameID string, script model.Script, players map[string]*model.Player, llmClient llm.Client) *GameEngine {
+func NewGameEngine(gameID string, logger *zap.Logger, script model.Script, players map[string]*model.Player, llmClient llm.Client) *GameEngine {
 	// 根据剧本配置初始化角色
 	characters := make(map[string]*model.Character)
 	for _, charConfig := range script.Characters {
@@ -80,6 +82,7 @@ func NewGameEngine(gameID string, script model.Script, players map[string]*model
 		gameControlChan:  make(chan struct{}),
 		llmClient:        llmClient,
 		playerReady:      make(map[string]bool),
+		logger:           logger.With(zap.String("gameID", gameID)),
 	}
 
 	// 识别主谋和主角
@@ -110,7 +113,7 @@ func (ge *GameEngine) SubmitPlayerAction(action model.PlayerAction) {
 	case ge.playerActionChan <- action:
 		// 动作提交成功
 	default:
-		log.Printf("Game %s: Player action channel full, dropping action from %s", ge.GameState.GameID, action.PlayerID)
+		ge.logger.Warn("Player action channel full, dropping action", zap.String("playerID", action.PlayerID))
 	}
 }
 
@@ -171,8 +174,8 @@ func (ge *GameEngine) GetPlayerView(playerID string) model.PlayerView {
 
 // runGameLoop 是单个游戏实例的主事件循环。
 func (ge *GameEngine) runGameLoop() {
-	log.Printf("Game %s: Game loop started.", ge.GameState.GameID)
-	defer log.Printf("Game %s: Game loop stopped.", ge.GameState.GameID)
+	ge.logger.Info("Game loop started.")
+	defer ge.logger.Info("Game loop stopped.")
 
 	for {
 		select {
@@ -219,7 +222,7 @@ func (ge *GameEngine) runGameLoop() {
 func (ge *GameEngine) handleMorningPhase() {
 	ge.mu.Lock()
 	defer ge.mu.Unlock()
-	log.Printf("Game %s, Loop %d, Day %d: Morning Phase", ge.GameState.GameID, ge.GameState.CurrentLoop, ge.GameState.CurrentDay)
+	ge.logger.Info("Morning Phase", zap.Int("loop", ge.GameState.CurrentLoop), zap.Int("day", ge.GameState.CurrentDay))
 	// 重置玩家准备状态
 	for playerID := range ge.playerReady {
 		ge.playerReady[playerID] = false
@@ -227,12 +230,13 @@ func (ge *GameEngine) handleMorningPhase() {
 	ge.GameState.PlayedCardsThisDay = make(map[string][]model.Card) // 清空当天打出的牌
 	// 触发 DayStart 能力
 	for _, char := range ge.GameState.Characters {
-		for _, ability := range char.Abilities {
+		for i, ability := range char.Abilities {
 			if ability.TriggerType == model.AbilityTriggerDayStart && !ability.UsedThisLoop {
-				if err := ge.applyAbilityEffect(ability.Effect, char.ID); err != nil { // 应用效果
-					log.Printf("Error applying ability effect: %v", err)
+				// 假设能力效果直接应用，没有目标。如果能力需要目标，则需要更复杂的逻辑。
+				if err := ge.applyAbilityEffect(ability.Effect, char.ID); err != nil {
+					ge.logger.Error("Error applying DayStart ability effect", zap.Error(err), zap.String("character", char.Name), zap.String("ability", ability.Name))
 				}
-				ability.UsedThisLoop = true // 如果是每循环一次，则标记为已使用
+				ge.GameState.Characters[char.ID].Abilities[i].UsedThisLoop = true // 标记为已使用
 				ge.publishGameEvent(model.EventAbilityUsed, map[string]string{"character_id": char.ID, "ability_name": ability.Name})
 			}
 		}
@@ -261,7 +265,7 @@ func (ge *GameEngine) handleCardPlayPhase() {
 		}
 	}
 	if allPlayersReady {
-		log.Printf("Game %s: All players ready for Card Reveal.", ge.GameState.GameID)
+		ge.logger.Info("All players ready for Card Reveal.")
 		ge.GameState.CurrentPhase = model.PhaseCardReveal
 	}
 }
@@ -269,7 +273,7 @@ func (ge *GameEngine) handleCardPlayPhase() {
 func (ge *GameEngine) handleCardRevealPhase() {
 	ge.mu.Lock()
 	defer ge.mu.Unlock()
-	log.Printf("Game %s: Card Reveal Phase", ge.GameState.GameID)
+	ge.logger.Info("Card Reveal Phase")
 	// 广播当天所有打出的牌
 	ge.publishGameEvent(model.EventCardPlayed, ge.GameState.PlayedCardsThisDay)
 	ge.GameState.CurrentPhase = model.PhaseCardResolve
@@ -278,30 +282,24 @@ func (ge *GameEngine) handleCardRevealPhase() {
 func (ge *GameEngine) handleCardResolvePhase() {
 	ge.mu.Lock()
 	defer ge.mu.Unlock()
-	log.Printf("Game %s: Card Resolve Phase", ge.GameState.GameID)
-	// 1. 首先解析移动卡
-	for _, playerPlayedCards := range ge.GameState.PlayedCardsThisDay {
-		for _, card := range playerPlayedCards {
-			if card.CardType == model.CardTypeMovement {
-				if err := ge.applyCardEffect(card.Effect, card.TargetCharacterID, card.TargetLocation); err != nil {
-					log.Printf("Error applying card effect: %v", err)
-				}
-				if card.OncePerLoop {
-					ge.markCardUsed(card.ID)
-				}
-			}
-		}
-	}
-	// 2. 解析其他卡牌类型（偏执、善意、阴谋、特殊）
-	for _, playerPlayedCards := range ge.GameState.PlayedCardsThisDay {
-		for _, card := range playerPlayedCards {
-			if card.CardType != model.CardTypeMovement {
-				if err := ge.applyCardEffect(card.Effect, card.TargetCharacterID, card.TargetLocation); err != nil {
-					log.Printf("Error applying card effect: %v", err)
-				}
-				if card.OncePerLoop {
-					ge.markCardUsed(card.ID)
-				}
+	ge.logger.Info("Card Resolve Phase")
+	// 按顺序解析所有打出的牌
+	for playerID, cards := range ge.GameState.PlayedCardsThisDay {
+		for _, card := range cards {
+			// 从卡牌动作的载荷中获取目标信息
+			// 注意：这假设卡牌在被打出时其目标信息被存储或可访问。
+			// 在当前结构中，我们可能需要调整 PlayerAction 来包含这些信息，
+			// 或者在 PlayedCardsThisDay 中存储更丰富的对象。
+			// 为简单起见，我们假设目标信息在卡牌效果中可用或可以推断。
+			targetCharID := card.TargetCharacterID // 假设卡牌结构中有这个字段
+			targetLocation := card.TargetLocation  // 假设卡牌结构中有这个字段
+
+			if err := ge.applyCardEffect(card.Effect, targetCharID, targetLocation); err != nil {
+				ge.logger.Error("Error applying card effect",
+					zap.Error(err),
+					zap.String("playerID", playerID),
+					zap.String("cardName", card.Name),
+				)
 			}
 		}
 	}
@@ -311,7 +309,7 @@ func (ge *GameEngine) handleCardResolvePhase() {
 func (ge *GameEngine) handleAbilitiesPhase() {
 	ge.mu.Lock()
 	defer ge.mu.Unlock()
-	log.Printf("Game %s: Abilities Phase", ge.GameState.GameID)
+	ge.logger.Info("Abilities Phase")
 	// 主谋能力（如果有）
 	mastermindPlayer := ge.GameState.Players[ge.mastermindPlayerID]
 	if mastermindPlayer.IsLLM {
@@ -336,13 +334,13 @@ func (ge *GameEngine) handleAbilitiesPhase() {
 func (ge *GameEngine) handleIncidentsPhase() {
 	ge.mu.Lock()
 	defer ge.mu.Unlock()
-	log.Printf("Game %s: Incidents Phase", ge.GameState.GameID)
+	ge.logger.Info("Incidents Phase")
 	// 检查悲剧是否发生
 	tragedyOccurred := false
 	for _, tragedy := range ge.GameState.Script.Tragedies {
 		if tragedy.Day == ge.GameState.CurrentDay && ge.GameState.ActiveTragedies[tragedy.TragedyType] && !ge.GameState.PreventedTragedies[tragedy.TragedyType] {
 			if ge.checkTragedyConditions(tragedy) {
-				log.Printf("Game %s: Tragedy %s triggered!", ge.GameState.GameID, tragedy.TragedyType)
+				ge.logger.Info("Tragedy triggered!", zap.String("tragedy_type", string(tragedy.TragedyType)))
 				ge.publishGameEvent(model.EventTragedyTriggered, map[string]string{"tragedy_type": string(tragedy.TragedyType)})
 				tragedyOccurred = true
 				break // 每天只能发生一个悲剧
@@ -359,7 +357,7 @@ func (ge *GameEngine) handleIncidentsPhase() {
 func (ge *GameEngine) handleDayEndPhase() {
 	ge.mu.Lock()
 	defer ge.mu.Unlock()
-	log.Printf("Game %s: Day %d End Phase", ge.GameState.GameID, ge.GameState.CurrentDay)
+	ge.logger.Info("Day End Phase", zap.Int("day", ge.GameState.CurrentDay))
 	ge.GameState.CurrentDay++
 	if ge.GameState.CurrentDay > ge.GameState.Script.DaysPerLoop {
 		ge.GameState.CurrentPhase = model.PhaseLoopEnd
@@ -371,7 +369,7 @@ func (ge *GameEngine) handleDayEndPhase() {
 func (ge *GameEngine) handleLoopEndPhase() {
 	ge.mu.Lock()
 	defer ge.mu.Unlock()
-	log.Printf("Game %s: Loop %d End Phase", ge.GameState.GameID, ge.GameState.CurrentLoop)
+	ge.logger.Info("Loop End Phase", zap.Int("loop", ge.GameState.CurrentLoop))
 
 	mastermindWins := false
 	if ge.GameState.CurrentLoop >= ge.GameState.Script.LoopCount {
@@ -408,7 +406,7 @@ func (ge *GameEngine) handleLoopEndPhase() {
 func (ge *GameEngine) handleProtagonistGuessPhase() {
 	ge.mu.Lock()
 	defer ge.mu.Unlock()
-	log.Printf("Game %s: Protagonist Guess Phase", ge.GameState.GameID)
+	ge.logger.Info("Protagonist Guess Phase")
 	// 这个阶段由主角决定进行最终猜测时触发。
 	// 它需要一个特定的玩家动作 (ActionMakeGuess)。
 	ge.GameState.CurrentPhase = model.PhaseGameOver // 猜测后过渡
@@ -431,7 +429,7 @@ func (ge *GameEngine) applyCardEffect(effect model.AbilityEffect, targetCharacte
 		}
 		char.CurrentLocation = targetLocation
 		ge.publishGameEvent(model.EventCharacterMoved, map[string]string{"character_id": targetCharacterID, "new_location": string(targetLocation)})
-		log.Printf("Character %s moved to %s", targetCharacterID, targetLocation)
+		ge.logger.Info("Character moved", zap.String("characterID", targetCharacterID), zap.String("location", string(targetLocation)))
 	case model.EffectTypeAdjustParanoia:
 		char, ok := ge.GameState.Characters[targetCharacterID]
 		if !ok {
@@ -443,7 +441,7 @@ func (ge *GameEngine) applyCardEffect(effect model.AbilityEffect, targetCharacte
 		}
 		char.Paranoia += int(amount)
 		ge.publishGameEvent(model.EventParanoiaAdjusted, map[string]interface{}{"character_id": targetCharacterID, "amount": int(amount), "new_paranoia": char.Paranoia})
-		log.Printf("Character %s paranoia adjusted by %d to %d", targetCharacterID, int(amount), char.Paranoia)
+		ge.logger.Info("Character paranoia adjusted", zap.String("characterID", targetCharacterID), zap.Int("amount", int(amount)), zap.Int("newParanoia", char.Paranoia))
 	case model.EffectTypeAdjustGoodwill:
 		char, ok := ge.GameState.Characters[targetCharacterID]
 		if !ok {
@@ -455,7 +453,7 @@ func (ge *GameEngine) applyCardEffect(effect model.AbilityEffect, targetCharacte
 		}
 		char.Goodwill += int(amount)
 		ge.publishGameEvent(model.EventGoodwillAdjusted, map[string]interface{}{"character_id": targetCharacterID, "amount": int(amount), "new_goodwill": char.Goodwill})
-		log.Printf("Character %s goodwill adjusted by %d to %d", targetCharacterID, int(amount), char.Goodwill)
+		ge.logger.Info("Character goodwill adjusted", zap.String("characterID", targetCharacterID), zap.Int("amount", int(amount)), zap.Int("newGoodwill", char.Goodwill))
 	case model.EffectTypeAdjustIntrigue:
 		char, ok := ge.GameState.Characters[targetCharacterID]
 		if !ok {
@@ -467,7 +465,7 @@ func (ge *GameEngine) applyCardEffect(effect model.AbilityEffect, targetCharacte
 		}
 		char.Intrigue += int(amount)
 		ge.publishGameEvent(model.EventIntrigueAdjusted, map[string]interface{}{"character_id": targetCharacterID, "amount": int(amount), "new_intrigue": char.Intrigue})
-		log.Printf("Character %s intrigue adjusted by %d to %d", targetCharacterID, int(amount), char.Intrigue)
+		ge.logger.Info("Character intrigue adjusted", zap.String("characterID", targetCharacterID), zap.Int("amount", int(amount)), zap.Int("newIntrigue", char.Intrigue))
 	default:
 		return fmt.Errorf("unsupported effect type: %s", effect.Type)
 	}
@@ -511,7 +509,7 @@ func (ge *GameEngine) checkTragedyConditions(tragedy model.TragedyCondition) boo
 
 // resetLoop 重置游戏状态以进行新循环。
 func (ge *GameEngine) resetLoop() {
-	log.Printf("Game %s: Resetting for new loop...", ge.GameState.GameID)
+	ge.logger.Info("Resetting for new loop...")
 	// 重置角色位置和状态到初始剧本配置
 	for _, charConfig := range ge.GameState.Script.Characters {
 		char := ge.GameState.Characters[charConfig.CharacterID]
@@ -541,14 +539,14 @@ func (ge *GameEngine) resetLoop() {
 	ge.GameState.DayEvents = []model.GameEvent{}                     // 清除日事件
 	ge.GameState.LoopEvents = []model.GameEvent{}                    // 清除循环事件
 
-	log.Printf("Game %s: Loop reset complete.", ge.GameState.GameID)
+	ge.logger.Info("Loop reset complete.")
 }
 
 // endGame 处理游戏结束状态。
 func (ge *GameEngine) endGame(winner model.PlayerRole) {
 	ge.mu.Lock()
 	defer ge.mu.Unlock()
-	log.Printf("Game %s: Game Over! Winner: %s", ge.GameState.GameID, winner)
+	ge.logger.Info("Game Over!", zap.String("winner", string(winner)))
 	ge.GameState.CurrentPhase = model.PhaseGameOver
 	ge.publishGameEvent(model.EventGameOver, map[string]string{"winner": string(winner)})
 	ge.StopGameLoop() // 停止游戏循环
@@ -566,7 +564,7 @@ func (ge *GameEngine) publishGameEvent(eventType model.EventType, payload interf
 		ge.GameState.DayEvents = append(ge.GameState.DayEvents, event)
 		ge.GameState.LoopEvents = append(ge.GameState.LoopEvents, event)
 	default:
-		log.Printf("Game %s: Game event channel full, dropping event %s", ge.GameState.GameID, eventType)
+		ge.logger.Warn("Game event channel full, dropping event", zap.String("eventType", string(eventType)))
 	}
 }
 
@@ -578,7 +576,7 @@ func (ge *GameEngine) resetPlayerReadiness() {
 }
 
 // markCardUsed 标记卡牌在此循环中已使用。
-func (ge *GameEngine) markCardUsed(cardID string) {
+/* func (ge *GameEngine) markCardUsed(cardID string) {
 	for _, player := range ge.GameState.Players {
 		for i := range player.Hand {
 			if player.Hand[i].ID == cardID {
@@ -587,7 +585,7 @@ func (ge *GameEngine) markCardUsed(cardID string) {
 			}
 		}
 	}
-}
+} */
 
 // --- 玩家动作处理 ---
 
@@ -597,11 +595,11 @@ func (ge *GameEngine) handlePlayerAction(action model.PlayerAction) {
 
 	player := ge.GameState.Players[action.PlayerID]
 	if player == nil {
-		log.Printf("Game %s: Action from unknown player %s", ge.GameState.GameID, action.PlayerID)
+		ge.logger.Warn("Action from unknown player", zap.String("playerID", action.PlayerID))
 		return
 	}
 
-	log.Printf("Game %s: Player %s submitted action %s in phase %s", ge.GameState.GameID, player.Name, action.Type, ge.GameState.CurrentPhase)
+	ge.logger.Info("Player submitted action", zap.String("player", player.Name), zap.String("actionType", string(action.Type)), zap.String("phase", string(ge.GameState.CurrentPhase)))
 
 	switch action.Type {
 	case model.ActionPlayCard:
@@ -613,7 +611,7 @@ func (ge *GameEngine) handlePlayerAction(action model.PlayerAction) {
 	case model.ActionMakeGuess:
 		ge.handleMakeGuessAction(action)
 	default:
-		log.Printf("Game %s: Unknown action type: %s", ge.GameState.GameID, action.Type)
+		ge.logger.Warn("Unknown action type", zap.String("actionType", string(action.Type)))
 	}
 }
 
@@ -690,7 +688,7 @@ func (ge *GameEngine) handleUseAbilityAction(player *model.Player, action model.
 	}
 
 	if err := ge.applyAbilityEffect(usedAbility.Effect, targetCharID); err != nil {
-		log.Printf("Error applying ability effect: %v", err)
+		ge.logger.Error("Error applying ability effect", zap.Error(err))
 	}
 	ge.playerReady[player.ID] = true
 }
@@ -744,7 +742,7 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID string) {
 		return
 	}
 
-	log.Printf("Game %s: Triggering LLM for player %s (%s)", ge.GameState.GameID, player.Name, player.Role)
+	ge.logger.Info("Triggering LLM for player", zap.String("player", player.Name), zap.String("role", string(player.Role)))
 	playerView := ge.GetPlayerView(playerID)
 	pBuilder := promptbuilder.NewPromptBuilder()
 	prompt := ""
@@ -757,7 +755,7 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID string) {
 	go func() {
 		llmResponse, err := ge.llmClient.GenerateResponse(prompt, player.LLMSessionID)
 		if err != nil {
-			log.Printf("Game %s: LLM call for player %s failed: %v", ge.GameState.GameID, player.Name, err)
+			ge.logger.Error("LLM call failed", zap.String("player", player.Name), zap.Error(err))
 			ge.SubmitPlayerAction(model.PlayerAction{
 				PlayerID: playerID, GameID: ge.GameState.GameID, Type: model.ActionReadyForNextPhase, Payload: nil,
 			})
@@ -767,7 +765,7 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID string) {
 		responseParser := llm.NewResponseParser()
 		llmAction, err := responseParser.ParseLLMAction(llmResponse)
 		if err != nil {
-			log.Printf("Game %s: Failed to parse LLM response for player %s: %v", ge.GameState.GameID, player.Name, err)
+			ge.logger.Error("Failed to parse LLM response", zap.String("player", player.Name), zap.Error(err))
 			ge.SubmitPlayerAction(model.PlayerAction{
 				PlayerID: playerID, GameID: ge.GameState.GameID, Type: model.ActionReadyForNextPhase, Payload: nil,
 			})

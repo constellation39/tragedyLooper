@@ -151,7 +151,7 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		DeductionKnowledge: make(map[string]interface{}),
 	}
 
-	gameEngine := engine.NewGameEngine(gameID, script, players, s.llmClient)
+	gameEngine := engine.NewGameEngine(gameID, ctxLogger, script, players, s.llmClient)
 	room := NewRoom(gameID, gameEngine, ctxLogger)
 	s.rooms[gameID] = room
 
