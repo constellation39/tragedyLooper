@@ -605,121 +605,133 @@ func (ge *GameEngine) handlePlayerAction(action model.PlayerAction) {
 
 	switch action.Type {
 	case model.ActionPlayCard:
-		if ge.GameState.CurrentPhase != model.PhaseCardPlay {
-			return
-		}
-		payload, ok := action.Payload.(map[string]interface{})
-		if !ok {
-			return
-		}
-		cardID, ok := payload["card_id"].(string)
-		if !ok {
-			return
-		}
-
-		var playedCard model.Card
-		cardFound := false
-		for i, card := range player.Hand {
-			if card.ID == cardID {
-				playedCard = card
-				player.Hand = append(player.Hand[:i], player.Hand[i+1:]...)
-				cardFound = true
-				break
-			}
-		}
-		if !cardFound {
-			return
-		}
-		if playedCard.OncePerLoop && playedCard.UsedThisLoop {
-			return
-		}
-
-		ge.GameState.PlayedCardsThisDay[player.ID] = append(ge.GameState.PlayedCardsThisDay[player.ID], playedCard)
-		ge.GameState.PlayedCardsThisLoop[player.ID] = append(ge.GameState.PlayedCardsThisLoop[player.ID], playedCard)
-		ge.playerReady[player.ID] = true
-
+		ge.handlePlayCardAction(player, action)
 	case model.ActionUseAbility:
-		if ge.GameState.CurrentPhase != model.PhaseAbilities {
-			return
-		}
-		payload, ok := action.Payload.(map[string]interface{})
-		if !ok {
-			return
-		}
-		abilityName, ok := payload["ability_name"].(string)
-		if !ok {
-			return
-		}
-		targetCharID, _ := payload["target_character_id"].(string)
-
-		var usedAbility model.Ability
-		abilityFound := false
-		for _, char := range ge.GameState.Characters {
-			if string(char.HiddenRole) == string(player.Role) || player.Role == model.PlayerRoleMastermind {
-				for i, ab := range char.Abilities {
-					if ab.Name == abilityName {
-						usedAbility = ab
-						if ab.OncePerLoop {
-							char.Abilities[i].UsedThisLoop = true
-						}
-						abilityFound = true
-						break
-					}
-				}
-			}
-			if abilityFound {
-				break
-			}
-		}
-		if !abilityFound {
-			return
-		}
-
-		if err := ge.applyAbilityEffect(usedAbility.Effect, targetCharID); err != nil {
-			log.Printf("Error applying ability effect: %v", err)
-		}
-		ge.playerReady[player.ID] = true
-
+		ge.handleUseAbilityAction(player, action)
 	case model.ActionReadyForNextPhase:
-		ge.playerReady[player.ID] = true
-
+		ge.handleReadyForNextPhaseAction(player)
 	case model.ActionMakeGuess:
-		if ge.GameState.CurrentPhase != model.PhaseProtagonistGuess {
-			return
-		}
-		payload, ok := action.Payload.(map[string]interface{})
-		if !ok {
-			return
-		}
-		guessedRolesMap, ok := payload["guessed_roles"].(map[string]interface{})
-		if !ok {
-			return
-		}
-
-		correctGuesses := 0
-		totalCharacters := 0
-		for charID, guessedRoleIfc := range guessedRolesMap {
-			guessedRole, ok := guessedRoleIfc.(string)
-			if !ok {
-				continue
-			}
-			char, exists := ge.GameState.Characters[charID]
-			if exists {
-				totalCharacters++
-				if char.HiddenRole == model.RoleType(guessedRole) {
-					correctGuesses++
-				}
-			}
-		}
-
-		if correctGuesses == totalCharacters && totalCharacters > 0 {
-			ge.endGame(model.PlayerRoleProtagonist)
-		} else {
-			ge.endGame(model.PlayerRoleMastermind)
-		}
-
+		ge.handleMakeGuessAction(action)
 	default:
 		log.Printf("Game %s: Unknown action type: %s", ge.GameState.GameID, action.Type)
+	}
+}
+
+func (ge *GameEngine) handlePlayCardAction(player *model.Player, action model.PlayerAction) {
+	if ge.GameState.CurrentPhase != model.PhaseCardPlay {
+		return
+	}
+	payload, ok := action.Payload.(map[string]interface{})
+	if !ok {
+		return
+	}
+	cardID, ok := payload["card_id"].(string)
+	if !ok {
+		return
+	}
+
+	var playedCard model.Card
+	cardFound := false
+	for i, card := range player.Hand {
+		if card.ID == cardID {
+			playedCard = card
+			player.Hand = append(player.Hand[:i], player.Hand[i+1:]...)
+			cardFound = true
+			break
+		}
+	}
+	if !cardFound {
+		return
+	}
+	if playedCard.OncePerLoop && playedCard.UsedThisLoop {
+		return
+	}
+
+	ge.GameState.PlayedCardsThisDay[player.ID] = append(ge.GameState.PlayedCardsThisDay[player.ID], playedCard)
+	ge.GameState.PlayedCardsThisLoop[player.ID] = append(ge.GameState.PlayedCardsThisLoop[player.ID], playedCard)
+	ge.playerReady[player.ID] = true
+}
+
+func (ge *GameEngine) handleUseAbilityAction(player *model.Player, action model.PlayerAction) {
+	if ge.GameState.CurrentPhase != model.PhaseAbilities {
+		return
+	}
+	payload, ok := action.Payload.(map[string]interface{})
+	if !ok {
+		return
+	}
+	abilityName, ok := payload["ability_name"].(string)
+	if !ok {
+		return
+	}
+	targetCharID, _ := payload["target_character_id"].(string)
+
+	var usedAbility model.Ability
+	abilityFound := false
+	for _, char := range ge.GameState.Characters {
+		if string(char.HiddenRole) == string(player.Role) || player.Role == model.PlayerRoleMastermind {
+			for i, ab := range char.Abilities {
+				if ab.Name == abilityName {
+					usedAbility = ab
+					if ab.OncePerLoop {
+						char.Abilities[i].UsedThisLoop = true
+					}
+					abilityFound = true
+					break
+				}
+			}
+		}
+		if abilityFound {
+			break
+		}
+	}
+	if !abilityFound {
+		return
+	}
+
+	if err := ge.applyAbilityEffect(usedAbility.Effect, targetCharID); err != nil {
+		log.Printf("Error applying ability effect: %v", err)
+	}
+	ge.playerReady[player.ID] = true
+}
+
+func (ge *GameEngine) handleReadyForNextPhaseAction(player *model.Player) {
+	ge.playerReady[player.ID] = true
+}
+
+func (ge *GameEngine) handleMakeGuessAction(action model.PlayerAction) {
+	if ge.GameState.CurrentPhase != model.PhaseProtagonistGuess {
+		return
+	}
+	payload, ok := action.Payload.(map[string]interface{})
+	if !ok {
+		return
+	}
+	guessedRolesMap, ok := payload["guessed_roles"].(map[string]interface{})
+	if !ok {
+		return
+	}
+
+	correctGuesses := 0
+	totalCharacters := 0
+	for charID, guessedRoleIfc := range guessedRolesMap {
+		guessedRole, ok := guessedRoleIfc.(string)
+		if !ok {
+			continue
+		}
+		char, exists := ge.GameState.Characters[charID]
+		if exists {
+			totalCharacters++
+			if char.HiddenRole == model.RoleType(guessedRole) {
+				correctGuesses++
+			}
+		}
+	}
+
+	if correctGuesses == totalCharacters && totalCharacters > 0 {
+		ge.endGame(model.PlayerRoleProtagonist)
+	} else {
+		ge.endGame(model.PlayerRoleMastermind)
 	}
 }
 
