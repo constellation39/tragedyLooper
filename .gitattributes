@@ -1,0 +1,21 @@
+# Set default behavior for all files to be text and use LF line endings.
+* text=auto eol=lf
+
+# Explicitly declare files that are text.
+/.gitattributes text
+/.gitignore text
+go.mod text
+go.sum text
+
+# Go source files
+*.go text
+
+# Markdown files
+*.md text
+
+# YAML files
+*.yaml text
+*.yml text
+
+# JSON files
+*.json text
