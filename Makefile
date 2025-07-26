@@ -2,7 +2,7 @@
 
 # Binary name
 BINARY_NAME=tragedylooper
-PROTO_FILES := $(wildcard proto/game/*.proto)
+PROTO_FILES := $(wildcard proto/model/*.proto)
 
 .PHONY: all build run test clean lint proto clean-proto install-tools
 
@@ -55,13 +55,3 @@ clean-proto:
 	@echo "Cleaning generated protobuf files..."
 	@go run ./tools/rmrf $(GOGEN_OUT_DIR)
 	@go run ./tools/rmrf $(JSONSCHEMA_OUT_DIR)
-
-# Generate Excel config template
-.PHONY: generate-config-template
-generate-config-template:
-	@echo "Generating Excel config template..."
-	@for %%f in (proto\game\*.proto) do (
-		protoc -I=proto --descriptor_set_out=proto.pb %%f
-	)
-	@go run ./tools/config-template-generator
-	@go run ./tools/rmrf proto.pb

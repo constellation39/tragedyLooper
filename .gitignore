@@ -17,4 +17,5 @@
 go.work
 .idea
 .aider*
-/shrimp-rules.md
+shrimp-rules.md
+*.xlsx
