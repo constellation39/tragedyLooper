@@ -10,31 +10,29 @@ import "proto/model/event.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 
-
-
 // Player 表示一个连接的玩家（人类或 LLM）。
 message Player {
-  string id = 1; // 唯一标识符
-  string name = 2; // 玩家名称
-  PlayerRole role = 3; // 玩家角色（主谋或主角）
-  bool is_llm = 4; // 是否为LLM玩家
-  repeated Card hand = 5; // 玩家手牌
-  map<int32, google.protobuf.Value> deduction_knowledge = 6; // 主角的推理知识
-  string llm_session_id = 7; // LLM玩家的会话ID
+  string id = 1;
+  string name = 2;
+  PlayerRole role = 3;
+  bool is_llm = 4;
+  repeated Card hand = 5;
+  map<int32, google.protobuf.Value> deduction_knowledge = 6;
+  string llm_session_id = 7;
 }
 
 // PlayerView 表示特定玩家的游戏状态过滤视图。
 message PlayerView {
-  string game_id = 1; // 游戏唯一标识符
-  string script_id = 2; // 剧本ID
-  map<int32, Character> characters = 3; // 角色信息（隐藏身份已移除）
-  map<int32, Player> players = 4; // 玩家信息（敏感信息已移除）
-  int32 current_day = 5; // 当前天数
-  int32 current_loop = 6; // 当前循环次数
-  GamePhase current_phase = 7; // 当前游戏阶段
-  map<int32, bool> active_tragedies = 8; // 活跃的悲剧（公开信息）, key is TragedyType
-  map<int32, bool> prevented_tragedies = 9; // 已阻止的悲剧（公开信息）, key is TragedyType
-  repeated Card your_hand = 10; // 你的手牌（仅对请求玩家可见）
-  map<int32, google.protobuf.Value> your_deductions = 11; // 你的推理（仅对主角可见）
-  repeated GameEvent public_events = 12; // 公开事件
+  string game_id = 1;
+  string script_id = 2;
+  map<int32, Character> characters = 3;
+  map<int32, Player> players = 4;
+  int32 current_day = 5;
+  int32 current_loop = 6;
+  GamePhase current_phase = 7;
+  map<int32, bool> active_tragedies = 8;
+  map<int32, bool> prevented_tragedies = 9;
+  repeated Card your_hand = 10;
+  map<int32, google.protobuf.Value> your_deductions = 11;
+  repeated GameEvent public_events = 12;
 }

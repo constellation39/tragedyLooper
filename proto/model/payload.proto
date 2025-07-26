@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package model;
 
-import "proto/model/location.proto";
 import "proto/model/enums.proto";
+import "proto/model/location.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 
@@ -22,5 +22,5 @@ message UseAbilityPayload {
 
 // MakeGuessPayload 定义了主角进行最终猜测时提交的数据结构。
 message MakeGuessPayload {
-  map<int32, PlayerRole> guessed_roles = 1; // GuessedRoles 是一个映射，键是角色ID，值是猜测的角色身份 (e.g., "KeyPerson", "Killer")。
+  map<int32, PlayerRole> guessed_roles = 1;
 }
