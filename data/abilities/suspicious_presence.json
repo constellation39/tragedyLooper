@@ -1,0 +1,17 @@
+{
+  "id": "suspicious_presence",
+  "name": "Suspicious Presence",
+  "description": "At the end of each day, all other characters at the same location have their paranoia increased by 1.",
+  "trigger": "OnDayEnd",
+  "conditions": [],
+  "effects": [
+    {
+      "type": "ModifyStatOfCharactersAtSameLocation",
+      "parameters": {
+        "target": "others",
+        "stat": "paranoia",
+        "value": 1
+      }
+    }
+  ]
+}

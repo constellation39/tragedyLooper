@@ -1,0 +1,15 @@
+{
+  "name": "First Steps",
+  "loops": 4,
+  "days_per_loop": 7,
+  "main_tragedy": {
+    "type": "Serial Murders",
+    "culprit": "The Doctor",
+    "conditions": ["paranoia >= 5"]
+  },
+  "characters": [
+    { "name": "High School Girl", "role": "Protagonist" },
+    { "name": "The Doctor", "role": "Culprit" }
+  ],
+  "locations": ["Hospital", "Shrine", "School"]
+}

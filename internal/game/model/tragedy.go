@@ -24,6 +24,7 @@ type TragedyCondition struct {
 	CulpritID   string         `json:"culprit_id"`   // 嫌疑人ID
 	Conditions  []Condition    `json:"conditions"`   // 必须满足的条件列表
 	TargetRule  TargetRuleType `json:"target_rule"`  // 目标规则
+	Abilities   []Ability      `json:"abilities"`    // 悲剧发生时触发的能力
 	IsActive    bool           `json:"-"`            // 运行时状态：此悲剧当前是否在剧本中活跃？
 	IsPrevented bool           `json:"-"`            // 运行时状态：此悲剧是否已被阻止？
 }

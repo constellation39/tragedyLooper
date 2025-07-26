@@ -1,0 +1,11 @@
+{
+  "id": "high_school_girl",
+  "name": "High School Girl",
+  "stats": {
+    "paranoia": 3,
+    "intrigue": 1
+  },
+  "abilities": [
+    "vigilant_protection"
+  ]
+}

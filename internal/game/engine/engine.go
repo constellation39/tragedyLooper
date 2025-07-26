@@ -3,12 +3,14 @@ package engine
 import (
 	"fmt"
 	"time"
+	"tragedylooper/internal/game/data"
 	promptbuilder "tragedylooper/internal/llm/prompt"
 
 	"github.com/mitchellh/mapstructure"
 	"go.uber.org/zap"
 
 	"tragedylooper/internal/game/model"
+	"tragedylooper/internal/game/data"
 	"tragedylooper/internal/llm"
 )
 
@@ -90,15 +92,17 @@ func NewGameEngine(gameID string, logger *zap.Logger, script model.Script, playe
 	for playerID, p := range players {
 		if p.Role == model.PlayerRoleMastermind {
 			ge.mastermindPlayerID = playerID
+			p.Hand = make([]model.Card, len(data.MastermindCards))
+			copy(p.Hand, data.MastermindCards)
 		} else {
 			ge.protagonistPlayerIDs = append(ge.protagonistPlayerIDs, playerID)
+			p.Hand = make([]model.Card, len(data.ProtagonistCards))
+			copy(p.Hand, data.ProtagonistCards)
 		}
 	}
 
 	return ge
 }
-
-// --- Public Methods / Engine API ---
 
 func (ge *GameEngine) StartGameLoop() {
 	go ge.runGameLoop()
@@ -134,11 +138,6 @@ func (ge *GameEngine) GetPlayerView(playerID string) model.PlayerView {
 	view := <-responseChan
 	return view
 }
-
-// --- GameMutator Implementation ---
-
-// Statically assert that *GameEngine implements the model.GameMutator interface.
-var _ model.GameMutator = (*GameEngine)(nil)
 
 func (ge *GameEngine) GetCharacter(id string) (*model.Character, bool) {
 	char, ok := ge.GameState.Characters[id]

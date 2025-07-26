@@ -1,0 +1,23 @@
+{
+  "id": "medical_knowledge",
+  "name": "Medical Knowledge",
+  "description": "When an incident occurs at the Hospital, the tragedy loop is extended by one day.",
+  "trigger": "OnIncidentOccurs",
+  "conditions": [
+    {
+      "type": "CharacterAtLocation",
+      "parameters": {
+        "character": "self",
+        "location": "Hospital"
+      }
+    }
+  ],
+  "effects": [
+    {
+      "type": "AddTragedyLoopCounter",
+      "parameters": {
+        "value": -1
+      }
+    }
+  ]
+}

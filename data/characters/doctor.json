@@ -1,0 +1,12 @@
+{
+  "id": "doctor",
+  "name": "The Doctor",
+  "stats": {
+    "paranoia": 2,
+    "intrigue": 3
+  },
+  "abilities": [
+    "medical_knowledge",
+    "suspicious_presence"
+  ]
+}

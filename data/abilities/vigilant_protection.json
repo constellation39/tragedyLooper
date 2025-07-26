@@ -1,0 +1,28 @@
+{
+  "id": "vigilant_protection",
+  "name": "Vigilant Protection",
+  "description": "If an incident occurs involving someone you have Goodwill with, you may move to their location and cancel the incident.",
+  "trigger": "OnIncidentOccurs",
+  "conditions": [
+    {
+      "type": "HasGoodwillWith",
+      "parameters": {
+        "characterA": "self",
+        "characterB": "event.protagonist" 
+      }
+    }
+  ],
+  "effects": [
+    {
+      "type": "MoveCharacter",
+      "parameters": {
+        "target": "self",
+        "destination": "event.location"
+      }
+    },
+    {
+      "type": "CancelEvent",
+      "parameters": {}
+    }
+  ]
+}
