@@ -1,51 +1,61 @@
 # Makefile for the Tragedy Looper project
 
+# Paths
+GO_BIN_PATH := C:/Users/const/scoop/apps/go/current/bin
+GIT_BIN_PATH := C:/Users/const/scoop/apps/git/current/usr/bin
+SHELL_PREFIX := export PATH="$(GIT_BIN_PATH):$(GO_BIN_PATH):$$PATH" &&
+
 # Binary name
 BINARY_NAME=tragedylooper
-PROTO_FILES := $(wildcard proto/model/*.proto)
 
-.PHONY: all build run test clean lint proto clean-proto install-tools
+.PHONY: all build run test clean lint proto clean-proto install-tools format
 
 all: build
+
+# Format the code
+format:
+	@echo "Formatting..."
+	@$(SHELL_PREFIX) go run github.com/bufbuild/buf/cmd/buf@latest format -w
 
 # Build the application
 build:
 	@echo "Building $(BINARY_NAME)..."
-	@go build -o bin/$(BINARY_NAME) ./cmd/tragedylooper
+	@$(SHELL_PREFIX) go build -o bin/$(BINARY_NAME) ./cmd/tragedylooper
 
 # Run the application
 run:
 	@echo "Running $(BINARY_NAME)..."
-	@go run ./cmd/tragedylooper
+	@$(SHELL_PREFIX) go run ./cmd/tragedylooper
 
 # Test the application
 test:
 	@echo "Running tests..."
-	@go test ./...
+	@$(SHELL_PREFIX) go test ./...
 
 # Clean the binary
 clean:
 	@echo "Cleaning..."
-	@go run ./tools/rmrf bin
+	@$(SHELL_PREFIX) go run ./tools/rmrf bin
 
 # Lint the code
-lint:
+lint: format
 	@echo "Linting..."
-	@golangci-lint run
+	@$(SHELL_PREFIX) golangci-lint run
+	@$(SHELL_PREFIX) go run github.com/bufbuild/buf/cmd/buf@latest lint
 
 # Install protobuf tools
 install-tools:
 	@echo "Installing protobuf tools..."
-	@go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-	@go install github.com/chrusty/protoc-gen-jsonschema/cmd/protoc-gen-jsonschema@latest
+	@$(SHELL_PREFIX) go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+	@$(SHELL_PREFIX) go install github.com/chrusty/protoc-gen-jsonschema/cmd/protoc-gen-jsonschema@latest
 
 # Protobuf generation
 proto:
 	@echo "Generating Go code and JSON schema from protobuf..."
-	@buf generate
+	@$(SHELL_PREFIX) buf generate
 
 # Clean generated protobuf files
 clean-proto:
 	@echo "Cleaning generated protobuf files..."
-	@go run ./tools/rmrf internal/game/model
-	@go run ./tools/rmrf data/jsonschema
+	@$(SHELL_PREFIX) go run ./tools/rmrf internal/game/model
+	@$(SHELL_PREFIX) go run ./tools/rmrf data/jsonschema
