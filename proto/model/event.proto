@@ -10,7 +10,7 @@ option go_package = "github.com/user/repo/proto/model";
 
 // GameEvent 表示游戏中发生的事件。
 message GameEvent {
-  GameEventType type = 1;
-  google.protobuf.Struct payload = 2;
-  google.protobuf.Timestamp timestamp = 3;
+  GameEventType type = 1; // 事件类型
+  google.protobuf.Struct payload = 2; // 事件负载
+  google.protobuf.Timestamp timestamp = 3; // 事件时间戳
 }

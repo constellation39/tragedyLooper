@@ -4,31 +4,31 @@ package model;
 
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
-import "proto/model/card.proto";
+import "proto/model/script.proto";
 import "proto/model/character.proto";
+import "proto/model/player.proto";
+import "proto/model/card.proto";
 import "proto/model/enums.proto";
 import "proto/model/event.proto";
-import "proto/model/player.proto";
-import "proto/model/script.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 
 // GameState 表示游戏实例的权威当前状态。
 message GameState {
-  string game_id = 1;
-  Script script = 2;
-  map<int32, Character> characters = 3;
-  map<int32, Player> players = 4;
-  int32 current_day = 5;
-  int32 current_loop = 6;
-  GamePhase current_phase = 7;
-  map<int32, bool> active_tragedies = 8;
-  map<int32, bool> prevented_tragedies = 9;
-  map<int32, CardList> played_cards_this_day = 10;
-  map<int32, CardList> played_cards_this_loop = 11;
-  google.protobuf.Timestamp last_update_time = 12;
-  repeated GameEvent day_events = 13;
-  repeated GameEvent loop_events = 14;
+  string game_id = 1; // 游戏唯一标识符
+  Script script = 2; // 当前使用的剧本
+  map<int32, Character> characters = 3; // 游戏中所有角色的映射
+  map<int32, Player> players = 4; // 游戏中所有玩家的映射
+  int32 current_day = 5; // 当前天数
+  int32 current_loop = 6; // 当前循环次数
+  GamePhase current_phase = 7; // 当前游戏阶段
+  map<int32, bool> active_tragedies = 8; // 此剧本中活跃的悲剧, key is TragedyType
+  map<int32, bool> prevented_tragedies = 9; // 此循环中已被阻止的悲剧, key is TragedyType
+  map<int32, CardList> played_cards_this_day = 10; // 当天玩家打出的牌
+  map<int32, CardList> played_cards_this_loop = 11; // 本循环玩家打出的牌
+  google.protobuf.Timestamp last_update_time = 12; // 最后更新时间
+  repeated GameEvent day_events = 13; // 当天发生的事件
+  repeated GameEvent loop_events = 14; // 本循环发生的事件
 }
 
 // PlayerAction 代表单个玩家提交的动作。
@@ -36,5 +36,5 @@ message PlayerAction {
   string player_id = 1;
   string game_id = 2;
   ActionType type = 3;
-  google.protobuf.Struct payload = 4;
+  google.protobuf.Struct payload = 4; // e.g., PlayCardPayload, UseAbilityPayload
 }

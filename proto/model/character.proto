@@ -2,30 +2,31 @@ syntax = "proto3";
 
 package model;
 
+import "proto/model/location.proto";
 import "proto/model/ability.proto";
 import "proto/model/enums.proto";
-import "proto/model/location.proto";
+
 
 option go_package = "github.com/user/repo/proto/model";
 
 // Character 表示游戏中的一个角色。
 message Character {
-  string id = 1;
-  string name = 2;
-  repeated string traits = 3;
-  LocationType current_location = 4;
-  int32 paranoia = 5;
-  int32 goodwill = 6;
-  int32 intrigue = 7;
-  bool is_alive = 8;
-  repeated Ability abilities = 9;
-  RoleType hidden_role = 10;
+  string id = 1; // 唯一标识符
+  string name = 2; // 角色名称
+  repeated string traits = 3; // 角色特征，例如：["Student", "Journalist"]
+  LocationType current_location = 4; // 当前所在位置
+  int32 paranoia = 5; // 妄想指数
+  int32 goodwill = 6; // 好感度
+  int32 intrigue = 7; // 阴谋标记
+  bool is_alive = 8; // 是否存活
+  repeated Ability abilities = 9; // 角色能力
+  RoleType hidden_role = 10; // 角色的隐藏身份，对主角隐藏，仅供主谋查看
 }
 
 // CharacterConfig 定义特定剧本中角色的初始状态。
 message CharacterConfig {
-  string character_id = 1;
-  LocationType initial_location = 2;
-  RoleType hidden_role = 3;
-  string is_culprit_for = 4;
+  string character_id = 1; // 引用基础角色定义
+  LocationType initial_location = 2; // 初始位置
+  RoleType hidden_role = 3; // 此剧本中角色的秘密身份
+  string is_culprit_for = 4; // 如果此角色是特定悲剧的嫌疑犯
 }

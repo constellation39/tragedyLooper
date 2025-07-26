@@ -7,8 +7,8 @@ option go_package = "github.com/user/repo/proto/model";
 // LocationType 定义游戏中的可能地点。
 enum LocationType {
   LOCATION_TYPE_UNSPECIFIED = 0;
-  LOCATION_TYPE_HOSPITAL = 1;
-  LOCATION_TYPE_SHRINE = 2;
-  LOCATION_TYPE_CITY = 3;
-  LOCATION_TYPE_SCHOOL = 4;
+  LOCATION_TYPE_HOSPITAL = 1; // 医院
+  LOCATION_TYPE_SHRINE = 2; // 神社
+  LOCATION_TYPE_CITY = 3; // 城市
+  LOCATION_TYPE_SCHOOL = 4; // 学校
 }
