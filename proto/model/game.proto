@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package model;
 
-import "google/protobuf/struct.proto";
+import "google/protobuf/any.proto";
 import "google/protobuf/timestamp.proto";
 import "proto/model/card.proto";
 import "proto/model/character.proto";
@@ -41,5 +41,5 @@ message PlayerAction {
   int32 player_id = 1;
   int32 game_id = 2;
   ActionType type = 3;
-  google.protobuf.Struct payload = 4; // e.g., PlayCardPayload, UseAbilityPayload
+  google.protobuf.Any payload = 4; // e.g., PlayCardPayload, UseAbilityPayload
 }

@@ -652,7 +652,7 @@ func (x *Choice) GetCharacterId() int32 {
 type ChoiceRequiredEvent struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// This might need a more complex structure depending on the choices
-	Choice        *Choice `protobuf:"bytes,1,opt,name=choice,proto3" json:"choice,omitempty"`
+	Choices       []*Choice `protobuf:"bytes,1,rep,name=choices,proto3" json:"choices,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -687,9 +687,9 @@ func (*ChoiceRequiredEvent) Descriptor() ([]byte, []int) {
 	return file_proto_model_event_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *ChoiceRequiredEvent) GetChoice() *Choice {
+func (x *ChoiceRequiredEvent) GetChoices() []*Choice {
 	if x != nil {
-		return x.Choice
+		return x.Choices
 	}
 	return nil
 }
@@ -737,9 +737,9 @@ const file_proto_model_event_proto_rawDesc = "" +
 	"\x06winner\x18\x01 \x01(\x0e2\x11.model.PlayerRoleR\x06winner\"M\n" +
 	"\x06Choice\x12 \n" +
 	"\vdescription\x18\x01 \x01(\tR\vdescription\x12!\n" +
-	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\"<\n" +
-	"\x13ChoiceRequiredEvent\x12%\n" +
-	"\x06choice\x18\x01 \x01(\v2\r.model.ChoiceR\x06choiceB\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\">\n" +
+	"\x13ChoiceRequiredEvent\x12'\n" +
+	"\achoices\x18\x01 \x03(\v2\r.model.ChoiceR\achoicesB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
 	file_proto_model_event_proto_rawDescOnce sync.Once
@@ -785,7 +785,7 @@ var file_proto_model_event_proto_depIdxs = []int32{
 	18, // 4: model.TragedyTriggeredEvent.tragedy_type:type_name -> model.TragedyType
 	13, // 5: model.CardPlayedEvent.played_cards:type_name -> model.CardPlayedEvent.PlayedCardsEntry
 	19, // 6: model.GameOverEvent.winner:type_name -> model.PlayerRole
-	11, // 7: model.ChoiceRequiredEvent.choice:type_name -> model.Choice
+	11, // 7: model.ChoiceRequiredEvent.choices:type_name -> model.Choice
 	20, // 8: model.CardPlayedEvent.PlayedCardsEntry.value:type_name -> model.CardList
 	9,  // [9:9] is the sub-list for method output_type
 	9,  // [9:9] is the sub-list for method input_type

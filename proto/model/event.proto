@@ -72,5 +72,5 @@ message Choice {
 }
 message ChoiceRequiredEvent {
   // This might need a more complex structure depending on the choices
-    Choice choice = 1;
+    repeated Choice choices = 1;
 }

@@ -1,10 +1,20 @@
 package engine
 
 import (
+	"fmt"
 	"go.uber.org/zap"
-	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/anypb"
 	"tragedylooper/internal/game/proto/model"
 )
+
+// unmarshalAnyPayload safely unmarshals an anypb.Any into a target protobuf message.
+func unmarshalAnyPayload(payload *anypb.Any, target proto.Message) error {
+	if payload == nil {
+		return fmt.Errorf("action payload is nil for target type %T", target)
+	}
+	return payload.UnmarshalTo(target)
+}
 
 // --- Player Action Handlers ---
 
@@ -33,7 +43,7 @@ func (ge *GameEngine) handlePlayerAction(action *model.PlayerAction) {
 
 func (ge *GameEngine) handlePlayCardAction(player *model.Player, action *model.PlayerAction) {
 	var payload model.PlayCardPayload
-	if err := protojson.Unmarshal(action.Payload.MarshalJSON(), &payload); err != nil {
+	if err := unmarshalAnyPayload(action.Payload, &payload); err != nil {
 		ge.logger.Error("Failed to unmarshal PlayCardPayload", zap.Error(err))
 		return
 	}
@@ -76,7 +86,7 @@ func (ge *GameEngine) handlePlayCardAction(player *model.Player, action *model.P
 
 func (ge *GameEngine) handleUseAbilityAction(player *model.Player, action *model.PlayerAction) {
 	var payload model.UseAbilityPayload
-	if err := action.Payload.UnmarshalTo(&payload); err != nil {
+	if err := unmarshalAnyPayload(action.Payload, &payload); err != nil {
 		ge.logger.Error("Failed to unmarshal UseAbilityPayload", zap.Error(err))
 		return
 	}
@@ -123,7 +133,7 @@ func (ge *GameEngine) handleMakeGuessAction(action *model.PlayerAction) {
 	}
 
 	var payload model.MakeGuessPayload
-	if err := protojson.Unmarshal(action.Payload.MarshalJSON(), &payload); err != nil {
+	if err := unmarshalAnyPayload(action.Payload, &payload); err != nil {
 		ge.logger.Error("Failed to unmarshal MakeGuessPayload", zap.Error(err))
 		return
 	}

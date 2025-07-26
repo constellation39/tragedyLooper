@@ -4,9 +4,11 @@
     "definitions": {
         "ChoiceRequiredEvent": {
             "properties": {
-                "choice": {
-                    "$ref": "#/definitions/model.Choice",
-                    "additionalProperties": true,
+                "choices": {
+                    "items": {
+                        "$ref": "#/definitions/model.Choice"
+                    },
+                    "type": "array",
                     "description": "This might need a more complex structure depending on the choices"
                 }
             },

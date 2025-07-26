@@ -9,7 +9,7 @@ package model
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	structpb "google.golang.org/protobuf/types/known/structpb"
+	anypb "google.golang.org/protobuf/types/known/anypb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
@@ -223,7 +223,7 @@ type PlayerAction struct {
 	PlayerId      int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`
 	GameId        int32                  `protobuf:"varint,2,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`
 	Type          ActionType             `protobuf:"varint,3,opt,name=type,proto3,enum=model.ActionType" json:"type,omitempty"`
-	Payload       *structpb.Struct       `protobuf:"bytes,4,opt,name=payload,proto3" json:"payload,omitempty"` // e.g., PlayCardPayload, UseAbilityPayload
+	Payload       *anypb.Any             `protobuf:"bytes,4,opt,name=payload,proto3" json:"payload,omitempty"` // e.g., PlayCardPayload, UseAbilityPayload
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -279,7 +279,7 @@ func (x *PlayerAction) GetType() ActionType {
 	return ActionType_ACTION_TYPE_UNSPECIFIED
 }
 
-func (x *PlayerAction) GetPayload() *structpb.Struct {
+func (x *PlayerAction) GetPayload() *anypb.Any {
 	if x != nil {
 		return x.Payload
 	}
@@ -290,7 +290,7 @@ var File_proto_model_game_proto protoreflect.FileDescriptor
 
 const file_proto_model_game_proto_rawDesc = "" +
 	"\n" +
-	"\x16proto/model/game.proto\x12\x05model\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16proto/model/card.proto\x1a\x1bproto/model/character.proto\x1a\x17proto/model/enums.proto\x1a\x17proto/model/event.proto\x1a\x18proto/model/player.proto\x1a\x18proto/model/script.proto\"\xad\n" +
+	"\x16proto/model/game.proto\x12\x05model\x1a\x19google/protobuf/any.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16proto/model/card.proto\x1a\x1bproto/model/character.proto\x1a\x17proto/model/enums.proto\x1a\x17proto/model/event.proto\x1a\x18proto/model/player.proto\x1a\x18proto/model/script.proto\"\xad\n" +
 	"\n" +
 	"\tGameState\x12\x17\n" +
 	"\agame_id\x18\x01 \x01(\x05R\x06gameId\x12%\n" +
@@ -333,12 +333,12 @@ const file_proto_model_game_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\v2\x0f.model.CardListR\x05value:\x028\x01\"@\n" +
 	"\rEffectContext\x12/\n" +
 	"\n" +
-	"game_state\x18\x01 \x01(\v2\x10.model.GameStateR\tgameState\"\x9e\x01\n" +
+	"game_state\x18\x01 \x01(\v2\x10.model.GameStateR\tgameState\"\x9b\x01\n" +
 	"\fPlayerAction\x12\x1b\n" +
 	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12\x17\n" +
 	"\agame_id\x18\x02 \x01(\x05R\x06gameId\x12%\n" +
-	"\x04type\x18\x03 \x01(\x0e2\x11.model.ActionTypeR\x04type\x121\n" +
-	"\apayload\x18\x04 \x01(\v2\x17.google.protobuf.StructR\apayloadB\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\x04type\x18\x03 \x01(\x0e2\x11.model.ActionTypeR\x04type\x12.\n" +
+	"\apayload\x18\x04 \x01(\v2\x14.google.protobuf.AnyR\apayloadB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
 	file_proto_model_game_proto_rawDescOnce sync.Once
@@ -368,7 +368,7 @@ var file_proto_model_game_proto_goTypes = []any{
 	(*timestamppb.Timestamp)(nil), // 11: google.protobuf.Timestamp
 	(*GameEvent)(nil),             // 12: model.GameEvent
 	(ActionType)(0),               // 13: model.ActionType
-	(*structpb.Struct)(nil),       // 14: google.protobuf.Struct
+	(*anypb.Any)(nil),             // 14: google.protobuf.Any
 	(*Character)(nil),             // 15: model.Character
 	(*Player)(nil),                // 16: model.Player
 	(*CardList)(nil),              // 17: model.CardList
@@ -387,7 +387,7 @@ var file_proto_model_game_proto_depIdxs = []int32{
 	12, // 10: model.GameState.loop_events:type_name -> model.GameEvent
 	0,  // 11: model.EffectContext.game_state:type_name -> model.GameState
 	13, // 12: model.PlayerAction.type:type_name -> model.ActionType
-	14, // 13: model.PlayerAction.payload:type_name -> google.protobuf.Struct
+	14, // 13: model.PlayerAction.payload:type_name -> google.protobuf.Any
 	15, // 14: model.GameState.CharactersEntry.value:type_name -> model.Character
 	16, // 15: model.GameState.PlayersEntry.value:type_name -> model.Player
 	17, // 16: model.GameState.PlayedCardsThisDayEntry.value:type_name -> model.CardList
