@@ -40,18 +40,12 @@ install-tools:
 	@go install github.com/chrusty/protoc-gen-jsonschema/cmd/protoc-gen-jsonschema@latest
 
 # Protobuf generation
-GOGEN_OUT_DIR := internal/game
-JSONSCHEMA_OUT_DIR := data/jsonschema
-
-proto: install-tools
+proto:
 	@echo "Generating Go code and JSON schema from protobuf..."
-	@go run ./tools/mkdir $(GOGEN_OUT_DIR)
-	@go run ./tools/mkdir $(JSONSCHEMA_OUT_DIR)
-	@protoc --proto_path=. --go_out=$(GOGEN_OUT_DIR) --go_opt=paths=source_relative $(PROTO_FILES)
-	@protoc --proto_path=. --jsonschema_out=$(JSONSCHEMA_OUT_DIR) $(PROTO_FILES)
+	@buf generate
 
 # Clean generated protobuf files
 clean-proto:
 	@echo "Cleaning generated protobuf files..."
-	@go run ./tools/rmrf $(GOGEN_OUT_DIR)
-	@go run ./tools/rmrf $(JSONSCHEMA_OUT_DIR)
+	@go run ./tools/rmrf internal/game/model
+	@go run ./tools/rmrf data/jsonschema

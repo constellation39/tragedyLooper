@@ -25,8 +25,7 @@
                         "title": "Player Role",
                         "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
                     },
-                    "type": "object",
-                    "description": "GuessedRoles 是一个映射，键是角色ID，值是猜测的角色身份 (e.g., \"KeyPerson\", \"Killer\")。"
+                    "type": "object"
                 }
             },
             "additionalProperties": true,

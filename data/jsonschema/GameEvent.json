@@ -46,12 +46,10 @@
                 },
                 "payload": {
                     "additionalProperties": true,
-                    "type": "object",
-                    "description": "事件负载"
+                    "type": "object"
                 },
                 "timestamp": {
                     "type": "string",
-                    "description": "事件时间戳",
                     "format": "date-time"
                 }
             },

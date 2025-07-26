@@ -5,36 +5,30 @@
         "PlayerView": {
             "properties": {
                 "game_id": {
-                    "type": "string",
-                    "description": "游戏唯一标识符"
+                    "type": "string"
                 },
                 "script_id": {
-                    "type": "string",
-                    "description": "剧本ID"
+                    "type": "string"
                 },
                 "characters": {
                     "additionalProperties": {
                         "$ref": "#/definitions/model.Character",
                         "additionalProperties": true
                     },
-                    "type": "object",
-                    "description": "角色信息（隐藏身份已移除）"
+                    "type": "object"
                 },
                 "players": {
                     "additionalProperties": {
                         "$ref": "#/definitions/model.Player",
                         "additionalProperties": true
                     },
-                    "type": "object",
-                    "description": "玩家信息（敏感信息已移除）"
+                    "type": "object"
                 },
                 "current_day": {
-                    "type": "integer",
-                    "description": "当前天数"
+                    "type": "integer"
                 },
                 "current_loop": {
-                    "type": "integer",
-                    "description": "当前循环次数"
+                    "type": "integer"
                 },
                 "current_phase": {
                     "enum": [
@@ -76,22 +70,19 @@
                     "additionalProperties": {
                         "type": "boolean"
                     },
-                    "type": "object",
-                    "description": "活跃的悲剧（公开信息）, key is TragedyType"
+                    "type": "object"
                 },
                 "prevented_tragedies": {
                     "additionalProperties": {
                         "type": "boolean"
                     },
-                    "type": "object",
-                    "description": "已阻止的悲剧（公开信息）, key is TragedyType"
+                    "type": "object"
                 },
                 "your_hand": {
                     "items": {
                         "$ref": "#/definitions/model.Card"
                     },
-                    "type": "array",
-                    "description": "你的手牌（仅对请求玩家可见）"
+                    "type": "array"
                 },
                 "your_deductions": {
                     "additionalProperties": {
@@ -115,15 +106,13 @@
                         "title": "Value",
                         "description": "`Value` represents a dynamically typed value which can be either null, a number, a string, a boolean, a recursive struct value, or a list of values. A producer of value is expected to set one of these variants. Absence of any variant indicates an error. The JSON representation for `Value` is JSON value."
                     },
-                    "type": "object",
-                    "description": "你的推理（仅对主角可见）"
+                    "type": "object"
                 },
                 "public_events": {
                     "items": {
                         "$ref": "#/definitions/model.GameEvent"
                     },
-                    "type": "array",
-                    "description": "公开事件"
+                    "type": "array"
                 }
             },
             "additionalProperties": true,
@@ -137,12 +126,10 @@
                     "type": "string"
                 },
                 "name": {
-                    "type": "string",
-                    "description": "能力名称"
+                    "type": "string"
                 },
                 "description": {
-                    "type": "string",
-                    "description": "能力描述"
+                    "type": "string"
                 },
                 "trigger_type": {
                     "enum": [
@@ -170,12 +157,10 @@
                 },
                 "effect": {
                     "$ref": "#/definitions/model.Effect",
-                    "additionalProperties": true,
-                    "description": "实际效果"
+                    "additionalProperties": true
                 },
                 "once_per_loop": {
-                    "type": "boolean",
-                    "description": "每循环只能使用一次"
+                    "type": "boolean"
                 },
                 "refusal_role": {
                     "enum": [
@@ -198,8 +183,7 @@
                     "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
                 },
                 "used_this_loop": {
-                    "type": "boolean",
-                    "description": "运行时状态，不用于配置"
+                    "type": "boolean"
                 },
                 "target_location": {
                     "enum": [
@@ -267,12 +251,10 @@
         "model.Card": {
             "properties": {
                 "id": {
-                    "type": "string",
-                    "description": "唯一标识符"
+                    "type": "string"
                 },
                 "name": {
-                    "type": "string",
-                    "description": "卡牌名称"
+                    "type": "string"
                 },
                 "card_type": {
                     "enum": [
@@ -321,25 +303,20 @@
                     "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
                 },
                 "target_type": {
-                    "type": "string",
-                    "description": "目标类型（\"Character\" 或 \"Location\"）"
+                    "type": "string"
                 },
                 "effect": {
                     "$ref": "#/definitions/model.Effect",
-                    "additionalProperties": true,
-                    "description": "卡牌效果"
+                    "additionalProperties": true
                 },
                 "once_per_loop": {
-                    "type": "boolean",
-                    "description": "每循环只能使用一次"
+                    "type": "boolean"
                 },
                 "used_this_loop": {
-                    "type": "boolean",
-                    "description": "运行时状态"
+                    "type": "boolean"
                 },
                 "target_character_id": {
-                    "type": "string",
-                    "description": "目标角色ID"
+                    "type": "string"
                 },
                 "target_location": {
                     "enum": [
@@ -374,19 +351,16 @@
         "model.Character": {
             "properties": {
                 "id": {
-                    "type": "string",
-                    "description": "唯一标识符"
+                    "type": "string"
                 },
                 "name": {
-                    "type": "string",
-                    "description": "角色名称"
+                    "type": "string"
                 },
                 "traits": {
                     "items": {
                         "type": "string"
                     },
-                    "type": "array",
-                    "description": "角色特征，例如：[\"Student\", \"Journalist\"]"
+                    "type": "array"
                 },
                 "current_location": {
                     "enum": [
@@ -413,27 +387,22 @@
                     "description": "LocationType 定义游戏中的可能地点。"
                 },
                 "paranoia": {
-                    "type": "integer",
-                    "description": "妄想指数"
+                    "type": "integer"
                 },
                 "goodwill": {
-                    "type": "integer",
-                    "description": "好感度"
+                    "type": "integer"
                 },
                 "intrigue": {
-                    "type": "integer",
-                    "description": "阴谋标记"
+                    "type": "integer"
                 },
                 "is_alive": {
-                    "type": "boolean",
-                    "description": "是否存活"
+                    "type": "boolean"
                 },
                 "abilities": {
                     "items": {
                         "$ref": "#/definitions/model.Ability"
                     },
-                    "type": "array",
-                    "description": "角色能力"
+                    "type": "array"
                 },
                 "hidden_role": {
                     "enum": [
@@ -543,12 +512,10 @@
                 },
                 "payload": {
                     "additionalProperties": true,
-                    "type": "object",
-                    "description": "事件负载"
+                    "type": "object"
                 },
                 "timestamp": {
                     "type": "string",
-                    "description": "事件时间戳",
                     "format": "date-time"
                 }
             },
@@ -566,12 +533,10 @@
         "model.Player": {
             "properties": {
                 "id": {
-                    "type": "string",
-                    "description": "唯一标识符"
+                    "type": "string"
                 },
                 "name": {
-                    "type": "string",
-                    "description": "玩家名称"
+                    "type": "string"
                 },
                 "role": {
                     "enum": [
@@ -594,15 +559,13 @@
                     "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
                 },
                 "is_llm": {
-                    "type": "boolean",
-                    "description": "是否为LLM玩家"
+                    "type": "boolean"
                 },
                 "hand": {
                     "items": {
                         "$ref": "#/definitions/model.Card"
                     },
-                    "type": "array",
-                    "description": "玩家手牌"
+                    "type": "array"
                 },
                 "deduction_knowledge": {
                     "additionalProperties": {
@@ -626,12 +589,10 @@
                         "title": "Value",
                         "description": "`Value` represents a dynamically typed value which can be either null, a number, a string, a boolean, a recursive struct value, or a list of values. A producer of value is expected to set one of these variants. Absence of any variant indicates an error. The JSON representation for `Value` is JSON value."
                     },
-                    "type": "object",
-                    "description": "主角的推理知识"
+                    "type": "object"
                 },
                 "llm_session_id": {
-                    "type": "string",
-                    "description": "LLM玩家的会话ID"
+                    "type": "string"
                 }
             },
             "additionalProperties": true,

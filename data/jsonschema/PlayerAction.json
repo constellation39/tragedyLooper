@@ -36,8 +36,7 @@
                 },
                 "payload": {
                     "additionalProperties": true,
-                    "type": "object",
-                    "description": "e.g., PlayCardPayload, UseAbilityPayload"
+                    "type": "object"
                 }
             },
             "additionalProperties": true,

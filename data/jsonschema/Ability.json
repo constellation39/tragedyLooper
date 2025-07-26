@@ -8,12 +8,10 @@
                     "type": "string"
                 },
                 "name": {
-                    "type": "string",
-                    "description": "能力名称"
+                    "type": "string"
                 },
                 "description": {
-                    "type": "string",
-                    "description": "能力描述"
+                    "type": "string"
                 },
                 "trigger_type": {
                     "enum": [
@@ -41,12 +39,10 @@
                 },
                 "effect": {
                     "$ref": "#/definitions/model.Effect",
-                    "additionalProperties": true,
-                    "description": "实际效果"
+                    "additionalProperties": true
                 },
                 "once_per_loop": {
-                    "type": "boolean",
-                    "description": "每循环只能使用一次"
+                    "type": "boolean"
                 },
                 "refusal_role": {
                     "enum": [
@@ -69,8 +65,7 @@
                     "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
                 },
                 "used_this_loop": {
-                    "type": "boolean",
-                    "description": "运行时状态，不用于配置"
+                    "type": "boolean"
                 },
                 "target_location": {
                     "enum": [

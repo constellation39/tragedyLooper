@@ -51,12 +51,10 @@
         "model.Card": {
             "properties": {
                 "id": {
-                    "type": "string",
-                    "description": "唯一标识符"
+                    "type": "string"
                 },
                 "name": {
-                    "type": "string",
-                    "description": "卡牌名称"
+                    "type": "string"
                 },
                 "card_type": {
                     "enum": [
@@ -105,25 +103,20 @@
                     "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
                 },
                 "target_type": {
-                    "type": "string",
-                    "description": "目标类型（\"Character\" 或 \"Location\"）"
+                    "type": "string"
                 },
                 "effect": {
                     "$ref": "#/definitions/model.Effect",
-                    "additionalProperties": true,
-                    "description": "卡牌效果"
+                    "additionalProperties": true
                 },
                 "once_per_loop": {
-                    "type": "boolean",
-                    "description": "每循环只能使用一次"
+                    "type": "boolean"
                 },
                 "used_this_loop": {
-                    "type": "boolean",
-                    "description": "运行时状态"
+                    "type": "boolean"
                 },
                 "target_character_id": {
-                    "type": "string",
-                    "description": "目标角色ID"
+                    "type": "string"
                 },
                 "target_location": {
                     "enum": [

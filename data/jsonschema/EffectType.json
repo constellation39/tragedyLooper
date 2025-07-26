@@ -1,0 +1,35 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [
+        "EFFECT_TYPE_UNSPECIFIED",
+        0,
+        "EFFECT_TYPE_MOVE_CHARACTER",
+        1,
+        "EFFECT_TYPE_ADJUST_PARANOIA",
+        2,
+        "EFFECT_TYPE_ADJUST_GOODWILL",
+        3,
+        "EFFECT_TYPE_ADJUST_INTRIGUE",
+        4,
+        "EFFECT_TYPE_REVEAL_ROLE",
+        5,
+        "EFFECT_TYPE_PREVENT_TRAGEDY",
+        6,
+        "EFFECT_TYPE_GRANT_ABILITY",
+        7,
+        "EFFECT_TYPE_CHECK_LOCATION_ALONE",
+        8,
+        "EFFECT_TYPE_CHECK_CHARACTER_STATUS",
+        9
+    ],
+    "oneOf": [
+        {
+            "type": "string"
+        },
+        {
+            "type": "integer"
+        }
+    ],
+    "title": "Effect Type",
+    "description": "EffectType 定义能力或卡牌可能产生的效果类型。 这是组合方法的核心。"
+}

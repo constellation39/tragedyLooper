@@ -29,19 +29,16 @@
                     "description": "TragedyType 定义了剧本中可能发生的悲剧类型。"
                 },
                 "day": {
-                    "type": "integer",
-                    "description": "悲剧可能发生的日期"
+                    "type": "integer"
                 },
                 "culprit_id": {
-                    "type": "string",
-                    "description": "嫌疑人ID"
+                    "type": "string"
                 },
                 "conditions": {
                     "items": {
                         "$ref": "#/definitions/model.Condition"
                     },
-                    "type": "array",
-                    "description": "必须满足的条件列表"
+                    "type": "array"
                 },
                 "target_rule": {
                     "enum": [
@@ -67,16 +64,13 @@
                     "items": {
                         "$ref": "#/definitions/model.Ability"
                     },
-                    "type": "array",
-                    "description": "悲剧发生时触发的能力"
+                    "type": "array"
                 },
                 "is_active": {
-                    "type": "boolean",
-                    "description": "运行时状态：此悲剧当前是否在剧本中活跃？"
+                    "type": "boolean"
                 },
                 "is_prevented": {
-                    "type": "boolean",
-                    "description": "运行时状态：此悲剧是否已被阻止？"
+                    "type": "boolean"
                 }
             },
             "additionalProperties": true,
@@ -90,12 +84,10 @@
                     "type": "string"
                 },
                 "name": {
-                    "type": "string",
-                    "description": "能力名称"
+                    "type": "string"
                 },
                 "description": {
-                    "type": "string",
-                    "description": "能力描述"
+                    "type": "string"
                 },
                 "trigger_type": {
                     "enum": [
@@ -123,12 +115,10 @@
                 },
                 "effect": {
                     "$ref": "#/definitions/model.Effect",
-                    "additionalProperties": true,
-                    "description": "实际效果"
+                    "additionalProperties": true
                 },
                 "once_per_loop": {
-                    "type": "boolean",
-                    "description": "每循环只能使用一次"
+                    "type": "boolean"
                 },
                 "refusal_role": {
                     "enum": [
@@ -151,8 +141,7 @@
                     "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
                 },
                 "used_this_loop": {
-                    "type": "boolean",
-                    "description": "运行时状态，不用于配置"
+                    "type": "boolean"
                 },
                 "target_location": {
                     "enum": [
@@ -220,8 +209,7 @@
         "model.Condition": {
             "properties": {
                 "character_id": {
-                    "type": "string",
-                    "description": "角色ID"
+                    "type": "string"
                 },
                 "location": {
                     "enum": [
@@ -248,12 +236,10 @@
                     "description": "LocationType 定义游戏中的可能地点。"
                 },
                 "min_paranoia": {
-                    "type": "integer",
-                    "description": "最小妄想指数"
+                    "type": "integer"
                 },
                 "is_alone": {
-                    "type": "boolean",
-                    "description": "是否独处"
+                    "type": "boolean"
                 }
             },
             "additionalProperties": true,

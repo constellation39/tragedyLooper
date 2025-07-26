@@ -5,19 +5,16 @@
         "Character": {
             "properties": {
                 "id": {
-                    "type": "string",
-                    "description": "唯一标识符"
+                    "type": "string"
                 },
                 "name": {
-                    "type": "string",
-                    "description": "角色名称"
+                    "type": "string"
                 },
                 "traits": {
                     "items": {
                         "type": "string"
                     },
-                    "type": "array",
-                    "description": "角色特征，例如：[\"Student\", \"Journalist\"]"
+                    "type": "array"
                 },
                 "current_location": {
                     "enum": [
@@ -44,27 +41,22 @@
                     "description": "LocationType 定义游戏中的可能地点。"
                 },
                 "paranoia": {
-                    "type": "integer",
-                    "description": "妄想指数"
+                    "type": "integer"
                 },
                 "goodwill": {
-                    "type": "integer",
-                    "description": "好感度"
+                    "type": "integer"
                 },
                 "intrigue": {
-                    "type": "integer",
-                    "description": "阴谋标记"
+                    "type": "integer"
                 },
                 "is_alive": {
-                    "type": "boolean",
-                    "description": "是否存活"
+                    "type": "boolean"
                 },
                 "abilities": {
                     "items": {
                         "$ref": "#/definitions/model.Ability"
                     },
-                    "type": "array",
-                    "description": "角色能力"
+                    "type": "array"
                 },
                 "hidden_role": {
                     "enum": [
@@ -112,12 +104,10 @@
                     "type": "string"
                 },
                 "name": {
-                    "type": "string",
-                    "description": "能力名称"
+                    "type": "string"
                 },
                 "description": {
-                    "type": "string",
-                    "description": "能力描述"
+                    "type": "string"
                 },
                 "trigger_type": {
                     "enum": [
@@ -145,12 +135,10 @@
                 },
                 "effect": {
                     "$ref": "#/definitions/model.Effect",
-                    "additionalProperties": true,
-                    "description": "实际效果"
+                    "additionalProperties": true
                 },
                 "once_per_loop": {
-                    "type": "boolean",
-                    "description": "每循环只能使用一次"
+                    "type": "boolean"
                 },
                 "refusal_role": {
                     "enum": [
@@ -173,8 +161,7 @@
                     "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
                 },
                 "used_this_loop": {
-                    "type": "boolean",
-                    "description": "运行时状态，不用于配置"
+                    "type": "boolean"
                 },
                 "target_location": {
                     "enum": [
