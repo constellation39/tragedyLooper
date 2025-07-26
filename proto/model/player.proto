@@ -10,8 +10,6 @@ import "proto/model/event.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 
-
-
 // Player 表示一个连接的玩家（人类或 LLM）。
 message Player {
   int32 id = 1; // 唯一标识符

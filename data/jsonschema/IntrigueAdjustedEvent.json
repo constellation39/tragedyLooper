@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/IntrigueAdjustedEvent",
+    "definitions": {
+        "IntrigueAdjustedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer"
+                },
+                "amount": {
+                    "type": "integer"
+                },
+                "new_intrigue": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Intrigue Adjusted Event"
+        }
+    }
+}

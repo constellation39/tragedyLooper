@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/GameOverEvent",
+    "definitions": {
+        "GameOverEvent": {
+            "properties": {
+                "winner": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "PLAYER_ROLE_MASTERMIND",
+                        1,
+                        "PLAYER_ROLE_PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Game Over Event"
+        }
+    }
+}

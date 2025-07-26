@@ -25,15 +25,15 @@ func main() {
 	// 为简单起见，我们使用占位符。
 	scripts := map[string]*model.Script{
 		"basic_script": {
-			Id:          "basic_script",
+			Id:          0,
 			Name:        "Basic Tragedy",
 			Description: "A simple script for testing.",
 			LoopCount:   3,
 			DaysPerLoop: 7,
 			Characters: []*model.CharacterConfig{
-				{CharacterId: "boy_student", InitialLocation: model.LocationType_LOCATION_TYPE_SCHOOL, HiddenRole: model.RoleType_ROLE_TYPE_INNOCENT},
-				{CharacterId: "girl_student", InitialLocation: model.LocationType_LOCATION_TYPE_SCHOOL, HiddenRole: model.RoleType_ROLE_TYPE_INNOCENT},
-				{CharacterId: "serial_killer", InitialLocation: model.LocationType_LOCATION_TYPE_CITY, HiddenRole: model.RoleType_ROLE_TYPE_KILLER},
+				{Id: 0, Name: "boy_student", InitialLocation: model.LocationType_LOCATION_TYPE_SCHOOL, HiddenRole: model.RoleType_ROLE_TYPE_INNOCENT},
+				{Id: 0, Name: "girl_student", InitialLocation: model.LocationType_LOCATION_TYPE_SCHOOL, HiddenRole: model.RoleType_ROLE_TYPE_INNOCENT},
+				{Id: 0, Name: "serial_killer", InitialLocation: model.LocationType_LOCATION_TYPE_CITY, HiddenRole: model.RoleType_ROLE_TYPE_KILLER},
 			},
 			Tragedies: []*model.TragedyCondition{
 				{
@@ -41,7 +41,7 @@ func main() {
 					Day:         3, // 谋杀可能发生在第 3 天
 					CulpritId:   "serial_killer",
 					Conditions: []*model.Condition{
-						{CharacterId: "boy_student", Location: model.LocationType_LOCATION_TYPE_SCHOOL, IsAlone: true},
+						{CharacterId: 0, Location: model.LocationType_LOCATION_TYPE_SCHOOL, IsAlone: true},
 					},
 				},
 			},

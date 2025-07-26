@@ -4,12 +4,12 @@ package model;
 
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
-import "proto/model/script.proto";
-import "proto/model/character.proto";
-import "proto/model/player.proto";
 import "proto/model/card.proto";
+import "proto/model/character.proto";
 import "proto/model/enums.proto";
 import "proto/model/event.proto";
+import "proto/model/player.proto";
+import "proto/model/script.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 

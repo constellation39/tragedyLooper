@@ -170,7 +170,7 @@ var File_proto_model_card_proto protoreflect.FileDescriptor
 
 const file_proto_model_card_proto_rawDesc = "" +
 	"\n" +
-	"\x16proto/model/card.proto\x12\x05model\x1a\x18proto/model/effect.proto\x1a\x1aproto/model/location.proto\x1a\x17proto/model/enums.proto\x1a\x18proto/model/target.proto\"\xa2\x02\n" +
+	"\x16proto/model/card.proto\x12\x05model\x1a\x18proto/model/effect.proto\x1a\x17proto/model/enums.proto\x1a\x18proto/model/target.proto\"\xa2\x02\n" +
 	"\x04Card\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12,\n" +
@@ -224,7 +224,6 @@ func file_proto_model_card_proto_init() {
 		return
 	}
 	file_proto_model_effect_proto_init()
-	file_proto_model_location_proto_init()
 	file_proto_model_enums_proto_init()
 	file_proto_model_target_proto_init()
 	type x struct{}

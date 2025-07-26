@@ -34,7 +34,7 @@ func (pb *PromptBuilder) BuildMastermindPrompt(
 	sb.WriteString(fmt.Sprintf("Script Name: %s\n", script.Name))
 
 	// TODO: add subplots to prompt
-	//if len(script.SubPlots) > 0 {
+	// if len(script.SubPlots) > 0 {
 	//	sb.WriteString(fmt.Sprintf("Sub Plots: %s\n", strings.Join(script.SubPlots, ", ")))
 	//}
 	sb.WriteString("Tragedies to trigger:\n")
@@ -45,15 +45,15 @@ func (pb *PromptBuilder) BuildMastermindPrompt(
 	sb.WriteString("\n--- Characters (including hidden roles) ---\n")
 	for _, char := range characters { // 使用主谋的完整角色映射
 		sb.WriteString(fmt.Sprintf("- %s (Role: %s, Location: %s, Paranoia: %d, Goodwill: %d, Alive: %t)\n",
-			char.Name, char.Role, char.CurrentLocation, char.Paranoia, char.Goodwill, char.IsAlive))
+			char.Name, char.HiddenRole, char.CurrentLocation, char.Paranoia, char.Goodwill, char.IsAlive))
 		if len(char.Traits) > 0 {
 			sb.WriteString(fmt.Sprintf("  Traits: %s\n", strings.Join(char.Traits, ", ")))
 		}
 	}
 
 	sb.WriteString("\n--- Your Hand ---\n")
-	for _, card := range fullGameState.YourHand.Cards {
-		sb.WriteString(fmt.Sprintf("- Card: %s (Type: %s, Effect: %+v)\n", card.Name, card.Type, card.Effect))
+	for _, card := range fullGameState.YourHand {
+		sb.WriteString(fmt.Sprintf("- Card: %s (Type: %s, Effect: %+v)\n", card.Name, card.CardType, card.Effect))
 	}
 
 	sb.WriteString("\n--- Public Events (This Day) ---\n")
@@ -100,8 +100,8 @@ func (pb *PromptBuilder) BuildProtagonistPrompt(
 	}
 
 	sb.WriteString("\n--- Your Hand ---\n")
-	for _, card := range playerView.YourHand.Cards {
-		sb.WriteString(fmt.Sprintf("- Card: %s (Type: %s, Effect: %+v)\n", card.Name, card.Type, card.Effect))
+	for _, card := range playerView.YourHand {
+		sb.WriteString(fmt.Sprintf("- Card: %s (Type: %s, Effect: %+v)\n", card.Name, card.CardType, card.Effect))
 	}
 
 	sb.WriteString("\n--- Your Deductions (from previous loops) ---\n")

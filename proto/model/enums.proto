@@ -65,15 +65,15 @@ enum ActionType {
 // RoleType 定义了玩家在游戏中的具体角色。
 enum RoleType {
   ROLE_TYPE_UNSPECIFIED = 0; // 未指定角色类型 (默认值)
-  ROLE_TYPE_INNOCENT = 1;    // 无辜者
-  ROLE_TYPE_KILLER = 2;      // 杀手
-  ROLE_TYPE_BRAIN = 3;       // 大脑
-  ROLE_TYPE_KEY_PERSON = 4;  // 关键人物
-  ROLE_TYPE_FRIEND = 5;      // 朋友
+  ROLE_TYPE_INNOCENT = 1; // 无辜者
+  ROLE_TYPE_KILLER = 2; // 杀手
+  ROLE_TYPE_BRAIN = 3; // 大脑
+  ROLE_TYPE_KEY_PERSON = 4; // 关键人物
+  ROLE_TYPE_FRIEND = 5; // 朋友
   ROLE_TYPE_CONSPIRACY_THEORIST = 6; // 阴谋论者
-  ROLE_TYPE_CULTIST = 7;     // 例如：具有善意拒绝的角色
+  ROLE_TYPE_CULTIST = 7; // 例如：具有善意拒绝的角色
   // 注意：Mastermind 和 Protagonist 也可以在 PlayerRole 中定义，这里是作为游戏内具体角色的一种。
-  ROLE_TYPE_MASTERMIND = 8;  // LLM 玩家角色 (主谋)
+  ROLE_TYPE_MASTERMIND = 8; // LLM 玩家角色 (主谋)
   ROLE_TYPE_PROTAGONIST = 9; // LLM 玩家角色 (主角)
 }
 
@@ -81,11 +81,10 @@ enum RoleType {
 // TragedyType 定义了在游戏中可能发生的悲剧类型。
 enum TragedyType {
   TRAGEDY_TYPE_UNSPECIFIED = 0; // 未指定悲剧类型 (默认值)
-  TRAGEDY_TYPE_MURDER = 1;      // 谋杀
-  TRAGEDY_TYPE_SUICIDE = 2;     // 自杀
-  TRAGEDY_TYPE_SEALED = 3;      // 例如：封印物品剧情
+  TRAGEDY_TYPE_MURDER = 1; // 谋杀
+  TRAGEDY_TYPE_SUICIDE = 2; // 自杀
+  TRAGEDY_TYPE_SEALED = 3; // 例如：封印物品剧情
 }
-
 
 // AbilityTriggerType 定义能力何时可以被触发。
 enum AbilityTriggerType {

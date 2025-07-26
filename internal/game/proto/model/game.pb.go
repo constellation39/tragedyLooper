@@ -245,7 +245,7 @@ var File_proto_model_game_proto protoreflect.FileDescriptor
 
 const file_proto_model_game_proto_rawDesc = "" +
 	"\n" +
-	"\x16proto/model/game.proto\x12\x05model\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x18proto/model/script.proto\x1a\x1bproto/model/character.proto\x1a\x18proto/model/player.proto\x1a\x16proto/model/card.proto\x1a\x17proto/model/enums.proto\x1a\x17proto/model/event.proto\"\xad\n" +
+	"\x16proto/model/game.proto\x12\x05model\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16proto/model/card.proto\x1a\x1bproto/model/character.proto\x1a\x17proto/model/enums.proto\x1a\x17proto/model/event.proto\x1a\x18proto/model/player.proto\x1a\x18proto/model/script.proto\"\xad\n" +
 	"\n" +
 	"\tGameState\x12\x17\n" +
 	"\agame_id\x18\x01 \x01(\x05R\x06gameId\x12%\n" +
@@ -354,12 +354,12 @@ func file_proto_model_game_proto_init() {
 	if File_proto_model_game_proto != nil {
 		return
 	}
-	file_proto_model_script_proto_init()
-	file_proto_model_character_proto_init()
-	file_proto_model_player_proto_init()
 	file_proto_model_card_proto_init()
+	file_proto_model_character_proto_init()
 	file_proto_model_enums_proto_init()
 	file_proto_model_event_proto_init()
+	file_proto_model_player_proto_init()
+	file_proto_model_script_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

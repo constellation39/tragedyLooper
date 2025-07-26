@@ -7,12 +7,26 @@
                 "guessed_roles": {
                     "additionalProperties": {
                         "enum": [
-                            "PLAYER_ROLE_UNSPECIFIED",
+                            "ROLE_TYPE_UNSPECIFIED",
                             0,
-                            "PLAYER_ROLE_MASTERMIND",
+                            "ROLE_TYPE_INNOCENT",
                             1,
-                            "PLAYER_ROLE_PROTAGONIST",
-                            2
+                            "ROLE_TYPE_KILLER",
+                            2,
+                            "ROLE_TYPE_BRAIN",
+                            3,
+                            "ROLE_TYPE_KEY_PERSON",
+                            4,
+                            "ROLE_TYPE_FRIEND",
+                            5,
+                            "ROLE_TYPE_CONSPIRACY_THEORIST",
+                            6,
+                            "ROLE_TYPE_CULTIST",
+                            7,
+                            "ROLE_TYPE_MASTERMIND",
+                            8,
+                            "ROLE_TYPE_PROTAGONIST",
+                            9
                         ],
                         "oneOf": [
                             {
@@ -22,8 +36,8 @@
                                 "type": "integer"
                             }
                         ],
-                        "title": "Player Role",
-                        "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
+                        "title": "Role Type",
+                        "description": "RoleType 定义了玩家在游戏中的具体角色。"
                     },
                     "type": "object",
                     "description": "GuessedRoles 是一个映射，键是角色ID，值是猜测的角色身份 (e.g., \"KeyPerson\", \"Killer\")。"

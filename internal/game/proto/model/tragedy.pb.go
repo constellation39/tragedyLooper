@@ -195,7 +195,7 @@ var File_proto_model_tragedy_proto protoreflect.FileDescriptor
 
 const file_proto_model_tragedy_proto_rawDesc = "" +
 	"\n" +
-	"\x19proto/model/tragedy.proto\x12\x05model\x1a\x19proto/model/ability.proto\x1a\x1aproto/model/location.proto\x1a\x17proto/model/enums.proto\"\xd2\x02\n" +
+	"\x19proto/model/tragedy.proto\x12\x05model\x1a\x19proto/model/ability.proto\x1a\x17proto/model/enums.proto\x1a\x1aproto/model/location.proto\"\xd2\x02\n" +
 	"\x10TragedyCondition\x125\n" +
 	"\ftragedy_type\x18\x01 \x01(\x0e2\x12.model.TragedyTypeR\vtragedyType\x12\x10\n" +
 	"\x03day\x18\x02 \x01(\x05R\x03day\x12\x1d\n" +
@@ -255,8 +255,8 @@ func file_proto_model_tragedy_proto_init() {
 		return
 	}
 	file_proto_model_ability_proto_init()
-	file_proto_model_location_proto_init()
 	file_proto_model_enums_proto_init()
+	file_proto_model_location_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

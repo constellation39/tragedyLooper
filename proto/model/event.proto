@@ -2,15 +2,70 @@ syntax = "proto3";
 
 package model;
 
-import "google/protobuf/struct.proto";
+import "google/protobuf/any.proto";
 import "google/protobuf/timestamp.proto";
+import "proto/model/card.proto";
 import "proto/model/enums.proto";
+import "proto/model/location.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 
-// GameEvent 表示游戏中发生的事件。
+// GameEvent represents an event that occurred in the game.
 message GameEvent {
-  GameEventType type = 1; // 事件类型
-  google.protobuf.Struct payload = 2; // 事件负载
-  google.protobuf.Timestamp timestamp = 3; // 事件时间戳
+  GameEventType type = 1;
+  google.protobuf.Any payload = 2;
+  google.protobuf.Timestamp timestamp = 3;
+}
+
+message CharacterMovedEvent {
+  int32 character_id = 1;
+  LocationType new_location = 2;
+}
+
+message ParanoiaAdjustedEvent {
+  int32 character_id = 1;
+  int32 amount = 2;
+  int32 new_paranoia = 3;
+}
+
+message GoodwillAdjustedEvent {
+  int32 character_id = 1;
+  int32 amount = 2;
+  int32 new_goodwill = 3;
+}
+
+message IntrigueAdjustedEvent {
+  int32 character_id = 1;
+  int32 amount = 2;
+  int32 new_intrigue = 3;
+}
+
+message TragedyTriggeredEvent {
+  TragedyType tragedy_type = 1;
+}
+
+message AbilityUsedEvent {
+  int32 character_id = 1;
+  string ability_name = 2;
+}
+
+message DayAdvancedEvent {
+  int32 day = 1;
+  int32 loop = 2;
+}
+
+message CardPlayedEvent {
+  map<int32, CardList> played_cards = 1;
+}
+
+message LoopResetEvent {
+  int32 loop = 1;
+}
+
+message GameOverEvent {
+  PlayerRole winner = 1;
+}
+
+message ChoiceRequiredEvent {
+  // This might need a more complex structure depending on the choices
 }

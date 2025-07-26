@@ -138,7 +138,7 @@ func (x *UseAbilityPayload) GetTarget() *Target {
 // MakeGuessPayload 定义了主角进行最终猜测时提交的数据结构。
 type MakeGuessPayload struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	GuessedRoles  map[int32]PlayerRole   `protobuf:"bytes,1,rep,name=guessed_roles,json=guessedRoles,proto3" json:"guessed_roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=model.PlayerRole"` // GuessedRoles 是一个映射，键是角色ID，值是猜测的角色身份 (e.g., "KeyPerson", "Killer")。
+	GuessedRoles  map[int32]RoleType     `protobuf:"bytes,1,rep,name=guessed_roles,json=guessedRoles,proto3" json:"guessed_roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=model.RoleType"` // GuessedRoles 是一个映射，键是角色ID，值是猜测的角色身份 (e.g., "KeyPerson", "Killer")。
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -173,7 +173,7 @@ func (*MakeGuessPayload) Descriptor() ([]byte, []int) {
 	return file_proto_model_payload_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *MakeGuessPayload) GetGuessedRoles() map[int32]PlayerRole {
+func (x *MakeGuessPayload) GetGuessedRoles() map[int32]RoleType {
 	if x != nil {
 		return x.GuessedRoles
 	}
@@ -184,7 +184,7 @@ var File_proto_model_payload_proto protoreflect.FileDescriptor
 
 const file_proto_model_payload_proto_rawDesc = "" +
 	"\n" +
-	"\x19proto/model/payload.proto\x12\x05model\x1a\x1aproto/model/location.proto\x1a\x17proto/model/enums.proto\x1a\x18proto/model/target.proto\"Q\n" +
+	"\x19proto/model/payload.proto\x12\x05model\x1a\x17proto/model/enums.proto\x1a\x18proto/model/target.proto\"Q\n" +
 	"\x0fPlayCardPayload\x12\x17\n" +
 	"\acard_id\x18\x01 \x01(\x05R\x06cardId\x12%\n" +
 	"\x06target\x18\x02 \x01(\v2\r.model.TargetR\x06target\"|\n" +
@@ -192,12 +192,12 @@ const file_proto_model_payload_proto_rawDesc = "" +
 	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x12\x1d\n" +
 	"\n" +
 	"ability_id\x18\x02 \x01(\x05R\tabilityId\x12%\n" +
-	"\x06target\x18\x03 \x01(\v2\r.model.TargetR\x06target\"\xb6\x01\n" +
+	"\x06target\x18\x03 \x01(\v2\r.model.TargetR\x06target\"\xb4\x01\n" +
 	"\x10MakeGuessPayload\x12N\n" +
-	"\rguessed_roles\x18\x01 \x03(\v2).model.MakeGuessPayload.GuessedRolesEntryR\fguessedRoles\x1aR\n" +
+	"\rguessed_roles\x18\x01 \x03(\v2).model.MakeGuessPayload.GuessedRolesEntryR\fguessedRoles\x1aP\n" +
 	"\x11GuessedRolesEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12'\n" +
-	"\x05value\x18\x02 \x01(\x0e2\x11.model.PlayerRoleR\x05value:\x028\x01B\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12%\n" +
+	"\x05value\x18\x02 \x01(\x0e2\x0f.model.RoleTypeR\x05value:\x028\x01B\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
 	file_proto_model_payload_proto_rawDescOnce sync.Once
@@ -218,13 +218,13 @@ var file_proto_model_payload_proto_goTypes = []any{
 	(*MakeGuessPayload)(nil),  // 2: model.MakeGuessPayload
 	nil,                       // 3: model.MakeGuessPayload.GuessedRolesEntry
 	(*Target)(nil),            // 4: model.Target
-	(PlayerRole)(0),           // 5: model.PlayerRole
+	(RoleType)(0),             // 5: model.RoleType
 }
 var file_proto_model_payload_proto_depIdxs = []int32{
 	4, // 0: model.PlayCardPayload.target:type_name -> model.Target
 	4, // 1: model.UseAbilityPayload.target:type_name -> model.Target
 	3, // 2: model.MakeGuessPayload.guessed_roles:type_name -> model.MakeGuessPayload.GuessedRolesEntry
-	5, // 3: model.MakeGuessPayload.GuessedRolesEntry.value:type_name -> model.PlayerRole
+	5, // 3: model.MakeGuessPayload.GuessedRolesEntry.value:type_name -> model.RoleType
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
@@ -237,7 +237,6 @@ func file_proto_model_payload_proto_init() {
 	if File_proto_model_payload_proto != nil {
 		return
 	}
-	file_proto_model_location_proto_init()
 	file_proto_model_enums_proto_init()
 	file_proto_model_target_proto_init()
 	type x struct{}

@@ -2,11 +2,10 @@ syntax = "proto3";
 
 package model;
 
-import "proto/model/target.proto";
 import "proto/model/enums.proto";
+import "proto/model/target.proto";
 
 option go_package = "github.com/user/repo/proto/model";
-
 
 // PlayCardPayload 定义了打出卡牌动作所需的数据。
 message PlayCardPayload {
@@ -23,5 +22,5 @@ message UseAbilityPayload {
 
 // MakeGuessPayload 定义了主角进行最终猜测时提交的数据结构。
 message MakeGuessPayload {
-  map<int32, PlayerRole> guessed_roles = 1; // GuessedRoles 是一个映射，键是角色ID，值是猜测的角色身份 (e.g., "KeyPerson", "Killer")。
+  map<int32, RoleType> guessed_roles = 1; // GuessedRoles 是一个映射，键是角色ID，值是猜测的角色身份 (e.g., "KeyPerson", "Killer")。
 }

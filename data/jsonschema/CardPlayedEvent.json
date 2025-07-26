@@ -1,82 +1,20 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/Player",
+    "$ref": "#/definitions/CardPlayedEvent",
     "definitions": {
-        "Player": {
+        "CardPlayedEvent": {
             "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "唯一标识符"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "玩家名称"
-                },
-                "role": {
-                    "enum": [
-                        "PLAYER_ROLE_UNSPECIFIED",
-                        0,
-                        "PLAYER_ROLE_MASTERMIND",
-                        1,
-                        "PLAYER_ROLE_PROTAGONIST",
-                        2
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Player Role",
-                    "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
-                },
-                "is_llm": {
-                    "type": "boolean",
-                    "description": "是否为LLM玩家"
-                },
-                "hand": {
-                    "items": {
-                        "$ref": "#/definitions/model.Card"
-                    },
-                    "type": "array",
-                    "description": "玩家手牌"
-                },
-                "deduction_knowledge": {
+                "played_cards": {
                     "additionalProperties": {
-                        "oneOf": [
-                            {
-                                "type": "array"
-                            },
-                            {
-                                "type": "boolean"
-                            },
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "object"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "title": "Value",
-                        "description": "`Value` represents a dynamically typed value which can be either null, a number, a string, a boolean, a recursive struct value, or a list of values. A producer of value is expected to set one of these variants. Absence of any variant indicates an error. The JSON representation for `Value` is JSON value."
+                        "$ref": "#/definitions/model.CardList",
+                        "additionalProperties": true
                     },
-                    "type": "object",
-                    "description": "主角的推理知识"
-                },
-                "llm_session_id": {
-                    "type": "string",
-                    "description": "LLM玩家的会话ID"
+                    "type": "object"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Player",
-            "description": "Player 表示一个连接的玩家（人类或 LLM）。"
+            "title": "Card Played Event"
         },
         "model.AdjustGoodwillEffect": {
             "properties": {
@@ -189,6 +127,19 @@
             "type": "object",
             "title": "Card 表示一张行动卡。",
             "description": "Card 表示一张行动卡。  Card 表示一张行动卡。"
+        },
+        "model.CardList": {
+            "properties": {
+                "cards": {
+                    "items": {
+                        "$ref": "#/definitions/model.Card"
+                    },
+                    "type": "array"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Card List"
         },
         "model.Effect": {
             "properties": {

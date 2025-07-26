@@ -24,7 +24,7 @@ const (
 // Ability 定义角色的特殊技能。
 type Ability struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                 // 能力名称
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                   // 能力描述
 	TriggerType   AbilityTriggerType     `protobuf:"varint,4,opt,name=trigger_type,json=triggerType,proto3,enum=model.AbilityTriggerType" json:"trigger_type,omitempty"` // 触发时机
@@ -67,11 +67,11 @@ func (*Ability) Descriptor() ([]byte, []int) {
 	return file_proto_model_ability_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Ability) GetId() string {
+func (x *Ability) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 func (x *Ability) GetName() string {
@@ -134,9 +134,9 @@ var File_proto_model_ability_proto protoreflect.FileDescriptor
 
 const file_proto_model_ability_proto_rawDesc = "" +
 	"\n" +
-	"\x19proto/model/ability.proto\x12\x05model\x1a\x18proto/model/effect.proto\x1a\x17proto/model/enums.proto\x1a\x1aproto/model/location.proto\x1a\x18proto/model/target.proto\"\xdb\x02\n" +
+	"\x19proto/model/ability.proto\x12\x05model\x1a\x18proto/model/effect.proto\x1a\x17proto/model/enums.proto\x1a\x18proto/model/target.proto\"\xdb\x02\n" +
 	"\aAbility\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12<\n" +
 	"\ftrigger_type\x18\x04 \x01(\x0e2\x19.model.AbilityTriggerTypeR\vtriggerType\x12%\n" +
@@ -185,7 +185,6 @@ func file_proto_model_ability_proto_init() {
 	}
 	file_proto_model_effect_proto_init()
 	file_proto_model_enums_proto_init()
-	file_proto_model_location_proto_init()
 	file_proto_model_target_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{

@@ -1,0 +1,12 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/ChoiceRequiredEvent",
+    "definitions": {
+        "ChoiceRequiredEvent": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Choice Required Event",
+            "description": "This might need a more complex structure depending on the choices"
+        }
+    }
+}

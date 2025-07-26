@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/DayAdvancedEvent",
+    "definitions": {
+        "DayAdvancedEvent": {
+            "properties": {
+                "day": {
+                    "type": "integer"
+                },
+                "loop": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Day Advanced Event"
+        }
+    }
+}

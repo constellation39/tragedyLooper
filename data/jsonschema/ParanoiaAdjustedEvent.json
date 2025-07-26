@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/ParanoiaAdjustedEvent",
+    "definitions": {
+        "ParanoiaAdjustedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer"
+                },
+                "amount": {
+                    "type": "integer"
+                },
+                "new_paranoia": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Paranoia Adjusted Event"
+        }
+    }
+}

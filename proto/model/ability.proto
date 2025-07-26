@@ -12,7 +12,7 @@ option go_package = "github.com/user/repo/proto/model";
 
 // Ability 定义角色的特殊技能。
 message Ability {
-  string id = 1;
+  int32 id = 1;
   string name = 2; // 能力名称
   string description = 3; // 能力描述
   AbilityTriggerType trigger_type = 4; // 触发时机

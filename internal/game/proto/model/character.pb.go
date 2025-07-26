@@ -219,7 +219,7 @@ var File_proto_model_character_proto protoreflect.FileDescriptor
 
 const file_proto_model_character_proto_rawDesc = "" +
 	"\n" +
-	"\x1bproto/model/character.proto\x12\x05model\x1a\x1aproto/model/location.proto\x1a\x19proto/model/ability.proto\x1a\x17proto/model/enums.proto\"\xd6\x02\n" +
+	"\x1bproto/model/character.proto\x12\x05model\x1a\x19proto/model/ability.proto\x1a\x17proto/model/enums.proto\x1a\x1aproto/model/location.proto\"\xd6\x02\n" +
 	"\tCharacter\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
@@ -279,9 +279,9 @@ func file_proto_model_character_proto_init() {
 	if File_proto_model_character_proto != nil {
 		return
 	}
-	file_proto_model_location_proto_init()
 	file_proto_model_ability_proto_init()
 	file_proto_model_enums_proto_init()
+	file_proto_model_location_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

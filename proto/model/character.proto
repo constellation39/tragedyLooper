@@ -2,10 +2,9 @@ syntax = "proto3";
 
 package model;
 
-import "proto/model/location.proto";
 import "proto/model/ability.proto";
 import "proto/model/enums.proto";
-
+import "proto/model/location.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 

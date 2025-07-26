@@ -2,6 +2,8 @@ package engine
 
 import (
 	"fmt"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"slices"
 	"time"
@@ -22,7 +24,7 @@ type GameEngine struct {
 	gameEventChan        chan model.GameEvent
 	gameControlChan      chan struct{}
 	llmClient            llm.Client
-	playerReady          map[string]bool
+	playerReady          map[int32]bool
 	mastermindPlayerID   int32
 	protagonistPlayerIDs []int32
 	logger               *zap.Logger
@@ -33,13 +35,13 @@ type engineRequest interface{}
 
 // getPlayerViewRequest is a request to get a filtered view of the game state for a player.
 type getPlayerViewRequest struct {
-	playerID     string
-	responseChan chan model.PlayerView
+	playerID     int32
+	responseChan chan *model.PlayerView
 }
 
 // llmActionCompleteRequest is sent when an LLM player has decided on an action.
 type llmActionCompleteRequest struct {
-	playerID string
+	playerID int32
 	action   *model.PlayerAction
 }
 
@@ -86,7 +88,7 @@ func NewGameEngine(gameID int32, logger *zap.Logger, script *model.Script, playe
 		gameEventChan:   make(chan model.GameEvent, 100),
 		gameControlChan: make(chan struct{}),
 		llmClient:       llmClient,
-		playerReady:     make(map[string]bool),
+		playerReady:     make(map[int32]bool),
 		logger:          logger.With(zap.Int32("gameID", gameID)),
 	}
 
@@ -125,8 +127,8 @@ func (ge *GameEngine) GetGameEvents() <-chan model.GameEvent {
 
 // GetPlayerView 为特定玩家生成游戏状态的过滤视图。
 // It is thread-safe as it communicates with the main game loop via a channel.
-func (ge *GameEngine) GetPlayerView(playerID string) model.PlayerView {
-	responseChan := make(chan model.PlayerView)
+func (ge *GameEngine) GetPlayerView(playerID int32) *model.PlayerView {
+	responseChan := make(chan *model.PlayerView)
 	req := getPlayerViewRequest{
 		playerID:     playerID,
 		responseChan: responseChan,
@@ -147,7 +149,7 @@ func (ge *GameEngine) SetCharacterLocation(id int32, location model.LocationType
 	if char, ok := ge.GameState.Characters[id]; ok {
 		char.CurrentLocation = location
 		ge.logger.Info("Character moved", zap.Int32("characterID", id), zap.String("location", string(location)))
-		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_CHARACTER_MOVED, map[string]int32{"character_id": id, "new_location": int32(location)})
+		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_CHARACTER_MOVED, &model.CharacterMovedEvent{CharacterId: id, NewLocation: location})
 	}
 }
 
@@ -155,7 +157,7 @@ func (ge *GameEngine) AdjustCharacterParanoia(id int32, amount int32) int32 {
 	if char, ok := ge.GameState.Characters[id]; ok {
 		char.Paranoia += amount
 		ge.logger.Info("Character paranoia adjusted", zap.Int32("characterID", id), zap.Int32("amount", amount), zap.Int32("newParanoia", char.Paranoia))
-		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED, map[string]int32{"character_id": id, "amount": amount, "new_paranoia": char.Paranoia})
+		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED, &model.ParanoiaAdjustedEvent{CharacterId: id, Amount: amount, NewParanoia: char.Paranoia})
 		return char.Paranoia
 	}
 	return 0
@@ -165,7 +167,7 @@ func (ge *GameEngine) AdjustCharacterGoodwill(id int32, amount int32) int32 {
 	if char, ok := ge.GameState.Characters[id]; ok {
 		char.Goodwill += amount
 		ge.logger.Info("Character goodwill adjusted", zap.Int32("characterID", id), zap.Int32("amount", amount), zap.Int32("newGoodwill", char.Goodwill))
-		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED, map[string]int32{"character_id": id, "amount": amount, "new_goodwill": char.Goodwill})
+		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED, &model.GoodwillAdjustedEvent{CharacterId: id, Amount: amount, NewGoodwill: char.Goodwill})
 		return char.Goodwill
 	}
 	return 0
@@ -175,13 +177,13 @@ func (ge *GameEngine) AdjustCharacterIntrigue(id int32, amount int32) int32 {
 	if char, ok := ge.GameState.Characters[id]; ok {
 		char.Intrigue += amount
 		ge.logger.Info("Character intrigue adjusted", zap.Int32("characterID", id), zap.Int32("amount", amount), zap.Int32("newIntrigue", char.Intrigue))
-		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED, map[string]int32{"character_id": id, "amount": amount, "new_intrigue": char.Intrigue})
+		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED, &model.IntrigueAdjustedEvent{CharacterId: id, Amount: amount, NewIntrigue: char.Intrigue})
 		return char.Intrigue
 	}
 	return 0
 }
 
-func (ge *GameEngine) PublishEvent(eventType model.GameEventType, payload interface{}) {
+func (ge *GameEngine) PublishEvent(eventType model.GameEventType, payload proto.Message) {
 	ge.publishGameEvent(eventType, payload)
 }
 
@@ -276,7 +278,7 @@ func (ge *GameEngine) handlePlayCardAction(player *model.Player, action *model.P
 	for i, card := range player.Hand {
 		if card.Id == payload.CardId {
 			if card.OncePerLoop && card.UsedThisLoop {
-				ge.logger.Warn("Attempted to play a card that was already used this loop", zap.String("cardID", card.Id))
+				ge.logger.Warn("Attempted to play a card that was already used this loop", zap.Int32("cardID", card.Id))
 				return // Card already used
 			}
 			playedCard = card
@@ -292,17 +294,17 @@ func (ge *GameEngine) handlePlayCardAction(player *model.Player, action *model.P
 	}
 
 	// Add target info to the card instance before storing it
-	playedCard.TargetCharacterID = payload.TargetCharacterID
-	playedCard.TargetLocation = payload.TargetLocation
+	playedCard.Id = payload.CardId
+	playedCard.Target = payload.Target
 	playedCard.UsedThisLoop = true // Mark as used
 
-	ge.GameState.PlayedCardsThisDay[player.ID] = append(ge.GameState.PlayedCardsThisDay[player.ID], playedCard)
-	ge.GameState.PlayedCardsThisLoop[player.ID] = append(ge.GameState.PlayedCardsThisLoop[player.ID], playedCard)
-	ge.playerReady[player.ID] = true
+	ge.GameState.PlayedCardsThisDay[player.Id].Cards = append(ge.GameState.PlayedCardsThisDay[player.Id].Cards, playedCard)
+	ge.GameState.PlayedCardsThisLoop[player.Id].Cards = append(ge.GameState.PlayedCardsThisLoop[player.Id].Cards, playedCard)
+	ge.playerReady[player.Id] = true
 }
 
 func (ge *GameEngine) handleUseAbilityAction(player *model.Player, action *model.PlayerAction) {
-	var payload model.UseAbilityPayload
+	var payload *model.UseAbilityPayload
 	if err := mapstructure.Decode(action.Payload, &payload); err != nil {
 		ge.logger.Error("Failed to decode UseAbilityPayload", zap.Error(err))
 		return
@@ -310,22 +312,22 @@ func (ge *GameEngine) handleUseAbilityAction(player *model.Player, action *model
 
 	var ability *model.Ability
 	abilityFound := false
-	char, ok := ge.GameState.Characters[payload.CharacterID]
+	char, ok := ge.GameState.Characters[payload.CharacterId]
 	if !ok {
-		ge.logger.Warn("Character not found for ability use", zap.String("characterID", payload.CharacterID))
+		ge.logger.Warn("Character not found for ability use", zap.Int32("characterID", payload.CharacterId))
 		return
 	}
 
 	for i := range char.Abilities {
-		if char.Abilities[i].ID == payload.AbilityID {
-			ability = &char.Abilities[i]
+		if char.Abilities[i].Id == payload.AbilityId {
+			ability = char.Abilities[i]
 			abilityFound = true
 			break
 		}
 	}
 
 	if !abilityFound {
-		ge.logger.Warn("Ability not found on character", zap.String("abilityID", payload.AbilityID), zap.String("characterID", payload.CharacterID))
+		ge.logger.Warn("Ability not found on character", zap.Int32("abilityID", payload.AbilityId), zap.Int32("characterID", payload.CharacterId))
 		return
 	}
 
@@ -340,11 +342,11 @@ func (ge *GameEngine) handleUseAbilityAction(player *model.Player, action *model
 }
 
 func (ge *GameEngine) handleReadyForNextPhaseAction(player *model.Player) {
-	ge.playerReady[player.ID] = true
+	ge.playerReady[player.Id] = true
 }
 
 func (ge *GameEngine) handleMakeGuessAction(action *model.PlayerAction) {
-	if ge.GameState.CurrentPhase != model.PhaseProtagonistGuess {
+	if ge.GameState.CurrentPhase != model.GamePhase_GAME_PHASE_PROTAGONIST_GUESS {
 		ge.logger.Warn("MakeGuess action received outside of the guess phase")
 		return
 	}
@@ -363,7 +365,7 @@ func (ge *GameEngine) handleMakeGuessAction(action *model.PlayerAction) {
 			continue // Ignore guesses for non-existent characters
 		}
 		// Only count characters that have a hidden role to be guessed
-		if char.HiddenRole != "" {
+		if char.HiddenRole != model.RoleType_ROLE_TYPE_UNSPECIFIED {
 			totalCharactersToGuess++
 			if char.HiddenRole == guessedRole {
 				correctGuesses++
@@ -372,35 +374,35 @@ func (ge *GameEngine) handleMakeGuessAction(action *model.PlayerAction) {
 	}
 
 	if totalCharactersToGuess > 0 && correctGuesses == totalCharactersToGuess {
-		ge.endGame(model.PlayerRoleProtagonist)
+		ge.endGame(model.PlayerRole_PLAYER_ROLE_PROTAGONIST)
 	} else {
-		ge.endGame(model.PlayerRoleMastermind)
+		ge.endGame(model.PlayerRole_PLAYER_ROLE_MASTERMIND)
 	}
 }
 
 // --- Game Phase Handlers ---
 
 func (ge *GameEngine) handleMorningPhase() {
-	ge.logger.Info("Morning Phase", zap.Int("loop", ge.GameState.CurrentLoop), zap.Int("day", ge.GameState.CurrentDay))
+	ge.logger.Info("Morning Phase", zap.Int("loop", int(ge.GameState.CurrentLoop)), zap.Int("day", int(ge.GameState.CurrentDay)))
 	ge.resetPlayerReadiness()
-	ge.GameState.PlayedCardsThisDay = make(map[string][]model.Card) // Clear cards for the new day
+	ge.GameState.PlayedCardsThisDay = make(map[int32]*model.CardList) // Clear cards for the new day
 
 	// Trigger DayStart abilities
 	for _, char := range ge.GameState.Characters {
 		for i, ability := range char.Abilities {
-			if ability.TriggerType == model.AbilityTriggerDayStart && !ability.UsedThisLoop {
-				payload := model.UseAbilityPayload{CharacterID: char.ID, AbilityID: ability.ID} // Assuming self-target for simplicity
-				if err := ge.applyEffect(ability.Effect, &ability, payload); err != nil {
+			if ability.TriggerType == model.AbilityTriggerType_ABILITY_TRIGGER_TYPE_DAY_START && !ability.UsedThisLoop {
+				payload := model.UseAbilityPayload{CharacterId: char.Id, AbilityId: ability.Id} // Assuming self-target for simplicity
+				if err := ge.applyEffect(ability.Effect, ability, &payload); err != nil {
 					ge.logger.Error("Error applying DayStart ability effect", zap.Error(err), zap.String("character", char.Name), zap.String("ability", ability.Name))
 				}
-				ge.GameState.Characters[char.ID].Abilities[i].UsedThisLoop = true // Mark as used
-				ge.publishGameEvent(model.EventAbilityUsed, map[string]string{"character_id": char.ID, "ability_name": ability.Name})
+				ge.GameState.Characters[char.Id].Abilities[i].UsedThisLoop = true // Mark as used
+				ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_ABILITY_USED, &model.AbilityUsedEvent{CharacterId: char.Id, AbilityName: ability.Name})
 			}
 		}
 	}
 
-	ge.GameState.CurrentPhase = model.PhaseCardPlay
-	ge.publishGameEvent(model.EventDayAdvanced, map[string]int{"day": ge.GameState.CurrentDay, "loop": ge.GameState.CurrentLoop})
+	ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_CARD_PLAY
+	ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED, &model.DayAdvancedEvent{Day: ge.GameState.CurrentDay, Loop: ge.GameState.CurrentLoop})
 }
 
 func (ge *GameEngine) handleCardPlayPhase() {
@@ -409,7 +411,7 @@ func (ge *GameEngine) handleCardPlayPhase() {
 		if ge.playerReady[playerID] {
 			continue
 		}
-		if player.IsLLM {
+		if player.IsLlm {
 			go ge.triggerLLMPlayerAction(playerID)
 		}
 		allPlayersReady = false
@@ -417,37 +419,37 @@ func (ge *GameEngine) handleCardPlayPhase() {
 
 	if allPlayersReady {
 		ge.logger.Info("All players ready for Card Reveal.")
-		ge.GameState.CurrentPhase = model.PhaseCardReveal
+		ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_CARD_REVEAL
 	}
 }
 
 func (ge *GameEngine) handleCardRevealPhase() {
 	ge.logger.Info("Card Reveal Phase")
-	ge.publishGameEvent(model.EventCardPlayed, ge.GameState.PlayedCardsThisDay)
-	ge.GameState.CurrentPhase = model.PhaseCardResolve
+	ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_CARD_PLAYED, &model.CardPlayedEvent{PlayedCards: ge.GameState.PlayedCardsThisDay})
+	ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_CARD_RESOLVE
 }
 
 func (ge *GameEngine) handleCardResolvePhase() {
 	ge.logger.Info("Card Resolve Phase")
 	// Resolve cards in a specific order if necessary (e.g., by initiative). For now, iterate over players.
 	for playerID, cards := range ge.GameState.PlayedCardsThisDay {
-		for _, card := range cards {
+		for _, card := range cards.Cards {
 			// We need to create a payload that fits the new UseAbilityPayload structure.
 			// However, card effects are not directly tied to a character's ability in the same way.
 			// This part of the logic might need a bigger refactor depending on how card effects are intended to work.
 			// For now, we'll pass an empty payload and adjust the applyEffect function if necessary.
 			// A better approach would be to have card effects not use UseAbilityPayload, but their own struct.
 			payload := model.UseAbilityPayload{} // This is a temporary fix.
-			if err := ge.applyEffect(card.Effect, nil, payload); err != nil {
+			if err := ge.applyEffect(card.Effect, nil, &payload); err != nil {
 				ge.logger.Error("Error applying card effect",
 					zap.Error(err),
-					zap.String("playerID", playerID),
+					zap.String("playerID", fmt.Sprint(playerID)),
 					zap.String("cardName", card.Name),
 				)
 			}
 		}
 	}
-	ge.GameState.CurrentPhase = model.PhaseAbilities
+	ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_ABILITIES
 }
 
 func (ge *GameEngine) handleAbilitiesPhase() {
@@ -455,9 +457,9 @@ func (ge *GameEngine) handleAbilitiesPhase() {
 	// This phase can be complex, involving player choices.
 	// For now, we assume a simple flow where the Mastermind might use an ability.
 	mastermindPlayer := ge.GameState.Players[ge.mastermindPlayerID]
-	if !ge.playerReady[mastermindPlayer.ID] {
-		if mastermindPlayer.IsLLM {
-			go ge.triggerLLMPlayerAction(mastermindPlayer.ID)
+	if !ge.playerReady[mastermindPlayer.Id] {
+		if mastermindPlayer.IsLlm {
+			go ge.triggerLLMPlayerAction(mastermindPlayer.Id)
 		}
 		return // Wait for mastermind action/readiness
 	}
@@ -465,7 +467,7 @@ func (ge *GameEngine) handleAbilitiesPhase() {
 	// After mastermind, protagonists might act. This requires more state and player interaction.
 	// For now, we'll just move to the next phase.
 	ge.resetPlayerReadiness()
-	ge.GameState.CurrentPhase = model.PhaseIncidents
+	ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_INCIDENTS
 }
 
 func (ge *GameEngine) handleIncidentsPhase() {
@@ -476,7 +478,7 @@ func (ge *GameEngine) handleIncidentsPhase() {
 		if tragedy.Day == ge.GameState.CurrentDay && ge.GameState.ActiveTragedies[tragedy.TragedyType] && !ge.GameState.PreventedTragedies[tragedy.TragedyType] {
 			if ge.checkTragedyConditions(tragedy) {
 				ge.logger.Info("Tragedy triggered!", zap.String("tragedy_type", string(tragedy.TragedyType)))
-				ge.publishGameEvent(model.EventTragedyTriggered, map[string]string{"tragedy_type": string(tragedy.TragedyType)})
+				ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_TRAGEDY_TRIGGERED, &model.TragedyTriggeredEvent{TragedyType: tragedy.TragedyType})
 				tragedyOccurred = true
 				break // Only one tragedy per day
 			}
@@ -484,24 +486,24 @@ func (ge *GameEngine) handleIncidentsPhase() {
 	}
 
 	if tragedyOccurred {
-		ge.GameState.CurrentPhase = model.PhaseLoopEnd
+		ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_LOOP_END
 	} else {
-		ge.GameState.CurrentPhase = model.PhaseDayEnd
+		ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_DAY_END
 	}
 }
 
 func (ge *GameEngine) handleDayEndPhase() {
-	ge.logger.Info("Day End Phase", zap.Int("day", ge.GameState.CurrentDay))
+	ge.logger.Info("Day End Phase", zap.Int("day", int(ge.GameState.CurrentDay)))
 	ge.GameState.CurrentDay++
 	if ge.GameState.CurrentDay > ge.GameState.Script.DaysPerLoop {
-		ge.GameState.CurrentPhase = model.PhaseLoopEnd
+		ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_LOOP_END
 	} else {
-		ge.GameState.CurrentPhase = model.PhaseMorning
+		ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_MORNING
 	}
 }
 
 func (ge *GameEngine) handleLoopEndPhase() {
-	ge.logger.Info("Loop End Phase", zap.Int("loop", ge.GameState.CurrentLoop))
+	ge.logger.Info("Loop End Phase", zap.Int("loop", int(ge.GameState.CurrentLoop)))
 
 	// Check for Mastermind win condition (a tragedy occurred or final loop ended with un-prevented tragedies)
 	mastermindWins := false
@@ -517,16 +519,16 @@ func (ge *GameEngine) handleLoopEndPhase() {
 	// If it's the last loop, the outcome is final.
 	if ge.GameState.CurrentLoop >= ge.GameState.Script.LoopCount {
 		if mastermindWins {
-			ge.endGame(model.PlayerRoleMastermind)
+			ge.endGame(model.PlayerRole_PLAYER_ROLE_MASTERMIND)
 		} else {
-			ge.endGame(model.PlayerRoleProtagonist)
+			ge.endGame(model.PlayerRole_PLAYER_ROLE_PROTAGONIST)
 		}
 		return
 	}
 
 	// If a tragedy occurred mid-loop, Mastermind wins immediately.
 	if mastermindWins { // Simplified check, should be based on an actual event.
-		ge.endGame(model.PlayerRoleMastermind)
+		ge.endGame(model.PlayerRole_PLAYER_ROLE_MASTERMIND)
 		return
 	}
 
@@ -534,8 +536,8 @@ func (ge *GameEngine) handleLoopEndPhase() {
 	ge.resetLoop()
 	ge.GameState.CurrentLoop++
 	ge.GameState.CurrentDay = 1
-	ge.GameState.CurrentPhase = model.PhaseMorning
-	ge.publishGameEvent(model.EventLoopReset, map[string]int{"loop": ge.GameState.CurrentLoop})
+	ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_MORNING
+	ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_RESET, &model.LoopResetEvent{Loop: ge.GameState.CurrentLoop})
 }
 
 func (ge *GameEngine) handleProtagonistGuessPhase() {
@@ -543,40 +545,56 @@ func (ge *GameEngine) handleProtagonistGuessPhase() {
 	// This phase is triggered by a player action (ActionMakeGuess).
 	// The logic is handled in `handleMakeGuessAction`.
 	// After the guess, the game transitions to GameOver.
-	ge.GameState.CurrentPhase = model.PhaseGameOver
+	ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_GAME_OVER
 }
 
 // --- Core Logic & Helper Functions ---
 
-func (ge *GameEngine) processEvent(event model.Event) {
+func (ge *GameEngine) processEvent(event *model.GameEvent) {
 	// This function applies the consequences of a resolved effect event to the game state.
-	switch e := event.(type) {
-	case model.CharacterMovedEvent:
-		if char, ok := ge.GameState.Characters[e.CharacterID]; ok {
+	switch event.Type {
+	case model.GameEventType_GAME_EVENT_TYPE_CHARACTER_MOVED:
+		var e model.CharacterMovedEvent
+		if err := event.Payload.UnmarshalTo(&e); err != nil {
+			ge.logger.Error("Failed to unmarshal CharacterMovedEvent", zap.Error(err))
+			return
+		}
+		if char, ok := ge.GameState.Characters[e.CharacterId]; ok {
 			char.CurrentLocation = e.NewLocation
-			ge.publishGameEvent(model.EventCharacterMoved, e)
 		}
-	case model.ParanoiaAdjustedEvent:
-		if char, ok := ge.GameState.Characters[e.CharacterID]; ok {
+	case model.GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED:
+		var e model.ParanoiaAdjustedEvent
+		if err := event.Payload.UnmarshalTo(&e); err != nil {
+			ge.logger.Error("Failed to unmarshal ParanoiaAdjustedEvent", zap.Error(err))
+			return
+		}
+		if char, ok := ge.GameState.Characters[e.CharacterId]; ok {
 			char.Paranoia += e.Amount
-			ge.publishGameEvent(model.EventParanoiaAdjusted, e)
 		}
-	case model.GoodwillAdjustedEvent:
-		if char, ok := ge.GameState.Characters[e.CharacterID]; ok {
+	case model.GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED:
+		var e model.GoodwillAdjustedEvent
+		if err := event.Payload.UnmarshalTo(&e); err != nil {
+			ge.logger.Error("Failed to unmarshal GoodwillAdjustedEvent", zap.Error(err))
+			return
+		}
+		if char, ok := ge.GameState.Characters[e.CharacterId]; ok {
 			char.Goodwill += e.Amount
-			ge.publishGameEvent(model.EventGoodwillAdjusted, e)
 		}
-	case model.IntrigueAdjustedEvent:
-		if char, ok := ge.GameState.Characters[e.CharacterID]; ok {
+	case model.GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED:
+		var e model.IntrigueAdjustedEvent
+		if err := event.Payload.UnmarshalTo(&e); err != nil {
+			ge.logger.Error("Failed to unmarshal IntrigueAdjustedEvent", zap.Error(err))
+			return
+		}
+		if char, ok := ge.GameState.Characters[e.CharacterId]; ok {
 			char.Intrigue += e.Amount
-			ge.publishGameEvent(model.EventIntrigueAdjusted, e)
 		}
 	default:
-		ge.logger.Warn("Unknown event type for processing", zap.Any("event", event))
+		ge.logger.Warn("Unknown event type for processing", zap.String("eventType", event.Type.String()))
 	}
 }
 
-func (ge *GameEngine) applyEffect(effect model.Effect, ability *model.Ability, payload model.UseAbilityPayload) error {
+func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload) error {
 	ctx := model.EffectContext{GameState: ge.GameState}
 
 	// First, see if the effect requires a choice from the player.
@@ -586,8 +604,8 @@ func (ge *GameEngine) applyEffect(effect model.Effect, ability *model.Ability, p
 	}
 
 	// If choices are available and no specific target was provided in the payload, ask the player.
-	if len(choices) > 1 && payload.CharacterID == "" { // Simplified check, might need more robust logic
-		ge.publishGameEvent(model.EventChoiceRequired, choices)
+	if len(choices) > 1 && payload.CharacterId == "" { // Simplified check, might need more robust logic
+		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_CHOICE_REQUIRED, choices)
 		return nil // Stop processing and wait for a player action with the choice.
 	}
 
@@ -606,9 +624,9 @@ func (ge *GameEngine) applyEffect(effect model.Effect, ability *model.Ability, p
 }
 
 // checkTragedyConditions checks if the conditions for a given tragedy are met.
-func (ge *GameEngine) checkTragedyConditions(tragedy model.TragedyCondition) bool {
+func (ge *GameEngine) checkTragedyConditions(tragedy *model.TragedyCondition) bool {
 	for _, cond := range tragedy.Conditions {
-		char, ok := ge.GameState.Characters[cond.CharacterID]
+		char, ok := ge.GameState.Characters[cond.CharacterId]
 		if !ok || !char.IsAlive {
 			return false // Character not found or not alive
 		}
@@ -638,7 +656,7 @@ func (ge *GameEngine) resetLoop() {
 	ge.logger.Info("Resetting for new loop...")
 	// Reset characters to their initial script configuration
 	for _, charConfig := range ge.GameState.Script.Characters {
-		if char, ok := ge.GameState.Characters[charConfig.CharacterID]; ok {
+		if char, ok := ge.GameState.Characters[charConfig.Id]; ok {
 			char.CurrentLocation = charConfig.InitialLocation
 			char.Paranoia = 0
 			char.Goodwill = 0
@@ -657,11 +675,11 @@ func (ge *GameEngine) resetLoop() {
 	}
 
 	// Clear loop-specific state
-	ge.GameState.PreventedTragedies = make(map[model.TragedyType]bool)
-	ge.GameState.PlayedCardsThisDay = make(map[string][]model.Card)
-	ge.GameState.PlayedCardsThisLoop = make(map[string][]model.Card)
-	ge.GameState.DayEvents = []model.GameEvent{}
-	ge.GameState.LoopEvents = []model.GameEvent{}
+	ge.GameState.PreventedTragedies = make(map[int32]bool)
+	ge.GameState.PlayedCardsThisDay = make(map[int32]*model.CardList)
+	ge.GameState.PlayedCardsThisLoop = make(map[int32]*model.CardList)
+	ge.GameState.DayEvents = []*model.GameEvent{}
+	ge.GameState.LoopEvents = []*model.GameEvent{}
 
 	ge.logger.Info("Loop reset complete.")
 }
@@ -669,8 +687,8 @@ func (ge *GameEngine) resetLoop() {
 // endGame transitions the game to a finished state.
 func (ge *GameEngine) endGame(winner model.PlayerRole) {
 	ge.logger.Info("Game Over!", zap.String("winner", string(winner)))
-	ge.GameState.CurrentPhase = model.PhaseGameOver
-	ge.publishGameEvent(model.EventGameOver, map[string]string{"winner": string(winner)})
+	ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_GAME_OVER
+	ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_OVER, &model.GameOverEvent{Winner: winner})
 	ge.StopGameLoop()
 }
 
@@ -683,15 +701,15 @@ func (ge *GameEngine) resetPlayerReadiness() {
 
 // generatePlayerView creates a filtered view of the game state for a specific player.
 // This method is NOT thread-safe and must only be called from within the runGameLoop goroutine.
-func (ge *GameEngine) generatePlayerView(playerID string) model.PlayerView {
+func (ge *GameEngine) generatePlayerView(playerID int32) *model.PlayerView {
 	player := ge.GameState.Players[playerID]
 	if player == nil {
-		return model.PlayerView{} // Or handle error
+		return &model.PlayerView{} // Or handle error
 	}
 
-	view := model.PlayerView{
-		GameID:             ge.GameState.GameID,
-		ScriptID:           ge.GameState.Script.ID,
+	view := &model.PlayerView{
+		GameId:             ge.GameState.GameId,
+		ScriptId:           ge.GameState.Script.Id,
 		CurrentDay:         ge.GameState.CurrentDay,
 		CurrentLoop:        ge.GameState.CurrentLoop,
 		CurrentPhase:       ge.GameState.CurrentPhase,
@@ -701,17 +719,17 @@ func (ge *GameEngine) generatePlayerView(playerID string) model.PlayerView {
 	}
 
 	// Filter characters based on player role
-	view.Characters = make(map[string]*model.Character)
+	view.Characters = make(map[int32]*model.Character)
 	for id, char := range ge.GameState.Characters {
 		charCopy := *char // Create a copy to avoid modifying original data
-		if player.Role == model.PlayerRoleProtagonist {
-			charCopy.HiddenRole = "" // Hide role from protagonists
+		if player.Role == model.PlayerRole_PLAYER_ROLE_PROTAGONIST {
+			charCopy.HiddenRole = model.RoleType_ROLE_TYPE_PROTAGONIST // Hide role from protagonists
 		}
 		view.Characters[id] = &charCopy
 	}
 
 	// Filter player info
-	view.Players = make(map[string]*model.Player)
+	view.Players = make(map[int32]*model.Player)
 	for id, p := range ge.GameState.Players {
 		playerCopy := *p
 		if id != playerID {
@@ -722,7 +740,7 @@ func (ge *GameEngine) generatePlayerView(playerID string) model.PlayerView {
 
 	// Add player-specific info
 	view.YourHand = player.Hand
-	if player.Role == model.PlayerRoleProtagonist {
+	if player.Role == model.PlayerRole_PLAYER_ROLE_PROTAGONIST {
 		view.YourDeductions = player.DeductionKnowledge
 	}
 
@@ -732,9 +750,9 @@ func (ge *GameEngine) generatePlayerView(playerID string) model.PlayerView {
 // --- LLM Integration ---
 
 // triggerLLMPlayerAction prompts an LLM player to make a decision.
-func (ge *GameEngine) triggerLLMPlayerAction(playerID string) {
+func (ge *GameEngine) triggerLLMPlayerAction(playerID int32) {
 	player := ge.GameState.Players[playerID]
-	if player == nil || !player.IsLLM {
+	if player == nil || !player.IsLlm {
 		return
 	}
 
@@ -742,18 +760,26 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID string) {
 	playerView := ge.GetPlayerView(playerID) // Get a safe, filtered view of the game state
 	pBuilder := promptbuilder.NewPromptBuilder()
 	var prompt string
-	if player.Role == model.PlayerRoleMastermind {
-		prompt = pBuilder.BuildMastermindPrompt(playerView, ge.GameState.Script, ge.GameState.Characters)
+	if player.Role == model.PlayerRole_PLAYER_ROLE_MASTERMIND {
+		charactersWithStringKeys := make(map[string]*model.Character)
+		for id, char := range ge.GameState.Characters {
+			charactersWithStringKeys[fmt.Sprint(id)] = char
+		}
+		prompt = pBuilder.BuildMastermindPrompt(playerView, ge.GameState.Script, charactersWithStringKeys)
 	} else {
-		prompt = pBuilder.BuildProtagonistPrompt(playerView, player.DeductionKnowledge)
+		deductionKnowledgeWithStringKeys := make(map[string]string)
+		for id, value := range player.DeductionKnowledge {
+			deductionKnowledgeWithStringKeys[fmt.Sprint(id)] = value.String()
+		}
+		prompt = pBuilder.BuildProtagonistPrompt(playerView, deductionKnowledgeWithStringKeys)
 	}
 
 	go func() {
-		llmResponse, err := ge.llmClient.GenerateResponse(prompt, player.LLMSessionID)
+		llmResponse, err := ge.llmClient.GenerateResponse(prompt, player.LlmSessionId)
 		if err != nil {
 			ge.logger.Error("LLM call failed", zap.String("player", player.Name), zap.Error(err))
 			// Submit a default action to unblock the game
-			ge.requestChan <- model.PlayerAction{PlayerID: playerID, GameID: ge.GameState.GameID, Type: model.ActionReadyForNextPhase}
+			ge.requestChan <- &model.PlayerAction{PlayerId: playerID, GameId: ge.GameState.GameId, Type: model.ActionType_ACTION_TYPE_READY_FOR_NEXT_PHASE}
 			return
 		}
 
@@ -762,7 +788,7 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID string) {
 		if err != nil {
 			ge.logger.Error("Failed to parse LLM response", zap.String("player", player.Name), zap.Error(err))
 			// Submit a default action to unblock the game
-			ge.requestChan <- model.PlayerAction{PlayerID: playerID, GameID: ge.GameState.GameID, Type: model.ActionReadyForNextPhase}
+			ge.requestChan <- &model.PlayerAction{PlayerId: playerID, GameId: ge.GameState.GameId, Type: model.ActionType_ACTION_TYPE_READY_FOR_NEXT_PHASE}
 			return
 		}
 
@@ -777,14 +803,19 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID string) {
 	}()
 }
 
-func (ge *GameEngine) publishGameEvent(eventType model.GameEventType, payload interface{}) {
-	event := model.GameEvent{
+func (ge *GameEngine) publishGameEvent(eventType model.GameEventType, payload proto.Message) {
+	anyPayload, err := anypb.New(payload)
+	if err != nil {
+		ge.logger.Error("Failed to create anypb.Any for event payload", zap.Error(err))
+		return
+	}
+	event := &model.GameEvent{
 		Type:      eventType,
-		Payload:   payload,
-		Timestamp: time.Now(),
+		Payload:   anyPayload,
+		Timestamp: timestamppb.Now(),
 	}
 	select {
-	case ge.gameEventChan <- event:
+	case ge.gameEventChan <- *event:
 		// Also record the event in the game state for player views
 		ge.GameState.DayEvents = append(ge.GameState.DayEvents, event)
 		ge.GameState.LoopEvents = append(ge.GameState.LoopEvents, event)

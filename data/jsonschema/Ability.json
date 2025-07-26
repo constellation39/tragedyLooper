@@ -5,7 +5,7 @@
         "Ability": {
             "properties": {
                 "id": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "name": {
                     "type": "string",
@@ -79,8 +79,8 @@
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Ability",
-            "description": "Ability 定义角色的特殊技能。"
+            "title": "Ability 定义角色的特殊技能。",
+            "description": "Ability 定义角色的特殊技能。  Ability 定义角色的特殊技能。"
         },
         "model.AdjustGoodwillEffect": {
             "properties": {

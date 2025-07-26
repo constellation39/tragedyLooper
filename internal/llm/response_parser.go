@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"google.golang.org/protobuf/types/known/anypb"
+	"google.golang.org/protobuf/types/known/structpb"
 	"tragedylooper/internal/game/proto/model"
 )
 
@@ -35,9 +35,9 @@ func (rp *ResponseParser) ParseLLMAction(llmResponse string) (*model.PlayerActio
 		if err != nil {
 			return nil, fmt.Errorf("invalid PlayCard payload structure: %w", err)
 		}
-		action.Payload, err = anypb.New(&payload)
-		if err != nil {
-			return nil, fmt.Errorf("failed to marshal PlayCard payload to any: %w", err)
+		action.Payload = &structpb.Struct{}
+		if err := action.Payload.UnmarshalJSON(payloadBytes); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal payload to struct: %w", err)
 		}
 
 	case model.ActionType_ACTION_TYPE_USE_ABILITY:
@@ -50,9 +50,9 @@ func (rp *ResponseParser) ParseLLMAction(llmResponse string) (*model.PlayerActio
 		if err != nil {
 			return nil, fmt.Errorf("invalid UseAbility payload structure: %w", err)
 		}
-		action.Payload, err = anypb.New(&payload)
-		if err != nil {
-			return nil, fmt.Errorf("failed to marshal UseAbility payload to any: %w", err)
+		action.Payload = &structpb.Struct{}
+		if err := action.Payload.UnmarshalJSON(payloadBytes); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal payload to struct: %w", err)
 		}
 
 	case model.ActionType_ACTION_TYPE_MAKE_GUESS:
@@ -65,9 +65,9 @@ func (rp *ResponseParser) ParseLLMAction(llmResponse string) (*model.PlayerActio
 		if err != nil {
 			return nil, fmt.Errorf("invalid MakeGuess payload structure: %w", err)
 		}
-		action.Payload, err = anypb.New(&payload)
-		if err != nil {
-			return nil, fmt.Errorf("failed to marshal MakeGuess payload to any: %w", err)
+		action.Payload = &structpb.Struct{}
+		if err := action.Payload.UnmarshalJSON(payloadBytes); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal payload to struct: %w", err)
 		}
 
 	case model.ActionType_ACTION_TYPE_READY_FOR_NEXT_PHASE:

@@ -119,7 +119,7 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		PlayerID   string           `json:"player_id"`
 		PlayerName string           `json:"player_name"`
 		PlayerRole model.PlayerRole `json:"player_role"`
-		IsLLM      bool             `json:"is_llm"`
+		IsLlm      bool             `json:"is_llm"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
@@ -146,7 +146,7 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		Id:                 req.PlayerID,
 		Name:               req.PlayerName,
 		Role:               req.PlayerRole,
-		IsLlm:              req.IsLLM,
+		IsLlm:              req.IsLlm,
 		Hand:               make([]*model.Card, 0), // 卡牌将由游戏引擎处理
 		DeductionKnowledge: nil,
 		LlmSessionId:       "",
@@ -174,11 +174,11 @@ func (s *Server) HandleJoinRoom(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var req struct {
-		GameID     string           `json:"game_id"`
+		GameId     string           `json:"game_id"`
 		PlayerID   string           `json:"player_id"`
 		PlayerName string           `json:"player_name"`
 		PlayerRole model.PlayerRole `json:"player_role"`
-		IsLLM      bool             `json:"is_llm"`
+		IsLlm      bool             `json:"is_llm"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
@@ -186,7 +186,7 @@ func (s *Server) HandleJoinRoom(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s.mu.RLock()
-	room, ok := s.rooms[req.GameID]
+	room, ok := s.rooms[req.GameId]
 	s.mu.RUnlock()
 
 	if !ok {
@@ -198,12 +198,12 @@ func (s *Server) HandleJoinRoom(w http.ResponseWriter, r *http.Request) {
 		Id:         req.PlayerID,
 		Name:       req.PlayerName,
 		Role:       req.PlayerRole,
-		IsLlm:      req.IsLLM,
+		IsLlm:      req.IsLlm,
 		Hand:       &model.CardList{}, // Cards will be handled by the model engine
 		Deductions: make(map[string]string),
 	}
 
-	ctxLogger.Info("Player joined room", zap.String("playerID", req.PlayerID), zap.String("gameID", req.GameID), zap.String("role", req.PlayerRole.String()))
+	ctxLogger.Info("Player joined room", zap.String("playerID", req.PlayerID), zap.String("gameID", req.GameId), zap.String("role", req.PlayerRole.String()))
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(map[string]string{"message": "Joined room successfully"}); err != nil {
 		ctxLogger.Error("Error encoding response", zap.Error(err))
@@ -290,7 +290,7 @@ func (c *Client) writePump() {
 
 // Room 管理单个游戏实例及其连接的客户端。
 type Room struct {
-	GameID     string
+	GameId     string
 	gameEngine *engine.GameEngine
 	clients    map[string]*Client // 玩家 ID 到 Client 的映射
 	mu         sync.RWMutex
@@ -301,7 +301,7 @@ type Room struct {
 // NewRoom 创建一个新的游戏房间。
 func NewRoom(gameID string, ge *engine.GameEngine, logger *zap.Logger) *Room {
 	return &Room{
-		GameID:     gameID,
+		GameId:     gameID,
 		gameEngine: ge,
 		clients:    make(map[string]*Client),
 		stopChan:   make(chan struct{}),
@@ -315,7 +315,7 @@ func (r *Room) AddClient(client *Client) {
 	defer r.mu.Unlock()
 	r.clients[client.playerID] = client
 	client.room = r // 设置客户端的房间引用
-	r.logger.Info("Client added to room", zap.String("clientID", client.playerID), zap.String("roomID", r.GameID))
+	r.logger.Info("Client added to room", zap.String("clientID", client.playerID), zap.String("roomID", r.GameId))
 }
 
 // RemoveClient 从房间中移除客户端。
@@ -325,7 +325,7 @@ func (r *Room) RemoveClient(playerID string) {
 	if client, ok := r.clients[playerID]; ok {
 		close(client.send) // 关闭客户端的发送通道
 		delete(r.clients, playerID)
-		r.logger.Info("Client removed from room", zap.String("clientID", playerID), zap.String("roomID", r.GameID))
+		r.logger.Info("Client removed from room", zap.String("clientID", playerID), zap.String("roomID", r.GameId))
 	}
 }
 
@@ -339,7 +339,7 @@ func (r *Room) Start() {
 func (r *Room) Stop() {
 	r.gameEngine.StopGameLoop()
 	close(r.stopChan)
-	r.logger.Info("Room signaled to stop.", zap.String("roomID", r.GameID))
+	r.logger.Info("Room signaled to stop.", zap.String("roomID", r.GameId))
 }
 
 // broadcastGameEvents 监听游戏事件并将其广播给客户端。
@@ -348,22 +348,22 @@ func (r *Room) broadcastGameEvents() {
 	for {
 		select {
 		case <-r.stopChan:
-			r.logger.Info("Event broadcaster stopped.", zap.String("roomID", r.GameID))
+			r.logger.Info("Event broadcaster stopped.", zap.String("roomID", r.GameId))
 			return
 		case event := <-eventChan:
-			r.logger.Debug("Broadcasting event", zap.String("roomID", r.GameID), zap.String("eventType", event.Type.String()))
+			r.logger.Debug("Broadcasting event", zap.String("roomID", r.GameId), zap.String("eventType", event.Type.String()))
 			r.mu.RLock()
 			for playerID, client := range r.clients {
 				playerView := r.gameEngine.GetPlayerView(playerID)
 				msg, err := json.Marshal(playerView)
 				if err != nil {
-					r.logger.Error("Failed to marshal player view", zap.String("roomID", r.GameID), zap.String("playerID", playerID), zap.Error(err))
+					r.logger.Error("Failed to marshal player view", zap.String("roomID", r.GameId), zap.String("playerID", playerID), zap.Error(err))
 					continue
 				}
 				select {
 				case client.send <- msg:
 				default:
-					r.logger.Warn("Client send channel full, dropping message.", zap.String("roomID", r.GameID), zap.String("playerID", playerID))
+					r.logger.Warn("Client send channel full, dropping message.", zap.String("roomID", r.GameId), zap.String("playerID", playerID))
 				}
 			}
 			r.mu.RUnlock()

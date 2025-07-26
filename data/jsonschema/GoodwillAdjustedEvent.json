@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/GoodwillAdjustedEvent",
+    "definitions": {
+        "GoodwillAdjustedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer"
+                },
+                "amount": {
+                    "type": "integer"
+                },
+                "new_goodwill": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Goodwill Adjusted Event"
+        }
+    }
+}
