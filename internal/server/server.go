@@ -198,7 +198,7 @@ func (s *Server) HandleJoinRoom(w http.ResponseWriter, r *http.Request) {
 		Name:               req.PlayerName,
 		Role:               req.PlayerRole,
 		IsLLM:              req.IsLLM,
-		Hand:               []model.Card{}, // Cards will be handled by the game engine
+		Hand:               []model.Card{}, // Cards will be handled by the model engine
 		DeductionKnowledge: make(map[string]interface{}),
 	}
 

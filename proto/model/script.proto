@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package model;
+
+import "proto/model/character.proto";
+import "proto/model/tragedy.proto";
+
+option go_package = "github.com/user/repo/proto/model";
+
+// Script 定义一个特定的游戏场景。
+message Script {
+  string id = 1; // 唯一标识符
+  string name = 2; // 剧本名称
+  string description = 3; // 剧本描述
+  string main_plot = 4; // 主线剧情
+  repeated string sub_plots = 5; // 支线剧情
+  repeated CharacterConfig characters = 6; // 角色配置
+  repeated TragedyCondition tragedies = 7; // 悲剧条件
+  int32 loop_count = 8; // 循环总次数
+  int32 days_per_loop = 9; // 每循环天数
+}

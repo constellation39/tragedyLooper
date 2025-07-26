@@ -22,7 +22,7 @@ func (pb *PromptBuilder) BuildMastermindPrompt(
 	characters map[string]*model.Character, // 主谋看到隐藏身份
 ) string {
 	var sb strings.Builder
-	sb.WriteString("You are the Mastermind in the game Tragedy Looper.\n")
+	sb.WriteString("You are the Mastermind in the model Tragedy Looper.\n")
 	sb.WriteString("Your goal is to trigger one of the tragedies defined in the script before the loops run out, or before the Protagonists make a correct final guess.\n")
 	sb.WriteString("You know all hidden roles and plots. You can bluff and mislead the Protagonists.\n\n")
 
@@ -63,7 +63,7 @@ func (pb *PromptBuilder) BuildMastermindPrompt(
 
 	sb.WriteString("\n--- Instructions ---\n")
 	sb.WriteString(fmt.Sprintf("It is currently the %s phase.\n", fullGameState.CurrentPhase))
-	sb.WriteString("Based on the current game state and your objective, decide your action.\n")
+	sb.WriteString("Based on the current model state and your objective, decide your action.\n")
 	sb.WriteString("You can play a card (ActionPlayCard) or use an ability (ActionUseAbility) or signal readiness (ActionReadyForNextPhase).\n")
 	sb.WriteString("If playing a card, specify 'card_id', 'target_character_id' (if applicable), 'target_location' (if applicable).\n")
 	sb.WriteString("If using an ability, specify 'ability_name' and 'target_character_id' (if applicable).\n")
@@ -81,7 +81,7 @@ func (pb *PromptBuilder) BuildProtagonistPrompt(
 	deductionKnowledge map[string]interface{},
 ) string {
 	var sb strings.Builder
-	sb.WriteString("You are a Protagonist in the game Tragedy Looper.\n")
+	sb.WriteString("You are a Protagonist in the model Tragedy Looper.\n")
 	sb.WriteString("Your goal is to deduce the hidden roles and plots, and prevent tragedies from occurring.\n")
 	sb.WriteString("You do not know the hidden roles or the full script initially. You must deduce them from observations.\n\n")
 
@@ -119,12 +119,12 @@ func (pb *PromptBuilder) BuildProtagonistPrompt(
 
 	sb.WriteString("\n--- Instructions ---\n")
 	sb.WriteString(fmt.Sprintf("It is currently the %s phase.\n", playerView.CurrentPhase))
-	sb.WriteString("Based on the current game state and your deductions, decide your action.\n")
+	sb.WriteString("Based on the current model state and your deductions, decide your action.\n")
 	sb.WriteString("You can play a card (ActionPlayCard) or use an ability (ActionUseAbility) or signal readiness (ActionReadyForNextPhase).\n")
 	sb.WriteString("If playing a card, specify 'card_id', 'target_character_id' (if applicable), 'target_location' (if applicable).\n")
 	sb.WriteString("If using an ability, specify 'ability_name' and 'target_character_id' (if applicable).\n")
 	sb.WriteString("If you have no action or are done, use ActionReadyForNextPhase.\n")
-	sb.WriteString("You can also make a final guess (ActionMakeGuess) if you believe you have deduced all roles correctly. This ends the game.\n")
+	sb.WriteString("You can also make a final guess (ActionMakeGuess) if you believe you have deduced all roles correctly. This ends the model.\n")
 	sb.WriteString("Please provide your action in JSON format, matching the model.PlayerAction structure.\n")
 	sb.WriteString("Example: {\"type\": \"PlayCard\", \"payload\": {\"card_id\": \"some_card_id\", \"target_character_id\": \"some_char_id\"}}\n")
 	sb.WriteString("Example: {\"type\": \"ReadyForNextPhase\"}\n")

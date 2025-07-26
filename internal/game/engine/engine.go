@@ -3,7 +3,6 @@ package engine
 import (
 	"fmt"
 	"time"
-	"tragedylooper/internal/game/data"
 	promptbuilder "tragedylooper/internal/llm/prompt"
 
 	"github.com/mitchellh/mapstructure"

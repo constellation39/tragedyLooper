@@ -1,12 +1,8 @@
 # Makefile for the Tragedy Looper project
 
-# Go parameters
-GOBASE := $(shell pwd)
-GOPATH := $(GOBASE)/vendor
-GOFILES := $(wildcard *.go)
-
 # Binary name
 BINARY_NAME=tragedylooper
+PROTO_FILES := $(wildcard proto/game/*.proto)
 
 .PHONY: all build run test clean lint proto clean-proto install-tools
 
@@ -30,7 +26,7 @@ test:
 # Clean the binary
 clean:
 	@echo "Cleaning..."
-	@if [ -f bin/$(BINARY_NAME) ]; then rm bin/$(BINARY_NAME); fi
+	@go run ./tools/rmrf bin
 
 # Lint the code
 lint:
@@ -44,15 +40,28 @@ install-tools:
 	@go install github.com/chrusty/protoc-gen-jsonschema/cmd/protoc-gen-jsonschema@latest
 
 # Protobuf generation
-PROTO_FILES := $(wildcard proto/game/*.proto)
+GOGEN_OUT_DIR := internal/game/proto
+JSONSCHEMA_OUT_DIR := data/jsonschema
 
 proto: install-tools
 	@echo "Generating Go code and JSON schema from protobuf..."
-	@protoc --go_out=. --go_opt=paths=source_relative $(PROTO_FILES)
-	@protoc --jsonschema_out=./proto/game $(PROTO_FILES)
+	@go run ./tools/mkdir $(GOGEN_OUT_DIR)
+	@go run ./tools/mkdir $(JSONSCHEMA_OUT_DIR)
+	@protoc --proto_path=. --go_out=$(GOGEN_OUT_DIR) --go_opt=paths=source_relative $(PROTO_FILES)
+	@protoc --proto_path=. --jsonschema_out=$(JSONSCHEMA_OUT_DIR) $(PROTO_FILES)
 
 # Clean generated protobuf files
 clean-proto:
 	@echo "Cleaning generated protobuf files..."
-	@rm -f proto/game/*.pb.go
-	@rm -f proto/game/*.json
+	@go run ./tools/rmrf $(GOGEN_OUT_DIR)
+	@go run ./tools/rmrf $(JSONSCHEMA_OUT_DIR)
+
+# Generate Excel config template
+.PHONY: generate-config-template
+generate-config-template:
+	@echo "Generating Excel config template..."
+	@for %%f in (proto\game\*.proto) do (
+		protoc -I=proto --descriptor_set_out=proto.pb %%f
+	)
+	@go run ./tools/config-template-generator
+	@go run ./tools/rmrf proto.pb
