@@ -1,0 +1,69 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/Effect",
+    "definitions": {
+        "Effect": {
+            "properties": {
+                "move_character_effect": {
+                    "$ref": "#/definitions/model.MoveCharacterEffect",
+                    "additionalProperties": true
+                },
+                "adjust_paranoia_effect": {
+                    "$ref": "#/definitions/model.AdjustParanoiaEffect",
+                    "additionalProperties": true
+                },
+                "adjust_goodwill_effect": {
+                    "$ref": "#/definitions/model.AdjustGoodwillEffect",
+                    "additionalProperties": true
+                },
+                "adjust_intrigue_effect": {
+                    "$ref": "#/definitions/model.AdjustIntrigueEffect",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Effect",
+            "description": "Effect 接口定义了一个效果的核心行为。"
+        },
+        "model.AdjustGoodwillEffect": {
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Adjust Goodwill Effect",
+            "description": "AdjustGoodwillEffect 调整角色的好感度。"
+        },
+        "model.AdjustIntrigueEffect": {
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Adjust Intrigue Effect",
+            "description": "AdjustIntrigueEffect 调整角色的阴谋值。"
+        },
+        "model.AdjustParanoiaEffect": {
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Adjust Paranoia Effect",
+            "description": "AdjustParanoiaEffect 调整角色的妄想值。"
+        },
+        "model.MoveCharacterEffect": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Move Character Effect",
+            "description": "MoveCharacterEffect 移动一个角色到指定地点。"
+        }
+    }
+}

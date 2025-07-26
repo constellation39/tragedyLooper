@@ -1,0 +1,422 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/Script",
+    "definitions": {
+        "Script": {
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "唯一标识符"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "剧本名称"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "剧本描述"
+                },
+                "main_plot": {
+                    "type": "string",
+                    "description": "主线剧情"
+                },
+                "sub_plots": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array",
+                    "description": "支线剧情"
+                },
+                "characters": {
+                    "items": {
+                        "$ref": "#/definitions/model.CharacterConfig"
+                    },
+                    "type": "array",
+                    "description": "角色配置"
+                },
+                "tragedies": {
+                    "items": {
+                        "$ref": "#/definitions/model.TragedyCondition"
+                    },
+                    "type": "array",
+                    "description": "悲剧条件"
+                },
+                "loop_count": {
+                    "type": "integer",
+                    "description": "循环总次数"
+                },
+                "days_per_loop": {
+                    "type": "integer",
+                    "description": "每循环天数"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Script",
+            "description": "Script 定义一个特定的游戏场景。"
+        },
+        "model.Ability": {
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "能力名称"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "能力描述"
+                },
+                "trigger_type": {
+                    "enum": [
+                        "ABILITY_TRIGGER_TYPE_UNSPECIFIED",
+                        0,
+                        "ABILITY_TRIGGER_TYPE_DAY_START",
+                        1,
+                        "ABILITY_TRIGGER_TYPE_MASTERMIND_PHASE",
+                        2,
+                        "ABILITY_TRIGGER_TYPE_GOODWILL_PHASE",
+                        3,
+                        "ABILITY_TRIGGER_TYPE_PASSIVE",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Ability Trigger Type",
+                    "description": "AbilityTriggerType 定义能力何时可以被触发。"
+                },
+                "effect": {
+                    "$ref": "#/definitions/model.Effect",
+                    "additionalProperties": true,
+                    "description": "实际效果"
+                },
+                "once_per_loop": {
+                    "type": "boolean",
+                    "description": "每循环只能使用一次"
+                },
+                "refusal_role": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "PLAYER_ROLE_MASTERMIND",
+                        1,
+                        "PLAYER_ROLE_PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
+                },
+                "used_this_loop": {
+                    "type": "boolean",
+                    "description": "运行时状态，不用于配置"
+                },
+                "target_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "LocationType 定义游戏中的可能地点。"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Ability",
+            "description": "Ability 定义角色的特殊技能。"
+        },
+        "model.AdjustGoodwillEffect": {
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Adjust Goodwill Effect",
+            "description": "AdjustGoodwillEffect 调整角色的好感度。"
+        },
+        "model.AdjustIntrigueEffect": {
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Adjust Intrigue Effect",
+            "description": "AdjustIntrigueEffect 调整角色的阴谋值。"
+        },
+        "model.AdjustParanoiaEffect": {
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Adjust Paranoia Effect",
+            "description": "AdjustParanoiaEffect 调整角色的妄想值。"
+        },
+        "model.CharacterConfig": {
+            "properties": {
+                "character_id": {
+                    "type": "string",
+                    "description": "引用基础角色定义"
+                },
+                "initial_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "LocationType 定义游戏中的可能地点。"
+                },
+                "hidden_role": {
+                    "enum": [
+                        "ROLE_TYPE_UNSPECIFIED",
+                        0,
+                        "ROLE_TYPE_INNOCENT",
+                        1,
+                        "ROLE_TYPE_KILLER",
+                        2,
+                        "ROLE_TYPE_BRAIN",
+                        3,
+                        "ROLE_TYPE_KEY_PERSON",
+                        4,
+                        "ROLE_TYPE_FRIEND",
+                        5,
+                        "ROLE_TYPE_CONSPIRACY_THEORIST",
+                        6,
+                        "ROLE_TYPE_CULTIST",
+                        7,
+                        "ROLE_TYPE_MASTERMIND",
+                        8,
+                        "ROLE_TYPE_PROTAGONIST",
+                        9
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Role Type",
+                    "description": "RoleType 定义了玩家在游戏中的具体角色。"
+                },
+                "is_culprit_for": {
+                    "type": "string",
+                    "description": "如果此角色是特定悲剧的嫌疑犯"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Character Config",
+            "description": "CharacterConfig 定义特定剧本中角色的初始状态。"
+        },
+        "model.Condition": {
+            "properties": {
+                "character_id": {
+                    "type": "string",
+                    "description": "角色ID"
+                },
+                "location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "LocationType 定义游戏中的可能地点。"
+                },
+                "min_paranoia": {
+                    "type": "integer",
+                    "description": "最小妄想指数"
+                },
+                "is_alone": {
+                    "type": "boolean",
+                    "description": "是否独处"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Condition",
+            "description": "Condition 定义悲剧的一个单一条件。"
+        },
+        "model.Effect": {
+            "properties": {
+                "move_character_effect": {
+                    "$ref": "#/definitions/model.MoveCharacterEffect",
+                    "additionalProperties": true
+                },
+                "adjust_paranoia_effect": {
+                    "$ref": "#/definitions/model.AdjustParanoiaEffect",
+                    "additionalProperties": true
+                },
+                "adjust_goodwill_effect": {
+                    "$ref": "#/definitions/model.AdjustGoodwillEffect",
+                    "additionalProperties": true
+                },
+                "adjust_intrigue_effect": {
+                    "$ref": "#/definitions/model.AdjustIntrigueEffect",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Effect",
+            "description": "Effect 接口定义了一个效果的核心行为。"
+        },
+        "model.MoveCharacterEffect": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Move Character Effect",
+            "description": "MoveCharacterEffect 移动一个角色到指定地点。"
+        },
+        "model.TragedyCondition": {
+            "properties": {
+                "tragedy_type": {
+                    "enum": [
+                        "TRAGEDY_TYPE_UNSPECIFIED",
+                        0,
+                        "TRAGEDY_TYPE_A",
+                        1,
+                        "TRAGEDY_TYPE_B",
+                        2,
+                        "TRAGEDY_TYPE_C",
+                        3,
+                        "TRAGEDY_TYPE_D",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Tragedy Type",
+                    "description": "TragedyType 定义了剧本中可能发生的悲剧类型。"
+                },
+                "day": {
+                    "type": "integer",
+                    "description": "悲剧可能发生的日期"
+                },
+                "culprit_id": {
+                    "type": "string",
+                    "description": "嫌疑人ID"
+                },
+                "conditions": {
+                    "items": {
+                        "$ref": "#/definitions/model.Condition"
+                    },
+                    "type": "array",
+                    "description": "必须满足的条件列表"
+                },
+                "target_rule": {
+                    "enum": [
+                        "TARGET_RULE_TYPE_UNSPECIFIED",
+                        0,
+                        "TARGET_RULE_TYPE_SPECIFIC_CHARACTER",
+                        1,
+                        "TARGET_RULE_TYPE_ANY_CHARACTER_AT_LOCATION",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Target Rule Type",
+                    "description": "TargetRuleType 定义悲剧如何选择目标角色。"
+                },
+                "abilities": {
+                    "items": {
+                        "$ref": "#/definitions/model.Ability"
+                    },
+                    "type": "array",
+                    "description": "悲剧发生时触发的能力"
+                },
+                "is_active": {
+                    "type": "boolean",
+                    "description": "运行时状态：此悲剧当前是否在剧本中活跃？"
+                },
+                "is_prevented": {
+                    "type": "boolean",
+                    "description": "运行时状态：此悲剧是否已被阻止？"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Tragedy Condition",
+            "description": "TragedyCondition 定义悲剧发生的条件。"
+        }
+    }
+}

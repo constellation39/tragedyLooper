@@ -1,0 +1,44 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/PlayCardPayload",
+    "definitions": {
+        "PlayCardPayload": {
+            "properties": {
+                "card_id": {
+                    "type": "string"
+                },
+                "target_character_id": {
+                    "type": "string"
+                },
+                "target_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "LocationType 定义游戏中的可能地点。"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Play Card Payload",
+            "description": "PlayCardPayload 定义了打出卡牌动作所需的数据。"
+        }
+    }
+}

@@ -1,0 +1,80 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/CharacterConfig",
+    "definitions": {
+        "CharacterConfig": {
+            "properties": {
+                "character_id": {
+                    "type": "string",
+                    "description": "引用基础角色定义"
+                },
+                "initial_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "LocationType 定义游戏中的可能地点。"
+                },
+                "hidden_role": {
+                    "enum": [
+                        "ROLE_TYPE_UNSPECIFIED",
+                        0,
+                        "ROLE_TYPE_INNOCENT",
+                        1,
+                        "ROLE_TYPE_KILLER",
+                        2,
+                        "ROLE_TYPE_BRAIN",
+                        3,
+                        "ROLE_TYPE_KEY_PERSON",
+                        4,
+                        "ROLE_TYPE_FRIEND",
+                        5,
+                        "ROLE_TYPE_CONSPIRACY_THEORIST",
+                        6,
+                        "ROLE_TYPE_CULTIST",
+                        7,
+                        "ROLE_TYPE_MASTERMIND",
+                        8,
+                        "ROLE_TYPE_PROTAGONIST",
+                        9
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Role Type",
+                    "description": "RoleType 定义了玩家在游戏中的具体角色。"
+                },
+                "is_culprit_for": {
+                    "type": "string",
+                    "description": "如果此角色是特定悲剧的嫌疑犯"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Character Config",
+            "description": "CharacterConfig 定义特定剧本中角色的初始状态。"
+        }
+    }
+}

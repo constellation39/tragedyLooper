@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"tragedylooper/internal/game/model"
+	"tragedylooper/internal/game/proto/model"
 	// "github.com/sashabaranov/go-openai" // OpenAI 示例
 )
 
@@ -31,10 +31,10 @@ func (m *MockLLMClient) GenerateResponse(prompt string, sessionID string) (strin
 	if len(prompt) > 100 && prompt[len(prompt)-100:] == "Please provide your action in JSON format." {
 		// 示例主谋打出一张偏执卡
 		mockAction := model.PlayerAction{
-			Type: model.ActionPlayCard,
-			Payload: model.PlayCardPayload{
-				CardID:            "mastermind_paranoia_card_1", // 假设存在这张卡
-				TargetCharacterID: "boy_student",
+			Type: model.ActionType_ACTION_TYPE_PLAY_CARD,
+			Payload: &model.PlayCardPayload{
+				CardId:            "mastermind_paranoia_card_1", // 假设存在这张卡
+				TargetCharacterId: "boy_student",
 			},
 		}
 		actionBytes, _ := json.Marshal(mockAction)
@@ -43,6 +43,7 @@ func (m *MockLLMClient) GenerateResponse(prompt string, sessionID string) (strin
 
 	return "Mock LLM response: I am thinking...", nil
 }
+
 
 /*
 // OpenAIClient 是使用 OpenAI API 的示例实现。

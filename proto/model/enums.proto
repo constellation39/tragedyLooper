@@ -61,3 +61,58 @@ enum ActionType {
   ACTION_TYPE_MAKE_GUESS = 3; // 作出猜测
   ACTION_TYPE_READY_FOR_NEXT_PHASE = 4; // 准备好进入下一阶段
 }
+
+// RoleType 定义了玩家在游戏中的具体角色。
+enum RoleType {
+  ROLE_TYPE_UNSPECIFIED = 0; // 未指定角色类型 (默认值)
+  ROLE_TYPE_INNOCENT = 1;    // 无辜者
+  ROLE_TYPE_KILLER = 2;      // 杀手
+  ROLE_TYPE_BRAIN = 3;       // 大脑
+  ROLE_TYPE_KEY_PERSON = 4;  // 关键人物
+  ROLE_TYPE_FRIEND = 5;      // 朋友
+  ROLE_TYPE_CONSPIRACY_THEORIST = 6; // 阴谋论者
+  ROLE_TYPE_CULTIST = 7;     // 例如：具有善意拒绝的角色
+  // 注意：Mastermind 和 Protagonist 也可以在 PlayerRole 中定义，这里是作为游戏内具体角色的一种。
+  ROLE_TYPE_MASTERMIND = 8;  // LLM 玩家角色 (主谋)
+  ROLE_TYPE_PROTAGONIST = 9; // LLM 玩家角色 (主角)
+}
+
+// TragedyType 定义了剧本中可能发生的悲剧类型。
+enum TragedyType {
+  TRAGEDY_TYPE_UNSPECIFIED = 0;
+  TRAGEDY_TYPE_A = 1;
+  TRAGEDY_TYPE_B = 2;
+  TRAGEDY_TYPE_C = 3;
+  TRAGEDY_TYPE_D = 4;
+}
+
+// AbilityTriggerType 定义能力何时可以被触发。
+enum AbilityTriggerType {
+  ABILITY_TRIGGER_TYPE_UNSPECIFIED = 0;
+  ABILITY_TRIGGER_TYPE_DAY_START = 1; // 天开始时
+  ABILITY_TRIGGER_TYPE_MASTERMIND_PHASE = 2; // 主谋阶段
+  ABILITY_TRIGGER_TYPE_GOODWILL_PHASE = 3; // 好感阶段
+  ABILITY_TRIGGER_TYPE_PASSIVE = 4; // 被动
+}
+
+// EffectType 定义能力或卡牌可能产生的效果类型。
+// 这是组合方法的核心。
+enum EffectType {
+  EFFECT_TYPE_UNSPECIFIED = 0;
+  EFFECT_TYPE_MOVE_CHARACTER = 1; // 移动角色
+  EFFECT_TYPE_ADJUST_PARANOIA = 2; // 调整妄想
+  EFFECT_TYPE_ADJUST_GOODWILL = 3; // 调整好感
+  EFFECT_TYPE_ADJUST_INTRIGUE = 4; // 调整阴谋
+  EFFECT_TYPE_REVEAL_ROLE = 5; // 用于特定能力，揭示角色
+  EFFECT_TYPE_PREVENT_TRAGEDY = 6; // 阻止悲剧
+  EFFECT_TYPE_GRANT_ABILITY = 7; // 授予能力
+  EFFECT_TYPE_CHECK_LOCATION_ALONE = 8; // 用于悲剧条件，检查地点是否有人独处
+  EFFECT_TYPE_CHECK_CHARACTER_STATUS = 9; // 用于悲剧条件，检查角色状态
+}
+
+// TargetRuleType 定义悲剧如何选择目标角色。
+enum TargetRuleType {
+  TARGET_RULE_TYPE_UNSPECIFIED = 0;
+  TARGET_RULE_TYPE_SPECIFIC_CHARACTER = 1; // 特定角色
+  TARGET_RULE_TYPE_ANY_CHARACTER_AT_LOCATION = 2; // 在某个地点的任何角色
+}

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"tragedylooper/internal/game/model"
+	"tragedylooper/internal/game/proto/model"
 )
 
 // PromptBuilder 帮助构建 LLM 玩家的提示词。
@@ -17,8 +17,8 @@ func NewPromptBuilder() *PromptBuilder {
 
 // BuildMastermindPrompt 为主谋 LLM 构建提示词。
 func (pb *PromptBuilder) BuildMastermindPrompt(
-	fullGameState model.PlayerView, // 主谋获得完整视图
-	script model.Script,
+	fullGameState *model.PlayerView, // 主谋获得完整视图
+	script *model.Script,
 	characters map[string]*model.Character, // 主谋看到隐藏身份
 ) string {
 	var sb strings.Builder
@@ -32,27 +32,28 @@ func (pb *PromptBuilder) BuildMastermindPrompt(
 
 	sb.WriteString("\n--- Script Details ---\n")
 	sb.WriteString(fmt.Sprintf("Script Name: %s\n", script.Name))
-	sb.WriteString(fmt.Sprintf("Main Plot: %s\n", script.MainPlot))
-	if len(script.SubPlots) > 0 {
-		sb.WriteString(fmt.Sprintf("Sub Plots: %s\n", strings.Join(script.SubPlots, ", ")))
-	}
+
+	// TODO: add subplots to prompt
+	//if len(script.SubPlots) > 0 {
+	//	sb.WriteString(fmt.Sprintf("Sub Plots: %s\n", strings.Join(script.SubPlots, ", ")))
+	//}
 	sb.WriteString("Tragedies to trigger:\n")
 	for _, t := range script.Tragedies {
-		sb.WriteString(fmt.Sprintf("- %s (Day %d, Culprit: %s, Conditions: %+v)\n", t.TragedyType, t.Day, t.CulpritID, t.Conditions))
+		sb.WriteString(fmt.Sprintf("- %s (Day %d, Culprit: %s, Conditions: %+v)\n", t.TragedyType, t.Day, t.CulpritId, t.Conditions))
 	}
 
 	sb.WriteString("\n--- Characters (including hidden roles) ---\n")
 	for _, char := range characters { // 使用主谋的完整角色映射
 		sb.WriteString(fmt.Sprintf("- %s (Role: %s, Location: %s, Paranoia: %d, Goodwill: %d, Alive: %t)\n",
-			char.Name, char.HiddenRole, char.CurrentLocation, char.Paranoia, char.Goodwill, char.IsAlive))
+			char.Name, char.Role, char.CurrentLocation, char.Paranoia, char.Goodwill, char.IsAlive))
 		if len(char.Traits) > 0 {
 			sb.WriteString(fmt.Sprintf("  Traits: %s\n", strings.Join(char.Traits, ", ")))
 		}
 	}
 
 	sb.WriteString("\n--- Your Hand ---\n")
-	for _, card := range fullGameState.YourHand {
-		sb.WriteString(fmt.Sprintf("- Card: %s (Type: %s, Effect: %+v)\n", card.Name, card.CardType, card.Effect))
+	for _, card := range fullGameState.YourHand.Cards {
+		sb.WriteString(fmt.Sprintf("- Card: %s (Type: %s, Effect: %+v)\n", card.Name, card.Type, card.Effect))
 	}
 
 	sb.WriteString("\n--- Public Events (This Day) ---\n")
@@ -77,8 +78,8 @@ func (pb *PromptBuilder) BuildMastermindPrompt(
 
 // BuildProtagonistPrompt 为主角 LLM 构建提示词。
 func (pb *PromptBuilder) BuildProtagonistPrompt(
-	playerView model.PlayerView,
-	deductionKnowledge map[string]interface{},
+	playerView *model.PlayerView,
+	deductionKnowledge map[string]string,
 ) string {
 	var sb strings.Builder
 	sb.WriteString("You are a Protagonist in the model Tragedy Looper.\n")
@@ -99,8 +100,8 @@ func (pb *PromptBuilder) BuildProtagonistPrompt(
 	}
 
 	sb.WriteString("\n--- Your Hand ---\n")
-	for _, card := range playerView.YourHand {
-		sb.WriteString(fmt.Sprintf("- Card: %s (Type: %s, Effect: %+v)\n", card.Name, card.CardType, card.Effect))
+	for _, card := range playerView.YourHand.Cards {
+		sb.WriteString(fmt.Sprintf("- Card: %s (Type: %s, Effect: %+v)\n", card.Name, card.Type, card.Effect))
 	}
 
 	sb.WriteString("\n--- Your Deductions (from previous loops) ---\n")

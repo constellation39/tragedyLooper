@@ -1,0 +1,25 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [
+        "ACTION_TYPE_UNSPECIFIED",
+        0,
+        "ACTION_TYPE_PLAY_CARD",
+        1,
+        "ACTION_TYPE_USE_ABILITY",
+        2,
+        "ACTION_TYPE_MAKE_GUESS",
+        3,
+        "ACTION_TYPE_READY_FOR_NEXT_PHASE",
+        4
+    ],
+    "oneOf": [
+        {
+            "type": "string"
+        },
+        {
+            "type": "integer"
+        }
+    ],
+    "title": "Action Type",
+    "description": "ActionType 定义了玩家可以执行的操作类型。"
+}

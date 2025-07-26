@@ -4,22 +4,18 @@ package model;
 
 import "proto/model/ability.proto";
 import "proto/model/location.proto";
+import "proto/model/enums.proto";
 
 
 option go_package = "github.com/user/repo/proto/model";
 
 
 
-// TargetRuleType 定义悲剧如何选择目标角色。
-enum TargetRuleType {
-  TARGET_RULE_TYPE_UNSPECIFIED = 0;
-  TARGET_RULE_TYPE_SPECIFIC_CHARACTER = 1; // 特定角色
-  TARGET_RULE_TYPE_ANY_CHARACTER_AT_LOCATION = 2; // 在某个地点的任何角色
-}
+
 
 // TragedyCondition 定义悲剧发生的条件。
 message TragedyCondition {
-  string tragedy_type = 1; // 悲剧类型
+  TragedyType tragedy_type = 1; // 悲剧类型
   int32 day = 2; // 悲剧可能发生的日期
   string culprit_id = 3; // 嫌疑人ID
   repeated Condition conditions = 4; // 必须满足的条件列表

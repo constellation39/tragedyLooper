@@ -5,8 +5,8 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"tragedylooper/internal/game/proto/model"
 
-	"tragedylooper/internal/game/model"
 	"tragedylooper/internal/llm"
 	"tragedylooper/internal/logger"
 	"tragedylooper/internal/server"
@@ -23,27 +23,26 @@ func main() {
 	// 1. 加载游戏剧本和资源
 	// 在实际应用中，这些将从文件或数据库加载。
 	// 为简单起见，我们使用占位符。
-	scripts := map[string]model.Script{
+	scripts := map[string]*model.Script{
 		"basic_script": {
-			ID:          "basic_script",
+			Id:          "basic_script",
 			Name:        "Basic Tragedy",
 			Description: "A simple script for testing.",
 			LoopCount:   3,
 			DaysPerLoop: 7,
-			Characters: []model.CharacterConfig{
-				{CharacterID: "boy_student", InitialLocation: model.LocationSchool, HiddenRole: model.RoleInnocent},
-				{CharacterID: "girl_student", InitialLocation: model.LocationSchool, HiddenRole: model.RoleInnocent},
-				{CharacterID: "serial_killer", InitialLocation: model.LocationCity, HiddenRole: model.RoleKiller, IsCulpritFor: model.TragedyMurder},
+			Characters: []*model.CharacterConfig{
+				{CharacterId: "boy_student", InitialLocation: model.LocationType_LOCATION_TYPE_SCHOOL, HiddenRole: model.RoleType_ROLE_TYPE_INNOCENT},
+				{CharacterId: "girl_student", InitialLocation: model.LocationType_LOCATION_TYPE_SCHOOL, HiddenRole: model.RoleType_ROLE_TYPE_INNOCENT},
+				{CharacterId: "serial_killer", InitialLocation: model.LocationType_LOCATION_TYPE_CITY, HiddenRole: model.RoleType_ROLE_TYPE_KILLER},
 			},
-			Tragedies: []model.TragedyCondition{
+			Tragedies: []*model.TragedyCondition{
 				{
-					TragedyType: model.TragedyMurder,
+					TragedyType: model.TragedyType_TRAGEDY_TYPE_MURDER,
 					Day:         3, // 谋杀可能发生在第 3 天
-					CulpritID:   "serial_killer",
-					Conditions: []model.Condition{
-						{CharacterID: "boy_student", Location: model.LocationSchool, IsAlone: true},
+					CulpritId:   "serial_killer",
+					Conditions: []*model.Condition{
+						{CharacterId: "boy_student", Location: model.LocationType_LOCATION_TYPE_SCHOOL, IsAlone: true},
 					},
-					TargetRule: model.TargetRuleSpecificCharacter,
 				},
 			},
 		},

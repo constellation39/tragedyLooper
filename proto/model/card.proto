@@ -8,8 +8,6 @@ import "proto/model/enums.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 
-
-
 // Card 表示一张行动卡。
 message Card {
   string id = 1; // 唯一标识符

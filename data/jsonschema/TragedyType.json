@@ -1,0 +1,25 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [
+        "TRAGEDY_TYPE_UNSPECIFIED",
+        0,
+        "TRAGEDY_TYPE_A",
+        1,
+        "TRAGEDY_TYPE_B",
+        2,
+        "TRAGEDY_TYPE_C",
+        3,
+        "TRAGEDY_TYPE_D",
+        4
+    ],
+    "oneOf": [
+        {
+            "type": "string"
+        },
+        {
+            "type": "integer"
+        }
+    ],
+    "title": "Tragedy Type",
+    "description": "TragedyType 定义了剧本中可能发生的悲剧类型。"
+}

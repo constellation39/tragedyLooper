@@ -8,8 +8,8 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"go.uber.org/zap"
 
-	"tragedylooper/internal/game/model"
 	"tragedylooper/internal/game/data"
+	"tragedylooper/internal/game/proto/model"
 	"tragedylooper/internal/llm"
 )
 
@@ -42,23 +42,23 @@ type llmActionCompleteRequest struct {
 }
 
 // NewGameEngine 创建一个新的游戏引擎实例。
-func NewGameEngine(gameID string, logger *zap.Logger, script model.Script, players map[string]*model.Player, llmClient llm.Client) *GameEngine {
+func NewGameEngine(gameID string, logger *zap.Logger, script *model.Script, players map[string]*model.Player, llmClient llm.Client) *GameEngine {
 	characters := make(map[string]*model.Character)
 	for _, charConfig := range script.Characters {
 		char := &model.Character{
-			ID:              charConfig.CharacterID,
-			Name:            charConfig.CharacterID, // Placeholder
+			Id:              charConfig.CharacterId,
+			Name:            charConfig.CharacterId, // Placeholder
 			CurrentLocation: charConfig.InitialLocation,
 			IsAlive:         true,
 			HiddenRole:      charConfig.HiddenRole,
-			Abilities:       []model.Ability{}, // Load from data
-			Traits:          []string{},        // Load from data
+			Abilities:       make([]*model.Ability, 0), // Load from data
+			Traits:          []string{},                // Load from data
 		}
-		characters[char.ID] = char
+		characters[char.Id] = char
 	}
 
 	gs := &model.GameState{
-		GameID:              gameID,
+		GameId:              gameID,
 		Script:              script,
 		Characters:          characters,
 		Players:             players,

@@ -40,7 +40,7 @@ install-tools:
 	@go install github.com/chrusty/protoc-gen-jsonschema/cmd/protoc-gen-jsonschema@latest
 
 # Protobuf generation
-GOGEN_OUT_DIR := internal/game/proto
+GOGEN_OUT_DIR := internal/game
 JSONSCHEMA_OUT_DIR := data/jsonschema
 
 proto: install-tools

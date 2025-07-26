@@ -8,14 +8,7 @@ import "proto/model/location.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 
-// AbilityTriggerType 定义能力何时可以被触发。
-enum AbilityTriggerType {
-  ABILITY_TRIGGER_TYPE_UNSPECIFIED = 0;
-  ABILITY_TRIGGER_TYPE_DAY_START = 1; // 天开始时
-  ABILITY_TRIGGER_TYPE_MASTERMIND_PHASE = 2; // 主谋阶段
-  ABILITY_TRIGGER_TYPE_GOODWILL_PHASE = 3; // 好感阶段
-  ABILITY_TRIGGER_TYPE_PASSIVE = 4; // 被动
-}
+
 
 // Ability 定义角色的特殊技能。
 message Ability {

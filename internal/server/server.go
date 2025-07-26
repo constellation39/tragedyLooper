@@ -12,7 +12,7 @@ import (
 	"go.uber.org/zap"
 
 	"tragedylooper/internal/game/engine"
-	"tragedylooper/internal/game/model"
+	"tragedylooper/internal/game/proto/model"
 	"tragedylooper/internal/llm"
 	"tragedylooper/internal/logger"
 )
@@ -25,14 +25,14 @@ type Server struct {
 	// 用于发出服务器关闭信号的通道
 	shutdownChan chan struct{}
 	// 可用游戏剧本的映射
-	scripts map[string]model.Script
+	scripts map[string]*model.Script
 	// LLM 客户端用于 AI 玩家
 	llmClient llm.Client
 	logger    *zap.Logger
 }
 
 // NewServer 创建一个新的游戏服务器实例。
-func NewServer(scripts map[string]model.Script, llmClient llm.Client, logger *zap.Logger) *Server {
+func NewServer(scripts map[string]*model.Script, llmClient llm.Client, logger *zap.Logger) *Server {
 	return &Server{
 		upgrader: websocket.Upgrader{
 			ReadBufferSize:  1024,
@@ -143,12 +143,13 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 
 	players := make(map[string]*model.Player)
 	players[req.PlayerID] = &model.Player{
-		ID:                 req.PlayerID,
+		Id:                 req.PlayerID,
 		Name:               req.PlayerName,
 		Role:               req.PlayerRole,
-		IsLLM:              req.IsLLM,
-		Hand:               []model.Card{}, // 卡牌将由游戏引擎处理
-		DeductionKnowledge: make(map[string]interface{}),
+		IsLlm:              req.IsLLM,
+		Hand:               make([]*model.Card, 0), // 卡牌将由游戏引擎处理
+		DeductionKnowledge: nil,
+		LlmSessionId:       "",
 	}
 
 	gameEngine := engine.NewGameEngine(gameID, ctxLogger, script, players, s.llmClient)
@@ -194,15 +195,15 @@ func (s *Server) HandleJoinRoom(w http.ResponseWriter, r *http.Request) {
 	}
 
 	room.gameEngine.GameState.Players[req.PlayerID] = &model.Player{
-		ID:                 req.PlayerID,
-		Name:               req.PlayerName,
-		Role:               req.PlayerRole,
-		IsLLM:              req.IsLLM,
-		Hand:               []model.Card{}, // Cards will be handled by the model engine
-		DeductionKnowledge: make(map[string]interface{}),
+		Id:         req.PlayerID,
+		Name:       req.PlayerName,
+		Role:       req.PlayerRole,
+		IsLlm:      req.IsLLM,
+		Hand:       &model.CardList{}, // Cards will be handled by the model engine
+		Deductions: make(map[string]string),
 	}
 
-	ctxLogger.Info("Player joined room", zap.String("playerID", req.PlayerID), zap.String("gameID", req.GameID), zap.String("role", string(req.PlayerRole)))
+	ctxLogger.Info("Player joined room", zap.String("playerID", req.PlayerID), zap.String("gameID", req.GameID), zap.String("role", req.PlayerRole.String()))
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(map[string]string{"message": "Joined room successfully"}); err != nil {
 		ctxLogger.Error("Error encoding response", zap.Error(err))
@@ -217,7 +218,7 @@ func (s *Server) HandleListRooms(w http.ResponseWriter, _ *http.Request) {
 	var roomList []map[string]interface{}
 	for id, room := range s.rooms {
 		// 只列出未满或未开始的房间
-		if room.gameEngine.GameState.CurrentPhase == model.PhaseMorning { // 示例条件
+		if room.gameEngine.GameState.CurrentPhase == model.GamePhase_GAME_PHASE_MORNING { // 示例条件
 			roomList = append(roomList, map[string]interface{}{
 				"id":            id,
 				"script_name":   room.gameEngine.GameState.Script.Name,
@@ -264,10 +265,10 @@ func (c *Client) readPump(_ *Server) {
 			c.logger.Warn("Failed to parse incoming message as PlayerAction", zap.Error(err))
 			continue
 		}
-		action.PlayerID = c.playerID
+		action.PlayerId = c.playerID
 
 		if c.room != nil {
-			c.room.gameEngine.SubmitPlayerAction(action)
+			c.room.gameEngine.SubmitPlayerAction(&action)
 		} else {
 			c.logger.Warn("Received action but not in a room.")
 		}
@@ -350,7 +351,7 @@ func (r *Room) broadcastGameEvents() {
 			r.logger.Info("Event broadcaster stopped.", zap.String("roomID", r.GameID))
 			return
 		case event := <-eventChan:
-			r.logger.Debug("Broadcasting event", zap.String("roomID", r.GameID), zap.String("eventType", string(event.Type)))
+			r.logger.Debug("Broadcasting event", zap.String("roomID", r.GameID), zap.String("eventType", event.Type.String()))
 			r.mu.RLock()
 			for playerID, client := range r.clients {
 				playerView := r.gameEngine.GetPlayerView(playerID)
