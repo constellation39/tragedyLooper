@@ -39,7 +39,6 @@ func main() {
 				{
 					TragedyType: model.TragedyType_TRAGEDY_TYPE_MURDER,
 					Day:         3, // 谋杀可能发生在第 3 天
-					CulpritId:   "serial_killer",
 					Conditions: []*model.Condition{
 						{CharacterId: 0, Location: model.LocationType_LOCATION_TYPE_SCHOOL, IsAlone: true},
 					},

@@ -3,10 +3,30 @@
     "$ref": "#/definitions/ChoiceRequiredEvent",
     "definitions": {
         "ChoiceRequiredEvent": {
+            "properties": {
+                "choice": {
+                    "$ref": "#/definitions/model.Choice",
+                    "additionalProperties": true,
+                    "description": "This might need a more complex structure depending on the choices"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
-            "title": "Choice Required Event",
-            "description": "This might need a more complex structure depending on the choices"
+            "title": "Choice Required Event"
+        },
+        "model.Choice": {
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "character_id": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Choice",
+            "description": "Choice represents a choice a player can make."
         }
     }
 }

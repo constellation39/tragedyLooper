@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/Choice",
+    "definitions": {
+        "Choice": {
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "character_id": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Choice",
+            "description": "Choice represents a choice a player can make."
+        }
+    }
+}

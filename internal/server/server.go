@@ -4,12 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"sync"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/structpb"
 
 	"tragedylooper/internal/game/engine"
 	"tragedylooper/internal/game/proto/model"
@@ -82,8 +84,8 @@ func (s *Server) HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Close()
 
-	playerID := r.URL.Query().Get("player_id")
-	if playerID == "" {
+	playerIDStr := r.URL.Query().Get("player_id")
+	if playerIDStr == "" {
 		ctxLogger.Warn("WebSocket connection: Missing player_id query parameter.")
 		if err := conn.WriteMessage(websocket.TextMessage, []byte("Error: player_id required.")); err != nil {
 			ctxLogger.Error("Error writing message", zap.Error(err))
@@ -91,13 +93,22 @@ func (s *Server) HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	clientLogger := ctxLogger.With(zap.String("playerID", playerID))
+	playerID, err := strconv.ParseInt(playerIDStr, 10, 32)
+	if err != nil {
+		ctxLogger.Warn("WebSocket connection: Invalid player_id.")
+		if err := conn.WriteMessage(websocket.TextMessage, []byte("Error: invalid player_id.")); err != nil {
+			ctxLogger.Error("Error writing message", zap.Error(err))
+		}
+		return
+	}
+
+	clientLogger := ctxLogger.With(zap.Int32("playerID", int32(playerID)))
 	clientLogger.Info("Player connected via WebSocket.")
 
 	client := &Client{
 		conn:     conn,
 		send:     make(chan []byte, 256),
-		playerID: playerID,
+		playerID: int32(playerID),
 		room:     nil, // Set when joining a room
 		logger:   clientLogger,
 	}
@@ -116,7 +127,7 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 
 	var req struct {
 		ScriptID   string           `json:"script_id"`
-		PlayerID   string           `json:"player_id"`
+		PlayerID   int32            `json:"player_id"`
 		PlayerName string           `json:"player_name"`
 		PlayerRole model.PlayerRole `json:"player_role"`
 		IsLlm      bool             `json:"is_llm"`
@@ -132,35 +143,39 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	gameID := generateUniqueGameID() // 实现生成唯一 ID 的函数
+	gameID, err := strconv.ParseInt(generateUniqueGameID(), 10, 32)
+	if err != nil {
+		ctxLogger.Error("failed to parse gameID", zap.Error(err))
+		return
+	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	if _, exists := s.rooms[gameID]; exists {
+	if _, exists := s.rooms[fmt.Sprintf("%d", gameID)]; exists {
 		http.Error(w, "Game ID already exists, try again", http.StatusConflict)
 		return
 	}
 
-	players := make(map[string]*model.Player)
+	players := make(map[int32]*model.Player)
 	players[req.PlayerID] = &model.Player{
 		Id:                 req.PlayerID,
 		Name:               req.PlayerName,
 		Role:               req.PlayerRole,
 		IsLlm:              req.IsLlm,
 		Hand:               make([]*model.Card, 0), // 卡牌将由游戏引擎处理
-		DeductionKnowledge: nil,
+		DeductionKnowledge: make(map[int32]*structpb.Value),
 		LlmSessionId:       "",
 	}
 
-	gameEngine := engine.NewGameEngine(gameID, ctxLogger, script, players, s.llmClient)
-	room := NewRoom(gameID, gameEngine, ctxLogger)
-	s.rooms[gameID] = room
+	gameEngine := engine.NewGameEngine(int32(gameID), ctxLogger, script, players, s.llmClient)
+	room := NewRoom(fmt.Sprintf("%d", gameID), gameEngine, ctxLogger)
+	s.rooms[fmt.Sprintf("%d", gameID)] = room
 
 	room.Start() // 启动此房间的游戏引擎循环
 
-	ctxLogger.Info("Room created", zap.String("gameID", gameID), zap.String("playerID", req.PlayerID), zap.String("scriptID", req.ScriptID))
+	ctxLogger.Info("Room created", zap.String("gameID", fmt.Sprintf("%d", gameID)), zap.Int32("playerID", req.PlayerID), zap.String("scriptID", req.ScriptID))
 	w.WriteHeader(http.StatusCreated)
-	if err := json.NewEncoder(w).Encode(map[string]string{"game_id": gameID}); err != nil {
+	if err := json.NewEncoder(w).Encode(map[string]string{"game_id": fmt.Sprintf("%d", gameID)}); err != nil {
 		ctxLogger.Error("Error encoding response", zap.Error(err))
 	}
 }
@@ -175,7 +190,7 @@ func (s *Server) HandleJoinRoom(w http.ResponseWriter, r *http.Request) {
 
 	var req struct {
 		GameId     string           `json:"game_id"`
-		PlayerID   string           `json:"player_id"`
+		PlayerID   int32            `json:"player_id"`
 		PlayerName string           `json:"player_name"`
 		PlayerRole model.PlayerRole `json:"player_role"`
 		IsLlm      bool             `json:"is_llm"`
@@ -195,15 +210,15 @@ func (s *Server) HandleJoinRoom(w http.ResponseWriter, r *http.Request) {
 	}
 
 	room.gameEngine.GameState.Players[req.PlayerID] = &model.Player{
-		Id:         req.PlayerID,
-		Name:       req.PlayerName,
-		Role:       req.PlayerRole,
-		IsLlm:      req.IsLlm,
-		Hand:       &model.CardList{}, // Cards will be handled by the model engine
-		Deductions: make(map[string]string),
+		Id:                 req.PlayerID,
+		Name:               req.PlayerName,
+		Role:               req.PlayerRole,
+		IsLlm:              req.IsLlm,
+		Hand:               make([]*model.Card, 0),
+		DeductionKnowledge: make(map[int32]*structpb.Value),
 	}
 
-	ctxLogger.Info("Player joined room", zap.String("playerID", req.PlayerID), zap.String("gameID", req.GameId), zap.String("role", req.PlayerRole.String()))
+	ctxLogger.Info("Player joined room", zap.Int32("playerID", req.PlayerID), zap.String("gameID", req.GameId), zap.String("role", req.PlayerRole.String()))
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(map[string]string{"message": "Joined room successfully"}); err != nil {
 		ctxLogger.Error("Error encoding response", zap.Error(err))
@@ -238,7 +253,7 @@ func (s *Server) HandleListRooms(w http.ResponseWriter, _ *http.Request) {
 type Client struct {
 	conn     *websocket.Conn
 	send     chan []byte // 用于传出消息的带缓冲通道
-	playerID string
+	playerID int32
 	room     *Room // 此客户端所属的房间
 	logger   *zap.Logger
 }
@@ -292,7 +307,7 @@ func (c *Client) writePump() {
 type Room struct {
 	GameId     string
 	gameEngine *engine.GameEngine
-	clients    map[string]*Client // 玩家 ID 到 Client 的映射
+	clients    map[int32]*Client // 玩家 ID 到 Client 的映射
 	mu         sync.RWMutex
 	stopChan   chan struct{} // 用于发出房间停止信号的通道
 	logger     *zap.Logger
@@ -303,7 +318,7 @@ func NewRoom(gameID string, ge *engine.GameEngine, logger *zap.Logger) *Room {
 	return &Room{
 		GameId:     gameID,
 		gameEngine: ge,
-		clients:    make(map[string]*Client),
+		clients:    make(map[int32]*Client),
 		stopChan:   make(chan struct{}),
 		logger:     logger.With(zap.String("gameID", gameID)), // Add gameID to all room logs
 	}
@@ -315,17 +330,17 @@ func (r *Room) AddClient(client *Client) {
 	defer r.mu.Unlock()
 	r.clients[client.playerID] = client
 	client.room = r // 设置客户端的房间引用
-	r.logger.Info("Client added to room", zap.String("clientID", client.playerID), zap.String("roomID", r.GameId))
+	r.logger.Info("Client added to room", zap.Int32("clientID", client.playerID), zap.String("roomID", r.GameId))
 }
 
 // RemoveClient 从房间中移除客户端。
-func (r *Room) RemoveClient(playerID string) {
+func (r *Room) RemoveClient(playerID int32) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	if client, ok := r.clients[playerID]; ok {
 		close(client.send) // 关闭客户端的发送通道
 		delete(r.clients, playerID)
-		r.logger.Info("Client removed from room", zap.String("clientID", playerID), zap.String("roomID", r.GameId))
+		r.logger.Info("Client removed from room", zap.Int32("clientID", playerID), zap.String("roomID", r.GameId))
 	}
 }
 
@@ -357,13 +372,13 @@ func (r *Room) broadcastGameEvents() {
 				playerView := r.gameEngine.GetPlayerView(playerID)
 				msg, err := json.Marshal(playerView)
 				if err != nil {
-					r.logger.Error("Failed to marshal player view", zap.String("roomID", r.GameId), zap.String("playerID", playerID), zap.Error(err))
+					r.logger.Error("Failed to marshal player view", zap.String("roomID", r.GameId), zap.Int32("playerID", playerID), zap.Error(err))
 					continue
 				}
 				select {
 				case client.send <- msg:
 				default:
-					r.logger.Warn("Client send channel full, dropping message.", zap.String("roomID", r.GameId), zap.String("playerID", playerID))
+					r.logger.Warn("Client send channel full, dropping message.", zap.String("roomID", r.GameId), zap.Int32("playerID", playerID))
 				}
 			}
 			r.mu.RUnlock()
@@ -373,5 +388,5 @@ func (r *Room) broadcastGameEvents() {
 
 // generateUniqueGameID 是实际 ID 生成函数的占位符。
 func generateUniqueGameID() string {
-	return fmt.Sprintf("game_%d", time.Now().UnixNano())
+	return fmt.Sprintf("%d", time.Now().UnixNano())
 }

@@ -65,7 +65,12 @@ message LoopResetEvent {
 message GameOverEvent {
   PlayerRole winner = 1;
 }
-
+// Choice represents a choice a player can make.
+message Choice {
+  string description = 1;
+  int32 character_id = 2;
+}
 message ChoiceRequiredEvent {
   // This might need a more complex structure depending on the choices
+    Choice choice = 1;
 }

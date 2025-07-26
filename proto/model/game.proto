@@ -31,6 +31,11 @@ message GameState {
   repeated GameEvent loop_events = 14; // 本循环发生的事件
 }
 
+// EffectContext provides the context in which an effect is executed.
+message EffectContext {
+  GameState game_state = 1;
+}
+
 // PlayerAction 代表单个玩家提交的动作。
 message PlayerAction {
   int32 player_id = 1;

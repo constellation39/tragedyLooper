@@ -26,7 +26,9 @@
         "GAME_EVENT_TYPE_GAME_OVER",
         11,
         "GAME_EVENT_TYPE_PLAYER_GUESS",
-        12
+        12,
+        "GAME_EVENT_TYPE_CHOICE_REQUIRED",
+        13
     ],
     "oneOf": [
         {

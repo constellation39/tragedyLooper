@@ -6,6 +6,8 @@ import "proto/model/location.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 
+
+
 // Effect 接口定义了一个效果的核心行为。
 message Effect {
   oneof effect_oneof {

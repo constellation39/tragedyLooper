@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"google.golang.org/protobuf/types/known/structpb"
 	"tragedylooper/internal/game/proto/model"
+
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 // ResponseParser 将 LLM 响应解析为结构化游戏动作。

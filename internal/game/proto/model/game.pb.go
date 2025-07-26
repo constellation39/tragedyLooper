@@ -172,6 +172,51 @@ func (x *GameState) GetLoopEvents() []*GameEvent {
 	return nil
 }
 
+// EffectContext provides the context in which an effect is executed.
+type EffectContext struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	GameState     *GameState             `protobuf:"bytes,1,opt,name=game_state,json=gameState,proto3" json:"game_state,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EffectContext) Reset() {
+	*x = EffectContext{}
+	mi := &file_proto_model_game_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EffectContext) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EffectContext) ProtoMessage() {}
+
+func (x *EffectContext) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_model_game_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EffectContext.ProtoReflect.Descriptor instead.
+func (*EffectContext) Descriptor() ([]byte, []int) {
+	return file_proto_model_game_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *EffectContext) GetGameState() *GameState {
+	if x != nil {
+		return x.GameState
+	}
+	return nil
+}
+
 // PlayerAction 代表单个玩家提交的动作。
 type PlayerAction struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -185,7 +230,7 @@ type PlayerAction struct {
 
 func (x *PlayerAction) Reset() {
 	*x = PlayerAction{}
-	mi := &file_proto_model_game_proto_msgTypes[1]
+	mi := &file_proto_model_game_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -197,7 +242,7 @@ func (x *PlayerAction) String() string {
 func (*PlayerAction) ProtoMessage() {}
 
 func (x *PlayerAction) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_model_game_proto_msgTypes[1]
+	mi := &file_proto_model_game_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -210,7 +255,7 @@ func (x *PlayerAction) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlayerAction.ProtoReflect.Descriptor instead.
 func (*PlayerAction) Descriptor() ([]byte, []int) {
-	return file_proto_model_game_proto_rawDescGZIP(), []int{1}
+	return file_proto_model_game_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *PlayerAction) GetPlayerId() int32 {
@@ -285,7 +330,10 @@ const file_proto_model_game_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\v2\x0f.model.CardListR\x05value:\x028\x01\x1aW\n" +
 	"\x18PlayedCardsThisLoopEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12%\n" +
-	"\x05value\x18\x02 \x01(\v2\x0f.model.CardListR\x05value:\x028\x01\"\x9e\x01\n" +
+	"\x05value\x18\x02 \x01(\v2\x0f.model.CardListR\x05value:\x028\x01\"@\n" +
+	"\rEffectContext\x12/\n" +
+	"\n" +
+	"game_state\x18\x01 \x01(\v2\x10.model.GameStateR\tgameState\"\x9e\x01\n" +
 	"\fPlayerAction\x12\x1b\n" +
 	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12\x17\n" +
 	"\agame_id\x18\x02 \x01(\x05R\x06gameId\x12%\n" +
@@ -304,49 +352,51 @@ func file_proto_model_game_proto_rawDescGZIP() []byte {
 	return file_proto_model_game_proto_rawDescData
 }
 
-var file_proto_model_game_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_proto_model_game_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_proto_model_game_proto_goTypes = []any{
 	(*GameState)(nil),             // 0: model.GameState
-	(*PlayerAction)(nil),          // 1: model.PlayerAction
-	nil,                           // 2: model.GameState.CharactersEntry
-	nil,                           // 3: model.GameState.PlayersEntry
-	nil,                           // 4: model.GameState.ActiveTragediesEntry
-	nil,                           // 5: model.GameState.PreventedTragediesEntry
-	nil,                           // 6: model.GameState.PlayedCardsThisDayEntry
-	nil,                           // 7: model.GameState.PlayedCardsThisLoopEntry
-	(*Script)(nil),                // 8: model.Script
-	(GamePhase)(0),                // 9: model.GamePhase
-	(*timestamppb.Timestamp)(nil), // 10: google.protobuf.Timestamp
-	(*GameEvent)(nil),             // 11: model.GameEvent
-	(ActionType)(0),               // 12: model.ActionType
-	(*structpb.Struct)(nil),       // 13: google.protobuf.Struct
-	(*Character)(nil),             // 14: model.Character
-	(*Player)(nil),                // 15: model.Player
-	(*CardList)(nil),              // 16: model.CardList
+	(*EffectContext)(nil),         // 1: model.EffectContext
+	(*PlayerAction)(nil),          // 2: model.PlayerAction
+	nil,                           // 3: model.GameState.CharactersEntry
+	nil,                           // 4: model.GameState.PlayersEntry
+	nil,                           // 5: model.GameState.ActiveTragediesEntry
+	nil,                           // 6: model.GameState.PreventedTragediesEntry
+	nil,                           // 7: model.GameState.PlayedCardsThisDayEntry
+	nil,                           // 8: model.GameState.PlayedCardsThisLoopEntry
+	(*Script)(nil),                // 9: model.Script
+	(GamePhase)(0),                // 10: model.GamePhase
+	(*timestamppb.Timestamp)(nil), // 11: google.protobuf.Timestamp
+	(*GameEvent)(nil),             // 12: model.GameEvent
+	(ActionType)(0),               // 13: model.ActionType
+	(*structpb.Struct)(nil),       // 14: google.protobuf.Struct
+	(*Character)(nil),             // 15: model.Character
+	(*Player)(nil),                // 16: model.Player
+	(*CardList)(nil),              // 17: model.CardList
 }
 var file_proto_model_game_proto_depIdxs = []int32{
-	8,  // 0: model.GameState.script:type_name -> model.Script
-	2,  // 1: model.GameState.characters:type_name -> model.GameState.CharactersEntry
-	3,  // 2: model.GameState.players:type_name -> model.GameState.PlayersEntry
-	9,  // 3: model.GameState.current_phase:type_name -> model.GamePhase
-	4,  // 4: model.GameState.active_tragedies:type_name -> model.GameState.ActiveTragediesEntry
-	5,  // 5: model.GameState.prevented_tragedies:type_name -> model.GameState.PreventedTragediesEntry
-	6,  // 6: model.GameState.played_cards_this_day:type_name -> model.GameState.PlayedCardsThisDayEntry
-	7,  // 7: model.GameState.played_cards_this_loop:type_name -> model.GameState.PlayedCardsThisLoopEntry
-	10, // 8: model.GameState.last_update_time:type_name -> google.protobuf.Timestamp
-	11, // 9: model.GameState.day_events:type_name -> model.GameEvent
-	11, // 10: model.GameState.loop_events:type_name -> model.GameEvent
-	12, // 11: model.PlayerAction.type:type_name -> model.ActionType
-	13, // 12: model.PlayerAction.payload:type_name -> google.protobuf.Struct
-	14, // 13: model.GameState.CharactersEntry.value:type_name -> model.Character
-	15, // 14: model.GameState.PlayersEntry.value:type_name -> model.Player
-	16, // 15: model.GameState.PlayedCardsThisDayEntry.value:type_name -> model.CardList
-	16, // 16: model.GameState.PlayedCardsThisLoopEntry.value:type_name -> model.CardList
-	17, // [17:17] is the sub-list for method output_type
-	17, // [17:17] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	9,  // 0: model.GameState.script:type_name -> model.Script
+	3,  // 1: model.GameState.characters:type_name -> model.GameState.CharactersEntry
+	4,  // 2: model.GameState.players:type_name -> model.GameState.PlayersEntry
+	10, // 3: model.GameState.current_phase:type_name -> model.GamePhase
+	5,  // 4: model.GameState.active_tragedies:type_name -> model.GameState.ActiveTragediesEntry
+	6,  // 5: model.GameState.prevented_tragedies:type_name -> model.GameState.PreventedTragediesEntry
+	7,  // 6: model.GameState.played_cards_this_day:type_name -> model.GameState.PlayedCardsThisDayEntry
+	8,  // 7: model.GameState.played_cards_this_loop:type_name -> model.GameState.PlayedCardsThisLoopEntry
+	11, // 8: model.GameState.last_update_time:type_name -> google.protobuf.Timestamp
+	12, // 9: model.GameState.day_events:type_name -> model.GameEvent
+	12, // 10: model.GameState.loop_events:type_name -> model.GameEvent
+	0,  // 11: model.EffectContext.game_state:type_name -> model.GameState
+	13, // 12: model.PlayerAction.type:type_name -> model.ActionType
+	14, // 13: model.PlayerAction.payload:type_name -> google.protobuf.Struct
+	15, // 14: model.GameState.CharactersEntry.value:type_name -> model.Character
+	16, // 15: model.GameState.PlayersEntry.value:type_name -> model.Player
+	17, // 16: model.GameState.PlayedCardsThisDayEntry.value:type_name -> model.CardList
+	17, // 17: model.GameState.PlayedCardsThisLoopEntry.value:type_name -> model.CardList
+	18, // [18:18] is the sub-list for method output_type
+	18, // [18:18] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_proto_model_game_proto_init() }
@@ -366,7 +416,7 @@ func file_proto_model_game_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_model_game_proto_rawDesc), len(file_proto_model_game_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

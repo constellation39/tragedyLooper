@@ -2,6 +2,7 @@ package engine
 
 import (
 	"fmt"
+	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -9,7 +10,6 @@ import (
 	"time"
 	promptbuilder "tragedylooper/internal/llm/prompt"
 
-	"github.com/mitchellh/mapstructure"
 	"go.uber.org/zap"
 
 	"tragedylooper/internal/game/data"
@@ -258,9 +258,9 @@ func (ge *GameEngine) handlePlayerAction(action *model.PlayerAction) {
 	case model.ActionType_ACTION_TYPE_USE_ABILITY:
 		ge.handleUseAbilityAction(player, action)
 	case model.ActionType_ACTION_TYPE_MAKE_GUESS:
-		ge.handleReadyForNextPhaseAction(player)
-	case model.ActionType_ACTION_TYPE_READY_FOR_NEXT_PHASE:
 		ge.handleMakeGuessAction(action)
+	case model.ActionType_ACTION_TYPE_READY_FOR_NEXT_PHASE:
+		ge.handleReadyForNextPhaseAction(player)
 	default:
 		ge.logger.Warn("Unknown action type", zap.String("actionType", string(action.Type)))
 	}
@@ -268,8 +268,8 @@ func (ge *GameEngine) handlePlayerAction(action *model.PlayerAction) {
 
 func (ge *GameEngine) handlePlayCardAction(player *model.Player, action *model.PlayerAction) {
 	var payload model.PlayCardPayload
-	if err := mapstructure.Decode(action.Payload, &payload); err != nil {
-		ge.logger.Error("Failed to decode PlayCardPayload", zap.Error(err))
+	if err := protojson.Unmarshal(action.Payload.MarshalJSON(), &payload); err != nil {
+		ge.logger.Error("Failed to unmarshal PlayCardPayload", zap.Error(err))
 		return
 	}
 
@@ -294,9 +294,15 @@ func (ge *GameEngine) handlePlayCardAction(player *model.Player, action *model.P
 	}
 
 	// Add target info to the card instance before storing it
-	playedCard.Id = payload.CardId
 	playedCard.Target = payload.Target
 	playedCard.UsedThisLoop = true // Mark as used
+
+	if _, ok := ge.GameState.PlayedCardsThisDay[player.Id]; !ok {
+		ge.GameState.PlayedCardsThisDay[player.Id] = &model.CardList{}
+	}
+	if _, ok := ge.GameState.PlayedCardsThisLoop[player.Id]; !ok {
+		ge.GameState.PlayedCardsThisLoop[player.Id] = &model.CardList{}
+	}
 
 	ge.GameState.PlayedCardsThisDay[player.Id].Cards = append(ge.GameState.PlayedCardsThisDay[player.Id].Cards, playedCard)
 	ge.GameState.PlayedCardsThisLoop[player.Id].Cards = append(ge.GameState.PlayedCardsThisLoop[player.Id].Cards, playedCard)
@@ -304,9 +310,9 @@ func (ge *GameEngine) handlePlayCardAction(player *model.Player, action *model.P
 }
 
 func (ge *GameEngine) handleUseAbilityAction(player *model.Player, action *model.PlayerAction) {
-	var payload *model.UseAbilityPayload
-	if err := mapstructure.Decode(action.Payload, &payload); err != nil {
-		ge.logger.Error("Failed to decode UseAbilityPayload", zap.Error(err))
+	var payload model.UseAbilityPayload
+	if err := action.Payload.UnmarshalTo(&payload); err != nil {
+		ge.logger.Error("Failed to unmarshal UseAbilityPayload", zap.Error(err))
 		return
 	}
 
@@ -331,7 +337,7 @@ func (ge *GameEngine) handleUseAbilityAction(player *model.Player, action *model
 		return
 	}
 
-	if err := ge.applyEffect(ability.Effect, ability, payload); err != nil {
+	if err := ge.applyEffect(ability.Effect, ability, &payload); err != nil {
 		ge.logger.Error("Failed to apply effect for ability", zap.String("abilityName", ability.Name), zap.Error(err))
 		return
 	}
@@ -352,8 +358,8 @@ func (ge *GameEngine) handleMakeGuessAction(action *model.PlayerAction) {
 	}
 
 	var payload model.MakeGuessPayload
-	if err := mapstructure.Decode(action.Payload, &payload); err != nil {
-		ge.logger.Error("Failed to decode MakeGuessPayload", zap.Error(err))
+	if err := protojson.Unmarshal(action.Payload.MarshalJSON(), &payload) {
+		ge.logger.Error("Failed to unmarshal MakeGuessPayload", zap.Error(err))
 		return
 	}
 
@@ -434,13 +440,12 @@ func (ge *GameEngine) handleCardResolvePhase() {
 	// Resolve cards in a specific order if necessary (e.g., by initiative). For now, iterate over players.
 	for playerID, cards := range ge.GameState.PlayedCardsThisDay {
 		for _, card := range cards.Cards {
-			// We need to create a payload that fits the new UseAbilityPayload structure.
-			// However, card effects are not directly tied to a character's ability in the same way.
-			// This part of the logic might need a bigger refactor depending on how card effects are intended to work.
-			// For now, we'll pass an empty payload and adjust the applyEffect function if necessary.
-			// A better approach would be to have card effects not use UseAbilityPayload, but their own struct.
-			payload := model.UseAbilityPayload{} // This is a temporary fix.
-			if err := ge.applyEffect(card.Effect, nil, &payload); err != nil {
+			// The card itself contains the target information, set during the play action.
+			// We construct a payload for the effect system.
+			payload := &model.UseAbilityPayload{
+				Target: card.Target,
+			}
+			if err := ge.applyEffect(card.Effect, nil, payload); err != nil {
 				ge.logger.Error("Error applying card effect",
 					zap.Error(err),
 					zap.String("playerID", fmt.Sprint(playerID)),
@@ -475,7 +480,7 @@ func (ge *GameEngine) handleIncidentsPhase() {
 	tragedyOccurred := false
 	for _, tragedy := range ge.GameState.Script.Tragedies {
 		// Check if the tragedy is active for the day and hasn't been prevented
-		if tragedy.Day == ge.GameState.CurrentDay && ge.GameState.ActiveTragedies[tragedy.TragedyType] && !ge.GameState.PreventedTragedies[tragedy.TragedyType] {
+		if tragedy.Day == ge.GameState.CurrentDay && ge.GameState.ActiveTragedies[int32(tragedy.TragedyType)] && !ge.GameState.PreventedTragedies[int32(tragedy.TragedyType)] {
 			if ge.checkTragedyConditions(tragedy) {
 				ge.logger.Info("Tragedy triggered!", zap.String("tragedy_type", string(tragedy.TragedyType)))
 				ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_TRAGEDY_TRIGGERED, &model.TragedyTriggeredEvent{TragedyType: tragedy.TragedyType})
@@ -508,7 +513,7 @@ func (ge *GameEngine) handleLoopEndPhase() {
 	// Check for Mastermind win condition (a tragedy occurred or final loop ended with un-prevented tragedies)
 	mastermindWins := false
 	for _, tragedy := range ge.GameState.Script.Tragedies {
-		if ge.GameState.ActiveTragedies[tragedy.TragedyType] && !ge.GameState.PreventedTragedies[tragedy.TragedyType] {
+		if ge.GameState.ActiveTragedies[int32(tragedy.TragedyType)] && !ge.GameState.PreventedTragedies[int32(tragedy.TragedyType)] {
 			// This check is broad. A more precise check would be if a tragedy *actually occurred* this loop.
 			// For now, we assume any un-prevented tragedy at loop end is a win condition.
 			mastermindWins = true
@@ -594,23 +599,63 @@ func (ge *GameEngine) processEvent(event *model.GameEvent) {
 	}
 }
 
+func resolveEffectChoices(ctx *model.EffectContext, effect *model.Effect, ability *model.Ability) ([]*model.Choice, error) {
+	switch t := effect.EffectOneof.(type) {
+	case *model.Effect_MoveCharacterEffect:
+		// No choices needed for this effect
+		return nil, nil
+	case *model.Effect_AdjustParanoiaEffect:
+		// No choices needed for this effect
+		return nil, nil
+	case *model.Effect_AdjustGoodwillEffect:
+		// No choices needed for this effect
+		return nil, nil
+	case *model.Effect_AdjustIntrigueEffect:
+		// No choices needed for this effect
+		return nil, nil
+	default:
+		return nil, fmt.Errorf("unknown effect type: %T", t)
+	}
+}
+
+func executeEffect(ge *GameEngine, ctx *model.EffectContext, effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload) ([]*model.GameEvent, error) {
+	switch t := effect.EffectOneof.(type) {
+	case *model.Effect_MoveCharacterEffect:
+		ge.SetCharacterLocation(payload.GetCharacterId(), t.MoveCharacterEffect.Destination)
+		return nil, nil
+	case *model.Effect_AdjustParanoiaEffect:
+		ge.AdjustCharacterParanoia(payload.GetCharacterId(), t.AdjustParanoiaEffect.Amount)
+		return nil, nil
+	case *model.Effect_AdjustGoodwillEffect:
+		ge.AdjustCharacterGoodwill(payload.GetCharacterId(), t.AdjustGoodwillEffect.Amount)
+		return nil, nil
+	case *model.Effect_AdjustIntrigueEffect:
+		ge.AdjustCharacterIntrigue(payload.GetCharacterId(), t.AdjustIntrigueEffect.Amount)
+		return nil, nil
+	default:
+		return nil, fmt.Errorf("unknown effect type: %T", t)
+	}
+}
+
 func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload) error {
-	ctx := model.EffectContext{GameState: ge.GameState}
+	ctx := &model.EffectContext{GameState: ge.GameState}
 
 	// First, see if the effect requires a choice from the player.
-	choices, err := effect.ResolveChoices(ctx, ability)
+	choices, err := resolveEffectChoices(ctx, effect, ability)
 	if err != nil {
 		return fmt.Errorf("error resolving choices: %w", err)
 	}
 
 	// If choices are available and no specific target was provided in the payload, ask the player.
-	if len(choices) > 1 && payload.CharacterId == "" { // Simplified check, might need more robust logic
-		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_CHOICE_REQUIRED, choices)
+	// A more robust check might be needed, e.g., checking if payload.Target is fully specified.
+	if len(choices) > 1 && (payload.Target == nil || payload.Target.GetCharacterId() == 0) {
+		choiceEvent := &model.ChoiceRequiredEvent{Choices: choices}
+		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_CHOICE_REQUIRED, choiceEvent)
 		return nil // Stop processing and wait for a player action with the choice.
 	}
 
 	// If a choice was made or not required, execute the effect.
-	events, err := effect.Execute(ctx, ability, payload)
+	events, err := executeEffect(ge, ctx, effect, ability, payload)
 	if err != nil {
 		return fmt.Errorf("error executing effect: %w", err)
 	}
@@ -721,21 +766,24 @@ func (ge *GameEngine) generatePlayerView(playerID int32) *model.PlayerView {
 	// Filter characters based on player role
 	view.Characters = make(map[int32]*model.Character)
 	for id, char := range ge.GameState.Characters {
-		charCopy := *char // Create a copy to avoid modifying original data
+		// Create a copy to avoid races and unintended modification of the core state.
+		charCopy := proto.Clone(char).(*model.Character)
 		if player.Role == model.PlayerRole_PLAYER_ROLE_PROTAGONIST {
-			charCopy.HiddenRole = model.RoleType_ROLE_TYPE_PROTAGONIST // Hide role from protagonists
+			// Hide the true role from Protagonists, showing it as unspecified.
+			// The Mastermind will see the true roles.
+			charCopy.HiddenRole = model.RoleType_ROLE_TYPE_UNSPECIFIED
 		}
-		view.Characters[id] = &charCopy
+		view.Characters[id] = charCopy
 	}
 
 	// Filter player info
 	view.Players = make(map[int32]*model.Player)
 	for id, p := range ge.GameState.Players {
-		playerCopy := *p
+		playerCopy := proto.Clone(p).(*model.Player)
 		if id != playerID {
 			playerCopy.Hand = nil // Hide other players' hands
 		}
-		view.Players[id] = &playerCopy
+		view.Players[id] = playerCopy
 	}
 
 	// Add player-specific info
@@ -788,7 +836,7 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID int32) {
 		if err != nil {
 			ge.logger.Error("Failed to parse LLM response", zap.String("player", player.Name), zap.Error(err))
 			// Submit a default action to unblock the game
-			ge.requestChan <- &model.PlayerAction{PlayerId: playerID, GameId: ge.GameState.GameId, Type: model.ActionType_ACTION_TYPE_READY_FOR_NEXT_PHASE}
+			ge.requestChan <- &model.PlayerAction{PlayerId: playerID, GameId: a.GameState.GameId, Type: model.ActionType_ACTION_TYPE_READY_FOR_NEXT_PHASE}
 			return
 		}
 

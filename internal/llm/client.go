@@ -57,13 +57,12 @@ func (m *MockLLMClient) GenerateResponse(prompt string, sessionID string) (strin
 			Type:    model.ActionType_ACTION_TYPE_PLAY_CARD,
 			Payload: payloadStruct,
 		}
-		actionBytes, _ := json.Marshal(mockAction)
+		actionBytes, _ := protojson.Marshal(&mockAction)
 		return string(actionBytes), nil
 	}
 
 	return "Mock LLM response: I am thinking...", nil
 }
-
 
 /*
 // OpenAIClient 是使用 OpenAI API 的示例实现。

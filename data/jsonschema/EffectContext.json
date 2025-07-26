@@ -1,132 +1,18 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/GameState",
+    "$ref": "#/definitions/EffectContext",
     "definitions": {
-        "GameState": {
+        "EffectContext": {
             "properties": {
-                "game_id": {
-                    "type": "integer",
-                    "description": "游戏唯一标识符"
-                },
-                "script": {
-                    "$ref": "#/definitions/model.Script",
-                    "additionalProperties": true,
-                    "description": "当前使用的剧本"
-                },
-                "characters": {
-                    "additionalProperties": {
-                        "$ref": "#/definitions/model.Character",
-                        "additionalProperties": true
-                    },
-                    "type": "object",
-                    "description": "游戏中所有角色的映射"
-                },
-                "players": {
-                    "additionalProperties": {
-                        "$ref": "#/definitions/model.Player",
-                        "additionalProperties": true
-                    },
-                    "type": "object",
-                    "description": "游戏中所有玩家的映射"
-                },
-                "current_day": {
-                    "type": "integer",
-                    "description": "当前天数"
-                },
-                "current_loop": {
-                    "type": "integer",
-                    "description": "当前循环次数"
-                },
-                "current_phase": {
-                    "enum": [
-                        "GAME_PHASE_UNSPECIFIED",
-                        0,
-                        "GAME_PHASE_MORNING",
-                        1,
-                        "GAME_PHASE_CARD_PLAY",
-                        2,
-                        "GAME_PHASE_CARD_REVEAL",
-                        3,
-                        "GAME_PHASE_CARD_RESOLVE",
-                        4,
-                        "GAME_PHASE_ABILITIES",
-                        5,
-                        "GAME_PHASE_INCIDENTS",
-                        6,
-                        "GAME_PHASE_DAY_END",
-                        7,
-                        "GAME_PHASE_LOOP_END",
-                        8,
-                        "GAME_PHASE_GAME_OVER",
-                        9,
-                        "GAME_PHASE_PROTAGONIST_GUESS",
-                        10
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Game Phase",
-                    "description": "GamePhase 定义游戏日期的当前阶段。"
-                },
-                "active_tragedies": {
-                    "additionalProperties": {
-                        "type": "boolean"
-                    },
-                    "type": "object",
-                    "description": "此剧本中活跃的悲剧, key is TragedyType"
-                },
-                "prevented_tragedies": {
-                    "additionalProperties": {
-                        "type": "boolean"
-                    },
-                    "type": "object",
-                    "description": "此循环中已被阻止的悲剧, key is TragedyType"
-                },
-                "played_cards_this_day": {
-                    "additionalProperties": {
-                        "$ref": "#/definitions/model.CardList",
-                        "additionalProperties": true
-                    },
-                    "type": "object",
-                    "description": "当天玩家打出的牌"
-                },
-                "played_cards_this_loop": {
-                    "additionalProperties": {
-                        "$ref": "#/definitions/model.CardList",
-                        "additionalProperties": true
-                    },
-                    "type": "object",
-                    "description": "本循环玩家打出的牌"
-                },
-                "last_update_time": {
-                    "type": "string",
-                    "description": "最后更新时间",
-                    "format": "date-time"
-                },
-                "day_events": {
-                    "items": {
-                        "$ref": "#/definitions/model.GameEvent"
-                    },
-                    "type": "array",
-                    "description": "当天发生的事件"
-                },
-                "loop_events": {
-                    "items": {
-                        "$ref": "#/definitions/model.GameEvent"
-                    },
-                    "type": "array",
-                    "description": "本循环发生的事件"
+                "game_state": {
+                    "$ref": "#/definitions/model.GameState",
+                    "additionalProperties": true
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Game State",
-            "description": "GameState 表示游戏实例的权威当前状态。"
+            "title": "Effect Context",
+            "description": "EffectContext provides the context in which an effect is executed."
         },
         "model.Ability": {
             "properties": {
@@ -652,6 +538,132 @@
             "type": "object",
             "title": "Game Event",
             "description": "GameEvent represents an event that occurred in the game."
+        },
+        "model.GameState": {
+            "properties": {
+                "game_id": {
+                    "type": "integer",
+                    "description": "游戏唯一标识符"
+                },
+                "script": {
+                    "$ref": "#/definitions/model.Script",
+                    "additionalProperties": true,
+                    "description": "当前使用的剧本"
+                },
+                "characters": {
+                    "additionalProperties": {
+                        "$ref": "#/definitions/model.Character",
+                        "additionalProperties": true
+                    },
+                    "type": "object",
+                    "description": "游戏中所有角色的映射"
+                },
+                "players": {
+                    "additionalProperties": {
+                        "$ref": "#/definitions/model.Player",
+                        "additionalProperties": true
+                    },
+                    "type": "object",
+                    "description": "游戏中所有玩家的映射"
+                },
+                "current_day": {
+                    "type": "integer",
+                    "description": "当前天数"
+                },
+                "current_loop": {
+                    "type": "integer",
+                    "description": "当前循环次数"
+                },
+                "current_phase": {
+                    "enum": [
+                        "GAME_PHASE_UNSPECIFIED",
+                        0,
+                        "GAME_PHASE_MORNING",
+                        1,
+                        "GAME_PHASE_CARD_PLAY",
+                        2,
+                        "GAME_PHASE_CARD_REVEAL",
+                        3,
+                        "GAME_PHASE_CARD_RESOLVE",
+                        4,
+                        "GAME_PHASE_ABILITIES",
+                        5,
+                        "GAME_PHASE_INCIDENTS",
+                        6,
+                        "GAME_PHASE_DAY_END",
+                        7,
+                        "GAME_PHASE_LOOP_END",
+                        8,
+                        "GAME_PHASE_GAME_OVER",
+                        9,
+                        "GAME_PHASE_PROTAGONIST_GUESS",
+                        10
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Game Phase",
+                    "description": "GamePhase 定义游戏日期的当前阶段。"
+                },
+                "active_tragedies": {
+                    "additionalProperties": {
+                        "type": "boolean"
+                    },
+                    "type": "object",
+                    "description": "此剧本中活跃的悲剧, key is TragedyType"
+                },
+                "prevented_tragedies": {
+                    "additionalProperties": {
+                        "type": "boolean"
+                    },
+                    "type": "object",
+                    "description": "此循环中已被阻止的悲剧, key is TragedyType"
+                },
+                "played_cards_this_day": {
+                    "additionalProperties": {
+                        "$ref": "#/definitions/model.CardList",
+                        "additionalProperties": true
+                    },
+                    "type": "object",
+                    "description": "当天玩家打出的牌"
+                },
+                "played_cards_this_loop": {
+                    "additionalProperties": {
+                        "$ref": "#/definitions/model.CardList",
+                        "additionalProperties": true
+                    },
+                    "type": "object",
+                    "description": "本循环玩家打出的牌"
+                },
+                "last_update_time": {
+                    "type": "string",
+                    "description": "最后更新时间",
+                    "format": "date-time"
+                },
+                "day_events": {
+                    "items": {
+                        "$ref": "#/definitions/model.GameEvent"
+                    },
+                    "type": "array",
+                    "description": "当天发生的事件"
+                },
+                "loop_events": {
+                    "items": {
+                        "$ref": "#/definitions/model.GameEvent"
+                    },
+                    "type": "array",
+                    "description": "本循环发生的事件"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Game State",
+            "description": "GameState 表示游戏实例的权威当前状态。"
         },
         "model.MoveCharacterEffect": {
             "properties": {

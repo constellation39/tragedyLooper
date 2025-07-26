@@ -596,15 +596,70 @@ func (x *GameOverEvent) GetWinner() PlayerRole {
 	return PlayerRole_PLAYER_ROLE_UNSPECIFIED
 }
 
-type ChoiceRequiredEvent struct {
+// Choice represents a choice a player can make.
+type Choice struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Description   string                 `protobuf:"bytes,1,opt,name=description,proto3" json:"description,omitempty"`
+	CharacterId   int32                  `protobuf:"varint,2,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Choice) Reset() {
+	*x = Choice{}
+	mi := &file_proto_model_event_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Choice) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Choice) ProtoMessage() {}
+
+func (x *Choice) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_model_event_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Choice.ProtoReflect.Descriptor instead.
+func (*Choice) Descriptor() ([]byte, []int) {
+	return file_proto_model_event_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *Choice) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *Choice) GetCharacterId() int32 {
+	if x != nil {
+		return x.CharacterId
+	}
+	return 0
+}
+
+type ChoiceRequiredEvent struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// This might need a more complex structure depending on the choices
+	Choice        *Choice `protobuf:"bytes,1,opt,name=choice,proto3" json:"choice,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ChoiceRequiredEvent) Reset() {
 	*x = ChoiceRequiredEvent{}
-	mi := &file_proto_model_event_proto_msgTypes[11]
+	mi := &file_proto_model_event_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -616,7 +671,7 @@ func (x *ChoiceRequiredEvent) String() string {
 func (*ChoiceRequiredEvent) ProtoMessage() {}
 
 func (x *ChoiceRequiredEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_model_event_proto_msgTypes[11]
+	mi := &file_proto_model_event_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -629,14 +684,21 @@ func (x *ChoiceRequiredEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChoiceRequiredEvent.ProtoReflect.Descriptor instead.
 func (*ChoiceRequiredEvent) Descriptor() ([]byte, []int) {
-	return file_proto_model_event_proto_rawDescGZIP(), []int{11}
+	return file_proto_model_event_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *ChoiceRequiredEvent) GetChoice() *Choice {
+	if x != nil {
+		return x.Choice
+	}
+	return nil
 }
 
 var File_proto_model_event_proto protoreflect.FileDescriptor
 
 const file_proto_model_event_proto_rawDesc = "" +
 	"\n" +
-	"\x17proto/model/event.proto\x12\x05model\x1a\x19google/protobuf/any.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17proto/model/enums.proto\x1a\x16proto/model/card.proto\x1a\x1aproto/model/location.proto\"\x9f\x01\n" +
+	"\x17proto/model/event.proto\x12\x05model\x1a\x19google/protobuf/any.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16proto/model/card.proto\x1a\x17proto/model/enums.proto\x1a\x1aproto/model/location.proto\"\x9f\x01\n" +
 	"\tGameEvent\x12(\n" +
 	"\x04type\x18\x01 \x01(\x0e2\x14.model.GameEventTypeR\x04type\x12.\n" +
 	"\apayload\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\apayload\x128\n" +
@@ -672,8 +734,12 @@ const file_proto_model_event_proto_rawDesc = "" +
 	"\x0eLoopResetEvent\x12\x12\n" +
 	"\x04loop\x18\x01 \x01(\x05R\x04loop\":\n" +
 	"\rGameOverEvent\x12)\n" +
-	"\x06winner\x18\x01 \x01(\x0e2\x11.model.PlayerRoleR\x06winner\"\x15\n" +
-	"\x13ChoiceRequiredEventB\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\x06winner\x18\x01 \x01(\x0e2\x11.model.PlayerRoleR\x06winner\"M\n" +
+	"\x06Choice\x12 \n" +
+	"\vdescription\x18\x01 \x01(\tR\vdescription\x12!\n" +
+	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\"<\n" +
+	"\x13ChoiceRequiredEvent\x12%\n" +
+	"\x06choice\x18\x01 \x01(\v2\r.model.ChoiceR\x06choiceB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
 	file_proto_model_event_proto_rawDescOnce sync.Once
@@ -687,7 +753,7 @@ func file_proto_model_event_proto_rawDescGZIP() []byte {
 	return file_proto_model_event_proto_rawDescData
 }
 
-var file_proto_model_event_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_proto_model_event_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_proto_model_event_proto_goTypes = []any{
 	(*GameEvent)(nil),             // 0: model.GameEvent
 	(*CharacterMovedEvent)(nil),   // 1: model.CharacterMovedEvent
@@ -700,30 +766,32 @@ var file_proto_model_event_proto_goTypes = []any{
 	(*CardPlayedEvent)(nil),       // 8: model.CardPlayedEvent
 	(*LoopResetEvent)(nil),        // 9: model.LoopResetEvent
 	(*GameOverEvent)(nil),         // 10: model.GameOverEvent
-	(*ChoiceRequiredEvent)(nil),   // 11: model.ChoiceRequiredEvent
-	nil,                           // 12: model.CardPlayedEvent.PlayedCardsEntry
-	(GameEventType)(0),            // 13: model.GameEventType
-	(*anypb.Any)(nil),             // 14: google.protobuf.Any
-	(*timestamppb.Timestamp)(nil), // 15: google.protobuf.Timestamp
-	(LocationType)(0),             // 16: model.LocationType
-	(TragedyType)(0),              // 17: model.TragedyType
-	(PlayerRole)(0),               // 18: model.PlayerRole
-	(*CardList)(nil),              // 19: model.CardList
+	(*Choice)(nil),                // 11: model.Choice
+	(*ChoiceRequiredEvent)(nil),   // 12: model.ChoiceRequiredEvent
+	nil,                           // 13: model.CardPlayedEvent.PlayedCardsEntry
+	(GameEventType)(0),            // 14: model.GameEventType
+	(*anypb.Any)(nil),             // 15: google.protobuf.Any
+	(*timestamppb.Timestamp)(nil), // 16: google.protobuf.Timestamp
+	(LocationType)(0),             // 17: model.LocationType
+	(TragedyType)(0),              // 18: model.TragedyType
+	(PlayerRole)(0),               // 19: model.PlayerRole
+	(*CardList)(nil),              // 20: model.CardList
 }
 var file_proto_model_event_proto_depIdxs = []int32{
-	13, // 0: model.GameEvent.type:type_name -> model.GameEventType
-	14, // 1: model.GameEvent.payload:type_name -> google.protobuf.Any
-	15, // 2: model.GameEvent.timestamp:type_name -> google.protobuf.Timestamp
-	16, // 3: model.CharacterMovedEvent.new_location:type_name -> model.LocationType
-	17, // 4: model.TragedyTriggeredEvent.tragedy_type:type_name -> model.TragedyType
-	12, // 5: model.CardPlayedEvent.played_cards:type_name -> model.CardPlayedEvent.PlayedCardsEntry
-	18, // 6: model.GameOverEvent.winner:type_name -> model.PlayerRole
-	19, // 7: model.CardPlayedEvent.PlayedCardsEntry.value:type_name -> model.CardList
-	8,  // [8:8] is the sub-list for method output_type
-	8,  // [8:8] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	14, // 0: model.GameEvent.type:type_name -> model.GameEventType
+	15, // 1: model.GameEvent.payload:type_name -> google.protobuf.Any
+	16, // 2: model.GameEvent.timestamp:type_name -> google.protobuf.Timestamp
+	17, // 3: model.CharacterMovedEvent.new_location:type_name -> model.LocationType
+	18, // 4: model.TragedyTriggeredEvent.tragedy_type:type_name -> model.TragedyType
+	13, // 5: model.CardPlayedEvent.played_cards:type_name -> model.CardPlayedEvent.PlayedCardsEntry
+	19, // 6: model.GameOverEvent.winner:type_name -> model.PlayerRole
+	11, // 7: model.ChoiceRequiredEvent.choice:type_name -> model.Choice
+	20, // 8: model.CardPlayedEvent.PlayedCardsEntry.value:type_name -> model.CardList
+	9,  // [9:9] is the sub-list for method output_type
+	9,  // [9:9] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_proto_model_event_proto_init() }
@@ -731,8 +799,8 @@ func file_proto_model_event_proto_init() {
 	if File_proto_model_event_proto != nil {
 		return
 	}
-	file_proto_model_enums_proto_init()
 	file_proto_model_card_proto_init()
+	file_proto_model_enums_proto_init()
 	file_proto_model_location_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -740,7 +808,7 @@ func file_proto_model_event_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_model_event_proto_rawDesc), len(file_proto_model_event_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   13,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

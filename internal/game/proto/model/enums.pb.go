@@ -221,6 +221,7 @@ const (
 	GameEventType_GAME_EVENT_TYPE_LOOP_RESET        GameEventType = 10 // 循环重置
 	GameEventType_GAME_EVENT_TYPE_GAME_OVER         GameEventType = 11 // 游戏结束
 	GameEventType_GAME_EVENT_TYPE_PLAYER_GUESS      GameEventType = 12 // 玩家猜测
+	GameEventType_GAME_EVENT_TYPE_CHOICE_REQUIRED   GameEventType = 13 // 需要玩家选择
 )
 
 // Enum value maps for GameEventType.
@@ -239,6 +240,7 @@ var (
 		10: "GAME_EVENT_TYPE_LOOP_RESET",
 		11: "GAME_EVENT_TYPE_GAME_OVER",
 		12: "GAME_EVENT_TYPE_PLAYER_GUESS",
+		13: "GAME_EVENT_TYPE_CHOICE_REQUIRED",
 	}
 	GameEventType_value = map[string]int32{
 		"GAME_EVENT_TYPE_UNSPECIFIED":       0,
@@ -254,6 +256,7 @@ var (
 		"GAME_EVENT_TYPE_LOOP_RESET":        10,
 		"GAME_EVENT_TYPE_GAME_OVER":         11,
 		"GAME_EVENT_TYPE_PLAYER_GUESS":      12,
+		"GAME_EVENT_TYPE_CHOICE_REQUIRED":   13,
 	}
 )
 
@@ -673,7 +676,7 @@ const file_proto_model_enums_proto_rawDesc = "" +
 	"\x13GAME_PHASE_LOOP_END\x10\b\x12\x18\n" +
 	"\x14GAME_PHASE_GAME_OVER\x10\t\x12 \n" +
 	"\x1cGAME_PHASE_PROTAGONIST_GUESS\x10\n" +
-	"*\xde\x03\n" +
+	"*\x83\x04\n" +
 	"\rGameEventType\x12\x1f\n" +
 	"\x1bGAME_EVENT_TYPE_UNSPECIFIED\x10\x00\x12\x1f\n" +
 	"\x1bGAME_EVENT_TYPE_CARD_PLAYED\x10\x01\x12#\n" +
@@ -688,7 +691,8 @@ const file_proto_model_enums_proto_rawDesc = "" +
 	"\x1aGAME_EVENT_TYPE_LOOP_RESET\x10\n" +
 	"\x12\x1d\n" +
 	"\x19GAME_EVENT_TYPE_GAME_OVER\x10\v\x12 \n" +
-	"\x1cGAME_EVENT_TYPE_PLAYER_GUESS\x10\f*\xa3\x01\n" +
+	"\x1cGAME_EVENT_TYPE_PLAYER_GUESS\x10\f\x12#\n" +
+	"\x1fGAME_EVENT_TYPE_CHOICE_REQUIRED\x10\r*\xa3\x01\n" +
 	"\n" +
 	"ActionType\x12\x1b\n" +
 	"\x17ACTION_TYPE_UNSPECIFIED\x10\x00\x12\x19\n" +
