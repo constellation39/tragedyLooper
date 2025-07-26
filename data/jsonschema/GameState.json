@@ -198,29 +198,9 @@
                     "type": "boolean",
                     "description": "运行时状态，不用于配置"
                 },
-                "target_location": {
-                    "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
-                        0,
-                        "LOCATION_TYPE_HOSPITAL",
-                        1,
-                        "LOCATION_TYPE_SHRINE",
-                        2,
-                        "LOCATION_TYPE_CITY",
-                        3,
-                        "LOCATION_TYPE_SCHOOL",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Location Type",
-                    "description": "LocationType 定义游戏中的可能地点。"
+                "target": {
+                    "$ref": "#/definitions/model.Target",
+                    "additionalProperties": true
                 }
             },
             "additionalProperties": true,
@@ -264,7 +244,7 @@
         "model.Card": {
             "properties": {
                 "id": {
-                    "type": "string",
+                    "type": "integer",
                     "description": "唯一标识符"
                 },
                 "name": {
@@ -317,10 +297,6 @@
                     "title": "Player Role",
                     "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
                 },
-                "target_type": {
-                    "type": "string",
-                    "description": "目标类型（\"Character\" 或 \"Location\"）"
-                },
                 "effect": {
                     "$ref": "#/definitions/model.Effect",
                     "additionalProperties": true,
@@ -334,33 +310,9 @@
                     "type": "boolean",
                     "description": "运行时状态"
                 },
-                "target_character_id": {
-                    "type": "string",
-                    "description": "目标角色ID"
-                },
-                "target_location": {
-                    "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
-                        0,
-                        "LOCATION_TYPE_HOSPITAL",
-                        1,
-                        "LOCATION_TYPE_SHRINE",
-                        2,
-                        "LOCATION_TYPE_CITY",
-                        3,
-                        "LOCATION_TYPE_SCHOOL",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Location Type",
-                    "description": "LocationType 定义游戏中的可能地点。"
+                "target": {
+                    "$ref": "#/definitions/model.Target",
+                    "additionalProperties": true
                 }
             },
             "additionalProperties": true,
@@ -566,7 +518,7 @@
         "model.Condition": {
             "properties": {
                 "character_id": {
-                    "type": "string",
+                    "type": "integer",
                     "description": "角色ID"
                 },
                 "location": {
@@ -690,6 +642,32 @@
             "description": "GameEvent 表示游戏中发生的事件。"
         },
         "model.MoveCharacterEffect": {
+            "properties": {
+                "destination": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "LocationType 定义游戏中的可能地点。"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Move Character Effect",
@@ -698,7 +676,7 @@
         "model.Player": {
             "properties": {
                 "id": {
-                    "type": "string",
+                    "type": "integer",
                     "description": "唯一标识符"
                 },
                 "name": {
@@ -774,7 +752,7 @@
         "model.Script": {
             "properties": {
                 "id": {
-                    "type": "string",
+                    "type": "integer",
                     "description": "唯一标识符"
                 },
                 "name": {
@@ -823,6 +801,40 @@
             "type": "object",
             "title": "Script",
             "description": "Script 定义一个特定的游戏场景。"
+        },
+        "model.Target": {
+            "properties": {
+                "character_id": {
+                    "type": "integer"
+                },
+                "location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "LocationType 定义游戏中的可能地点。"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Target"
         },
         "model.TragedyCondition": {
             "properties": {

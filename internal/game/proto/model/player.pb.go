@@ -25,7 +25,7 @@ const (
 // Player 表示一个连接的玩家（人类或 LLM）。
 type Player struct {
 	state              protoimpl.MessageState    `protogen:"open.v1"`
-	Id                 string                    `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                                                                      // 唯一标识符
+	Id                 int32                     `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                                                                     // 唯一标识符
 	Name               string                    `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                                                                                  // 玩家名称
 	Role               PlayerRole                `protobuf:"varint,3,opt,name=role,proto3,enum=model.PlayerRole" json:"role,omitempty"`                                                                                                           // 玩家角色（主谋或主角）
 	IsLlm              bool                      `protobuf:"varint,4,opt,name=is_llm,json=isLlm,proto3" json:"is_llm,omitempty"`                                                                                                                  // 是否为LLM玩家
@@ -66,11 +66,11 @@ func (*Player) Descriptor() ([]byte, []int) {
 	return file_proto_model_player_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Player) GetId() string {
+func (x *Player) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 func (x *Player) GetName() string {
@@ -118,8 +118,8 @@ func (x *Player) GetLlmSessionId() string {
 // PlayerView 表示特定玩家的游戏状态过滤视图。
 type PlayerView struct {
 	state              protoimpl.MessageState    `protogen:"open.v1"`
-	GameId             string                    `protobuf:"bytes,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`                                                                                                                 // 游戏唯一标识符
-	ScriptId           string                    `protobuf:"bytes,2,opt,name=script_id,json=scriptId,proto3" json:"script_id,omitempty"`                                                                                                           // 剧本ID
+	GameId             int32                     `protobuf:"varint,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`                                                                                                                // 游戏唯一标识符
+	ScriptId           int32                     `protobuf:"varint,2,opt,name=script_id,json=scriptId,proto3" json:"script_id,omitempty"`                                                                                                          // 剧本ID
 	Characters         map[int32]*Character      `protobuf:"bytes,3,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                            // 角色信息（隐藏身份已移除）
 	Players            map[int32]*Player         `protobuf:"bytes,4,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                  // 玩家信息（敏感信息已移除）
 	CurrentDay         int32                     `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                                                                    // 当前天数
@@ -164,18 +164,18 @@ func (*PlayerView) Descriptor() ([]byte, []int) {
 	return file_proto_model_player_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *PlayerView) GetGameId() string {
+func (x *PlayerView) GetGameId() int32 {
 	if x != nil {
 		return x.GameId
 	}
-	return ""
+	return 0
 }
 
-func (x *PlayerView) GetScriptId() string {
+func (x *PlayerView) GetScriptId() int32 {
 	if x != nil {
 		return x.ScriptId
 	}
-	return ""
+	return 0
 }
 
 func (x *PlayerView) GetCharacters() map[int32]*Character {
@@ -254,7 +254,7 @@ const file_proto_model_player_proto_rawDesc = "" +
 	"\n" +
 	"\x18proto/model/player.proto\x12\x05model\x1a\x1cgoogle/protobuf/struct.proto\x1a\x16proto/model/card.proto\x1a\x1bproto/model/character.proto\x1a\x17proto/model/enums.proto\x1a\x17proto/model/event.proto\"\xe8\x02\n" +
 	"\x06Player\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12%\n" +
 	"\x04role\x18\x03 \x01(\x0e2\x11.model.PlayerRoleR\x04role\x12\x15\n" +
 	"\x06is_llm\x18\x04 \x01(\bR\x05isLlm\x12\x1f\n" +
@@ -266,8 +266,8 @@ const file_proto_model_player_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\v2\x16.google.protobuf.ValueR\x05value:\x028\x01\"\x9c\b\n" +
 	"\n" +
 	"PlayerView\x12\x17\n" +
-	"\agame_id\x18\x01 \x01(\tR\x06gameId\x12\x1b\n" +
-	"\tscript_id\x18\x02 \x01(\tR\bscriptId\x12A\n" +
+	"\agame_id\x18\x01 \x01(\x05R\x06gameId\x12\x1b\n" +
+	"\tscript_id\x18\x02 \x01(\x05R\bscriptId\x12A\n" +
 	"\n" +
 	"characters\x18\x03 \x03(\v2!.model.PlayerView.CharactersEntryR\n" +
 	"characters\x128\n" +

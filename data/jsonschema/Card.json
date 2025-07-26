@@ -5,7 +5,7 @@
         "Card": {
             "properties": {
                 "id": {
-                    "type": "string",
+                    "type": "integer",
                     "description": "唯一标识符"
                 },
                 "name": {
@@ -58,10 +58,6 @@
                     "title": "Player Role",
                     "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
                 },
-                "target_type": {
-                    "type": "string",
-                    "description": "目标类型（\"Character\" 或 \"Location\"）"
-                },
                 "effect": {
                     "$ref": "#/definitions/model.Effect",
                     "additionalProperties": true,
@@ -75,33 +71,9 @@
                     "type": "boolean",
                     "description": "运行时状态"
                 },
-                "target_character_id": {
-                    "type": "string",
-                    "description": "目标角色ID"
-                },
-                "target_location": {
-                    "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
-                        0,
-                        "LOCATION_TYPE_HOSPITAL",
-                        1,
-                        "LOCATION_TYPE_SHRINE",
-                        2,
-                        "LOCATION_TYPE_CITY",
-                        3,
-                        "LOCATION_TYPE_SCHOOL",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Location Type",
-                    "description": "LocationType 定义游戏中的可能地点。"
+                "target": {
+                    "$ref": "#/definitions/model.Target",
+                    "additionalProperties": true
                 }
             },
             "additionalProperties": true,
@@ -167,10 +139,70 @@
             "description": "Effect 接口定义了一个效果的核心行为。"
         },
         "model.MoveCharacterEffect": {
+            "properties": {
+                "destination": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "LocationType 定义游戏中的可能地点。"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Move Character Effect",
             "description": "MoveCharacterEffect 移动一个角色到指定地点。"
+        },
+        "model.Target": {
+            "properties": {
+                "character_id": {
+                    "type": "integer"
+                },
+                "location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "LocationType 定义游戏中的可能地点。"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Target"
         }
     }
 }

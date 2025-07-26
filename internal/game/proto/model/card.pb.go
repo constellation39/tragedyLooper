@@ -23,19 +23,17 @@ const (
 
 // Card 表示一张行动卡。
 type Card struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	Id                string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                         // 唯一标识符
-	Name              string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                     // 卡牌名称
-	CardType          CardType               `protobuf:"varint,3,opt,name=card_type,json=cardType,proto3,enum=model.CardType" json:"card_type,omitempty"`                        // 卡牌类型
-	OwnerRole         PlayerRole             `protobuf:"varint,4,opt,name=owner_role,json=ownerRole,proto3,enum=model.PlayerRole" json:"owner_role,omitempty"`                   // 所属玩家角色（主谋或主角）
-	TargetType        string                 `protobuf:"bytes,5,opt,name=target_type,json=targetType,proto3" json:"target_type,omitempty"`                                       // 目标类型（"Character" 或 "Location"）
-	Effect            *Effect                `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`                                                                 // 卡牌效果
-	OncePerLoop       bool                   `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`                                 // 每循环只能使用一次
-	UsedThisLoop      bool                   `protobuf:"varint,8,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"`                              // 运行时状态
-	TargetCharacterId string                 `protobuf:"bytes,9,opt,name=target_character_id,json=targetCharacterId,proto3" json:"target_character_id,omitempty"`                // 目标角色ID
-	TargetLocation    LocationType           `protobuf:"varint,10,opt,name=target_location,json=targetLocation,proto3,enum=model.LocationType" json:"target_location,omitempty"` // 目标位置
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                      // 唯一标识符
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                   // 卡牌名称
+	CardType      CardType               `protobuf:"varint,3,opt,name=card_type,json=cardType,proto3,enum=model.CardType" json:"card_type,omitempty"`      // 卡牌类型
+	OwnerRole     PlayerRole             `protobuf:"varint,4,opt,name=owner_role,json=ownerRole,proto3,enum=model.PlayerRole" json:"owner_role,omitempty"` // 所属玩家角色（主谋或主角）
+	Effect        *Effect                `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`                                               // 卡牌效果
+	OncePerLoop   bool                   `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`               // 每循环只能使用一次
+	UsedThisLoop  bool                   `protobuf:"varint,8,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"`            // 运行时状态
+	Target        *Target                `protobuf:"bytes,9,opt,name=target,proto3" json:"target,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Card) Reset() {
@@ -68,11 +66,11 @@ func (*Card) Descriptor() ([]byte, []int) {
 	return file_proto_model_card_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Card) GetId() string {
+func (x *Card) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 func (x *Card) GetName() string {
@@ -96,13 +94,6 @@ func (x *Card) GetOwnerRole() PlayerRole {
 	return PlayerRole_PLAYER_ROLE_UNSPECIFIED
 }
 
-func (x *Card) GetTargetType() string {
-	if x != nil {
-		return x.TargetType
-	}
-	return ""
-}
-
 func (x *Card) GetEffect() *Effect {
 	if x != nil {
 		return x.Effect
@@ -124,18 +115,11 @@ func (x *Card) GetUsedThisLoop() bool {
 	return false
 }
 
-func (x *Card) GetTargetCharacterId() string {
+func (x *Card) GetTarget() *Target {
 	if x != nil {
-		return x.TargetCharacterId
+		return x.Target
 	}
-	return ""
-}
-
-func (x *Card) GetTargetLocation() LocationType {
-	if x != nil {
-		return x.TargetLocation
-	}
-	return LocationType_LOCATION_TYPE_UNSPECIFIED
+	return nil
 }
 
 type CardList struct {
@@ -186,21 +170,17 @@ var File_proto_model_card_proto protoreflect.FileDescriptor
 
 const file_proto_model_card_proto_rawDesc = "" +
 	"\n" +
-	"\x16proto/model/card.proto\x12\x05model\x1a\x18proto/model/effect.proto\x1a\x1aproto/model/location.proto\x1a\x17proto/model/enums.proto\"\x8a\x03\n" +
+	"\x16proto/model/card.proto\x12\x05model\x1a\x18proto/model/effect.proto\x1a\x1aproto/model/location.proto\x1a\x17proto/model/enums.proto\x1a\x18proto/model/target.proto\"\xa2\x02\n" +
 	"\x04Card\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12,\n" +
 	"\tcard_type\x18\x03 \x01(\x0e2\x0f.model.CardTypeR\bcardType\x120\n" +
 	"\n" +
-	"owner_role\x18\x04 \x01(\x0e2\x11.model.PlayerRoleR\townerRole\x12\x1f\n" +
-	"\vtarget_type\x18\x05 \x01(\tR\n" +
-	"targetType\x12%\n" +
+	"owner_role\x18\x04 \x01(\x0e2\x11.model.PlayerRoleR\townerRole\x12%\n" +
 	"\x06effect\x18\x06 \x01(\v2\r.model.EffectR\x06effect\x12\"\n" +
 	"\ronce_per_loop\x18\a \x01(\bR\voncePerLoop\x12$\n" +
-	"\x0eused_this_loop\x18\b \x01(\bR\fusedThisLoop\x12.\n" +
-	"\x13target_character_id\x18\t \x01(\tR\x11targetCharacterId\x12<\n" +
-	"\x0ftarget_location\x18\n" +
-	" \x01(\x0e2\x13.model.LocationTypeR\x0etargetLocation\"-\n" +
+	"\x0eused_this_loop\x18\b \x01(\bR\fusedThisLoop\x12%\n" +
+	"\x06target\x18\t \x01(\v2\r.model.TargetR\x06target\"-\n" +
 	"\bCardList\x12!\n" +
 	"\x05cards\x18\x01 \x03(\v2\v.model.CardR\x05cardsB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
@@ -218,18 +198,18 @@ func file_proto_model_card_proto_rawDescGZIP() []byte {
 
 var file_proto_model_card_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_model_card_proto_goTypes = []any{
-	(*Card)(nil),      // 0: model.Card
-	(*CardList)(nil),  // 1: model.CardList
-	(CardType)(0),     // 2: model.CardType
-	(PlayerRole)(0),   // 3: model.PlayerRole
-	(*Effect)(nil),    // 4: model.Effect
-	(LocationType)(0), // 5: model.LocationType
+	(*Card)(nil),     // 0: model.Card
+	(*CardList)(nil), // 1: model.CardList
+	(CardType)(0),    // 2: model.CardType
+	(PlayerRole)(0),  // 3: model.PlayerRole
+	(*Effect)(nil),   // 4: model.Effect
+	(*Target)(nil),   // 5: model.Target
 }
 var file_proto_model_card_proto_depIdxs = []int32{
 	2, // 0: model.Card.card_type:type_name -> model.CardType
 	3, // 1: model.Card.owner_role:type_name -> model.PlayerRole
 	4, // 2: model.Card.effect:type_name -> model.Effect
-	5, // 3: model.Card.target_location:type_name -> model.LocationType
+	5, // 3: model.Card.target:type_name -> model.Target
 	0, // 4: model.CardList.cards:type_name -> model.Card
 	5, // [5:5] is the sub-list for method output_type
 	5, // [5:5] is the sub-list for method input_type
@@ -246,6 +226,7 @@ func file_proto_model_card_proto_init() {
 	file_proto_model_effect_proto_init()
 	file_proto_model_location_proto_init()
 	file_proto_model_enums_proto_init()
+	file_proto_model_target_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

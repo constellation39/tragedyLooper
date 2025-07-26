@@ -139,6 +139,7 @@ func (*Effect_AdjustIntrigueEffect) isEffect_EffectOneof() {}
 // MoveCharacterEffect 移动一个角色到指定地点。
 type MoveCharacterEffect struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Destination   LocationType           `protobuf:"varint,1,opt,name=destination,proto3,enum=model.LocationType" json:"destination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -171,6 +172,13 @@ func (x *MoveCharacterEffect) ProtoReflect() protoreflect.Message {
 // Deprecated: Use MoveCharacterEffect.ProtoReflect.Descriptor instead.
 func (*MoveCharacterEffect) Descriptor() ([]byte, []int) {
 	return file_proto_model_effect_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *MoveCharacterEffect) GetDestination() LocationType {
+	if x != nil {
+		return x.Destination
+	}
+	return LocationType_LOCATION_TYPE_UNSPECIFIED
 }
 
 // AdjustParanoiaEffect 调整角色的妄想值。
@@ -312,14 +320,15 @@ var File_proto_model_effect_proto protoreflect.FileDescriptor
 
 const file_proto_model_effect_proto_rawDesc = "" +
 	"\n" +
-	"\x18proto/model/effect.proto\x12\x05model\"\xe9\x02\n" +
+	"\x18proto/model/effect.proto\x12\x05model\x1a\x1aproto/model/location.proto\"\xe9\x02\n" +
 	"\x06Effect\x12P\n" +
 	"\x15move_character_effect\x18\x01 \x01(\v2\x1a.model.MoveCharacterEffectH\x00R\x13moveCharacterEffect\x12S\n" +
 	"\x16adjust_paranoia_effect\x18\x02 \x01(\v2\x1b.model.AdjustParanoiaEffectH\x00R\x14adjustParanoiaEffect\x12S\n" +
 	"\x16adjust_goodwill_effect\x18\x03 \x01(\v2\x1b.model.AdjustGoodwillEffectH\x00R\x14adjustGoodwillEffect\x12S\n" +
 	"\x16adjust_intrigue_effect\x18\x04 \x01(\v2\x1b.model.AdjustIntrigueEffectH\x00R\x14adjustIntrigueEffectB\x0e\n" +
-	"\feffect_oneof\"\x15\n" +
-	"\x13MoveCharacterEffect\".\n" +
+	"\feffect_oneof\"L\n" +
+	"\x13MoveCharacterEffect\x125\n" +
+	"\vdestination\x18\x01 \x01(\x0e2\x13.model.LocationTypeR\vdestination\".\n" +
 	"\x14AdjustParanoiaEffect\x12\x16\n" +
 	"\x06amount\x18\x01 \x01(\x05R\x06amount\".\n" +
 	"\x14AdjustGoodwillEffect\x12\x16\n" +
@@ -346,17 +355,19 @@ var file_proto_model_effect_proto_goTypes = []any{
 	(*AdjustParanoiaEffect)(nil), // 2: model.AdjustParanoiaEffect
 	(*AdjustGoodwillEffect)(nil), // 3: model.AdjustGoodwillEffect
 	(*AdjustIntrigueEffect)(nil), // 4: model.AdjustIntrigueEffect
+	(LocationType)(0),            // 5: model.LocationType
 }
 var file_proto_model_effect_proto_depIdxs = []int32{
 	1, // 0: model.Effect.move_character_effect:type_name -> model.MoveCharacterEffect
 	2, // 1: model.Effect.adjust_paranoia_effect:type_name -> model.AdjustParanoiaEffect
 	3, // 2: model.Effect.adjust_goodwill_effect:type_name -> model.AdjustGoodwillEffect
 	4, // 3: model.Effect.adjust_intrigue_effect:type_name -> model.AdjustIntrigueEffect
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	5, // 4: model.MoveCharacterEffect.destination:type_name -> model.LocationType
+	5, // [5:5] is the sub-list for method output_type
+	5, // [5:5] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_proto_model_effect_proto_init() }
@@ -364,6 +375,7 @@ func file_proto_model_effect_proto_init() {
 	if File_proto_model_effect_proto != nil {
 		return
 	}
+	file_proto_model_location_proto_init()
 	file_proto_model_effect_proto_msgTypes[0].OneofWrappers = []any{
 		(*Effect_MoveCharacterEffect)(nil),
 		(*Effect_AdjustParanoiaEffect)(nil),

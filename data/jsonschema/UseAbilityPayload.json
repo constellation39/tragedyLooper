@@ -9,12 +9,50 @@
                 },
                 "ability_id": {
                     "type": "integer"
+                },
+                "target": {
+                    "$ref": "#/definitions/model.Target",
+                    "additionalProperties": true
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Use Ability Payload",
             "description": "UseAbilityPayload 定义了使用能力动作所需的数据。"
+        },
+        "model.Target": {
+            "properties": {
+                "character_id": {
+                    "type": "integer"
+                },
+                "location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "LocationType 定义游戏中的可能地点。"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Target"
         }
     }
 }

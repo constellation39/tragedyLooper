@@ -2,22 +2,23 @@ syntax = "proto3";
 
 package model;
 
-import "proto/model/location.proto";
+import "proto/model/target.proto";
 import "proto/model/enums.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 
+
 // PlayCardPayload 定义了打出卡牌动作所需的数据。
 message PlayCardPayload {
   int32 card_id = 1;
-  string target_character_id = 2;
-  LocationType target_location = 3;
+  Target target = 2;
 }
 
 // UseAbilityPayload 定义了使用能力动作所需的数据。
 message UseAbilityPayload {
   int32 character_id = 1;
   int32 ability_id = 2;
+  Target target = 3;
 }
 
 // MakeGuessPayload 定义了主角进行最终猜测时提交的数据结构。

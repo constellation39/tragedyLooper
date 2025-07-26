@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package model;
+
+import "proto/model/location.proto";
+
+option go_package = "github.com/user/repo/proto/model";
+
+message Target {
+  oneof target_oneof {
+    int32 character_id = 1;
+    LocationType location = 2;
+  }
+}

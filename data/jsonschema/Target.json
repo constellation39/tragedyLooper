@@ -1,10 +1,13 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/MoveCharacterEffect",
+    "$ref": "#/definitions/Target",
     "definitions": {
-        "MoveCharacterEffect": {
+        "Target": {
             "properties": {
-                "destination": {
+                "character_id": {
+                    "type": "integer"
+                },
+                "location": {
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
@@ -31,8 +34,7 @@
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Move Character Effect",
-            "description": "MoveCharacterEffect 移动一个角色到指定地点。"
+            "title": "Target"
         }
     }
 }

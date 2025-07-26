@@ -23,12 +23,11 @@ const (
 
 // PlayCardPayload 定义了打出卡牌动作所需的数据。
 type PlayCardPayload struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	CardId            int32                  `protobuf:"varint,1,opt,name=card_id,json=cardId,proto3" json:"card_id,omitempty"`
-	TargetCharacterId string                 `protobuf:"bytes,2,opt,name=target_character_id,json=targetCharacterId,proto3" json:"target_character_id,omitempty"`
-	TargetLocation    LocationType           `protobuf:"varint,3,opt,name=target_location,json=targetLocation,proto3,enum=model.LocationType" json:"target_location,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CardId        int32                  `protobuf:"varint,1,opt,name=card_id,json=cardId,proto3" json:"card_id,omitempty"`
+	Target        *Target                `protobuf:"bytes,2,opt,name=target,proto3" json:"target,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *PlayCardPayload) Reset() {
@@ -68,18 +67,11 @@ func (x *PlayCardPayload) GetCardId() int32 {
 	return 0
 }
 
-func (x *PlayCardPayload) GetTargetCharacterId() string {
+func (x *PlayCardPayload) GetTarget() *Target {
 	if x != nil {
-		return x.TargetCharacterId
+		return x.Target
 	}
-	return ""
-}
-
-func (x *PlayCardPayload) GetTargetLocation() LocationType {
-	if x != nil {
-		return x.TargetLocation
-	}
-	return LocationType_LOCATION_TYPE_UNSPECIFIED
+	return nil
 }
 
 // UseAbilityPayload 定义了使用能力动作所需的数据。
@@ -87,6 +79,7 @@ type UseAbilityPayload struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`
 	AbilityId     int32                  `protobuf:"varint,2,opt,name=ability_id,json=abilityId,proto3" json:"ability_id,omitempty"`
+	Target        *Target                `protobuf:"bytes,3,opt,name=target,proto3" json:"target,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -133,6 +126,13 @@ func (x *UseAbilityPayload) GetAbilityId() int32 {
 		return x.AbilityId
 	}
 	return 0
+}
+
+func (x *UseAbilityPayload) GetTarget() *Target {
+	if x != nil {
+		return x.Target
+	}
+	return nil
 }
 
 // MakeGuessPayload 定义了主角进行最终猜测时提交的数据结构。
@@ -184,15 +184,15 @@ var File_proto_model_payload_proto protoreflect.FileDescriptor
 
 const file_proto_model_payload_proto_rawDesc = "" +
 	"\n" +
-	"\x19proto/model/payload.proto\x12\x05model\x1a\x1aproto/model/location.proto\x1a\x17proto/model/enums.proto\"\x98\x01\n" +
+	"\x19proto/model/payload.proto\x12\x05model\x1a\x1aproto/model/location.proto\x1a\x17proto/model/enums.proto\x1a\x18proto/model/target.proto\"Q\n" +
 	"\x0fPlayCardPayload\x12\x17\n" +
-	"\acard_id\x18\x01 \x01(\x05R\x06cardId\x12.\n" +
-	"\x13target_character_id\x18\x02 \x01(\tR\x11targetCharacterId\x12<\n" +
-	"\x0ftarget_location\x18\x03 \x01(\x0e2\x13.model.LocationTypeR\x0etargetLocation\"U\n" +
+	"\acard_id\x18\x01 \x01(\x05R\x06cardId\x12%\n" +
+	"\x06target\x18\x02 \x01(\v2\r.model.TargetR\x06target\"|\n" +
 	"\x11UseAbilityPayload\x12!\n" +
 	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x12\x1d\n" +
 	"\n" +
-	"ability_id\x18\x02 \x01(\x05R\tabilityId\"\xb6\x01\n" +
+	"ability_id\x18\x02 \x01(\x05R\tabilityId\x12%\n" +
+	"\x06target\x18\x03 \x01(\v2\r.model.TargetR\x06target\"\xb6\x01\n" +
 	"\x10MakeGuessPayload\x12N\n" +
 	"\rguessed_roles\x18\x01 \x03(\v2).model.MakeGuessPayload.GuessedRolesEntryR\fguessedRoles\x1aR\n" +
 	"\x11GuessedRolesEntry\x12\x10\n" +
@@ -217,18 +217,19 @@ var file_proto_model_payload_proto_goTypes = []any{
 	(*UseAbilityPayload)(nil), // 1: model.UseAbilityPayload
 	(*MakeGuessPayload)(nil),  // 2: model.MakeGuessPayload
 	nil,                       // 3: model.MakeGuessPayload.GuessedRolesEntry
-	(LocationType)(0),         // 4: model.LocationType
+	(*Target)(nil),            // 4: model.Target
 	(PlayerRole)(0),           // 5: model.PlayerRole
 }
 var file_proto_model_payload_proto_depIdxs = []int32{
-	4, // 0: model.PlayCardPayload.target_location:type_name -> model.LocationType
-	3, // 1: model.MakeGuessPayload.guessed_roles:type_name -> model.MakeGuessPayload.GuessedRolesEntry
-	5, // 2: model.MakeGuessPayload.GuessedRolesEntry.value:type_name -> model.PlayerRole
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	4, // 0: model.PlayCardPayload.target:type_name -> model.Target
+	4, // 1: model.UseAbilityPayload.target:type_name -> model.Target
+	3, // 2: model.MakeGuessPayload.guessed_roles:type_name -> model.MakeGuessPayload.GuessedRolesEntry
+	5, // 3: model.MakeGuessPayload.GuessedRolesEntry.value:type_name -> model.PlayerRole
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_proto_model_payload_proto_init() }
@@ -238,6 +239,7 @@ func file_proto_model_payload_proto_init() {
 	}
 	file_proto_model_location_proto_init()
 	file_proto_model_enums_proto_init()
+	file_proto_model_target_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

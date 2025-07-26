@@ -125,7 +125,7 @@ func (x *TragedyCondition) GetIsPrevented() bool {
 // Condition 定义悲剧的一个单一条件。
 type Condition struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CharacterId   string                 `protobuf:"bytes,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`  // 角色ID
+	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"` // 角色ID
 	Location      LocationType           `protobuf:"varint,2,opt,name=location,proto3,enum=model.LocationType" json:"location,omitempty"`  // 所在位置
 	MinParanoia   int32                  `protobuf:"varint,3,opt,name=min_paranoia,json=minParanoia,proto3" json:"min_paranoia,omitempty"` // 最小妄想指数
 	IsAlone       bool                   `protobuf:"varint,4,opt,name=is_alone,json=isAlone,proto3" json:"is_alone,omitempty"`             // 是否独处
@@ -163,11 +163,11 @@ func (*Condition) Descriptor() ([]byte, []int) {
 	return file_proto_model_tragedy_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Condition) GetCharacterId() string {
+func (x *Condition) GetCharacterId() int32 {
 	if x != nil {
 		return x.CharacterId
 	}
-	return ""
+	return 0
 }
 
 func (x *Condition) GetLocation() LocationType {
@@ -210,7 +210,7 @@ const file_proto_model_tragedy_proto_rawDesc = "" +
 	"\tis_active\x18\a \x01(\bR\bisActive\x12!\n" +
 	"\fis_prevented\x18\b \x01(\bR\visPrevented\"\x9d\x01\n" +
 	"\tCondition\x12!\n" +
-	"\fcharacter_id\x18\x01 \x01(\tR\vcharacterId\x12/\n" +
+	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x12/\n" +
 	"\blocation\x18\x02 \x01(\x0e2\x13.model.LocationTypeR\blocation\x12!\n" +
 	"\fmin_paranoia\x18\x03 \x01(\x05R\vminParanoia\x12\x19\n" +
 	"\bis_alone\x18\x04 \x01(\bR\aisAloneB\"Z github.com/user/repo/proto/modelb\x06proto3"

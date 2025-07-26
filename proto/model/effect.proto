@@ -4,6 +4,8 @@ package model;
 
 option go_package = "github.com/user/repo/proto/model";
 
+import "proto/model/location.proto";
+
 // Effect 接口定义了一个效果的核心行为。
 message Effect {
   oneof effect_oneof {
@@ -15,7 +17,9 @@ message Effect {
 }
 
 // MoveCharacterEffect 移动一个角色到指定地点。
-message MoveCharacterEffect {}
+message MoveCharacterEffect {
+  LocationType destination = 1;
+}
 
 // AdjustParanoiaEffect 调整角色的妄想值。
 message AdjustParanoiaEffect {

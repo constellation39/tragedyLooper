@@ -23,18 +23,18 @@ const (
 
 // Ability 定义角色的特殊技能。
 type Ability struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	Id             string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                 // 能力名称
-	Description    string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                   // 能力描述
-	TriggerType    AbilityTriggerType     `protobuf:"varint,4,opt,name=trigger_type,json=triggerType,proto3,enum=model.AbilityTriggerType" json:"trigger_type,omitempty"` // 触发时机
-	Effect         *Effect                `protobuf:"bytes,5,opt,name=effect,proto3" json:"effect,omitempty"`                                                             // 实际效果
-	OncePerLoop    bool                   `protobuf:"varint,6,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`                             // 每循环只能使用一次
-	RefusalRole    PlayerRole             `protobuf:"varint,7,opt,name=refusal_role,json=refusalRole,proto3,enum=model.PlayerRole" json:"refusal_role,omitempty"`         // 如果有，指定拒绝此善意能力的特定角色身份
-	UsedThisLoop   bool                   `protobuf:"varint,8,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"`                          // 运行时状态，不用于配置
-	TargetLocation LocationType           `protobuf:"varint,9,opt,name=target_location,json=targetLocation,proto3,enum=model.LocationType" json:"target_location,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                 // 能力名称
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                   // 能力描述
+	TriggerType   AbilityTriggerType     `protobuf:"varint,4,opt,name=trigger_type,json=triggerType,proto3,enum=model.AbilityTriggerType" json:"trigger_type,omitempty"` // 触发时机
+	Effect        *Effect                `protobuf:"bytes,5,opt,name=effect,proto3" json:"effect,omitempty"`                                                             // 实际效果
+	OncePerLoop   bool                   `protobuf:"varint,6,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`                             // 每循环只能使用一次
+	RefusalRole   PlayerRole             `protobuf:"varint,7,opt,name=refusal_role,json=refusalRole,proto3,enum=model.PlayerRole" json:"refusal_role,omitempty"`         // 如果有，指定拒绝此善意能力的特定角色身份
+	UsedThisLoop  bool                   `protobuf:"varint,8,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"`                          // 运行时状态，不用于配置
+	Target        *Target                `protobuf:"bytes,9,opt,name=target,proto3" json:"target,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Ability) Reset() {
@@ -123,18 +123,18 @@ func (x *Ability) GetUsedThisLoop() bool {
 	return false
 }
 
-func (x *Ability) GetTargetLocation() LocationType {
+func (x *Ability) GetTarget() *Target {
 	if x != nil {
-		return x.TargetLocation
+		return x.Target
 	}
-	return LocationType_LOCATION_TYPE_UNSPECIFIED
+	return nil
 }
 
 var File_proto_model_ability_proto protoreflect.FileDescriptor
 
 const file_proto_model_ability_proto_rawDesc = "" +
 	"\n" +
-	"\x19proto/model/ability.proto\x12\x05model\x1a\x18proto/model/effect.proto\x1a\x17proto/model/enums.proto\x1a\x1aproto/model/location.proto\"\xf2\x02\n" +
+	"\x19proto/model/ability.proto\x12\x05model\x1a\x18proto/model/effect.proto\x1a\x17proto/model/enums.proto\x1a\x1aproto/model/location.proto\x1a\x18proto/model/target.proto\"\xdb\x02\n" +
 	"\aAbility\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -143,8 +143,8 @@ const file_proto_model_ability_proto_rawDesc = "" +
 	"\x06effect\x18\x05 \x01(\v2\r.model.EffectR\x06effect\x12\"\n" +
 	"\ronce_per_loop\x18\x06 \x01(\bR\voncePerLoop\x124\n" +
 	"\frefusal_role\x18\a \x01(\x0e2\x11.model.PlayerRoleR\vrefusalRole\x12$\n" +
-	"\x0eused_this_loop\x18\b \x01(\bR\fusedThisLoop\x12<\n" +
-	"\x0ftarget_location\x18\t \x01(\x0e2\x13.model.LocationTypeR\x0etargetLocationB\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\x0eused_this_loop\x18\b \x01(\bR\fusedThisLoop\x12%\n" +
+	"\x06target\x18\t \x01(\v2\r.model.TargetR\x06targetB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
 	file_proto_model_ability_proto_rawDescOnce sync.Once
@@ -164,13 +164,13 @@ var file_proto_model_ability_proto_goTypes = []any{
 	(AbilityTriggerType)(0), // 1: model.AbilityTriggerType
 	(*Effect)(nil),          // 2: model.Effect
 	(PlayerRole)(0),         // 3: model.PlayerRole
-	(LocationType)(0),       // 4: model.LocationType
+	(*Target)(nil),          // 4: model.Target
 }
 var file_proto_model_ability_proto_depIdxs = []int32{
 	1, // 0: model.Ability.trigger_type:type_name -> model.AbilityTriggerType
 	2, // 1: model.Ability.effect:type_name -> model.Effect
 	3, // 2: model.Ability.refusal_role:type_name -> model.PlayerRole
-	4, // 3: model.Ability.target_location:type_name -> model.LocationType
+	4, // 3: model.Ability.target:type_name -> model.Target
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
@@ -186,6 +186,7 @@ func file_proto_model_ability_proto_init() {
 	file_proto_model_effect_proto_init()
 	file_proto_model_enums_proto_init()
 	file_proto_model_location_proto_init()
+	file_proto_model_target_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

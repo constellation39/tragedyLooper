@@ -7,10 +7,22 @@
                 "card_id": {
                     "type": "integer"
                 },
-                "target_character_id": {
-                    "type": "string"
+                "target": {
+                    "$ref": "#/definitions/model.Target",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Play Card Payload",
+            "description": "PlayCardPayload 定义了打出卡牌动作所需的数据。"
+        },
+        "model.Target": {
+            "properties": {
+                "character_id": {
+                    "type": "integer"
                 },
-                "target_location": {
+                "location": {
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
@@ -37,8 +49,7 @@
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Play Card Payload",
-            "description": "PlayCardPayload 定义了打出卡牌动作所需的数据。"
+            "title": "Target"
         }
     }
 }

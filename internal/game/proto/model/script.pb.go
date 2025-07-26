@@ -24,7 +24,7 @@ const (
 // Script 定义一个特定的游戏场景。
 type Script struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                         // 唯一标识符
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                        // 唯一标识符
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                     // 剧本名称
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                       // 剧本描述
 	MainPlot      string                 `protobuf:"bytes,4,opt,name=main_plot,json=mainPlot,proto3" json:"main_plot,omitempty"`             // 主线剧情
@@ -67,11 +67,11 @@ func (*Script) Descriptor() ([]byte, []int) {
 	return file_proto_model_script_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Script) GetId() string {
+func (x *Script) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 func (x *Script) GetName() string {
@@ -136,7 +136,7 @@ const file_proto_model_script_proto_rawDesc = "" +
 	"\n" +
 	"\x18proto/model/script.proto\x12\x05model\x1a\x1bproto/model/character.proto\x1a\x19proto/model/tragedy.proto\"\xba\x02\n" +
 	"\x06Script\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1b\n" +
 	"\tmain_plot\x18\x04 \x01(\tR\bmainPlot\x12\x1b\n" +
