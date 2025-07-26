@@ -25,13 +25,13 @@ const (
 type Ability struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	Id             string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Description    string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	TriggerType    AbilityTriggerType     `protobuf:"varint,4,opt,name=trigger_type,json=triggerType,proto3,enum=model.AbilityTriggerType" json:"trigger_type,omitempty"`
-	Effect         *Effect                `protobuf:"bytes,5,opt,name=effect,proto3" json:"effect,omitempty"`
-	OncePerLoop    bool                   `protobuf:"varint,6,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`
-	RefusalRole    PlayerRole             `protobuf:"varint,7,opt,name=refusal_role,json=refusalRole,proto3,enum=model.PlayerRole" json:"refusal_role,omitempty"`
-	UsedThisLoop   bool                   `protobuf:"varint,8,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"`
+	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                 // 能力名称
+	Description    string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                   // 能力描述
+	TriggerType    AbilityTriggerType     `protobuf:"varint,4,opt,name=trigger_type,json=triggerType,proto3,enum=model.AbilityTriggerType" json:"trigger_type,omitempty"` // 触发时机
+	Effect         *Effect                `protobuf:"bytes,5,opt,name=effect,proto3" json:"effect,omitempty"`                                                             // 实际效果
+	OncePerLoop    bool                   `protobuf:"varint,6,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`                             // 每循环只能使用一次
+	RefusalRole    PlayerRole             `protobuf:"varint,7,opt,name=refusal_role,json=refusalRole,proto3,enum=model.PlayerRole" json:"refusal_role,omitempty"`         // 如果有，指定拒绝此善意能力的特定角色身份
+	UsedThisLoop   bool                   `protobuf:"varint,8,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"`                          // 运行时状态，不用于配置
 	TargetLocation LocationType           `protobuf:"varint,9,opt,name=target_location,json=targetLocation,proto3,enum=model.LocationType" json:"target_location,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache

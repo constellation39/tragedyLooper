@@ -26,20 +26,20 @@ const (
 // GameState 表示游戏实例的权威当前状态。
 type GameState struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
-	GameId              string                 `protobuf:"bytes,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`
-	Script              *Script                `protobuf:"bytes,2,opt,name=script,proto3" json:"script,omitempty"`
-	Characters          map[int32]*Character   `protobuf:"bytes,3,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	Players             map[int32]*Player      `protobuf:"bytes,4,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	CurrentDay          int32                  `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`
-	CurrentLoop         int32                  `protobuf:"varint,6,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`
-	CurrentPhase        GamePhase              `protobuf:"varint,7,opt,name=current_phase,json=currentPhase,proto3,enum=model.GamePhase" json:"current_phase,omitempty"`
-	ActiveTragedies     map[int32]bool         `protobuf:"bytes,8,rep,name=active_tragedies,json=activeTragedies,proto3" json:"active_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	PreventedTragedies  map[int32]bool         `protobuf:"bytes,9,rep,name=prevented_tragedies,json=preventedTragedies,proto3" json:"prevented_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	PlayedCardsThisDay  map[int32]*CardList    `protobuf:"bytes,10,rep,name=played_cards_this_day,json=playedCardsThisDay,proto3" json:"played_cards_this_day,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	PlayedCardsThisLoop map[int32]*CardList    `protobuf:"bytes,11,rep,name=played_cards_this_loop,json=playedCardsThisLoop,proto3" json:"played_cards_this_loop,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	LastUpdateTime      *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=last_update_time,json=lastUpdateTime,proto3" json:"last_update_time,omitempty"`
-	DayEvents           []*GameEvent           `protobuf:"bytes,13,rep,name=day_events,json=dayEvents,proto3" json:"day_events,omitempty"`
-	LoopEvents          []*GameEvent           `protobuf:"bytes,14,rep,name=loop_events,json=loopEvents,proto3" json:"loop_events,omitempty"`
+	GameId              int32                  `protobuf:"varint,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`                                                                                                                       // 游戏唯一标识符
+	Script              *Script                `protobuf:"bytes,2,opt,name=script,proto3" json:"script,omitempty"`                                                                                                                                      // 当前使用的剧本
+	Characters          map[int32]*Character   `protobuf:"bytes,3,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                   // 游戏中所有角色的映射
+	Players             map[int32]*Player      `protobuf:"bytes,4,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                         // 游戏中所有玩家的映射
+	CurrentDay          int32                  `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                                                                           // 当前天数
+	CurrentLoop         int32                  `protobuf:"varint,6,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                                                                        // 当前循环次数
+	CurrentPhase        GamePhase              `protobuf:"varint,7,opt,name=current_phase,json=currentPhase,proto3,enum=model.GamePhase" json:"current_phase,omitempty"`                                                                                // 当前游戏阶段
+	ActiveTragedies     map[int32]bool         `protobuf:"bytes,8,rep,name=active_tragedies,json=activeTragedies,proto3" json:"active_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                 // 此剧本中活跃的悲剧, key is TragedyType
+	PreventedTragedies  map[int32]bool         `protobuf:"bytes,9,rep,name=prevented_tragedies,json=preventedTragedies,proto3" json:"prevented_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`        // 此循环中已被阻止的悲剧, key is TragedyType
+	PlayedCardsThisDay  map[int32]*CardList    `protobuf:"bytes,10,rep,name=played_cards_this_day,json=playedCardsThisDay,proto3" json:"played_cards_this_day,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`    // 当天玩家打出的牌
+	PlayedCardsThisLoop map[int32]*CardList    `protobuf:"bytes,11,rep,name=played_cards_this_loop,json=playedCardsThisLoop,proto3" json:"played_cards_this_loop,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 本循环玩家打出的牌
+	LastUpdateTime      *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=last_update_time,json=lastUpdateTime,proto3" json:"last_update_time,omitempty"`                                                                                             // 最后更新时间
+	DayEvents           []*GameEvent           `protobuf:"bytes,13,rep,name=day_events,json=dayEvents,proto3" json:"day_events,omitempty"`                                                                                                              // 当天发生的事件
+	LoopEvents          []*GameEvent           `protobuf:"bytes,14,rep,name=loop_events,json=loopEvents,proto3" json:"loop_events,omitempty"`                                                                                                           // 本循环发生的事件
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -74,11 +74,11 @@ func (*GameState) Descriptor() ([]byte, []int) {
 	return file_proto_model_game_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *GameState) GetGameId() string {
+func (x *GameState) GetGameId() int32 {
 	if x != nil {
 		return x.GameId
 	}
-	return ""
+	return 0
 }
 
 func (x *GameState) GetScript() *Script {
@@ -175,10 +175,10 @@ func (x *GameState) GetLoopEvents() []*GameEvent {
 // PlayerAction 代表单个玩家提交的动作。
 type PlayerAction struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PlayerId      string                 `protobuf:"bytes,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`
-	GameId        string                 `protobuf:"bytes,2,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`
+	PlayerId      int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`
+	GameId        int32                  `protobuf:"varint,2,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`
 	Type          ActionType             `protobuf:"varint,3,opt,name=type,proto3,enum=model.ActionType" json:"type,omitempty"`
-	Payload       *structpb.Struct       `protobuf:"bytes,4,opt,name=payload,proto3" json:"payload,omitempty"`
+	Payload       *structpb.Struct       `protobuf:"bytes,4,opt,name=payload,proto3" json:"payload,omitempty"` // e.g., PlayCardPayload, UseAbilityPayload
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -213,18 +213,18 @@ func (*PlayerAction) Descriptor() ([]byte, []int) {
 	return file_proto_model_game_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *PlayerAction) GetPlayerId() string {
+func (x *PlayerAction) GetPlayerId() int32 {
 	if x != nil {
 		return x.PlayerId
 	}
-	return ""
+	return 0
 }
 
-func (x *PlayerAction) GetGameId() string {
+func (x *PlayerAction) GetGameId() int32 {
 	if x != nil {
 		return x.GameId
 	}
-	return ""
+	return 0
 }
 
 func (x *PlayerAction) GetType() ActionType {
@@ -245,10 +245,10 @@ var File_proto_model_game_proto protoreflect.FileDescriptor
 
 const file_proto_model_game_proto_rawDesc = "" +
 	"\n" +
-	"\x16proto/model/game.proto\x12\x05model\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16proto/model/card.proto\x1a\x1bproto/model/character.proto\x1a\x17proto/model/enums.proto\x1a\x17proto/model/event.proto\x1a\x18proto/model/player.proto\x1a\x18proto/model/script.proto\"\xad\n" +
+	"\x16proto/model/game.proto\x12\x05model\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x18proto/model/script.proto\x1a\x1bproto/model/character.proto\x1a\x18proto/model/player.proto\x1a\x16proto/model/card.proto\x1a\x17proto/model/enums.proto\x1a\x17proto/model/event.proto\"\xad\n" +
 	"\n" +
 	"\tGameState\x12\x17\n" +
-	"\agame_id\x18\x01 \x01(\tR\x06gameId\x12%\n" +
+	"\agame_id\x18\x01 \x01(\x05R\x06gameId\x12%\n" +
 	"\x06script\x18\x02 \x01(\v2\r.model.ScriptR\x06script\x12@\n" +
 	"\n" +
 	"characters\x18\x03 \x03(\v2 .model.GameState.CharactersEntryR\n" +
@@ -287,8 +287,8 @@ const file_proto_model_game_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12%\n" +
 	"\x05value\x18\x02 \x01(\v2\x0f.model.CardListR\x05value:\x028\x01\"\x9e\x01\n" +
 	"\fPlayerAction\x12\x1b\n" +
-	"\tplayer_id\x18\x01 \x01(\tR\bplayerId\x12\x17\n" +
-	"\agame_id\x18\x02 \x01(\tR\x06gameId\x12%\n" +
+	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12\x17\n" +
+	"\agame_id\x18\x02 \x01(\x05R\x06gameId\x12%\n" +
 	"\x04type\x18\x03 \x01(\x0e2\x11.model.ActionTypeR\x04type\x121\n" +
 	"\apayload\x18\x04 \x01(\v2\x17.google.protobuf.StructR\apayloadB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
@@ -354,12 +354,12 @@ func file_proto_model_game_proto_init() {
 	if File_proto_model_game_proto != nil {
 		return
 	}
-	file_proto_model_card_proto_init()
+	file_proto_model_script_proto_init()
 	file_proto_model_character_proto_init()
+	file_proto_model_player_proto_init()
+	file_proto_model_card_proto_init()
 	file_proto_model_enums_proto_init()
 	file_proto_model_event_proto_init()
-	file_proto_model_player_proto_init()
-	file_proto_model_script_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

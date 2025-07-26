@@ -5,7 +5,7 @@
         "PlayCardPayload": {
             "properties": {
                 "card_id": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "target_character_id": {
                     "type": "string"

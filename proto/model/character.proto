@@ -11,7 +11,7 @@ option go_package = "github.com/user/repo/proto/model";
 
 // Character 表示游戏中的一个角色。
 message Character {
-  string id = 1; // 唯一标识符
+  int32 id = 1; // 唯一标识符
   string name = 2; // 角色名称
   repeated string traits = 3; // 角色特征，例如：["Student", "Journalist"]
   LocationType current_location = 4; // 当前所在位置
@@ -25,8 +25,9 @@ message Character {
 
 // CharacterConfig 定义特定剧本中角色的初始状态。
 message CharacterConfig {
-  string character_id = 1; // 引用基础角色定义
-  LocationType initial_location = 2; // 初始位置
-  RoleType hidden_role = 3; // 此剧本中角色的秘密身份
-  string is_culprit_for = 4; // 如果此角色是特定悲剧的嫌疑犯
+  int32 id = 1; // 引用基础角色定义
+  string name = 2; // 角色名称
+  LocationType initial_location = 3; // 初始位置
+  RoleType hidden_role = 4; // 此剧本中角色的秘密身份
+  string is_culprit_for = 5; // 如果此角色是特定悲剧的嫌疑犯
 }

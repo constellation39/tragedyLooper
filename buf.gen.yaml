@@ -7,6 +7,6 @@ plugins:
       - Mgoogle/protobuf/struct.proto=google.golang.org/protobuf/types/known/structpb
       - Mgoogle/protobuf/timestamp.proto=google.golang.org/protobuf/types/known/timestamppb
       - Mgoogle/protobuf/any.proto=google.golang.org/protobuf/types/known/anypb
-      - go_opt=Mgoogle/protobuf/descriptor.proto=google.golang.org/protobuf/types/descriptorpb,initialisms=ID,LLM
+      - Mgoogle/protobuf/descriptor.proto=google.golang.org/protobuf/types/descriptorpb
   - local: protoc-gen-jsonschema
     out: data/jsonschema

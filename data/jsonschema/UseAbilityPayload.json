@@ -5,10 +5,10 @@
         "UseAbilityPayload": {
             "properties": {
                 "character_id": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "ability_id": {
-                    "type": "string"
+                    "type": "integer"
                 }
             },
             "additionalProperties": true,

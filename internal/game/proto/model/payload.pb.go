@@ -24,7 +24,7 @@ const (
 // PlayCardPayload 定义了打出卡牌动作所需的数据。
 type PlayCardPayload struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	CardId            string                 `protobuf:"bytes,1,opt,name=card_id,json=cardId,proto3" json:"card_id,omitempty"`
+	CardId            int32                  `protobuf:"varint,1,opt,name=card_id,json=cardId,proto3" json:"card_id,omitempty"`
 	TargetCharacterId string                 `protobuf:"bytes,2,opt,name=target_character_id,json=targetCharacterId,proto3" json:"target_character_id,omitempty"`
 	TargetLocation    LocationType           `protobuf:"varint,3,opt,name=target_location,json=targetLocation,proto3,enum=model.LocationType" json:"target_location,omitempty"`
 	unknownFields     protoimpl.UnknownFields
@@ -61,11 +61,11 @@ func (*PlayCardPayload) Descriptor() ([]byte, []int) {
 	return file_proto_model_payload_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PlayCardPayload) GetCardId() string {
+func (x *PlayCardPayload) GetCardId() int32 {
 	if x != nil {
 		return x.CardId
 	}
-	return ""
+	return 0
 }
 
 func (x *PlayCardPayload) GetTargetCharacterId() string {
@@ -85,8 +85,8 @@ func (x *PlayCardPayload) GetTargetLocation() LocationType {
 // UseAbilityPayload 定义了使用能力动作所需的数据。
 type UseAbilityPayload struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CharacterId   string                 `protobuf:"bytes,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`
-	AbilityId     string                 `protobuf:"bytes,2,opt,name=ability_id,json=abilityId,proto3" json:"ability_id,omitempty"`
+	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`
+	AbilityId     int32                  `protobuf:"varint,2,opt,name=ability_id,json=abilityId,proto3" json:"ability_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -121,24 +121,24 @@ func (*UseAbilityPayload) Descriptor() ([]byte, []int) {
 	return file_proto_model_payload_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *UseAbilityPayload) GetCharacterId() string {
+func (x *UseAbilityPayload) GetCharacterId() int32 {
 	if x != nil {
 		return x.CharacterId
 	}
-	return ""
+	return 0
 }
 
-func (x *UseAbilityPayload) GetAbilityId() string {
+func (x *UseAbilityPayload) GetAbilityId() int32 {
 	if x != nil {
 		return x.AbilityId
 	}
-	return ""
+	return 0
 }
 
 // MakeGuessPayload 定义了主角进行最终猜测时提交的数据结构。
 type MakeGuessPayload struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	GuessedRoles  map[int32]PlayerRole   `protobuf:"bytes,1,rep,name=guessed_roles,json=guessedRoles,proto3" json:"guessed_roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=model.PlayerRole"`
+	GuessedRoles  map[int32]PlayerRole   `protobuf:"bytes,1,rep,name=guessed_roles,json=guessedRoles,proto3" json:"guessed_roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=model.PlayerRole"` // GuessedRoles 是一个映射，键是角色ID，值是猜测的角色身份 (e.g., "KeyPerson", "Killer")。
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -184,15 +184,15 @@ var File_proto_model_payload_proto protoreflect.FileDescriptor
 
 const file_proto_model_payload_proto_rawDesc = "" +
 	"\n" +
-	"\x19proto/model/payload.proto\x12\x05model\x1a\x17proto/model/enums.proto\x1a\x1aproto/model/location.proto\"\x98\x01\n" +
+	"\x19proto/model/payload.proto\x12\x05model\x1a\x1aproto/model/location.proto\x1a\x17proto/model/enums.proto\"\x98\x01\n" +
 	"\x0fPlayCardPayload\x12\x17\n" +
-	"\acard_id\x18\x01 \x01(\tR\x06cardId\x12.\n" +
+	"\acard_id\x18\x01 \x01(\x05R\x06cardId\x12.\n" +
 	"\x13target_character_id\x18\x02 \x01(\tR\x11targetCharacterId\x12<\n" +
 	"\x0ftarget_location\x18\x03 \x01(\x0e2\x13.model.LocationTypeR\x0etargetLocation\"U\n" +
 	"\x11UseAbilityPayload\x12!\n" +
-	"\fcharacter_id\x18\x01 \x01(\tR\vcharacterId\x12\x1d\n" +
+	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x12\x1d\n" +
 	"\n" +
-	"ability_id\x18\x02 \x01(\tR\tabilityId\"\xb6\x01\n" +
+	"ability_id\x18\x02 \x01(\x05R\tabilityId\"\xb6\x01\n" +
 	"\x10MakeGuessPayload\x12N\n" +
 	"\rguessed_roles\x18\x01 \x03(\v2).model.MakeGuessPayload.GuessedRolesEntryR\fguessedRoles\x1aR\n" +
 	"\x11GuessedRolesEntry\x12\x10\n" +
@@ -236,8 +236,8 @@ func file_proto_model_payload_proto_init() {
 	if File_proto_model_payload_proto != nil {
 		return
 	}
-	file_proto_model_enums_proto_init()
 	file_proto_model_location_proto_init()
+	file_proto_model_enums_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

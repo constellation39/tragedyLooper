@@ -5,10 +5,12 @@
         "Player": {
             "properties": {
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "唯一标识符"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "玩家名称"
                 },
                 "role": {
                     "enum": [
@@ -31,13 +33,15 @@
                     "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
                 },
                 "is_llm": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "是否为LLM玩家"
                 },
                 "hand": {
                     "items": {
                         "$ref": "#/definitions/model.Card"
                     },
-                    "type": "array"
+                    "type": "array",
+                    "description": "玩家手牌"
                 },
                 "deduction_knowledge": {
                     "additionalProperties": {
@@ -61,10 +65,12 @@
                         "title": "Value",
                         "description": "`Value` represents a dynamically typed value which can be either null, a number, a string, a boolean, a recursive struct value, or a list of values. A producer of value is expected to set one of these variants. Absence of any variant indicates an error. The JSON representation for `Value` is JSON value."
                     },
-                    "type": "object"
+                    "type": "object",
+                    "description": "主角的推理知识"
                 },
                 "llm_session_id": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "LLM玩家的会话ID"
                 }
             },
             "additionalProperties": true,
@@ -108,10 +114,12 @@
         "model.Card": {
             "properties": {
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "唯一标识符"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "卡牌名称"
                 },
                 "card_type": {
                     "enum": [
@@ -160,20 +168,25 @@
                     "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
                 },
                 "target_type": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "目标类型（\"Character\" 或 \"Location\"）"
                 },
                 "effect": {
                     "$ref": "#/definitions/model.Effect",
-                    "additionalProperties": true
+                    "additionalProperties": true,
+                    "description": "卡牌效果"
                 },
                 "once_per_loop": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "每循环只能使用一次"
                 },
                 "used_this_loop": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "运行时状态"
                 },
                 "target_character_id": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "目标角色ID"
                 },
                 "target_location": {
                     "enum": [

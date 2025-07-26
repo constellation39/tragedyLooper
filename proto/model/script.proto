@@ -9,7 +9,7 @@ option go_package = "github.com/user/repo/proto/model";
 
 // Script 定义一个特定的游戏场景。
 message Script {
-  string id = 1; // 唯一标识符
+  int32 id = 1; // 唯一标识符
   string name = 2; // 剧本名称
   string description = 3; // 剧本描述
   string main_plot = 4; // 主线剧情

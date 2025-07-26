@@ -3,14 +3,12 @@
     "enum": [
         "TRAGEDY_TYPE_UNSPECIFIED",
         0,
-        "TRAGEDY_TYPE_A",
+        "TRAGEDY_TYPE_MURDER",
         1,
-        "TRAGEDY_TYPE_B",
+        "TRAGEDY_TYPE_SUICIDE",
         2,
-        "TRAGEDY_TYPE_C",
-        3,
-        "TRAGEDY_TYPE_D",
-        4
+        "TRAGEDY_TYPE_SEALED",
+        3
     ],
     "oneOf": [
         {
@@ -21,5 +19,5 @@
         }
     ],
     "title": "Tragedy Type",
-    "description": "TragedyType 定义了剧本中可能发生的悲剧类型。"
+    "description": "TragedyType 定义了剧本中可能发生的悲剧类型。 TragedyType 定义了在游戏中可能发生的悲剧类型。"
 }

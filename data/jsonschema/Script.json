@@ -5,40 +5,49 @@
         "Script": {
             "properties": {
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "唯一标识符"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "剧本名称"
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "剧本描述"
                 },
                 "main_plot": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "主线剧情"
                 },
                 "sub_plots": {
                     "items": {
                         "type": "string"
                     },
-                    "type": "array"
+                    "type": "array",
+                    "description": "支线剧情"
                 },
                 "characters": {
                     "items": {
                         "$ref": "#/definitions/model.CharacterConfig"
                     },
-                    "type": "array"
+                    "type": "array",
+                    "description": "角色配置"
                 },
                 "tragedies": {
                     "items": {
                         "$ref": "#/definitions/model.TragedyCondition"
                     },
-                    "type": "array"
+                    "type": "array",
+                    "description": "悲剧条件"
                 },
                 "loop_count": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "循环总次数"
                 },
                 "days_per_loop": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "每循环天数"
                 }
             },
             "additionalProperties": true,
@@ -52,10 +61,12 @@
                     "type": "string"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "能力名称"
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "能力描述"
                 },
                 "trigger_type": {
                     "enum": [
@@ -83,10 +94,12 @@
                 },
                 "effect": {
                     "$ref": "#/definitions/model.Effect",
-                    "additionalProperties": true
+                    "additionalProperties": true,
+                    "description": "实际效果"
                 },
                 "once_per_loop": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "每循环只能使用一次"
                 },
                 "refusal_role": {
                     "enum": [
@@ -109,7 +122,8 @@
                     "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
                 },
                 "used_this_loop": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "运行时状态，不用于配置"
                 },
                 "target_location": {
                     "enum": [
@@ -176,8 +190,13 @@
         },
         "model.CharacterConfig": {
             "properties": {
-                "character_id": {
-                    "type": "string"
+                "id": {
+                    "type": "integer",
+                    "description": "引用基础角色定义"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "角色名称"
                 },
                 "initial_location": {
                     "enum": [
@@ -238,7 +257,8 @@
                     "description": "RoleType 定义了玩家在游戏中的具体角色。"
                 },
                 "is_culprit_for": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "如果此角色是特定悲剧的嫌疑犯"
                 }
             },
             "additionalProperties": true,
@@ -249,7 +269,8 @@
         "model.Condition": {
             "properties": {
                 "character_id": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "角色ID"
                 },
                 "location": {
                     "enum": [
@@ -276,10 +297,12 @@
                     "description": "LocationType 定义游戏中的可能地点。"
                 },
                 "min_paranoia": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "最小妄想指数"
                 },
                 "is_alone": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "是否独处"
                 }
             },
             "additionalProperties": true,
@@ -323,14 +346,12 @@
                     "enum": [
                         "TRAGEDY_TYPE_UNSPECIFIED",
                         0,
-                        "TRAGEDY_TYPE_A",
+                        "TRAGEDY_TYPE_MURDER",
                         1,
-                        "TRAGEDY_TYPE_B",
+                        "TRAGEDY_TYPE_SUICIDE",
                         2,
-                        "TRAGEDY_TYPE_C",
-                        3,
-                        "TRAGEDY_TYPE_D",
-                        4
+                        "TRAGEDY_TYPE_SEALED",
+                        3
                     ],
                     "oneOf": [
                         {
@@ -341,19 +362,22 @@
                         }
                     ],
                     "title": "Tragedy Type",
-                    "description": "TragedyType 定义了剧本中可能发生的悲剧类型。"
+                    "description": "TragedyType 定义了剧本中可能发生的悲剧类型。 TragedyType 定义了在游戏中可能发生的悲剧类型。"
                 },
                 "day": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "悲剧可能发生的日期"
                 },
                 "culprit_id": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "嫌疑人ID"
                 },
                 "conditions": {
                     "items": {
                         "$ref": "#/definitions/model.Condition"
                     },
-                    "type": "array"
+                    "type": "array",
+                    "description": "必须满足的条件列表"
                 },
                 "target_rule": {
                     "enum": [
@@ -379,13 +403,16 @@
                     "items": {
                         "$ref": "#/definitions/model.Ability"
                     },
-                    "type": "array"
+                    "type": "array",
+                    "description": "悲剧发生时触发的能力"
                 },
                 "is_active": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "运行时状态：此悲剧当前是否在剧本中活跃？"
                 },
                 "is_prevented": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "运行时状态：此悲剧是否已被阻止？"
                 }
             },
             "additionalProperties": true,

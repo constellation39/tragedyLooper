@@ -5,7 +5,8 @@
         "Condition": {
             "properties": {
                 "character_id": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "角色ID"
                 },
                 "location": {
                     "enum": [
@@ -32,10 +33,12 @@
                     "description": "LocationType 定义游戏中的可能地点。"
                 },
                 "min_paranoia": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "最小妄想指数"
                 },
                 "is_alone": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "是否独处"
                 }
             },
             "additionalProperties": true,

@@ -10,7 +10,7 @@ option go_package = "github.com/user/repo/proto/model";
 
 // Card 表示一张行动卡。
 message Card {
-  string id = 1; // 唯一标识符
+  int32 id = 1; // 唯一标识符
   string name = 2; // 卡牌名称
   CardType card_type = 3; // 卡牌类型
   PlayerRole owner_role = 4; // 所属玩家角色（主谋或主角）

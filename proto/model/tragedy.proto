@@ -22,7 +22,7 @@ message TragedyCondition {
 
 // Condition 定义悲剧的一个单一条件。
 message Condition {
-  string character_id = 1; // 角色ID
+  int32 character_id = 1; // 角色ID
   LocationType location = 2; // 所在位置
   int32 min_paranoia = 3; // 最小妄想指数
   bool is_alone = 4; // 是否独处

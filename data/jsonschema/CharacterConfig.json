@@ -4,8 +4,13 @@
     "definitions": {
         "CharacterConfig": {
             "properties": {
-                "character_id": {
-                    "type": "string"
+                "id": {
+                    "type": "integer",
+                    "description": "引用基础角色定义"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "角色名称"
                 },
                 "initial_location": {
                     "enum": [
@@ -66,7 +71,8 @@
                     "description": "RoleType 定义了玩家在游戏中的具体角色。"
                 },
                 "is_culprit_for": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "如果此角色是特定悲剧的嫌疑犯"
                 }
             },
             "additionalProperties": true,

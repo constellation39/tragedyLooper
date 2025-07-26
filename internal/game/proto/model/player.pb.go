@@ -25,13 +25,13 @@ const (
 // Player 表示一个连接的玩家（人类或 LLM）。
 type Player struct {
 	state              protoimpl.MessageState    `protogen:"open.v1"`
-	Id                 string                    `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name               string                    `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Role               PlayerRole                `protobuf:"varint,3,opt,name=role,proto3,enum=model.PlayerRole" json:"role,omitempty"`
-	IsLlm              bool                      `protobuf:"varint,4,opt,name=is_llm,json=isLlm,proto3" json:"is_llm,omitempty"`
-	Hand               []*Card                   `protobuf:"bytes,5,rep,name=hand,proto3" json:"hand,omitempty"`
-	DeductionKnowledge map[int32]*structpb.Value `protobuf:"bytes,6,rep,name=deduction_knowledge,json=deductionKnowledge,proto3" json:"deduction_knowledge,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	LlmSessionId       string                    `protobuf:"bytes,7,opt,name=llm_session_id,json=llmSessionId,proto3" json:"llm_session_id,omitempty"`
+	Id                 string                    `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                                                                      // 唯一标识符
+	Name               string                    `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                                                                                  // 玩家名称
+	Role               PlayerRole                `protobuf:"varint,3,opt,name=role,proto3,enum=model.PlayerRole" json:"role,omitempty"`                                                                                                           // 玩家角色（主谋或主角）
+	IsLlm              bool                      `protobuf:"varint,4,opt,name=is_llm,json=isLlm,proto3" json:"is_llm,omitempty"`                                                                                                                  // 是否为LLM玩家
+	Hand               []*Card                   `protobuf:"bytes,5,rep,name=hand,proto3" json:"hand,omitempty"`                                                                                                                                  // 玩家手牌
+	DeductionKnowledge map[int32]*structpb.Value `protobuf:"bytes,6,rep,name=deduction_knowledge,json=deductionKnowledge,proto3" json:"deduction_knowledge,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 主角的推理知识
+	LlmSessionId       string                    `protobuf:"bytes,7,opt,name=llm_session_id,json=llmSessionId,proto3" json:"llm_session_id,omitempty"`                                                                                            // LLM玩家的会话ID
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -118,18 +118,18 @@ func (x *Player) GetLlmSessionId() string {
 // PlayerView 表示特定玩家的游戏状态过滤视图。
 type PlayerView struct {
 	state              protoimpl.MessageState    `protogen:"open.v1"`
-	GameId             string                    `protobuf:"bytes,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`
-	ScriptId           string                    `protobuf:"bytes,2,opt,name=script_id,json=scriptId,proto3" json:"script_id,omitempty"`
-	Characters         map[int32]*Character      `protobuf:"bytes,3,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	Players            map[int32]*Player         `protobuf:"bytes,4,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	CurrentDay         int32                     `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`
-	CurrentLoop        int32                     `protobuf:"varint,6,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`
-	CurrentPhase       GamePhase                 `protobuf:"varint,7,opt,name=current_phase,json=currentPhase,proto3,enum=model.GamePhase" json:"current_phase,omitempty"`
-	ActiveTragedies    map[int32]bool            `protobuf:"bytes,8,rep,name=active_tragedies,json=activeTragedies,proto3" json:"active_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	PreventedTragedies map[int32]bool            `protobuf:"bytes,9,rep,name=prevented_tragedies,json=preventedTragedies,proto3" json:"prevented_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	YourHand           []*Card                   `protobuf:"bytes,10,rep,name=your_hand,json=yourHand,proto3" json:"your_hand,omitempty"`
-	YourDeductions     map[int32]*structpb.Value `protobuf:"bytes,11,rep,name=your_deductions,json=yourDeductions,proto3" json:"your_deductions,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	PublicEvents       []*GameEvent              `protobuf:"bytes,12,rep,name=public_events,json=publicEvents,proto3" json:"public_events,omitempty"`
+	GameId             string                    `protobuf:"bytes,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`                                                                                                                 // 游戏唯一标识符
+	ScriptId           string                    `protobuf:"bytes,2,opt,name=script_id,json=scriptId,proto3" json:"script_id,omitempty"`                                                                                                           // 剧本ID
+	Characters         map[int32]*Character      `protobuf:"bytes,3,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                            // 角色信息（隐藏身份已移除）
+	Players            map[int32]*Player         `protobuf:"bytes,4,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                  // 玩家信息（敏感信息已移除）
+	CurrentDay         int32                     `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                                                                    // 当前天数
+	CurrentLoop        int32                     `protobuf:"varint,6,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                                                                 // 当前循环次数
+	CurrentPhase       GamePhase                 `protobuf:"varint,7,opt,name=current_phase,json=currentPhase,proto3,enum=model.GamePhase" json:"current_phase,omitempty"`                                                                         // 当前游戏阶段
+	ActiveTragedies    map[int32]bool            `protobuf:"bytes,8,rep,name=active_tragedies,json=activeTragedies,proto3" json:"active_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`          // 活跃的悲剧（公开信息）, key is TragedyType
+	PreventedTragedies map[int32]bool            `protobuf:"bytes,9,rep,name=prevented_tragedies,json=preventedTragedies,proto3" json:"prevented_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 已阻止的悲剧（公开信息）, key is TragedyType
+	YourHand           []*Card                   `protobuf:"bytes,10,rep,name=your_hand,json=yourHand,proto3" json:"your_hand,omitempty"`                                                                                                          // 你的手牌（仅对请求玩家可见）
+	YourDeductions     map[int32]*structpb.Value `protobuf:"bytes,11,rep,name=your_deductions,json=yourDeductions,proto3" json:"your_deductions,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`             // 你的推理（仅对主角可见）
+	PublicEvents       []*GameEvent              `protobuf:"bytes,12,rep,name=public_events,json=publicEvents,proto3" json:"public_events,omitempty"`                                                                                              // 公开事件
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }

@@ -26,10 +26,10 @@ type LocationType int32
 
 const (
 	LocationType_LOCATION_TYPE_UNSPECIFIED LocationType = 0
-	LocationType_LOCATION_TYPE_HOSPITAL    LocationType = 1
-	LocationType_LOCATION_TYPE_SHRINE      LocationType = 2
-	LocationType_LOCATION_TYPE_CITY        LocationType = 3
-	LocationType_LOCATION_TYPE_SCHOOL      LocationType = 4
+	LocationType_LOCATION_TYPE_HOSPITAL    LocationType = 1 // 医院
+	LocationType_LOCATION_TYPE_SHRINE      LocationType = 2 // 神社
+	LocationType_LOCATION_TYPE_CITY        LocationType = 3 // 城市
+	LocationType_LOCATION_TYPE_SCHOOL      LocationType = 4 // 学校
 )
 
 // Enum value maps for LocationType.

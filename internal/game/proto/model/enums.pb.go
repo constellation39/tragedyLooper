@@ -26,11 +26,11 @@ type CardType int32
 
 const (
 	CardType_CARD_TYPE_UNSPECIFIED CardType = 0
-	CardType_CARD_TYPE_MOVEMENT    CardType = 1
-	CardType_CARD_TYPE_PARANOIA    CardType = 2
-	CardType_CARD_TYPE_GOODWILL    CardType = 3
-	CardType_CARD_TYPE_INTRIGUE    CardType = 4
-	CardType_CARD_TYPE_SPECIAL     CardType = 5
+	CardType_CARD_TYPE_MOVEMENT    CardType = 1 // 移动
+	CardType_CARD_TYPE_PARANOIA    CardType = 2 // 妄想
+	CardType_CARD_TYPE_GOODWILL    CardType = 3 // 好感
+	CardType_CARD_TYPE_INTRIGUE    CardType = 4 // 阴谋
+	CardType_CARD_TYPE_SPECIAL     CardType = 5 // 用于特殊卡牌效果
 )
 
 // Enum value maps for CardType.
@@ -85,8 +85,8 @@ type PlayerRole int32
 
 const (
 	PlayerRole_PLAYER_ROLE_UNSPECIFIED PlayerRole = 0
-	PlayerRole_PLAYER_ROLE_MASTERMIND  PlayerRole = 1
-	PlayerRole_PLAYER_ROLE_PROTAGONIST PlayerRole = 2
+	PlayerRole_PLAYER_ROLE_MASTERMIND  PlayerRole = 1 // 主谋
+	PlayerRole_PLAYER_ROLE_PROTAGONIST PlayerRole = 2 // 主角
 )
 
 // Enum value maps for PlayerRole.
@@ -135,16 +135,16 @@ type GamePhase int32
 
 const (
 	GamePhase_GAME_PHASE_UNSPECIFIED       GamePhase = 0
-	GamePhase_GAME_PHASE_MORNING           GamePhase = 1
-	GamePhase_GAME_PHASE_CARD_PLAY         GamePhase = 2
-	GamePhase_GAME_PHASE_CARD_REVEAL       GamePhase = 3
-	GamePhase_GAME_PHASE_CARD_RESOLVE      GamePhase = 4
-	GamePhase_GAME_PHASE_ABILITIES         GamePhase = 5
-	GamePhase_GAME_PHASE_INCIDENTS         GamePhase = 6
-	GamePhase_GAME_PHASE_DAY_END           GamePhase = 7
-	GamePhase_GAME_PHASE_LOOP_END          GamePhase = 8
-	GamePhase_GAME_PHASE_GAME_OVER         GamePhase = 9
-	GamePhase_GAME_PHASE_PROTAGONIST_GUESS GamePhase = 10
+	GamePhase_GAME_PHASE_MORNING           GamePhase = 1  // 早晨
+	GamePhase_GAME_PHASE_CARD_PLAY         GamePhase = 2  // 出牌阶段
+	GamePhase_GAME_PHASE_CARD_REVEAL       GamePhase = 3  // 牌揭示阶段
+	GamePhase_GAME_PHASE_CARD_RESOLVE      GamePhase = 4  // 牌结算阶段
+	GamePhase_GAME_PHASE_ABILITIES         GamePhase = 5  // 能力阶段
+	GamePhase_GAME_PHASE_INCIDENTS         GamePhase = 6  // 事件阶段
+	GamePhase_GAME_PHASE_DAY_END           GamePhase = 7  // 天结束
+	GamePhase_GAME_PHASE_LOOP_END          GamePhase = 8  // 循环结束
+	GamePhase_GAME_PHASE_GAME_OVER         GamePhase = 9  // 游戏结束
+	GamePhase_GAME_PHASE_PROTAGONIST_GUESS GamePhase = 10 // 最终猜测阶段
 )
 
 // Enum value maps for GamePhase.
@@ -209,18 +209,18 @@ type GameEventType int32
 
 const (
 	GameEventType_GAME_EVENT_TYPE_UNSPECIFIED       GameEventType = 0
-	GameEventType_GAME_EVENT_TYPE_CARD_PLAYED       GameEventType = 1
-	GameEventType_GAME_EVENT_TYPE_CHARACTER_MOVED   GameEventType = 2
-	GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED GameEventType = 3
-	GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED GameEventType = 4
-	GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED GameEventType = 5
-	GameEventType_GAME_EVENT_TYPE_ABILITY_USED      GameEventType = 6
-	GameEventType_GAME_EVENT_TYPE_TRAGEDY_TRIGGERED GameEventType = 7
-	GameEventType_GAME_EVENT_TYPE_TRAGEDY_PREVENTED GameEventType = 8
-	GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED      GameEventType = 9
-	GameEventType_GAME_EVENT_TYPE_LOOP_RESET        GameEventType = 10
-	GameEventType_GAME_EVENT_TYPE_GAME_OVER         GameEventType = 11
-	GameEventType_GAME_EVENT_TYPE_PLAYER_GUESS      GameEventType = 12
+	GameEventType_GAME_EVENT_TYPE_CARD_PLAYED       GameEventType = 1  // 打出卡牌
+	GameEventType_GAME_EVENT_TYPE_CHARACTER_MOVED   GameEventType = 2  // 角色移动
+	GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED GameEventType = 3  // 妄想调整
+	GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED GameEventType = 4  // 好感调整
+	GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED GameEventType = 5  // 阴谋调整
+	GameEventType_GAME_EVENT_TYPE_ABILITY_USED      GameEventType = 6  // 使用能力
+	GameEventType_GAME_EVENT_TYPE_TRAGEDY_TRIGGERED GameEventType = 7  // 悲剧触发
+	GameEventType_GAME_EVENT_TYPE_TRAGEDY_PREVENTED GameEventType = 8  // 悲剧阻止
+	GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED      GameEventType = 9  // 天数推进
+	GameEventType_GAME_EVENT_TYPE_LOOP_RESET        GameEventType = 10 // 循环重置
+	GameEventType_GAME_EVENT_TYPE_GAME_OVER         GameEventType = 11 // 游戏结束
+	GameEventType_GAME_EVENT_TYPE_PLAYER_GUESS      GameEventType = 12 // 玩家猜测
 )
 
 // Enum value maps for GameEventType.
@@ -289,10 +289,10 @@ type ActionType int32
 
 const (
 	ActionType_ACTION_TYPE_UNSPECIFIED          ActionType = 0
-	ActionType_ACTION_TYPE_PLAY_CARD            ActionType = 1
-	ActionType_ACTION_TYPE_USE_ABILITY          ActionType = 2
-	ActionType_ACTION_TYPE_MAKE_GUESS           ActionType = 3
-	ActionType_ACTION_TYPE_READY_FOR_NEXT_PHASE ActionType = 4
+	ActionType_ACTION_TYPE_PLAY_CARD            ActionType = 1 // 出牌
+	ActionType_ACTION_TYPE_USE_ABILITY          ActionType = 2 // 使用能力
+	ActionType_ACTION_TYPE_MAKE_GUESS           ActionType = 3 // 作出猜测
+	ActionType_ACTION_TYPE_READY_FOR_NEXT_PHASE ActionType = 4 // 准备好进入下一阶段
 )
 
 // Enum value maps for ActionType.
@@ -344,16 +344,17 @@ func (ActionType) EnumDescriptor() ([]byte, []int) {
 type RoleType int32
 
 const (
-	RoleType_ROLE_TYPE_UNSPECIFIED         RoleType = 0
-	RoleType_ROLE_TYPE_INNOCENT            RoleType = 1
-	RoleType_ROLE_TYPE_KILLER              RoleType = 2
-	RoleType_ROLE_TYPE_BRAIN               RoleType = 3
-	RoleType_ROLE_TYPE_KEY_PERSON          RoleType = 4
-	RoleType_ROLE_TYPE_FRIEND              RoleType = 5
-	RoleType_ROLE_TYPE_CONSPIRACY_THEORIST RoleType = 6
-	RoleType_ROLE_TYPE_CULTIST             RoleType = 7
-	RoleType_ROLE_TYPE_MASTERMIND          RoleType = 8
-	RoleType_ROLE_TYPE_PROTAGONIST         RoleType = 9
+	RoleType_ROLE_TYPE_UNSPECIFIED         RoleType = 0 // 未指定角色类型 (默认值)
+	RoleType_ROLE_TYPE_INNOCENT            RoleType = 1 // 无辜者
+	RoleType_ROLE_TYPE_KILLER              RoleType = 2 // 杀手
+	RoleType_ROLE_TYPE_BRAIN               RoleType = 3 // 大脑
+	RoleType_ROLE_TYPE_KEY_PERSON          RoleType = 4 // 关键人物
+	RoleType_ROLE_TYPE_FRIEND              RoleType = 5 // 朋友
+	RoleType_ROLE_TYPE_CONSPIRACY_THEORIST RoleType = 6 // 阴谋论者
+	RoleType_ROLE_TYPE_CULTIST             RoleType = 7 // 例如：具有善意拒绝的角色
+	// 注意：Mastermind 和 Protagonist 也可以在 PlayerRole 中定义，这里是作为游戏内具体角色的一种。
+	RoleType_ROLE_TYPE_MASTERMIND  RoleType = 8 // LLM 玩家角色 (主谋)
+	RoleType_ROLE_TYPE_PROTAGONIST RoleType = 9 // LLM 玩家角色 (主角)
 )
 
 // Enum value maps for RoleType.
@@ -412,31 +413,29 @@ func (RoleType) EnumDescriptor() ([]byte, []int) {
 }
 
 // TragedyType 定义了剧本中可能发生的悲剧类型。
+// TragedyType 定义了在游戏中可能发生的悲剧类型。
 type TragedyType int32
 
 const (
-	TragedyType_TRAGEDY_TYPE_UNSPECIFIED TragedyType = 0
-	TragedyType_TRAGEDY_TYPE_A           TragedyType = 1
-	TragedyType_TRAGEDY_TYPE_B           TragedyType = 2
-	TragedyType_TRAGEDY_TYPE_C           TragedyType = 3
-	TragedyType_TRAGEDY_TYPE_D           TragedyType = 4
+	TragedyType_TRAGEDY_TYPE_UNSPECIFIED TragedyType = 0 // 未指定悲剧类型 (默认值)
+	TragedyType_TRAGEDY_TYPE_MURDER      TragedyType = 1 // 谋杀
+	TragedyType_TRAGEDY_TYPE_SUICIDE     TragedyType = 2 // 自杀
+	TragedyType_TRAGEDY_TYPE_SEALED      TragedyType = 3 // 例如：封印物品剧情
 )
 
 // Enum value maps for TragedyType.
 var (
 	TragedyType_name = map[int32]string{
 		0: "TRAGEDY_TYPE_UNSPECIFIED",
-		1: "TRAGEDY_TYPE_A",
-		2: "TRAGEDY_TYPE_B",
-		3: "TRAGEDY_TYPE_C",
-		4: "TRAGEDY_TYPE_D",
+		1: "TRAGEDY_TYPE_MURDER",
+		2: "TRAGEDY_TYPE_SUICIDE",
+		3: "TRAGEDY_TYPE_SEALED",
 	}
 	TragedyType_value = map[string]int32{
 		"TRAGEDY_TYPE_UNSPECIFIED": 0,
-		"TRAGEDY_TYPE_A":           1,
-		"TRAGEDY_TYPE_B":           2,
-		"TRAGEDY_TYPE_C":           3,
-		"TRAGEDY_TYPE_D":           4,
+		"TRAGEDY_TYPE_MURDER":      1,
+		"TRAGEDY_TYPE_SUICIDE":     2,
+		"TRAGEDY_TYPE_SEALED":      3,
 	}
 )
 
@@ -472,10 +471,10 @@ type AbilityTriggerType int32
 
 const (
 	AbilityTriggerType_ABILITY_TRIGGER_TYPE_UNSPECIFIED      AbilityTriggerType = 0
-	AbilityTriggerType_ABILITY_TRIGGER_TYPE_DAY_START        AbilityTriggerType = 1
-	AbilityTriggerType_ABILITY_TRIGGER_TYPE_MASTERMIND_PHASE AbilityTriggerType = 2
-	AbilityTriggerType_ABILITY_TRIGGER_TYPE_GOODWILL_PHASE   AbilityTriggerType = 3
-	AbilityTriggerType_ABILITY_TRIGGER_TYPE_PASSIVE          AbilityTriggerType = 4
+	AbilityTriggerType_ABILITY_TRIGGER_TYPE_DAY_START        AbilityTriggerType = 1 // 天开始时
+	AbilityTriggerType_ABILITY_TRIGGER_TYPE_MASTERMIND_PHASE AbilityTriggerType = 2 // 主谋阶段
+	AbilityTriggerType_ABILITY_TRIGGER_TYPE_GOODWILL_PHASE   AbilityTriggerType = 3 // 好感阶段
+	AbilityTriggerType_ABILITY_TRIGGER_TYPE_PASSIVE          AbilityTriggerType = 4 // 被动
 )
 
 // Enum value maps for AbilityTriggerType.
@@ -529,15 +528,15 @@ type EffectType int32
 
 const (
 	EffectType_EFFECT_TYPE_UNSPECIFIED            EffectType = 0
-	EffectType_EFFECT_TYPE_MOVE_CHARACTER         EffectType = 1
-	EffectType_EFFECT_TYPE_ADJUST_PARANOIA        EffectType = 2
-	EffectType_EFFECT_TYPE_ADJUST_GOODWILL        EffectType = 3
-	EffectType_EFFECT_TYPE_ADJUST_INTRIGUE        EffectType = 4
-	EffectType_EFFECT_TYPE_REVEAL_ROLE            EffectType = 5
-	EffectType_EFFECT_TYPE_PREVENT_TRAGEDY        EffectType = 6
-	EffectType_EFFECT_TYPE_GRANT_ABILITY          EffectType = 7
-	EffectType_EFFECT_TYPE_CHECK_LOCATION_ALONE   EffectType = 8
-	EffectType_EFFECT_TYPE_CHECK_CHARACTER_STATUS EffectType = 9
+	EffectType_EFFECT_TYPE_MOVE_CHARACTER         EffectType = 1 // 移动角色
+	EffectType_EFFECT_TYPE_ADJUST_PARANOIA        EffectType = 2 // 调整妄想
+	EffectType_EFFECT_TYPE_ADJUST_GOODWILL        EffectType = 3 // 调整好感
+	EffectType_EFFECT_TYPE_ADJUST_INTRIGUE        EffectType = 4 // 调整阴谋
+	EffectType_EFFECT_TYPE_REVEAL_ROLE            EffectType = 5 // 用于特定能力，揭示角色
+	EffectType_EFFECT_TYPE_PREVENT_TRAGEDY        EffectType = 6 // 阻止悲剧
+	EffectType_EFFECT_TYPE_GRANT_ABILITY          EffectType = 7 // 授予能力
+	EffectType_EFFECT_TYPE_CHECK_LOCATION_ALONE   EffectType = 8 // 用于悲剧条件，检查地点是否有人独处
+	EffectType_EFFECT_TYPE_CHECK_CHARACTER_STATUS EffectType = 9 // 用于悲剧条件，检查角色状态
 )
 
 // Enum value maps for EffectType.
@@ -600,8 +599,8 @@ type TargetRuleType int32
 
 const (
 	TargetRuleType_TARGET_RULE_TYPE_UNSPECIFIED               TargetRuleType = 0
-	TargetRuleType_TARGET_RULE_TYPE_SPECIFIC_CHARACTER        TargetRuleType = 1
-	TargetRuleType_TARGET_RULE_TYPE_ANY_CHARACTER_AT_LOCATION TargetRuleType = 2
+	TargetRuleType_TARGET_RULE_TYPE_SPECIFIC_CHARACTER        TargetRuleType = 1 // 特定角色
+	TargetRuleType_TARGET_RULE_TYPE_ANY_CHARACTER_AT_LOCATION TargetRuleType = 2 // 在某个地点的任何角色
 )
 
 // Enum value maps for TargetRuleType.
@@ -707,13 +706,12 @@ const file_proto_model_enums_proto_rawDesc = "" +
 	"\x1dROLE_TYPE_CONSPIRACY_THEORIST\x10\x06\x12\x15\n" +
 	"\x11ROLE_TYPE_CULTIST\x10\a\x12\x18\n" +
 	"\x14ROLE_TYPE_MASTERMIND\x10\b\x12\x19\n" +
-	"\x15ROLE_TYPE_PROTAGONIST\x10\t*{\n" +
+	"\x15ROLE_TYPE_PROTAGONIST\x10\t*w\n" +
 	"\vTragedyType\x12\x1c\n" +
-	"\x18TRAGEDY_TYPE_UNSPECIFIED\x10\x00\x12\x12\n" +
-	"\x0eTRAGEDY_TYPE_A\x10\x01\x12\x12\n" +
-	"\x0eTRAGEDY_TYPE_B\x10\x02\x12\x12\n" +
-	"\x0eTRAGEDY_TYPE_C\x10\x03\x12\x12\n" +
-	"\x0eTRAGEDY_TYPE_D\x10\x04*\xd4\x01\n" +
+	"\x18TRAGEDY_TYPE_UNSPECIFIED\x10\x00\x12\x17\n" +
+	"\x13TRAGEDY_TYPE_MURDER\x10\x01\x12\x18\n" +
+	"\x14TRAGEDY_TYPE_SUICIDE\x10\x02\x12\x17\n" +
+	"\x13TRAGEDY_TYPE_SEALED\x10\x03*\xd4\x01\n" +
 	"\x12AbilityTriggerType\x12$\n" +
 	" ABILITY_TRIGGER_TYPE_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eABILITY_TRIGGER_TYPE_DAY_START\x10\x01\x12)\n" +

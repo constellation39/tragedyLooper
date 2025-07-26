@@ -9,15 +9,15 @@ option go_package = "github.com/user/repo/proto/model";
 
 // PlayCardPayload 定义了打出卡牌动作所需的数据。
 message PlayCardPayload {
-  string card_id = 1;
+  int32 card_id = 1;
   string target_character_id = 2;
   LocationType target_location = 3;
 }
 
 // UseAbilityPayload 定义了使用能力动作所需的数据。
 message UseAbilityPayload {
-  string character_id = 1;
-  string ability_id = 2;
+  int32 character_id = 1;
+  int32 ability_id = 2;
 }
 
 // MakeGuessPayload 定义了主角进行最终猜测时提交的数据结构。

@@ -2,6 +2,8 @@ package engine
 
 import (
 	"fmt"
+	"google.golang.org/protobuf/types/known/timestamppb"
+	"slices"
 	"time"
 	promptbuilder "tragedylooper/internal/llm/prompt"
 
@@ -21,8 +23,8 @@ type GameEngine struct {
 	gameControlChan      chan struct{}
 	llmClient            llm.Client
 	playerReady          map[string]bool
-	mastermindPlayerID   string
-	protagonistPlayerIDs []string
+	mastermindPlayerID   int32
+	protagonistPlayerIDs []int32
 	logger               *zap.Logger
 }
 
@@ -38,16 +40,16 @@ type getPlayerViewRequest struct {
 // llmActionCompleteRequest is sent when an LLM player has decided on an action.
 type llmActionCompleteRequest struct {
 	playerID string
-	action   model.PlayerAction
+	action   *model.PlayerAction
 }
 
 // NewGameEngine 创建一个新的游戏引擎实例。
-func NewGameEngine(gameID string, logger *zap.Logger, script *model.Script, players map[string]*model.Player, llmClient llm.Client) *GameEngine {
-	characters := make(map[string]*model.Character)
+func NewGameEngine(gameID int32, logger *zap.Logger, script *model.Script, players map[int32]*model.Player, llmClient llm.Client) *GameEngine {
+	characters := make(map[int32]*model.Character)
 	for _, charConfig := range script.Characters {
 		char := &model.Character{
-			Id:              charConfig.CharacterId,
-			Name:            charConfig.CharacterId, // Placeholder
+			Id:              charConfig.Id,
+			Name:            charConfig.Name, // Placeholder
 			CurrentLocation: charConfig.InitialLocation,
 			IsAlive:         true,
 			HiddenRole:      charConfig.HiddenRole,
@@ -64,18 +66,18 @@ func NewGameEngine(gameID string, logger *zap.Logger, script *model.Script, play
 		Players:             players,
 		CurrentDay:          1,
 		CurrentLoop:         1,
-		CurrentPhase:        model.PhaseMorning,
-		ActiveTragedies:     make(map[model.TragedyType]bool),
-		PreventedTragedies:  make(map[model.TragedyType]bool),
-		PlayedCardsThisDay:  make(map[string][]model.Card),
-		PlayedCardsThisLoop: make(map[string][]model.Card),
-		LastUpdateTime:      time.Now(),
-		DayEvents:           []model.GameEvent{},
-		LoopEvents:          []model.GameEvent{},
+		CurrentPhase:        model.GamePhase_GAME_PHASE_MORNING,
+		ActiveTragedies:     make(map[int32]bool),
+		PreventedTragedies:  make(map[int32]bool),
+		PlayedCardsThisDay:  make(map[int32]*model.CardList),
+		PlayedCardsThisLoop: make(map[int32]*model.CardList),
+		LastUpdateTime:      timestamppb.Now(),
+		DayEvents:           make([]*model.GameEvent, 0),
+		LoopEvents:          make([]*model.GameEvent, 0),
 	}
 
 	for _, t := range script.Tragedies {
-		gs.ActiveTragedies[t.TragedyType] = true
+		gs.ActiveTragedies[int32(t.TragedyType)] = true
 	}
 
 	ge := &GameEngine{
@@ -85,18 +87,16 @@ func NewGameEngine(gameID string, logger *zap.Logger, script *model.Script, play
 		gameControlChan: make(chan struct{}),
 		llmClient:       llmClient,
 		playerReady:     make(map[string]bool),
-		logger:          logger.With(zap.String("gameID", gameID)),
+		logger:          logger.With(zap.Int32("gameID", gameID)),
 	}
 
 	for playerID, p := range players {
-		if p.Role == model.PlayerRoleMastermind {
+		if p.Role == model.PlayerRole_PLAYER_ROLE_MASTERMIND {
 			ge.mastermindPlayerID = playerID
-			p.Hand = make([]model.Card, len(data.MastermindCards))
-			copy(p.Hand, data.MastermindCards)
+			p.Hand = slices.Clone(data.MastermindCards)
 		} else {
 			ge.protagonistPlayerIDs = append(ge.protagonistPlayerIDs, playerID)
-			p.Hand = make([]model.Card, len(data.ProtagonistCards))
-			copy(p.Hand, data.ProtagonistCards)
+			p.Hand = slices.Clone(data.ProtagonistCards)
 		}
 	}
 
@@ -111,11 +111,11 @@ func (ge *GameEngine) StopGameLoop() {
 	close(ge.gameControlChan)
 }
 
-func (ge *GameEngine) SubmitPlayerAction(action model.PlayerAction) {
+func (ge *GameEngine) SubmitPlayerAction(action *model.PlayerAction) {
 	select {
 	case ge.requestChan <- action:
 	default:
-		ge.logger.Warn("Request channel full, dropping action", zap.String("playerID", action.PlayerID))
+		ge.logger.Warn("Request channel full, dropping action", zap.Int32("playerID", action.PlayerId))
 	}
 }
 
@@ -138,54 +138,52 @@ func (ge *GameEngine) GetPlayerView(playerID string) model.PlayerView {
 	return view
 }
 
-func (ge *GameEngine) GetCharacter(id string) (*model.Character, bool) {
+func (ge *GameEngine) GetCharacter(id int32) (*model.Character, bool) {
 	char, ok := ge.GameState.Characters[id]
 	return char, ok
 }
 
-func (ge *GameEngine) SetCharacterLocation(id string, location model.LocationType) {
+func (ge *GameEngine) SetCharacterLocation(id int32, location model.LocationType) {
 	if char, ok := ge.GameState.Characters[id]; ok {
 		char.CurrentLocation = location
-		ge.logger.Info("Character moved", zap.String("characterID", id), zap.String("location", string(location)))
-		ge.publishGameEvent(model.EventCharacterMoved, map[string]string{"character_id": id, "new_location": string(location)})
+		ge.logger.Info("Character moved", zap.Int32("characterID", id), zap.String("location", string(location)))
+		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_CHARACTER_MOVED, map[string]int32{"character_id": id, "new_location": int32(location)})
 	}
 }
 
-func (ge *GameEngine) AdjustCharacterParanoia(id string, amount int) int {
+func (ge *GameEngine) AdjustCharacterParanoia(id int32, amount int32) int32 {
 	if char, ok := ge.GameState.Characters[id]; ok {
 		char.Paranoia += amount
-		ge.logger.Info("Character paranoia adjusted", zap.String("characterID", id), zap.Int("amount", amount), zap.Int("newParanoia", char.Paranoia))
-		ge.publishGameEvent(model.EventParanoiaAdjusted, map[string]interface{}{"character_id": id, "amount": amount, "new_paranoia": char.Paranoia})
+		ge.logger.Info("Character paranoia adjusted", zap.Int32("characterID", id), zap.Int32("amount", amount), zap.Int32("newParanoia", char.Paranoia))
+		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED, map[string]int32{"character_id": id, "amount": amount, "new_paranoia": char.Paranoia})
 		return char.Paranoia
 	}
 	return 0
 }
 
-func (ge *GameEngine) AdjustCharacterGoodwill(id string, amount int) int {
+func (ge *GameEngine) AdjustCharacterGoodwill(id int32, amount int32) int32 {
 	if char, ok := ge.GameState.Characters[id]; ok {
 		char.Goodwill += amount
-		ge.logger.Info("Character goodwill adjusted", zap.String("characterID", id), zap.Int("amount", amount), zap.Int("newGoodwill", char.Goodwill))
-		ge.publishGameEvent(model.EventGoodwillAdjusted, map[string]interface{}{"character_id": id, "amount": amount, "new_goodwill": char.Goodwill})
+		ge.logger.Info("Character goodwill adjusted", zap.Int32("characterID", id), zap.Int32("amount", amount), zap.Int32("newGoodwill", char.Goodwill))
+		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED, map[string]int32{"character_id": id, "amount": amount, "new_goodwill": char.Goodwill})
 		return char.Goodwill
 	}
 	return 0
 }
 
-func (ge *GameEngine) AdjustCharacterIntrigue(id string, amount int) int {
+func (ge *GameEngine) AdjustCharacterIntrigue(id int32, amount int32) int32 {
 	if char, ok := ge.GameState.Characters[id]; ok {
 		char.Intrigue += amount
-		ge.logger.Info("Character intrigue adjusted", zap.String("characterID", id), zap.Int("amount", amount), zap.Int("newIntrigue", char.Intrigue))
-		ge.publishGameEvent(model.EventIntrigueAdjusted, map[string]interface{}{"character_id": id, "amount": amount, "new_intrigue": char.Intrigue})
+		ge.logger.Info("Character intrigue adjusted", zap.Int32("characterID", id), zap.Int32("amount", amount), zap.Int32("newIntrigue", char.Intrigue))
+		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED, map[string]int32{"character_id": id, "amount": amount, "new_intrigue": char.Intrigue})
 		return char.Intrigue
 	}
 	return 0
 }
 
-func (ge *GameEngine) PublishEvent(eventType model.EventType, payload interface{}) {
+func (ge *GameEngine) PublishEvent(eventType model.GameEventType, payload interface{}) {
 	ge.publishGameEvent(eventType, payload)
 }
-
-// --- Main Game Loop ---
 
 func (ge *GameEngine) runGameLoop() {
 	ge.logger.Info("Game loop started.")
@@ -202,12 +200,12 @@ func (ge *GameEngine) runGameLoop() {
 
 		case req := <-ge.requestChan:
 			switch r := req.(type) {
-			case model.PlayerAction:
+			case *model.PlayerAction:
 				ge.handlePlayerAction(r)
-			case getPlayerViewRequest:
+			case *getPlayerViewRequest:
 				playerView := ge.generatePlayerView(r.playerID)
 				r.responseChan <- playerView
-			case llmActionCompleteRequest:
+			case *llmActionCompleteRequest:
 				// The LLM has finished. Process its action and mark it as ready.
 				ge.handlePlayerAction(r.action)
 				ge.playerReady[r.playerID] = true
@@ -216,25 +214,25 @@ func (ge *GameEngine) runGameLoop() {
 		case <-timer.C:
 			// Advance the game state based on the current phase.
 			switch ge.GameState.CurrentPhase {
-			case model.PhaseMorning:
+			case model.GamePhase_GAME_PHASE_MORNING:
 				ge.handleMorningPhase()
-			case model.PhaseCardPlay:
+			case model.GamePhase_GAME_PHASE_CARD_PLAY:
 				ge.handleCardPlayPhase()
-			case model.PhaseCardReveal:
+			case model.GamePhase_GAME_PHASE_CARD_REVEAL:
 				ge.handleCardRevealPhase()
-			case model.PhaseCardResolve:
+			case model.GamePhase_GAME_PHASE_CARD_RESOLVE:
 				ge.handleCardResolvePhase()
-			case model.PhaseAbilities:
+			case model.GamePhase_GAME_PHASE_ABILITIES:
 				ge.handleAbilitiesPhase()
-			case model.PhaseIncidents:
+			case model.GamePhase_GAME_PHASE_INCIDENTS:
 				ge.handleIncidentsPhase()
-			case model.PhaseDayEnd:
+			case model.GamePhase_GAME_PHASE_DAY_END:
 				ge.handleDayEndPhase()
-			case model.PhaseLoopEnd:
+			case model.GamePhase_GAME_PHASE_LOOP_END:
 				ge.handleLoopEndPhase()
-			case model.PhaseProtagonistGuess:
+			case model.GamePhase_GAME_PHASE_PROTAGONIST_GUESS:
 				ge.handleProtagonistGuessPhase()
-			case model.PhaseGameOver:
+			case model.GamePhase_GAME_PHASE_GAME_OVER:
 				// Do nothing, wait for StopGameLoop
 			}
 		}
@@ -243,42 +241,42 @@ func (ge *GameEngine) runGameLoop() {
 
 // --- Player Action Handlers ---
 
-func (ge *GameEngine) handlePlayerAction(action model.PlayerAction) {
-	player, ok := ge.GameState.Players[action.PlayerID]
+func (ge *GameEngine) handlePlayerAction(action *model.PlayerAction) {
+	player, ok := ge.GameState.Players[action.PlayerId]
 	if !ok {
-		ge.logger.Warn("Action from unknown player", zap.String("playerID", action.PlayerID))
+		ge.logger.Warn("Action from unknown player", zap.Int32("playerID", action.PlayerId))
 		return
 	}
 
 	ge.logger.Info("Handling player action", zap.String("player", player.Name), zap.String("actionType", string(action.Type)))
 
 	switch action.Type {
-	case model.ActionPlayCard:
+	case model.ActionType_ACTION_TYPE_PLAY_CARD:
 		ge.handlePlayCardAction(player, action)
-	case model.ActionUseAbility:
+	case model.ActionType_ACTION_TYPE_USE_ABILITY:
 		ge.handleUseAbilityAction(player, action)
-	case model.ActionReadyForNextPhase:
+	case model.ActionType_ACTION_TYPE_MAKE_GUESS:
 		ge.handleReadyForNextPhaseAction(player)
-	case model.ActionMakeGuess:
+	case model.ActionType_ACTION_TYPE_READY_FOR_NEXT_PHASE:
 		ge.handleMakeGuessAction(action)
 	default:
 		ge.logger.Warn("Unknown action type", zap.String("actionType", string(action.Type)))
 	}
 }
 
-func (ge *GameEngine) handlePlayCardAction(player *model.Player, action model.PlayerAction) {
+func (ge *GameEngine) handlePlayCardAction(player *model.Player, action *model.PlayerAction) {
 	var payload model.PlayCardPayload
 	if err := mapstructure.Decode(action.Payload, &payload); err != nil {
 		ge.logger.Error("Failed to decode PlayCardPayload", zap.Error(err))
 		return
 	}
 
-	var playedCard model.Card
+	var playedCard *model.Card
 	cardFound := false
 	for i, card := range player.Hand {
-		if card.ID == payload.CardID {
+		if card.Id == payload.CardId {
 			if card.OncePerLoop && card.UsedThisLoop {
-				ge.logger.Warn("Attempted to play a card that was already used this loop", zap.String("cardID", card.ID))
+				ge.logger.Warn("Attempted to play a card that was already used this loop", zap.String("cardID", card.Id))
 				return // Card already used
 			}
 			playedCard = card
@@ -289,7 +287,7 @@ func (ge *GameEngine) handlePlayCardAction(player *model.Player, action model.Pl
 	}
 
 	if !cardFound {
-		ge.logger.Warn("Attempted to play a card not in hand", zap.String("cardID", payload.CardID), zap.String("playerID", player.ID))
+		ge.logger.Warn("Attempted to play a card not in hand", zap.Int32("cardID", payload.CardId), zap.Int32("playerID", player.Id))
 		return
 	}
 
@@ -303,7 +301,7 @@ func (ge *GameEngine) handlePlayCardAction(player *model.Player, action model.Pl
 	ge.playerReady[player.ID] = true
 }
 
-func (ge *GameEngine) handleUseAbilityAction(player *model.Player, action model.PlayerAction) {
+func (ge *GameEngine) handleUseAbilityAction(player *model.Player, action *model.PlayerAction) {
 	var payload model.UseAbilityPayload
 	if err := mapstructure.Decode(action.Payload, &payload); err != nil {
 		ge.logger.Error("Failed to decode UseAbilityPayload", zap.Error(err))
@@ -345,7 +343,7 @@ func (ge *GameEngine) handleReadyForNextPhaseAction(player *model.Player) {
 	ge.playerReady[player.ID] = true
 }
 
-func (ge *GameEngine) handleMakeGuessAction(action model.PlayerAction) {
+func (ge *GameEngine) handleMakeGuessAction(action *model.PlayerAction) {
 	if ge.GameState.CurrentPhase != model.PhaseProtagonistGuess {
 		ge.logger.Warn("MakeGuess action received outside of the guess phase")
 		return
@@ -779,7 +777,7 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID string) {
 	}()
 }
 
-func (ge *GameEngine) publishGameEvent(eventType model.EventType, payload interface{}) {
+func (ge *GameEngine) publishGameEvent(eventType model.GameEventType, payload interface{}) {
 	event := model.GameEvent{
 		Type:      eventType,
 		Payload:   payload,

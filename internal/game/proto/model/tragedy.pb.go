@@ -24,14 +24,14 @@ const (
 // TragedyCondition 定义悲剧发生的条件。
 type TragedyCondition struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TragedyType   TragedyType            `protobuf:"varint,1,opt,name=tragedy_type,json=tragedyType,proto3,enum=model.TragedyType" json:"tragedy_type,omitempty"`
-	Day           int32                  `protobuf:"varint,2,opt,name=day,proto3" json:"day,omitempty"`
-	CulpritId     string                 `protobuf:"bytes,3,opt,name=culprit_id,json=culpritId,proto3" json:"culprit_id,omitempty"`
-	Conditions    []*Condition           `protobuf:"bytes,4,rep,name=conditions,proto3" json:"conditions,omitempty"`
-	TargetRule    TargetRuleType         `protobuf:"varint,5,opt,name=target_rule,json=targetRule,proto3,enum=model.TargetRuleType" json:"target_rule,omitempty"`
-	Abilities     []*Ability             `protobuf:"bytes,6,rep,name=abilities,proto3" json:"abilities,omitempty"`
-	IsActive      bool                   `protobuf:"varint,7,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
-	IsPrevented   bool                   `protobuf:"varint,8,opt,name=is_prevented,json=isPrevented,proto3" json:"is_prevented,omitempty"`
+	TragedyType   TragedyType            `protobuf:"varint,1,opt,name=tragedy_type,json=tragedyType,proto3,enum=model.TragedyType" json:"tragedy_type,omitempty"` // 悲剧类型
+	Day           int32                  `protobuf:"varint,2,opt,name=day,proto3" json:"day,omitempty"`                                                           // 悲剧可能发生的日期
+	CulpritId     string                 `protobuf:"bytes,3,opt,name=culprit_id,json=culpritId,proto3" json:"culprit_id,omitempty"`                               // 嫌疑人ID
+	Conditions    []*Condition           `protobuf:"bytes,4,rep,name=conditions,proto3" json:"conditions,omitempty"`                                              // 必须满足的条件列表
+	TargetRule    TargetRuleType         `protobuf:"varint,5,opt,name=target_rule,json=targetRule,proto3,enum=model.TargetRuleType" json:"target_rule,omitempty"` // 目标规则
+	Abilities     []*Ability             `protobuf:"bytes,6,rep,name=abilities,proto3" json:"abilities,omitempty"`                                                // 悲剧发生时触发的能力
+	IsActive      bool                   `protobuf:"varint,7,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`                                 // 运行时状态：此悲剧当前是否在剧本中活跃？
+	IsPrevented   bool                   `protobuf:"varint,8,opt,name=is_prevented,json=isPrevented,proto3" json:"is_prevented,omitempty"`                        // 运行时状态：此悲剧是否已被阻止？
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -125,10 +125,10 @@ func (x *TragedyCondition) GetIsPrevented() bool {
 // Condition 定义悲剧的一个单一条件。
 type Condition struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CharacterId   string                 `protobuf:"bytes,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`
-	Location      LocationType           `protobuf:"varint,2,opt,name=location,proto3,enum=model.LocationType" json:"location,omitempty"`
-	MinParanoia   int32                  `protobuf:"varint,3,opt,name=min_paranoia,json=minParanoia,proto3" json:"min_paranoia,omitempty"`
-	IsAlone       bool                   `protobuf:"varint,4,opt,name=is_alone,json=isAlone,proto3" json:"is_alone,omitempty"`
+	CharacterId   string                 `protobuf:"bytes,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`  // 角色ID
+	Location      LocationType           `protobuf:"varint,2,opt,name=location,proto3,enum=model.LocationType" json:"location,omitempty"`  // 所在位置
+	MinParanoia   int32                  `protobuf:"varint,3,opt,name=min_paranoia,json=minParanoia,proto3" json:"min_paranoia,omitempty"` // 最小妄想指数
+	IsAlone       bool                   `protobuf:"varint,4,opt,name=is_alone,json=isAlone,proto3" json:"is_alone,omitempty"`             // 是否独处
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -195,7 +195,7 @@ var File_proto_model_tragedy_proto protoreflect.FileDescriptor
 
 const file_proto_model_tragedy_proto_rawDesc = "" +
 	"\n" +
-	"\x19proto/model/tragedy.proto\x12\x05model\x1a\x19proto/model/ability.proto\x1a\x17proto/model/enums.proto\x1a\x1aproto/model/location.proto\"\xd2\x02\n" +
+	"\x19proto/model/tragedy.proto\x12\x05model\x1a\x19proto/model/ability.proto\x1a\x1aproto/model/location.proto\x1a\x17proto/model/enums.proto\"\xd2\x02\n" +
 	"\x10TragedyCondition\x125\n" +
 	"\ftragedy_type\x18\x01 \x01(\x0e2\x12.model.TragedyTypeR\vtragedyType\x12\x10\n" +
 	"\x03day\x18\x02 \x01(\x05R\x03day\x12\x1d\n" +
@@ -255,8 +255,8 @@ func file_proto_model_tragedy_proto_init() {
 		return
 	}
 	file_proto_model_ability_proto_init()
-	file_proto_model_enums_proto_init()
 	file_proto_model_location_proto_init()
+	file_proto_model_enums_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

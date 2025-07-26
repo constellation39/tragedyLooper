@@ -5,10 +5,10 @@
         "PlayerAction": {
             "properties": {
                 "player_id": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "game_id": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "type": {
                     "enum": [
@@ -36,7 +36,8 @@
                 },
                 "payload": {
                     "additionalProperties": true,
-                    "type": "object"
+                    "type": "object",
+                    "description": "e.g., PlayCardPayload, UseAbilityPayload"
                 }
             },
             "additionalProperties": true,
