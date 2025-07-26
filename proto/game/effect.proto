@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package game;
+
+option go_package = "github.com/user/repo/proto/game";
+
+// EffectType 定义能力或卡牌可能产生的效果类型。
+// 这是组合方法的核心。
+enum EffectType {
+  EFFECT_TYPE_UNSPECIFIED = 0;
+  EFFECT_TYPE_MOVE_CHARACTER = 1; // 移动角色
+  EFFECT_TYPE_ADJUST_PARANOIA = 2; // 调整妄想
+  EFFECT_TYPE_ADJUST_GOODWILL = 3; // 调整好感
+  EFFECT_TYPE_ADJUST_INTRIGUE = 4; // 调整阴谋
+  EFFECT_TYPE_REVEAL_ROLE = 5; // 用于特定能力，揭示角色
+  EFFECT_TYPE_PREVENT_TRAGEDY = 6; // 阻止悲剧
+  EFFECT_TYPE_GRANT_ABILITY = 7; // 授予能力
+  EFFECT_TYPE_CHECK_LOCATION_ALONE = 8; // 用于悲剧条件，检查地点是否有人独处
+  EFFECT_TYPE_CHECK_CHARACTER_STATUS = 9; // 用于悲剧条件，检查角色状态
+}
+
+// Effect 接口定义了一个效果的核心行为。
+message Effect {
+  oneof effect_oneof {
+    MoveCharacterEffect move_character_effect = 1;
+    AdjustParanoiaEffect adjust_paranoia_effect = 2;
+    AdjustGoodwillEffect adjust_goodwill_effect = 3;
+    AdjustIntrigueEffect adjust_intrigue_effect = 4;
+  }
+}
+
+// MoveCharacterEffect 移动一个角色到指定地点。
+message MoveCharacterEffect {
+}
+
+// AdjustParanoiaEffect 调整角色的妄想值。
+message AdjustParanoiaEffect {
+  int32 amount = 1;
+}
+
+// AdjustGoodwillEffect 调整角色的好感度。
+message AdjustGoodwillEffect {
+  int32 amount = 1;
+}
+
+// AdjustIntrigueEffect 调整角色的阴谋值。
+message AdjustIntrigueEffect {
+  int32 amount = 1;
+}

@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package game;
+
+import "google/protobuf/struct.proto";
+import "proto/game/card.proto";
+import "proto/game/character.proto";
+import "proto/game/enums.proto";
+import "proto/game/event.proto";
+
+option go_package = "github.com/user/repo/proto/game";
+
+
+
+// Player 表示一个连接的玩家（人类或 LLM）。
+message Player {
+  string id = 1; // 唯一标识符
+  string name = 2; // 玩家名称
+  PlayerRole role = 3; // 玩家角色（主谋或主角）
+  bool is_llm = 4; // 是否为LLM玩家
+  repeated Card hand = 5; // 玩家手牌
+  map<string, google.protobuf.Value> deduction_knowledge = 6; // 主角的推理知识
+  string llm_session_id = 7; // LLM玩家的会话ID
+}
+
+// PlayerView 表示特定玩家的游戏状态过滤视图。
+message PlayerView {
+  string game_id = 1; // 游戏唯一标识符
+  string script_id = 2; // 剧本ID
+  map<string, Character> characters = 3; // 角色信息（隐藏身份已移除）
+  map<string, Player> players = 4; // 玩家信息（敏感信息已移除）
+  int32 current_day = 5; // 当前天数
+  int32 current_loop = 6; // 当前循环次数
+  GamePhase current_phase = 7; // 当前游戏阶段
+  map<string, bool> active_tragedies = 8; // 活跃的悲剧（公开信息）
+  map<string, bool> prevented_tragedies = 9; // 已阻止的悲剧（公开信息）
+  repeated Card your_hand = 10; // 你的手牌（仅对请求玩家可见）
+  map<string, google.protobuf.Value> your_deductions = 11; // 你的推理（仅对主角可见）
+  repeated GameEvent public_events = 12; // 公开事件
+}

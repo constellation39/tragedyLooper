@@ -1,0 +1,66 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/CharacterConfig",
+    "definitions": {
+        "CharacterConfig": {
+            "properties": {
+                "character_id": {
+                    "type": "string",
+                    "description": "引用基础角色定义"
+                },
+                "initial_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "LocationType 定义游戏中的可能地点。"
+                },
+                "hidden_role": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "PLAYER_ROLE_MASTERMIND",
+                        1,
+                        "PLAYER_ROLE_PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
+                },
+                "is_culprit_for": {
+                    "type": "string",
+                    "description": "如果此角色是特定悲剧的嫌疑犯"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Character Config",
+            "description": "CharacterConfig 定义特定剧本中角色的初始状态。"
+        }
+    }
+}

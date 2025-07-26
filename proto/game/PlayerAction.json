@@ -1,0 +1,49 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/PlayerAction",
+    "definitions": {
+        "PlayerAction": {
+            "properties": {
+                "player_id": {
+                    "type": "string"
+                },
+                "game_id": {
+                    "type": "string"
+                },
+                "type": {
+                    "enum": [
+                        "ACTION_TYPE_UNSPECIFIED",
+                        0,
+                        "ACTION_TYPE_PLAY_CARD",
+                        1,
+                        "ACTION_TYPE_USE_ABILITY",
+                        2,
+                        "ACTION_TYPE_MAKE_GUESS",
+                        3,
+                        "ACTION_TYPE_READY_FOR_NEXT_PHASE",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Action Type",
+                    "description": "ActionType 定义了玩家可以执行的操作类型。"
+                },
+                "payload": {
+                    "additionalProperties": true,
+                    "type": "object",
+                    "description": "e.g., PlayCardPayload, UseAbilityPayload"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Player Action",
+            "description": "PlayerAction 代表单个玩家提交的动作。"
+        }
+    }
+}

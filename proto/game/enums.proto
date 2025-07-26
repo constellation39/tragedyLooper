@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package game;
+
+option go_package = "github.com/user/repo/proto/game";
+
+// CardType 定义玩家可以打出的卡牌类型。
+enum CardType {
+  CARD_TYPE_UNSPECIFIED = 0;
+  CARD_TYPE_MOVEMENT = 1; // 移动
+  CARD_TYPE_PARANOIA = 2; // 妄想
+  CARD_TYPE_GOODWILL = 3; // 好感
+  CARD_TYPE_INTRIGUE = 4; // 阴谋
+  CARD_TYPE_SPECIAL = 5; // 用于特殊卡牌效果
+}
+
+// PlayerRole 定义连接玩家的角色（人类或 LLM）。
+enum PlayerRole {
+  PLAYER_ROLE_UNSPECIFIED = 0;
+  PLAYER_ROLE_MASTERMIND = 1; // 主谋
+  PLAYER_ROLE_PROTAGONIST = 2; // 主角
+}
+
+// GamePhase 定义游戏日期的当前阶段。
+enum GamePhase {
+  GAME_PHASE_UNSPECIFIED = 0;
+  GAME_PHASE_MORNING = 1; // 早晨
+  GAME_PHASE_CARD_PLAY = 2; // 出牌阶段
+  GAME_PHASE_CARD_REVEAL = 3; // 牌揭示阶段
+  GAME_PHASE_CARD_RESOLVE = 4; // 牌结算阶段
+  GAME_PHASE_ABILITIES = 5; // 能力阶段
+  GAME_PHASE_INCIDENTS = 6; // 事件阶段
+  GAME_PHASE_DAY_END = 7; // 天结束
+  GAME_PHASE_LOOP_END = 8; // 循环结束
+  GAME_PHASE_GAME_OVER = 9; // 游戏结束
+  GAME_PHASE_PROTAGONIST_GUESS = 10; // 最终猜测阶段
+}
+
+// GameEventType for GameEvent
+enum GameEventType {
+  GAME_EVENT_TYPE_UNSPECIFIED = 0;
+  GAME_EVENT_TYPE_CARD_PLAYED = 1; // 打出卡牌
+  GAME_EVENT_TYPE_CHARACTER_MOVED = 2; // 角色移动
+  GAME_EVENT_TYPE_PARANOIA_ADJUSTED = 3; // 妄想调整
+  GAME_EVENT_TYPE_GOODWILL_ADJUSTED = 4; // 好感调整
+  GAME_EVENT_TYPE_INTRIGUE_ADJUSTED = 5; // 阴谋调整
+  GAME_EVENT_TYPE_ABILITY_USED = 6; // 使用能力
+  GAME_EVENT_TYPE_TRAGEDY_TRIGGERED = 7; // 悲剧触发
+  GAME_EVENT_TYPE_TRAGEDY_PREVENTED = 8; // 悲剧阻止
+  GAME_EVENT_TYPE_DAY_ADVANCED = 9; // 天数推进
+  GAME_EVENT_TYPE_LOOP_RESET = 10; // 循环重置
+  GAME_EVENT_TYPE_GAME_OVER = 11; // 游戏结束
+  GAME_EVENT_TYPE_PLAYER_GUESS = 12; // 玩家猜测
+}
+
+// ActionType 定义了玩家可以执行的操作类型。
+enum ActionType {
+  ACTION_TYPE_UNSPECIFIED = 0;
+  ACTION_TYPE_PLAY_CARD = 1; // 出牌
+  ACTION_TYPE_USE_ABILITY = 2; // 使用能力
+  ACTION_TYPE_MAKE_GUESS = 3; // 作出猜测
+  ACTION_TYPE_READY_FOR_NEXT_PHASE = 4; // 准备好进入下一阶段
+}

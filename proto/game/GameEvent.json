@@ -1,0 +1,64 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/GameEvent",
+    "definitions": {
+        "GameEvent": {
+            "properties": {
+                "type": {
+                    "enum": [
+                        "GAME_EVENT_TYPE_UNSPECIFIED",
+                        0,
+                        "GAME_EVENT_TYPE_CARD_PLAYED",
+                        1,
+                        "GAME_EVENT_TYPE_CHARACTER_MOVED",
+                        2,
+                        "GAME_EVENT_TYPE_PARANOIA_ADJUSTED",
+                        3,
+                        "GAME_EVENT_TYPE_GOODWILL_ADJUSTED",
+                        4,
+                        "GAME_EVENT_TYPE_INTRIGUE_ADJUSTED",
+                        5,
+                        "GAME_EVENT_TYPE_ABILITY_USED",
+                        6,
+                        "GAME_EVENT_TYPE_TRAGEDY_TRIGGERED",
+                        7,
+                        "GAME_EVENT_TYPE_TRAGEDY_PREVENTED",
+                        8,
+                        "GAME_EVENT_TYPE_DAY_ADVANCED",
+                        9,
+                        "GAME_EVENT_TYPE_LOOP_RESET",
+                        10,
+                        "GAME_EVENT_TYPE_GAME_OVER",
+                        11,
+                        "GAME_EVENT_TYPE_PLAYER_GUESS",
+                        12
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Game Event Type",
+                    "description": "GameEventType for GameEvent"
+                },
+                "payload": {
+                    "additionalProperties": true,
+                    "type": "object",
+                    "description": "事件负载"
+                },
+                "timestamp": {
+                    "type": "string",
+                    "description": "事件时间戳",
+                    "format": "date-time"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Game Event",
+            "description": "GameEvent 表示游戏中发生的事件。"
+        }
+    }
+}

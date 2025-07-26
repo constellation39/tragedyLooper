@@ -1,0 +1,259 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/Character",
+    "definitions": {
+        "Character": {
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "唯一标识符"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "角色名称"
+                },
+                "traits": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array",
+                    "description": "角色特征，例如：[\"Student\", \"Journalist\"]"
+                },
+                "current_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "LocationType 定义游戏中的可能地点。"
+                },
+                "paranoia": {
+                    "type": "integer",
+                    "description": "妄想指数"
+                },
+                "goodwill": {
+                    "type": "integer",
+                    "description": "好感度"
+                },
+                "intrigue": {
+                    "type": "integer",
+                    "description": "阴谋标记"
+                },
+                "is_alive": {
+                    "type": "boolean",
+                    "description": "是否存活"
+                },
+                "abilities": {
+                    "items": {
+                        "$ref": "#/definitions/game.Ability"
+                    },
+                    "type": "array",
+                    "description": "角色能力"
+                },
+                "hidden_role": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "PLAYER_ROLE_MASTERMIND",
+                        1,
+                        "PLAYER_ROLE_PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Character",
+            "description": "Character 表示游戏中的一个角色。"
+        },
+        "game.Ability": {
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "能力名称"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "能力描述"
+                },
+                "trigger_type": {
+                    "enum": [
+                        "ABILITY_TRIGGER_TYPE_UNSPECIFIED",
+                        0,
+                        "ABILITY_TRIGGER_TYPE_DAY_START",
+                        1,
+                        "ABILITY_TRIGGER_TYPE_MASTERMIND_PHASE",
+                        2,
+                        "ABILITY_TRIGGER_TYPE_GOODWILL_PHASE",
+                        3,
+                        "ABILITY_TRIGGER_TYPE_PASSIVE",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Ability Trigger Type",
+                    "description": "AbilityTriggerType 定义能力何时可以被触发。"
+                },
+                "effect": {
+                    "$ref": "#/definitions/game.Effect",
+                    "additionalProperties": true,
+                    "description": "实际效果"
+                },
+                "once_per_loop": {
+                    "type": "boolean",
+                    "description": "每循环只能使用一次"
+                },
+                "refusal_role": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "PLAYER_ROLE_MASTERMIND",
+                        1,
+                        "PLAYER_ROLE_PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
+                },
+                "used_this_loop": {
+                    "type": "boolean",
+                    "description": "运行时状态，不用于配置"
+                },
+                "target_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "LocationType 定义游戏中的可能地点。"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Ability",
+            "description": "Ability 定义角色的特殊技能。"
+        },
+        "game.AdjustGoodwillEffect": {
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Adjust Goodwill Effect",
+            "description": "AdjustGoodwillEffect 调整角色的好感度。"
+        },
+        "game.AdjustIntrigueEffect": {
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Adjust Intrigue Effect",
+            "description": "AdjustIntrigueEffect 调整角色的阴谋值。"
+        },
+        "game.AdjustParanoiaEffect": {
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Adjust Paranoia Effect",
+            "description": "AdjustParanoiaEffect 调整角色的妄想值。"
+        },
+        "game.Effect": {
+            "properties": {
+                "move_character_effect": {
+                    "$ref": "#/definitions/game.MoveCharacterEffect",
+                    "additionalProperties": true
+                },
+                "adjust_paranoia_effect": {
+                    "$ref": "#/definitions/game.AdjustParanoiaEffect",
+                    "additionalProperties": true
+                },
+                "adjust_goodwill_effect": {
+                    "$ref": "#/definitions/game.AdjustGoodwillEffect",
+                    "additionalProperties": true
+                },
+                "adjust_intrigue_effect": {
+                    "$ref": "#/definitions/game.AdjustIntrigueEffect",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Effect",
+            "description": "Effect 接口定义了一个效果的核心行为。"
+        },
+        "game.MoveCharacterEffect": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Move Character Effect",
+            "description": "MoveCharacterEffect 移动一个角色到指定地点。"
+        }
+    }
+}
