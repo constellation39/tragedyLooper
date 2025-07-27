@@ -472,68 +472,87 @@ func (TragedyType) EnumDescriptor() ([]byte, []int) {
 	return file_proto_v1_enums_proto_rawDescGZIP(), []int{6}
 }
 
-// AbilityTriggerType 定义能力何时可以被触发。
-type AbilityTriggerType int32
+// TriggerType 定义了能力、规则或效果何时被激活或评估。
+// 这个统一的枚举旨在澄清触发机制，明确区分基于游戏阶段的触发和基于事件的触发。
+// 好的设计实践建议将触发条件与效果分离开来。
+// 例如，一个能力可以有一个 `TriggerType` 来定义“何时”检查，以及一个效果列表来定义“做什么”。
+type TriggerType int32
 
 const (
-	AbilityTriggerType_ABILITY_TRIGGER_TYPE_UNSPECIFIED      AbilityTriggerType = 0
-	AbilityTriggerType_ABILITY_TRIGGER_TYPE_DAY_START        AbilityTriggerType = 1 // 天开始时
-	AbilityTriggerType_ABILITY_TRIGGER_TYPE_MASTERMIND_PHASE AbilityTriggerType = 2 // 主谋阶段
-	AbilityTriggerType_ABILITY_TRIGGER_TYPE_GOODWILL_PHASE   AbilityTriggerType = 3 // 好感阶段
-	AbilityTriggerType_ABILITY_TRIGGER_TYPE_PASSIVE          AbilityTriggerType = 4 // 被动
-	AbilityTriggerType_ABILITY_TRIGGER_TYPE_CARD_RESOLUTION  AbilityTriggerType = 5 // 卡牌结算阶段
-	AbilityTriggerType_ABILITY_TRIGGER_TYPE_INCIDENT         AbilityTriggerType = 6 // 事件发生时
-	AbilityTriggerType_ABILITY_TRIGGER_TYPE_PLAYER_ACTION    AbilityTriggerType = 7 // 玩家行动时
+	TriggerType_TRIGGER_TYPE_UNSPECIFIED TriggerType = 0
+	// --- 设置与循环触发器 ---
+	TriggerType_TRIGGER_TYPE_ON_GAME_SETUP TriggerType = 1 // 在游戏首次设置时触发。用于设置初始角色规则或状态。
+	TriggerType_TRIGGER_TYPE_ON_LOOP_START TriggerType = 2 // 在每个新循环开始时触发。
+	// --- 阶段性触发器 (直接映射到 GamePhase) ---
+	// 这些触发器在相应游戏阶段开始时激活。
+	TriggerType_TRIGGER_TYPE_ON_DAY_START          TriggerType = 3 // 对应 `GAME_PHASE_MORNING`。
+	TriggerType_TRIGGER_TYPE_ON_CARD_PLAY_PHASE    TriggerType = 4 // 对应 `GAME_PHASE_CARD_PLAY`。
+	TriggerType_TRIGGER_TYPE_ON_CARD_REVEAL_PHASE  TriggerType = 5 // 对应 `GAME_PHASE_CARD_REVEAL`。
+	TriggerType_TRIGGER_TYPE_ON_CARD_RESOLVE_PHASE TriggerType = 6 // 对应 `GAME_PHASE_CARD_RESOLVE`。
+	TriggerType_TRIGGER_TYPE_ON_ABILITY_PHASE      TriggerType = 7 // 对应 `GAME_PHASE_ABILITIES`。
+	TriggerType_TRIGGER_TYPE_ON_INCIDENT_PHASE     TriggerType = 8 // 对应 `GAME_PHASE_INCIDENTS`。
+	// --- 事件驱动触发器 (响应 GameEvent) ---
+	// 使用这些触发器的能力/规则需要额外指定它们监听的 `GameEventType`。
+	// 这种设计将“何时”触发（一般性事件）与“具体哪个事件”分离开来，增加了灵活性。
+	TriggerType_TRIGGER_TYPE_ON_GAME_EVENT TriggerType = 15 // 响应一个特定的游戏事件。
+	// --- 持续性/被动触发器 ---
+	TriggerType_TRIGGER_TYPE_PASSIVE TriggerType = 20 // 表示一个持续生效的被动能力或规则。它的效果在任何时候都适用，而不是由单个事件触发。
 )
 
-// Enum value maps for AbilityTriggerType.
+// Enum value maps for TriggerType.
 var (
-	AbilityTriggerType_name = map[int32]string{
-		0: "ABILITY_TRIGGER_TYPE_UNSPECIFIED",
-		1: "ABILITY_TRIGGER_TYPE_DAY_START",
-		2: "ABILITY_TRIGGER_TYPE_MASTERMIND_PHASE",
-		3: "ABILITY_TRIGGER_TYPE_GOODWILL_PHASE",
-		4: "ABILITY_TRIGGER_TYPE_PASSIVE",
-		5: "ABILITY_TRIGGER_TYPE_CARD_RESOLUTION",
-		6: "ABILITY_TRIGGER_TYPE_INCIDENT",
-		7: "ABILITY_TRIGGER_TYPE_PLAYER_ACTION",
+	TriggerType_name = map[int32]string{
+		0:  "TRIGGER_TYPE_UNSPECIFIED",
+		1:  "TRIGGER_TYPE_ON_GAME_SETUP",
+		2:  "TRIGGER_TYPE_ON_LOOP_START",
+		3:  "TRIGGER_TYPE_ON_DAY_START",
+		4:  "TRIGGER_TYPE_ON_CARD_PLAY_PHASE",
+		5:  "TRIGGER_TYPE_ON_CARD_REVEAL_PHASE",
+		6:  "TRIGGER_TYPE_ON_CARD_RESOLVE_PHASE",
+		7:  "TRIGGER_TYPE_ON_ABILITY_PHASE",
+		8:  "TRIGGER_TYPE_ON_INCIDENT_PHASE",
+		15: "TRIGGER_TYPE_ON_GAME_EVENT",
+		20: "TRIGGER_TYPE_PASSIVE",
 	}
-	AbilityTriggerType_value = map[string]int32{
-		"ABILITY_TRIGGER_TYPE_UNSPECIFIED":      0,
-		"ABILITY_TRIGGER_TYPE_DAY_START":        1,
-		"ABILITY_TRIGGER_TYPE_MASTERMIND_PHASE": 2,
-		"ABILITY_TRIGGER_TYPE_GOODWILL_PHASE":   3,
-		"ABILITY_TRIGGER_TYPE_PASSIVE":          4,
-		"ABILITY_TRIGGER_TYPE_CARD_RESOLUTION":  5,
-		"ABILITY_TRIGGER_TYPE_INCIDENT":         6,
-		"ABILITY_TRIGGER_TYPE_PLAYER_ACTION":    7,
+	TriggerType_value = map[string]int32{
+		"TRIGGER_TYPE_UNSPECIFIED":           0,
+		"TRIGGER_TYPE_ON_GAME_SETUP":         1,
+		"TRIGGER_TYPE_ON_LOOP_START":         2,
+		"TRIGGER_TYPE_ON_DAY_START":          3,
+		"TRIGGER_TYPE_ON_CARD_PLAY_PHASE":    4,
+		"TRIGGER_TYPE_ON_CARD_REVEAL_PHASE":  5,
+		"TRIGGER_TYPE_ON_CARD_RESOLVE_PHASE": 6,
+		"TRIGGER_TYPE_ON_ABILITY_PHASE":      7,
+		"TRIGGER_TYPE_ON_INCIDENT_PHASE":     8,
+		"TRIGGER_TYPE_ON_GAME_EVENT":         15,
+		"TRIGGER_TYPE_PASSIVE":               20,
 	}
 )
 
-func (x AbilityTriggerType) Enum() *AbilityTriggerType {
-	p := new(AbilityTriggerType)
+func (x TriggerType) Enum() *TriggerType {
+	p := new(TriggerType)
 	*p = x
 	return p
 }
 
-func (x AbilityTriggerType) String() string {
+func (x TriggerType) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (AbilityTriggerType) Descriptor() protoreflect.EnumDescriptor {
+func (TriggerType) Descriptor() protoreflect.EnumDescriptor {
 	return file_proto_v1_enums_proto_enumTypes[7].Descriptor()
 }
 
-func (AbilityTriggerType) Type() protoreflect.EnumType {
+func (TriggerType) Type() protoreflect.EnumType {
 	return &file_proto_v1_enums_proto_enumTypes[7]
 }
 
-func (x AbilityTriggerType) Number() protoreflect.EnumNumber {
+func (x TriggerType) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use AbilityTriggerType.Descriptor instead.
-func (AbilityTriggerType) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use TriggerType.Descriptor instead.
+func (TriggerType) EnumDescriptor() ([]byte, []int) {
 	return file_proto_v1_enums_proto_rawDescGZIP(), []int{7}
 }
 
@@ -728,16 +747,19 @@ const file_proto_v1_enums_proto_rawDesc = "" +
 	"\x18TRAGEDY_TYPE_UNSPECIFIED\x10\x00\x12\x17\n" +
 	"\x13TRAGEDY_TYPE_MURDER\x10\x01\x12\x18\n" +
 	"\x14TRAGEDY_TYPE_SUICIDE\x10\x02\x12\x17\n" +
-	"\x13TRAGEDY_TYPE_SEALED\x10\x03*\xc9\x02\n" +
-	"\x12AbilityTriggerType\x12$\n" +
-	" ABILITY_TRIGGER_TYPE_UNSPECIFIED\x10\x00\x12\"\n" +
-	"\x1eABILITY_TRIGGER_TYPE_DAY_START\x10\x01\x12)\n" +
-	"%ABILITY_TRIGGER_TYPE_MASTERMIND_PHASE\x10\x02\x12'\n" +
-	"#ABILITY_TRIGGER_TYPE_GOODWILL_PHASE\x10\x03\x12 \n" +
-	"\x1cABILITY_TRIGGER_TYPE_PASSIVE\x10\x04\x12(\n" +
-	"$ABILITY_TRIGGER_TYPE_CARD_RESOLUTION\x10\x05\x12!\n" +
-	"\x1dABILITY_TRIGGER_TYPE_INCIDENT\x10\x06\x12&\n" +
-	"\"ABILITY_TRIGGER_TYPE_PLAYER_ACTION\x10\a*\xd7\x02\n" +
+	"\x13TRAGEDY_TYPE_SEALED\x10\x03*\xff\x02\n" +
+	"\vTriggerType\x12\x1c\n" +
+	"\x18TRIGGER_TYPE_UNSPECIFIED\x10\x00\x12\x1e\n" +
+	"\x1aTRIGGER_TYPE_ON_GAME_SETUP\x10\x01\x12\x1e\n" +
+	"\x1aTRIGGER_TYPE_ON_LOOP_START\x10\x02\x12\x1d\n" +
+	"\x19TRIGGER_TYPE_ON_DAY_START\x10\x03\x12#\n" +
+	"\x1fTRIGGER_TYPE_ON_CARD_PLAY_PHASE\x10\x04\x12%\n" +
+	"!TRIGGER_TYPE_ON_CARD_REVEAL_PHASE\x10\x05\x12&\n" +
+	"\"TRIGGER_TYPE_ON_CARD_RESOLVE_PHASE\x10\x06\x12!\n" +
+	"\x1dTRIGGER_TYPE_ON_ABILITY_PHASE\x10\a\x12\"\n" +
+	"\x1eTRIGGER_TYPE_ON_INCIDENT_PHASE\x10\b\x12\x1e\n" +
+	"\x1aTRIGGER_TYPE_ON_GAME_EVENT\x10\x0f\x12\x18\n" +
+	"\x14TRIGGER_TYPE_PASSIVE\x10\x14*\xd7\x02\n" +
 	"\n" +
 	"EffectType\x12\x1b\n" +
 	"\x17EFFECT_TYPE_UNSPECIFIED\x10\x00\x12\x1e\n" +
@@ -769,16 +791,16 @@ func file_proto_v1_enums_proto_rawDescGZIP() []byte {
 
 var file_proto_v1_enums_proto_enumTypes = make([]protoimpl.EnumInfo, 10)
 var file_proto_v1_enums_proto_goTypes = []any{
-	(CardType)(0),           // 0: proto.v1.CardType
-	(PlayerRole)(0),         // 1: proto.v1.PlayerRole
-	(GamePhase)(0),          // 2: proto.v1.GamePhase
-	(GameEventType)(0),      // 3: proto.v1.GameEventType
-	(ActionType)(0),         // 4: proto.v1.ActionType
-	(RoleType)(0),           // 5: proto.v1.RoleType
-	(TragedyType)(0),        // 6: proto.v1.TragedyType
-	(AbilityTriggerType)(0), // 7: proto.v1.AbilityTriggerType
-	(EffectType)(0),         // 8: proto.v1.EffectType
-	(TargetRuleType)(0),     // 9: proto.v1.TargetRuleType
+	(CardType)(0),       // 0: proto.v1.CardType
+	(PlayerRole)(0),     // 1: proto.v1.PlayerRole
+	(GamePhase)(0),      // 2: proto.v1.GamePhase
+	(GameEventType)(0),  // 3: proto.v1.GameEventType
+	(ActionType)(0),     // 4: proto.v1.ActionType
+	(RoleType)(0),       // 5: proto.v1.RoleType
+	(TragedyType)(0),    // 6: proto.v1.TragedyType
+	(TriggerType)(0),    // 7: proto.v1.TriggerType
+	(EffectType)(0),     // 8: proto.v1.EffectType
+	(TargetRuleType)(0), // 9: proto.v1.TargetRuleType
 }
 var file_proto_v1_enums_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type

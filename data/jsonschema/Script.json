@@ -84,22 +84,28 @@
                 },
                 "trigger_type": {
                     "enum": [
-                        "ABILITY_TRIGGER_TYPE_UNSPECIFIED",
+                        "TRIGGER_TYPE_UNSPECIFIED",
                         0,
-                        "ABILITY_TRIGGER_TYPE_DAY_START",
+                        "TRIGGER_TYPE_ON_GAME_SETUP",
                         1,
-                        "ABILITY_TRIGGER_TYPE_MASTERMIND_PHASE",
+                        "TRIGGER_TYPE_ON_LOOP_START",
                         2,
-                        "ABILITY_TRIGGER_TYPE_GOODWILL_PHASE",
+                        "TRIGGER_TYPE_ON_DAY_START",
                         3,
-                        "ABILITY_TRIGGER_TYPE_PASSIVE",
+                        "TRIGGER_TYPE_ON_CARD_PLAY_PHASE",
                         4,
-                        "ABILITY_TRIGGER_TYPE_CARD_RESOLUTION",
+                        "TRIGGER_TYPE_ON_CARD_REVEAL_PHASE",
                         5,
-                        "ABILITY_TRIGGER_TYPE_INCIDENT",
+                        "TRIGGER_TYPE_ON_CARD_RESOLVE_PHASE",
                         6,
-                        "ABILITY_TRIGGER_TYPE_PLAYER_ACTION",
-                        7
+                        "TRIGGER_TYPE_ON_ABILITY_PHASE",
+                        7,
+                        "TRIGGER_TYPE_ON_INCIDENT_PHASE",
+                        8,
+                        "TRIGGER_TYPE_ON_GAME_EVENT",
+                        15,
+                        "TRIGGER_TYPE_PASSIVE",
+                        20
                     ],
                     "oneOf": [
                         {
@@ -109,17 +115,56 @@
                             "type": "integer"
                         }
                     ],
-                    "title": "Ability Trigger Type",
-                    "description": "AbilityTriggerType 定义能力何时可以被触发。"
+                    "title": "Trigger Type",
+                    "description": "TriggerType 定义了能力、规则或效果何时被激活或评估。 这个统一的枚举旨在澄清触发机制，明确区分基于游戏阶段的触发和基于事件的触发。 好的设计实践建议将触发条件与效果分离开来。 例如，一个能力可以有一个 `TriggerType` 来定义“何时”检查，以及一个效果列表来定义“做什么”。"
                 },
-                "effect": {
-                    "$ref": "#/definitions/proto.v1.Effect",
+                "event_filters": {
+                    "items": {
+                        "enum": [
+                            "GAME_EVENT_TYPE_UNSPECIFIED",
+                            0,
+                            "GAME_EVENT_TYPE_CARD_PLAYED",
+                            1,
+                            "GAME_EVENT_TYPE_CHARACTER_MOVED",
+                            2,
+                            "GAME_EVENT_TYPE_PARANOIA_ADJUSTED",
+                            3,
+                            "GAME_EVENT_TYPE_GOODWILL_ADJUSTED",
+                            4,
+                            "GAME_EVENT_TYPE_INTRIGUE_ADJUSTED",
+                            5,
+                            "GAME_EVENT_TYPE_ABILITY_USED",
+                            6,
+                            "GAME_EVENT_TYPE_TRAGEDY_TRIGGERED",
+                            7,
+                            "GAME_EVENT_TYPE_TRAGEDY_PREVENTED",
+                            8,
+                            "GAME_EVENT_TYPE_DAY_ADVANCED",
+                            9,
+                            "GAME_EVENT_TYPE_LOOP_RESET",
+                            10,
+                            "GAME_EVENT_TYPE_GAME_OVER",
+                            11,
+                            "GAME_EVENT_TYPE_PLAYER_GUESS",
+                            12,
+                            "GAME_EVENT_TYPE_CHOICE_REQUIRED",
+                            13,
+                            "GAME_EVENT_TYPE_INCIDENT_TRIGGERED",
+                            14
+                        ]
+                    },
+                    "type": "array",
+                    "title": "Game Event Type",
+                    "description": "GameEventType for GameEvent"
+                },
+                "target": {
+                    "$ref": "#/definitions/proto.v1.Target",
                     "additionalProperties": true,
-                    "description": "实际效果"
+                    "description": "目标"
                 },
                 "once_per_loop": {
                     "type": "boolean",
-                    "description": "每循环只能使用一次"
+                    "description": "每个循环只能使用一次"
                 },
                 "refusal_role": {
                     "enum": [
@@ -141,17 +186,12 @@
                     "title": "Player Role",
                     "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
                 },
-                "used_this_loop": {
-                    "type": "boolean",
-                    "description": "运行时状态，不用于配置"
-                },
-                "target": {
-                    "$ref": "#/definitions/proto.v1.Target",
+                "effect": {
+                    "$ref": "#/definitions/proto.v1.Effect",
                     "additionalProperties": true
                 },
-                "cost": {
-                    "type": "integer",
-                    "description": "Cost in goodwill to use the ability"
+                "used_this_loop": {
+                    "type": "boolean"
                 }
             },
             "additionalProperties": true,

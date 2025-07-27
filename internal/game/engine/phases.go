@@ -14,25 +14,15 @@ func (ge *GameEngine) handleMorningPhase() {
 	ge.resetPlayerReadiness()
 	ge.GameState.PlayedCardsThisDay = make(map[int32]*model.CardList) // Clear cards for the new day
 
-	// Trigger DayStart abilities
-	for _, char := range ge.GameState.Characters {
-		for i, ability := range char.Abilities {
-			if ability.TriggerType == model.AbilityTriggerType_ABILITY_TRIGGER_TYPE_DAY_START && !ability.UsedThisLoop {
-				payload := model.UseAbilityPayload{CharacterId: char.Id, AbilityId: ability.Id} // Assuming self-target for simplicity
-				if err := ge.applyEffect(ability.Effect, ability, &payload); err != nil {
-					ge.logger.Error("Error applying DayStart ability effect", zap.Error(err), zap.String("character", char.Name), zap.String("ability", ability.Name))
-				}
-				ge.GameState.Characters[char.Id].Abilities[i].UsedThisLoop = true // Mark as used
-				ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_ABILITY_USED, &model.AbilityUsedEvent{CharacterId: char.Id, AbilityName: ability.Name})
-			}
-		}
-	}
+	ge.checkAndTriggerAbilities(model.TriggerType_TRIGGER_TYPE_ON_DAY_START, nil)
 
 	ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_CARD_PLAY
 	ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED, &model.DayAdvancedEvent{Day: ge.GameState.CurrentDay, Loop: ge.GameState.CurrentLoop})
 }
 
 func (ge *GameEngine) handleCardPlayPhase() {
+	ge.checkAndTriggerAbilities(model.TriggerType_TRIGGER_TYPE_ON_CARD_PLAY_PHASE, nil)
+
 	allPlayersReady := true
 	for playerID, player := range ge.GameState.Players {
 		if ge.playerReady[playerID] {
@@ -52,12 +42,15 @@ func (ge *GameEngine) handleCardPlayPhase() {
 
 func (ge *GameEngine) handleCardRevealPhase() {
 	ge.logger.Info("Card Reveal Phase")
+	ge.checkAndTriggerAbilities(model.TriggerType_TRIGGER_TYPE_ON_CARD_REVEAL_PHASE, nil)
 	ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_CARD_PLAYED, &model.CardPlayedEvent{PlayedCards: ge.GameState.PlayedCardsThisDay})
 	ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_CARD_RESOLVE
 }
 
 func (ge *GameEngine) handleCardResolvePhase() {
 	ge.logger.Info("Card Resolve Phase")
+	ge.checkAndTriggerAbilities(model.TriggerType_TRIGGER_TYPE_ON_CARD_RESOLVE_PHASE, nil)
+
 	// Resolve cards in a specific order if necessary (e.g., by initiative). For now, iterate over players.
 	for playerID, cards := range ge.GameState.PlayedCardsThisDay {
 		for _, card := range cards.Cards {
@@ -80,6 +73,7 @@ func (ge *GameEngine) handleCardResolvePhase() {
 
 func (ge *GameEngine) handleAbilitiesPhase() {
 	ge.logger.Info("Abilities Phase")
+	ge.checkAndTriggerAbilities(model.TriggerType_TRIGGER_TYPE_ON_ABILITY_PHASE, nil)
 
 	allPlayersReady := true
 	for playerID, player := range ge.GameState.Players {
@@ -101,6 +95,7 @@ func (ge *GameEngine) handleAbilitiesPhase() {
 
 func (ge *GameEngine) handleIncidentsPhase() {
 	ge.logger.Info("Incidents Phase")
+	ge.checkAndTriggerAbilities(model.TriggerType_TRIGGER_TYPE_ON_INCIDENT_PHASE, nil)
 
 	// Check for incidents on the current day
 	for _, incident := range ge.gameData.Incidents {
@@ -148,6 +143,7 @@ func (ge *GameEngine) handleDayEndPhase() {
 
 func (ge *GameEngine) handleLoopEndPhase() {
 	ge.logger.Info("Loop End Phase", zap.Int("loop", int(ge.GameState.CurrentLoop)))
+	ge.checkAndTriggerAbilities(model.TriggerType_TRIGGER_TYPE_ON_LOOP_START, nil)
 
 	if gameOver, winner := ge.checkGameEndConditions(); gameOver {
 		ge.endGame(winner)

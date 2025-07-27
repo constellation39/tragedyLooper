@@ -88,16 +88,33 @@ enum TragedyType {
   TRAGEDY_TYPE_SEALED = 3; // 例如：封印物品剧情
 }
 
-// AbilityTriggerType 定义能力何时可以被触发。
-enum AbilityTriggerType {
-  ABILITY_TRIGGER_TYPE_UNSPECIFIED = 0;
-  ABILITY_TRIGGER_TYPE_DAY_START = 1; // 天开始时
-  ABILITY_TRIGGER_TYPE_MASTERMIND_PHASE = 2; // 主谋阶段
-  ABILITY_TRIGGER_TYPE_GOODWILL_PHASE = 3; // 好感阶段
-  ABILITY_TRIGGER_TYPE_PASSIVE = 4; // 被动
-  ABILITY_TRIGGER_TYPE_CARD_RESOLUTION = 5; // 卡牌结算阶段
-  ABILITY_TRIGGER_TYPE_INCIDENT = 6; // 事件发生时
-  ABILITY_TRIGGER_TYPE_PLAYER_ACTION = 7; // 玩家行动时
+// TriggerType 定义了能力、规则或效果何时被激活或评估。
+// 这个统一的枚举旨在澄清触发机制，明确区分基于游戏阶段的触发和基于事件的触发。
+// 好的设计实践建议将触发条件与效果分离开来。
+// 例如，一个能力可以有一个 `TriggerType` 来定义“何时”检查，以及一个效果列表来定义“做什么”。
+enum TriggerType {
+  TRIGGER_TYPE_UNSPECIFIED = 0;
+
+  // --- 设置与循环触发器 ---
+  TRIGGER_TYPE_ON_GAME_SETUP = 1; // 在游戏首次设置时触发。用于设置初始角色规则或状态。
+  TRIGGER_TYPE_ON_LOOP_START = 2; // 在每个新循环开始时触发。
+
+  // --- 阶段性触发器 (直接映射到 GamePhase) ---
+  // 这些触发器在相应游戏阶段开始时激活。
+  TRIGGER_TYPE_ON_DAY_START = 3;           // 对应 `GAME_PHASE_MORNING`。
+  TRIGGER_TYPE_ON_CARD_PLAY_PHASE = 4;     // 对应 `GAME_PHASE_CARD_PLAY`。
+  TRIGGER_TYPE_ON_CARD_REVEAL_PHASE = 5;   // 对应 `GAME_PHASE_CARD_REVEAL`。
+  TRIGGER_TYPE_ON_CARD_RESOLVE_PHASE = 6;  // 对应 `GAME_PHASE_CARD_RESOLVE`。
+  TRIGGER_TYPE_ON_ABILITY_PHASE = 7;       // 对应 `GAME_PHASE_ABILITIES`。
+  TRIGGER_TYPE_ON_INCIDENT_PHASE = 8;      // 对应 `GAME_PHASE_INCIDENTS`。
+
+  // --- 事件驱动触发器 (响应 GameEvent) ---
+  // 使用这些触发器的能力/规则需要额外指定它们监听的 `GameEventType`。
+  // 这种设计将“何时”触发（一般性事件）与“具体哪个事件”分离开来，增加了灵活性。
+  TRIGGER_TYPE_ON_GAME_EVENT = 15; // 响应一个特定的游戏事件。
+
+  // --- 持续性/被动触发器 ---
+  TRIGGER_TYPE_PASSIVE = 20; // 表示一个持续生效的被动能力或规则。它的效果在任何时候都适用，而不是由单个事件触发。
 }
 
 // EffectType 定义能力或卡牌可能产生的效果类型。
@@ -120,12 +137,4 @@ enum TargetRuleType {
   TARGET_RULE_TYPE_UNSPECIFIED = 0;
   TARGET_RULE_TYPE_SPECIFIC_CHARACTER = 1; // 特定角色
   TARGET_RULE_TYPE_ANY_CHARACTER_AT_LOCATION = 2; // 在某个地点的任何角色
-}
-
-// RuleTriggerType 定义规则何时被评估。
-enum RuleTriggerType {
-  RULE_TRIGGER_TYPE_UNSPECIFIED = 0;
-  ON_GAME_SETUP = 1; // 在游戏设置阶段触发
-  ON_LOOP_START = 2; // 在每个循环开始时触发
-  LOCATION_RESOLUTION = 3; // 在解析角色位置时触发
 }

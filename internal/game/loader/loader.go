@@ -191,7 +191,7 @@ func loadData[T any](dir string, target *map[string]*T, gameData ...*GameData) e
 				ability := &model.Ability{
 					Name:        item.Name,
 					Description: item.Description,
-					TriggerType: model.AbilityTriggerType(model.AbilityTriggerType_value[item.TriggerType]),
+					TriggerType: model.TriggerType(model.TriggerType_value[item.TriggerType]),
 					Effect:      item.Effect,
 					OncePerLoop: item.OncePerLoop,
 					RefusalRole: model.PlayerRole(model.PlayerRole_value[item.RefusalRole]),

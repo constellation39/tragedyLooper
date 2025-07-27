@@ -25,15 +25,15 @@ const (
 type Ability struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                    // 能力名称
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                      // 能力描述
-	TriggerType   AbilityTriggerType     `protobuf:"varint,4,opt,name=trigger_type,json=triggerType,proto3,enum=proto.v1.AbilityTriggerType" json:"trigger_type,omitempty"` // 触发时机
-	Effect        *Effect                `protobuf:"bytes,5,opt,name=effect,proto3" json:"effect,omitempty"`                                                                // 实际效果
-	OncePerLoop   bool                   `protobuf:"varint,6,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`                                // 每循环只能使用一次
-	RefusalRole   PlayerRole             `protobuf:"varint,7,opt,name=refusal_role,json=refusalRole,proto3,enum=proto.v1.PlayerRole" json:"refusal_role,omitempty"`         // 如果有，指定拒绝此善意能力的特定角色身份
-	UsedThisLoop  bool                   `protobuf:"varint,8,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"`                             // 运行时状态，不用于配置
-	Target        *Target                `protobuf:"bytes,9,opt,name=target,proto3" json:"target,omitempty"`
-	Cost          int32                  `protobuf:"varint,10,opt,name=cost,proto3" json:"cost,omitempty"` // Cost in goodwill to use the ability
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                         // 能力名称
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                           // 能力描述
+	TriggerType   TriggerType            `protobuf:"varint,4,opt,name=trigger_type,json=triggerType,proto3,enum=proto.v1.TriggerType" json:"trigger_type,omitempty"`             // 触发时机
+	EventFilters  []GameEventType        `protobuf:"varint,5,rep,packed,name=event_filters,json=eventFilters,proto3,enum=proto.v1.GameEventType" json:"event_filters,omitempty"` // 当 trigger_type 为 ON_GAME_EVENT 时，指定监听的事件类型
+	Target        *Target                `protobuf:"bytes,6,opt,name=target,proto3" json:"target,omitempty"`                                                                     // 目标
+	OncePerLoop   bool                   `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`                                     // 每个循环只能使用一次
+	RefusalRole   PlayerRole             `protobuf:"varint,8,opt,name=refusal_role,json=refusalRole,proto3,enum=proto.v1.PlayerRole" json:"refusal_role,omitempty"`              // 拒绝该能力的角色
+	Effect        *Effect                `protobuf:"bytes,9,opt,name=effect,proto3" json:"effect,omitempty"`
+	UsedThisLoop  bool                   `protobuf:"varint,10,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -89,16 +89,23 @@ func (x *Ability) GetDescription() string {
 	return ""
 }
 
-func (x *Ability) GetTriggerType() AbilityTriggerType {
+func (x *Ability) GetTriggerType() TriggerType {
 	if x != nil {
 		return x.TriggerType
 	}
-	return AbilityTriggerType_ABILITY_TRIGGER_TYPE_UNSPECIFIED
+	return TriggerType_TRIGGER_TYPE_UNSPECIFIED
 }
 
-func (x *Ability) GetEffect() *Effect {
+func (x *Ability) GetEventFilters() []GameEventType {
 	if x != nil {
-		return x.Effect
+		return x.EventFilters
+	}
+	return nil
+}
+
+func (x *Ability) GetTarget() *Target {
+	if x != nil {
+		return x.Target
 	}
 	return nil
 }
@@ -117,6 +124,13 @@ func (x *Ability) GetRefusalRole() PlayerRole {
 	return PlayerRole_PLAYER_ROLE_UNSPECIFIED
 }
 
+func (x *Ability) GetEffect() *Effect {
+	if x != nil {
+		return x.Effect
+	}
+	return nil
+}
+
 func (x *Ability) GetUsedThisLoop() bool {
 	if x != nil {
 		return x.UsedThisLoop
@@ -124,37 +138,23 @@ func (x *Ability) GetUsedThisLoop() bool {
 	return false
 }
 
-func (x *Ability) GetTarget() *Target {
-	if x != nil {
-		return x.Target
-	}
-	return nil
-}
-
-func (x *Ability) GetCost() int32 {
-	if x != nil {
-		return x.Cost
-	}
-	return 0
-}
-
 var File_proto_v1_ability_proto protoreflect.FileDescriptor
 
 const file_proto_v1_ability_proto_rawDesc = "" +
 	"\n" +
-	"\x16proto/v1/ability.proto\x12\bproto.v1\x1a\x15proto/v1/effect.proto\x1a\x14proto/v1/enums.proto\x1a\x15proto/v1/target.proto\"\xfb\x02\n" +
+	"\x16proto/v1/ability.proto\x12\bproto.v1\x1a\x15proto/v1/effect.proto\x1a\x14proto/v1/enums.proto\x1a\x15proto/v1/target.proto\"\x9e\x03\n" +
 	"\aAbility\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12?\n" +
-	"\ftrigger_type\x18\x04 \x01(\x0e2\x1c.proto.v1.AbilityTriggerTypeR\vtriggerType\x12(\n" +
-	"\x06effect\x18\x05 \x01(\v2\x10.proto.v1.EffectR\x06effect\x12\"\n" +
-	"\ronce_per_loop\x18\x06 \x01(\bR\voncePerLoop\x127\n" +
-	"\frefusal_role\x18\a \x01(\x0e2\x14.proto.v1.PlayerRoleR\vrefusalRole\x12$\n" +
-	"\x0eused_this_loop\x18\b \x01(\bR\fusedThisLoop\x12(\n" +
-	"\x06target\x18\t \x01(\v2\x10.proto.v1.TargetR\x06target\x12\x12\n" +
-	"\x04cost\x18\n" +
-	" \x01(\x05R\x04costB\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x128\n" +
+	"\ftrigger_type\x18\x04 \x01(\x0e2\x15.proto.v1.TriggerTypeR\vtriggerType\x12<\n" +
+	"\revent_filters\x18\x05 \x03(\x0e2\x17.proto.v1.GameEventTypeR\feventFilters\x12(\n" +
+	"\x06target\x18\x06 \x01(\v2\x10.proto.v1.TargetR\x06target\x12\"\n" +
+	"\ronce_per_loop\x18\a \x01(\bR\voncePerLoop\x127\n" +
+	"\frefusal_role\x18\b \x01(\x0e2\x14.proto.v1.PlayerRoleR\vrefusalRole\x12(\n" +
+	"\x06effect\x18\t \x01(\v2\x10.proto.v1.EffectR\x06effect\x12$\n" +
+	"\x0eused_this_loop\x18\n" +
+	" \x01(\bR\fusedThisLoopB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
 	file_proto_v1_ability_proto_rawDescOnce sync.Once
@@ -170,22 +170,24 @@ func file_proto_v1_ability_proto_rawDescGZIP() []byte {
 
 var file_proto_v1_ability_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_proto_v1_ability_proto_goTypes = []any{
-	(*Ability)(nil),         // 0: proto.v1.Ability
-	(AbilityTriggerType)(0), // 1: proto.v1.AbilityTriggerType
-	(*Effect)(nil),          // 2: proto.v1.Effect
-	(PlayerRole)(0),         // 3: proto.v1.PlayerRole
-	(*Target)(nil),          // 4: proto.v1.Target
+	(*Ability)(nil),    // 0: proto.v1.Ability
+	(TriggerType)(0),   // 1: proto.v1.TriggerType
+	(GameEventType)(0), // 2: proto.v1.GameEventType
+	(*Target)(nil),     // 3: proto.v1.Target
+	(PlayerRole)(0),    // 4: proto.v1.PlayerRole
+	(*Effect)(nil),     // 5: proto.v1.Effect
 }
 var file_proto_v1_ability_proto_depIdxs = []int32{
-	1, // 0: proto.v1.Ability.trigger_type:type_name -> proto.v1.AbilityTriggerType
-	2, // 1: proto.v1.Ability.effect:type_name -> proto.v1.Effect
-	3, // 2: proto.v1.Ability.refusal_role:type_name -> proto.v1.PlayerRole
-	4, // 3: proto.v1.Ability.target:type_name -> proto.v1.Target
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	1, // 0: proto.v1.Ability.trigger_type:type_name -> proto.v1.TriggerType
+	2, // 1: proto.v1.Ability.event_filters:type_name -> proto.v1.GameEventType
+	3, // 2: proto.v1.Ability.target:type_name -> proto.v1.Target
+	4, // 3: proto.v1.Ability.refusal_role:type_name -> proto.v1.PlayerRole
+	5, // 4: proto.v1.Ability.effect:type_name -> proto.v1.Effect
+	5, // [5:5] is the sub-list for method output_type
+	5, // [5:5] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_proto_v1_ability_proto_init() }

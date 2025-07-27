@@ -13,11 +13,11 @@ message Ability {
   int32 id = 1;
   string name = 2; // 能力名称
   string description = 3; // 能力描述
-  AbilityTriggerType trigger_type = 4; // 触发时机
-  Effect effect = 5; // 实际效果
-  bool once_per_loop = 6; // 每循环只能使用一次
-  PlayerRole refusal_role = 7; // 如果有，指定拒绝此善意能力的特定角色身份
-  bool used_this_loop = 8; // 运行时状态，不用于配置
-  Target target = 9;
-  int32 cost = 10; // Cost in goodwill to use the ability
+  TriggerType trigger_type = 4; // 触发时机
+  repeated GameEventType event_filters = 5; // 当 trigger_type 为 ON_GAME_EVENT 时，指定监听的事件类型
+  Target target = 6; // 目标
+  bool once_per_loop = 7; // 每个循环只能使用一次
+  PlayerRole refusal_role = 8; // 拒绝该能力的角色
+  Effect effect = 9;
+  bool used_this_loop = 10; 
 }

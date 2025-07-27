@@ -25,7 +25,7 @@ message Character {
 
 // CharacterRule 定义角色的特殊规则。
 message CharacterRule {
-  RuleTriggerType trigger = 1;
+  TriggerType trigger = 1;
   string description = 2;
   oneof effect {
     TurfSelectionEffect turf_selection = 3;
