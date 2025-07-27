@@ -7,11 +7,12 @@
 package model
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -27,22 +28,22 @@ type GameEndConditionType int32
 const (
 	GameEndConditionType_GAME_END_CONDITION_TYPE_UNSPECIFIED GameEndConditionType = 0
 	// All tragedy plots are disabled/prevented. (Protagonist Win)
-	GameEndConditionType_ALL_TRAGEDIES_PREVENTED GameEndConditionType = 1
+	GameEndConditionType_GAME_END_CONDITION_TYPE_ALL_TRAGEDIES_PREVENTED GameEndConditionType = 1
 	// A tragedy plot is successfully triggered. (Mastermind Win)
-	GameEndConditionType_A_TRAGEDY_OCCURS GameEndConditionType = 2
+	GameEndConditionType_GAME_END_CONDITION_TYPE_A_TRAGEDY_OCCURS GameEndConditionType = 2
 )
 
 // Enum value maps for GameEndConditionType.
 var (
 	GameEndConditionType_name = map[int32]string{
 		0: "GAME_END_CONDITION_TYPE_UNSPECIFIED",
-		1: "ALL_TRAGEDIES_PREVENTED",
-		2: "A_TRAGEDY_OCCURS",
+		1: "GAME_END_CONDITION_TYPE_ALL_TRAGEDIES_PREVENTED",
+		2: "GAME_END_CONDITION_TYPE_A_TRAGEDY_OCCURS",
 	}
 	GameEndConditionType_value = map[string]int32{
-		"GAME_END_CONDITION_TYPE_UNSPECIFIED": 0,
-		"ALL_TRAGEDIES_PREVENTED":             1,
-		"A_TRAGEDY_OCCURS":                    2,
+		"GAME_END_CONDITION_TYPE_UNSPECIFIED":             0,
+		"GAME_END_CONDITION_TYPE_ALL_TRAGEDIES_PREVENTED": 1,
+		"GAME_END_CONDITION_TYPE_A_TRAGEDY_OCCURS":        2,
 	}
 )
 
@@ -265,11 +266,11 @@ const file_proto_v1_script_proto_rawDesc = "" +
 	"\rdays_per_loop\x18\t \x01(\x05R\vdaysPerLoop\x12A\n" +
 	"\x0ewin_conditions\x18\n" +
 	" \x03(\v2\x1a.proto.v1.GameEndConditionR\rwinConditions\x12C\n" +
-	"\x0flose_conditions\x18\v \x03(\v2\x1a.proto.v1.GameEndConditionR\x0eloseConditions*r\n" +
+	"\x0flose_conditions\x18\v \x03(\v2\x1a.proto.v1.GameEndConditionR\x0eloseConditions*\xa2\x01\n" +
 	"\x14GameEndConditionType\x12'\n" +
-	"#GAME_END_CONDITION_TYPE_UNSPECIFIED\x10\x00\x12\x1b\n" +
-	"\x17ALL_TRAGEDIES_PREVENTED\x10\x01\x12\x14\n" +
-	"\x10A_TRAGEDY_OCCURS\x10\x02B\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"#GAME_END_CONDITION_TYPE_UNSPECIFIED\x10\x00\x123\n" +
+	"/GAME_END_CONDITION_TYPE_ALL_TRAGEDIES_PREVENTED\x10\x01\x12,\n" +
+	"(GAME_END_CONDITION_TYPE_A_TRAGEDY_OCCURS\x10\x02B\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
 	file_proto_v1_script_proto_rawDescOnce sync.Once

@@ -14,6 +14,7 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 
 	"tragedylooper/internal/game/engine"
+	"tragedylooper/internal/game/loader"
 	model "tragedylooper/internal/game/proto/v1"
 	"tragedylooper/internal/llm"
 	"tragedylooper/internal/logger"

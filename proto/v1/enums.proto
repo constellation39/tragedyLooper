@@ -52,6 +52,7 @@ enum GameEventType {
   GAME_EVENT_TYPE_GAME_OVER = 11; // 游戏结束
   GAME_EVENT_TYPE_PLAYER_GUESS = 12; // 玩家猜测
   GAME_EVENT_TYPE_CHOICE_REQUIRED = 13; // 需要玩家选择
+  GAME_EVENT_TYPE_INCIDENT_TRIGGERED = 14; // 事件触发
 }
 
 // ActionType 定义了玩家可以执行的操作类型。

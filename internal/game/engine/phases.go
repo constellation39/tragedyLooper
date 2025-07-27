@@ -103,7 +103,7 @@ func (ge *GameEngine) handleIncidentsPhase() {
 	ge.logger.Info("Incidents Phase")
 
 	// Check for incidents on the current day
-	for _, incident := range ge.GameState.Script.Incidents {
+	for _, incident := range ge.gameData.Incidents {
 		if incident.Day == ge.GameState.CurrentDay {
 			ge.logger.Info("Incident triggered!", zap.String("incident_name", incident.Name))
 			ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_INCIDENT_TRIGGERED, &model.IncidentTriggeredEvent{Incident: incident})
@@ -118,8 +118,8 @@ func (ge *GameEngine) handleIncidentsPhase() {
 				ge.logger.Info("Tragedy triggered!", zap.String("tragedy_type", string(tragedy.TragedyType)))
 				ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_TRAGEDY_TRIGGERED, &model.TragedyTriggeredEvent{TragedyType: tragedy.TragedyType})
 				tragedyOccurred = true
-				ge.GameState.TragedyOccurred[int32(tragedy.TragedyType)] = true
-				break // Only one tragedy per day
+				ge.GameState.ActiveTragedies[int32(tragedy.TragedyType)] = false // A tragedy can only occur once
+				break                                                            // Only one tragedy per day
 			}
 		}
 	}

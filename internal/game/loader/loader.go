@@ -2,7 +2,7 @@ package loader
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	model "tragedylooper/internal/game/proto/v1"
 )
@@ -51,14 +51,14 @@ func LoadGameData(dataDir string) (*GameData, error) {
 }
 
 func loadData[T any](dir string, target *map[string]*T) error {
-	files, err := ioutil.ReadDir(dir)
+	files, err := os.ReadDir(dir)
 	if err != nil {
 		return err
 	}
 
 	for _, file := range files {
 		if !file.IsDir() {
-			data, err := ioutil.ReadFile(filepath.Join(dir, file.Name()))
+			data, err := os.ReadFile(filepath.Join(dir, file.Name()))
 			if err != nil {
 				return err
 			}

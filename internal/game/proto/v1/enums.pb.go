@@ -7,11 +7,12 @@
 package model
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -208,20 +209,21 @@ func (GamePhase) EnumDescriptor() ([]byte, []int) {
 type GameEventType int32
 
 const (
-	GameEventType_GAME_EVENT_TYPE_UNSPECIFIED       GameEventType = 0
-	GameEventType_GAME_EVENT_TYPE_CARD_PLAYED       GameEventType = 1  // 打出卡牌
-	GameEventType_GAME_EVENT_TYPE_CHARACTER_MOVED   GameEventType = 2  // 角色移动
-	GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED GameEventType = 3  // 妄想调整
-	GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED GameEventType = 4  // 好感调整
-	GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED GameEventType = 5  // 阴谋调整
-	GameEventType_GAME_EVENT_TYPE_ABILITY_USED      GameEventType = 6  // 使用能力
-	GameEventType_GAME_EVENT_TYPE_TRAGEDY_TRIGGERED GameEventType = 7  // 悲剧触发
-	GameEventType_GAME_EVENT_TYPE_TRAGEDY_PREVENTED GameEventType = 8  // 悲剧阻止
-	GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED      GameEventType = 9  // 天数推进
-	GameEventType_GAME_EVENT_TYPE_LOOP_RESET        GameEventType = 10 // 循环重置
-	GameEventType_GAME_EVENT_TYPE_GAME_OVER         GameEventType = 11 // 游戏结束
-	GameEventType_GAME_EVENT_TYPE_PLAYER_GUESS      GameEventType = 12 // 玩家猜测
-	GameEventType_GAME_EVENT_TYPE_CHOICE_REQUIRED   GameEventType = 13 // 需要玩家选择
+	GameEventType_GAME_EVENT_TYPE_UNSPECIFIED        GameEventType = 0
+	GameEventType_GAME_EVENT_TYPE_CARD_PLAYED        GameEventType = 1  // 打出卡牌
+	GameEventType_GAME_EVENT_TYPE_CHARACTER_MOVED    GameEventType = 2  // 角色移动
+	GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED  GameEventType = 3  // 妄想调整
+	GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED  GameEventType = 4  // 好感调整
+	GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED  GameEventType = 5  // 阴谋调整
+	GameEventType_GAME_EVENT_TYPE_ABILITY_USED       GameEventType = 6  // 使用能力
+	GameEventType_GAME_EVENT_TYPE_TRAGEDY_TRIGGERED  GameEventType = 7  // 悲剧触发
+	GameEventType_GAME_EVENT_TYPE_TRAGEDY_PREVENTED  GameEventType = 8  // 悲剧阻止
+	GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED       GameEventType = 9  // 天数推进
+	GameEventType_GAME_EVENT_TYPE_LOOP_RESET         GameEventType = 10 // 循环重置
+	GameEventType_GAME_EVENT_TYPE_GAME_OVER          GameEventType = 11 // 游戏结束
+	GameEventType_GAME_EVENT_TYPE_PLAYER_GUESS       GameEventType = 12 // 玩家猜测
+	GameEventType_GAME_EVENT_TYPE_CHOICE_REQUIRED    GameEventType = 13 // 需要玩家选择
+	GameEventType_GAME_EVENT_TYPE_INCIDENT_TRIGGERED GameEventType = 14 // 事件触发
 )
 
 // Enum value maps for GameEventType.
@@ -241,22 +243,24 @@ var (
 		11: "GAME_EVENT_TYPE_GAME_OVER",
 		12: "GAME_EVENT_TYPE_PLAYER_GUESS",
 		13: "GAME_EVENT_TYPE_CHOICE_REQUIRED",
+		14: "GAME_EVENT_TYPE_INCIDENT_TRIGGERED",
 	}
 	GameEventType_value = map[string]int32{
-		"GAME_EVENT_TYPE_UNSPECIFIED":       0,
-		"GAME_EVENT_TYPE_CARD_PLAYED":       1,
-		"GAME_EVENT_TYPE_CHARACTER_MOVED":   2,
-		"GAME_EVENT_TYPE_PARANOIA_ADJUSTED": 3,
-		"GAME_EVENT_TYPE_GOODWILL_ADJUSTED": 4,
-		"GAME_EVENT_TYPE_INTRIGUE_ADJUSTED": 5,
-		"GAME_EVENT_TYPE_ABILITY_USED":      6,
-		"GAME_EVENT_TYPE_TRAGEDY_TRIGGERED": 7,
-		"GAME_EVENT_TYPE_TRAGEDY_PREVENTED": 8,
-		"GAME_EVENT_TYPE_DAY_ADVANCED":      9,
-		"GAME_EVENT_TYPE_LOOP_RESET":        10,
-		"GAME_EVENT_TYPE_GAME_OVER":         11,
-		"GAME_EVENT_TYPE_PLAYER_GUESS":      12,
-		"GAME_EVENT_TYPE_CHOICE_REQUIRED":   13,
+		"GAME_EVENT_TYPE_UNSPECIFIED":        0,
+		"GAME_EVENT_TYPE_CARD_PLAYED":        1,
+		"GAME_EVENT_TYPE_CHARACTER_MOVED":    2,
+		"GAME_EVENT_TYPE_PARANOIA_ADJUSTED":  3,
+		"GAME_EVENT_TYPE_GOODWILL_ADJUSTED":  4,
+		"GAME_EVENT_TYPE_INTRIGUE_ADJUSTED":  5,
+		"GAME_EVENT_TYPE_ABILITY_USED":       6,
+		"GAME_EVENT_TYPE_TRAGEDY_TRIGGERED":  7,
+		"GAME_EVENT_TYPE_TRAGEDY_PREVENTED":  8,
+		"GAME_EVENT_TYPE_DAY_ADVANCED":       9,
+		"GAME_EVENT_TYPE_LOOP_RESET":         10,
+		"GAME_EVENT_TYPE_GAME_OVER":          11,
+		"GAME_EVENT_TYPE_PLAYER_GUESS":       12,
+		"GAME_EVENT_TYPE_CHOICE_REQUIRED":    13,
+		"GAME_EVENT_TYPE_INCIDENT_TRIGGERED": 14,
 	}
 )
 
@@ -676,7 +680,7 @@ const file_proto_v1_enums_proto_rawDesc = "" +
 	"\x13GAME_PHASE_LOOP_END\x10\b\x12\x18\n" +
 	"\x14GAME_PHASE_GAME_OVER\x10\t\x12 \n" +
 	"\x1cGAME_PHASE_PROTAGONIST_GUESS\x10\n" +
-	"*\x83\x04\n" +
+	"*\xab\x04\n" +
 	"\rGameEventType\x12\x1f\n" +
 	"\x1bGAME_EVENT_TYPE_UNSPECIFIED\x10\x00\x12\x1f\n" +
 	"\x1bGAME_EVENT_TYPE_CARD_PLAYED\x10\x01\x12#\n" +
@@ -692,7 +696,8 @@ const file_proto_v1_enums_proto_rawDesc = "" +
 	"\x12\x1d\n" +
 	"\x19GAME_EVENT_TYPE_GAME_OVER\x10\v\x12 \n" +
 	"\x1cGAME_EVENT_TYPE_PLAYER_GUESS\x10\f\x12#\n" +
-	"\x1fGAME_EVENT_TYPE_CHOICE_REQUIRED\x10\r*\xa3\x01\n" +
+	"\x1fGAME_EVENT_TYPE_CHOICE_REQUIRED\x10\r\x12&\n" +
+	"\"GAME_EVENT_TYPE_INCIDENT_TRIGGERED\x10\x0e*\xa3\x01\n" +
 	"\n" +
 	"ActionType\x12\x1b\n" +
 	"\x17ACTION_TYPE_UNSPECIFIED\x10\x00\x12\x19\n" +

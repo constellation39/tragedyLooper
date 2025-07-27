@@ -9,7 +9,7 @@ var MastermindCards = []*model.Card{
 		CardType:  model.CardType_CARD_TYPE_MOVEMENT,
 		OwnerRole: model.PlayerRole_PLAYER_ROLE_MASTERMIND,
 		Effect: &model.Effect{
-			Effect: &model.Effect_MoveCharacterEffect{
+			EffectOneof: &model.Effect_MoveCharacterEffect{
 				MoveCharacterEffect: &model.MoveCharacterEffect{},
 			},
 		},
@@ -21,7 +21,7 @@ var MastermindCards = []*model.Card{
 		CardType:  model.CardType_CARD_TYPE_PARANOIA,
 		OwnerRole: model.PlayerRole_PLAYER_ROLE_MASTERMIND,
 		Effect: &model.Effect{
-			Effect: &model.Effect_AdjustParanoiaEffect{
+			EffectOneof: &model.Effect_AdjustParanoiaEffect{
 				AdjustParanoiaEffect: &model.AdjustParanoiaEffect{
 					Amount: 1,
 				},
@@ -38,7 +38,7 @@ var ProtagonistCards = []*model.Card{
 		CardType:  model.CardType_CARD_TYPE_MOVEMENT,
 		OwnerRole: model.PlayerRole_PLAYER_ROLE_PROTAGONIST,
 		Effect: &model.Effect{
-			Effect: &model.Effect_MoveCharacterEffect{
+			EffectOneof: &model.Effect_MoveCharacterEffect{
 				MoveCharacterEffect: &model.MoveCharacterEffect{},
 			},
 		},
@@ -50,7 +50,7 @@ var ProtagonistCards = []*model.Card{
 		CardType:  model.CardType_CARD_TYPE_PARANOIA,
 		OwnerRole: model.PlayerRole_PLAYER_ROLE_PROTAGONIST,
 		Effect: &model.Effect{
-			Effect: &model.Effect_AdjustParanoiaEffect{
+			EffectOneof: &model.Effect_AdjustParanoiaEffect{
 				AdjustParanoiaEffect: &model.AdjustParanoiaEffect{
 					Amount: 1,
 				},

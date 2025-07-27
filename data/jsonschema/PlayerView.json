@@ -482,7 +482,9 @@
                         "GAME_EVENT_TYPE_PLAYER_GUESS",
                         12,
                         "GAME_EVENT_TYPE_CHOICE_REQUIRED",
-                        13
+                        13,
+                        "GAME_EVENT_TYPE_INCIDENT_TRIGGERED",
+                        14
                     ],
                     "oneOf": [
                         {

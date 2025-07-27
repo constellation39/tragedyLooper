@@ -5,12 +5,9 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"path/filepath"
-	"strings"
 	"syscall"
 
 	"tragedylooper/internal/game/loader"
-	model "tragedylooper/internal/game/proto/v1"
 
 	"tragedylooper/internal/llm"
 	"tragedylooper/internal/logger"
@@ -18,26 +15,6 @@ import (
 
 	"go.uber.org/zap"
 )
-
-func loadScripts(path string, logger *zap.Logger) map[string]*model.Script {
-	scripts := make(map[string]*model.Script)
-	files, err := filepath.Glob(filepath.Join(path, "*.json"))
-	if err != nil {
-		logger.Fatal("Failed to glob scripts", zap.Error(err))
-	}
-
-	for _, file := range files {
-		script, err := loader.LoadScript(file)
-		if err != nil {
-			logger.Warn("Failed to load script", zap.String("file", file), zap.Error(err))
-			continue
-		}
-		scriptID := strings.TrimSuffix(filepath.Base(file), filepath.Ext(file))
-		scripts[scriptID] = script
-		logger.Info("Loaded script", zap.String("id", scriptID))
-	}
-	return scripts
-}
 
 func main() {
 	logger := logger.New()

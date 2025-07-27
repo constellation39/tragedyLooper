@@ -11,9 +11,9 @@ option go_package = "github.com/user/repo/proto/model";
 enum GameEndConditionType {
   GAME_END_CONDITION_TYPE_UNSPECIFIED = 0;
   // All tragedy plots are disabled/prevented. (Protagonist Win)
-  ALL_TRAGEDIES_PREVENTED = 1;
+  GAME_END_CONDITION_TYPE_ALL_TRAGEDIES_PREVENTED = 1;
   // A tragedy plot is successfully triggered. (Mastermind Win)
-  A_TRAGEDY_OCCURS = 2;
+  GAME_END_CONDITION_TYPE_A_TRAGEDY_OCCURS = 2;
 }
 
 // Defines a single condition for winning or losing the game.
