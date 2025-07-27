@@ -121,3 +121,11 @@ enum TargetRuleType {
   TARGET_RULE_TYPE_SPECIFIC_CHARACTER = 1; // 特定角色
   TARGET_RULE_TYPE_ANY_CHARACTER_AT_LOCATION = 2; // 在某个地点的任何角色
 }
+
+// RuleTriggerType 定义规则何时被评估。
+enum RuleTriggerType {
+  RULE_TRIGGER_TYPE_UNSPECIFIED = 0;
+  ON_GAME_SETUP = 1; // 在游戏设置阶段触发
+  ON_LOOP_START = 2; // 在每个循环开始时触发
+  LOCATION_RESOLUTION = 3; // 在解析角色位置时触发
+}
