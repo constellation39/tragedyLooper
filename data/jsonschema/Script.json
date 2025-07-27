@@ -89,15 +89,17 @@
                 },
                 "mastermind_card_ids": {
                     "items": {
-                        "type": "string"
+                        "type": "integer"
                     },
-                    "type": "array"
+                    "type": "array",
+                    "description": "IDs of cards available to the Mastermind."
                 },
                 "protagonist_card_ids": {
                     "items": {
-                        "type": "string"
+                        "type": "integer"
                     },
-                    "type": "array"
+                    "type": "array",
+                    "description": "IDs of cards available to the Protagonists."
                 },
                 "special_rules_description": {
                     "items": {

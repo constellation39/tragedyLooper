@@ -7,22 +7,27 @@ import "v1/enums.proto";
 
 option go_package = "tragedylooper/internal/game/v1;v1";
 
-// 角色或卡牌能力
-message Ability {
-  int32 id = 1; // 能力唯一ID
-  string name = 2; // 能力名称
-  string description = 3; // 能力描述
-  TriggerType trigger_type = 4; // 能力触发类型
-  repeated GameEventType event_filters = 5; // 仅当 trigger_type 为 ON_GAME_EVENT 时，过滤特定游戏事件
-  Effect effect = 6; // 能力的具体效果
-  bool once_per_loop = 7; // 是否每个循环只能使用一次
-  PlayerRole refusal_role = 8; // 如果有特定角色可以拒绝此能力，指定其角色类型（例如主谋可以拒绝某些主角能力）
-  bool used_this_loop = 9; // 运行时状态：本循环是否已使用过此能力
-  bool is_passive = 10; // 是否是被动能力（与TriggerType.PASSIVE配合使用）
-  bool is_mandatory = 11; // 是否是强制触发的能力（不需要玩家选择）
-  // 考虑到目标的选择在实际游戏中是动态的，这里可能不需要明确的target字段，而是在Effect中定义target_character_id
+// AbilityConfig represents the static configuration of an ability.
+message AbilityConfig {
+  int32 id = 1; // Unique ID for the ability configuration
+  string name = 2; // Name of the ability
+  string description = 3; // Description of the ability
+  TriggerType trigger_type = 4; // When the ability triggers
+  repeated GameEventType event_filters = 5; // Optional: Filters for ON_GAME_EVENT trigger type
+  Effect effect = 6; // The effect of the ability
+  bool once_per_loop = 7; // Whether the ability can be used only once per loop
+  PlayerRole refusal_role = 8; // The player role that can refuse this ability
+  bool is_passive = 10; // Whether this is a passive ability
+  bool is_mandatory = 11; // Whether this ability is mandatory
 }
 
-message AbilityLib {
-  map<int32, Ability> abilities = 1;
+// Ability represents a runtime instance of an ability.
+message Ability {
+  int32 id = 1; // The ID of the ability, linking to an AbilityConfig
+  bool used_this_loop = 2; // Runtime state: whether this ability has been used in the current loop
+}
+
+// AbilityConfigLib holds a library of ability configurations.
+message AbilityConfigLib {
+  map<int32, AbilityConfig> abilities = 1;
 }

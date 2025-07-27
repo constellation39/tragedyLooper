@@ -21,28 +21,103 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 行动卡牌
+// CardConfig represents the static configuration of a card.
+type CardConfig struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                   // Unique ID for the card configuration
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                // Name of the card
+	CardType      CardType               `protobuf:"varint,3,opt,name=card_type,json=cardType,proto3,enum=v1.CardType" json:"card_type,omitempty"`      // Type of the card
+	OwnerRole     PlayerRole             `protobuf:"varint,4,opt,name=owner_role,json=ownerRole,proto3,enum=v1.PlayerRole" json:"owner_role,omitempty"` // The player role this card belongs to (Mastermind or Protagonist)
+	Effect        *Effect                `protobuf:"bytes,5,opt,name=effect,proto3" json:"effect,omitempty"`                                            // The effect of the card
+	OncePerLoop   bool                   `protobuf:"varint,6,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`            // Whether the card can be used only once per loop
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CardConfig) Reset() {
+	*x = CardConfig{}
+	mi := &file_v1_card_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CardConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CardConfig) ProtoMessage() {}
+
+func (x *CardConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_card_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CardConfig.ProtoReflect.Descriptor instead.
+func (*CardConfig) Descriptor() ([]byte, []int) {
+	return file_v1_card_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *CardConfig) GetId() int32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *CardConfig) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *CardConfig) GetCardType() CardType {
+	if x != nil {
+		return x.CardType
+	}
+	return CardType_CARD_TYPE_UNSPECIFIED
+}
+
+func (x *CardConfig) GetOwnerRole() PlayerRole {
+	if x != nil {
+		return x.OwnerRole
+	}
+	return PlayerRole_PLAYER_ROLE_UNSPECIFIED
+}
+
+func (x *CardConfig) GetEffect() *Effect {
+	if x != nil {
+		return x.Effect
+	}
+	return nil
+}
+
+func (x *CardConfig) GetOncePerLoop() bool {
+	if x != nil {
+		return x.OncePerLoop
+	}
+	return false
+}
+
+// Card represents a runtime instance of a card.
 type Card struct {
-	state        protoimpl.MessageState `protogen:"open.v1"`
-	Id           int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                   // 卡牌唯一ID
-	Name         string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                // 卡牌名称
-	CardType     CardType               `protobuf:"varint,3,opt,name=card_type,json=cardType,proto3,enum=v1.CardType" json:"card_type,omitempty"`      // 卡牌类型
-	OwnerRole    PlayerRole             `protobuf:"varint,4,opt,name=owner_role,json=ownerRole,proto3,enum=v1.PlayerRole" json:"owner_role,omitempty"` // 卡牌所属玩家类型 (主谋或主角)
-	Effect       *Effect                `protobuf:"bytes,5,opt,name=effect,proto3" json:"effect,omitempty"`                                            // 卡牌的具体效果
-	OncePerLoop  bool                   `protobuf:"varint,6,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`            // 是否每个循环只能使用一次
-	UsedThisLoop bool                   `protobuf:"varint,7,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"`         // 运行时状态：本循环是否已使用过此卡牌
-	// Types that are valid to be assigned to Target:
-	//
-	//	*Card_TargetCharacterId
-	//	*Card_TargetLocation
-	Target        isCard_Target `protobuf_oneof:"target"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                           // The ID of the card, linking to a CardConfig
+	UsedThisLoop  bool                   `protobuf:"varint,2,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"` // Runtime state: whether this card has been used in the current loop
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Card) Reset() {
 	*x = Card{}
-	mi := &file_v1_card_proto_msgTypes[0]
+	mi := &file_v1_card_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -54,7 +129,7 @@ func (x *Card) String() string {
 func (*Card) ProtoMessage() {}
 
 func (x *Card) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_card_proto_msgTypes[0]
+	mi := &file_v1_card_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -67,7 +142,7 @@ func (x *Card) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Card.ProtoReflect.Descriptor instead.
 func (*Card) Descriptor() ([]byte, []int) {
-	return file_v1_card_proto_rawDescGZIP(), []int{0}
+	return file_v1_card_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Card) GetId() int32 {
@@ -77,41 +152,6 @@ func (x *Card) GetId() int32 {
 	return 0
 }
 
-func (x *Card) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *Card) GetCardType() CardType {
-	if x != nil {
-		return x.CardType
-	}
-	return CardType_CARD_TYPE_UNSPECIFIED
-}
-
-func (x *Card) GetOwnerRole() PlayerRole {
-	if x != nil {
-		return x.OwnerRole
-	}
-	return PlayerRole_PLAYER_ROLE_UNSPECIFIED
-}
-
-func (x *Card) GetEffect() *Effect {
-	if x != nil {
-		return x.Effect
-	}
-	return nil
-}
-
-func (x *Card) GetOncePerLoop() bool {
-	if x != nil {
-		return x.OncePerLoop
-	}
-	return false
-}
-
 func (x *Card) GetUsedThisLoop() bool {
 	if x != nil {
 		return x.UsedThisLoop
@@ -119,69 +159,29 @@ func (x *Card) GetUsedThisLoop() bool {
 	return false
 }
 
-func (x *Card) GetTarget() isCard_Target {
-	if x != nil {
-		return x.Target
-	}
-	return nil
-}
-
-func (x *Card) GetTargetCharacterId() int32 {
-	if x != nil {
-		if x, ok := x.Target.(*Card_TargetCharacterId); ok {
-			return x.TargetCharacterId
-		}
-	}
-	return 0
-}
-
-func (x *Card) GetTargetLocation() LocationType {
-	if x != nil {
-		if x, ok := x.Target.(*Card_TargetLocation); ok {
-			return x.TargetLocation
-		}
-	}
-	return LocationType_LOCATION_TYPE_UNSPECIFIED
-}
-
-type isCard_Target interface {
-	isCard_Target()
-}
-
-type Card_TargetCharacterId struct {
-	TargetCharacterId int32 `protobuf:"varint,8,opt,name=target_character_id,json=targetCharacterId,proto3,oneof"` // 卡牌的目标角色ID
-}
-
-type Card_TargetLocation struct {
-	TargetLocation LocationType `protobuf:"varint,9,opt,name=target_location,json=targetLocation,proto3,enum=v1.LocationType,oneof"` // 如果是移动卡，指定目标地点
-}
-
-func (*Card_TargetCharacterId) isCard_Target() {}
-
-func (*Card_TargetLocation) isCard_Target() {}
-
-type CardLib struct {
+// CardConfigLib holds a library of card configurations.
+type CardConfigLib struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Cards         map[int32]*Card        `protobuf:"bytes,1,rep,name=cards,proto3" json:"cards,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Cards         map[int32]*CardConfig  `protobuf:"bytes,1,rep,name=cards,proto3" json:"cards,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CardLib) Reset() {
-	*x = CardLib{}
-	mi := &file_v1_card_proto_msgTypes[1]
+func (x *CardConfigLib) Reset() {
+	*x = CardConfigLib{}
+	mi := &file_v1_card_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CardLib) String() string {
+func (x *CardConfigLib) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CardLib) ProtoMessage() {}
+func (*CardConfigLib) ProtoMessage() {}
 
-func (x *CardLib) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_card_proto_msgTypes[1]
+func (x *CardConfigLib) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_card_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -192,18 +192,19 @@ func (x *CardLib) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CardLib.ProtoReflect.Descriptor instead.
-func (*CardLib) Descriptor() ([]byte, []int) {
-	return file_v1_card_proto_rawDescGZIP(), []int{1}
+// Deprecated: Use CardConfigLib.ProtoReflect.Descriptor instead.
+func (*CardConfigLib) Descriptor() ([]byte, []int) {
+	return file_v1_card_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *CardLib) GetCards() map[int32]*Card {
+func (x *CardConfigLib) GetCards() map[int32]*CardConfig {
 	if x != nil {
 		return x.Cards
 	}
 	return nil
 }
 
+// CardList holds a list of card instances.
 type CardList struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Cards         []*Card                `protobuf:"bytes,1,rep,name=cards,proto3" json:"cards,omitempty"`
@@ -213,7 +214,7 @@ type CardList struct {
 
 func (x *CardList) Reset() {
 	*x = CardList{}
-	mi := &file_v1_card_proto_msgTypes[2]
+	mi := &file_v1_card_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -225,7 +226,7 @@ func (x *CardList) String() string {
 func (*CardList) ProtoMessage() {}
 
 func (x *CardList) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_card_proto_msgTypes[2]
+	mi := &file_v1_card_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -238,7 +239,7 @@ func (x *CardList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CardList.ProtoReflect.Descriptor instead.
 func (*CardList) Descriptor() ([]byte, []int) {
-	return file_v1_card_proto_rawDescGZIP(), []int{2}
+	return file_v1_card_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *CardList) GetCards() []*Card {
@@ -252,8 +253,9 @@ var File_v1_card_proto protoreflect.FileDescriptor
 
 const file_v1_card_proto_rawDesc = "" +
 	"\n" +
-	"\rv1/card.proto\x12\x02v1\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\xeb\x02\n" +
-	"\x04Card\x12\x0e\n" +
+	"\rv1/card.proto\x12\x02v1\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\xd2\x01\n" +
+	"\n" +
+	"CardConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12)\n" +
 	"\tcard_type\x18\x03 \x01(\x0e2\f.v1.CardTypeR\bcardType\x12-\n" +
@@ -261,17 +263,16 @@ const file_v1_card_proto_rawDesc = "" +
 	"owner_role\x18\x04 \x01(\x0e2\x0e.v1.PlayerRoleR\townerRole\x12\"\n" +
 	"\x06effect\x18\x05 \x01(\v2\n" +
 	".v1.EffectR\x06effect\x12\"\n" +
-	"\ronce_per_loop\x18\x06 \x01(\bR\voncePerLoop\x12$\n" +
-	"\x0eused_this_loop\x18\a \x01(\bR\fusedThisLoop\x120\n" +
-	"\x13target_character_id\x18\b \x01(\x05H\x00R\x11targetCharacterId\x12;\n" +
-	"\x0ftarget_location\x18\t \x01(\x0e2\x10.v1.LocationTypeH\x00R\x0etargetLocationB\b\n" +
-	"\x06target\"{\n" +
-	"\aCardLib\x12,\n" +
-	"\x05cards\x18\x01 \x03(\v2\x16.v1.CardLib.CardsEntryR\x05cards\x1aB\n" +
+	"\ronce_per_loop\x18\x06 \x01(\bR\voncePerLoop\"<\n" +
+	"\x04Card\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12$\n" +
+	"\x0eused_this_loop\x18\x02 \x01(\bR\fusedThisLoop\"\x8d\x01\n" +
+	"\rCardConfigLib\x122\n" +
+	"\x05cards\x18\x01 \x03(\v2\x1c.v1.CardConfigLib.CardsEntryR\x05cards\x1aH\n" +
 	"\n" +
 	"CardsEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x1e\n" +
-	"\x05value\x18\x02 \x01(\v2\b.v1.CardR\x05value:\x028\x01\"*\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12$\n" +
+	"\x05value\x18\x02 \x01(\v2\x0e.v1.CardConfigR\x05value:\x028\x01\"*\n" +
 	"\bCardList\x12\x1e\n" +
 	"\x05cards\x18\x01 \x03(\v2\b.v1.CardR\x05cardsB#Z!tragedylooper/internal/game/v1;v1b\x06proto3"
 
@@ -287,30 +288,29 @@ func file_v1_card_proto_rawDescGZIP() []byte {
 	return file_v1_card_proto_rawDescData
 }
 
-var file_v1_card_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_v1_card_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_v1_card_proto_goTypes = []any{
-	(*Card)(nil),      // 0: v1.Card
-	(*CardLib)(nil),   // 1: v1.CardLib
-	(*CardList)(nil),  // 2: v1.CardList
-	nil,               // 3: v1.CardLib.CardsEntry
-	(CardType)(0),     // 4: v1.CardType
-	(PlayerRole)(0),   // 5: v1.PlayerRole
-	(*Effect)(nil),    // 6: v1.Effect
-	(LocationType)(0), // 7: v1.LocationType
+	(*CardConfig)(nil),    // 0: v1.CardConfig
+	(*Card)(nil),          // 1: v1.Card
+	(*CardConfigLib)(nil), // 2: v1.CardConfigLib
+	(*CardList)(nil),      // 3: v1.CardList
+	nil,                   // 4: v1.CardConfigLib.CardsEntry
+	(CardType)(0),         // 5: v1.CardType
+	(PlayerRole)(0),       // 6: v1.PlayerRole
+	(*Effect)(nil),        // 7: v1.Effect
 }
 var file_v1_card_proto_depIdxs = []int32{
-	4, // 0: v1.Card.card_type:type_name -> v1.CardType
-	5, // 1: v1.Card.owner_role:type_name -> v1.PlayerRole
-	6, // 2: v1.Card.effect:type_name -> v1.Effect
-	7, // 3: v1.Card.target_location:type_name -> v1.LocationType
-	3, // 4: v1.CardLib.cards:type_name -> v1.CardLib.CardsEntry
-	0, // 5: v1.CardList.cards:type_name -> v1.Card
-	0, // 6: v1.CardLib.CardsEntry.value:type_name -> v1.Card
-	7, // [7:7] is the sub-list for method output_type
-	7, // [7:7] is the sub-list for method input_type
-	7, // [7:7] is the sub-list for extension type_name
-	7, // [7:7] is the sub-list for extension extendee
-	0, // [0:7] is the sub-list for field type_name
+	5, // 0: v1.CardConfig.card_type:type_name -> v1.CardType
+	6, // 1: v1.CardConfig.owner_role:type_name -> v1.PlayerRole
+	7, // 2: v1.CardConfig.effect:type_name -> v1.Effect
+	4, // 3: v1.CardConfigLib.cards:type_name -> v1.CardConfigLib.CardsEntry
+	1, // 4: v1.CardList.cards:type_name -> v1.Card
+	0, // 5: v1.CardConfigLib.CardsEntry.value:type_name -> v1.CardConfig
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_v1_card_proto_init() }
@@ -320,17 +320,13 @@ func file_v1_card_proto_init() {
 	}
 	file_v1_effect_proto_init()
 	file_v1_enums_proto_init()
-	file_v1_card_proto_msgTypes[0].OneofWrappers = []any{
-		(*Card_TargetCharacterId)(nil),
-		(*Card_TargetLocation)(nil),
-	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_card_proto_rawDesc), len(file_v1_card_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -1,20 +1,152 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/CardLib",
+    "$ref": "#/definitions/AbilityConfig",
     "definitions": {
-        "CardLib": {
+        "AbilityConfig": {
             "properties": {
-                "cards": {
-                    "additionalProperties": {
-                        "$ref": "#/definitions/v1.Card",
-                        "additionalProperties": true
+                "id": {
+                    "type": "integer",
+                    "description": "Unique ID for the ability configuration"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the ability"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the ability"
+                },
+                "trigger_type": {
+                    "enum": [
+                        "TRIGGER_TYPE_UNSPECIFIED",
+                        0,
+                        "ON_GAME_SETUP",
+                        1,
+                        "ON_LOOP_START",
+                        2,
+                        "ON_DAY_START",
+                        3,
+                        "ON_CARD_PLAY_PHASE",
+                        4,
+                        "ON_CARD_REVEAL_PHASE",
+                        5,
+                        "ON_CARD_RESOLVE_PHASE",
+                        6,
+                        "ON_ABILITY_PHASE",
+                        7,
+                        "ON_INCIDENT_PHASE",
+                        8,
+                        "ON_GAME_EVENT",
+                        9,
+                        "PASSIVE",
+                        10,
+                        "ON_LOOP_LOSS",
+                        11,
+                        "ON_LOOP_WIN",
+                        12,
+                        "ON_GAME_END",
+                        13
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Trigger Type",
+                    "description": "触发器类型枚举（能力或规则何时触发）"
+                },
+                "event_filters": {
+                    "items": {
+                        "enum": [
+                            "GAME_EVENT_TYPE_UNSPECIFIED",
+                            0,
+                            "CHARACTER_MOVED",
+                            1,
+                            "PARANOIA_ADJUSTED",
+                            2,
+                            "GOODWILL_ADJUSTED",
+                            3,
+                            "INTRIGUE_ADJUSTED",
+                            4,
+                            "INCIDENT_TRIGGERED",
+                            5,
+                            "INCIDENT_PREVENTED",
+                            6,
+                            "ROLE_REVEALED",
+                            7,
+                            "ABILITY_GRANTED",
+                            8,
+                            "CHOICE_REQUIRED",
+                            9,
+                            "LOOP_WIN",
+                            10,
+                            "LOOP_LOSS",
+                            11,
+                            "FIRST_GUESS_MADE",
+                            12,
+                            "FINAL_GUESS_MADE",
+                            13,
+                            "GOODWILL_REFUSAL_TEST",
+                            14,
+                            "LOOP_OVER",
+                            15,
+                            "DAY_ADVANCED",
+                            16,
+                            "TRAGEDY_TRIGGERED",
+                            17,
+                            "LOOP_RESET",
+                            18
+                        ]
                     },
-                    "type": "object"
+                    "type": "array",
+                    "title": "Game Event Type",
+                    "description": "游戏事件类型枚举"
+                },
+                "effect": {
+                    "$ref": "#/definitions/v1.Effect",
+                    "additionalProperties": true,
+                    "description": "The effect of the ability"
+                },
+                "once_per_loop": {
+                    "type": "boolean",
+                    "description": "Whether the ability can be used only once per loop"
+                },
+                "refusal_role": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "MASTERMIND",
+                        1,
+                        "PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色枚举"
+                },
+                "is_passive": {
+                    "type": "boolean",
+                    "description": "Whether this is a passive ability"
+                },
+                "is_mandatory": {
+                    "type": "boolean",
+                    "description": "Whether this ability is mandatory"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Card Lib"
+            "title": "Ability Config",
+            "description": "AbilityConfig represents the static configuration of an ability."
         },
         "v1.AdjustGoodwillEffect": {
             "properties": {
@@ -99,109 +231,6 @@
             "type": "object",
             "title": "Cancel Incident Effect",
             "description": "取消悲剧事件效果"
-        },
-        "v1.Card": {
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "卡牌唯一ID"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "卡牌名称"
-                },
-                "card_type": {
-                    "enum": [
-                        "CARD_TYPE_UNSPECIFIED",
-                        0,
-                        "MOVEMENT",
-                        1,
-                        "PARANOIA",
-                        2,
-                        "GOODWILL",
-                        3,
-                        "INTRIGUE",
-                        4,
-                        "SPECIAL",
-                        5
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Card Type",
-                    "description": "卡牌类型枚举"
-                },
-                "owner_role": {
-                    "enum": [
-                        "PLAYER_ROLE_UNSPECIFIED",
-                        0,
-                        "MASTERMIND",
-                        1,
-                        "PROTAGONIST",
-                        2
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Player Role",
-                    "description": "玩家角色枚举"
-                },
-                "effect": {
-                    "$ref": "#/definitions/v1.Effect",
-                    "additionalProperties": true,
-                    "description": "卡牌的具体效果"
-                },
-                "once_per_loop": {
-                    "type": "boolean",
-                    "description": "是否每个循环只能使用一次"
-                },
-                "used_this_loop": {
-                    "type": "boolean",
-                    "description": "运行时状态：本循环是否已使用过此卡牌"
-                },
-                "target_character_id": {
-                    "type": "integer",
-                    "description": "卡牌的目标角色ID"
-                },
-                "target_location": {
-                    "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
-                        0,
-                        "HOSPITAL",
-                        1,
-                        "SHRINE",
-                        2,
-                        "CITY",
-                        3,
-                        "SCHOOL",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Location Type",
-                    "description": "地点类型枚举"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Card",
-            "description": "行动卡牌"
         },
         "v1.Effect": {
             "properties": {

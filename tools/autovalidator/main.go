@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -14,42 +13,49 @@ func main() {
 	dataDir := "data"
 	schemaDir := "data/jsonschema"
 
-	// Validate files in the root of the data directory
-	validateRootDataFiles(dataDir, schemaDir)
+	// Automatically discover and validate data files based on schemas.
+	fmt.Println("Starting validation...")
+	discoverAndValidate(dataDir, schemaDir)
+	fmt.Println("Validation finished.")
+}
 
-	// Get all subdirectories in the data directory
-	dataSubDirs, err := ioutil.ReadDir(dataDir)
+func discoverAndValidate(dataDir, schemaDir string) {
+	schemaFiles, err := filepath.Glob(filepath.Join(schemaDir, "*.json"))
 	if err != nil {
-		fmt.Printf("Error reading data directory: %s\n", err.Error())
+		fmt.Printf("Error finding schema files in %s: %s\n", schemaDir, err.Error())
 		os.Exit(1)
 	}
 
-	for _, dirInfo := range dataSubDirs {
-		if dirInfo.IsDir() && dirInfo.Name() != "jsonschema" {
-			// Determine the schema name from the directory name
-			dirName := dirInfo.Name()
-			schemaName := strings.TrimSuffix(dirName, "s")
-			schemaName = strings.Title(schemaName) + ".json"
-			schemaPath := filepath.Join(schemaDir, schemaName)
+	validatedCount := 0
+	for _, schemaPath := range schemaFiles {
+		var dataPath string
+		schemaName := filepath.Base(schemaPath)
 
-			// Check if the schema file exists
-			if _, err := os.Stat(schemaPath); os.IsNotExist(err) {
-				fmt.Printf("Skipping directory %s: schema %s not found\n", dirName, schemaPath)
-				continue
-			}
-
-			// Get all json files in the directory
-			jsonFiles, err := filepath.Glob(filepath.Join(dataDir, dirName, "*.json"))
-			if err != nil {
-				fmt.Printf("Error finding json files in %s: %s\n", dirName, err.Error())
-				continue
-			}
-
-			// Validate each json file
-			for _, jsonFile := range jsonFiles {
-				validateFile(schemaPath, jsonFile)
-			}
+		// Rule 1: For "XxxConfigLib.json", validate "xxx.json"
+		if strings.HasSuffix(schemaName, "ConfigLib.json") {
+			dataFileName := strings.TrimSuffix(schemaName, "ConfigLib.json")
+			dataFileName = strings.ToLower(dataFileName) + ".json"
+			dataPath = filepath.Join(dataDir, dataFileName)
+		} else if strings.HasSuffix(schemaName, "Config.json") {
+			// Rule 2: For "XxxConfig.json", validate "XxxConfig.json" in the data root
+			dataPath = filepath.Join(dataDir, schemaName)
+		} else {
+			// Skip schemas that don't represent a main data file (e.g., enums, individual objects)
+			continue
 		}
+
+		// Check if the inferred data file exists before trying to validate
+		if _, err := os.Stat(dataPath); os.IsNotExist(err) {
+			// This is not an error, just means there's no corresponding data file for this schema.
+			continue
+		}
+
+		validateFile(schemaPath, dataPath)
+		validatedCount++
+	}
+
+	if validatedCount == 0 {
+		fmt.Println("No data files were found to validate.")
 	}
 }
 
@@ -57,46 +63,21 @@ func validateFile(schemaPath, docPath string) {
 	schemaAbsPath, _ := filepath.Abs(schemaPath)
 	docAbsPath, _ := filepath.Abs(docPath)
 
-	schemaLoader := gojsonschema.NewReferenceLoader("file://" + strings.ReplaceAll(schemaAbsPath, "\\", "/"))
-	documentLoader := gojsonschema.NewReferenceLoader("file://" + strings.ReplaceAll(docAbsPath, "\\", "/"))
+	schemaLoader := gojsonschema.NewReferenceLoader("file://" + filepath.ToSlash(schemaAbsPath))
+	documentLoader := gojsonschema.NewReferenceLoader("file://" + filepath.ToSlash(docAbsPath))
 
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
 	if err != nil {
-		fmt.Printf("Error validating %s: %s\n", docPath, err.Error())
+		fmt.Printf("Error validating %s against %s: %s\n", docPath, schemaPath, err.Error())
 		return
 	}
 
 	if result.Valid() {
-		fmt.Printf("%s is valid\n", docPath)
+		fmt.Printf("OK: %s is valid\n", docPath)
 	} else {
-		fmt.Printf("%s is not valid. see errors:\n", docPath)
+		fmt.Printf("FAIL: %s is not valid. Errors:\n", docPath)
 		for _, desc := range result.Errors() {
-			fmt.Printf("- %s\n", desc)
+			fmt.Printf("  - %s\n", desc)
 		}
-	}
-}
-
-func validateRootDataFiles(dataDir, schemaDir string) {
-	filesToValidate := map[string]string{
-		"ability.json":   "AbilityLib.json",
-		"card.json":      "CardLib.json",
-		"character.json": "CharacterLib.json",
-		"incidents.json": "IncidentLib.json",
-	}
-
-	for dataFile, schemaFile := range filesToValidate {
-		jsonFile := filepath.Join(dataDir, dataFile)
-		schemaPath := filepath.Join(schemaDir, schemaFile)
-
-		if _, err := os.Stat(jsonFile); os.IsNotExist(err) {
-			continue
-		}
-
-		if _, err := os.Stat(schemaPath); os.IsNotExist(err) {
-			fmt.Printf("Skipping file %s: schema %s not found\n", jsonFile, schemaPath)
-			continue
-		}
-
-		validateFile(schemaPath, jsonFile)
 	}
 }

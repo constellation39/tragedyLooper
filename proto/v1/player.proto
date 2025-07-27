@@ -19,7 +19,7 @@ message Player {
   repeated Card hand = 5; // 玩家手牌列表
   string llm_session_id = 6; // 如果是LLM，对应的会话ID
   PlayerDeductionKnowledge deduction_knowledge = 7; // 主角的推理知识（仅主角玩家拥有）
-  repeated int32 protagonist_characters_controlled = 8; // 新增：如果主角玩家可以控制多个主角角色牌组，列出其控制的角色ID列表
+  repeated int32 protagonist_characters_controlled = 8; // If a protagonist player controls multiple character decks, this lists their IDs.
 }
 
 message PlayerLib {

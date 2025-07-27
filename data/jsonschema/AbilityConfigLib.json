@@ -1,12 +1,12 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/AbilityLib",
+    "$ref": "#/definitions/AbilityConfigLib",
     "definitions": {
-        "AbilityLib": {
+        "AbilityConfigLib": {
             "properties": {
                 "abilities": {
                     "additionalProperties": {
-                        "$ref": "#/definitions/v1.Ability",
+                        "$ref": "#/definitions/v1.AbilityConfig",
                         "additionalProperties": true
                     },
                     "type": "object"
@@ -14,21 +14,22 @@
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Ability Lib"
+            "title": "Ability Config Lib",
+            "description": "AbilityConfigLib holds a library of ability configurations."
         },
-        "v1.Ability": {
+        "v1.AbilityConfig": {
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "能力唯一ID"
+                    "description": "Unique ID for the ability configuration"
                 },
                 "name": {
                     "type": "string",
-                    "description": "能力名称"
+                    "description": "Name of the ability"
                 },
                 "description": {
                     "type": "string",
-                    "description": "能力描述"
+                    "description": "Description of the ability"
                 },
                 "trigger_type": {
                     "enum": [
@@ -122,11 +123,11 @@
                 "effect": {
                     "$ref": "#/definitions/v1.Effect",
                     "additionalProperties": true,
-                    "description": "能力的具体效果"
+                    "description": "The effect of the ability"
                 },
                 "once_per_loop": {
                     "type": "boolean",
-                    "description": "是否每个循环只能使用一次"
+                    "description": "Whether the ability can be used only once per loop"
                 },
                 "refusal_role": {
                     "enum": [
@@ -148,23 +149,19 @@
                     "title": "Player Role",
                     "description": "玩家角色枚举"
                 },
-                "used_this_loop": {
-                    "type": "boolean",
-                    "description": "运行时状态：本循环是否已使用过此能力"
-                },
                 "is_passive": {
                     "type": "boolean",
-                    "description": "是否是被动能力（与TriggerType.PASSIVE配合使用）"
+                    "description": "Whether this is a passive ability"
                 },
                 "is_mandatory": {
                     "type": "boolean",
-                    "description": "是否是强制触发的能力（不需要玩家选择）"
+                    "description": "Whether this ability is mandatory"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Ability",
-            "description": "角色或卡牌能力"
+            "title": "Ability Config",
+            "description": "AbilityConfig represents the static configuration of an ability."
         },
         "v1.AdjustGoodwillEffect": {
             "properties": {

@@ -70,7 +70,7 @@ func (x StatCondition_StatType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StatCondition_StatType.Descriptor instead.
 func (StatCondition_StatType) EnumDescriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{6, 0}
+	return file_v1_script_proto_rawDescGZIP(), []int{7, 0}
 }
 
 type StatCondition_Comparator int32
@@ -128,7 +128,7 @@ func (x StatCondition_Comparator) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StatCondition_Comparator.Descriptor instead.
 func (StatCondition_Comparator) EnumDescriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{6, 1}
+	return file_v1_script_proto_rawDescGZIP(), []int{7, 1}
 }
 
 type GameEndCondition_ConditionType int32
@@ -186,7 +186,7 @@ func (x GameEndCondition_ConditionType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use GameEndCondition_ConditionType.Descriptor instead.
 func (GameEndCondition_ConditionType) EnumDescriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{8, 0}
+	return file_v1_script_proto_rawDescGZIP(), []int{9, 0}
 }
 
 // Tragedy represents a tragedy in the script.
@@ -253,19 +253,19 @@ func (x *Tragedy) GetConditions() []*Condition {
 // 剧本信息
 type Script struct {
 	state                   protoimpl.MessageState `protogen:"open.v1"`
-	Id                      int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                              // 剧本唯一ID
-	Name                    string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                           // 剧本名称
-	Description             string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                             // 剧本描述
-	MainPlot                TragedyScriptType      `protobuf:"varint,4,opt,name=main_plot,json=mainPlot,proto3,enum=v1.TragedyScriptType" json:"main_plot,omitempty"`        // 主线剧情类型
-	SubPlots                []TragedyScriptType    `protobuf:"varint,5,rep,packed,name=sub_plots,json=subPlots,proto3,enum=v1.TragedyScriptType" json:"sub_plots,omitempty"` // 支线剧情类型列表
-	Characters              []*CharacterConfig     `protobuf:"bytes,6,rep,name=characters,proto3" json:"characters,omitempty"`                                               // 剧本中角色的初始配置
-	Incidents               []*IncidentConfig      `protobuf:"bytes,7,rep,name=incidents,proto3" json:"incidents,omitempty"`                                                 // 剧本中预设的事件（悲剧）配置
-	LoopCount               int32                  `protobuf:"varint,8,opt,name=loop_count,json=loopCount,proto3" json:"loop_count,omitempty"`                               // 允许的最大时间循环次数
-	DaysPerLoop             int32                  `protobuf:"varint,9,opt,name=days_per_loop,json=daysPerLoop,proto3" json:"days_per_loop,omitempty"`                       // 每个循环包含的天数
-	WinConditions           []*GameEndCondition    `protobuf:"bytes,10,rep,name=win_conditions,json=winConditions,proto3" json:"win_conditions,omitempty"`                   // 胜利条件列表
-	LoseConditions          []*GameEndCondition    `protobuf:"bytes,11,rep,name=lose_conditions,json=loseConditions,proto3" json:"lose_conditions,omitempty"`                // 失败条件列表
-	MastermindCardIds       []string               `protobuf:"bytes,12,rep,name=mastermind_card_ids,json=mastermindCardIds,proto3" json:"mastermind_card_ids,omitempty"`
-	ProtagonistCardIds      []string               `protobuf:"bytes,13,rep,name=protagonist_card_ids,json=protagonistCardIds,proto3" json:"protagonist_card_ids,omitempty"`
+	Id                      int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                            // 剧本唯一ID
+	Name                    string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                         // 剧本名称
+	Description             string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                           // 剧本描述
+	MainPlot                TragedyScriptType      `protobuf:"varint,4,opt,name=main_plot,json=mainPlot,proto3,enum=v1.TragedyScriptType" json:"main_plot,omitempty"`                      // 主线剧情类型
+	SubPlots                []TragedyScriptType    `protobuf:"varint,5,rep,packed,name=sub_plots,json=subPlots,proto3,enum=v1.TragedyScriptType" json:"sub_plots,omitempty"`               // 支线剧情类型列表
+	Characters              []*CharacterConfig     `protobuf:"bytes,6,rep,name=characters,proto3" json:"characters,omitempty"`                                                             // 剧本中角色的初始配置
+	Incidents               []*IncidentConfig      `protobuf:"bytes,7,rep,name=incidents,proto3" json:"incidents,omitempty"`                                                               // 剧本中预设的事件（悲剧）配置
+	LoopCount               int32                  `protobuf:"varint,8,opt,name=loop_count,json=loopCount,proto3" json:"loop_count,omitempty"`                                             // 允许的最大时间循环次数
+	DaysPerLoop             int32                  `protobuf:"varint,9,opt,name=days_per_loop,json=daysPerLoop,proto3" json:"days_per_loop,omitempty"`                                     // 每个循环包含的天数
+	WinConditions           []*GameEndCondition    `protobuf:"bytes,10,rep,name=win_conditions,json=winConditions,proto3" json:"win_conditions,omitempty"`                                 // 胜利条件列表
+	LoseConditions          []*GameEndCondition    `protobuf:"bytes,11,rep,name=lose_conditions,json=loseConditions,proto3" json:"lose_conditions,omitempty"`                              // 失败条件列表
+	MastermindCardIds       []int32                `protobuf:"varint,12,rep,packed,name=mastermind_card_ids,json=mastermindCardIds,proto3" json:"mastermind_card_ids,omitempty"`           // IDs of cards available to the Mastermind.
+	ProtagonistCardIds      []int32                `protobuf:"varint,13,rep,packed,name=protagonist_card_ids,json=protagonistCardIds,proto3" json:"protagonist_card_ids,omitempty"`        // IDs of cards available to the Protagonists.
 	SpecialRulesDescription []string               `protobuf:"bytes,14,rep,name=special_rules_description,json=specialRulesDescription,proto3" json:"special_rules_description,omitempty"` // 剧本特有规则的文字描述
 	Tragedies               []*Tragedy             `protobuf:"bytes,15,rep,name=tragedies,proto3" json:"tragedies,omitempty"`                                                              // 剧本中的悲剧列表
 	unknownFields           protoimpl.UnknownFields
@@ -379,14 +379,14 @@ func (x *Script) GetLoseConditions() []*GameEndCondition {
 	return nil
 }
 
-func (x *Script) GetMastermindCardIds() []string {
+func (x *Script) GetMastermindCardIds() []int32 {
 	if x != nil {
 		return x.MastermindCardIds
 	}
 	return nil
 }
 
-func (x *Script) GetProtagonistCardIds() []string {
+func (x *Script) GetProtagonistCardIds() []int32 {
 	if x != nil {
 		return x.ProtagonistCardIds
 	}
@@ -508,6 +508,50 @@ func (x *CharacterConfig) GetIsFirstStepRole() bool {
 	return false
 }
 
+type CharacterConfigLib struct {
+	state         protoimpl.MessageState     `protogen:"open.v1"`
+	Characters    map[int32]*CharacterConfig `protobuf:"bytes,1,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CharacterConfigLib) Reset() {
+	*x = CharacterConfigLib{}
+	mi := &file_v1_script_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CharacterConfigLib) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CharacterConfigLib) ProtoMessage() {}
+
+func (x *CharacterConfigLib) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_script_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CharacterConfigLib.ProtoReflect.Descriptor instead.
+func (*CharacterConfigLib) Descriptor() ([]byte, []int) {
+	return file_v1_script_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *CharacterConfigLib) GetCharacters() map[int32]*CharacterConfig {
+	if x != nil {
+		return x.Characters
+	}
+	return nil
+}
+
 // 事件/悲剧在剧本中的配置
 type IncidentConfig struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
@@ -523,7 +567,7 @@ type IncidentConfig struct {
 
 func (x *IncidentConfig) Reset() {
 	*x = IncidentConfig{}
-	mi := &file_v1_script_proto_msgTypes[3]
+	mi := &file_v1_script_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -535,7 +579,7 @@ func (x *IncidentConfig) String() string {
 func (*IncidentConfig) ProtoMessage() {}
 
 func (x *IncidentConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[3]
+	mi := &file_v1_script_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -548,7 +592,7 @@ func (x *IncidentConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IncidentConfig.ProtoReflect.Descriptor instead.
 func (*IncidentConfig) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{3}
+	return file_v1_script_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *IncidentConfig) GetIncidentType() IncidentType {
@@ -602,7 +646,7 @@ type IncidentConfigLib struct {
 
 func (x *IncidentConfigLib) Reset() {
 	*x = IncidentConfigLib{}
-	mi := &file_v1_script_proto_msgTypes[4]
+	mi := &file_v1_script_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -614,7 +658,7 @@ func (x *IncidentConfigLib) String() string {
 func (*IncidentConfigLib) ProtoMessage() {}
 
 func (x *IncidentConfigLib) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[4]
+	mi := &file_v1_script_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -627,7 +671,7 @@ func (x *IncidentConfigLib) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IncidentConfigLib.ProtoReflect.Descriptor instead.
 func (*IncidentConfigLib) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{4}
+	return file_v1_script_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *IncidentConfigLib) GetIncidents() map[int32]*IncidentConfig {
@@ -651,7 +695,7 @@ type Condition struct {
 
 func (x *Condition) Reset() {
 	*x = Condition{}
-	mi := &file_v1_script_proto_msgTypes[5]
+	mi := &file_v1_script_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -663,7 +707,7 @@ func (x *Condition) String() string {
 func (*Condition) ProtoMessage() {}
 
 func (x *Condition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[5]
+	mi := &file_v1_script_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -676,7 +720,7 @@ func (x *Condition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Condition.ProtoReflect.Descriptor instead.
 func (*Condition) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{5}
+	return file_v1_script_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Condition) GetConditionType() isCondition_ConditionType {
@@ -733,7 +777,7 @@ type StatCondition struct {
 
 func (x *StatCondition) Reset() {
 	*x = StatCondition{}
-	mi := &file_v1_script_proto_msgTypes[6]
+	mi := &file_v1_script_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -745,7 +789,7 @@ func (x *StatCondition) String() string {
 func (*StatCondition) ProtoMessage() {}
 
 func (x *StatCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[6]
+	mi := &file_v1_script_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -758,7 +802,7 @@ func (x *StatCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatCondition.ProtoReflect.Descriptor instead.
 func (*StatCondition) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{6}
+	return file_v1_script_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *StatCondition) GetCharacterId() int32 {
@@ -802,7 +846,7 @@ type LocationCondition struct {
 
 func (x *LocationCondition) Reset() {
 	*x = LocationCondition{}
-	mi := &file_v1_script_proto_msgTypes[7]
+	mi := &file_v1_script_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -814,7 +858,7 @@ func (x *LocationCondition) String() string {
 func (*LocationCondition) ProtoMessage() {}
 
 func (x *LocationCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[7]
+	mi := &file_v1_script_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -827,7 +871,7 @@ func (x *LocationCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LocationCondition.ProtoReflect.Descriptor instead.
 func (*LocationCondition) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{7}
+	return file_v1_script_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *LocationCondition) GetCharacterId() int32 {
@@ -869,7 +913,7 @@ type GameEndCondition struct {
 
 func (x *GameEndCondition) Reset() {
 	*x = GameEndCondition{}
-	mi := &file_v1_script_proto_msgTypes[8]
+	mi := &file_v1_script_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -881,7 +925,7 @@ func (x *GameEndCondition) String() string {
 func (*GameEndCondition) ProtoMessage() {}
 
 func (x *GameEndCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[8]
+	mi := &file_v1_script_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -894,7 +938,7 @@ func (x *GameEndCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GameEndCondition.ProtoReflect.Descriptor instead.
 func (*GameEndCondition) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{8}
+	return file_v1_script_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *GameEndCondition) GetType() GameEndCondition_ConditionType {
@@ -938,8 +982,8 @@ const file_v1_script_proto_rawDesc = "" +
 	"\x0ewin_conditions\x18\n" +
 	" \x03(\v2\x14.v1.GameEndConditionR\rwinConditions\x12=\n" +
 	"\x0flose_conditions\x18\v \x03(\v2\x14.v1.GameEndConditionR\x0eloseConditions\x12.\n" +
-	"\x13mastermind_card_ids\x18\f \x03(\tR\x11mastermindCardIds\x120\n" +
-	"\x14protagonist_card_ids\x18\r \x03(\tR\x12protagonistCardIds\x12:\n" +
+	"\x13mastermind_card_ids\x18\f \x03(\x05R\x11mastermindCardIds\x120\n" +
+	"\x14protagonist_card_ids\x18\r \x03(\x05R\x12protagonistCardIds\x12:\n" +
 	"\x19special_rules_description\x18\x0e \x03(\tR\x17specialRulesDescription\x12)\n" +
 	"\ttragedies\x18\x0f \x03(\v2\v.v1.TragedyR\ttragedies\"\xeb\x02\n" +
 	"\x0fCharacterConfig\x12\x0e\n" +
@@ -951,7 +995,14 @@ const file_v1_script_proto_rawDesc = "" +
 	"\x10initial_goodwill\x18\x05 \x01(\x05R\x0finitialGoodwill\x12)\n" +
 	"\x10initial_intrigue\x18\x06 \x01(\x05R\x0finitialIntrigue\x12.\n" +
 	"\x13initial_ability_ids\x18\a \x03(\x05R\x11initialAbilityIds\x12+\n" +
-	"\x12is_first_step_role\x18\b \x01(\bR\x0fisFirstStepRole\"\x81\x02\n" +
+	"\x12is_first_step_role\x18\b \x01(\bR\x0fisFirstStepRole\"\xb0\x01\n" +
+	"\x12CharacterConfigLib\x12F\n" +
+	"\n" +
+	"characters\x18\x01 \x03(\v2&.v1.CharacterConfigLib.CharactersEntryR\n" +
+	"characters\x1aR\n" +
+	"\x0fCharactersEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12)\n" +
+	"\x05value\x18\x02 \x01(\v2\x13.v1.CharacterConfigR\x05value:\x028\x01\"\x81\x02\n" +
 	"\x0eIncidentConfig\x125\n" +
 	"\rincident_type\x18\x01 \x01(\x0e2\x10.v1.IncidentTypeR\fincidentType\x12\x10\n" +
 	"\x03day\x18\x02 \x01(\x05R\x03day\x120\n" +
@@ -1020,7 +1071,7 @@ func file_v1_script_proto_rawDescGZIP() []byte {
 }
 
 var file_v1_script_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_v1_script_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_v1_script_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_v1_script_proto_goTypes = []any{
 	(StatCondition_StatType)(0),         // 0: v1.StatCondition.StatType
 	(StatCondition_Comparator)(0),       // 1: v1.StatCondition.Comparator
@@ -1028,46 +1079,50 @@ var file_v1_script_proto_goTypes = []any{
 	(*Tragedy)(nil),                     // 3: v1.Tragedy
 	(*Script)(nil),                      // 4: v1.Script
 	(*CharacterConfig)(nil),             // 5: v1.CharacterConfig
-	(*IncidentConfig)(nil),              // 6: v1.IncidentConfig
-	(*IncidentConfigLib)(nil),           // 7: v1.IncidentConfigLib
-	(*Condition)(nil),                   // 8: v1.Condition
-	(*StatCondition)(nil),               // 9: v1.StatCondition
-	(*LocationCondition)(nil),           // 10: v1.LocationCondition
-	(*GameEndCondition)(nil),            // 11: v1.GameEndCondition
-	nil,                                 // 12: v1.IncidentConfigLib.IncidentsEntry
-	(IncidentType)(0),                   // 13: v1.IncidentType
-	(TragedyScriptType)(0),              // 14: v1.TragedyScriptType
-	(RoleType)(0),                       // 15: v1.RoleType
-	(LocationType)(0),                   // 16: v1.LocationType
+	(*CharacterConfigLib)(nil),          // 6: v1.CharacterConfigLib
+	(*IncidentConfig)(nil),              // 7: v1.IncidentConfig
+	(*IncidentConfigLib)(nil),           // 8: v1.IncidentConfigLib
+	(*Condition)(nil),                   // 9: v1.Condition
+	(*StatCondition)(nil),               // 10: v1.StatCondition
+	(*LocationCondition)(nil),           // 11: v1.LocationCondition
+	(*GameEndCondition)(nil),            // 12: v1.GameEndCondition
+	nil,                                 // 13: v1.CharacterConfigLib.CharactersEntry
+	nil,                                 // 14: v1.IncidentConfigLib.IncidentsEntry
+	(IncidentType)(0),                   // 15: v1.IncidentType
+	(TragedyScriptType)(0),              // 16: v1.TragedyScriptType
+	(RoleType)(0),                       // 17: v1.RoleType
+	(LocationType)(0),                   // 18: v1.LocationType
 }
 var file_v1_script_proto_depIdxs = []int32{
-	13, // 0: v1.Tragedy.tragedy_type:type_name -> v1.IncidentType
-	8,  // 1: v1.Tragedy.conditions:type_name -> v1.Condition
-	14, // 2: v1.Script.main_plot:type_name -> v1.TragedyScriptType
-	14, // 3: v1.Script.sub_plots:type_name -> v1.TragedyScriptType
+	15, // 0: v1.Tragedy.tragedy_type:type_name -> v1.IncidentType
+	9,  // 1: v1.Tragedy.conditions:type_name -> v1.Condition
+	16, // 2: v1.Script.main_plot:type_name -> v1.TragedyScriptType
+	16, // 3: v1.Script.sub_plots:type_name -> v1.TragedyScriptType
 	5,  // 4: v1.Script.characters:type_name -> v1.CharacterConfig
-	6,  // 5: v1.Script.incidents:type_name -> v1.IncidentConfig
-	11, // 6: v1.Script.win_conditions:type_name -> v1.GameEndCondition
-	11, // 7: v1.Script.lose_conditions:type_name -> v1.GameEndCondition
+	7,  // 5: v1.Script.incidents:type_name -> v1.IncidentConfig
+	12, // 6: v1.Script.win_conditions:type_name -> v1.GameEndCondition
+	12, // 7: v1.Script.lose_conditions:type_name -> v1.GameEndCondition
 	3,  // 8: v1.Script.tragedies:type_name -> v1.Tragedy
-	15, // 9: v1.CharacterConfig.hidden_role:type_name -> v1.RoleType
-	16, // 10: v1.CharacterConfig.initial_location:type_name -> v1.LocationType
-	13, // 11: v1.IncidentConfig.incident_type:type_name -> v1.IncidentType
-	8,  // 12: v1.IncidentConfig.conditions:type_name -> v1.Condition
-	12, // 13: v1.IncidentConfigLib.incidents:type_name -> v1.IncidentConfigLib.IncidentsEntry
-	9,  // 14: v1.Condition.stat_condition:type_name -> v1.StatCondition
-	10, // 15: v1.Condition.location_condition:type_name -> v1.LocationCondition
-	0,  // 16: v1.StatCondition.stat_type:type_name -> v1.StatCondition.StatType
-	1,  // 17: v1.StatCondition.comparator:type_name -> v1.StatCondition.Comparator
-	16, // 18: v1.LocationCondition.location:type_name -> v1.LocationType
-	2,  // 19: v1.GameEndCondition.type:type_name -> v1.GameEndCondition.ConditionType
-	13, // 20: v1.GameEndCondition.incident_type:type_name -> v1.IncidentType
-	6,  // 21: v1.IncidentConfigLib.IncidentsEntry.value:type_name -> v1.IncidentConfig
-	22, // [22:22] is the sub-list for method output_type
-	22, // [22:22] is the sub-list for method input_type
-	22, // [22:22] is the sub-list for extension type_name
-	22, // [22:22] is the sub-list for extension extendee
-	0,  // [0:22] is the sub-list for field type_name
+	17, // 9: v1.CharacterConfig.hidden_role:type_name -> v1.RoleType
+	18, // 10: v1.CharacterConfig.initial_location:type_name -> v1.LocationType
+	13, // 11: v1.CharacterConfigLib.characters:type_name -> v1.CharacterConfigLib.CharactersEntry
+	15, // 12: v1.IncidentConfig.incident_type:type_name -> v1.IncidentType
+	9,  // 13: v1.IncidentConfig.conditions:type_name -> v1.Condition
+	14, // 14: v1.IncidentConfigLib.incidents:type_name -> v1.IncidentConfigLib.IncidentsEntry
+	10, // 15: v1.Condition.stat_condition:type_name -> v1.StatCondition
+	11, // 16: v1.Condition.location_condition:type_name -> v1.LocationCondition
+	0,  // 17: v1.StatCondition.stat_type:type_name -> v1.StatCondition.StatType
+	1,  // 18: v1.StatCondition.comparator:type_name -> v1.StatCondition.Comparator
+	18, // 19: v1.LocationCondition.location:type_name -> v1.LocationType
+	2,  // 20: v1.GameEndCondition.type:type_name -> v1.GameEndCondition.ConditionType
+	15, // 21: v1.GameEndCondition.incident_type:type_name -> v1.IncidentType
+	5,  // 22: v1.CharacterConfigLib.CharactersEntry.value:type_name -> v1.CharacterConfig
+	7,  // 23: v1.IncidentConfigLib.IncidentsEntry.value:type_name -> v1.IncidentConfig
+	24, // [24:24] is the sub-list for method output_type
+	24, // [24:24] is the sub-list for method input_type
+	24, // [24:24] is the sub-list for extension type_name
+	24, // [24:24] is the sub-list for extension extendee
+	0,  // [0:24] is the sub-list for field type_name
 }
 
 func init() { file_v1_script_proto_init() }
@@ -1078,18 +1133,18 @@ func file_v1_script_proto_init() {
 	file_v1_ability_proto_init()
 	file_v1_character_proto_init()
 	file_v1_enums_proto_init()
-	file_v1_script_proto_msgTypes[5].OneofWrappers = []any{
+	file_v1_script_proto_msgTypes[6].OneofWrappers = []any{
 		(*Condition_StatCondition)(nil),
 		(*Condition_LocationCondition)(nil),
 	}
-	file_v1_script_proto_msgTypes[8].OneofWrappers = []any{}
+	file_v1_script_proto_msgTypes[9].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_script_proto_rawDesc), len(file_v1_script_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   10,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -31,7 +31,7 @@ type Player struct {
 	Hand                            []*Card                   `protobuf:"bytes,5,rep,name=hand,proto3" json:"hand,omitempty"`                                                                                                        // 玩家手牌列表
 	LlmSessionId                    string                    `protobuf:"bytes,6,opt,name=llm_session_id,json=llmSessionId,proto3" json:"llm_session_id,omitempty"`                                                                  // 如果是LLM，对应的会话ID
 	DeductionKnowledge              *PlayerDeductionKnowledge `protobuf:"bytes,7,opt,name=deduction_knowledge,json=deductionKnowledge,proto3" json:"deduction_knowledge,omitempty"`                                                  // 主角的推理知识（仅主角玩家拥有）
-	ProtagonistCharactersControlled []int32                   `protobuf:"varint,8,rep,packed,name=protagonist_characters_controlled,json=protagonistCharactersControlled,proto3" json:"protagonist_characters_controlled,omitempty"` // 新增：如果主角玩家可以控制多个主角角色牌组，列出其控制的角色ID列表
+	ProtagonistCharactersControlled []int32                   `protobuf:"varint,8,rep,packed,name=protagonist_characters_controlled,json=protagonistCharactersControlled,proto3" json:"protagonist_characters_controlled,omitempty"` // If a protagonist player controls multiple character decks, this lists their IDs.
 	unknownFields                   protoimpl.UnknownFields
 	sizeCache                       protoimpl.SizeCache
 }

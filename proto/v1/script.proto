@@ -28,8 +28,8 @@ message Script {
   int32 days_per_loop = 9; // 每个循环包含的天数
   repeated GameEndCondition win_conditions = 10; // 胜利条件列表
   repeated GameEndCondition lose_conditions = 11; // 失败条件列表
-  repeated string mastermind_card_ids = 12;
-  repeated string protagonist_card_ids = 13;
+  repeated int32 mastermind_card_ids = 12; // IDs of cards available to the Mastermind.
+  repeated int32 protagonist_card_ids = 13; // IDs of cards available to the Protagonists.
   repeated string special_rules_description = 14; // 剧本特有规则的文字描述
   repeated Tragedy tragedies = 15; // 剧本中的悲剧列表
 }

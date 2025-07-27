@@ -7,25 +7,28 @@ import "v1/enums.proto";
 
 option go_package = "tragedylooper/internal/game/v1;v1";
 
-// 行动卡牌
+// CardConfig represents the static configuration of a card.
+message CardConfig {
+  int32 id = 1; // Unique ID for the card configuration
+  string name = 2; // Name of the card
+  CardType card_type = 3; // Type of the card
+  PlayerRole owner_role = 4; // The player role this card belongs to (Mastermind or Protagonist)
+  Effect effect = 5; // The effect of the card
+  bool once_per_loop = 6; // Whether the card can be used only once per loop
+}
+
+// Card represents a runtime instance of a card.
 message Card {
-  int32 id = 1; // 卡牌唯一ID
-  string name = 2; // 卡牌名称
-  CardType card_type = 3; // 卡牌类型
-  PlayerRole owner_role = 4; // 卡牌所属玩家类型 (主谋或主角)
-  Effect effect = 5; // 卡牌的具体效果
-  bool once_per_loop = 6; // 是否每个循环只能使用一次
-  bool used_this_loop = 7; // 运行时状态：本循环是否已使用过此卡牌
-  oneof target {
-    int32 target_character_id = 8; // 卡牌的目标角色ID
-    LocationType target_location = 9; // 如果是移动卡，指定目标地点
-  }
+  int32 id = 1; // The ID of the card, linking to a CardConfig
+  bool used_this_loop = 2; // Runtime state: whether this card has been used in the current loop
 }
 
-message CardLib {
-  map<int32, Card> cards = 1;
+// CardConfigLib holds a library of card configurations.
+message CardConfigLib {
+  map<int32, CardConfig> cards = 1;
 }
 
+// CardList holds a list of card instances.
 message CardList {
   repeated Card cards = 1;
 }
