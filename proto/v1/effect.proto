@@ -4,7 +4,7 @@ package v1;
 
 import "v1/enums.proto";
 
-option go_package = "tragedylooper/internal/game/v1;v1";
+option go_package = "tragedylooper/internal/game/proto/v1;v1";
 
 // 效果的通用消息，使用 oneof 包含各种具体效果
 message Effect {

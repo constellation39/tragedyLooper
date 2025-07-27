@@ -1,0 +1,29 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/CharacterData",
+    "definitions": {
+        "CharacterData": {
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "Unique ID for the character data"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Character's name"
+                },
+                "traits": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array",
+                    "description": "Character's traits, e.g., \"Student\", \"Reporter\""
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Character Data",
+            "description": "CharacterData represents the static, script-independent blueprint of a character."
+        }
+    }
+}

@@ -6,8 +6,9 @@ import "google/protobuf/any.proto";
 import "google/protobuf/timestamp.proto";
 import "v1/card.proto";
 import "v1/enums.proto";
+import "v1/incident.proto";
 
-option go_package = "tragedylooper/internal/game/v1;v1";
+option go_package = "tragedylooper/internal/game/proto/v1;v1";
 
 // GameEvent 表示游戏中发生的事件。
 message GameEvent {
@@ -79,15 +80,6 @@ message Choice {
 message ChoiceRequiredEvent {
   // 这可能需要更复杂的结构，具体取决于选择
   repeated Choice choices = 1;
-}
-
-message Incident {
-  int32 id = 1;
-  string name = 2;
-  int32 day = 3;
-  string culprit = 4;
-  string victim = 5;
-  string description = 6;
 }
 
 message IncidentTriggeredEvent {

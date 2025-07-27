@@ -1,0 +1,44 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/CharacterDataLib",
+    "definitions": {
+        "CharacterDataLib": {
+            "properties": {
+                "characters": {
+                    "additionalProperties": {
+                        "$ref": "#/definitions/v1.CharacterData",
+                        "additionalProperties": true
+                    },
+                    "type": "object"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Character Data Lib",
+            "description": "CharacterDataLib holds a library of character blueprints."
+        },
+        "v1.CharacterData": {
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "Unique ID for the character data"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Character's name"
+                },
+                "traits": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array",
+                    "description": "Character's traits, e.g., \"Student\", \"Reporter\""
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Character Data",
+            "description": "CharacterData represents the static, script-independent blueprint of a character."
+        }
+    }
+}

@@ -970,7 +970,7 @@ const file_v1_effect_proto_rawDesc = "" +
 	"\fincident_day\x18\x02 \x01(\x05R\vincidentDay\"w\n" +
 	"\x1eForceGoodwillRefusalTestEffect\x122\n" +
 	"\x15protagonist_player_id\x18\x01 \x01(\tR\x13protagonistPlayerId\x12!\n" +
-	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterIdB#Z!tragedylooper/internal/game/v1;v1b\x06proto3"
+	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterIdB)Z'tragedylooper/internal/game/proto/v1;v1b\x06proto3"
 
 var (
 	file_v1_effect_proto_rawDescOnce sync.Once

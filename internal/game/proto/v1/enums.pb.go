@@ -824,7 +824,7 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\rGRANT_ABILITY\x10\n" +
 	"\x12\x13\n" +
 	"\x0fCANCEL_INCIDENT\x10\v\x12\x1f\n" +
-	"\x1bFORCE_GOODWILL_REFUSAL_TEST\x10\fB#Z!tragedylooper/internal/game/v1;v1b\x06proto3"
+	"\x1bFORCE_GOODWILL_REFUSAL_TEST\x10\fB)Z'tragedylooper/internal/game/proto/v1;v1b\x06proto3"
 
 var (
 	file_v1_enums_proto_rawDescOnce sync.Once

@@ -274,7 +274,7 @@ const file_v1_card_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12$\n" +
 	"\x05value\x18\x02 \x01(\v2\x0e.v1.CardConfigR\x05value:\x028\x01\"*\n" +
 	"\bCardList\x12\x1e\n" +
-	"\x05cards\x18\x01 \x03(\v2\b.v1.CardR\x05cardsB#Z!tragedylooper/internal/game/v1;v1b\x06proto3"
+	"\x05cards\x18\x01 \x03(\v2\b.v1.CardR\x05cardsB)Z'tragedylooper/internal/game/proto/v1;v1b\x06proto3"
 
 var (
 	file_v1_card_proto_rawDescOnce sync.Once

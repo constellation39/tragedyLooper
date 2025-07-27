@@ -25,13 +25,13 @@
                 },
                 "prompt": {
                     "type": "string",
-                    "description": "给玩家的提示语"
+                    "description": "Prompt message for the player"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Turf Selection Effect",
-            "description": "地盘选择效果（例如某些角色开局可以选择初始地点）"
+            "description": "TurfSelectionEffect allows a character to choose their starting location."
         }
     }
 }

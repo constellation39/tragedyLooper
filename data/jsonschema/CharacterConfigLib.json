@@ -14,13 +14,14 @@
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Character Config Lib"
+            "title": "Character Config Lib",
+            "description": "CharacterConfigLib holds a library of script-specific character configurations."
         },
         "v1.CharacterConfig": {
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "角色ID"
+                    "description": "Character ID"
                 },
                 "hidden_role": {
                     "enum": [
@@ -82,32 +83,32 @@
                 },
                 "initial_paranoia": {
                     "type": "integer",
-                    "description": "角色初始妄想值"
+                    "description": "Initial paranoia"
                 },
                 "initial_goodwill": {
                     "type": "integer",
-                    "description": "角色初始好感值"
+                    "description": "Initial goodwill"
                 },
                 "initial_intrigue": {
                     "type": "integer",
-                    "description": "角色初始阴谋值"
+                    "description": "Initial intrigue"
                 },
                 "initial_ability_ids": {
                     "items": {
                         "type": "integer"
                     },
                     "type": "array",
-                    "description": "角色初始拥有的能力ID列表"
+                    "description": "List of initial ability IDs"
                 },
                 "is_first_step_role": {
                     "type": "boolean",
-                    "description": "是否为First Step身份（新版中此概念用于特定剧本）"
+                    "description": "Whether this is a First Step role for this script"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Character Config",
-            "description": "角色在剧本中的配置"
+            "description": "CharacterConfig defines a character's initial setup for a specific script."
         }
     }
 }

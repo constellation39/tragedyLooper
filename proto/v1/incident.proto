@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package v1;
+
+import "v1/condition.proto";
+import "v1/enums.proto";
+
+option go_package = "tragedylooper/internal/game/proto/v1;v1";
+
+message Incident {
+  int32 id = 1;
+  string name = 2;
+  int32 day = 3;
+  string culprit = 4;
+  string victim = 5;
+  string description = 6;
+}
+
+// 事件/悲剧在剧本中的配置
+message IncidentConfig {
+  IncidentType incident_type = 1; // 悲剧类型
+  int32 day = 2; // 悲剧预设发生的日期（第几天）
+  int32 culprit_character_id = 3; // 导致悲剧发生的角色ID（如果适用，例如谋杀案的凶手）
+  repeated Condition conditions = 4; // 触发悲剧所需满足的条件列表
+  bool is_main_plot_incident = 5; // 是否是主线剧情的事件（新增）
+  string name = 6;
+  // bool is_preventable = 6;         // 如果某些事件不可阻止，可以添加此字段
+}
+
+message IncidentConfigLib {
+  map<int32, IncidentConfig> incidents = 1;
+}

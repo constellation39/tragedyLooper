@@ -21,116 +21,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type StatCondition_StatType int32
-
-const (
-	StatCondition_STAT_TYPE_UNSPECIFIED StatCondition_StatType = 0 // 未指定
-	StatCondition_PARANOIA_STAT         StatCondition_StatType = 1 // 妄想值
-	StatCondition_GOODWILL_STAT         StatCondition_StatType = 2 // 好感值
-	StatCondition_INTRIGUE_STAT         StatCondition_StatType = 3 // 阴谋值
-)
-
-// Enum value maps for StatCondition_StatType.
-var (
-	StatCondition_StatType_name = map[int32]string{
-		0: "STAT_TYPE_UNSPECIFIED",
-		1: "PARANOIA_STAT",
-		2: "GOODWILL_STAT",
-		3: "INTRIGUE_STAT",
-	}
-	StatCondition_StatType_value = map[string]int32{
-		"STAT_TYPE_UNSPECIFIED": 0,
-		"PARANOIA_STAT":         1,
-		"GOODWILL_STAT":         2,
-		"INTRIGUE_STAT":         3,
-	}
-)
-
-func (x StatCondition_StatType) Enum() *StatCondition_StatType {
-	p := new(StatCondition_StatType)
-	*p = x
-	return p
-}
-
-func (x StatCondition_StatType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (StatCondition_StatType) Descriptor() protoreflect.EnumDescriptor {
-	return file_v1_script_proto_enumTypes[0].Descriptor()
-}
-
-func (StatCondition_StatType) Type() protoreflect.EnumType {
-	return &file_v1_script_proto_enumTypes[0]
-}
-
-func (x StatCondition_StatType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use StatCondition_StatType.Descriptor instead.
-func (StatCondition_StatType) EnumDescriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{7, 0}
-}
-
-type StatCondition_Comparator int32
-
-const (
-	StatCondition_COMPARATOR_UNSPECIFIED StatCondition_Comparator = 0 // 未指定
-	StatCondition_GREATER_THAN           StatCondition_Comparator = 1 // 大于
-	StatCondition_LESS_THAN              StatCondition_Comparator = 2 // 小于
-	StatCondition_EQUAL_TO               StatCondition_Comparator = 3 // 等于
-	StatCondition_GREATER_THAN_OR_EQUAL  StatCondition_Comparator = 4 // 大于等于
-	StatCondition_LESS_THAN_OR_EQUAL     StatCondition_Comparator = 5 // 小于等于
-)
-
-// Enum value maps for StatCondition_Comparator.
-var (
-	StatCondition_Comparator_name = map[int32]string{
-		0: "COMPARATOR_UNSPECIFIED",
-		1: "GREATER_THAN",
-		2: "LESS_THAN",
-		3: "EQUAL_TO",
-		4: "GREATER_THAN_OR_EQUAL",
-		5: "LESS_THAN_OR_EQUAL",
-	}
-	StatCondition_Comparator_value = map[string]int32{
-		"COMPARATOR_UNSPECIFIED": 0,
-		"GREATER_THAN":           1,
-		"LESS_THAN":              2,
-		"EQUAL_TO":               3,
-		"GREATER_THAN_OR_EQUAL":  4,
-		"LESS_THAN_OR_EQUAL":     5,
-	}
-)
-
-func (x StatCondition_Comparator) Enum() *StatCondition_Comparator {
-	p := new(StatCondition_Comparator)
-	*p = x
-	return p
-}
-
-func (x StatCondition_Comparator) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (StatCondition_Comparator) Descriptor() protoreflect.EnumDescriptor {
-	return file_v1_script_proto_enumTypes[1].Descriptor()
-}
-
-func (StatCondition_Comparator) Type() protoreflect.EnumType {
-	return &file_v1_script_proto_enumTypes[1]
-}
-
-func (x StatCondition_Comparator) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use StatCondition_Comparator.Descriptor instead.
-func (StatCondition_Comparator) EnumDescriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{7, 1}
-}
-
 type GameEndCondition_ConditionType int32
 
 const (
@@ -173,11 +63,11 @@ func (x GameEndCondition_ConditionType) String() string {
 }
 
 func (GameEndCondition_ConditionType) Descriptor() protoreflect.EnumDescriptor {
-	return file_v1_script_proto_enumTypes[2].Descriptor()
+	return file_v1_script_proto_enumTypes[0].Descriptor()
 }
 
 func (GameEndCondition_ConditionType) Type() protoreflect.EnumType {
-	return &file_v1_script_proto_enumTypes[2]
+	return &file_v1_script_proto_enumTypes[0]
 }
 
 func (x GameEndCondition_ConditionType) Number() protoreflect.EnumNumber {
@@ -186,7 +76,7 @@ func (x GameEndCondition_ConditionType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use GameEndCondition_ConditionType.Descriptor instead.
 func (GameEndCondition_ConditionType) EnumDescriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{9, 0}
+	return file_v1_script_proto_rawDescGZIP(), []int{2, 0}
 }
 
 // Tragedy represents a tragedy in the script.
@@ -407,501 +297,6 @@ func (x *Script) GetTragedies() []*Tragedy {
 	return nil
 }
 
-// 角色在剧本中的配置
-type CharacterConfig struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	Id                int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                       // 角色ID
-	HiddenRole        RoleType               `protobuf:"varint,2,opt,name=hidden_role,json=hiddenRole,proto3,enum=v1.RoleType" json:"hidden_role,omitempty"`                    // 角色在当前剧本中的隐藏身份
-	InitialLocation   LocationType           `protobuf:"varint,3,opt,name=initial_location,json=initialLocation,proto3,enum=v1.LocationType" json:"initial_location,omitempty"` // 角色初始所在地点
-	InitialParanoia   int32                  `protobuf:"varint,4,opt,name=initial_paranoia,json=initialParanoia,proto3" json:"initial_paranoia,omitempty"`                      // 角色初始妄想值
-	InitialGoodwill   int32                  `protobuf:"varint,5,opt,name=initial_goodwill,json=initialGoodwill,proto3" json:"initial_goodwill,omitempty"`                      // 角色初始好感值
-	InitialIntrigue   int32                  `protobuf:"varint,6,opt,name=initial_intrigue,json=initialIntrigue,proto3" json:"initial_intrigue,omitempty"`                      // 角色初始阴谋值
-	InitialAbilityIds []int32                `protobuf:"varint,7,rep,packed,name=initial_ability_ids,json=initialAbilityIds,proto3" json:"initial_ability_ids,omitempty"`       // 角色初始拥有的能力ID列表
-	IsFirstStepRole   bool                   `protobuf:"varint,8,opt,name=is_first_step_role,json=isFirstStepRole,proto3" json:"is_first_step_role,omitempty"`                  // 是否为First Step身份（新版中此概念用于特定剧本）
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
-}
-
-func (x *CharacterConfig) Reset() {
-	*x = CharacterConfig{}
-	mi := &file_v1_script_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CharacterConfig) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CharacterConfig) ProtoMessage() {}
-
-func (x *CharacterConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CharacterConfig.ProtoReflect.Descriptor instead.
-func (*CharacterConfig) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *CharacterConfig) GetId() int32 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *CharacterConfig) GetHiddenRole() RoleType {
-	if x != nil {
-		return x.HiddenRole
-	}
-	return RoleType_ROLE_TYPE_UNSPECIFIED
-}
-
-func (x *CharacterConfig) GetInitialLocation() LocationType {
-	if x != nil {
-		return x.InitialLocation
-	}
-	return LocationType_LOCATION_TYPE_UNSPECIFIED
-}
-
-func (x *CharacterConfig) GetInitialParanoia() int32 {
-	if x != nil {
-		return x.InitialParanoia
-	}
-	return 0
-}
-
-func (x *CharacterConfig) GetInitialGoodwill() int32 {
-	if x != nil {
-		return x.InitialGoodwill
-	}
-	return 0
-}
-
-func (x *CharacterConfig) GetInitialIntrigue() int32 {
-	if x != nil {
-		return x.InitialIntrigue
-	}
-	return 0
-}
-
-func (x *CharacterConfig) GetInitialAbilityIds() []int32 {
-	if x != nil {
-		return x.InitialAbilityIds
-	}
-	return nil
-}
-
-func (x *CharacterConfig) GetIsFirstStepRole() bool {
-	if x != nil {
-		return x.IsFirstStepRole
-	}
-	return false
-}
-
-type CharacterConfigLib struct {
-	state         protoimpl.MessageState     `protogen:"open.v1"`
-	Characters    map[int32]*CharacterConfig `protobuf:"bytes,1,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CharacterConfigLib) Reset() {
-	*x = CharacterConfigLib{}
-	mi := &file_v1_script_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CharacterConfigLib) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CharacterConfigLib) ProtoMessage() {}
-
-func (x *CharacterConfigLib) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CharacterConfigLib.ProtoReflect.Descriptor instead.
-func (*CharacterConfigLib) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *CharacterConfigLib) GetCharacters() map[int32]*CharacterConfig {
-	if x != nil {
-		return x.Characters
-	}
-	return nil
-}
-
-// 事件/悲剧在剧本中的配置
-type IncidentConfig struct {
-	state              protoimpl.MessageState `protogen:"open.v1"`
-	IncidentType       IncidentType           `protobuf:"varint,1,opt,name=incident_type,json=incidentType,proto3,enum=v1.IncidentType" json:"incident_type,omitempty"`  // 悲剧类型
-	Day                int32                  `protobuf:"varint,2,opt,name=day,proto3" json:"day,omitempty"`                                                             // 悲剧预设发生的日期（第几天）
-	CulpritCharacterId int32                  `protobuf:"varint,3,opt,name=culprit_character_id,json=culpritCharacterId,proto3" json:"culprit_character_id,omitempty"`   // 导致悲剧发生的角色ID（如果适用，例如谋杀案的凶手）
-	Conditions         []*Condition           `protobuf:"bytes,4,rep,name=conditions,proto3" json:"conditions,omitempty"`                                                // 触发悲剧所需满足的条件列表
-	IsMainPlotIncident bool                   `protobuf:"varint,5,opt,name=is_main_plot_incident,json=isMainPlotIncident,proto3" json:"is_main_plot_incident,omitempty"` // 是否是主线剧情的事件（新增）
-	Name               string                 `protobuf:"bytes,6,opt,name=name,proto3" json:"name,omitempty"`                                                            // bool is_preventable = 6;         // 如果某些事件不可阻止，可以添加此字段
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
-}
-
-func (x *IncidentConfig) Reset() {
-	*x = IncidentConfig{}
-	mi := &file_v1_script_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *IncidentConfig) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*IncidentConfig) ProtoMessage() {}
-
-func (x *IncidentConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use IncidentConfig.ProtoReflect.Descriptor instead.
-func (*IncidentConfig) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *IncidentConfig) GetIncidentType() IncidentType {
-	if x != nil {
-		return x.IncidentType
-	}
-	return IncidentType_INCIDENT_TYPE_UNSPECIFIED
-}
-
-func (x *IncidentConfig) GetDay() int32 {
-	if x != nil {
-		return x.Day
-	}
-	return 0
-}
-
-func (x *IncidentConfig) GetCulpritCharacterId() int32 {
-	if x != nil {
-		return x.CulpritCharacterId
-	}
-	return 0
-}
-
-func (x *IncidentConfig) GetConditions() []*Condition {
-	if x != nil {
-		return x.Conditions
-	}
-	return nil
-}
-
-func (x *IncidentConfig) GetIsMainPlotIncident() bool {
-	if x != nil {
-		return x.IsMainPlotIncident
-	}
-	return false
-}
-
-func (x *IncidentConfig) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-type IncidentConfigLib struct {
-	state         protoimpl.MessageState    `protogen:"open.v1"`
-	Incidents     map[int32]*IncidentConfig `protobuf:"bytes,1,rep,name=incidents,proto3" json:"incidents,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *IncidentConfigLib) Reset() {
-	*x = IncidentConfigLib{}
-	mi := &file_v1_script_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *IncidentConfigLib) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*IncidentConfigLib) ProtoMessage() {}
-
-func (x *IncidentConfigLib) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use IncidentConfigLib.ProtoReflect.Descriptor instead.
-func (*IncidentConfigLib) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *IncidentConfigLib) GetIncidents() map[int32]*IncidentConfig {
-	if x != nil {
-		return x.Incidents
-	}
-	return nil
-}
-
-// 条件的通用消息，使用 oneof 包含各种具体条件
-type Condition struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Types that are valid to be assigned to ConditionType:
-	//
-	//	*Condition_StatCondition
-	//	*Condition_LocationCondition
-	ConditionType isCondition_ConditionType `protobuf_oneof:"condition_type"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Condition) Reset() {
-	*x = Condition{}
-	mi := &file_v1_script_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Condition) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Condition) ProtoMessage() {}
-
-func (x *Condition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Condition.ProtoReflect.Descriptor instead.
-func (*Condition) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *Condition) GetConditionType() isCondition_ConditionType {
-	if x != nil {
-		return x.ConditionType
-	}
-	return nil
-}
-
-func (x *Condition) GetStatCondition() *StatCondition {
-	if x != nil {
-		if x, ok := x.ConditionType.(*Condition_StatCondition); ok {
-			return x.StatCondition
-		}
-	}
-	return nil
-}
-
-func (x *Condition) GetLocationCondition() *LocationCondition {
-	if x != nil {
-		if x, ok := x.ConditionType.(*Condition_LocationCondition); ok {
-			return x.LocationCondition
-		}
-	}
-	return nil
-}
-
-type isCondition_ConditionType interface {
-	isCondition_ConditionType()
-}
-
-type Condition_StatCondition struct {
-	StatCondition *StatCondition `protobuf:"bytes,1,opt,name=stat_condition,json=statCondition,proto3,oneof"` // 属性条件（例如，妄想值达到某阈值）
-}
-
-type Condition_LocationCondition struct {
-	LocationCondition *LocationCondition `protobuf:"bytes,2,opt,name=location_condition,json=locationCondition,proto3,oneof"` // 地点条件（例如，角色在特定地点）
-}
-
-func (*Condition_StatCondition) isCondition_ConditionType() {}
-
-func (*Condition_LocationCondition) isCondition_ConditionType() {}
-
-// 属性条件
-type StatCondition struct {
-	state         protoimpl.MessageState   `protogen:"open.v1"`
-	CharacterId   int32                    `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`                       // 目标角色ID
-	StatType      StatCondition_StatType   `protobuf:"varint,2,opt,name=stat_type,json=statType,proto3,enum=v1.StatCondition_StatType" json:"stat_type,omitempty"` // 要检查的属性类型
-	Comparator    StatCondition_Comparator `protobuf:"varint,3,opt,name=comparator,proto3,enum=v1.StatCondition_Comparator" json:"comparator,omitempty"`           // 比较符
-	Value         int32                    `protobuf:"varint,4,opt,name=value,proto3" json:"value,omitempty"`                                                      // 比较的值
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *StatCondition) Reset() {
-	*x = StatCondition{}
-	mi := &file_v1_script_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *StatCondition) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*StatCondition) ProtoMessage() {}
-
-func (x *StatCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use StatCondition.ProtoReflect.Descriptor instead.
-func (*StatCondition) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *StatCondition) GetCharacterId() int32 {
-	if x != nil {
-		return x.CharacterId
-	}
-	return 0
-}
-
-func (x *StatCondition) GetStatType() StatCondition_StatType {
-	if x != nil {
-		return x.StatType
-	}
-	return StatCondition_STAT_TYPE_UNSPECIFIED
-}
-
-func (x *StatCondition) GetComparator() StatCondition_Comparator {
-	if x != nil {
-		return x.Comparator
-	}
-	return StatCondition_COMPARATOR_UNSPECIFIED
-}
-
-func (x *StatCondition) GetValue() int32 {
-	if x != nil {
-		return x.Value
-	}
-	return 0
-}
-
-// 地点条件
-type LocationCondition struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"` // 目标角色ID
-	Location      LocationType           `protobuf:"varint,2,opt,name=location,proto3,enum=v1.LocationType" json:"location,omitempty"`     // 目标地点
-	IsAlone       bool                   `protobuf:"varint,3,opt,name=is_alone,json=isAlone,proto3" json:"is_alone,omitempty"`             // 是否在该地点独处
-	NotAlone      bool                   `protobuf:"varint,4,opt,name=not_alone,json=notAlone,proto3" json:"not_alone,omitempty"`          // 是否在该地点不独处
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *LocationCondition) Reset() {
-	*x = LocationCondition{}
-	mi := &file_v1_script_proto_msgTypes[8]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *LocationCondition) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*LocationCondition) ProtoMessage() {}
-
-func (x *LocationCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[8]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use LocationCondition.ProtoReflect.Descriptor instead.
-func (*LocationCondition) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *LocationCondition) GetCharacterId() int32 {
-	if x != nil {
-		return x.CharacterId
-	}
-	return 0
-}
-
-func (x *LocationCondition) GetLocation() LocationType {
-	if x != nil {
-		return x.Location
-	}
-	return LocationType_LOCATION_TYPE_UNSPECIFIED
-}
-
-func (x *LocationCondition) GetIsAlone() bool {
-	if x != nil {
-		return x.IsAlone
-	}
-	return false
-}
-
-func (x *LocationCondition) GetNotAlone() bool {
-	if x != nil {
-		return x.NotAlone
-	}
-	return false
-}
-
 // 游戏结束条件
 type GameEndCondition struct {
 	state         protoimpl.MessageState         `protogen:"open.v1"`
@@ -913,7 +308,7 @@ type GameEndCondition struct {
 
 func (x *GameEndCondition) Reset() {
 	*x = GameEndCondition{}
-	mi := &file_v1_script_proto_msgTypes[9]
+	mi := &file_v1_script_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -925,7 +320,7 @@ func (x *GameEndCondition) String() string {
 func (*GameEndCondition) ProtoMessage() {}
 
 func (x *GameEndCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[9]
+	mi := &file_v1_script_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -938,7 +333,7 @@ func (x *GameEndCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GameEndCondition.ProtoReflect.Descriptor instead.
 func (*GameEndCondition) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{9}
+	return file_v1_script_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GameEndCondition) GetType() GameEndCondition_ConditionType {
@@ -959,7 +354,7 @@ var File_v1_script_proto protoreflect.FileDescriptor
 
 const file_v1_script_proto_rawDesc = "" +
 	"\n" +
-	"\x0fv1/script.proto\x12\x02v1\x1a\x10v1/ability.proto\x1a\x12v1/character.proto\x1a\x0ev1/enums.proto\"\x7f\n" +
+	"\x0fv1/script.proto\x12\x02v1\x1a\x12v1/character.proto\x1a\x12v1/condition.proto\x1a\x0ev1/enums.proto\x1a\x11v1/incident.proto\"\x7f\n" +
 	"\aTragedy\x123\n" +
 	"\ftragedy_type\x18\x01 \x01(\x0e2\x10.v1.IncidentTypeR\vtragedyType\x12\x10\n" +
 	"\x03day\x18\x02 \x01(\x05R\x03day\x12-\n" +
@@ -985,67 +380,7 @@ const file_v1_script_proto_rawDesc = "" +
 	"\x13mastermind_card_ids\x18\f \x03(\x05R\x11mastermindCardIds\x120\n" +
 	"\x14protagonist_card_ids\x18\r \x03(\x05R\x12protagonistCardIds\x12:\n" +
 	"\x19special_rules_description\x18\x0e \x03(\tR\x17specialRulesDescription\x12)\n" +
-	"\ttragedies\x18\x0f \x03(\v2\v.v1.TragedyR\ttragedies\"\xeb\x02\n" +
-	"\x0fCharacterConfig\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x12-\n" +
-	"\vhidden_role\x18\x02 \x01(\x0e2\f.v1.RoleTypeR\n" +
-	"hiddenRole\x12;\n" +
-	"\x10initial_location\x18\x03 \x01(\x0e2\x10.v1.LocationTypeR\x0finitialLocation\x12)\n" +
-	"\x10initial_paranoia\x18\x04 \x01(\x05R\x0finitialParanoia\x12)\n" +
-	"\x10initial_goodwill\x18\x05 \x01(\x05R\x0finitialGoodwill\x12)\n" +
-	"\x10initial_intrigue\x18\x06 \x01(\x05R\x0finitialIntrigue\x12.\n" +
-	"\x13initial_ability_ids\x18\a \x03(\x05R\x11initialAbilityIds\x12+\n" +
-	"\x12is_first_step_role\x18\b \x01(\bR\x0fisFirstStepRole\"\xb0\x01\n" +
-	"\x12CharacterConfigLib\x12F\n" +
-	"\n" +
-	"characters\x18\x01 \x03(\v2&.v1.CharacterConfigLib.CharactersEntryR\n" +
-	"characters\x1aR\n" +
-	"\x0fCharactersEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12)\n" +
-	"\x05value\x18\x02 \x01(\v2\x13.v1.CharacterConfigR\x05value:\x028\x01\"\x81\x02\n" +
-	"\x0eIncidentConfig\x125\n" +
-	"\rincident_type\x18\x01 \x01(\x0e2\x10.v1.IncidentTypeR\fincidentType\x12\x10\n" +
-	"\x03day\x18\x02 \x01(\x05R\x03day\x120\n" +
-	"\x14culprit_character_id\x18\x03 \x01(\x05R\x12culpritCharacterId\x12-\n" +
-	"\n" +
-	"conditions\x18\x04 \x03(\v2\r.v1.ConditionR\n" +
-	"conditions\x121\n" +
-	"\x15is_main_plot_incident\x18\x05 \x01(\bR\x12isMainPlotIncident\x12\x12\n" +
-	"\x04name\x18\x06 \x01(\tR\x04name\"\xa9\x01\n" +
-	"\x11IncidentConfigLib\x12B\n" +
-	"\tincidents\x18\x01 \x03(\v2$.v1.IncidentConfigLib.IncidentsEntryR\tincidents\x1aP\n" +
-	"\x0eIncidentsEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12(\n" +
-	"\x05value\x18\x02 \x01(\v2\x12.v1.IncidentConfigR\x05value:\x028\x01\"\xa1\x01\n" +
-	"\tCondition\x12:\n" +
-	"\x0estat_condition\x18\x01 \x01(\v2\x11.v1.StatConditionH\x00R\rstatCondition\x12F\n" +
-	"\x12location_condition\x18\x02 \x01(\v2\x15.v1.LocationConditionH\x00R\x11locationConditionB\x10\n" +
-	"\x0econdition_type\"\xac\x03\n" +
-	"\rStatCondition\x12!\n" +
-	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x127\n" +
-	"\tstat_type\x18\x02 \x01(\x0e2\x1a.v1.StatCondition.StatTypeR\bstatType\x12<\n" +
-	"\n" +
-	"comparator\x18\x03 \x01(\x0e2\x1c.v1.StatCondition.ComparatorR\n" +
-	"comparator\x12\x14\n" +
-	"\x05value\x18\x04 \x01(\x05R\x05value\"^\n" +
-	"\bStatType\x12\x19\n" +
-	"\x15STAT_TYPE_UNSPECIFIED\x10\x00\x12\x11\n" +
-	"\rPARANOIA_STAT\x10\x01\x12\x11\n" +
-	"\rGOODWILL_STAT\x10\x02\x12\x11\n" +
-	"\rINTRIGUE_STAT\x10\x03\"\x8a\x01\n" +
-	"\n" +
-	"Comparator\x12\x1a\n" +
-	"\x16COMPARATOR_UNSPECIFIED\x10\x00\x12\x10\n" +
-	"\fGREATER_THAN\x10\x01\x12\r\n" +
-	"\tLESS_THAN\x10\x02\x12\f\n" +
-	"\bEQUAL_TO\x10\x03\x12\x19\n" +
-	"\x15GREATER_THAN_OR_EQUAL\x10\x04\x12\x16\n" +
-	"\x12LESS_THAN_OR_EQUAL\x10\x05\"\x9c\x01\n" +
-	"\x11LocationCondition\x12!\n" +
-	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x12,\n" +
-	"\blocation\x18\x02 \x01(\x0e2\x10.v1.LocationTypeR\blocation\x12\x19\n" +
-	"\bis_alone\x18\x03 \x01(\bR\aisAlone\x12\x1b\n" +
-	"\tnot_alone\x18\x04 \x01(\bR\bnotAlone\"\xe6\x02\n" +
+	"\ttragedies\x18\x0f \x03(\v2\v.v1.TragedyR\ttragedies\"\xe6\x02\n" +
 	"\x10GameEndCondition\x126\n" +
 	"\x04type\x18\x01 \x01(\x0e2\".v1.GameEndCondition.ConditionTypeR\x04type\x12:\n" +
 	"\rincident_type\x18\x02 \x01(\x0e2\x10.v1.IncidentTypeH\x00R\fincidentType\x88\x01\x01\"\xcb\x01\n" +
@@ -1056,7 +391,7 @@ const file_v1_script_proto_rawDesc = "" +
 	"\x11MAX_LOOPS_REACHED\x10\x03\x12!\n" +
 	"\x1dPROTAGONIST_GUESSED_CORRECTLY\x10\x04\x12#\n" +
 	"\x1fPROTAGONIST_GUESSED_INCORRECTLY\x10\x05B\x10\n" +
-	"\x0e_incident_typeB#Z!tragedylooper/internal/game/v1;v1b\x06proto3"
+	"\x0e_incident_typeB)Z'tragedylooper/internal/game/proto/v1;v1b\x06proto3"
 
 var (
 	file_v1_script_proto_rawDescOnce sync.Once
@@ -1070,59 +405,36 @@ func file_v1_script_proto_rawDescGZIP() []byte {
 	return file_v1_script_proto_rawDescData
 }
 
-var file_v1_script_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_v1_script_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_v1_script_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_v1_script_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_v1_script_proto_goTypes = []any{
-	(StatCondition_StatType)(0),         // 0: v1.StatCondition.StatType
-	(StatCondition_Comparator)(0),       // 1: v1.StatCondition.Comparator
-	(GameEndCondition_ConditionType)(0), // 2: v1.GameEndCondition.ConditionType
-	(*Tragedy)(nil),                     // 3: v1.Tragedy
-	(*Script)(nil),                      // 4: v1.Script
-	(*CharacterConfig)(nil),             // 5: v1.CharacterConfig
-	(*CharacterConfigLib)(nil),          // 6: v1.CharacterConfigLib
-	(*IncidentConfig)(nil),              // 7: v1.IncidentConfig
-	(*IncidentConfigLib)(nil),           // 8: v1.IncidentConfigLib
-	(*Condition)(nil),                   // 9: v1.Condition
-	(*StatCondition)(nil),               // 10: v1.StatCondition
-	(*LocationCondition)(nil),           // 11: v1.LocationCondition
-	(*GameEndCondition)(nil),            // 12: v1.GameEndCondition
-	nil,                                 // 13: v1.CharacterConfigLib.CharactersEntry
-	nil,                                 // 14: v1.IncidentConfigLib.IncidentsEntry
-	(IncidentType)(0),                   // 15: v1.IncidentType
-	(TragedyScriptType)(0),              // 16: v1.TragedyScriptType
-	(RoleType)(0),                       // 17: v1.RoleType
-	(LocationType)(0),                   // 18: v1.LocationType
+	(GameEndCondition_ConditionType)(0), // 0: v1.GameEndCondition.ConditionType
+	(*Tragedy)(nil),                     // 1: v1.Tragedy
+	(*Script)(nil),                      // 2: v1.Script
+	(*GameEndCondition)(nil),            // 3: v1.GameEndCondition
+	(IncidentType)(0),                   // 4: v1.IncidentType
+	(*Condition)(nil),                   // 5: v1.Condition
+	(TragedyScriptType)(0),              // 6: v1.TragedyScriptType
+	(*CharacterConfig)(nil),             // 7: v1.CharacterConfig
+	(*IncidentConfig)(nil),              // 8: v1.IncidentConfig
 }
 var file_v1_script_proto_depIdxs = []int32{
-	15, // 0: v1.Tragedy.tragedy_type:type_name -> v1.IncidentType
-	9,  // 1: v1.Tragedy.conditions:type_name -> v1.Condition
-	16, // 2: v1.Script.main_plot:type_name -> v1.TragedyScriptType
-	16, // 3: v1.Script.sub_plots:type_name -> v1.TragedyScriptType
-	5,  // 4: v1.Script.characters:type_name -> v1.CharacterConfig
-	7,  // 5: v1.Script.incidents:type_name -> v1.IncidentConfig
-	12, // 6: v1.Script.win_conditions:type_name -> v1.GameEndCondition
-	12, // 7: v1.Script.lose_conditions:type_name -> v1.GameEndCondition
-	3,  // 8: v1.Script.tragedies:type_name -> v1.Tragedy
-	17, // 9: v1.CharacterConfig.hidden_role:type_name -> v1.RoleType
-	18, // 10: v1.CharacterConfig.initial_location:type_name -> v1.LocationType
-	13, // 11: v1.CharacterConfigLib.characters:type_name -> v1.CharacterConfigLib.CharactersEntry
-	15, // 12: v1.IncidentConfig.incident_type:type_name -> v1.IncidentType
-	9,  // 13: v1.IncidentConfig.conditions:type_name -> v1.Condition
-	14, // 14: v1.IncidentConfigLib.incidents:type_name -> v1.IncidentConfigLib.IncidentsEntry
-	10, // 15: v1.Condition.stat_condition:type_name -> v1.StatCondition
-	11, // 16: v1.Condition.location_condition:type_name -> v1.LocationCondition
-	0,  // 17: v1.StatCondition.stat_type:type_name -> v1.StatCondition.StatType
-	1,  // 18: v1.StatCondition.comparator:type_name -> v1.StatCondition.Comparator
-	18, // 19: v1.LocationCondition.location:type_name -> v1.LocationType
-	2,  // 20: v1.GameEndCondition.type:type_name -> v1.GameEndCondition.ConditionType
-	15, // 21: v1.GameEndCondition.incident_type:type_name -> v1.IncidentType
-	5,  // 22: v1.CharacterConfigLib.CharactersEntry.value:type_name -> v1.CharacterConfig
-	7,  // 23: v1.IncidentConfigLib.IncidentsEntry.value:type_name -> v1.IncidentConfig
-	24, // [24:24] is the sub-list for method output_type
-	24, // [24:24] is the sub-list for method input_type
-	24, // [24:24] is the sub-list for extension type_name
-	24, // [24:24] is the sub-list for extension extendee
-	0,  // [0:24] is the sub-list for field type_name
+	4,  // 0: v1.Tragedy.tragedy_type:type_name -> v1.IncidentType
+	5,  // 1: v1.Tragedy.conditions:type_name -> v1.Condition
+	6,  // 2: v1.Script.main_plot:type_name -> v1.TragedyScriptType
+	6,  // 3: v1.Script.sub_plots:type_name -> v1.TragedyScriptType
+	7,  // 4: v1.Script.characters:type_name -> v1.CharacterConfig
+	8,  // 5: v1.Script.incidents:type_name -> v1.IncidentConfig
+	3,  // 6: v1.Script.win_conditions:type_name -> v1.GameEndCondition
+	3,  // 7: v1.Script.lose_conditions:type_name -> v1.GameEndCondition
+	1,  // 8: v1.Script.tragedies:type_name -> v1.Tragedy
+	0,  // 9: v1.GameEndCondition.type:type_name -> v1.GameEndCondition.ConditionType
+	4,  // 10: v1.GameEndCondition.incident_type:type_name -> v1.IncidentType
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_v1_script_proto_init() }
@@ -1130,21 +442,18 @@ func file_v1_script_proto_init() {
 	if File_v1_script_proto != nil {
 		return
 	}
-	file_v1_ability_proto_init()
 	file_v1_character_proto_init()
+	file_v1_condition_proto_init()
 	file_v1_enums_proto_init()
-	file_v1_script_proto_msgTypes[6].OneofWrappers = []any{
-		(*Condition_StatCondition)(nil),
-		(*Condition_LocationCondition)(nil),
-	}
-	file_v1_script_proto_msgTypes[9].OneofWrappers = []any{}
+	file_v1_incident_proto_init()
+	file_v1_script_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_script_proto_rawDesc), len(file_v1_script_proto_rawDesc)),
-			NumEnums:      3,
-			NumMessages:   12,
+			NumEnums:      1,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

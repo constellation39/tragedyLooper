@@ -5,7 +5,7 @@ package v1;
 import "v1/ability.proto";
 import "v1/enums.proto";
 
-option go_package = "tragedylooper/internal/game/v1;v1";
+option go_package = "tragedylooper/internal/game/proto/v1;v1";
 
 // 角色信息
 message Character {
@@ -51,4 +51,21 @@ message TurfSelectionEffect {
 message DelayedEntryEffect {
   int32 day_of_entry = 1; // 角色登场的日期
   LocationType entry_location = 2; // 角色登场地点
+}
+
+// 角色在剧本中的配置
+message CharacterConfig {
+  int32 id = 1; // 角色ID
+  RoleType hidden_role = 2; // 角色在当前剧本中的隐藏身份
+  LocationType initial_location = 3; // 角色初始所在地点
+  int32 initial_paranoia = 4; // 角色初始妄想值
+  int32 initial_goodwill = 5; // 角色初始好感值
+  int32 initial_intrigue = 6; // 角色初始阴谋值
+  repeated int32 initial_ability_ids = 7; // 角色初始拥有的能力ID列表
+  bool is_first_step_role = 8; // 是否为First Step身份（新版中此概念用于特定剧本）
+  // 可以根据需要增加其他初始状态或元数据，如 paranoia_limit等
+}
+
+message CharacterConfigLib {
+  map<int32, CharacterConfig> characters = 1;
 }
