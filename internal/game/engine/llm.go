@@ -31,8 +31,8 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID int32) {
 		prompt = pBuilder.BuildMastermindPrompt(playerView, ge.GameState.Script, charactersWithStringKeys)
 	} else {
 		deductionKnowledgeWithStringKeys := make(map[string]string)
-		for id, value := range player.DeductionKnowledge.Entries {
-			deductionKnowledgeWithStringKeys[fmt.Sprint(id)] = value
+		for id, value := range player.DeductionKnowledge.GuessedRoles {
+			deductionKnowledgeWithStringKeys[fmt.Sprint(id)] = value.String()
 		}
 		prompt = pBuilder.BuildProtagonistPrompt(playerView, deductionKnowledgeWithStringKeys)
 	}
@@ -71,4 +71,3 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID int32) {
 		}
 	}()
 }
-

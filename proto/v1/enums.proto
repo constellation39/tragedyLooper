@@ -55,6 +55,10 @@ enum GameEventType {
   FIRST_GUESS_MADE = 12; // 首次猜测事件
   FINAL_GUESS_MADE = 13; // 最终猜测事件
   GOODWILL_REFUSAL_TEST = 14; // 好感度拒绝测试事件
+  LOOP_OVER = 15; // 好感度拒绝测试事件
+  DAY_ADVANCED = 16; // 天数推进事件
+  TRAGEDY_TRIGGERED = 17; // 悲剧触发事件
+  LOOP_RESET = 18; // 循环重置事件
 }
 
 // 角色身份类型枚举

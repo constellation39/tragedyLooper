@@ -77,26 +77,27 @@
                     "title": "Game Phase",
                     "description": "游戏阶段枚举"
                 },
-                "active_incidents": {
+                "active_tragedies": {
                     "additionalProperties": {
                         "type": "boolean"
                     },
                     "type": "object",
-                    "description": "当前循环中已激活（满足条件）的悲剧，键为 IncidentType"
+                    "description": "当前循环中已激活（满足条件）的悲剧，键为 TragedyType"
                 },
-                "prevented_incidents": {
+                "prevented_tragedies": {
                     "additionalProperties": {
                         "type": "boolean"
                     },
                     "type": "object",
-                    "description": "当前循环中已被阻止的悲剧，键为 IncidentType"
+                    "description": "当前循环中已被阻止的悲剧，键为 TragedyType"
                 },
                 "played_cards_this_day": {
                     "additionalProperties": {
-                        "type": "boolean"
+                        "$ref": "#/definitions/v1.Card",
+                        "additionalProperties": true
                     },
                     "type": "object",
-                    "description": "本日已打出的卡牌ID列表"
+                    "description": "本日已打出的卡牌列表, key is player_id"
                 },
                 "played_cards_this_loop": {
                     "additionalProperties": {
@@ -238,7 +239,15 @@
                             "FINAL_GUESS_MADE",
                             13,
                             "GOODWILL_REFUSAL_TEST",
-                            14
+                            14,
+                            "LOOP_OVER",
+                            15,
+                            "DAY_ADVANCED",
+                            16,
+                            "TRAGEDY_TRIGGERED",
+                            17,
+                            "LOOP_RESET",
+                            18
                         ]
                     },
                     "type": "array",
@@ -1040,7 +1049,15 @@
                         "FINAL_GUESS_MADE",
                         13,
                         "GOODWILL_REFUSAL_TEST",
-                        14
+                        14,
+                        "LOOP_OVER",
+                        15,
+                        "DAY_ADVANCED",
+                        16,
+                        "TRAGEDY_TRIGGERED",
+                        17,
+                        "LOOP_RESET",
+                        18
                     ],
                     "oneOf": [
                         {
@@ -1486,6 +1503,13 @@
                     },
                     "type": "array",
                     "description": "剧本特有规则的文字描述"
+                },
+                "tragedies": {
+                    "items": {
+                        "$ref": "#/definitions/v1.Tragedy"
+                    },
+                    "type": "array",
+                    "description": "剧本中的悲剧列表"
                 }
             },
             "additionalProperties": true,
@@ -1556,6 +1580,47 @@
             "type": "object",
             "title": "Stat Condition",
             "description": "属性条件"
+        },
+        "v1.Tragedy": {
+            "properties": {
+                "tragedy_type": {
+                    "enum": [
+                        "INCIDENT_TYPE_UNSPECIFIED",
+                        0,
+                        "MURDER",
+                        1,
+                        "SUICIDE",
+                        2,
+                        "HOSPITAL_CONSPIRACY",
+                        3,
+                        "MURDER_MYSTERY",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Incident Type",
+                    "description": "悲剧类型枚举"
+                },
+                "day": {
+                    "type": "integer"
+                },
+                "conditions": {
+                    "items": {
+                        "$ref": "#/definitions/v1.Condition"
+                    },
+                    "type": "array"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Tragedy",
+            "description": "Tragedy represents a tragedy in the script."
         },
         "v1.TurfSelectionEffect": {
             "properties": {

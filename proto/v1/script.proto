@@ -6,7 +6,15 @@ import "v1/ability.proto"; // 引入 ability.proto
 import "v1/character.proto"; // 引入 character.proto 以使用 CharacterConfig 中的字段
 import "v1/enums.proto";
 
+
 option go_package = "tragedylooper/internal/game/v1;v1";
+
+// Tragedy represents a tragedy in the script.
+message Tragedy {
+  IncidentType tragedy_type = 1;
+  int32 day = 2;
+  repeated Condition conditions = 3;
+}
 
 // 剧本信息
 message Script {
@@ -22,6 +30,7 @@ message Script {
   repeated GameEndCondition win_conditions = 10; // 胜利条件列表
   repeated GameEndCondition lose_conditions = 11; // 失败条件列表
   repeated string special_rules_description = 12; // 剧本特有规则的文字描述
+  repeated Tragedy tragedies = 13; // 剧本中的悲剧列表
 }
 
 // 角色在剧本中的配置

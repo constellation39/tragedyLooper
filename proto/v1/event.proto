@@ -92,3 +92,7 @@ message Incident {
 message IncidentTriggeredEvent {
   Incident incident = 1;
 }
+
+message TragedyTriggeredEvent {
+  IncidentType tragedy_type = 1;
+}

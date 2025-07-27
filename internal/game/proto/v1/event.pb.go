@@ -894,6 +894,50 @@ func (x *IncidentTriggeredEvent) GetIncident() *Incident {
 	return nil
 }
 
+type TragedyTriggeredEvent struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TragedyType   IncidentType           `protobuf:"varint,1,opt,name=tragedy_type,json=tragedyType,proto3,enum=v1.IncidentType" json:"tragedy_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TragedyTriggeredEvent) Reset() {
+	*x = TragedyTriggeredEvent{}
+	mi := &file_v1_event_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TragedyTriggeredEvent) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TragedyTriggeredEvent) ProtoMessage() {}
+
+func (x *TragedyTriggeredEvent) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_event_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TragedyTriggeredEvent.ProtoReflect.Descriptor instead.
+func (*TragedyTriggeredEvent) Descriptor() ([]byte, []int) {
+	return file_v1_event_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *TragedyTriggeredEvent) GetTragedyType() IncidentType {
+	if x != nil {
+		return x.TragedyType
+	}
+	return IncidentType_INCIDENT_TYPE_UNSPECIFIED
+}
+
 var File_v1_event_proto protoreflect.FileDescriptor
 
 const file_v1_event_proto_rawDesc = "" +
@@ -954,7 +998,9 @@ const file_v1_event_proto_rawDesc = "" +
 	"\x06victim\x18\x04 \x01(\tR\x06victim\x12 \n" +
 	"\vdescription\x18\x05 \x01(\tR\vdescription\"B\n" +
 	"\x16IncidentTriggeredEvent\x12(\n" +
-	"\bincident\x18\x01 \x01(\v2\f.v1.IncidentR\bincidentB#Z!tragedylooper/internal/game/v1;v1b\x06proto3"
+	"\bincident\x18\x01 \x01(\v2\f.v1.IncidentR\bincident\"L\n" +
+	"\x15TragedyTriggeredEvent\x123\n" +
+	"\ftragedy_type\x18\x01 \x01(\x0e2\x10.v1.IncidentTypeR\vtragedyTypeB#Z!tragedylooper/internal/game/v1;v1b\x06proto3"
 
 var (
 	file_v1_event_proto_rawDescOnce sync.Once
@@ -968,7 +1014,7 @@ func file_v1_event_proto_rawDescGZIP() []byte {
 	return file_v1_event_proto_rawDescData
 }
 
-var file_v1_event_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
+var file_v1_event_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_v1_event_proto_goTypes = []any{
 	(*GameEvent)(nil),              // 0: v1.GameEvent
 	(*GameEventLib)(nil),           // 1: v1.GameEventLib
@@ -987,34 +1033,36 @@ var file_v1_event_proto_goTypes = []any{
 	(*ChoiceRequiredEvent)(nil),    // 14: v1.ChoiceRequiredEvent
 	(*Incident)(nil),               // 15: v1.Incident
 	(*IncidentTriggeredEvent)(nil), // 16: v1.IncidentTriggeredEvent
-	nil,                            // 17: v1.GameEventLib.EventsEntry
-	nil,                            // 18: v1.CardPlayedEvent.PlayedCardsEntry
-	(GameEventType)(0),             // 19: v1.GameEventType
-	(*anypb.Any)(nil),              // 20: google.protobuf.Any
-	(*timestamppb.Timestamp)(nil),  // 21: google.protobuf.Timestamp
-	(LocationType)(0),              // 22: v1.LocationType
-	(IncidentType)(0),              // 23: v1.IncidentType
-	(PlayerRole)(0),                // 24: v1.PlayerRole
-	(*CardList)(nil),               // 25: v1.CardList
+	(*TragedyTriggeredEvent)(nil),  // 17: v1.TragedyTriggeredEvent
+	nil,                            // 18: v1.GameEventLib.EventsEntry
+	nil,                            // 19: v1.CardPlayedEvent.PlayedCardsEntry
+	(GameEventType)(0),             // 20: v1.GameEventType
+	(*anypb.Any)(nil),              // 21: google.protobuf.Any
+	(*timestamppb.Timestamp)(nil),  // 22: google.protobuf.Timestamp
+	(LocationType)(0),              // 23: v1.LocationType
+	(IncidentType)(0),              // 24: v1.IncidentType
+	(PlayerRole)(0),                // 25: v1.PlayerRole
+	(*CardList)(nil),               // 26: v1.CardList
 }
 var file_v1_event_proto_depIdxs = []int32{
-	19, // 0: v1.GameEvent.type:type_name -> v1.GameEventType
-	20, // 1: v1.GameEvent.payload:type_name -> google.protobuf.Any
-	21, // 2: v1.GameEvent.timestamp:type_name -> google.protobuf.Timestamp
-	17, // 3: v1.GameEventLib.events:type_name -> v1.GameEventLib.EventsEntry
-	22, // 4: v1.CharacterMovedEvent.new_location:type_name -> v1.LocationType
-	23, // 5: v1.LoopLossEvent.incident_type:type_name -> v1.IncidentType
-	18, // 6: v1.CardPlayedEvent.played_cards:type_name -> v1.CardPlayedEvent.PlayedCardsEntry
-	24, // 7: v1.GameOverEvent.winner:type_name -> v1.PlayerRole
+	20, // 0: v1.GameEvent.type:type_name -> v1.GameEventType
+	21, // 1: v1.GameEvent.payload:type_name -> google.protobuf.Any
+	22, // 2: v1.GameEvent.timestamp:type_name -> google.protobuf.Timestamp
+	18, // 3: v1.GameEventLib.events:type_name -> v1.GameEventLib.EventsEntry
+	23, // 4: v1.CharacterMovedEvent.new_location:type_name -> v1.LocationType
+	24, // 5: v1.LoopLossEvent.incident_type:type_name -> v1.IncidentType
+	19, // 6: v1.CardPlayedEvent.played_cards:type_name -> v1.CardPlayedEvent.PlayedCardsEntry
+	25, // 7: v1.GameOverEvent.winner:type_name -> v1.PlayerRole
 	13, // 8: v1.ChoiceRequiredEvent.choices:type_name -> v1.Choice
 	15, // 9: v1.IncidentTriggeredEvent.incident:type_name -> v1.Incident
-	20, // 10: v1.GameEventLib.EventsEntry.value:type_name -> google.protobuf.Any
-	25, // 11: v1.CardPlayedEvent.PlayedCardsEntry.value:type_name -> v1.CardList
-	12, // [12:12] is the sub-list for method output_type
-	12, // [12:12] is the sub-list for method input_type
-	12, // [12:12] is the sub-list for extension type_name
-	12, // [12:12] is the sub-list for extension extendee
-	0,  // [0:12] is the sub-list for field type_name
+	24, // 10: v1.TragedyTriggeredEvent.tragedy_type:type_name -> v1.IncidentType
+	21, // 11: v1.GameEventLib.EventsEntry.value:type_name -> google.protobuf.Any
+	26, // 12: v1.CardPlayedEvent.PlayedCardsEntry.value:type_name -> v1.CardList
+	13, // [13:13] is the sub-list for method output_type
+	13, // [13:13] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_v1_event_proto_init() }
@@ -1030,7 +1078,7 @@ func file_v1_event_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_event_proto_rawDesc), len(file_v1_event_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   19,
+			NumMessages:   20,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

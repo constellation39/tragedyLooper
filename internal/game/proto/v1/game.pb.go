@@ -31,9 +31,9 @@ type GameState struct {
 	CurrentDay              int32                  `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                                                                                      // 当前天数
 	CurrentLoop             int32                  `protobuf:"varint,6,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                                                                                   // 当前循环数
 	CurrentPhase            GamePhase              `protobuf:"varint,7,opt,name=current_phase,json=currentPhase,proto3,enum=v1.GamePhase" json:"current_phase,omitempty"`                                                                                              // 当前游戏阶段
-	ActiveIncidents         map[int32]bool         `protobuf:"bytes,8,rep,name=active_incidents,json=activeIncidents,proto3" json:"active_incidents,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                            // 当前循环中已激活（满足条件）的悲剧，键为 IncidentType
-	PreventedIncidents      map[int32]bool         `protobuf:"bytes,9,rep,name=prevented_incidents,json=preventedIncidents,proto3" json:"prevented_incidents,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                   // 当前循环中已被阻止的悲剧，键为 IncidentType
-	PlayedCardsThisDay      map[int32]bool         `protobuf:"bytes,10,rep,name=played_cards_this_day,json=playedCardsThisDay,proto3" json:"played_cards_this_day,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`              // 本日已打出的卡牌ID列表
+	ActiveTragedies         map[int32]bool         `protobuf:"bytes,8,rep,name=active_tragedies,json=activeTragedies,proto3" json:"active_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                            // 当前循环中已激活（满足条件）的悲剧，键为 TragedyType
+	PreventedTragedies      map[int32]bool         `protobuf:"bytes,9,rep,name=prevented_tragedies,json=preventedTragedies,proto3" json:"prevented_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                   // 当前循环中已被阻止的悲剧，键为 TragedyType
+	PlayedCardsThisDay      map[int32]*Card        `protobuf:"bytes,10,rep,name=played_cards_this_day,json=playedCardsThisDay,proto3" json:"played_cards_this_day,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`               // 本日已打出的卡牌列表, key is player_id
 	PlayedCardsThisLoop     map[int32]bool         `protobuf:"bytes,11,rep,name=played_cards_this_loop,json=playedCardsThisLoop,proto3" json:"played_cards_this_loop,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`           // 本循环已打出的卡牌ID列表
 	LastUpdateTime          int64                  `protobuf:"varint,12,opt,name=last_update_time,json=lastUpdateTime,proto3" json:"last_update_time,omitempty"`                                                                                                       // 最后更新时间戳 (Unix timestamp)
 	DayEvents               []*GameEvent           `protobuf:"bytes,13,rep,name=day_events,json=dayEvents,proto3" json:"day_events,omitempty"`                                                                                                                         // 本日发生的事件日志
@@ -124,21 +124,21 @@ func (x *GameState) GetCurrentPhase() GamePhase {
 	return GamePhase_GAME_PHASE_UNSPECIFIED
 }
 
-func (x *GameState) GetActiveIncidents() map[int32]bool {
+func (x *GameState) GetActiveTragedies() map[int32]bool {
 	if x != nil {
-		return x.ActiveIncidents
+		return x.ActiveTragedies
 	}
 	return nil
 }
 
-func (x *GameState) GetPreventedIncidents() map[int32]bool {
+func (x *GameState) GetPreventedTragedies() map[int32]bool {
 	if x != nil {
-		return x.PreventedIncidents
+		return x.PreventedTragedies
 	}
 	return nil
 }
 
-func (x *GameState) GetPlayedCardsThisDay() map[int32]bool {
+func (x *GameState) GetPlayedCardsThisDay() map[int32]*Card {
 	if x != nil {
 		return x.PlayedCardsThisDay
 	}
@@ -198,7 +198,7 @@ var File_v1_game_proto protoreflect.FileDescriptor
 
 const file_v1_game_proto_rawDesc = "" +
 	"\n" +
-	"\rv1/game.proto\x12\x02v1\x1a\x12v1/character.proto\x1a\x0ev1/enums.proto\x1a\x0ev1/event.proto\x1a\x0fv1/player.proto\x1a\x0fv1/script.proto\"\xe7\r\n" +
+	"\rv1/game.proto\x12\x02v1\x1a\x12v1/character.proto\x1a\x0ev1/enums.proto\x1a\x0ev1/event.proto\x1a\x0fv1/player.proto\x1a\rv1/card.proto\x1a\x0fv1/script.proto\"\xf1\r\n" +
 	"\tGameState\x12\x17\n" +
 	"\agame_id\x18\x01 \x01(\tR\x06gameId\x12\"\n" +
 	"\x06script\x18\x02 \x01(\v2\n" +
@@ -211,8 +211,8 @@ const file_v1_game_proto_rawDesc = "" +
 	"currentDay\x12!\n" +
 	"\fcurrent_loop\x18\x06 \x01(\x05R\vcurrentLoop\x122\n" +
 	"\rcurrent_phase\x18\a \x01(\x0e2\r.v1.GamePhaseR\fcurrentPhase\x12M\n" +
-	"\x10active_incidents\x18\b \x03(\v2\".v1.GameState.ActiveIncidentsEntryR\x0factiveIncidents\x12V\n" +
-	"\x13prevented_incidents\x18\t \x03(\v2%.v1.GameState.PreventedIncidentsEntryR\x12preventedIncidents\x12X\n" +
+	"\x10active_tragedies\x18\b \x03(\v2\".v1.GameState.ActiveTragediesEntryR\x0factiveTragedies\x12V\n" +
+	"\x13prevented_tragedies\x18\t \x03(\v2%.v1.GameState.PreventedTragediesEntryR\x12preventedTragedies\x12X\n" +
 	"\x15played_cards_this_day\x18\n" +
 	" \x03(\v2%.v1.GameState.PlayedCardsThisDayEntryR\x12playedCardsThisDay\x12[\n" +
 	"\x16played_cards_this_loop\x18\v \x03(\v2&.v1.GameState.PlayedCardsThisLoopEntryR\x13playedCardsThisLoop\x12(\n" +
@@ -231,15 +231,15 @@ const file_v1_game_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12 \n" +
 	"\x05value\x18\x02 \x01(\v2\n" +
 	".v1.PlayerR\x05value:\x028\x01\x1aB\n" +
-	"\x14ActiveIncidentsEntry\x12\x10\n" +
+	"\x14ActiveTragediesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aE\n" +
-	"\x17PreventedIncidentsEntry\x12\x10\n" +
+	"\x17PreventedTragediesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aE\n" +
+	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aO\n" +
 	"\x17PlayedCardsThisDayEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aF\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x1e\n" +
+	"\x05value\x18\x02 \x01(\v2\b.v1.CardR\x05value:\x028\x01\x1aF\n" +
 	"\x18PlayedCardsThisLoopEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aJ\n" +
@@ -270,8 +270,8 @@ var file_v1_game_proto_goTypes = []any{
 	(*GameState)(nil), // 0: v1.GameState
 	nil,               // 1: v1.GameState.CharactersEntry
 	nil,               // 2: v1.GameState.PlayersEntry
-	nil,               // 3: v1.GameState.ActiveIncidentsEntry
-	nil,               // 4: v1.GameState.PreventedIncidentsEntry
+	nil,               // 3: v1.GameState.ActiveTragediesEntry
+	nil,               // 4: v1.GameState.PreventedTragediesEntry
 	nil,               // 5: v1.GameState.PlayedCardsThisDayEntry
 	nil,               // 6: v1.GameState.PlayedCardsThisLoopEntry
 	nil,               // 7: v1.GameState.CharacterParanoiaLimitsEntry
@@ -282,14 +282,15 @@ var file_v1_game_proto_goTypes = []any{
 	(*GameEvent)(nil), // 12: v1.GameEvent
 	(*Character)(nil), // 13: v1.Character
 	(*Player)(nil),    // 14: v1.Player
+	(*Card)(nil),      // 15: v1.Card
 }
 var file_v1_game_proto_depIdxs = []int32{
 	10, // 0: v1.GameState.script:type_name -> v1.Script
 	1,  // 1: v1.GameState.characters:type_name -> v1.GameState.CharactersEntry
 	2,  // 2: v1.GameState.players:type_name -> v1.GameState.PlayersEntry
 	11, // 3: v1.GameState.current_phase:type_name -> v1.GamePhase
-	3,  // 4: v1.GameState.active_incidents:type_name -> v1.GameState.ActiveIncidentsEntry
-	4,  // 5: v1.GameState.prevented_incidents:type_name -> v1.GameState.PreventedIncidentsEntry
+	3,  // 4: v1.GameState.active_tragedies:type_name -> v1.GameState.ActiveTragediesEntry
+	4,  // 5: v1.GameState.prevented_tragedies:type_name -> v1.GameState.PreventedTragediesEntry
 	5,  // 6: v1.GameState.played_cards_this_day:type_name -> v1.GameState.PlayedCardsThisDayEntry
 	6,  // 7: v1.GameState.played_cards_this_loop:type_name -> v1.GameState.PlayedCardsThisLoopEntry
 	12, // 8: v1.GameState.day_events:type_name -> v1.GameEvent
@@ -299,11 +300,12 @@ var file_v1_game_proto_depIdxs = []int32{
 	9,  // 12: v1.GameState.character_intrigue_limits:type_name -> v1.GameState.CharacterIntrigueLimitsEntry
 	13, // 13: v1.GameState.CharactersEntry.value:type_name -> v1.Character
 	14, // 14: v1.GameState.PlayersEntry.value:type_name -> v1.Player
-	15, // [15:15] is the sub-list for method output_type
-	15, // [15:15] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	15, // 15: v1.GameState.PlayedCardsThisDayEntry.value:type_name -> v1.Card
+	16, // [16:16] is the sub-list for method output_type
+	16, // [16:16] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_v1_game_proto_init() }
@@ -315,6 +317,7 @@ func file_v1_game_proto_init() {
 	file_v1_enums_proto_init()
 	file_v1_event_proto_init()
 	file_v1_player_proto_init()
+	file_v1_card_proto_init()
 	file_v1_script_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{

@@ -12,7 +12,7 @@ import (
 func (ge *GameEngine) handleMorningPhase() {
 	ge.logger.Info("Morning Phase", zap.Int("loop", int(ge.GameState.CurrentLoop)), zap.Int("day", int(ge.GameState.CurrentDay)))
 	ge.resetPlayerReadiness()
-	ge.GameState.PlayedCardsThisDay = make(map[int32]bool) // Clear cards for the new day
+	ge.GameState.PlayedCardsThisDay = make(map[int32]*model.Card) // Clear cards for the new day
 
 	ge.checkAndTriggerAbilities(model.TriggerType_ON_DAY_START, nil)
 
@@ -49,11 +49,10 @@ func (ge *GameEngine) handleCardRevealPhase() {
 
 func (ge *GameEngine) handleCardResolvePhase() {
 	ge.logger.Info("Card Resolve Phase")
-	ge.checkAndTriggerAbilities(model.TriggerType_TRIGGER_TYPE_ON_CARD_RESOLVE_PHASE, nil)
+	ge.checkAndTriggerAbilities(model.TriggerType_ON_CARD_RESOLVE_PHASE, nil)
 
 	// Resolve cards in a specific order if necessary (e.g., by initiative). For now, iterate over players.
-	for playerID, cards := range ge.GameState.PlayedCardsThisDay {
-		for _, card := range cards.Cards {
+	for playerID, card := range ge.GameState.PlayedCardsThisDay {
 			// The card itself contains the target information, set during the play action.
 			// We construct a payload for the effect system.
 			payload := &model.UseAbilityPayload{
@@ -66,14 +65,12 @@ func (ge *GameEngine) handleCardResolvePhase() {
 					zap.String("cardName", card.Name),
 				)
 			}
-		}
-	}
-	ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_ABILITIES
+		ge.GameState.CurrentPhase = model.GamePhase_ABILITIES}
 }
 
 func (ge *GameEngine) handleAbilitiesPhase() {
 	ge.logger.Info("Abilities Phase")
-	ge.checkAndTriggerAbilities(model.TriggerType_TRIGGER_TYPE_ON_ABILITY_PHASE, nil)
+	ge.checkAndTriggerAbilities(model.TriggerType_ON_ABILITY_PHASE, nil)
 
 	allPlayersReady := true
 	for playerID, player := range ge.GameState.Players {
@@ -89,19 +86,19 @@ func (ge *GameEngine) handleAbilitiesPhase() {
 	if allPlayersReady {
 		ge.logger.Info("All players ready for Incidents Phase.")
 		ge.resetPlayerReadiness()
-		ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_INCIDENTS
+		ge.GameState.CurrentPhase = model.GamePhase_INCIDENTS
 	}
 }
 
 func (ge *GameEngine) handleIncidentsPhase() {
 	ge.logger.Info("Incidents Phase")
-	ge.checkAndTriggerAbilities(model.TriggerType_TRIGGER_TYPE_ON_INCIDENT_PHASE, nil)
+	ge.checkAndTriggerAbilities(model.TriggerType_ON_INCIDENT_PHASE, nil)
 
 	// Check for incidents on the current day
-	for _, incident := range ge.gameData.Incidents {
+	for _, incident := range ge.gameData.GetIncidents() {
 		if incident.Day == ge.GameState.CurrentDay {
 			ge.logger.Info("Incident triggered!", zap.String("incident_name", incident.Name))
-			ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_INCIDENT_TRIGGERED, &model.IncidentTriggeredEvent{Incident: incident})
+			ge.publishGameEvent(model.GameEventType_INCIDENT_TRIGGERED, &model.IncidentTriggeredEvent{Incident: incident})
 		}
 	}
 
@@ -111,7 +108,7 @@ func (ge *GameEngine) handleIncidentsPhase() {
 		if tragedy.Day == ge.GameState.CurrentDay && ge.GameState.ActiveTragedies[int32(tragedy.TragedyType)] && !ge.GameState.PreventedTragedies[int32(tragedy.TragedyType)] {
 			if ge.checkConditions(tragedy.Conditions) {
 				ge.logger.Info("Tragedy triggered!", zap.String("tragedy_type", string(tragedy.TragedyType)))
-				ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_TRAGEDY_TRIGGERED, &model.TragedyTriggeredEvent{TragedyType: tragedy.TragedyType})
+				ge.publishGameEvent(model.GameEventType_TRAGEDY_TRIGGERED, &model.TragedyTriggeredEvent{TragedyType: tragedy.TragedyType})
 				tragedyOccurred = true
 				ge.GameState.ActiveTragedies[int32(tragedy.TragedyType)] = false // A tragedy can only occur once
 				break                                                            // Only one tragedy per day
@@ -125,9 +122,9 @@ func (ge *GameEngine) handleIncidentsPhase() {
 	}
 
 	if tragedyOccurred {
-		ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_LOOP_END
+		ge.GameState.CurrentPhase = model.GamePhase_LOOP_END
 	} else {
-		ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_DAY_END
+		ge.GameState.CurrentPhase = model.GamePhase_DAY_END
 	}
 }
 
@@ -135,9 +132,9 @@ func (ge *GameEngine) handleDayEndPhase() {
 	ge.logger.Info("Day End Phase", zap.Int("day", int(ge.GameState.CurrentDay)))
 	ge.GameState.CurrentDay++
 	if ge.GameState.CurrentDay > ge.GameState.Script.DaysPerLoop {
-		ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_LOOP_END
+		ge.GameState.CurrentPhase = model.GamePhase_LOOP_END
 	} else {
-		ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_MORNING
+		ge.GameState.CurrentPhase = model.GamePhase_SETUP
 	}
 }
 
@@ -161,7 +158,7 @@ func (ge *GameEngine) handleLoopEndPhase() {
 	ge.resetLoop()
 	ge.GameState.CurrentLoop++
 	ge.GameState.CurrentDay = 1
-	ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_MORNING
+	ge.GameState.CurrentPhase = model.GamePhase_SETUP
 	ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_RESET, &model.LoopResetEvent{Loop: ge.GameState.CurrentLoop})
 }
 

@@ -6,14 +6,16 @@
             "properties": {
                 "tragedy_type": {
                     "enum": [
-                        "TRAGEDY_TYPE_UNSPECIFIED",
+                        "INCIDENT_TYPE_UNSPECIFIED",
                         0,
-                        "TRAGEDY_TYPE_MURDER",
+                        "MURDER",
                         1,
-                        "TRAGEDY_TYPE_SUICIDE",
+                        "SUICIDE",
                         2,
-                        "TRAGEDY_TYPE_SEALED",
-                        3
+                        "HOSPITAL_CONSPIRACY",
+                        3,
+                        "MURDER_MYSTERY",
+                        4
                     ],
                     "oneOf": [
                         {
@@ -23,8 +25,8 @@
                             "type": "integer"
                         }
                     ],
-                    "title": "Tragedy Type",
-                    "description": "TragedyType 定义了剧本中可能发生的悲剧类型。 TragedyType 定义了在游戏中可能发生的悲剧类型。"
+                    "title": "Incident Type",
+                    "description": "悲剧类型枚举"
                 }
             },
             "additionalProperties": true,

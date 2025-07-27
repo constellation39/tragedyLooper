@@ -217,7 +217,15 @@
                             "FINAL_GUESS_MADE",
                             13,
                             "GOODWILL_REFUSAL_TEST",
-                            14
+                            14,
+                            "LOOP_OVER",
+                            15,
+                            "DAY_ADVANCED",
+                            16,
+                            "TRAGEDY_TRIGGERED",
+                            17,
+                            "LOOP_RESET",
+                            18
                         ]
                     },
                     "type": "array",

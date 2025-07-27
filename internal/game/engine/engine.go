@@ -14,6 +14,7 @@ import (
 // GameEngine manages the state and logic of a single game instance.
 type GameEngine struct {
 	GameState            *model.GameState
+	gameData             *loader.Loader
 	requestChan          chan engineRequest
 	gameEventChan        chan *model.GameEvent
 	gameControlChan      chan struct{}
@@ -50,9 +51,9 @@ func NewGameEngine(gameID string, logger *zap.Logger, script *model.Script, play
 		CurrentDay:              1,
 		CurrentLoop:             1,
 		CurrentPhase:            model.GamePhase_SETUP,
-		ActiveIncidents:         make(map[int32]bool),
-		PreventedIncidents:      make(map[int32]bool),
-		PlayedCardsThisDay:      make(map[int32]bool),
+		ActiveTragedies:         make(map[int32]bool),
+		PreventedTragedies:      make(map[int32]bool),
+		PlayedCardsThisDay:      make(map[int32]*model.Card),
 		PlayedCardsThisLoop:     make(map[int32]bool),
 		LastUpdateTime:          time.Now().Unix(),
 		DayEvents:               make([]*model.GameEvent, 0),
@@ -71,6 +72,7 @@ func NewGameEngine(gameID string, logger *zap.Logger, script *model.Script, play
 
 	ge := &GameEngine{
 		GameState:         gs,
+		gameData:          gameData,
 		requestChan:       make(chan engineRequest, 100),
 		gameEventChan:     make(chan *model.GameEvent, 100),
 		gameControlChan:   make(chan struct{}),
@@ -185,7 +187,7 @@ func (ge *GameEngine) runGameLoop() {
 
 func (ge *GameEngine) endGame(winner model.PlayerRole) {
 	ge.GameState.CurrentPhase = model.GamePhase_GAME_OVER
-	ge.publishGameEvent(model.GameEventType_GAME_OVER, &model.GameOverEvent{Winner: winner})
+	ge.publishGameEvent(model.GameEventType_LOOP_OVER, &model.GameOverEvent{Winner: winner})
 	ge.logger.Info("Game over", zap.String("winner", winner.String()))
 }
 

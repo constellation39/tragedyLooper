@@ -93,6 +93,13 @@
                     },
                     "type": "array",
                     "description": "剧本特有规则的文字描述"
+                },
+                "tragedies": {
+                    "items": {
+                        "$ref": "#/definitions/v1.Tragedy"
+                    },
+                    "type": "array",
+                    "description": "剧本中的悲剧列表"
                 }
             },
             "additionalProperties": true,
@@ -427,6 +434,47 @@
             "type": "object",
             "title": "Stat Condition",
             "description": "属性条件"
+        },
+        "v1.Tragedy": {
+            "properties": {
+                "tragedy_type": {
+                    "enum": [
+                        "INCIDENT_TYPE_UNSPECIFIED",
+                        0,
+                        "MURDER",
+                        1,
+                        "SUICIDE",
+                        2,
+                        "HOSPITAL_CONSPIRACY",
+                        3,
+                        "MURDER_MYSTERY",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Incident Type",
+                    "description": "悲剧类型枚举"
+                },
+                "day": {
+                    "type": "integer"
+                },
+                "conditions": {
+                    "items": {
+                        "$ref": "#/definitions/v1.Condition"
+                    },
+                    "type": "array"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Tragedy",
+            "description": "Tragedy represents a tragedy in the script."
         }
     }
 }

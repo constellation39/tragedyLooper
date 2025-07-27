@@ -229,6 +229,10 @@ const (
 	GameEventType_FIRST_GUESS_MADE            GameEventType = 12 // 首次猜测事件
 	GameEventType_FINAL_GUESS_MADE            GameEventType = 13 // 最终猜测事件
 	GameEventType_GOODWILL_REFUSAL_TEST       GameEventType = 14 // 好感度拒绝测试事件
+	GameEventType_LOOP_OVER                   GameEventType = 15 // 好感度拒绝测试事件
+	GameEventType_DAY_ADVANCED                GameEventType = 16 // 天数推进事件
+	GameEventType_TRAGEDY_TRIGGERED           GameEventType = 17 // 悲剧触发事件
+	GameEventType_LOOP_RESET                  GameEventType = 18 // 循环重置事件
 )
 
 // Enum value maps for GameEventType.
@@ -249,6 +253,10 @@ var (
 		12: "FIRST_GUESS_MADE",
 		13: "FINAL_GUESS_MADE",
 		14: "GOODWILL_REFUSAL_TEST",
+		15: "LOOP_OVER",
+		16: "DAY_ADVANCED",
+		17: "TRAGEDY_TRIGGERED",
+		18: "LOOP_RESET",
 	}
 	GameEventType_value = map[string]int32{
 		"GAME_EVENT_TYPE_UNSPECIFIED": 0,
@@ -266,6 +274,10 @@ var (
 		"FIRST_GUESS_MADE":            12,
 		"FINAL_GUESS_MADE":            13,
 		"GOODWILL_REFUSAL_TEST":       14,
+		"LOOP_OVER":                   15,
+		"DAY_ADVANCED":                16,
+		"TRAGEDY_TRIGGERED":           17,
+		"LOOP_RESET":                  18,
 	}
 )
 
@@ -724,7 +736,7 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\bPARANOIA\x10\x02\x12\f\n" +
 	"\bGOODWILL\x10\x03\x12\f\n" +
 	"\bINTRIGUE\x10\x04\x12\v\n" +
-	"\aSPECIAL\x10\x05*\xdb\x02\n" +
+	"\aSPECIAL\x10\x05*\xa3\x03\n" +
 	"\rGameEventType\x12\x1f\n" +
 	"\x1bGAME_EVENT_TYPE_UNSPECIFIED\x10\x00\x12\x13\n" +
 	"\x0fCHARACTER_MOVED\x10\x01\x12\x15\n" +
@@ -741,7 +753,12 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\tLOOP_LOSS\x10\v\x12\x14\n" +
 	"\x10FIRST_GUESS_MADE\x10\f\x12\x14\n" +
 	"\x10FINAL_GUESS_MADE\x10\r\x12\x19\n" +
-	"\x15GOODWILL_REFUSAL_TEST\x10\x0e*\xb4\x01\n" +
+	"\x15GOODWILL_REFUSAL_TEST\x10\x0e\x12\r\n" +
+	"\tLOOP_OVER\x10\x0f\x12\x10\n" +
+	"\fDAY_ADVANCED\x10\x10\x12\x15\n" +
+	"\x11TRAGEDY_TRIGGERED\x10\x11\x12\x0e\n" +
+	"\n" +
+	"LOOP_RESET\x10\x12*\xb4\x01\n" +
 	"\bRoleType\x12\x19\n" +
 	"\x15ROLE_TYPE_UNSPECIFIED\x10\x00\x12\f\n" +
 	"\bINNOCENT\x10\x01\x12\n" +
