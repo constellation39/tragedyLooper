@@ -1,16 +1,15 @@
 syntax = "proto3";
 
-package proto.v1;
+package v1;
 
 import "google/protobuf/any.proto";
 import "google/protobuf/timestamp.proto";
-import "proto/v1/card.proto";
-import "proto/v1/enums.proto";
-import "proto/v1/location.proto";
+import "v1/card.proto";
+import "v1/enums.proto";
 
-option go_package = "github.com/user/repo/proto/model";
+option go_package = "tragedylooper/internal/game/v1;v1";
 
-// GameEvent represents an event that occurred in the game.
+// GameEvent 表示游戏中发生的事件。
 message GameEvent {
   GameEventType type = 1;
   google.protobuf.Any payload = 2;
@@ -40,9 +39,11 @@ message IntrigueAdjustedEvent {
   int32 new_intrigue = 3;
 }
 
-message TragedyTriggeredEvent {
-  TragedyType tragedy_type = 1;
+message LoopLossEvent {
+  IncidentType incident_type = 1;
 }
+
+message LoopWinEvent {}
 
 message AbilityUsedEvent {
   int32 character_id = 1;
@@ -66,13 +67,13 @@ message GameOverEvent {
   PlayerRole winner = 1;
 }
 
-// Choice represents a choice a player can make.
+// Choice 表示玩家可以做出的选择。
 message Choice {
   string description = 1;
   int32 character_id = 2;
 }
 message ChoiceRequiredEvent {
-  // This might need a more complex structure depending on the choices
+  // 这可能需要更复杂的结构，具体取决于选择
   repeated Choice choices = 1;
 }
 

@@ -4,38 +4,33 @@
     "definitions": {
         "UseAbilityPayload": {
             "properties": {
+                "player_id": {
+                    "type": "string",
+                    "description": "执行操作的玩家ID"
+                },
                 "character_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "哪个角色的能力被使用"
                 },
                 "ability_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "哪个能力被使用"
                 },
-                "target": {
-                    "$ref": "#/definitions/proto.v1.Target",
-                    "additionalProperties": true
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Use Ability Payload",
-            "description": "UseAbilityPayload 定义了使用能力动作所需的数据。"
-        },
-        "proto.v1.Target": {
-            "properties": {
-                "character_id": {
-                    "type": "integer"
+                "target_character_id": {
+                    "type": "integer",
+                    "description": "如果能力有目标角色，指定其ID"
                 },
-                "location": {
+                "target_location": {
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
-                        "LOCATION_TYPE_HOSPITAL",
+                        "HOSPITAL",
                         1,
-                        "LOCATION_TYPE_SHRINE",
+                        "SHRINE",
                         2,
-                        "LOCATION_TYPE_CITY",
+                        "CITY",
                         3,
-                        "LOCATION_TYPE_SCHOOL",
+                        "SCHOOL",
                         4
                     ],
                     "oneOf": [
@@ -47,12 +42,37 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "LocationType 定义游戏中的可能地点。"
+                    "description": "地点类型枚举"
+                },
+                "target_incident_type": {
+                    "enum": [
+                        "INCIDENT_TYPE_UNSPECIFIED",
+                        0,
+                        "MURDER",
+                        1,
+                        "SUICIDE",
+                        2,
+                        "HOSPITAL_CONSPIRACY",
+                        3,
+                        "MURDER_MYSTERY",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Incident Type",
+                    "description": "悲剧类型枚举"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Target"
+            "title": "Use Ability Payload",
+            "description": "玩家使用能力的操作负载"
         }
     }
 }

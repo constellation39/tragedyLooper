@@ -1,26 +1,42 @@
 syntax = "proto3";
 
-package proto.v1;
+package v1;
 
-import "proto/v1/enums.proto";
-import "proto/v1/target.proto";
+import "v1/enums.proto";
 
-option go_package = "github.com/user/repo/proto/model";
+option go_package = "tragedylooper/internal/game/v1;v1";
 
-// PlayCardPayload 定义了打出卡牌动作所需的数据。
+// 玩家打出卡牌的操作负载
 message PlayCardPayload {
-  int32 card_id = 1;
-  Target target = 2;
+  string player_id = 1;                // 执行操作的玩家ID
+  int32 card_id = 2;                   // 打出的卡牌ID
+  oneof target {
+    int32 target_character_id = 3;       // 卡牌的目标角色ID
+    LocationType target_location = 4; // 如果是移动卡，指定目标地点
+  }
 }
 
-// UseAbilityPayload 定义了使用能力动作所需的数据。
+// 玩家使用能力的操作负载
 message UseAbilityPayload {
-  int32 character_id = 1;
-  int32 ability_id = 2;
-  Target target = 3;
+  string player_id = 1;                // 执行操作的玩家ID
+  int32 character_id = 2;              // 哪个角色的能力被使用
+  int32 ability_id = 3;                // 哪个能力被使用
+  oneof target {
+    int32 target_character_id = 4; // 如果能力有目标角色，指定其ID
+    LocationType target_location = 5; // 如果能力有目标地点，指定其地点
+    IncidentType target_incident_type = 6; // 如果能力目标是悲剧，指定其类型
+  }
 }
 
-// MakeGuessPayload 定义了主角进行最终猜测时提交的数据结构。
+// 主角玩家进行猜测的操作负载
 message MakeGuessPayload {
-  map<int32, RoleType> guessed_roles = 1; // GuessedRoles 是一个映射，键是角色ID，值是猜测的角色身份 (e.g., "KeyPerson", "Killer")。
+  string player_id = 1;                  // 执行操作的玩家ID
+  map<int32, RoleType> guessed_roles = 2; // 猜测的角色身份映射，键为 character_id
+}
+
+// 玩家进行选择的操作负载（例如，在需要选择地盘或目标时）
+message ChooseOptionPayload {
+  string player_id = 1;          // 执行操作的玩家ID
+  int32 character_id = 2;        // 做出选择的角色（如果选择与角色相关）
+  string chosen_option_id = 3;   // 选择项的ID
 }

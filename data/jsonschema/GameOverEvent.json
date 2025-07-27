@@ -8,9 +8,9 @@
                     "enum": [
                         "PLAYER_ROLE_UNSPECIFIED",
                         0,
-                        "PLAYER_ROLE_MASTERMIND",
+                        "MASTERMIND",
                         1,
-                        "PLAYER_ROLE_PROTAGONIST",
+                        "PROTAGONIST",
                         2
                     ],
                     "oneOf": [
@@ -22,7 +22,7 @@
                         }
                     ],
                     "title": "Player Role",
-                    "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
+                    "description": "玩家角色枚举"
                 }
             },
             "additionalProperties": true,

@@ -1,23 +1,25 @@
 syntax = "proto3";
 
-package proto.v1;
+package v1;
 
-import "proto/v1/effect.proto";
-import "proto/v1/enums.proto";
-import "proto/v1/target.proto";
+import "v1/enums.proto";
+import "v1/effect.proto";
 
-option go_package = "github.com/user/repo/proto/model";
+option go_package = "tragedylooper/internal/game/v1;v1";
 
-// Card 表示一张行动卡。
+// 行动卡牌
 message Card {
-  int32 id = 1; // 唯一标识符
-  string name = 2; // 卡牌名称
-  CardType card_type = 3; // 卡牌类型
-  PlayerRole owner_role = 4; // 所属玩家角色（主谋或主角）
-  Effect effect = 6; // 卡牌效果
-  bool once_per_loop = 7; // 每循环只能使用一次
-  bool used_this_loop = 8; // 运行时状态
-  Target target = 9;
+  int32 id = 1;                    // 卡牌唯一ID
+  string name = 2;                 // 卡牌名称
+  CardType card_type = 3;          // 卡牌类型
+  PlayerRole owner_role = 4;       // 卡牌所属玩家类型 (主谋或主角)
+  Effect effect = 5;               // 卡牌的具体效果
+  bool once_per_loop = 6;          // 是否每个循环只能使用一次
+  bool used_this_loop = 7;         // 运行时状态：本循环是否已使用过此卡牌
+  oneof target {
+    int32 target_character_id = 8;       // 卡牌的目标角色ID
+    LocationType target_location = 9; // 如果是移动卡，指定目标地点
+  }
 }
 
 message CardList {

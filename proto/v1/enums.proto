@@ -1,140 +1,135 @@
 syntax = "proto3";
 
-package proto.v1;
+package v1;
 
-option go_package = "github.com/user/repo/proto/model";
+option go_package = "tragedylooper/internal/game/v1;v1";
 
-// CardType 定义玩家可以打出的卡牌类型。
-enum CardType {
-  CARD_TYPE_UNSPECIFIED = 0;
-  CARD_TYPE_MOVEMENT = 1; // 移动
-  CARD_TYPE_PARANOIA = 2; // 妄想
-  CARD_TYPE_GOODWILL = 3; // 好感
-  CARD_TYPE_INTRIGUE = 4; // 阴谋
-  CARD_TYPE_SPECIAL = 5; // 用于特殊卡牌效果
-}
-
-// PlayerRole 定义连接玩家的角色（人类或 LLM）。
+// 玩家角色枚举
 enum PlayerRole {
-  PLAYER_ROLE_UNSPECIFIED = 0;
-  PLAYER_ROLE_MASTERMIND = 1; // 主谋
-  PLAYER_ROLE_PROTAGONIST = 2; // 主角
+  PLAYER_ROLE_UNSPECIFIED = 0; // 未指定
+  MASTERMIND = 1;              // 主谋
+  PROTAGONIST = 2;             // 主角
 }
 
-// GamePhase 定义游戏日期的当前阶段。
+// 游戏阶段枚举
 enum GamePhase {
-  GAME_PHASE_UNSPECIFIED = 0;
-  GAME_PHASE_MORNING = 1; // 早晨
-  GAME_PHASE_CARD_PLAY = 2; // 出牌阶段
-  GAME_PHASE_CARD_REVEAL = 3; // 牌揭示阶段
-  GAME_PHASE_CARD_RESOLVE = 4; // 牌结算阶段
-  GAME_PHASE_ABILITIES = 5; // 能力阶段
-  GAME_PHASE_INCIDENTS = 6; // 事件阶段
-  GAME_PHASE_DAY_END = 7; // 天结束
-  GAME_PHASE_LOOP_END = 8; // 循环结束
-  GAME_PHASE_GAME_OVER = 9; // 游戏结束
-  GAME_PHASE_PROTAGONIST_GUESS = 10; // 最终猜测阶段
+  GAME_PHASE_UNSPECIFIED = 0;      // 未指定
+  SETUP = 1;            // 游戏设置阶段（准备游戏板、角色等）
+  MASTERMIND_SETUP = 2; // 主谋设置剧本阶段（主谋秘密选择剧本、角色身份等）
+  CARD_PLAY = 3;                   // 卡牌打出阶段（玩家打出行动牌）
+  CARD_REVEAL = 4;                 // 卡牌揭示阶段（所有打出的行动牌面朝上）
+  CARD_RESOLVE = 5;                // 卡牌结算阶段（根据卡牌类型和优先级结算效果）
+  ABILITIES = 6;                   // 能力结算阶段（角色能力触发和结算）
+  INCIDENTS = 7;                   // 事件/悲剧结算阶段（检查悲剧是否触发）
+  DAY_END = 8;                     // 日末阶段（检查一天是否结束，重置某些状态）
+  LOOP_END = 9;                    // 循环结束阶段（检查一个循环是否结束，进行时间重置或进入最终猜测）
+  GAME_OVER = 10;                  // 游戏结束阶段（判断胜负并结束游戏）
+  PROTAGONIST_GUESS = 11;          // 主角猜测阶段（可以细化为最终猜测）
+  GAME_PHASE_FIRST_GUESS = 12;     // 主角首次猜测阶段（主角在游戏过程中进行的非最终猜测）
 }
 
-// GameEventType for GameEvent
+// 卡牌类型枚举
+enum CardType {
+  CARD_TYPE_UNSPECIFIED = 0; // 未指定
+  MOVEMENT = 1;              // 移动卡
+  PARANOIA = 2;              // 妄想卡（调整妄想值）
+  GOODWILL = 3;              // 好感卡（调整好感值）
+  INTRIGUE = 4;              // 阴谋卡（调整阴谋值）
+  SPECIAL = 5;               // 特殊卡（其他特殊效果）
+}
+
+// 游戏事件类型枚举
 enum GameEventType {
-  GAME_EVENT_TYPE_UNSPECIFIED = 0;
-  GAME_EVENT_TYPE_CARD_PLAYED = 1; // 打出卡牌
-  GAME_EVENT_TYPE_CHARACTER_MOVED = 2; // 角色移动
-  GAME_EVENT_TYPE_PARANOIA_ADJUSTED = 3; // 妄想调整
-  GAME_EVENT_TYPE_GOODWILL_ADJUSTED = 4; // 好感调整
-  GAME_EVENT_TYPE_INTRIGUE_ADJUSTED = 5; // 阴谋调整
-  GAME_EVENT_TYPE_ABILITY_USED = 6; // 使用能力
-  GAME_EVENT_TYPE_TRAGEDY_TRIGGERED = 7; // 悲剧触发
-  GAME_EVENT_TYPE_TRAGEDY_PREVENTED = 8; // 悲剧阻止
-  GAME_EVENT_TYPE_DAY_ADVANCED = 9; // 天数推进
-  GAME_EVENT_TYPE_LOOP_RESET = 10; // 循环重置
-  GAME_EVENT_TYPE_GAME_OVER = 11; // 游戏结束
-  GAME_EVENT_TYPE_PLAYER_GUESS = 12; // 玩家猜测
-  GAME_EVENT_TYPE_CHOICE_REQUIRED = 13; // 需要玩家选择
-  GAME_EVENT_TYPE_INCIDENT_TRIGGERED = 14; // 事件触发
+  GAME_EVENT_TYPE_UNSPECIFIED = 0;      // 未指定
+  CHARACTER_MOVED = 1;  // 角色移动事件
+  PARANOIA_ADJUSTED = 2; // 妄想值调整事件
+  GOODWILL_ADJUSTED = 3; // 好感值调整事件
+  INTRIGUE_ADJUSTED = 4; // 阴谋值调整事件
+  INCIDENT_TRIGGERED = 5; // 悲剧触发事件
+  INCIDENT_PREVENTED = 6; // 悲剧阻止事件
+  ROLE_REVEALED = 7;    // 角色身份揭示事件
+  ABILITY_GRANTED = 8;  // 授予能力事件
+  CHOICE_REQUIRED = 9;  // 需要玩家选择事件
+  LOOP_WIN = 10;        // 循环胜利事件
+  LOOP_LOSS = 11;       // 循环失败事件
+  FIRST_GUESS_MADE = 12; // 首次猜测事件
+  FINAL_GUESS_MADE = 13; // 最终猜测事件
+  GOODWILL_REFUSAL_TEST = 14; // 好感度拒绝测试事件
 }
 
-// ActionType 定义了玩家可以执行的操作类型。
-enum ActionType {
-  ACTION_TYPE_UNSPECIFIED = 0;
-  ACTION_TYPE_PLAY_CARD = 1; // 出牌
-  ACTION_TYPE_USE_ABILITY = 2; // 使用能力
-  ACTION_TYPE_MAKE_GUESS = 3; // 作出猜测
-  ACTION_TYPE_READY_FOR_NEXT_PHASE = 4; // 准备好进入下一阶段
-}
-
-// RoleType 定义了玩家在游戏中的具体角色。
+// 角色身份类型枚举
 enum RoleType {
-  ROLE_TYPE_UNSPECIFIED = 0; // 未指定角色类型 (默认值)
-  ROLE_TYPE_INNOCENT = 1; // 无辜者
-  ROLE_TYPE_KILLER = 2; // 杀手
-  ROLE_TYPE_BRAIN = 3; // 大脑
-  ROLE_TYPE_KEY_PERSON = 4; // 关键人物
-  ROLE_TYPE_FRIEND = 5; // 朋友
-  ROLE_TYPE_CONSPIRACY_THEORIST = 6; // 阴谋论者
-  ROLE_TYPE_CULTIST = 7; // 例如：具有善意拒绝的角色
-  // 注意：Mastermind 和 Protagonist 也可以在 PlayerRole 中定义，这里是作为游戏内具体角色的一种。
-  ROLE_TYPE_MASTERMIND = 8; // LLM 玩家角色 (主谋)
-  ROLE_TYPE_PROTAGONIST = 9; // LLM 玩家角色 (主角)
+  ROLE_TYPE_UNSPECIFIED = 0; // 未指定
+  INNOCENT = 1;              // 无辜者
+  KILLER = 2;                // 杀手
+  ACCOMPLICE = 3;            // 共犯
+  PERSON_OF_INTEREST = 4;    // 嫌疑人
+  KEY_PERSON = 5;            // 关键人物
+  FRIEND = 6;                // 朋友
+  LOVER = 7;                 // 恋人
+  CONSPIRACY_THEORIST = 8;   // 阴谋论者
+  CULTIST = 9;               // 邪教徒
+  // 可以根据具体剧本扩展更多角色类型
 }
 
-// TragedyType 定义了剧本中可能发生的悲剧类型。
-// TragedyType 定义了在游戏中可能发生的悲剧类型。
-enum TragedyType {
-  TRAGEDY_TYPE_UNSPECIFIED = 0; // 未指定悲剧类型 (默认值)
-  TRAGEDY_TYPE_MURDER = 1; // 谋杀
-  TRAGEDY_TYPE_SUICIDE = 2; // 自杀
-  TRAGEDY_TYPE_SEALED = 3; // 例如：封印物品剧情
+// 悲剧类型枚举
+enum IncidentType {
+  INCIDENT_TYPE_UNSPECIFIED = 0; // 未指定
+  MURDER = 1;                    // 谋杀
+  SUICIDE = 2;                   // 自杀
+  HOSPITAL_CONSPIRACY = 3;       // 医院阴谋
+  MURDER_MYSTERY = 4;            // 谋杀之谜
+  // 可以根据具体剧本扩展更多悲剧类型
 }
 
-// TriggerType 定义了能力、规则或效果何时被激活或评估。
-// 这个统一的枚举旨在澄清触发机制，明确区分基于游戏阶段的触发和基于事件的触发。
-// 好的设计实践建议将触发条件与效果分离开来。
-// 例如，一个能力可以有一个 `TriggerType` 来定义“何时”检查，以及一个效果列表来定义“做什么”。
+// 剧本类型枚举（主线/支线）
+enum TragedyScriptType {
+  TRAGEDY_SCRIPT_TYPE_UNSPECIFIED = 0; // 未指定
+  MAIN_PLOT = 1;                     // 主线剧情
+  SUB_PLOT = 2;                      // 支线剧情
+}
+
+// 地点类型枚举
+enum LocationType {
+  LOCATION_TYPE_UNSPECIFIED = 0; // 未指定
+  HOSPITAL = 1;                  // 医院
+  SHRINE = 2;                    // 神社
+  CITY = 3;                      // 城市
+  SCHOOL = 4;                    // 学校
+  // 可以根据具体剧本扩展更多地点
+}
+
+// 触发器类型枚举（能力或规则何时触发）
 enum TriggerType {
-  TRIGGER_TYPE_UNSPECIFIED = 0;
-
-  // --- 设置与循环触发器 ---
-  TRIGGER_TYPE_ON_GAME_SETUP = 1; // 在游戏首次设置时触发。用于设置初始角色规则或状态。
-  TRIGGER_TYPE_ON_LOOP_START = 2; // 在每个新循环开始时触发。
-
-  // --- 阶段性触发器 (直接映射到 GamePhase) ---
-  // 这些触发器在相应游戏阶段开始时激活。
-  TRIGGER_TYPE_ON_DAY_START = 3;           // 对应 `GAME_PHASE_MORNING`。
-  TRIGGER_TYPE_ON_CARD_PLAY_PHASE = 4;     // 对应 `GAME_PHASE_CARD_PLAY`。
-  TRIGGER_TYPE_ON_CARD_REVEAL_PHASE = 5;   // 对应 `GAME_PHASE_CARD_REVEAL`。
-  TRIGGER_TYPE_ON_CARD_RESOLVE_PHASE = 6;  // 对应 `GAME_PHASE_CARD_RESOLVE`。
-  TRIGGER_TYPE_ON_ABILITY_PHASE = 7;       // 对应 `GAME_PHASE_ABILITIES`。
-  TRIGGER_TYPE_ON_INCIDENT_PHASE = 8;      // 对应 `GAME_PHASE_INCIDENTS`。
-
-  // --- 事件驱动触发器 (响应 GameEvent) ---
-  // 使用这些触发器的能力/规则需要额外指定它们监听的 `GameEventType`。
-  // 这种设计将“何时”触发（一般性事件）与“具体哪个事件”分离开来，增加了灵活性。
-  TRIGGER_TYPE_ON_GAME_EVENT = 15; // 响应一个特定的游戏事件。
-
-  // --- 持续性/被动触发器 ---
-  TRIGGER_TYPE_PASSIVE = 20; // 表示一个持续生效的被动能力或规则。它的效果在任何时候都适用，而不是由单个事件触发。
+  TRIGGER_TYPE_UNSPECIFIED = 0;      // 未指定
+  ON_GAME_SETUP = 1;                 // 游戏设置时
+  ON_LOOP_START = 2;                 // 循环开始时
+  ON_DAY_START = 3;                  // 每天开始时
+  ON_CARD_PLAY_PHASE = 4;            // 卡牌打出阶段
+  ON_CARD_REVEAL_PHASE = 5;          // 卡牌揭示阶段
+  ON_CARD_RESOLVE_PHASE = 6;         // 卡牌结算阶段
+  ON_ABILITY_PHASE = 7;              // 能力结算阶段
+  ON_INCIDENT_PHASE = 8;             // 事件结算阶段
+  ON_GAME_EVENT = 9;                 // 发生特定游戏事件时
+  PASSIVE = 10;                      // 被动（一直生效）
+  ON_LOOP_LOSS = 11;                 // 循环失败时触发
+  ON_LOOP_WIN = 12;                  // 循环胜利时触发
+  ON_GAME_END = 13;                  // 游戏结束时触发
 }
 
-// EffectType 定义能力或卡牌可能产生的效果类型。
-// 这是组合方法的核心。
+// 效果类型枚举
 enum EffectType {
-  EFFECT_TYPE_UNSPECIFIED = 0;
-  EFFECT_TYPE_MOVE_CHARACTER = 1; // 移动角色
-  EFFECT_TYPE_ADJUST_PARANOIA = 2; // 调整妄想
-  EFFECT_TYPE_ADJUST_GOODWILL = 3; // 调整好感
-  EFFECT_TYPE_ADJUST_INTRIGUE = 4; // 调整阴谋
-  EFFECT_TYPE_REVEAL_ROLE = 5; // 用于特定能力，揭示角色
-  EFFECT_TYPE_PREVENT_TRAGEDY = 6; // 阻止悲剧
-  EFFECT_TYPE_GRANT_ABILITY = 7; // 授予能力
-  EFFECT_TYPE_CHECK_LOCATION_ALONE = 8; // 用于悲剧条件，检查地点是否有人独处
-  EFFECT_TYPE_CHECK_CHARACTER_STATUS = 9; // 用于悲剧条件，检查角色状态
-}
-
-// TargetRuleType 定义悲剧如何选择目标角色。
-enum TargetRuleType {
-  TARGET_RULE_TYPE_UNSPECIFIED = 0;
-  TARGET_RULE_TYPE_SPECIFIC_CHARACTER = 1; // 特定角色
-  TARGET_RULE_TYPE_ANY_CHARACTER_AT_LOCATION = 2; // 在某个地点的任何角色
+  EFFECT_TYPE_UNSPECIFIED = 0;       // 未指定
+  MOVE_CHARACTER = 1;                // 移动角色
+  ADJUST_PARANOIA = 2;               // 调整妄想值
+  ADJUST_GOODWILL = 3;               // 调整好感值
+  ADJUST_INTRIGUE = 4;               // 调整阴谋值
+  FORBID_MOVEMENT = 5;               // 禁止移动
+  FORBID_PARANOIA = 6;               // 禁止妄想值调整
+  FORBID_GOODWILL = 7;               // 禁止好感值调整
+  FORBID_INTRIGUE = 8;               // 禁止阴谋值调整
+  REVEAL_ROLE = 9;                   // 揭示角色身份
+  GRANT_ABILITY = 10;                // 授予角色能力
+  CANCEL_INCIDENT = 11;              // 取消悲剧事件
+  FORCE_GOODWILL_REFUSAL_TEST = 12;  // 强制进行好感度拒绝测试
 }

@@ -4,59 +4,31 @@
     "definitions": {
         "CharacterConfig": {
             "properties": {
-                "id": {
+                "character_id": {
                     "type": "integer",
-                    "description": "引用基础角色定义"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "角色名称"
-                },
-                "initial_location": {
-                    "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
-                        0,
-                        "LOCATION_TYPE_HOSPITAL",
-                        1,
-                        "LOCATION_TYPE_SHRINE",
-                        2,
-                        "LOCATION_TYPE_CITY",
-                        3,
-                        "LOCATION_TYPE_SCHOOL",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Location Type",
-                    "description": "LocationType 定义游戏中的可能地点。"
+                    "description": "角色ID"
                 },
                 "hidden_role": {
                     "enum": [
                         "ROLE_TYPE_UNSPECIFIED",
                         0,
-                        "ROLE_TYPE_INNOCENT",
+                        "INNOCENT",
                         1,
-                        "ROLE_TYPE_KILLER",
+                        "KILLER",
                         2,
-                        "ROLE_TYPE_BRAIN",
+                        "ACCOMPLICE",
                         3,
-                        "ROLE_TYPE_KEY_PERSON",
+                        "PERSON_OF_INTEREST",
                         4,
-                        "ROLE_TYPE_FRIEND",
+                        "KEY_PERSON",
                         5,
-                        "ROLE_TYPE_CONSPIRACY_THEORIST",
+                        "FRIEND",
                         6,
-                        "ROLE_TYPE_CULTIST",
+                        "LOVER",
                         7,
-                        "ROLE_TYPE_MASTERMIND",
+                        "CONSPIRACY_THEORIST",
                         8,
-                        "ROLE_TYPE_PROTAGONIST",
+                        "CULTIST",
                         9
                     ],
                     "oneOf": [
@@ -68,17 +40,60 @@
                         }
                     ],
                     "title": "Role Type",
-                    "description": "RoleType 定义了玩家在游戏中的具体角色。"
+                    "description": "角色身份类型枚举"
                 },
-                "is_culprit_for": {
-                    "type": "string",
-                    "description": "如果此角色是特定悲剧的嫌疑犯"
+                "initial_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型枚举"
+                },
+                "initial_paranoia": {
+                    "type": "integer",
+                    "description": "角色初始妄想值"
+                },
+                "initial_goodwill": {
+                    "type": "integer",
+                    "description": "角色初始好感值"
+                },
+                "initial_intrigue": {
+                    "type": "integer",
+                    "description": "角色初始阴谋值"
+                },
+                "initial_ability_ids": {
+                    "items": {
+                        "type": "integer"
+                    },
+                    "type": "array",
+                    "description": "角色初始拥有的能力ID列表"
+                },
+                "is_first_step_role": {
+                    "type": "boolean",
+                    "description": "是否为First Step身份（新版中此概念用于特定剧本）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Character Config",
-            "description": "CharacterConfig 定义特定剧本中角色的初始状态。"
+            "description": "角色在剧本中的配置"
         }
     }
 }

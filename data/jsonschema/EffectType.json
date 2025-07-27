@@ -3,24 +3,30 @@
     "enum": [
         "EFFECT_TYPE_UNSPECIFIED",
         0,
-        "EFFECT_TYPE_MOVE_CHARACTER",
+        "MOVE_CHARACTER",
         1,
-        "EFFECT_TYPE_ADJUST_PARANOIA",
+        "ADJUST_PARANOIA",
         2,
-        "EFFECT_TYPE_ADJUST_GOODWILL",
+        "ADJUST_GOODWILL",
         3,
-        "EFFECT_TYPE_ADJUST_INTRIGUE",
+        "ADJUST_INTRIGUE",
         4,
-        "EFFECT_TYPE_REVEAL_ROLE",
+        "FORBID_MOVEMENT",
         5,
-        "EFFECT_TYPE_PREVENT_TRAGEDY",
+        "FORBID_PARANOIA",
         6,
-        "EFFECT_TYPE_GRANT_ABILITY",
+        "FORBID_GOODWILL",
         7,
-        "EFFECT_TYPE_CHECK_LOCATION_ALONE",
+        "FORBID_INTRIGUE",
         8,
-        "EFFECT_TYPE_CHECK_CHARACTER_STATUS",
-        9
+        "REVEAL_ROLE",
+        9,
+        "GRANT_ABILITY",
+        10,
+        "CANCEL_INCIDENT",
+        11,
+        "FORCE_GOODWILL_REFUSAL_TEST",
+        12
     ],
     "oneOf": [
         {
@@ -31,5 +37,5 @@
         }
     ],
     "title": "Effect Type",
-    "description": "EffectType 定义能力或卡牌可能产生的效果类型。 这是组合方法的核心。"
+    "description": "效果类型枚举"
 }

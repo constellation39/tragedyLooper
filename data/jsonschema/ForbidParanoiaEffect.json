@@ -3,10 +3,16 @@
     "$ref": "#/definitions/ForbidParanoiaEffect",
     "definitions": {
         "ForbidParanoiaEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Forbid Paranoia Effect",
-            "description": "ForbidParanoiaEffect 禁止妄想值增加。"
+            "description": "禁止妄想值调整效果"
         }
     }
 }

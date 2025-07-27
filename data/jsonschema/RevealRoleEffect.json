@@ -1,0 +1,52 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/RevealRoleEffect",
+    "definitions": {
+        "RevealRoleEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                },
+                "revealed_role": {
+                    "enum": [
+                        "ROLE_TYPE_UNSPECIFIED",
+                        0,
+                        "INNOCENT",
+                        1,
+                        "KILLER",
+                        2,
+                        "ACCOMPLICE",
+                        3,
+                        "PERSON_OF_INTEREST",
+                        4,
+                        "KEY_PERSON",
+                        5,
+                        "FRIEND",
+                        6,
+                        "LOVER",
+                        7,
+                        "CONSPIRACY_THEORIST",
+                        8,
+                        "CULTIST",
+                        9
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Role Type",
+                    "description": "角色身份类型枚举"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Reveal Role Effect",
+            "description": "揭示角色身份效果"
+        }
+    }
+}

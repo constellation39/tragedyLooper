@@ -6,12 +6,18 @@
             "properties": {
                 "type": {
                     "enum": [
-                        "GAME_END_CONDITION_TYPE_UNSPECIFIED",
+                        "CONDITION_TYPE_UNSPECIFIED",
                         0,
-                        "GAME_END_CONDITION_TYPE_ALL_TRAGEDIES_PREVENTED",
+                        "ALL_TRAGEDIES_PREVENTED",
                         1,
-                        "GAME_END_CONDITION_TYPE_A_TRAGEDY_OCCURS",
-                        2
+                        "SPECIFIC_TRAGEDY_TRIGGERED",
+                        2,
+                        "MAX_LOOPS_REACHED",
+                        3,
+                        "PROTAGONIST_GUESSED_CORRECTLY",
+                        4,
+                        "PROTAGONIST_GUESSED_INCORRECTLY",
+                        5
                     ],
                     "oneOf": [
                         {
@@ -21,14 +27,38 @@
                             "type": "integer"
                         }
                     ],
-                    "title": "Game End Condition Type",
-                    "description": "Enum for different types of game end conditions"
+                    "title": "Condition Type",
+                    "description": "条件类型"
+                },
+                "incident_type": {
+                    "enum": [
+                        "INCIDENT_TYPE_UNSPECIFIED",
+                        0,
+                        "MURDER",
+                        1,
+                        "SUICIDE",
+                        2,
+                        "HOSPITAL_CONSPIRACY",
+                        3,
+                        "MURDER_MYSTERY",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Incident Type",
+                    "description": "悲剧类型枚举"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Game End Condition",
-            "description": "Defines a single condition for winning or losing the game."
+            "description": "游戏结束条件"
         }
     }
 }

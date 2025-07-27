@@ -1,0 +1,66 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/PlayerDeductionKnowledge",
+    "definitions": {
+        "PlayerDeductionKnowledge": {
+            "properties": {
+                "guessed_roles": {
+                    "additionalProperties": {
+                        "enum": [
+                            "ROLE_TYPE_UNSPECIFIED",
+                            0,
+                            "INNOCENT",
+                            1,
+                            "KILLER",
+                            2,
+                            "ACCOMPLICE",
+                            3,
+                            "PERSON_OF_INTEREST",
+                            4,
+                            "KEY_PERSON",
+                            5,
+                            "FRIEND",
+                            6,
+                            "LOVER",
+                            7,
+                            "CONSPIRACY_THEORIST",
+                            8,
+                            "CULTIST",
+                            9
+                        ],
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "integer"
+                            }
+                        ],
+                        "title": "Role Type",
+                        "description": "角色身份类型枚举"
+                    },
+                    "type": "object",
+                    "description": "对角色身份的猜测，键为 character_id"
+                },
+                "clues": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array",
+                    "description": "收集到的线索列表"
+                },
+                "theories": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array",
+                    "description": "推理出的理论列表"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Player Deduction Knowledge",
+            "description": "主角的推理知识"
+        }
+    }
+}

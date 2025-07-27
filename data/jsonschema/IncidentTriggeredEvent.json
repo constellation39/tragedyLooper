@@ -5,7 +5,7 @@
         "IncidentTriggeredEvent": {
             "properties": {
                 "incident": {
-                    "$ref": "#/definitions/proto.v1.Incident",
+                    "$ref": "#/definitions/v1.Incident",
                     "additionalProperties": true
                 }
             },
@@ -13,7 +13,7 @@
             "type": "object",
             "title": "Incident Triggered Event"
         },
-        "proto.v1.Incident": {
+        "v1.Incident": {
             "properties": {
                 "name": {
                     "type": "string"

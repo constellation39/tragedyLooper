@@ -3,10 +3,40 @@
     "$ref": "#/definitions/DelayedEntryEffect",
     "definitions": {
         "DelayedEntryEffect": {
+            "properties": {
+                "day_of_entry": {
+                    "type": "integer",
+                    "description": "角色登场的日期"
+                },
+                "entry_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型枚举"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Delayed Entry Effect",
-            "description": "DelayedEntryEffect 表示角色延迟登场。"
+            "description": "延迟登场效果（例如某些角色在特定天数才登场）"
         }
     }
 }

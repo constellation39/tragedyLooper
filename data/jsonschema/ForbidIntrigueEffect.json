@@ -3,10 +3,16 @@
     "$ref": "#/definitions/ForbidIntrigueEffect",
     "definitions": {
         "ForbidIntrigueEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Forbid Intrigue Effect",
-            "description": "ForbidIntrigueEffect 禁止阴谋值增加。"
+            "description": "禁止阴谋值调整效果"
         }
     }
 }

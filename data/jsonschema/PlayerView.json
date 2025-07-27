@@ -5,8 +5,8 @@
         "PlayerView": {
             "properties": {
                 "game_id": {
-                    "type": "integer",
-                    "description": "游戏唯一标识符"
+                    "type": "string",
+                    "description": "游戏唯一ID"
                 },
                 "script_id": {
                     "type": "integer",
@@ -14,19 +14,19 @@
                 },
                 "characters": {
                     "additionalProperties": {
-                        "$ref": "#/definitions/proto.v1.Character",
+                        "$ref": "#/definitions/v1.PlayerViewCharacter",
                         "additionalProperties": true
                     },
                     "type": "object",
-                    "description": "角色信息（隐藏身份已移除）"
+                    "description": "玩家视角下的角色状态映射 (隐藏身份已移除)"
                 },
                 "players": {
                     "additionalProperties": {
-                        "$ref": "#/definitions/proto.v1.Player",
+                        "$ref": "#/definitions/v1.PlayerViewPlayer",
                         "additionalProperties": true
                     },
                     "type": "object",
-                    "description": "玩家信息（敏感信息已移除）"
+                    "description": "玩家视角下的其他玩家信息 (手牌等可能隐藏)"
                 },
                 "current_day": {
                     "type": "integer",
@@ -34,32 +34,36 @@
                 },
                 "current_loop": {
                     "type": "integer",
-                    "description": "当前循环次数"
+                    "description": "当前循环数"
                 },
                 "current_phase": {
                     "enum": [
                         "GAME_PHASE_UNSPECIFIED",
                         0,
-                        "GAME_PHASE_MORNING",
+                        "SETUP",
                         1,
-                        "GAME_PHASE_CARD_PLAY",
+                        "MASTERMIND_SETUP",
                         2,
-                        "GAME_PHASE_CARD_REVEAL",
+                        "CARD_PLAY",
                         3,
-                        "GAME_PHASE_CARD_RESOLVE",
+                        "CARD_REVEAL",
                         4,
-                        "GAME_PHASE_ABILITIES",
+                        "CARD_RESOLVE",
                         5,
-                        "GAME_PHASE_INCIDENTS",
+                        "ABILITIES",
                         6,
-                        "GAME_PHASE_DAY_END",
+                        "INCIDENTS",
                         7,
-                        "GAME_PHASE_LOOP_END",
+                        "DAY_END",
                         8,
-                        "GAME_PHASE_GAME_OVER",
+                        "LOOP_END",
                         9,
-                        "GAME_PHASE_PROTAGONIST_GUESS",
-                        10
+                        "GAME_OVER",
+                        10,
+                        "PROTAGONIST_GUESS",
+                        11,
+                        "GAME_PHASE_FIRST_GUESS",
+                        12
                     ],
                     "oneOf": [
                         {
@@ -70,71 +74,52 @@
                         }
                     ],
                     "title": "Game Phase",
-                    "description": "GamePhase 定义游戏日期的当前阶段。"
+                    "description": "游戏阶段枚举"
                 },
                 "active_tragedies": {
                     "additionalProperties": {
                         "type": "boolean"
                     },
                     "type": "object",
-                    "description": "活跃的悲剧（公开信息）, key is TragedyType"
+                    "description": "已触发的悲剧"
                 },
                 "prevented_tragedies": {
                     "additionalProperties": {
                         "type": "boolean"
                     },
                     "type": "object",
-                    "description": "已阻止的悲剧（公开信息）, key is TragedyType"
+                    "description": "已阻止的悲剧"
                 },
                 "your_hand": {
                     "items": {
-                        "$ref": "#/definitions/proto.v1.Card"
+                        "$ref": "#/definitions/v1.Card"
                     },
                     "type": "array",
-                    "description": "你的手牌（仅对请求玩家可见）"
+                    "description": "当前玩家的手牌列表"
                 },
                 "your_deductions": {
-                    "additionalProperties": {
-                        "oneOf": [
-                            {
-                                "type": "array"
-                            },
-                            {
-                                "type": "boolean"
-                            },
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "object"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "title": "Value",
-                        "description": "`Value` represents a dynamically typed value which can be either null, a number, a string, a boolean, a recursive struct value, or a list of values. A producer of value is expected to set one of these variants. Absence of any variant indicates an error. The JSON representation for `Value` is JSON value."
-                    },
-                    "type": "object",
-                    "description": "你的推理（仅对主角可见）"
+                    "$ref": "#/definitions/v1.PlayerDeductionKnowledge",
+                    "additionalProperties": true,
+                    "description": "当前玩家的推理知识"
                 },
                 "public_events": {
                     "items": {
-                        "$ref": "#/definitions/proto.v1.GameEvent"
+                        "$ref": "#/definitions/v1.GameEvent"
                     },
                     "type": "array",
-                    "description": "公开事件"
+                    "description": "对所有玩家公开的事件日志"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Player View",
-            "description": "PlayerView 表示特定玩家的游戏状态过滤视图。"
+            "description": "玩家视角下的游戏状态（用于向特定玩家展示信息，隐藏其他玩家的秘密信息）"
         },
-        "proto.v1.Ability": {
+        "v1.Ability": {
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "能力唯一ID"
                 },
                 "name": {
                     "type": "string",
@@ -148,26 +133,32 @@
                     "enum": [
                         "TRIGGER_TYPE_UNSPECIFIED",
                         0,
-                        "TRIGGER_TYPE_ON_GAME_SETUP",
+                        "ON_GAME_SETUP",
                         1,
-                        "TRIGGER_TYPE_ON_LOOP_START",
+                        "ON_LOOP_START",
                         2,
-                        "TRIGGER_TYPE_ON_DAY_START",
+                        "ON_DAY_START",
                         3,
-                        "TRIGGER_TYPE_ON_CARD_PLAY_PHASE",
+                        "ON_CARD_PLAY_PHASE",
                         4,
-                        "TRIGGER_TYPE_ON_CARD_REVEAL_PHASE",
+                        "ON_CARD_REVEAL_PHASE",
                         5,
-                        "TRIGGER_TYPE_ON_CARD_RESOLVE_PHASE",
+                        "ON_CARD_RESOLVE_PHASE",
                         6,
-                        "TRIGGER_TYPE_ON_ABILITY_PHASE",
+                        "ON_ABILITY_PHASE",
                         7,
-                        "TRIGGER_TYPE_ON_INCIDENT_PHASE",
+                        "ON_INCIDENT_PHASE",
                         8,
-                        "TRIGGER_TYPE_ON_GAME_EVENT",
-                        15,
-                        "TRIGGER_TYPE_PASSIVE",
-                        20
+                        "ON_GAME_EVENT",
+                        9,
+                        "PASSIVE",
+                        10,
+                        "ON_LOOP_LOSS",
+                        11,
+                        "ON_LOOP_WIN",
+                        12,
+                        "ON_GAME_END",
+                        13
                     ],
                     "oneOf": [
                         {
@@ -178,63 +169,63 @@
                         }
                     ],
                     "title": "Trigger Type",
-                    "description": "TriggerType 定义了能力、规则或效果何时被激活或评估。 这个统一的枚举旨在澄清触发机制，明确区分基于游戏阶段的触发和基于事件的触发。 好的设计实践建议将触发条件与效果分离开来。 例如，一个能力可以有一个 `TriggerType` 来定义“何时”检查，以及一个效果列表来定义“做什么”。"
+                    "description": "触发器类型枚举（能力或规则何时触发）"
                 },
                 "event_filters": {
                     "items": {
                         "enum": [
                             "GAME_EVENT_TYPE_UNSPECIFIED",
                             0,
-                            "GAME_EVENT_TYPE_CARD_PLAYED",
+                            "CHARACTER_MOVED",
                             1,
-                            "GAME_EVENT_TYPE_CHARACTER_MOVED",
+                            "PARANOIA_ADJUSTED",
                             2,
-                            "GAME_EVENT_TYPE_PARANOIA_ADJUSTED",
+                            "GOODWILL_ADJUSTED",
                             3,
-                            "GAME_EVENT_TYPE_GOODWILL_ADJUSTED",
+                            "INTRIGUE_ADJUSTED",
                             4,
-                            "GAME_EVENT_TYPE_INTRIGUE_ADJUSTED",
+                            "INCIDENT_TRIGGERED",
                             5,
-                            "GAME_EVENT_TYPE_ABILITY_USED",
+                            "INCIDENT_PREVENTED",
                             6,
-                            "GAME_EVENT_TYPE_TRAGEDY_TRIGGERED",
+                            "ROLE_REVEALED",
                             7,
-                            "GAME_EVENT_TYPE_TRAGEDY_PREVENTED",
+                            "ABILITY_GRANTED",
                             8,
-                            "GAME_EVENT_TYPE_DAY_ADVANCED",
+                            "CHOICE_REQUIRED",
                             9,
-                            "GAME_EVENT_TYPE_LOOP_RESET",
+                            "LOOP_WIN",
                             10,
-                            "GAME_EVENT_TYPE_GAME_OVER",
+                            "LOOP_LOSS",
                             11,
-                            "GAME_EVENT_TYPE_PLAYER_GUESS",
+                            "FIRST_GUESS_MADE",
                             12,
-                            "GAME_EVENT_TYPE_CHOICE_REQUIRED",
+                            "FINAL_GUESS_MADE",
                             13,
-                            "GAME_EVENT_TYPE_INCIDENT_TRIGGERED",
+                            "GOODWILL_REFUSAL_TEST",
                             14
                         ]
                     },
                     "type": "array",
                     "title": "Game Event Type",
-                    "description": "GameEventType for GameEvent"
+                    "description": "游戏事件类型枚举"
                 },
-                "target": {
-                    "$ref": "#/definitions/proto.v1.Target",
+                "effect": {
+                    "$ref": "#/definitions/v1.Effect",
                     "additionalProperties": true,
-                    "description": "目标"
+                    "description": "能力的具体效果"
                 },
                 "once_per_loop": {
                     "type": "boolean",
-                    "description": "每个循环只能使用一次"
+                    "description": "是否每个循环只能使用一次"
                 },
                 "refusal_role": {
                     "enum": [
                         "PLAYER_ROLE_UNSPECIFIED",
                         0,
-                        "PLAYER_ROLE_MASTERMIND",
+                        "MASTERMIND",
                         1,
-                        "PLAYER_ROLE_PROTAGONIST",
+                        "PROTAGONIST",
                         2
                     ],
                     "oneOf": [
@@ -246,59 +237,115 @@
                         }
                     ],
                     "title": "Player Role",
-                    "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
-                },
-                "effect": {
-                    "$ref": "#/definitions/proto.v1.Effect",
-                    "additionalProperties": true
+                    "description": "玩家角色枚举"
                 },
                 "used_this_loop": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "运行时状态：本循环是否已使用过此能力"
+                },
+                "is_passive": {
+                    "type": "boolean",
+                    "description": "是否是被动能力（与TriggerType.PASSIVE配合使用）"
+                },
+                "is_mandatory": {
+                    "type": "boolean",
+                    "description": "是否是强制触发的能力（不需要玩家选择）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Ability",
-            "description": "Ability 定义角色的特殊技能。"
+            "description": "角色或卡牌能力"
         },
-        "proto.v1.AdjustGoodwillEffect": {
+        "v1.AdjustGoodwillEffect": {
             "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                },
                 "amount": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "调整量（正数增加，负数减少）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Adjust Goodwill Effect",
-            "description": "AdjustGoodwillEffect 调整角色的好感度。"
+            "description": "调整好感值效果"
         },
-        "proto.v1.AdjustIntrigueEffect": {
+        "v1.AdjustIntrigueEffect": {
             "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                },
                 "amount": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "调整量（正数增加，负数减少）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Adjust Intrigue Effect",
-            "description": "AdjustIntrigueEffect 调整角色的阴谋值。"
+            "description": "调整阴谋值效果"
         },
-        "proto.v1.AdjustParanoiaEffect": {
+        "v1.AdjustParanoiaEffect": {
             "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                },
                 "amount": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "调整量（正数增加，负数减少）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Adjust Paranoia Effect",
-            "description": "AdjustParanoiaEffect 调整角色的妄想值。"
+            "description": "调整妄想值效果"
         },
-        "proto.v1.Card": {
+        "v1.CancelIncidentEffect": {
+            "properties": {
+                "incident_type": {
+                    "enum": [
+                        "INCIDENT_TYPE_UNSPECIFIED",
+                        0,
+                        "MURDER",
+                        1,
+                        "SUICIDE",
+                        2,
+                        "HOSPITAL_CONSPIRACY",
+                        3,
+                        "MURDER_MYSTERY",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Incident Type",
+                    "description": "悲剧类型枚举"
+                },
+                "incident_day": {
+                    "type": "integer",
+                    "description": "要取消的悲剧发生在哪一天"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Cancel Incident Effect",
+            "description": "取消悲剧事件效果"
+        },
+        "v1.Card": {
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "唯一标识符"
+                    "description": "卡牌唯一ID"
                 },
                 "name": {
                     "type": "string",
@@ -308,15 +355,15 @@
                     "enum": [
                         "CARD_TYPE_UNSPECIFIED",
                         0,
-                        "CARD_TYPE_MOVEMENT",
+                        "MOVEMENT",
                         1,
-                        "CARD_TYPE_PARANOIA",
+                        "PARANOIA",
                         2,
-                        "CARD_TYPE_GOODWILL",
+                        "GOODWILL",
                         3,
-                        "CARD_TYPE_INTRIGUE",
+                        "INTRIGUE",
                         4,
-                        "CARD_TYPE_SPECIAL",
+                        "SPECIAL",
                         5
                     ],
                     "oneOf": [
@@ -328,15 +375,15 @@
                         }
                     ],
                     "title": "Card Type",
-                    "description": "CardType 定义玩家可以打出的卡牌类型。"
+                    "description": "卡牌类型枚举"
                 },
                 "owner_role": {
                     "enum": [
                         "PLAYER_ROLE_UNSPECIFIED",
                         0,
-                        "PLAYER_ROLE_MASTERMIND",
+                        "MASTERMIND",
                         1,
-                        "PLAYER_ROLE_PROTAGONIST",
+                        "PROTAGONIST",
                         2
                     ],
                     "oneOf": [
@@ -348,59 +395,108 @@
                         }
                     ],
                     "title": "Player Role",
-                    "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
+                    "description": "玩家角色枚举"
                 },
                 "effect": {
-                    "$ref": "#/definitions/proto.v1.Effect",
+                    "$ref": "#/definitions/v1.Effect",
                     "additionalProperties": true,
-                    "description": "卡牌效果"
+                    "description": "卡牌的具体效果"
                 },
                 "once_per_loop": {
                     "type": "boolean",
-                    "description": "每循环只能使用一次"
+                    "description": "是否每个循环只能使用一次"
                 },
                 "used_this_loop": {
                     "type": "boolean",
-                    "description": "运行时状态"
-                },
-                "target": {
-                    "$ref": "#/definitions/proto.v1.Target",
-                    "additionalProperties": true
+                    "description": "运行时状态：本循环是否已使用过此卡牌"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Card",
-            "description": "Card 表示一张行动卡。"
+            "description": "行动卡牌"
         },
-        "proto.v1.Character": {
+        "v1.CharacterRule": {
             "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "唯一标识符"
+                "trigger": {
+                    "enum": [
+                        "TRIGGER_TYPE_UNSPECIFIED",
+                        0,
+                        "ON_GAME_SETUP",
+                        1,
+                        "ON_LOOP_START",
+                        2,
+                        "ON_DAY_START",
+                        3,
+                        "ON_CARD_PLAY_PHASE",
+                        4,
+                        "ON_CARD_REVEAL_PHASE",
+                        5,
+                        "ON_CARD_RESOLVE_PHASE",
+                        6,
+                        "ON_ABILITY_PHASE",
+                        7,
+                        "ON_INCIDENT_PHASE",
+                        8,
+                        "ON_GAME_EVENT",
+                        9,
+                        "PASSIVE",
+                        10,
+                        "ON_LOOP_LOSS",
+                        11,
+                        "ON_LOOP_WIN",
+                        12,
+                        "ON_GAME_END",
+                        13
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Trigger Type",
+                    "description": "触发器类型枚举（能力或规则何时触发）"
                 },
-                "name": {
+                "description": {
                     "type": "string",
-                    "description": "角色名称"
+                    "description": "规则描述"
                 },
-                "traits": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array",
-                    "description": "角色特征，例如：[\"Student\", \"Journalist\"]"
+                "turf_selection_effect": {
+                    "$ref": "#/definitions/v1.TurfSelectionEffect",
+                    "additionalProperties": true,
+                    "description": "地盘选择效果"
                 },
-                "current_location": {
+                "delayed_entry_effect": {
+                    "$ref": "#/definitions/v1.DelayedEntryEffect",
+                    "additionalProperties": true,
+                    "description": "延迟登场效果"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Character Rule",
+            "description": "角色特殊规则"
+        },
+        "v1.DelayedEntryEffect": {
+            "properties": {
+                "day_of_entry": {
+                    "type": "integer",
+                    "description": "角色登场的日期"
+                },
+                "entry_location": {
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
-                        "LOCATION_TYPE_HOSPITAL",
+                        "HOSPITAL",
                         1,
-                        "LOCATION_TYPE_SHRINE",
+                        "SHRINE",
                         2,
-                        "LOCATION_TYPE_CITY",
+                        "CITY",
                         3,
-                        "LOCATION_TYPE_SCHOOL",
+                        "SCHOOL",
                         4
                     ],
                     "oneOf": [
@@ -412,236 +508,179 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "LocationType 定义游戏中的可能地点。"
-                },
-                "paranoia": {
-                    "type": "integer",
-                    "description": "妄想指数"
-                },
-                "goodwill": {
-                    "type": "integer",
-                    "description": "好感度"
-                },
-                "intrigue": {
-                    "type": "integer",
-                    "description": "阴谋标记"
-                },
-                "is_alive": {
-                    "type": "boolean",
-                    "description": "是否存活"
-                },
-                "abilities": {
-                    "items": {
-                        "$ref": "#/definitions/proto.v1.Ability"
-                    },
-                    "type": "array",
-                    "description": "角色能力"
-                },
-                "hidden_role": {
-                    "enum": [
-                        "ROLE_TYPE_UNSPECIFIED",
-                        0,
-                        "ROLE_TYPE_INNOCENT",
-                        1,
-                        "ROLE_TYPE_KILLER",
-                        2,
-                        "ROLE_TYPE_BRAIN",
-                        3,
-                        "ROLE_TYPE_KEY_PERSON",
-                        4,
-                        "ROLE_TYPE_FRIEND",
-                        5,
-                        "ROLE_TYPE_CONSPIRACY_THEORIST",
-                        6,
-                        "ROLE_TYPE_CULTIST",
-                        7,
-                        "ROLE_TYPE_MASTERMIND",
-                        8,
-                        "ROLE_TYPE_PROTAGONIST",
-                        9
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Role Type",
-                    "description": "RoleType 定义了玩家在游戏中的具体角色。"
-                },
-                "rules": {
-                    "items": {
-                        "$ref": "#/definitions/proto.v1.CharacterRule"
-                    },
-                    "type": "array",
-                    "description": "角色的特殊规则"
+                    "description": "地点类型枚举"
                 }
             },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Character",
-            "description": "Character 表示游戏中的一个角色。"
-        },
-        "proto.v1.CharacterRule": {
-            "properties": {
-                "trigger": {
-                    "enum": [
-                        "TRIGGER_TYPE_UNSPECIFIED",
-                        0,
-                        "TRIGGER_TYPE_ON_GAME_SETUP",
-                        1,
-                        "TRIGGER_TYPE_ON_LOOP_START",
-                        2,
-                        "TRIGGER_TYPE_ON_DAY_START",
-                        3,
-                        "TRIGGER_TYPE_ON_CARD_PLAY_PHASE",
-                        4,
-                        "TRIGGER_TYPE_ON_CARD_REVEAL_PHASE",
-                        5,
-                        "TRIGGER_TYPE_ON_CARD_RESOLVE_PHASE",
-                        6,
-                        "TRIGGER_TYPE_ON_ABILITY_PHASE",
-                        7,
-                        "TRIGGER_TYPE_ON_INCIDENT_PHASE",
-                        8,
-                        "TRIGGER_TYPE_ON_GAME_EVENT",
-                        15,
-                        "TRIGGER_TYPE_PASSIVE",
-                        20
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Trigger Type",
-                    "description": "TriggerType 定义了能力、规则或效果何时被激活或评估。 这个统一的枚举旨在澄清触发机制，明确区分基于游戏阶段的触发和基于事件的触发。 好的设计实践建议将触发条件与效果分离开来。 例如，一个能力可以有一个 `TriggerType` 来定义“何时”检查，以及一个效果列表来定义“做什么”。"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "turf_selection": {
-                    "$ref": "#/definitions/proto.v1.TurfSelectionEffect",
-                    "additionalProperties": true
-                },
-                "delayed_entry": {
-                    "$ref": "#/definitions/proto.v1.DelayedEntryEffect",
-                    "additionalProperties": true
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Character Rule",
-            "description": "CharacterRule 定义角色的特殊规则。"
-        },
-        "proto.v1.DelayedEntryEffect": {
             "additionalProperties": true,
             "type": "object",
             "title": "Delayed Entry Effect",
-            "description": "DelayedEntryEffect 表示角色延迟登场。"
+            "description": "延迟登场效果（例如某些角色在特定天数才登场）"
         },
-        "proto.v1.Effect": {
+        "v1.Effect": {
             "properties": {
                 "move_character_effect": {
-                    "$ref": "#/definitions/proto.v1.MoveCharacterEffect",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.MoveCharacterEffect",
+                    "additionalProperties": true,
+                    "description": "移动角色效果"
                 },
                 "adjust_paranoia_effect": {
-                    "$ref": "#/definitions/proto.v1.AdjustParanoiaEffect",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.AdjustParanoiaEffect",
+                    "additionalProperties": true,
+                    "description": "调整妄想值效果"
                 },
                 "adjust_goodwill_effect": {
-                    "$ref": "#/definitions/proto.v1.AdjustGoodwillEffect",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.AdjustGoodwillEffect",
+                    "additionalProperties": true,
+                    "description": "调整好感值效果"
                 },
                 "adjust_intrigue_effect": {
-                    "$ref": "#/definitions/proto.v1.AdjustIntrigueEffect",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.AdjustIntrigueEffect",
+                    "additionalProperties": true,
+                    "description": "调整阴谋值效果"
                 },
                 "forbid_movement_effect": {
-                    "$ref": "#/definitions/proto.v1.ForbidMovementEffect",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.ForbidMovementEffect",
+                    "additionalProperties": true,
+                    "description": "禁止移动效果"
                 },
                 "forbid_paranoia_effect": {
-                    "$ref": "#/definitions/proto.v1.ForbidParanoiaEffect",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.ForbidParanoiaEffect",
+                    "additionalProperties": true,
+                    "description": "禁止妄想值调整效果"
                 },
                 "forbid_goodwill_effect": {
-                    "$ref": "#/definitions/proto.v1.ForbidGoodwillEffect",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.ForbidGoodwillEffect",
+                    "additionalProperties": true,
+                    "description": "禁止好感值调整效果"
                 },
                 "forbid_intrigue_effect": {
-                    "$ref": "#/definitions/proto.v1.ForbidIntrigueEffect",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.ForbidIntrigueEffect",
+                    "additionalProperties": true,
+                    "description": "禁止阴谋值调整效果"
+                },
+                "reveal_role_effect": {
+                    "$ref": "#/definitions/v1.RevealRoleEffect",
+                    "additionalProperties": true,
+                    "description": "揭示角色身份效果（新增）"
+                },
+                "grant_ability_effect": {
+                    "$ref": "#/definitions/v1.GrantAbilityEffect",
+                    "additionalProperties": true,
+                    "description": "授予角色能力效果（新增）"
+                },
+                "cancel_incident_effect": {
+                    "$ref": "#/definitions/v1.CancelIncidentEffect",
+                    "additionalProperties": true,
+                    "description": "取消悲剧事件效果（新增）"
+                },
+                "force_goodwill_refusal_test": {
+                    "$ref": "#/definitions/v1.ForceGoodwillRefusalTestEffect",
+                    "additionalProperties": true,
+                    "description": "强制进行好感度拒绝测试效果（新增）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Effect",
-            "description": "Effect 接口定义了一个效果的核心行为。"
+            "description": "效果的通用消息，使用 oneof 包含各种具体效果"
         },
-        "proto.v1.ForbidGoodwillEffect": {
+        "v1.ForbidGoodwillEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Forbid Goodwill Effect",
-            "description": "ForbidGoodwillEffect 禁止好感度增加。"
+            "description": "禁止好感值调整效果"
         },
-        "proto.v1.ForbidIntrigueEffect": {
+        "v1.ForbidIntrigueEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Forbid Intrigue Effect",
-            "description": "ForbidIntrigueEffect 禁止阴谋值增加。"
+            "description": "禁止阴谋值调整效果"
         },
-        "proto.v1.ForbidMovementEffect": {
+        "v1.ForbidMovementEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID（如果为空则影响所有角色）"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Forbid Movement Effect",
-            "description": "ForbidMovementEffect 禁止角色移动。"
+            "description": "禁止移动效果"
         },
-        "proto.v1.ForbidParanoiaEffect": {
+        "v1.ForbidParanoiaEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Forbid Paranoia Effect",
-            "description": "ForbidParanoiaEffect 禁止妄想值增加。"
+            "description": "禁止妄想值调整效果"
         },
-        "proto.v1.GameEvent": {
+        "v1.ForceGoodwillRefusalTestEffect": {
+            "properties": {
+                "protagonist_player_id": {
+                    "type": "string",
+                    "description": "哪个主角玩家触发了测试"
+                },
+                "character_id": {
+                    "type": "integer",
+                    "description": "哪个角色的好感度能力被拒绝"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Force Goodwill Refusal Test Effect",
+            "description": "强制进行好感度拒绝测试效果"
+        },
+        "v1.GameEvent": {
             "properties": {
                 "type": {
                     "enum": [
                         "GAME_EVENT_TYPE_UNSPECIFIED",
                         0,
-                        "GAME_EVENT_TYPE_CARD_PLAYED",
+                        "CHARACTER_MOVED",
                         1,
-                        "GAME_EVENT_TYPE_CHARACTER_MOVED",
+                        "PARANOIA_ADJUSTED",
                         2,
-                        "GAME_EVENT_TYPE_PARANOIA_ADJUSTED",
+                        "GOODWILL_ADJUSTED",
                         3,
-                        "GAME_EVENT_TYPE_GOODWILL_ADJUSTED",
+                        "INTRIGUE_ADJUSTED",
                         4,
-                        "GAME_EVENT_TYPE_INTRIGUE_ADJUSTED",
+                        "INCIDENT_TRIGGERED",
                         5,
-                        "GAME_EVENT_TYPE_ABILITY_USED",
+                        "INCIDENT_PREVENTED",
                         6,
-                        "GAME_EVENT_TYPE_TRAGEDY_TRIGGERED",
+                        "ROLE_REVEALED",
                         7,
-                        "GAME_EVENT_TYPE_TRAGEDY_PREVENTED",
+                        "ABILITY_GRANTED",
                         8,
-                        "GAME_EVENT_TYPE_DAY_ADVANCED",
+                        "CHOICE_REQUIRED",
                         9,
-                        "GAME_EVENT_TYPE_LOOP_RESET",
+                        "LOOP_WIN",
                         10,
-                        "GAME_EVENT_TYPE_GAME_OVER",
+                        "LOOP_LOSS",
                         11,
-                        "GAME_EVENT_TYPE_PLAYER_GUESS",
+                        "FIRST_GUESS_MADE",
                         12,
-                        "GAME_EVENT_TYPE_CHOICE_REQUIRED",
+                        "FINAL_GUESS_MADE",
                         13,
-                        "GAME_EVENT_TYPE_INCIDENT_TRIGGERED",
+                        "GOODWILL_REFUSAL_TEST",
                         14
                     ],
                     "oneOf": [
@@ -653,7 +692,7 @@
                         }
                     ],
                     "title": "Game Event Type",
-                    "description": "GameEventType for GameEvent"
+                    "description": "游戏事件类型枚举"
                 },
                 "payload": {
                     "properties": {
@@ -679,21 +718,41 @@
             "additionalProperties": true,
             "type": "object",
             "title": "Game Event",
-            "description": "GameEvent represents an event that occurred in the game."
+            "description": "GameEvent 表示游戏中发生的事件。"
         },
-        "proto.v1.MoveCharacterEffect": {
+        "v1.GrantAbilityEffect": {
             "properties": {
-                "destination": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                },
+                "ability_id": {
+                    "type": "integer",
+                    "description": "授予的能力ID"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Grant Ability Effect",
+            "description": "授予角色能力效果"
+        },
+        "v1.MoveCharacterEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                },
+                "target_location": {
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
-                        "LOCATION_TYPE_HOSPITAL",
+                        "HOSPITAL",
                         1,
-                        "LOCATION_TYPE_SHRINE",
+                        "SHRINE",
                         2,
-                        "LOCATION_TYPE_CITY",
+                        "CITY",
                         3,
-                        "LOCATION_TYPE_SCHOOL",
+                        "SCHOOL",
                         4
                     ],
                     "oneOf": [
@@ -705,19 +764,160 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "LocationType 定义游戏中的可能地点。"
+                    "description": "地点类型枚举"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Move Character Effect",
-            "description": "MoveCharacterEffect 移动一个角色到指定地点。"
+            "description": "移动角色效果"
         },
-        "proto.v1.Player": {
+        "v1.PlayerDeductionKnowledge": {
+            "properties": {
+                "guessed_roles": {
+                    "additionalProperties": {
+                        "enum": [
+                            "ROLE_TYPE_UNSPECIFIED",
+                            0,
+                            "INNOCENT",
+                            1,
+                            "KILLER",
+                            2,
+                            "ACCOMPLICE",
+                            3,
+                            "PERSON_OF_INTEREST",
+                            4,
+                            "KEY_PERSON",
+                            5,
+                            "FRIEND",
+                            6,
+                            "LOVER",
+                            7,
+                            "CONSPIRACY_THEORIST",
+                            8,
+                            "CULTIST",
+                            9
+                        ],
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "integer"
+                            }
+                        ],
+                        "title": "Role Type",
+                        "description": "角色身份类型枚举"
+                    },
+                    "type": "object",
+                    "description": "对角色身份的猜测，键为 character_id"
+                },
+                "clues": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array",
+                    "description": "收集到的线索列表"
+                },
+                "theories": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array",
+                    "description": "推理出的理论列表"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Player Deduction Knowledge",
+            "description": "主角的推理知识"
+        },
+        "v1.PlayerViewCharacter": {
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "唯一标识符"
+                    "description": "角色唯一ID"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "角色名称"
+                },
+                "traits": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array",
+                    "description": "角色特征"
+                },
+                "current_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型枚举"
+                },
+                "paranoia": {
+                    "type": "integer",
+                    "description": "妄想值"
+                },
+                "goodwill": {
+                    "type": "integer",
+                    "description": "好感值"
+                },
+                "intrigue": {
+                    "type": "integer",
+                    "description": "阴谋值"
+                },
+                "abilities": {
+                    "items": {
+                        "$ref": "#/definitions/v1.Ability"
+                    },
+                    "type": "array",
+                    "description": "角色拥有的能力列表"
+                },
+                "is_alive": {
+                    "type": "boolean",
+                    "description": "角色是否存活"
+                },
+                "in_panic_mode": {
+                    "type": "boolean",
+                    "description": "是否处于恐慌模式"
+                },
+                "rules": {
+                    "items": {
+                        "$ref": "#/definitions/v1.CharacterRule"
+                    },
+                    "type": "array",
+                    "description": "角色特有规则"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Player View Character",
+            "description": "玩家视角下的角色信息（不包含隐藏身份）"
+        },
+        "v1.PlayerViewPlayer": {
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "玩家唯一ID"
                 },
                 "name": {
                     "type": "string",
@@ -727,9 +927,9 @@
                     "enum": [
                         "PLAYER_ROLE_UNSPECIFIED",
                         0,
-                        "PLAYER_ROLE_MASTERMIND",
+                        "MASTERMIND",
                         1,
-                        "PLAYER_ROLE_PROTAGONIST",
+                        "PROTAGONIST",
                         2
                     ],
                     "oneOf": [
@@ -741,71 +941,42 @@
                         }
                     ],
                     "title": "Player Role",
-                    "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
-                },
-                "is_llm": {
-                    "type": "boolean",
-                    "description": "是否为LLM玩家"
-                },
-                "hand": {
-                    "items": {
-                        "$ref": "#/definitions/proto.v1.Card"
-                    },
-                    "type": "array",
-                    "description": "玩家手牌"
-                },
-                "deduction_knowledge": {
-                    "additionalProperties": {
-                        "oneOf": [
-                            {
-                                "type": "array"
-                            },
-                            {
-                                "type": "boolean"
-                            },
-                            {
-                                "type": "number"
-                            },
-                            {
-                                "type": "object"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
-                        "title": "Value",
-                        "description": "`Value` represents a dynamically typed value which can be either null, a number, a string, a boolean, a recursive struct value, or a list of values. A producer of value is expected to set one of these variants. Absence of any variant indicates an error. The JSON representation for `Value` is JSON value."
-                    },
-                    "type": "object",
-                    "description": "主角的推理知识"
-                },
-                "llm_session_id": {
-                    "type": "string",
-                    "description": "LLM玩家的会话ID"
+                    "description": "玩家角色枚举"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Player",
-            "description": "Player 表示一个连接的玩家（人类或 LLM）。"
+            "title": "Player View Player",
+            "description": "玩家视角下的其他玩家信息（不包含私密数据）"
         },
-        "proto.v1.Target": {
+        "v1.RevealRoleEffect": {
             "properties": {
                 "character_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "目标角色ID"
                 },
-                "location": {
+                "revealed_role": {
                     "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
+                        "ROLE_TYPE_UNSPECIFIED",
                         0,
-                        "LOCATION_TYPE_HOSPITAL",
+                        "INNOCENT",
                         1,
-                        "LOCATION_TYPE_SHRINE",
+                        "KILLER",
                         2,
-                        "LOCATION_TYPE_CITY",
+                        "ACCOMPLICE",
                         3,
-                        "LOCATION_TYPE_SCHOOL",
-                        4
+                        "PERSON_OF_INTEREST",
+                        4,
+                        "KEY_PERSON",
+                        5,
+                        "FRIEND",
+                        6,
+                        "LOVER",
+                        7,
+                        "CONSPIRACY_THEORIST",
+                        8,
+                        "CULTIST",
+                        9
                     ],
                     "oneOf": [
                         {
@@ -815,19 +986,45 @@
                             "type": "integer"
                         }
                     ],
-                    "title": "Location Type",
-                    "description": "LocationType 定义游戏中的可能地点。"
+                    "title": "Role Type",
+                    "description": "角色身份类型枚举"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Target"
+            "title": "Reveal Role Effect",
+            "description": "揭示角色身份效果"
         },
-        "proto.v1.TurfSelectionEffect": {
+        "v1.TurfSelectionEffect": {
+            "properties": {
+                "possible_locations": {
+                    "items": {
+                        "enum": [
+                            "LOCATION_TYPE_UNSPECIFIED",
+                            0,
+                            "HOSPITAL",
+                            1,
+                            "SHRINE",
+                            2,
+                            "CITY",
+                            3,
+                            "SCHOOL",
+                            4
+                        ]
+                    },
+                    "type": "array",
+                    "title": "Location Type",
+                    "description": "地点类型枚举"
+                },
+                "prompt": {
+                    "type": "string",
+                    "description": "给玩家的提示语"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Turf Selection Effect",
-            "description": "TurfSelectionEffect 表示需要为 Boss 选择地盘。"
+            "description": "地盘选择效果（例如某些角色开局可以选择初始地点）"
         }
     }
 }

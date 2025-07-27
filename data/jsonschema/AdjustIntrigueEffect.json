@@ -4,14 +4,19 @@
     "definitions": {
         "AdjustIntrigueEffect": {
             "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                },
                 "amount": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "调整量（正数增加，负数减少）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Adjust Intrigue Effect",
-            "description": "AdjustIntrigueEffect 调整角色的阴谋值。"
+            "description": "调整阴谋值效果"
         }
     }
 }

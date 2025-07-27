@@ -4,35 +4,29 @@
     "definitions": {
         "PlayCardPayload": {
             "properties": {
+                "player_id": {
+                    "type": "string",
+                    "description": "执行操作的玩家ID"
+                },
                 "card_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "打出的卡牌ID"
                 },
-                "target": {
-                    "$ref": "#/definitions/proto.v1.Target",
-                    "additionalProperties": true
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Play Card Payload",
-            "description": "PlayCardPayload 定义了打出卡牌动作所需的数据。"
-        },
-        "proto.v1.Target": {
-            "properties": {
-                "character_id": {
-                    "type": "integer"
+                "target_character_id": {
+                    "type": "integer",
+                    "description": "卡牌的目标角色ID"
                 },
-                "location": {
+                "target_location": {
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
-                        "LOCATION_TYPE_HOSPITAL",
+                        "HOSPITAL",
                         1,
-                        "LOCATION_TYPE_SHRINE",
+                        "SHRINE",
                         2,
-                        "LOCATION_TYPE_CITY",
+                        "CITY",
                         3,
-                        "LOCATION_TYPE_SCHOOL",
+                        "SCHOOL",
                         4
                     ],
                     "oneOf": [
@@ -44,12 +38,13 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "LocationType 定义游戏中的可能地点。"
+                    "description": "地点类型枚举"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Target"
+            "title": "Play Card Payload",
+            "description": "玩家打出卡牌的操作负载"
         }
     }
 }

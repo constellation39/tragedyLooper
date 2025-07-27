@@ -4,28 +4,32 @@
     "definitions": {
         "MakeGuessPayload": {
             "properties": {
+                "player_id": {
+                    "type": "string",
+                    "description": "执行操作的玩家ID"
+                },
                 "guessed_roles": {
                     "additionalProperties": {
                         "enum": [
                             "ROLE_TYPE_UNSPECIFIED",
                             0,
-                            "ROLE_TYPE_INNOCENT",
+                            "INNOCENT",
                             1,
-                            "ROLE_TYPE_KILLER",
+                            "KILLER",
                             2,
-                            "ROLE_TYPE_BRAIN",
+                            "ACCOMPLICE",
                             3,
-                            "ROLE_TYPE_KEY_PERSON",
+                            "PERSON_OF_INTEREST",
                             4,
-                            "ROLE_TYPE_FRIEND",
+                            "KEY_PERSON",
                             5,
-                            "ROLE_TYPE_CONSPIRACY_THEORIST",
+                            "FRIEND",
                             6,
-                            "ROLE_TYPE_CULTIST",
+                            "LOVER",
                             7,
-                            "ROLE_TYPE_MASTERMIND",
+                            "CONSPIRACY_THEORIST",
                             8,
-                            "ROLE_TYPE_PROTAGONIST",
+                            "CULTIST",
                             9
                         ],
                         "oneOf": [
@@ -37,16 +41,16 @@
                             }
                         ],
                         "title": "Role Type",
-                        "description": "RoleType 定义了玩家在游戏中的具体角色。"
+                        "description": "角色身份类型枚举"
                     },
                     "type": "object",
-                    "description": "GuessedRoles 是一个映射，键是角色ID，值是猜测的角色身份 (e.g., \"KeyPerson\", \"Killer\")。"
+                    "description": "猜测的角色身份映射，键为 character_id"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Make Guess Payload",
-            "description": "MakeGuessPayload 定义了主角进行最终猜测时提交的数据结构。"
+            "description": "主角玩家进行猜测的操作负载"
         }
     }
 }

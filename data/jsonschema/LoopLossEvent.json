@@ -1,0 +1,37 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/LoopLossEvent",
+    "definitions": {
+        "LoopLossEvent": {
+            "properties": {
+                "incident_type": {
+                    "enum": [
+                        "INCIDENT_TYPE_UNSPECIFIED",
+                        0,
+                        "MURDER",
+                        1,
+                        "SUICIDE",
+                        2,
+                        "HOSPITAL_CONSPIRACY",
+                        3,
+                        "MURDER_MYSTERY",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Incident Type",
+                    "description": "悲剧类型枚举"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Loop Loss Event"
+        }
+    }
+}

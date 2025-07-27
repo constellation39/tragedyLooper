@@ -3,26 +3,30 @@
     "enum": [
         "GAME_PHASE_UNSPECIFIED",
         0,
-        "GAME_PHASE_MORNING",
+        "SETUP",
         1,
-        "GAME_PHASE_CARD_PLAY",
+        "MASTERMIND_SETUP",
         2,
-        "GAME_PHASE_CARD_REVEAL",
+        "CARD_PLAY",
         3,
-        "GAME_PHASE_CARD_RESOLVE",
+        "CARD_REVEAL",
         4,
-        "GAME_PHASE_ABILITIES",
+        "CARD_RESOLVE",
         5,
-        "GAME_PHASE_INCIDENTS",
+        "ABILITIES",
         6,
-        "GAME_PHASE_DAY_END",
+        "INCIDENTS",
         7,
-        "GAME_PHASE_LOOP_END",
+        "DAY_END",
         8,
-        "GAME_PHASE_GAME_OVER",
+        "LOOP_END",
         9,
-        "GAME_PHASE_PROTAGONIST_GUESS",
-        10
+        "GAME_OVER",
+        10,
+        "PROTAGONIST_GUESS",
+        11,
+        "GAME_PHASE_FIRST_GUESS",
+        12
     ],
     "oneOf": [
         {
@@ -33,5 +37,5 @@
         }
     ],
     "title": "Game Phase",
-    "description": "GamePhase 定义游戏日期的当前阶段。"
+    "description": "游戏阶段枚举"
 }

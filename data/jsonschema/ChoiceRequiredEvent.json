@@ -6,17 +6,17 @@
             "properties": {
                 "choices": {
                     "items": {
-                        "$ref": "#/definitions/proto.v1.Choice"
+                        "$ref": "#/definitions/v1.Choice"
                     },
                     "type": "array",
-                    "description": "This might need a more complex structure depending on the choices"
+                    "description": "这可能需要更复杂的结构，具体取决于选择"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Choice Required Event"
         },
-        "proto.v1.Choice": {
+        "v1.Choice": {
             "properties": {
                 "description": {
                     "type": "string"
@@ -28,7 +28,7 @@
             "additionalProperties": true,
             "type": "object",
             "title": "Choice",
-            "description": "Choice represents a choice a player can make."
+            "description": "Choice 表示玩家可以做出的选择。"
         }
     }
 }

@@ -5,35 +5,38 @@
         "Condition": {
             "properties": {
                 "stat_condition": {
-                    "$ref": "#/definitions/proto.v1.StatCondition",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.StatCondition",
+                    "additionalProperties": true,
+                    "description": "属性条件（例如，妄想值达到某阈值）"
                 },
                 "location_condition": {
-                    "$ref": "#/definitions/proto.v1.LocationCondition",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.LocationCondition",
+                    "additionalProperties": true,
+                    "description": "地点条件（例如，角色在特定地点）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Condition",
-            "description": "Condition 定义悲剧的一个单一条件。"
+            "description": "条件的通用消息，使用 oneof 包含各种具体条件"
         },
-        "proto.v1.LocationCondition": {
+        "v1.LocationCondition": {
             "properties": {
                 "character_id": {
-                    "type": "string"
+                    "type": "integer",
+                    "description": "目标角色ID"
                 },
                 "location": {
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
-                        "LOCATION_TYPE_HOSPITAL",
+                        "HOSPITAL",
                         1,
-                        "LOCATION_TYPE_SHRINE",
+                        "SHRINE",
                         2,
-                        "LOCATION_TYPE_CITY",
+                        "CITY",
                         3,
-                        "LOCATION_TYPE_SCHOOL",
+                        "SCHOOL",
                         4
                     ],
                     "oneOf": [
@@ -45,31 +48,37 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "LocationType 定义游戏中的可能地点。"
+                    "description": "地点类型枚举"
                 },
                 "is_alone": {
                     "type": "boolean",
-                    "description": "是否独处"
+                    "description": "是否在该地点独处"
+                },
+                "not_alone": {
+                    "type": "boolean",
+                    "description": "是否在该地点不独处"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Location Condition"
+            "title": "Location Condition",
+            "description": "地点条件"
         },
-        "proto.v1.StatCondition": {
+        "v1.StatCondition": {
             "properties": {
                 "character_id": {
-                    "type": "string"
+                    "type": "integer",
+                    "description": "目标角色ID"
                 },
-                "stat": {
+                "stat_type": {
                     "enum": [
-                        "STAT_UNSPECIFIED",
+                        "STAT_TYPE_UNSPECIFIED",
                         0,
-                        "STAT_PARANOIA",
+                        "PARANOIA_STAT",
                         1,
-                        "STAT_GOODWILL",
+                        "GOODWILL_STAT",
                         2,
-                        "STAT_INTRIGUE",
+                        "INTRIGUE_STAT",
                         3
                     ],
                     "oneOf": [
@@ -80,22 +89,22 @@
                             "type": "integer"
                         }
                     ],
-                    "title": "Stat",
-                    "description": "Enum for the type of attribute to check"
+                    "title": "Stat Type",
+                    "description": "属性类型"
                 },
-                "operator": {
+                "comparator": {
                     "enum": [
-                        "OPERATOR_UNSPECIFIED",
+                        "COMPARATOR_UNSPECIFIED",
                         0,
-                        "OPERATOR_GREATER_THAN",
+                        "GREATER_THAN",
                         1,
-                        "OPERATOR_LESS_THAN",
+                        "LESS_THAN",
                         2,
-                        "OPERATOR_EQUAL_TO",
+                        "EQUAL_TO",
                         3,
-                        "OPERATOR_GREATER_THAN_OR_EQUAL_TO",
+                        "GREATER_THAN_OR_EQUAL",
                         4,
-                        "OPERATOR_LESS_THAN_OR_EQUAL_TO",
+                        "LESS_THAN_OR_EQUAL",
                         5
                     ],
                     "oneOf": [
@@ -106,16 +115,18 @@
                             "type": "integer"
                         }
                     ],
-                    "title": "Operator",
-                    "description": "Enum for the comparison operator"
+                    "title": "Comparator",
+                    "description": "比较符"
                 },
                 "value": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "比较的值"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Stat Condition"
+            "title": "Stat Condition",
+            "description": "属性条件"
         }
     }
 }

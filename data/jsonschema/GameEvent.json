@@ -8,33 +8,33 @@
                     "enum": [
                         "GAME_EVENT_TYPE_UNSPECIFIED",
                         0,
-                        "GAME_EVENT_TYPE_CARD_PLAYED",
+                        "CHARACTER_MOVED",
                         1,
-                        "GAME_EVENT_TYPE_CHARACTER_MOVED",
+                        "PARANOIA_ADJUSTED",
                         2,
-                        "GAME_EVENT_TYPE_PARANOIA_ADJUSTED",
+                        "GOODWILL_ADJUSTED",
                         3,
-                        "GAME_EVENT_TYPE_GOODWILL_ADJUSTED",
+                        "INTRIGUE_ADJUSTED",
                         4,
-                        "GAME_EVENT_TYPE_INTRIGUE_ADJUSTED",
+                        "INCIDENT_TRIGGERED",
                         5,
-                        "GAME_EVENT_TYPE_ABILITY_USED",
+                        "INCIDENT_PREVENTED",
                         6,
-                        "GAME_EVENT_TYPE_TRAGEDY_TRIGGERED",
+                        "ROLE_REVEALED",
                         7,
-                        "GAME_EVENT_TYPE_TRAGEDY_PREVENTED",
+                        "ABILITY_GRANTED",
                         8,
-                        "GAME_EVENT_TYPE_DAY_ADVANCED",
+                        "CHOICE_REQUIRED",
                         9,
-                        "GAME_EVENT_TYPE_LOOP_RESET",
+                        "LOOP_WIN",
                         10,
-                        "GAME_EVENT_TYPE_GAME_OVER",
+                        "LOOP_LOSS",
                         11,
-                        "GAME_EVENT_TYPE_PLAYER_GUESS",
+                        "FIRST_GUESS_MADE",
                         12,
-                        "GAME_EVENT_TYPE_CHOICE_REQUIRED",
+                        "FINAL_GUESS_MADE",
                         13,
-                        "GAME_EVENT_TYPE_INCIDENT_TRIGGERED",
+                        "GOODWILL_REFUSAL_TEST",
                         14
                     ],
                     "oneOf": [
@@ -46,7 +46,7 @@
                         }
                     ],
                     "title": "Game Event Type",
-                    "description": "GameEventType for GameEvent"
+                    "description": "游戏事件类型枚举"
                 },
                 "payload": {
                     "properties": {
@@ -72,7 +72,7 @@
             "additionalProperties": true,
             "type": "object",
             "title": "Game Event",
-            "description": "GameEvent represents an event that occurred in the game."
+            "description": "GameEvent 表示游戏中发生的事件。"
         }
     }
 }

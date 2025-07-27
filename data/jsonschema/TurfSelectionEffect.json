@@ -3,10 +3,35 @@
     "$ref": "#/definitions/TurfSelectionEffect",
     "definitions": {
         "TurfSelectionEffect": {
+            "properties": {
+                "possible_locations": {
+                    "items": {
+                        "enum": [
+                            "LOCATION_TYPE_UNSPECIFIED",
+                            0,
+                            "HOSPITAL",
+                            1,
+                            "SHRINE",
+                            2,
+                            "CITY",
+                            3,
+                            "SCHOOL",
+                            4
+                        ]
+                    },
+                    "type": "array",
+                    "title": "Location Type",
+                    "description": "地点类型枚举"
+                },
+                "prompt": {
+                    "type": "string",
+                    "description": "给玩家的提示语"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Turf Selection Effect",
-            "description": "TurfSelectionEffect 表示需要为 Boss 选择地盘。"
+            "description": "地盘选择效果（例如某些角色开局可以选择初始地点）"
         }
     }
 }

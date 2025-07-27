@@ -3,10 +3,16 @@
     "$ref": "#/definitions/ForbidGoodwillEffect",
     "definitions": {
         "ForbidGoodwillEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Forbid Goodwill Effect",
-            "description": "ForbidGoodwillEffect 禁止好感度增加。"
+            "description": "禁止好感值调整效果"
         }
     }
 }

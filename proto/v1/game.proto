@@ -1,45 +1,32 @@
 syntax = "proto3";
 
-package proto.v1;
+package v1;
 
-import "google/protobuf/any.proto";
-import "google/protobuf/timestamp.proto";
-import "proto/v1/card.proto";
-import "proto/v1/character.proto";
-import "proto/v1/enums.proto";
-import "proto/v1/event.proto";
-import "proto/v1/player.proto";
-import "proto/v1/script.proto";
+import "v1/enums.proto";
+import "v1/script.proto";
+import "v1/character.proto";
+import "v1/player.proto";
+import "v1/event.proto";
 
-option go_package = "github.com/user/repo/proto/model";
+option go_package = "tragedylooper/internal/game/v1;v1";
 
-// GameState 表示游戏实例的权威当前状态。
+// 游戏当前状态
 message GameState {
-  int32 game_id = 1; // 游戏唯一标识符
-  Script script = 2; // 当前使用的剧本
-  map<int32, Character> characters = 3; // 游戏中所有角色的映射
-  map<int32, Player> players = 4; // 游戏中所有玩家的映射
-  int32 current_day = 5; // 当前天数
-  int32 current_loop = 6; // 当前循环次数
-  GamePhase current_phase = 7; // 当前游戏阶段
-  map<int32, bool> active_tragedies = 8; // 此剧本中活跃的悲剧, key is TragedyType
-  map<int32, bool> prevented_tragedies = 9; // 此循环中已被阻止的悲剧, key is TragedyType
-  map<int32, CardList> played_cards_this_day = 10; // 当天玩家打出的牌
-  map<int32, CardList> played_cards_this_loop = 11; // 本循环玩家打出的牌
-  google.protobuf.Timestamp last_update_time = 12; // 最后更新时间
-  repeated GameEvent day_events = 13; // 当天发生的事件
-  repeated GameEvent loop_events = 14; // 本循环发生的事件
-}
-
-// EffectContext provides the context in which an effect is executed.
-message EffectContext {
-  GameState game_state = 1;
-}
-
-// PlayerAction 代表单个玩家提交的动作。
-message PlayerAction {
-  int32 player_id = 1;
-  int32 game_id = 2;
-  ActionType type = 3;
-  google.protobuf.Any payload = 4; // e.g., PlayCardPayload, UseAbilityPayload
+  string game_id = 1;                       // 游戏唯一ID
+  Script script = 2;                        // 当前游戏的剧本配置
+  map<int32, Character> characters = 3;     // 所有角色当前状态的映射，键为 character_id
+  map<string, Player> players = 4;          // 所有玩家的映射，键为 player_id
+  int32 current_day = 5;                    // 当前天数
+  int32 current_loop = 6;                   // 当前循环数
+  GamePhase current_phase = 7;              // 当前游戏阶段
+  map<int32, bool> active_incidents = 8; // 当前循环中已激活（满足条件）的悲剧，键为 IncidentType
+  map<int32, bool> prevented_incidents = 9; // 当前循环中已被阻止的悲剧，键为 IncidentType
+  repeated int32 played_cards_this_day = 10; // 本日已打出的卡牌ID列表
+  repeated int32 played_cards_this_loop = 11; // 本循环已打出的卡牌ID列表
+  int64 last_update_time = 12;              // 最后更新时间戳 (Unix timestamp)
+  repeated GameEvent day_events = 13;       // 本日发生的事件日志
+  repeated GameEvent loop_events = 14;      // 本循环发生的事件日志
+  map<int32, int32> character_paranoia_limits = 15; // 每个角色的妄想上限映射（新增）
+  map<int32, int32> character_goodwill_limits = 16; // 每个角色的好感度上限映射（新增）
+  map<int32, int32> character_intrigue_limits = 17; // 每个角色的阴谋上限映射（新增）
 }

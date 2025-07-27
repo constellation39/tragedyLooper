@@ -14,7 +14,7 @@
             "additionalProperties": true,
             "type": "object",
             "title": "Choice",
-            "description": "Choice represents a choice a player can make."
+            "description": "Choice 表示玩家可以做出的选择。"
         }
     }
 }

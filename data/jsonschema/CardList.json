@@ -6,7 +6,7 @@
             "properties": {
                 "cards": {
                     "items": {
-                        "$ref": "#/definitions/proto.v1.Card"
+                        "$ref": "#/definitions/v1.Card"
                     },
                     "type": "array"
                 }
@@ -15,44 +15,95 @@
             "type": "object",
             "title": "Card List"
         },
-        "proto.v1.AdjustGoodwillEffect": {
+        "v1.AdjustGoodwillEffect": {
             "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                },
                 "amount": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "调整量（正数增加，负数减少）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Adjust Goodwill Effect",
-            "description": "AdjustGoodwillEffect 调整角色的好感度。"
+            "description": "调整好感值效果"
         },
-        "proto.v1.AdjustIntrigueEffect": {
+        "v1.AdjustIntrigueEffect": {
             "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                },
                 "amount": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "调整量（正数增加，负数减少）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Adjust Intrigue Effect",
-            "description": "AdjustIntrigueEffect 调整角色的阴谋值。"
+            "description": "调整阴谋值效果"
         },
-        "proto.v1.AdjustParanoiaEffect": {
+        "v1.AdjustParanoiaEffect": {
             "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                },
                 "amount": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "调整量（正数增加，负数减少）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Adjust Paranoia Effect",
-            "description": "AdjustParanoiaEffect 调整角色的妄想值。"
+            "description": "调整妄想值效果"
         },
-        "proto.v1.Card": {
+        "v1.CancelIncidentEffect": {
+            "properties": {
+                "incident_type": {
+                    "enum": [
+                        "INCIDENT_TYPE_UNSPECIFIED",
+                        0,
+                        "MURDER",
+                        1,
+                        "SUICIDE",
+                        2,
+                        "HOSPITAL_CONSPIRACY",
+                        3,
+                        "MURDER_MYSTERY",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Incident Type",
+                    "description": "悲剧类型枚举"
+                },
+                "incident_day": {
+                    "type": "integer",
+                    "description": "要取消的悲剧发生在哪一天"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Cancel Incident Effect",
+            "description": "取消悲剧事件效果"
+        },
+        "v1.Card": {
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "唯一标识符"
+                    "description": "卡牌唯一ID"
                 },
                 "name": {
                     "type": "string",
@@ -62,15 +113,15 @@
                     "enum": [
                         "CARD_TYPE_UNSPECIFIED",
                         0,
-                        "CARD_TYPE_MOVEMENT",
+                        "MOVEMENT",
                         1,
-                        "CARD_TYPE_PARANOIA",
+                        "PARANOIA",
                         2,
-                        "CARD_TYPE_GOODWILL",
+                        "GOODWILL",
                         3,
-                        "CARD_TYPE_INTRIGUE",
+                        "INTRIGUE",
                         4,
-                        "CARD_TYPE_SPECIAL",
+                        "SPECIAL",
                         5
                     ],
                     "oneOf": [
@@ -82,15 +133,15 @@
                         }
                     ],
                     "title": "Card Type",
-                    "description": "CardType 定义玩家可以打出的卡牌类型。"
+                    "description": "卡牌类型枚举"
                 },
                 "owner_role": {
                     "enum": [
                         "PLAYER_ROLE_UNSPECIFIED",
                         0,
-                        "PLAYER_ROLE_MASTERMIND",
+                        "MASTERMIND",
                         1,
-                        "PLAYER_ROLE_PROTAGONIST",
+                        "PROTAGONIST",
                         2
                     ],
                     "oneOf": [
@@ -102,108 +153,192 @@
                         }
                     ],
                     "title": "Player Role",
-                    "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
+                    "description": "玩家角色枚举"
                 },
                 "effect": {
-                    "$ref": "#/definitions/proto.v1.Effect",
+                    "$ref": "#/definitions/v1.Effect",
                     "additionalProperties": true,
-                    "description": "卡牌效果"
+                    "description": "卡牌的具体效果"
                 },
                 "once_per_loop": {
                     "type": "boolean",
-                    "description": "每循环只能使用一次"
+                    "description": "是否每个循环只能使用一次"
                 },
                 "used_this_loop": {
                     "type": "boolean",
-                    "description": "运行时状态"
-                },
-                "target": {
-                    "$ref": "#/definitions/proto.v1.Target",
-                    "additionalProperties": true
+                    "description": "运行时状态：本循环是否已使用过此卡牌"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Card",
-            "description": "Card 表示一张行动卡。"
+            "description": "行动卡牌"
         },
-        "proto.v1.Effect": {
+        "v1.Effect": {
             "properties": {
                 "move_character_effect": {
-                    "$ref": "#/definitions/proto.v1.MoveCharacterEffect",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.MoveCharacterEffect",
+                    "additionalProperties": true,
+                    "description": "移动角色效果"
                 },
                 "adjust_paranoia_effect": {
-                    "$ref": "#/definitions/proto.v1.AdjustParanoiaEffect",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.AdjustParanoiaEffect",
+                    "additionalProperties": true,
+                    "description": "调整妄想值效果"
                 },
                 "adjust_goodwill_effect": {
-                    "$ref": "#/definitions/proto.v1.AdjustGoodwillEffect",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.AdjustGoodwillEffect",
+                    "additionalProperties": true,
+                    "description": "调整好感值效果"
                 },
                 "adjust_intrigue_effect": {
-                    "$ref": "#/definitions/proto.v1.AdjustIntrigueEffect",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.AdjustIntrigueEffect",
+                    "additionalProperties": true,
+                    "description": "调整阴谋值效果"
                 },
                 "forbid_movement_effect": {
-                    "$ref": "#/definitions/proto.v1.ForbidMovementEffect",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.ForbidMovementEffect",
+                    "additionalProperties": true,
+                    "description": "禁止移动效果"
                 },
                 "forbid_paranoia_effect": {
-                    "$ref": "#/definitions/proto.v1.ForbidParanoiaEffect",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.ForbidParanoiaEffect",
+                    "additionalProperties": true,
+                    "description": "禁止妄想值调整效果"
                 },
                 "forbid_goodwill_effect": {
-                    "$ref": "#/definitions/proto.v1.ForbidGoodwillEffect",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.ForbidGoodwillEffect",
+                    "additionalProperties": true,
+                    "description": "禁止好感值调整效果"
                 },
                 "forbid_intrigue_effect": {
-                    "$ref": "#/definitions/proto.v1.ForbidIntrigueEffect",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/v1.ForbidIntrigueEffect",
+                    "additionalProperties": true,
+                    "description": "禁止阴谋值调整效果"
+                },
+                "reveal_role_effect": {
+                    "$ref": "#/definitions/v1.RevealRoleEffect",
+                    "additionalProperties": true,
+                    "description": "揭示角色身份效果（新增）"
+                },
+                "grant_ability_effect": {
+                    "$ref": "#/definitions/v1.GrantAbilityEffect",
+                    "additionalProperties": true,
+                    "description": "授予角色能力效果（新增）"
+                },
+                "cancel_incident_effect": {
+                    "$ref": "#/definitions/v1.CancelIncidentEffect",
+                    "additionalProperties": true,
+                    "description": "取消悲剧事件效果（新增）"
+                },
+                "force_goodwill_refusal_test": {
+                    "$ref": "#/definitions/v1.ForceGoodwillRefusalTestEffect",
+                    "additionalProperties": true,
+                    "description": "强制进行好感度拒绝测试效果（新增）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Effect",
-            "description": "Effect 接口定义了一个效果的核心行为。"
+            "description": "效果的通用消息，使用 oneof 包含各种具体效果"
         },
-        "proto.v1.ForbidGoodwillEffect": {
+        "v1.ForbidGoodwillEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Forbid Goodwill Effect",
-            "description": "ForbidGoodwillEffect 禁止好感度增加。"
+            "description": "禁止好感值调整效果"
         },
-        "proto.v1.ForbidIntrigueEffect": {
+        "v1.ForbidIntrigueEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Forbid Intrigue Effect",
-            "description": "ForbidIntrigueEffect 禁止阴谋值增加。"
+            "description": "禁止阴谋值调整效果"
         },
-        "proto.v1.ForbidMovementEffect": {
+        "v1.ForbidMovementEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID（如果为空则影响所有角色）"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Forbid Movement Effect",
-            "description": "ForbidMovementEffect 禁止角色移动。"
+            "description": "禁止移动效果"
         },
-        "proto.v1.ForbidParanoiaEffect": {
+        "v1.ForbidParanoiaEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Forbid Paranoia Effect",
-            "description": "ForbidParanoiaEffect 禁止妄想值增加。"
+            "description": "禁止妄想值调整效果"
         },
-        "proto.v1.MoveCharacterEffect": {
+        "v1.ForceGoodwillRefusalTestEffect": {
             "properties": {
-                "destination": {
+                "protagonist_player_id": {
+                    "type": "string",
+                    "description": "哪个主角玩家触发了测试"
+                },
+                "character_id": {
+                    "type": "integer",
+                    "description": "哪个角色的好感度能力被拒绝"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Force Goodwill Refusal Test Effect",
+            "description": "强制进行好感度拒绝测试效果"
+        },
+        "v1.GrantAbilityEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                },
+                "ability_id": {
+                    "type": "integer",
+                    "description": "授予的能力ID"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Grant Ability Effect",
+            "description": "授予角色能力效果"
+        },
+        "v1.MoveCharacterEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                },
+                "target_location": {
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
-                        "LOCATION_TYPE_HOSPITAL",
+                        "HOSPITAL",
                         1,
-                        "LOCATION_TYPE_SHRINE",
+                        "SHRINE",
                         2,
-                        "LOCATION_TYPE_CITY",
+                        "CITY",
                         3,
-                        "LOCATION_TYPE_SCHOOL",
+                        "SCHOOL",
                         4
                     ],
                     "oneOf": [
@@ -215,31 +350,42 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "LocationType 定义游戏中的可能地点。"
+                    "description": "地点类型枚举"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Move Character Effect",
-            "description": "MoveCharacterEffect 移动一个角色到指定地点。"
+            "description": "移动角色效果"
         },
-        "proto.v1.Target": {
+        "v1.RevealRoleEffect": {
             "properties": {
                 "character_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "目标角色ID"
                 },
-                "location": {
+                "revealed_role": {
                     "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
+                        "ROLE_TYPE_UNSPECIFIED",
                         0,
-                        "LOCATION_TYPE_HOSPITAL",
+                        "INNOCENT",
                         1,
-                        "LOCATION_TYPE_SHRINE",
+                        "KILLER",
                         2,
-                        "LOCATION_TYPE_CITY",
+                        "ACCOMPLICE",
                         3,
-                        "LOCATION_TYPE_SCHOOL",
-                        4
+                        "PERSON_OF_INTEREST",
+                        4,
+                        "KEY_PERSON",
+                        5,
+                        "FRIEND",
+                        6,
+                        "LOVER",
+                        7,
+                        "CONSPIRACY_THEORIST",
+                        8,
+                        "CULTIST",
+                        9
                     ],
                     "oneOf": [
                         {
@@ -249,13 +395,14 @@
                             "type": "integer"
                         }
                     ],
-                    "title": "Location Type",
-                    "description": "LocationType 定义游戏中的可能地点。"
+                    "title": "Role Type",
+                    "description": "角色身份类型枚举"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Target"
+            "title": "Reveal Role Effect",
+            "description": "揭示角色身份效果"
         }
     }
 }

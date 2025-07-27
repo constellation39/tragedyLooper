@@ -1,0 +1,11 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/LoopWinEvent",
+    "definitions": {
+        "LoopWinEvent": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Loop Win Event"
+        }
+    }
+}

@@ -4,14 +4,19 @@
     "definitions": {
         "AdjustParanoiaEffect": {
             "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                },
                 "amount": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "调整量（正数增加，负数减少）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Adjust Paranoia Effect",
-            "description": "AdjustParanoiaEffect 调整角色的妄想值。"
+            "description": "调整妄想值效果"
         }
     }
 }

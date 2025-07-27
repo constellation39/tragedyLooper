@@ -3,10 +3,16 @@
     "$ref": "#/definitions/ForbidMovementEffect",
     "definitions": {
         "ForbidMovementEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID（如果为空则影响所有角色）"
+                }
+            },
             "additionalProperties": true,
             "type": "object",
             "title": "Forbid Movement Effect",
-            "description": "ForbidMovementEffect 禁止角色移动。"
+            "description": "禁止移动效果"
         }
     }
 }

@@ -4,17 +4,21 @@
     "definitions": {
         "MoveCharacterEffect": {
             "properties": {
-                "destination": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                },
+                "target_location": {
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
-                        "LOCATION_TYPE_HOSPITAL",
+                        "HOSPITAL",
                         1,
-                        "LOCATION_TYPE_SHRINE",
+                        "SHRINE",
                         2,
-                        "LOCATION_TYPE_CITY",
+                        "CITY",
                         3,
-                        "LOCATION_TYPE_SCHOOL",
+                        "SCHOOL",
                         4
                     ],
                     "oneOf": [
@@ -26,13 +30,13 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "LocationType 定义游戏中的可能地点。"
+                    "description": "地点类型枚举"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Move Character Effect",
-            "description": "MoveCharacterEffect 移动一个角色到指定地点。"
+            "description": "移动角色效果"
         }
     }
 }

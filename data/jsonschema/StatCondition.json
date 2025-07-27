@@ -5,17 +5,18 @@
         "StatCondition": {
             "properties": {
                 "character_id": {
-                    "type": "string"
+                    "type": "integer",
+                    "description": "目标角色ID"
                 },
-                "stat": {
+                "stat_type": {
                     "enum": [
-                        "STAT_UNSPECIFIED",
+                        "STAT_TYPE_UNSPECIFIED",
                         0,
-                        "STAT_PARANOIA",
+                        "PARANOIA_STAT",
                         1,
-                        "STAT_GOODWILL",
+                        "GOODWILL_STAT",
                         2,
-                        "STAT_INTRIGUE",
+                        "INTRIGUE_STAT",
                         3
                     ],
                     "oneOf": [
@@ -26,22 +27,22 @@
                             "type": "integer"
                         }
                     ],
-                    "title": "Stat",
-                    "description": "Enum for the type of attribute to check"
+                    "title": "Stat Type",
+                    "description": "属性类型"
                 },
-                "operator": {
+                "comparator": {
                     "enum": [
-                        "OPERATOR_UNSPECIFIED",
+                        "COMPARATOR_UNSPECIFIED",
                         0,
-                        "OPERATOR_GREATER_THAN",
+                        "GREATER_THAN",
                         1,
-                        "OPERATOR_LESS_THAN",
+                        "LESS_THAN",
                         2,
-                        "OPERATOR_EQUAL_TO",
+                        "EQUAL_TO",
                         3,
-                        "OPERATOR_GREATER_THAN_OR_EQUAL_TO",
+                        "GREATER_THAN_OR_EQUAL",
                         4,
-                        "OPERATOR_LESS_THAN_OR_EQUAL_TO",
+                        "LESS_THAN_OR_EQUAL",
                         5
                     ],
                     "oneOf": [
@@ -52,16 +53,18 @@
                             "type": "integer"
                         }
                     ],
-                    "title": "Operator",
-                    "description": "Enum for the comparison operator"
+                    "title": "Comparator",
+                    "description": "比较符"
                 },
                 "value": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "比较的值"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Stat Condition"
+            "title": "Stat Condition",
+            "description": "属性条件"
         }
     }
 }

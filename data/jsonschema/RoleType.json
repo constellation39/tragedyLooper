@@ -3,23 +3,23 @@
     "enum": [
         "ROLE_TYPE_UNSPECIFIED",
         0,
-        "ROLE_TYPE_INNOCENT",
+        "INNOCENT",
         1,
-        "ROLE_TYPE_KILLER",
+        "KILLER",
         2,
-        "ROLE_TYPE_BRAIN",
+        "ACCOMPLICE",
         3,
-        "ROLE_TYPE_KEY_PERSON",
+        "PERSON_OF_INTEREST",
         4,
-        "ROLE_TYPE_FRIEND",
+        "KEY_PERSON",
         5,
-        "ROLE_TYPE_CONSPIRACY_THEORIST",
+        "FRIEND",
         6,
-        "ROLE_TYPE_CULTIST",
+        "LOVER",
         7,
-        "ROLE_TYPE_MASTERMIND",
+        "CONSPIRACY_THEORIST",
         8,
-        "ROLE_TYPE_PROTAGONIST",
+        "CULTIST",
         9
     ],
     "oneOf": [
@@ -31,5 +31,5 @@
         }
     ],
     "title": "Role Type",
-    "description": "RoleType 定义了玩家在游戏中的具体角色。"
+    "description": "角色身份类型枚举"
 }

@@ -3,26 +3,32 @@
     "enum": [
         "TRIGGER_TYPE_UNSPECIFIED",
         0,
-        "TRIGGER_TYPE_ON_GAME_SETUP",
+        "ON_GAME_SETUP",
         1,
-        "TRIGGER_TYPE_ON_LOOP_START",
+        "ON_LOOP_START",
         2,
-        "TRIGGER_TYPE_ON_DAY_START",
+        "ON_DAY_START",
         3,
-        "TRIGGER_TYPE_ON_CARD_PLAY_PHASE",
+        "ON_CARD_PLAY_PHASE",
         4,
-        "TRIGGER_TYPE_ON_CARD_REVEAL_PHASE",
+        "ON_CARD_REVEAL_PHASE",
         5,
-        "TRIGGER_TYPE_ON_CARD_RESOLVE_PHASE",
+        "ON_CARD_RESOLVE_PHASE",
         6,
-        "TRIGGER_TYPE_ON_ABILITY_PHASE",
+        "ON_ABILITY_PHASE",
         7,
-        "TRIGGER_TYPE_ON_INCIDENT_PHASE",
+        "ON_INCIDENT_PHASE",
         8,
-        "TRIGGER_TYPE_ON_GAME_EVENT",
-        15,
-        "TRIGGER_TYPE_PASSIVE",
-        20
+        "ON_GAME_EVENT",
+        9,
+        "PASSIVE",
+        10,
+        "ON_LOOP_LOSS",
+        11,
+        "ON_LOOP_WIN",
+        12,
+        "ON_GAME_END",
+        13
     ],
     "oneOf": [
         {
@@ -33,5 +39,5 @@
         }
     ],
     "title": "Trigger Type",
-    "description": "TriggerType 定义了能力、规则或效果何时被激活或评估。 这个统一的枚举旨在澄清触发机制，明确区分基于游戏阶段的触发和基于事件的触发。 好的设计实践建议将触发条件与效果分离开来。 例如，一个能力可以有一个 `TriggerType` 来定义“何时”检查，以及一个效果列表来定义“做什么”。"
+    "description": "触发器类型枚举（能力或规则何时触发）"
 }

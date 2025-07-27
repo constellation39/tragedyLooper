@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/GrantAbilityEffect",
+    "definitions": {
+        "GrantAbilityEffect": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "目标角色ID"
+                },
+                "ability_id": {
+                    "type": "integer",
+                    "description": "授予的能力ID"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Grant Ability Effect",
+            "description": "授予角色能力效果"
+        }
+    }
+}
