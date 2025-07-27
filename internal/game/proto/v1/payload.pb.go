@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        (unknown)
-// source: proto/v1/payload.proto
+// source: v1/payload.proto
 
-package model
+package v1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -21,18 +21,23 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// PlayCardPayload 定义了打出卡牌动作所需的数据。
+// 玩家打出卡牌的操作负载
 type PlayCardPayload struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	CardId        int32                  `protobuf:"varint,1,opt,name=card_id,json=cardId,proto3" json:"card_id,omitempty"`
-	Target        *Target                `protobuf:"bytes,2,opt,name=target,proto3" json:"target,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	PlayerId string                 `protobuf:"bytes,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"` // 执行操作的玩家ID
+	CardId   int32                  `protobuf:"varint,2,opt,name=card_id,json=cardId,proto3" json:"card_id,omitempty"`      // 打出的卡牌ID
+	// Types that are valid to be assigned to Target:
+	//
+	//	*PlayCardPayload_TargetCharacterId
+	//	*PlayCardPayload_TargetLocation
+	Target        isPlayCardPayload_Target `protobuf_oneof:"target"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *PlayCardPayload) Reset() {
 	*x = PlayCardPayload{}
-	mi := &file_proto_v1_payload_proto_msgTypes[0]
+	mi := &file_v1_payload_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -44,7 +49,7 @@ func (x *PlayCardPayload) String() string {
 func (*PlayCardPayload) ProtoMessage() {}
 
 func (x *PlayCardPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_payload_proto_msgTypes[0]
+	mi := &file_v1_payload_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -57,7 +62,14 @@ func (x *PlayCardPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlayCardPayload.ProtoReflect.Descriptor instead.
 func (*PlayCardPayload) Descriptor() ([]byte, []int) {
-	return file_proto_v1_payload_proto_rawDescGZIP(), []int{0}
+	return file_v1_payload_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *PlayCardPayload) GetPlayerId() string {
+	if x != nil {
+		return x.PlayerId
+	}
+	return ""
 }
 
 func (x *PlayCardPayload) GetCardId() int32 {
@@ -67,26 +79,66 @@ func (x *PlayCardPayload) GetCardId() int32 {
 	return 0
 }
 
-func (x *PlayCardPayload) GetTarget() *Target {
+func (x *PlayCardPayload) GetTarget() isPlayCardPayload_Target {
 	if x != nil {
 		return x.Target
 	}
 	return nil
 }
 
-// UseAbilityPayload 定义了使用能力动作所需的数据。
+func (x *PlayCardPayload) GetTargetCharacterId() int32 {
+	if x != nil {
+		if x, ok := x.Target.(*PlayCardPayload_TargetCharacterId); ok {
+			return x.TargetCharacterId
+		}
+	}
+	return 0
+}
+
+func (x *PlayCardPayload) GetTargetLocation() LocationType {
+	if x != nil {
+		if x, ok := x.Target.(*PlayCardPayload_TargetLocation); ok {
+			return x.TargetLocation
+		}
+	}
+	return LocationType_LOCATION_TYPE_UNSPECIFIED
+}
+
+type isPlayCardPayload_Target interface {
+	isPlayCardPayload_Target()
+}
+
+type PlayCardPayload_TargetCharacterId struct {
+	TargetCharacterId int32 `protobuf:"varint,3,opt,name=target_character_id,json=targetCharacterId,proto3,oneof"` // 卡牌的目标角色ID
+}
+
+type PlayCardPayload_TargetLocation struct {
+	TargetLocation LocationType `protobuf:"varint,4,opt,name=target_location,json=targetLocation,proto3,enum=v1.LocationType,oneof"` // 如果是移动卡，指定目标地点
+}
+
+func (*PlayCardPayload_TargetCharacterId) isPlayCardPayload_Target() {}
+
+func (*PlayCardPayload_TargetLocation) isPlayCardPayload_Target() {}
+
+// 玩家使用能力的操作负载
 type UseAbilityPayload struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`
-	AbilityId     int32                  `protobuf:"varint,2,opt,name=ability_id,json=abilityId,proto3" json:"ability_id,omitempty"`
-	Target        *Target                `protobuf:"bytes,3,opt,name=target,proto3" json:"target,omitempty"`
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	PlayerId    string                 `protobuf:"bytes,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`           // 执行操作的玩家ID
+	CharacterId int32                  `protobuf:"varint,2,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"` // 哪个角色的能力被使用
+	AbilityId   int32                  `protobuf:"varint,3,opt,name=ability_id,json=abilityId,proto3" json:"ability_id,omitempty"`       // 哪个能力被使用
+	// Types that are valid to be assigned to Target:
+	//
+	//	*UseAbilityPayload_TargetCharacterId
+	//	*UseAbilityPayload_TargetLocation
+	//	*UseAbilityPayload_TargetIncidentType
+	Target        isUseAbilityPayload_Target `protobuf_oneof:"target"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UseAbilityPayload) Reset() {
 	*x = UseAbilityPayload{}
-	mi := &file_proto_v1_payload_proto_msgTypes[1]
+	mi := &file_v1_payload_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -98,7 +150,7 @@ func (x *UseAbilityPayload) String() string {
 func (*UseAbilityPayload) ProtoMessage() {}
 
 func (x *UseAbilityPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_payload_proto_msgTypes[1]
+	mi := &file_v1_payload_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -111,7 +163,14 @@ func (x *UseAbilityPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UseAbilityPayload.ProtoReflect.Descriptor instead.
 func (*UseAbilityPayload) Descriptor() ([]byte, []int) {
-	return file_proto_v1_payload_proto_rawDescGZIP(), []int{1}
+	return file_v1_payload_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *UseAbilityPayload) GetPlayerId() string {
+	if x != nil {
+		return x.PlayerId
+	}
+	return ""
 }
 
 func (x *UseAbilityPayload) GetCharacterId() int32 {
@@ -128,24 +187,74 @@ func (x *UseAbilityPayload) GetAbilityId() int32 {
 	return 0
 }
 
-func (x *UseAbilityPayload) GetTarget() *Target {
+func (x *UseAbilityPayload) GetTarget() isUseAbilityPayload_Target {
 	if x != nil {
 		return x.Target
 	}
 	return nil
 }
 
-// MakeGuessPayload 定义了主角进行最终猜测时提交的数据结构。
+func (x *UseAbilityPayload) GetTargetCharacterId() int32 {
+	if x != nil {
+		if x, ok := x.Target.(*UseAbilityPayload_TargetCharacterId); ok {
+			return x.TargetCharacterId
+		}
+	}
+	return 0
+}
+
+func (x *UseAbilityPayload) GetTargetLocation() LocationType {
+	if x != nil {
+		if x, ok := x.Target.(*UseAbilityPayload_TargetLocation); ok {
+			return x.TargetLocation
+		}
+	}
+	return LocationType_LOCATION_TYPE_UNSPECIFIED
+}
+
+func (x *UseAbilityPayload) GetTargetIncidentType() IncidentType {
+	if x != nil {
+		if x, ok := x.Target.(*UseAbilityPayload_TargetIncidentType); ok {
+			return x.TargetIncidentType
+		}
+	}
+	return IncidentType_INCIDENT_TYPE_UNSPECIFIED
+}
+
+type isUseAbilityPayload_Target interface {
+	isUseAbilityPayload_Target()
+}
+
+type UseAbilityPayload_TargetCharacterId struct {
+	TargetCharacterId int32 `protobuf:"varint,4,opt,name=target_character_id,json=targetCharacterId,proto3,oneof"` // 如果能力有目标角色，指定其ID
+}
+
+type UseAbilityPayload_TargetLocation struct {
+	TargetLocation LocationType `protobuf:"varint,5,opt,name=target_location,json=targetLocation,proto3,enum=v1.LocationType,oneof"` // 如果能力有目标地点，指定其地点
+}
+
+type UseAbilityPayload_TargetIncidentType struct {
+	TargetIncidentType IncidentType `protobuf:"varint,6,opt,name=target_incident_type,json=targetIncidentType,proto3,enum=v1.IncidentType,oneof"` // 如果能力目标是悲剧，指定其类型
+}
+
+func (*UseAbilityPayload_TargetCharacterId) isUseAbilityPayload_Target() {}
+
+func (*UseAbilityPayload_TargetLocation) isUseAbilityPayload_Target() {}
+
+func (*UseAbilityPayload_TargetIncidentType) isUseAbilityPayload_Target() {}
+
+// 主角玩家进行猜测的操作负载
 type MakeGuessPayload struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	GuessedRoles  map[int32]RoleType     `protobuf:"bytes,1,rep,name=guessed_roles,json=guessedRoles,proto3" json:"guessed_roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=proto.v1.RoleType"` // GuessedRoles 是一个映射，键是角色ID，值是猜测的角色身份 (e.g., "KeyPerson", "Killer")。
+	PlayerId      string                 `protobuf:"bytes,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`                                                                                                          // 执行操作的玩家ID
+	GuessedRoles  map[int32]RoleType     `protobuf:"bytes,2,rep,name=guessed_roles,json=guessedRoles,proto3" json:"guessed_roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=v1.RoleType"` // 猜测的角色身份映射，键为 character_id
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *MakeGuessPayload) Reset() {
 	*x = MakeGuessPayload{}
-	mi := &file_proto_v1_payload_proto_msgTypes[2]
+	mi := &file_v1_payload_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -157,7 +266,7 @@ func (x *MakeGuessPayload) String() string {
 func (*MakeGuessPayload) ProtoMessage() {}
 
 func (x *MakeGuessPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_payload_proto_msgTypes[2]
+	mi := &file_v1_payload_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -170,7 +279,14 @@ func (x *MakeGuessPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MakeGuessPayload.ProtoReflect.Descriptor instead.
 func (*MakeGuessPayload) Descriptor() ([]byte, []int) {
-	return file_proto_v1_payload_proto_rawDescGZIP(), []int{2}
+	return file_v1_payload_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *MakeGuessPayload) GetPlayerId() string {
+	if x != nil {
+		return x.PlayerId
+	}
+	return ""
 }
 
 func (x *MakeGuessPayload) GetGuessedRoles() map[int32]RoleType {
@@ -180,80 +296,164 @@ func (x *MakeGuessPayload) GetGuessedRoles() map[int32]RoleType {
 	return nil
 }
 
-var File_proto_v1_payload_proto protoreflect.FileDescriptor
+// 玩家进行选择的操作负载（例如，在需要选择地盘或目标时）
+type ChooseOptionPayload struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	PlayerId       string                 `protobuf:"bytes,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`                     // 执行操作的玩家ID
+	CharacterId    int32                  `protobuf:"varint,2,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`           // 做出选择的角色（如果选择与角色相关）
+	ChosenOptionId string                 `protobuf:"bytes,3,opt,name=chosen_option_id,json=chosenOptionId,proto3" json:"chosen_option_id,omitempty"` // 选择项的ID
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
 
-const file_proto_v1_payload_proto_rawDesc = "" +
+func (x *ChooseOptionPayload) Reset() {
+	*x = ChooseOptionPayload{}
+	mi := &file_v1_payload_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChooseOptionPayload) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChooseOptionPayload) ProtoMessage() {}
+
+func (x *ChooseOptionPayload) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_payload_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChooseOptionPayload.ProtoReflect.Descriptor instead.
+func (*ChooseOptionPayload) Descriptor() ([]byte, []int) {
+	return file_v1_payload_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ChooseOptionPayload) GetPlayerId() string {
+	if x != nil {
+		return x.PlayerId
+	}
+	return ""
+}
+
+func (x *ChooseOptionPayload) GetCharacterId() int32 {
+	if x != nil {
+		return x.CharacterId
+	}
+	return 0
+}
+
+func (x *ChooseOptionPayload) GetChosenOptionId() string {
+	if x != nil {
+		return x.ChosenOptionId
+	}
+	return ""
+}
+
+var File_v1_payload_proto protoreflect.FileDescriptor
+
+const file_v1_payload_proto_rawDesc = "" +
 	"\n" +
-	"\x16proto/v1/payload.proto\x12\bproto.v1\x1a\x14proto/v1/enums.proto\x1a\x15proto/v1/target.proto\"T\n" +
-	"\x0fPlayCardPayload\x12\x17\n" +
-	"\acard_id\x18\x01 \x01(\x05R\x06cardId\x12(\n" +
-	"\x06target\x18\x02 \x01(\v2\x10.proto.v1.TargetR\x06target\"\x7f\n" +
-	"\x11UseAbilityPayload\x12!\n" +
-	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x12\x1d\n" +
+	"\x10v1/payload.proto\x12\x02v1\x1a\x0ev1/enums.proto\"\xc0\x01\n" +
+	"\x0fPlayCardPayload\x12\x1b\n" +
+	"\tplayer_id\x18\x01 \x01(\tR\bplayerId\x12\x17\n" +
+	"\acard_id\x18\x02 \x01(\x05R\x06cardId\x120\n" +
+	"\x13target_character_id\x18\x03 \x01(\x05H\x00R\x11targetCharacterId\x12;\n" +
+	"\x0ftarget_location\x18\x04 \x01(\x0e2\x10.v1.LocationTypeH\x00R\x0etargetLocationB\b\n" +
+	"\x06target\"\xb1\x02\n" +
+	"\x11UseAbilityPayload\x12\x1b\n" +
+	"\tplayer_id\x18\x01 \x01(\tR\bplayerId\x12!\n" +
+	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\x12\x1d\n" +
 	"\n" +
-	"ability_id\x18\x02 \x01(\x05R\tabilityId\x12(\n" +
-	"\x06target\x18\x03 \x01(\v2\x10.proto.v1.TargetR\x06target\"\xba\x01\n" +
-	"\x10MakeGuessPayload\x12Q\n" +
-	"\rguessed_roles\x18\x01 \x03(\v2,.proto.v1.MakeGuessPayload.GuessedRolesEntryR\fguessedRoles\x1aS\n" +
+	"ability_id\x18\x03 \x01(\x05R\tabilityId\x120\n" +
+	"\x13target_character_id\x18\x04 \x01(\x05H\x00R\x11targetCharacterId\x12;\n" +
+	"\x0ftarget_location\x18\x05 \x01(\x0e2\x10.v1.LocationTypeH\x00R\x0etargetLocation\x12D\n" +
+	"\x14target_incident_type\x18\x06 \x01(\x0e2\x10.v1.IncidentTypeH\x00R\x12targetIncidentTypeB\b\n" +
+	"\x06target\"\xcb\x01\n" +
+	"\x10MakeGuessPayload\x12\x1b\n" +
+	"\tplayer_id\x18\x01 \x01(\tR\bplayerId\x12K\n" +
+	"\rguessed_roles\x18\x02 \x03(\v2&.v1.MakeGuessPayload.GuessedRolesEntryR\fguessedRoles\x1aM\n" +
 	"\x11GuessedRolesEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12(\n" +
-	"\x05value\x18\x02 \x01(\x0e2\x12.proto.v1.RoleTypeR\x05value:\x028\x01B\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12\"\n" +
+	"\x05value\x18\x02 \x01(\x0e2\f.v1.RoleTypeR\x05value:\x028\x01\"\x7f\n" +
+	"\x13ChooseOptionPayload\x12\x1b\n" +
+	"\tplayer_id\x18\x01 \x01(\tR\bplayerId\x12!\n" +
+	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\x12(\n" +
+	"\x10chosen_option_id\x18\x03 \x01(\tR\x0echosenOptionIdB#Z!tragedylooper/internal/game/v1;v1b\x06proto3"
 
 var (
-	file_proto_v1_payload_proto_rawDescOnce sync.Once
-	file_proto_v1_payload_proto_rawDescData []byte
+	file_v1_payload_proto_rawDescOnce sync.Once
+	file_v1_payload_proto_rawDescData []byte
 )
 
-func file_proto_v1_payload_proto_rawDescGZIP() []byte {
-	file_proto_v1_payload_proto_rawDescOnce.Do(func() {
-		file_proto_v1_payload_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_v1_payload_proto_rawDesc), len(file_proto_v1_payload_proto_rawDesc)))
+func file_v1_payload_proto_rawDescGZIP() []byte {
+	file_v1_payload_proto_rawDescOnce.Do(func() {
+		file_v1_payload_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_v1_payload_proto_rawDesc), len(file_v1_payload_proto_rawDesc)))
 	})
-	return file_proto_v1_payload_proto_rawDescData
+	return file_v1_payload_proto_rawDescData
 }
 
-var file_proto_v1_payload_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-var file_proto_v1_payload_proto_goTypes = []any{
-	(*PlayCardPayload)(nil),   // 0: proto.v1.PlayCardPayload
-	(*UseAbilityPayload)(nil), // 1: proto.v1.UseAbilityPayload
-	(*MakeGuessPayload)(nil),  // 2: proto.v1.MakeGuessPayload
-	nil,                       // 3: proto.v1.MakeGuessPayload.GuessedRolesEntry
-	(*Target)(nil),            // 4: proto.v1.Target
-	(RoleType)(0),             // 5: proto.v1.RoleType
+var file_v1_payload_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_v1_payload_proto_goTypes = []any{
+	(*PlayCardPayload)(nil),     // 0: v1.PlayCardPayload
+	(*UseAbilityPayload)(nil),   // 1: v1.UseAbilityPayload
+	(*MakeGuessPayload)(nil),    // 2: v1.MakeGuessPayload
+	(*ChooseOptionPayload)(nil), // 3: v1.ChooseOptionPayload
+	nil,                         // 4: v1.MakeGuessPayload.GuessedRolesEntry
+	(LocationType)(0),           // 5: v1.LocationType
+	(IncidentType)(0),           // 6: v1.IncidentType
+	(RoleType)(0),               // 7: v1.RoleType
 }
-var file_proto_v1_payload_proto_depIdxs = []int32{
-	4, // 0: proto.v1.PlayCardPayload.target:type_name -> proto.v1.Target
-	4, // 1: proto.v1.UseAbilityPayload.target:type_name -> proto.v1.Target
-	3, // 2: proto.v1.MakeGuessPayload.guessed_roles:type_name -> proto.v1.MakeGuessPayload.GuessedRolesEntry
-	5, // 3: proto.v1.MakeGuessPayload.GuessedRolesEntry.value:type_name -> proto.v1.RoleType
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+var file_v1_payload_proto_depIdxs = []int32{
+	5, // 0: v1.PlayCardPayload.target_location:type_name -> v1.LocationType
+	5, // 1: v1.UseAbilityPayload.target_location:type_name -> v1.LocationType
+	6, // 2: v1.UseAbilityPayload.target_incident_type:type_name -> v1.IncidentType
+	4, // 3: v1.MakeGuessPayload.guessed_roles:type_name -> v1.MakeGuessPayload.GuessedRolesEntry
+	7, // 4: v1.MakeGuessPayload.GuessedRolesEntry.value:type_name -> v1.RoleType
+	5, // [5:5] is the sub-list for method output_type
+	5, // [5:5] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
-func init() { file_proto_v1_payload_proto_init() }
-func file_proto_v1_payload_proto_init() {
-	if File_proto_v1_payload_proto != nil {
+func init() { file_v1_payload_proto_init() }
+func file_v1_payload_proto_init() {
+	if File_v1_payload_proto != nil {
 		return
 	}
-	file_proto_v1_enums_proto_init()
-	file_proto_v1_target_proto_init()
+	file_v1_enums_proto_init()
+	file_v1_payload_proto_msgTypes[0].OneofWrappers = []any{
+		(*PlayCardPayload_TargetCharacterId)(nil),
+		(*PlayCardPayload_TargetLocation)(nil),
+	}
+	file_v1_payload_proto_msgTypes[1].OneofWrappers = []any{
+		(*UseAbilityPayload_TargetCharacterId)(nil),
+		(*UseAbilityPayload_TargetLocation)(nil),
+		(*UseAbilityPayload_TargetIncidentType)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_v1_payload_proto_rawDesc), len(file_proto_v1_payload_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_payload_proto_rawDesc), len(file_v1_payload_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_proto_v1_payload_proto_goTypes,
-		DependencyIndexes: file_proto_v1_payload_proto_depIdxs,
-		MessageInfos:      file_proto_v1_payload_proto_msgTypes,
+		GoTypes:           file_v1_payload_proto_goTypes,
+		DependencyIndexes: file_v1_payload_proto_depIdxs,
+		MessageInfos:      file_v1_payload_proto_msgTypes,
 	}.Build()
-	File_proto_v1_payload_proto = out.File
-	file_proto_v1_payload_proto_goTypes = nil
-	file_proto_v1_payload_proto_depIdxs = nil
+	File_v1_payload_proto = out.File
+	file_v1_payload_proto_goTypes = nil
+	file_v1_payload_proto_depIdxs = nil
 }

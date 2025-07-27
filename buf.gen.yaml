@@ -1,7 +1,7 @@
 version: v2
 plugins:
   - remote: buf.build/protocolbuffers/go
-    out: internal/game
+    out: internal/game/proto
     opt:
       - paths=source_relative
       - Mgoogle/protobuf/struct.proto=google.golang.org/protobuf/types/known/structpb

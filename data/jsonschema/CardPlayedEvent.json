@@ -168,6 +168,34 @@
                 "used_this_loop": {
                     "type": "boolean",
                     "description": "运行时状态：本循环是否已使用过此卡牌"
+                },
+                "target_character_id": {
+                    "type": "integer",
+                    "description": "卡牌的目标角色ID"
+                },
+                "target_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型枚举"
                 }
             },
             "additionalProperties": true,

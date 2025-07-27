@@ -2,14 +2,13 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        (unknown)
-// source: proto/v1/player.proto
+// source: v1/player.proto
 
-package model
+package v1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	structpb "google.golang.org/protobuf/types/known/structpb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -22,23 +21,24 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Player 表示一个连接的玩家（人类或 LLM）。
+// 玩家信息
 type Player struct {
-	state              protoimpl.MessageState    `protogen:"open.v1"`
-	Id                 int32                     `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                                                                     // 唯一标识符
-	Name               string                    `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                                                                                  // 玩家名称
-	Role               PlayerRole                `protobuf:"varint,3,opt,name=role,proto3,enum=proto.v1.PlayerRole" json:"role,omitempty"`                                                                                                        // 玩家角色（主谋或主角）
-	IsLlm              bool                      `protobuf:"varint,4,opt,name=is_llm,json=isLlm,proto3" json:"is_llm,omitempty"`                                                                                                                  // 是否为LLM玩家
-	Hand               []*Card                   `protobuf:"bytes,5,rep,name=hand,proto3" json:"hand,omitempty"`                                                                                                                                  // 玩家手牌
-	DeductionKnowledge map[int32]*structpb.Value `protobuf:"bytes,6,rep,name=deduction_knowledge,json=deductionKnowledge,proto3" json:"deduction_knowledge,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 主角的推理知识
-	LlmSessionId       string                    `protobuf:"bytes,7,opt,name=llm_session_id,json=llmSessionId,proto3" json:"llm_session_id,omitempty"`                                                                                            // LLM玩家的会话ID
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	state                           protoimpl.MessageState    `protogen:"open.v1"`
+	Id                              string                    `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                                            // 玩家唯一ID
+	Name                            string                    `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                                                        // 玩家名称
+	Role                            PlayerRole                `protobuf:"varint,3,opt,name=role,proto3,enum=v1.PlayerRole" json:"role,omitempty"`                                                                                    // 玩家角色 (主谋或主角)
+	IsLlm                           bool                      `protobuf:"varint,4,opt,name=is_llm,json=isLlm,proto3" json:"is_llm,omitempty"`                                                                                        // 是否由LLM（大语言模型）控制
+	Hand                            []*Card                   `protobuf:"bytes,5,rep,name=hand,proto3" json:"hand,omitempty"`                                                                                                        // 玩家手牌列表
+	LlmSessionId                    string                    `protobuf:"bytes,6,opt,name=llm_session_id,json=llmSessionId,proto3" json:"llm_session_id,omitempty"`                                                                  // 如果是LLM，对应的会话ID
+	DeductionKnowledge              *PlayerDeductionKnowledge `protobuf:"bytes,7,opt,name=deduction_knowledge,json=deductionKnowledge,proto3" json:"deduction_knowledge,omitempty"`                                                  // 主角的推理知识（仅主角玩家拥有）
+	ProtagonistCharactersControlled []int32                   `protobuf:"varint,8,rep,packed,name=protagonist_characters_controlled,json=protagonistCharactersControlled,proto3" json:"protagonist_characters_controlled,omitempty"` // 新增：如果主角玩家可以控制多个主角角色牌组，列出其控制的角色ID列表
+	unknownFields                   protoimpl.UnknownFields
+	sizeCache                       protoimpl.SizeCache
 }
 
 func (x *Player) Reset() {
 	*x = Player{}
-	mi := &file_proto_v1_player_proto_msgTypes[0]
+	mi := &file_v1_player_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -50,7 +50,7 @@ func (x *Player) String() string {
 func (*Player) ProtoMessage() {}
 
 func (x *Player) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_player_proto_msgTypes[0]
+	mi := &file_v1_player_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -63,14 +63,14 @@ func (x *Player) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Player.ProtoReflect.Descriptor instead.
 func (*Player) Descriptor() ([]byte, []int) {
-	return file_proto_v1_player_proto_rawDescGZIP(), []int{0}
+	return file_v1_player_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Player) GetId() int32 {
+func (x *Player) GetId() string {
 	if x != nil {
 		return x.Id
 	}
-	return 0
+	return ""
 }
 
 func (x *Player) GetName() string {
@@ -101,13 +101,6 @@ func (x *Player) GetHand() []*Card {
 	return nil
 }
 
-func (x *Player) GetDeductionKnowledge() map[int32]*structpb.Value {
-	if x != nil {
-		return x.DeductionKnowledge
-	}
-	return nil
-}
-
 func (x *Player) GetLlmSessionId() string {
 	if x != nil {
 		return x.LlmSessionId
@@ -115,28 +108,103 @@ func (x *Player) GetLlmSessionId() string {
 	return ""
 }
 
-// PlayerView 表示特定玩家的游戏状态过滤视图。
+func (x *Player) GetDeductionKnowledge() *PlayerDeductionKnowledge {
+	if x != nil {
+		return x.DeductionKnowledge
+	}
+	return nil
+}
+
+func (x *Player) GetProtagonistCharactersControlled() []int32 {
+	if x != nil {
+		return x.ProtagonistCharactersControlled
+	}
+	return nil
+}
+
+// 主角的推理知识
+type PlayerDeductionKnowledge struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	GuessedRoles  map[int32]RoleType     `protobuf:"bytes,1,rep,name=guessed_roles,json=guessedRoles,proto3" json:"guessed_roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=v1.RoleType"` // 对角色身份的猜测，键为 character_id
+	Clues         []string               `protobuf:"bytes,2,rep,name=clues,proto3" json:"clues,omitempty"`                                                                                                                                // 收集到的线索列表
+	Theories      []string               `protobuf:"bytes,3,rep,name=theories,proto3" json:"theories,omitempty"`                                                                                                                          // 推理出的理论列表
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PlayerDeductionKnowledge) Reset() {
+	*x = PlayerDeductionKnowledge{}
+	mi := &file_v1_player_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PlayerDeductionKnowledge) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PlayerDeductionKnowledge) ProtoMessage() {}
+
+func (x *PlayerDeductionKnowledge) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_player_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PlayerDeductionKnowledge.ProtoReflect.Descriptor instead.
+func (*PlayerDeductionKnowledge) Descriptor() ([]byte, []int) {
+	return file_v1_player_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *PlayerDeductionKnowledge) GetGuessedRoles() map[int32]RoleType {
+	if x != nil {
+		return x.GuessedRoles
+	}
+	return nil
+}
+
+func (x *PlayerDeductionKnowledge) GetClues() []string {
+	if x != nil {
+		return x.Clues
+	}
+	return nil
+}
+
+func (x *PlayerDeductionKnowledge) GetTheories() []string {
+	if x != nil {
+		return x.Theories
+	}
+	return nil
+}
+
+// 玩家视角下的游戏状态（用于向特定玩家展示信息，隐藏其他玩家的秘密信息）
 type PlayerView struct {
-	state              protoimpl.MessageState    `protogen:"open.v1"`
-	GameId             int32                     `protobuf:"varint,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`                                                                                                                // 游戏唯一标识符
-	ScriptId           int32                     `protobuf:"varint,2,opt,name=script_id,json=scriptId,proto3" json:"script_id,omitempty"`                                                                                                          // 剧本ID
-	Characters         map[int32]*Character      `protobuf:"bytes,3,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                            // 角色信息（隐藏身份已移除）
-	Players            map[int32]*Player         `protobuf:"bytes,4,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                  // 玩家信息（敏感信息已移除）
-	CurrentDay         int32                     `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                                                                    // 当前天数
-	CurrentLoop        int32                     `protobuf:"varint,6,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                                                                 // 当前循环次数
-	CurrentPhase       GamePhase                 `protobuf:"varint,7,opt,name=current_phase,json=currentPhase,proto3,enum=proto.v1.GamePhase" json:"current_phase,omitempty"`                                                                      // 当前游戏阶段
-	ActiveTragedies    map[int32]bool            `protobuf:"bytes,8,rep,name=active_tragedies,json=activeTragedies,proto3" json:"active_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`          // 活跃的悲剧（公开信息）, key is TragedyType
-	PreventedTragedies map[int32]bool            `protobuf:"bytes,9,rep,name=prevented_tragedies,json=preventedTragedies,proto3" json:"prevented_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 已阻止的悲剧（公开信息）, key is TragedyType
-	YourHand           []*Card                   `protobuf:"bytes,10,rep,name=your_hand,json=yourHand,proto3" json:"your_hand,omitempty"`                                                                                                          // 你的手牌（仅对请求玩家可见）
-	YourDeductions     map[int32]*structpb.Value `protobuf:"bytes,11,rep,name=your_deductions,json=yourDeductions,proto3" json:"your_deductions,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`             // 你的推理（仅对主角可见）
-	PublicEvents       []*GameEvent              `protobuf:"bytes,12,rep,name=public_events,json=publicEvents,proto3" json:"public_events,omitempty"`                                                                                              // 公开事件
+	state              protoimpl.MessageState         `protogen:"open.v1"`
+	GameId             string                         `protobuf:"bytes,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`                                                                                                                 // 游戏唯一ID
+	ScriptId           int32                          `protobuf:"varint,2,opt,name=script_id,json=scriptId,proto3" json:"script_id,omitempty"`                                                                                                          // 剧本ID
+	Characters         map[int32]*PlayerViewCharacter `protobuf:"bytes,3,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                            // 玩家视角下的角色状态映射 (隐藏身份已移除)
+	Players            map[string]*PlayerViewPlayer   `protobuf:"bytes,4,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                   // 玩家视角下的其他玩家信息 (手牌等可能隐藏)
+	CurrentDay         int32                          `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                                                                    // 当前天数
+	CurrentLoop        int32                          `protobuf:"varint,6,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                                                                 // 当前循环数
+	CurrentPhase       GamePhase                      `protobuf:"varint,7,opt,name=current_phase,json=currentPhase,proto3,enum=v1.GamePhase" json:"current_phase,omitempty"`                                                                            // 当前游戏阶段
+	ActiveTragedies    map[int32]bool                 `protobuf:"bytes,8,rep,name=active_tragedies,json=activeTragedies,proto3" json:"active_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`          // 已触发的悲剧
+	PreventedTragedies map[int32]bool                 `protobuf:"bytes,9,rep,name=prevented_tragedies,json=preventedTragedies,proto3" json:"prevented_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 已阻止的悲剧
+	YourHand           []*Card                        `protobuf:"bytes,10,rep,name=your_hand,json=yourHand,proto3" json:"your_hand,omitempty"`                                                                                                          // 当前玩家的手牌列表
+	YourDeductions     *PlayerDeductionKnowledge      `protobuf:"bytes,11,opt,name=your_deductions,json=yourDeductions,proto3" json:"your_deductions,omitempty"`                                                                                        // 当前玩家的推理知识
+	PublicEvents       []*GameEvent                   `protobuf:"bytes,12,rep,name=public_events,json=publicEvents,proto3" json:"public_events,omitempty"`                                                                                              // 对所有玩家公开的事件日志
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
 
 func (x *PlayerView) Reset() {
 	*x = PlayerView{}
-	mi := &file_proto_v1_player_proto_msgTypes[1]
+	mi := &file_v1_player_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -148,7 +216,7 @@ func (x *PlayerView) String() string {
 func (*PlayerView) ProtoMessage() {}
 
 func (x *PlayerView) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_player_proto_msgTypes[1]
+	mi := &file_v1_player_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -161,14 +229,14 @@ func (x *PlayerView) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlayerView.ProtoReflect.Descriptor instead.
 func (*PlayerView) Descriptor() ([]byte, []int) {
-	return file_proto_v1_player_proto_rawDescGZIP(), []int{1}
+	return file_v1_player_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *PlayerView) GetGameId() int32 {
+func (x *PlayerView) GetGameId() string {
 	if x != nil {
 		return x.GameId
 	}
-	return 0
+	return ""
 }
 
 func (x *PlayerView) GetScriptId() int32 {
@@ -178,14 +246,14 @@ func (x *PlayerView) GetScriptId() int32 {
 	return 0
 }
 
-func (x *PlayerView) GetCharacters() map[int32]*Character {
+func (x *PlayerView) GetCharacters() map[int32]*PlayerViewCharacter {
 	if x != nil {
 		return x.Characters
 	}
 	return nil
 }
 
-func (x *PlayerView) GetPlayers() map[int32]*Player {
+func (x *PlayerView) GetPlayers() map[string]*PlayerViewPlayer {
 	if x != nil {
 		return x.Players
 	}
@@ -234,7 +302,7 @@ func (x *PlayerView) GetYourHand() []*Card {
 	return nil
 }
 
-func (x *PlayerView) GetYourDeductions() map[int32]*structpb.Value {
+func (x *PlayerView) GetYourDeductions() *PlayerDeductionKnowledge {
 	if x != nil {
 		return x.YourDeductions
 	}
@@ -248,132 +316,346 @@ func (x *PlayerView) GetPublicEvents() []*GameEvent {
 	return nil
 }
 
-var File_proto_v1_player_proto protoreflect.FileDescriptor
+// 玩家视角下的角色信息（不包含隐藏身份）
+type PlayerViewCharacter struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Id              int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                       // 角色唯一ID
+	Name            string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                    // 角色名称
+	Traits          []string               `protobuf:"bytes,3,rep,name=traits,proto3" json:"traits,omitempty"`                                                                // 角色特征
+	CurrentLocation LocationType           `protobuf:"varint,4,opt,name=current_location,json=currentLocation,proto3,enum=v1.LocationType" json:"current_location,omitempty"` // 角色当前所在地点
+	Paranoia        int32                  `protobuf:"varint,5,opt,name=paranoia,proto3" json:"paranoia,omitempty"`                                                           // 妄想值
+	Goodwill        int32                  `protobuf:"varint,6,opt,name=goodwill,proto3" json:"goodwill,omitempty"`                                                           // 好感值
+	Intrigue        int32                  `protobuf:"varint,7,opt,name=intrigue,proto3" json:"intrigue,omitempty"`                                                           // 阴谋值
+	Abilities       []*Ability             `protobuf:"bytes,8,rep,name=abilities,proto3" json:"abilities,omitempty"`                                                          // 角色拥有的能力列表
+	IsAlive         bool                   `protobuf:"varint,9,opt,name=is_alive,json=isAlive,proto3" json:"is_alive,omitempty"`                                              // 角色是否存活
+	InPanicMode     bool                   `protobuf:"varint,10,opt,name=in_panic_mode,json=inPanicMode,proto3" json:"in_panic_mode,omitempty"`                               // 是否处于恐慌模式
+	Rules           []*CharacterRule       `protobuf:"bytes,11,rep,name=rules,proto3" json:"rules,omitempty"`                                                                 // 角色特有规则
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
 
-const file_proto_v1_player_proto_rawDesc = "" +
+func (x *PlayerViewCharacter) Reset() {
+	*x = PlayerViewCharacter{}
+	mi := &file_v1_player_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PlayerViewCharacter) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PlayerViewCharacter) ProtoMessage() {}
+
+func (x *PlayerViewCharacter) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_player_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PlayerViewCharacter.ProtoReflect.Descriptor instead.
+func (*PlayerViewCharacter) Descriptor() ([]byte, []int) {
+	return file_v1_player_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *PlayerViewCharacter) GetId() int32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *PlayerViewCharacter) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *PlayerViewCharacter) GetTraits() []string {
+	if x != nil {
+		return x.Traits
+	}
+	return nil
+}
+
+func (x *PlayerViewCharacter) GetCurrentLocation() LocationType {
+	if x != nil {
+		return x.CurrentLocation
+	}
+	return LocationType_LOCATION_TYPE_UNSPECIFIED
+}
+
+func (x *PlayerViewCharacter) GetParanoia() int32 {
+	if x != nil {
+		return x.Paranoia
+	}
+	return 0
+}
+
+func (x *PlayerViewCharacter) GetGoodwill() int32 {
+	if x != nil {
+		return x.Goodwill
+	}
+	return 0
+}
+
+func (x *PlayerViewCharacter) GetIntrigue() int32 {
+	if x != nil {
+		return x.Intrigue
+	}
+	return 0
+}
+
+func (x *PlayerViewCharacter) GetAbilities() []*Ability {
+	if x != nil {
+		return x.Abilities
+	}
+	return nil
+}
+
+func (x *PlayerViewCharacter) GetIsAlive() bool {
+	if x != nil {
+		return x.IsAlive
+	}
+	return false
+}
+
+func (x *PlayerViewCharacter) GetInPanicMode() bool {
+	if x != nil {
+		return x.InPanicMode
+	}
+	return false
+}
+
+func (x *PlayerViewCharacter) GetRules() []*CharacterRule {
+	if x != nil {
+		return x.Rules
+	}
+	return nil
+}
+
+// 玩家视角下的其他玩家信息（不包含私密数据）
+type PlayerViewPlayer struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                         // 玩家唯一ID
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                     // 玩家名称
+	Role          PlayerRole             `protobuf:"varint,3,opt,name=role,proto3,enum=v1.PlayerRole" json:"role,omitempty"` // 玩家角色
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PlayerViewPlayer) Reset() {
+	*x = PlayerViewPlayer{}
+	mi := &file_v1_player_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PlayerViewPlayer) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PlayerViewPlayer) ProtoMessage() {}
+
+func (x *PlayerViewPlayer) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_player_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PlayerViewPlayer.ProtoReflect.Descriptor instead.
+func (*PlayerViewPlayer) Descriptor() ([]byte, []int) {
+	return file_v1_player_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *PlayerViewPlayer) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *PlayerViewPlayer) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *PlayerViewPlayer) GetRole() PlayerRole {
+	if x != nil {
+		return x.Role
+	}
+	return PlayerRole_PLAYER_ROLE_UNSPECIFIED
+}
+
+var File_v1_player_proto protoreflect.FileDescriptor
+
+const file_v1_player_proto_rawDesc = "" +
 	"\n" +
-	"\x15proto/v1/player.proto\x12\bproto.v1\x1a\x1cgoogle/protobuf/struct.proto\x1a\x13proto/v1/card.proto\x1a\x18proto/v1/character.proto\x1a\x14proto/v1/enums.proto\x1a\x14proto/v1/event.proto\"\xf1\x02\n" +
+	"\x0fv1/player.proto\x12\x02v1\x1a\x0ev1/enums.proto\x1a\rv1/card.proto\x1a\x10v1/ability.proto\x1a\x12v1/character.proto\x1a\x0ev1/event.proto\"\xc6\x02\n" +
 	"\x06Player\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12(\n" +
-	"\x04role\x18\x03 \x01(\x0e2\x14.proto.v1.PlayerRoleR\x04role\x12\x15\n" +
-	"\x06is_llm\x18\x04 \x01(\bR\x05isLlm\x12\"\n" +
-	"\x04hand\x18\x05 \x03(\v2\x0e.proto.v1.CardR\x04hand\x12Y\n" +
-	"\x13deduction_knowledge\x18\x06 \x03(\v2(.proto.v1.Player.DeductionKnowledgeEntryR\x12deductionKnowledge\x12$\n" +
-	"\x0ellm_session_id\x18\a \x01(\tR\fllmSessionId\x1a]\n" +
-	"\x17DeductionKnowledgeEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12,\n" +
-	"\x05value\x18\x02 \x01(\v2\x16.google.protobuf.ValueR\x05value:\x028\x01\"\xba\b\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\"\n" +
+	"\x04role\x18\x03 \x01(\x0e2\x0e.v1.PlayerRoleR\x04role\x12\x15\n" +
+	"\x06is_llm\x18\x04 \x01(\bR\x05isLlm\x12\x1c\n" +
+	"\x04hand\x18\x05 \x03(\v2\b.v1.CardR\x04hand\x12$\n" +
+	"\x0ellm_session_id\x18\x06 \x01(\tR\fllmSessionId\x12M\n" +
+	"\x13deduction_knowledge\x18\a \x01(\v2\x1c.v1.PlayerDeductionKnowledgeR\x12deductionKnowledge\x12J\n" +
+	"!protagonist_characters_controlled\x18\b \x03(\x05R\x1fprotagonistCharactersControlled\"\xf0\x01\n" +
+	"\x18PlayerDeductionKnowledge\x12S\n" +
+	"\rguessed_roles\x18\x01 \x03(\v2..v1.PlayerDeductionKnowledge.GuessedRolesEntryR\fguessedRoles\x12\x14\n" +
+	"\x05clues\x18\x02 \x03(\tR\x05clues\x12\x1a\n" +
+	"\btheories\x18\x03 \x03(\tR\btheories\x1aM\n" +
+	"\x11GuessedRolesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12\"\n" +
+	"\x05value\x18\x02 \x01(\x0e2\f.v1.RoleTypeR\x05value:\x028\x01\"\xb1\a\n" +
 	"\n" +
 	"PlayerView\x12\x17\n" +
-	"\agame_id\x18\x01 \x01(\x05R\x06gameId\x12\x1b\n" +
-	"\tscript_id\x18\x02 \x01(\x05R\bscriptId\x12D\n" +
+	"\agame_id\x18\x01 \x01(\tR\x06gameId\x12\x1b\n" +
+	"\tscript_id\x18\x02 \x01(\x05R\bscriptId\x12>\n" +
 	"\n" +
-	"characters\x18\x03 \x03(\v2$.proto.v1.PlayerView.CharactersEntryR\n" +
-	"characters\x12;\n" +
-	"\aplayers\x18\x04 \x03(\v2!.proto.v1.PlayerView.PlayersEntryR\aplayers\x12\x1f\n" +
+	"characters\x18\x03 \x03(\v2\x1e.v1.PlayerView.CharactersEntryR\n" +
+	"characters\x125\n" +
+	"\aplayers\x18\x04 \x03(\v2\x1b.v1.PlayerView.PlayersEntryR\aplayers\x12\x1f\n" +
 	"\vcurrent_day\x18\x05 \x01(\x05R\n" +
 	"currentDay\x12!\n" +
-	"\fcurrent_loop\x18\x06 \x01(\x05R\vcurrentLoop\x128\n" +
-	"\rcurrent_phase\x18\a \x01(\x0e2\x13.proto.v1.GamePhaseR\fcurrentPhase\x12T\n" +
-	"\x10active_tragedies\x18\b \x03(\v2).proto.v1.PlayerView.ActiveTragediesEntryR\x0factiveTragedies\x12]\n" +
-	"\x13prevented_tragedies\x18\t \x03(\v2,.proto.v1.PlayerView.PreventedTragediesEntryR\x12preventedTragedies\x12+\n" +
+	"\fcurrent_loop\x18\x06 \x01(\x05R\vcurrentLoop\x122\n" +
+	"\rcurrent_phase\x18\a \x01(\x0e2\r.v1.GamePhaseR\fcurrentPhase\x12N\n" +
+	"\x10active_tragedies\x18\b \x03(\v2#.v1.PlayerView.ActiveTragediesEntryR\x0factiveTragedies\x12W\n" +
+	"\x13prevented_tragedies\x18\t \x03(\v2&.v1.PlayerView.PreventedTragediesEntryR\x12preventedTragedies\x12%\n" +
 	"\tyour_hand\x18\n" +
-	" \x03(\v2\x0e.proto.v1.CardR\byourHand\x12Q\n" +
-	"\x0fyour_deductions\x18\v \x03(\v2(.proto.v1.PlayerView.YourDeductionsEntryR\x0eyourDeductions\x128\n" +
-	"\rpublic_events\x18\f \x03(\v2\x13.proto.v1.GameEventR\fpublicEvents\x1aR\n" +
+	" \x03(\v2\b.v1.CardR\byourHand\x12E\n" +
+	"\x0fyour_deductions\x18\v \x01(\v2\x1c.v1.PlayerDeductionKnowledgeR\x0eyourDeductions\x122\n" +
+	"\rpublic_events\x18\f \x03(\v2\r.v1.GameEventR\fpublicEvents\x1aV\n" +
 	"\x0fCharactersEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12)\n" +
-	"\x05value\x18\x02 \x01(\v2\x13.proto.v1.CharacterR\x05value:\x028\x01\x1aL\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12-\n" +
+	"\x05value\x18\x02 \x01(\v2\x17.v1.PlayerViewCharacterR\x05value:\x028\x01\x1aP\n" +
 	"\fPlayersEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12&\n" +
-	"\x05value\x18\x02 \x01(\v2\x10.proto.v1.PlayerR\x05value:\x028\x01\x1aB\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12*\n" +
+	"\x05value\x18\x02 \x01(\v2\x14.v1.PlayerViewPlayerR\x05value:\x028\x01\x1aB\n" +
 	"\x14ActiveTragediesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aE\n" +
 	"\x17PreventedTragediesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aY\n" +
-	"\x13YourDeductionsEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12,\n" +
-	"\x05value\x18\x02 \x01(\v2\x16.google.protobuf.ValueR\x05value:\x028\x01B\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\"\xf5\x02\n" +
+	"\x13PlayerViewCharacter\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
+	"\x06traits\x18\x03 \x03(\tR\x06traits\x12;\n" +
+	"\x10current_location\x18\x04 \x01(\x0e2\x10.v1.LocationTypeR\x0fcurrentLocation\x12\x1a\n" +
+	"\bparanoia\x18\x05 \x01(\x05R\bparanoia\x12\x1a\n" +
+	"\bgoodwill\x18\x06 \x01(\x05R\bgoodwill\x12\x1a\n" +
+	"\bintrigue\x18\a \x01(\x05R\bintrigue\x12)\n" +
+	"\tabilities\x18\b \x03(\v2\v.v1.AbilityR\tabilities\x12\x19\n" +
+	"\bis_alive\x18\t \x01(\bR\aisAlive\x12\"\n" +
+	"\rin_panic_mode\x18\n" +
+	" \x01(\bR\vinPanicMode\x12'\n" +
+	"\x05rules\x18\v \x03(\v2\x11.v1.CharacterRuleR\x05rules\"Z\n" +
+	"\x10PlayerViewPlayer\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\"\n" +
+	"\x04role\x18\x03 \x01(\x0e2\x0e.v1.PlayerRoleR\x04roleB#Z!tragedylooper/internal/game/v1;v1b\x06proto3"
 
 var (
-	file_proto_v1_player_proto_rawDescOnce sync.Once
-	file_proto_v1_player_proto_rawDescData []byte
+	file_v1_player_proto_rawDescOnce sync.Once
+	file_v1_player_proto_rawDescData []byte
 )
 
-func file_proto_v1_player_proto_rawDescGZIP() []byte {
-	file_proto_v1_player_proto_rawDescOnce.Do(func() {
-		file_proto_v1_player_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_v1_player_proto_rawDesc), len(file_proto_v1_player_proto_rawDesc)))
+func file_v1_player_proto_rawDescGZIP() []byte {
+	file_v1_player_proto_rawDescOnce.Do(func() {
+		file_v1_player_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_v1_player_proto_rawDesc), len(file_v1_player_proto_rawDesc)))
 	})
-	return file_proto_v1_player_proto_rawDescData
+	return file_v1_player_proto_rawDescData
 }
 
-var file_proto_v1_player_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
-var file_proto_v1_player_proto_goTypes = []any{
-	(*Player)(nil),         // 0: proto.v1.Player
-	(*PlayerView)(nil),     // 1: proto.v1.PlayerView
-	nil,                    // 2: proto.v1.Player.DeductionKnowledgeEntry
-	nil,                    // 3: proto.v1.PlayerView.CharactersEntry
-	nil,                    // 4: proto.v1.PlayerView.PlayersEntry
-	nil,                    // 5: proto.v1.PlayerView.ActiveTragediesEntry
-	nil,                    // 6: proto.v1.PlayerView.PreventedTragediesEntry
-	nil,                    // 7: proto.v1.PlayerView.YourDeductionsEntry
-	(PlayerRole)(0),        // 8: proto.v1.PlayerRole
-	(*Card)(nil),           // 9: proto.v1.Card
-	(GamePhase)(0),         // 10: proto.v1.GamePhase
-	(*GameEvent)(nil),      // 11: proto.v1.GameEvent
-	(*structpb.Value)(nil), // 12: google.protobuf.Value
-	(*Character)(nil),      // 13: proto.v1.Character
+var file_v1_player_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_v1_player_proto_goTypes = []any{
+	(*Player)(nil),                   // 0: v1.Player
+	(*PlayerDeductionKnowledge)(nil), // 1: v1.PlayerDeductionKnowledge
+	(*PlayerView)(nil),               // 2: v1.PlayerView
+	(*PlayerViewCharacter)(nil),      // 3: v1.PlayerViewCharacter
+	(*PlayerViewPlayer)(nil),         // 4: v1.PlayerViewPlayer
+	nil,                              // 5: v1.PlayerDeductionKnowledge.GuessedRolesEntry
+	nil,                              // 6: v1.PlayerView.CharactersEntry
+	nil,                              // 7: v1.PlayerView.PlayersEntry
+	nil,                              // 8: v1.PlayerView.ActiveTragediesEntry
+	nil,                              // 9: v1.PlayerView.PreventedTragediesEntry
+	(PlayerRole)(0),                  // 10: v1.PlayerRole
+	(*Card)(nil),                     // 11: v1.Card
+	(GamePhase)(0),                   // 12: v1.GamePhase
+	(*GameEvent)(nil),                // 13: v1.GameEvent
+	(LocationType)(0),                // 14: v1.LocationType
+	(*Ability)(nil),                  // 15: v1.Ability
+	(*CharacterRule)(nil),            // 16: v1.CharacterRule
+	(RoleType)(0),                    // 17: v1.RoleType
 }
-var file_proto_v1_player_proto_depIdxs = []int32{
-	8,  // 0: proto.v1.Player.role:type_name -> proto.v1.PlayerRole
-	9,  // 1: proto.v1.Player.hand:type_name -> proto.v1.Card
-	2,  // 2: proto.v1.Player.deduction_knowledge:type_name -> proto.v1.Player.DeductionKnowledgeEntry
-	3,  // 3: proto.v1.PlayerView.characters:type_name -> proto.v1.PlayerView.CharactersEntry
-	4,  // 4: proto.v1.PlayerView.players:type_name -> proto.v1.PlayerView.PlayersEntry
-	10, // 5: proto.v1.PlayerView.current_phase:type_name -> proto.v1.GamePhase
-	5,  // 6: proto.v1.PlayerView.active_tragedies:type_name -> proto.v1.PlayerView.ActiveTragediesEntry
-	6,  // 7: proto.v1.PlayerView.prevented_tragedies:type_name -> proto.v1.PlayerView.PreventedTragediesEntry
-	9,  // 8: proto.v1.PlayerView.your_hand:type_name -> proto.v1.Card
-	7,  // 9: proto.v1.PlayerView.your_deductions:type_name -> proto.v1.PlayerView.YourDeductionsEntry
-	11, // 10: proto.v1.PlayerView.public_events:type_name -> proto.v1.GameEvent
-	12, // 11: proto.v1.Player.DeductionKnowledgeEntry.value:type_name -> google.protobuf.Value
-	13, // 12: proto.v1.PlayerView.CharactersEntry.value:type_name -> proto.v1.Character
-	0,  // 13: proto.v1.PlayerView.PlayersEntry.value:type_name -> proto.v1.Player
-	12, // 14: proto.v1.PlayerView.YourDeductionsEntry.value:type_name -> google.protobuf.Value
-	15, // [15:15] is the sub-list for method output_type
-	15, // [15:15] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+var file_v1_player_proto_depIdxs = []int32{
+	10, // 0: v1.Player.role:type_name -> v1.PlayerRole
+	11, // 1: v1.Player.hand:type_name -> v1.Card
+	1,  // 2: v1.Player.deduction_knowledge:type_name -> v1.PlayerDeductionKnowledge
+	5,  // 3: v1.PlayerDeductionKnowledge.guessed_roles:type_name -> v1.PlayerDeductionKnowledge.GuessedRolesEntry
+	6,  // 4: v1.PlayerView.characters:type_name -> v1.PlayerView.CharactersEntry
+	7,  // 5: v1.PlayerView.players:type_name -> v1.PlayerView.PlayersEntry
+	12, // 6: v1.PlayerView.current_phase:type_name -> v1.GamePhase
+	8,  // 7: v1.PlayerView.active_tragedies:type_name -> v1.PlayerView.ActiveTragediesEntry
+	9,  // 8: v1.PlayerView.prevented_tragedies:type_name -> v1.PlayerView.PreventedTragediesEntry
+	11, // 9: v1.PlayerView.your_hand:type_name -> v1.Card
+	1,  // 10: v1.PlayerView.your_deductions:type_name -> v1.PlayerDeductionKnowledge
+	13, // 11: v1.PlayerView.public_events:type_name -> v1.GameEvent
+	14, // 12: v1.PlayerViewCharacter.current_location:type_name -> v1.LocationType
+	15, // 13: v1.PlayerViewCharacter.abilities:type_name -> v1.Ability
+	16, // 14: v1.PlayerViewCharacter.rules:type_name -> v1.CharacterRule
+	10, // 15: v1.PlayerViewPlayer.role:type_name -> v1.PlayerRole
+	17, // 16: v1.PlayerDeductionKnowledge.GuessedRolesEntry.value:type_name -> v1.RoleType
+	3,  // 17: v1.PlayerView.CharactersEntry.value:type_name -> v1.PlayerViewCharacter
+	4,  // 18: v1.PlayerView.PlayersEntry.value:type_name -> v1.PlayerViewPlayer
+	19, // [19:19] is the sub-list for method output_type
+	19, // [19:19] is the sub-list for method input_type
+	19, // [19:19] is the sub-list for extension type_name
+	19, // [19:19] is the sub-list for extension extendee
+	0,  // [0:19] is the sub-list for field type_name
 }
 
-func init() { file_proto_v1_player_proto_init() }
-func file_proto_v1_player_proto_init() {
-	if File_proto_v1_player_proto != nil {
+func init() { file_v1_player_proto_init() }
+func file_v1_player_proto_init() {
+	if File_v1_player_proto != nil {
 		return
 	}
-	file_proto_v1_card_proto_init()
-	file_proto_v1_character_proto_init()
-	file_proto_v1_enums_proto_init()
-	file_proto_v1_event_proto_init()
+	file_v1_enums_proto_init()
+	file_v1_card_proto_init()
+	file_v1_ability_proto_init()
+	file_v1_character_proto_init()
+	file_v1_event_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_v1_player_proto_rawDesc), len(file_proto_v1_player_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_player_proto_rawDesc), len(file_v1_player_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_proto_v1_player_proto_goTypes,
-		DependencyIndexes: file_proto_v1_player_proto_depIdxs,
-		MessageInfos:      file_proto_v1_player_proto_msgTypes,
+		GoTypes:           file_v1_player_proto_goTypes,
+		DependencyIndexes: file_v1_player_proto_depIdxs,
+		MessageInfos:      file_v1_player_proto_msgTypes,
 	}.Build()
-	File_proto_v1_player_proto = out.File
-	file_proto_v1_player_proto_goTypes = nil
-	file_proto_v1_player_proto_depIdxs = nil
+	File_v1_player_proto = out.File
+	file_v1_player_proto_goTypes = nil
+	file_v1_player_proto_depIdxs = nil
 }

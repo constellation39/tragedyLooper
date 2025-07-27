@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        (unknown)
-// source: proto/v1/character.proto
+// source: v1/character.proto
 
-package model
+package v1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -21,27 +21,31 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Character 表示游戏中的一个角色。
+// 角色信息
 type Character struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	Id              int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                             // 唯一标识符
-	Name            string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                          // 角色名称
-	Traits          []string               `protobuf:"bytes,3,rep,name=traits,proto3" json:"traits,omitempty"`                                                                      // 角色特征，例如：["Student", "Journalist"]
-	CurrentLocation LocationType           `protobuf:"varint,4,opt,name=current_location,json=currentLocation,proto3,enum=proto.v1.LocationType" json:"current_location,omitempty"` // 当前所在位置
-	Paranoia        int32                  `protobuf:"varint,5,opt,name=paranoia,proto3" json:"paranoia,omitempty"`                                                                 // 妄想指数
-	Goodwill        int32                  `protobuf:"varint,6,opt,name=goodwill,proto3" json:"goodwill,omitempty"`                                                                 // 好感度
-	Intrigue        int32                  `protobuf:"varint,7,opt,name=intrigue,proto3" json:"intrigue,omitempty"`                                                                 // 阴谋标记
-	IsAlive         bool                   `protobuf:"varint,8,opt,name=is_alive,json=isAlive,proto3" json:"is_alive,omitempty"`                                                    // 是否存活
-	Abilities       []*Ability             `protobuf:"bytes,9,rep,name=abilities,proto3" json:"abilities,omitempty"`                                                                // 角色能力
-	HiddenRole      RoleType               `protobuf:"varint,10,opt,name=hidden_role,json=hiddenRole,proto3,enum=proto.v1.RoleType" json:"hidden_role,omitempty"`                   // 角色的隐藏身份，对主角隐藏，仅供主谋查看
-	Rules           []*CharacterRule       `protobuf:"bytes,11,rep,name=rules,proto3" json:"rules,omitempty"`                                                                       // 角色的特殊规则
+	Id              int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                       // 角色唯一ID
+	Name            string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                    // 角色名称
+	Traits          []string               `protobuf:"bytes,3,rep,name=traits,proto3" json:"traits,omitempty"`                                                                // 角色特征，例如“学生”、“记者”
+	CurrentLocation LocationType           `protobuf:"varint,4,opt,name=current_location,json=currentLocation,proto3,enum=v1.LocationType" json:"current_location,omitempty"` // 角色当前所在地点
+	Paranoia        int32                  `protobuf:"varint,5,opt,name=paranoia,proto3" json:"paranoia,omitempty"`                                                           // 妄想值
+	Goodwill        int32                  `protobuf:"varint,6,opt,name=goodwill,proto3" json:"goodwill,omitempty"`                                                           // 好感值
+	Intrigue        int32                  `protobuf:"varint,7,opt,name=intrigue,proto3" json:"intrigue,omitempty"`                                                           // 阴谋值
+	HiddenRole      RoleType               `protobuf:"varint,8,opt,name=hidden_role,json=hiddenRole,proto3,enum=v1.RoleType" json:"hidden_role,omitempty"`                    // 隐藏身份
+	Abilities       []*Ability             `protobuf:"bytes,9,rep,name=abilities,proto3" json:"abilities,omitempty"`                                                          // 角色拥有的能力列表
+	IsAlive         bool                   `protobuf:"varint,10,opt,name=is_alive,json=isAlive,proto3" json:"is_alive,omitempty"`                                             // 角色是否存活
+	InPanicMode     bool                   `protobuf:"varint,11,opt,name=in_panic_mode,json=inPanicMode,proto3" json:"in_panic_mode,omitempty"`                               // 是否处于恐慌模式（新增字段）
+	ParanoiaLimit   int32                  `protobuf:"varint,12,opt,name=paranoia_limit,json=paranoiaLimit,proto3" json:"paranoia_limit,omitempty"`                           // 妄想值上限，考虑作为剧本或游戏状态的一部分
+	GoodwillLimit   int32                  `protobuf:"varint,13,opt,name=goodwill_limit,json=goodwillLimit,proto3" json:"goodwill_limit,omitempty"`                           // 好感值上限
+	IntrigueLimit   int32                  `protobuf:"varint,14,opt,name=intrigue_limit,json=intrigueLimit,proto3" json:"intrigue_limit,omitempty"`                           // 阴谋值上限
+	Rules           []*CharacterRule       `protobuf:"bytes,15,rep,name=rules,proto3" json:"rules,omitempty"`                                                                 // 角色特有的规则列表
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
 
 func (x *Character) Reset() {
 	*x = Character{}
-	mi := &file_proto_v1_character_proto_msgTypes[0]
+	mi := &file_v1_character_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -53,7 +57,7 @@ func (x *Character) String() string {
 func (*Character) ProtoMessage() {}
 
 func (x *Character) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_character_proto_msgTypes[0]
+	mi := &file_v1_character_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -66,7 +70,7 @@ func (x *Character) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Character.ProtoReflect.Descriptor instead.
 func (*Character) Descriptor() ([]byte, []int) {
-	return file_proto_v1_character_proto_rawDescGZIP(), []int{0}
+	return file_v1_character_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Character) GetId() int32 {
@@ -118,11 +122,11 @@ func (x *Character) GetIntrigue() int32 {
 	return 0
 }
 
-func (x *Character) GetIsAlive() bool {
+func (x *Character) GetHiddenRole() RoleType {
 	if x != nil {
-		return x.IsAlive
+		return x.HiddenRole
 	}
-	return false
+	return RoleType_ROLE_TYPE_UNSPECIFIED
 }
 
 func (x *Character) GetAbilities() []*Ability {
@@ -132,11 +136,39 @@ func (x *Character) GetAbilities() []*Ability {
 	return nil
 }
 
-func (x *Character) GetHiddenRole() RoleType {
+func (x *Character) GetIsAlive() bool {
 	if x != nil {
-		return x.HiddenRole
+		return x.IsAlive
 	}
-	return RoleType_ROLE_TYPE_UNSPECIFIED
+	return false
+}
+
+func (x *Character) GetInPanicMode() bool {
+	if x != nil {
+		return x.InPanicMode
+	}
+	return false
+}
+
+func (x *Character) GetParanoiaLimit() int32 {
+	if x != nil {
+		return x.ParanoiaLimit
+	}
+	return 0
+}
+
+func (x *Character) GetGoodwillLimit() int32 {
+	if x != nil {
+		return x.GoodwillLimit
+	}
+	return 0
+}
+
+func (x *Character) GetIntrigueLimit() int32 {
+	if x != nil {
+		return x.IntrigueLimit
+	}
+	return 0
 }
 
 func (x *Character) GetRules() []*CharacterRule {
@@ -146,15 +178,15 @@ func (x *Character) GetRules() []*CharacterRule {
 	return nil
 }
 
-// CharacterRule 定义角色的特殊规则。
+// 角色特殊规则
 type CharacterRule struct {
 	state       protoimpl.MessageState `protogen:"open.v1"`
-	Trigger     TriggerType            `protobuf:"varint,1,opt,name=trigger,proto3,enum=proto.v1.TriggerType" json:"trigger,omitempty"`
-	Description string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	Trigger     TriggerType            `protobuf:"varint,1,opt,name=trigger,proto3,enum=v1.TriggerType" json:"trigger,omitempty"` // 规则触发时机
+	Description string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`              // 规则描述
 	// Types that are valid to be assigned to Effect:
 	//
-	//	*CharacterRule_TurfSelection
-	//	*CharacterRule_DelayedEntry
+	//	*CharacterRule_TurfSelectionEffect
+	//	*CharacterRule_DelayedEntryEffect
 	Effect        isCharacterRule_Effect `protobuf_oneof:"effect"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -162,7 +194,7 @@ type CharacterRule struct {
 
 func (x *CharacterRule) Reset() {
 	*x = CharacterRule{}
-	mi := &file_proto_v1_character_proto_msgTypes[1]
+	mi := &file_v1_character_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -174,7 +206,7 @@ func (x *CharacterRule) String() string {
 func (*CharacterRule) ProtoMessage() {}
 
 func (x *CharacterRule) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_character_proto_msgTypes[1]
+	mi := &file_v1_character_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -187,7 +219,7 @@ func (x *CharacterRule) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CharacterRule.ProtoReflect.Descriptor instead.
 func (*CharacterRule) Descriptor() ([]byte, []int) {
-	return file_proto_v1_character_proto_rawDescGZIP(), []int{1}
+	return file_v1_character_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *CharacterRule) GetTrigger() TriggerType {
@@ -211,19 +243,19 @@ func (x *CharacterRule) GetEffect() isCharacterRule_Effect {
 	return nil
 }
 
-func (x *CharacterRule) GetTurfSelection() *TurfSelectionEffect {
+func (x *CharacterRule) GetTurfSelectionEffect() *TurfSelectionEffect {
 	if x != nil {
-		if x, ok := x.Effect.(*CharacterRule_TurfSelection); ok {
-			return x.TurfSelection
+		if x, ok := x.Effect.(*CharacterRule_TurfSelectionEffect); ok {
+			return x.TurfSelectionEffect
 		}
 	}
 	return nil
 }
 
-func (x *CharacterRule) GetDelayedEntry() *DelayedEntryEffect {
+func (x *CharacterRule) GetDelayedEntryEffect() *DelayedEntryEffect {
 	if x != nil {
-		if x, ok := x.Effect.(*CharacterRule_DelayedEntry); ok {
-			return x.DelayedEntry
+		if x, ok := x.Effect.(*CharacterRule_DelayedEntryEffect); ok {
+			return x.DelayedEntryEffect
 		}
 	}
 	return nil
@@ -233,28 +265,30 @@ type isCharacterRule_Effect interface {
 	isCharacterRule_Effect()
 }
 
-type CharacterRule_TurfSelection struct {
-	TurfSelection *TurfSelectionEffect `protobuf:"bytes,3,opt,name=turf_selection,json=turfSelection,proto3,oneof"`
+type CharacterRule_TurfSelectionEffect struct {
+	TurfSelectionEffect *TurfSelectionEffect `protobuf:"bytes,3,opt,name=turf_selection_effect,json=turfSelectionEffect,proto3,oneof"` // 地盘选择效果
 }
 
-type CharacterRule_DelayedEntry struct {
-	DelayedEntry *DelayedEntryEffect `protobuf:"bytes,4,opt,name=delayed_entry,json=delayedEntry,proto3,oneof"`
+type CharacterRule_DelayedEntryEffect struct {
+	DelayedEntryEffect *DelayedEntryEffect `protobuf:"bytes,4,opt,name=delayed_entry_effect,json=delayedEntryEffect,proto3,oneof"` // 延迟登场效果
 }
 
-func (*CharacterRule_TurfSelection) isCharacterRule_Effect() {}
+func (*CharacterRule_TurfSelectionEffect) isCharacterRule_Effect() {}
 
-func (*CharacterRule_DelayedEntry) isCharacterRule_Effect() {}
+func (*CharacterRule_DelayedEntryEffect) isCharacterRule_Effect() {}
 
-// TurfSelectionEffect 表示需要为 Boss 选择地盘。
+// 地盘选择效果（例如某些角色开局可以选择初始地点）
 type TurfSelectionEffect struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	PossibleLocations []LocationType         `protobuf:"varint,1,rep,packed,name=possible_locations,json=possibleLocations,proto3,enum=v1.LocationType" json:"possible_locations,omitempty"` // 可选择的地点的列表
+	Prompt            string                 `protobuf:"bytes,2,opt,name=prompt,proto3" json:"prompt,omitempty"`                                                                             // 给玩家的提示语
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *TurfSelectionEffect) Reset() {
 	*x = TurfSelectionEffect{}
-	mi := &file_proto_v1_character_proto_msgTypes[2]
+	mi := &file_v1_character_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -266,7 +300,7 @@ func (x *TurfSelectionEffect) String() string {
 func (*TurfSelectionEffect) ProtoMessage() {}
 
 func (x *TurfSelectionEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_character_proto_msgTypes[2]
+	mi := &file_v1_character_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -279,19 +313,35 @@ func (x *TurfSelectionEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TurfSelectionEffect.ProtoReflect.Descriptor instead.
 func (*TurfSelectionEffect) Descriptor() ([]byte, []int) {
-	return file_proto_v1_character_proto_rawDescGZIP(), []int{2}
+	return file_v1_character_proto_rawDescGZIP(), []int{2}
 }
 
-// DelayedEntryEffect 表示角色延迟登场。
+func (x *TurfSelectionEffect) GetPossibleLocations() []LocationType {
+	if x != nil {
+		return x.PossibleLocations
+	}
+	return nil
+}
+
+func (x *TurfSelectionEffect) GetPrompt() string {
+	if x != nil {
+		return x.Prompt
+	}
+	return ""
+}
+
+// 延迟登场效果（例如某些角色在特定天数才登场）
 type DelayedEntryEffect struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	DayOfEntry    int32                  `protobuf:"varint,1,opt,name=day_of_entry,json=dayOfEntry,proto3" json:"day_of_entry,omitempty"`                             // 角色登场的日期
+	EntryLocation LocationType           `protobuf:"varint,2,opt,name=entry_location,json=entryLocation,proto3,enum=v1.LocationType" json:"entry_location,omitempty"` // 角色登场地点
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DelayedEntryEffect) Reset() {
 	*x = DelayedEntryEffect{}
-	mi := &file_proto_v1_character_proto_msgTypes[3]
+	mi := &file_v1_character_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -303,7 +353,7 @@ func (x *DelayedEntryEffect) String() string {
 func (*DelayedEntryEffect) ProtoMessage() {}
 
 func (x *DelayedEntryEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_character_proto_msgTypes[3]
+	mi := &file_v1_character_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -316,155 +366,93 @@ func (x *DelayedEntryEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DelayedEntryEffect.ProtoReflect.Descriptor instead.
 func (*DelayedEntryEffect) Descriptor() ([]byte, []int) {
-	return file_proto_v1_character_proto_rawDescGZIP(), []int{3}
+	return file_v1_character_proto_rawDescGZIP(), []int{3}
 }
 
-// CharacterConfig 定义特定剧本中角色的初始状态。
-type CharacterConfig struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	Id              int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                             // 引用基础角色定义
-	Name            string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                          // 角色名称
-	InitialLocation LocationType           `protobuf:"varint,3,opt,name=initial_location,json=initialLocation,proto3,enum=proto.v1.LocationType" json:"initial_location,omitempty"` // 初始位置
-	HiddenRole      RoleType               `protobuf:"varint,4,opt,name=hidden_role,json=hiddenRole,proto3,enum=proto.v1.RoleType" json:"hidden_role,omitempty"`                    // 此剧本中角色的秘密身份
-	IsCulpritFor    string                 `protobuf:"bytes,5,opt,name=is_culprit_for,json=isCulpritFor,proto3" json:"is_culprit_for,omitempty"`                                    // 如果此角色是特定悲剧的嫌疑犯
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *CharacterConfig) Reset() {
-	*x = CharacterConfig{}
-	mi := &file_proto_v1_character_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CharacterConfig) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CharacterConfig) ProtoMessage() {}
-
-func (x *CharacterConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_character_proto_msgTypes[4]
+func (x *DelayedEntryEffect) GetDayOfEntry() int32 {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CharacterConfig.ProtoReflect.Descriptor instead.
-func (*CharacterConfig) Descriptor() ([]byte, []int) {
-	return file_proto_v1_character_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *CharacterConfig) GetId() int32 {
-	if x != nil {
-		return x.Id
+		return x.DayOfEntry
 	}
 	return 0
 }
 
-func (x *CharacterConfig) GetName() string {
+func (x *DelayedEntryEffect) GetEntryLocation() LocationType {
 	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *CharacterConfig) GetInitialLocation() LocationType {
-	if x != nil {
-		return x.InitialLocation
+		return x.EntryLocation
 	}
 	return LocationType_LOCATION_TYPE_UNSPECIFIED
 }
 
-func (x *CharacterConfig) GetHiddenRole() RoleType {
-	if x != nil {
-		return x.HiddenRole
-	}
-	return RoleType_ROLE_TYPE_UNSPECIFIED
-}
+var File_v1_character_proto protoreflect.FileDescriptor
 
-func (x *CharacterConfig) GetIsCulpritFor() string {
-	if x != nil {
-		return x.IsCulpritFor
-	}
-	return ""
-}
-
-var File_proto_v1_character_proto protoreflect.FileDescriptor
-
-const file_proto_v1_character_proto_rawDesc = "" +
+const file_v1_character_proto_rawDesc = "" +
 	"\n" +
-	"\x18proto/v1/character.proto\x12\bproto.v1\x1a\x16proto/v1/ability.proto\x1a\x14proto/v1/enums.proto\x1a\x17proto/v1/location.proto\"\x8e\x03\n" +
+	"\x12v1/character.proto\x12\x02v1\x1a\x0ev1/enums.proto\x1a\x10v1/ability.proto\"\x8f\x04\n" +
 	"\tCharacter\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
-	"\x06traits\x18\x03 \x03(\tR\x06traits\x12A\n" +
-	"\x10current_location\x18\x04 \x01(\x0e2\x16.proto.v1.LocationTypeR\x0fcurrentLocation\x12\x1a\n" +
+	"\x06traits\x18\x03 \x03(\tR\x06traits\x12;\n" +
+	"\x10current_location\x18\x04 \x01(\x0e2\x10.v1.LocationTypeR\x0fcurrentLocation\x12\x1a\n" +
 	"\bparanoia\x18\x05 \x01(\x05R\bparanoia\x12\x1a\n" +
 	"\bgoodwill\x18\x06 \x01(\x05R\bgoodwill\x12\x1a\n" +
-	"\bintrigue\x18\a \x01(\x05R\bintrigue\x12\x19\n" +
-	"\bis_alive\x18\b \x01(\bR\aisAlive\x12/\n" +
-	"\tabilities\x18\t \x03(\v2\x11.proto.v1.AbilityR\tabilities\x123\n" +
-	"\vhidden_role\x18\n" +
-	" \x01(\x0e2\x12.proto.v1.RoleTypeR\n" +
-	"hiddenRole\x12-\n" +
-	"\x05rules\x18\v \x03(\v2\x17.proto.v1.CharacterRuleR\x05rules\"\xf9\x01\n" +
-	"\rCharacterRule\x12/\n" +
-	"\atrigger\x18\x01 \x01(\x0e2\x15.proto.v1.TriggerTypeR\atrigger\x12 \n" +
-	"\vdescription\x18\x02 \x01(\tR\vdescription\x12F\n" +
-	"\x0eturf_selection\x18\x03 \x01(\v2\x1d.proto.v1.TurfSelectionEffectH\x00R\rturfSelection\x12C\n" +
-	"\rdelayed_entry\x18\x04 \x01(\v2\x1c.proto.v1.DelayedEntryEffectH\x00R\fdelayedEntryB\b\n" +
-	"\x06effect\"\x15\n" +
-	"\x13TurfSelectionEffect\"\x14\n" +
-	"\x12DelayedEntryEffect\"\xd3\x01\n" +
-	"\x0fCharacterConfig\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12A\n" +
-	"\x10initial_location\x18\x03 \x01(\x0e2\x16.proto.v1.LocationTypeR\x0finitialLocation\x123\n" +
-	"\vhidden_role\x18\x04 \x01(\x0e2\x12.proto.v1.RoleTypeR\n" +
-	"hiddenRole\x12$\n" +
-	"\x0eis_culprit_for\x18\x05 \x01(\tR\fisCulpritForB\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\bintrigue\x18\a \x01(\x05R\bintrigue\x12-\n" +
+	"\vhidden_role\x18\b \x01(\x0e2\f.v1.RoleTypeR\n" +
+	"hiddenRole\x12)\n" +
+	"\tabilities\x18\t \x03(\v2\v.v1.AbilityR\tabilities\x12\x19\n" +
+	"\bis_alive\x18\n" +
+	" \x01(\bR\aisAlive\x12\"\n" +
+	"\rin_panic_mode\x18\v \x01(\bR\vinPanicMode\x12%\n" +
+	"\x0eparanoia_limit\x18\f \x01(\x05R\rparanoiaLimit\x12%\n" +
+	"\x0egoodwill_limit\x18\r \x01(\x05R\rgoodwillLimit\x12%\n" +
+	"\x0eintrigue_limit\x18\x0e \x01(\x05R\rintrigueLimit\x12'\n" +
+	"\x05rules\x18\x0f \x03(\v2\x11.v1.CharacterRuleR\x05rules\"\x81\x02\n" +
+	"\rCharacterRule\x12)\n" +
+	"\atrigger\x18\x01 \x01(\x0e2\x0f.v1.TriggerTypeR\atrigger\x12 \n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\x12M\n" +
+	"\x15turf_selection_effect\x18\x03 \x01(\v2\x17.v1.TurfSelectionEffectH\x00R\x13turfSelectionEffect\x12J\n" +
+	"\x14delayed_entry_effect\x18\x04 \x01(\v2\x16.v1.DelayedEntryEffectH\x00R\x12delayedEntryEffectB\b\n" +
+	"\x06effect\"n\n" +
+	"\x13TurfSelectionEffect\x12?\n" +
+	"\x12possible_locations\x18\x01 \x03(\x0e2\x10.v1.LocationTypeR\x11possibleLocations\x12\x16\n" +
+	"\x06prompt\x18\x02 \x01(\tR\x06prompt\"o\n" +
+	"\x12DelayedEntryEffect\x12 \n" +
+	"\fday_of_entry\x18\x01 \x01(\x05R\n" +
+	"dayOfEntry\x127\n" +
+	"\x0eentry_location\x18\x02 \x01(\x0e2\x10.v1.LocationTypeR\rentryLocationB#Z!tragedylooper/internal/game/v1;v1b\x06proto3"
 
 var (
-	file_proto_v1_character_proto_rawDescOnce sync.Once
-	file_proto_v1_character_proto_rawDescData []byte
+	file_v1_character_proto_rawDescOnce sync.Once
+	file_v1_character_proto_rawDescData []byte
 )
 
-func file_proto_v1_character_proto_rawDescGZIP() []byte {
-	file_proto_v1_character_proto_rawDescOnce.Do(func() {
-		file_proto_v1_character_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_v1_character_proto_rawDesc), len(file_proto_v1_character_proto_rawDesc)))
+func file_v1_character_proto_rawDescGZIP() []byte {
+	file_v1_character_proto_rawDescOnce.Do(func() {
+		file_v1_character_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_v1_character_proto_rawDesc), len(file_v1_character_proto_rawDesc)))
 	})
-	return file_proto_v1_character_proto_rawDescData
+	return file_v1_character_proto_rawDescData
 }
 
-var file_proto_v1_character_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
-var file_proto_v1_character_proto_goTypes = []any{
-	(*Character)(nil),           // 0: proto.v1.Character
-	(*CharacterRule)(nil),       // 1: proto.v1.CharacterRule
-	(*TurfSelectionEffect)(nil), // 2: proto.v1.TurfSelectionEffect
-	(*DelayedEntryEffect)(nil),  // 3: proto.v1.DelayedEntryEffect
-	(*CharacterConfig)(nil),     // 4: proto.v1.CharacterConfig
-	(LocationType)(0),           // 5: proto.v1.LocationType
-	(*Ability)(nil),             // 6: proto.v1.Ability
-	(RoleType)(0),               // 7: proto.v1.RoleType
-	(TriggerType)(0),            // 8: proto.v1.TriggerType
+var file_v1_character_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_v1_character_proto_goTypes = []any{
+	(*Character)(nil),           // 0: v1.Character
+	(*CharacterRule)(nil),       // 1: v1.CharacterRule
+	(*TurfSelectionEffect)(nil), // 2: v1.TurfSelectionEffect
+	(*DelayedEntryEffect)(nil),  // 3: v1.DelayedEntryEffect
+	(LocationType)(0),           // 4: v1.LocationType
+	(RoleType)(0),               // 5: v1.RoleType
+	(*Ability)(nil),             // 6: v1.Ability
+	(TriggerType)(0),            // 7: v1.TriggerType
 }
-var file_proto_v1_character_proto_depIdxs = []int32{
-	5, // 0: proto.v1.Character.current_location:type_name -> proto.v1.LocationType
-	6, // 1: proto.v1.Character.abilities:type_name -> proto.v1.Ability
-	7, // 2: proto.v1.Character.hidden_role:type_name -> proto.v1.RoleType
-	1, // 3: proto.v1.Character.rules:type_name -> proto.v1.CharacterRule
-	8, // 4: proto.v1.CharacterRule.trigger:type_name -> proto.v1.TriggerType
-	2, // 5: proto.v1.CharacterRule.turf_selection:type_name -> proto.v1.TurfSelectionEffect
-	3, // 6: proto.v1.CharacterRule.delayed_entry:type_name -> proto.v1.DelayedEntryEffect
-	5, // 7: proto.v1.CharacterConfig.initial_location:type_name -> proto.v1.LocationType
-	7, // 8: proto.v1.CharacterConfig.hidden_role:type_name -> proto.v1.RoleType
+var file_v1_character_proto_depIdxs = []int32{
+	4, // 0: v1.Character.current_location:type_name -> v1.LocationType
+	5, // 1: v1.Character.hidden_role:type_name -> v1.RoleType
+	6, // 2: v1.Character.abilities:type_name -> v1.Ability
+	1, // 3: v1.Character.rules:type_name -> v1.CharacterRule
+	7, // 4: v1.CharacterRule.trigger:type_name -> v1.TriggerType
+	2, // 5: v1.CharacterRule.turf_selection_effect:type_name -> v1.TurfSelectionEffect
+	3, // 6: v1.CharacterRule.delayed_entry_effect:type_name -> v1.DelayedEntryEffect
+	4, // 7: v1.TurfSelectionEffect.possible_locations:type_name -> v1.LocationType
+	4, // 8: v1.DelayedEntryEffect.entry_location:type_name -> v1.LocationType
 	9, // [9:9] is the sub-list for method output_type
 	9, // [9:9] is the sub-list for method input_type
 	9, // [9:9] is the sub-list for extension type_name
@@ -472,33 +460,32 @@ var file_proto_v1_character_proto_depIdxs = []int32{
 	0, // [0:9] is the sub-list for field type_name
 }
 
-func init() { file_proto_v1_character_proto_init() }
-func file_proto_v1_character_proto_init() {
-	if File_proto_v1_character_proto != nil {
+func init() { file_v1_character_proto_init() }
+func file_v1_character_proto_init() {
+	if File_v1_character_proto != nil {
 		return
 	}
-	file_proto_v1_ability_proto_init()
-	file_proto_v1_enums_proto_init()
-	file_proto_v1_location_proto_init()
-	file_proto_v1_character_proto_msgTypes[1].OneofWrappers = []any{
-		(*CharacterRule_TurfSelection)(nil),
-		(*CharacterRule_DelayedEntry)(nil),
+	file_v1_enums_proto_init()
+	file_v1_ability_proto_init()
+	file_v1_character_proto_msgTypes[1].OneofWrappers = []any{
+		(*CharacterRule_TurfSelectionEffect)(nil),
+		(*CharacterRule_DelayedEntryEffect)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_v1_character_proto_rawDesc), len(file_proto_v1_character_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_character_proto_rawDesc), len(file_v1_character_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_proto_v1_character_proto_goTypes,
-		DependencyIndexes: file_proto_v1_character_proto_depIdxs,
-		MessageInfos:      file_proto_v1_character_proto_msgTypes,
+		GoTypes:           file_v1_character_proto_goTypes,
+		DependencyIndexes: file_v1_character_proto_depIdxs,
+		MessageInfos:      file_v1_character_proto_msgTypes,
 	}.Build()
-	File_proto_v1_character_proto = out.File
-	file_proto_v1_character_proto_goTypes = nil
-	file_proto_v1_character_proto_depIdxs = nil
+	File_v1_character_proto = out.File
+	file_v1_character_proto_goTypes = nil
+	file_v1_character_proto_depIdxs = nil
 }

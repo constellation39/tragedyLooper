@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        (unknown)
-// source: proto/v1/enums.proto
+// source: v1/enums.proto
 
-package model
+package v1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -21,85 +21,26 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// CardType 定义玩家可以打出的卡牌类型。
-type CardType int32
-
-const (
-	CardType_CARD_TYPE_UNSPECIFIED CardType = 0
-	CardType_CARD_TYPE_MOVEMENT    CardType = 1 // 移动
-	CardType_CARD_TYPE_PARANOIA    CardType = 2 // 妄想
-	CardType_CARD_TYPE_GOODWILL    CardType = 3 // 好感
-	CardType_CARD_TYPE_INTRIGUE    CardType = 4 // 阴谋
-	CardType_CARD_TYPE_SPECIAL     CardType = 5 // 用于特殊卡牌效果
-)
-
-// Enum value maps for CardType.
-var (
-	CardType_name = map[int32]string{
-		0: "CARD_TYPE_UNSPECIFIED",
-		1: "CARD_TYPE_MOVEMENT",
-		2: "CARD_TYPE_PARANOIA",
-		3: "CARD_TYPE_GOODWILL",
-		4: "CARD_TYPE_INTRIGUE",
-		5: "CARD_TYPE_SPECIAL",
-	}
-	CardType_value = map[string]int32{
-		"CARD_TYPE_UNSPECIFIED": 0,
-		"CARD_TYPE_MOVEMENT":    1,
-		"CARD_TYPE_PARANOIA":    2,
-		"CARD_TYPE_GOODWILL":    3,
-		"CARD_TYPE_INTRIGUE":    4,
-		"CARD_TYPE_SPECIAL":     5,
-	}
-)
-
-func (x CardType) Enum() *CardType {
-	p := new(CardType)
-	*p = x
-	return p
-}
-
-func (x CardType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (CardType) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_v1_enums_proto_enumTypes[0].Descriptor()
-}
-
-func (CardType) Type() protoreflect.EnumType {
-	return &file_proto_v1_enums_proto_enumTypes[0]
-}
-
-func (x CardType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use CardType.Descriptor instead.
-func (CardType) EnumDescriptor() ([]byte, []int) {
-	return file_proto_v1_enums_proto_rawDescGZIP(), []int{0}
-}
-
-// PlayerRole 定义连接玩家的角色（人类或 LLM）。
+// 玩家角色枚举
 type PlayerRole int32
 
 const (
-	PlayerRole_PLAYER_ROLE_UNSPECIFIED PlayerRole = 0
-	PlayerRole_PLAYER_ROLE_MASTERMIND  PlayerRole = 1 // 主谋
-	PlayerRole_PLAYER_ROLE_PROTAGONIST PlayerRole = 2 // 主角
+	PlayerRole_PLAYER_ROLE_UNSPECIFIED PlayerRole = 0 // 未指定
+	PlayerRole_MASTERMIND              PlayerRole = 1 // 主谋
+	PlayerRole_PROTAGONIST             PlayerRole = 2 // 主角
 )
 
 // Enum value maps for PlayerRole.
 var (
 	PlayerRole_name = map[int32]string{
 		0: "PLAYER_ROLE_UNSPECIFIED",
-		1: "PLAYER_ROLE_MASTERMIND",
-		2: "PLAYER_ROLE_PROTAGONIST",
+		1: "MASTERMIND",
+		2: "PROTAGONIST",
 	}
 	PlayerRole_value = map[string]int32{
 		"PLAYER_ROLE_UNSPECIFIED": 0,
-		"PLAYER_ROLE_MASTERMIND":  1,
-		"PLAYER_ROLE_PROTAGONIST": 2,
+		"MASTERMIND":              1,
+		"PROTAGONIST":             2,
 	}
 )
 
@@ -114,11 +55,11 @@ func (x PlayerRole) String() string {
 }
 
 func (PlayerRole) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_v1_enums_proto_enumTypes[1].Descriptor()
+	return file_v1_enums_proto_enumTypes[0].Descriptor()
 }
 
 func (PlayerRole) Type() protoreflect.EnumType {
-	return &file_proto_v1_enums_proto_enumTypes[1]
+	return &file_v1_enums_proto_enumTypes[0]
 }
 
 func (x PlayerRole) Number() protoreflect.EnumNumber {
@@ -127,53 +68,59 @@ func (x PlayerRole) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PlayerRole.Descriptor instead.
 func (PlayerRole) EnumDescriptor() ([]byte, []int) {
-	return file_proto_v1_enums_proto_rawDescGZIP(), []int{1}
+	return file_v1_enums_proto_rawDescGZIP(), []int{0}
 }
 
-// GamePhase 定义游戏日期的当前阶段。
+// 游戏阶段枚举
 type GamePhase int32
 
 const (
-	GamePhase_GAME_PHASE_UNSPECIFIED       GamePhase = 0
-	GamePhase_GAME_PHASE_MORNING           GamePhase = 1  // 早晨
-	GamePhase_GAME_PHASE_CARD_PLAY         GamePhase = 2  // 出牌阶段
-	GamePhase_GAME_PHASE_CARD_REVEAL       GamePhase = 3  // 牌揭示阶段
-	GamePhase_GAME_PHASE_CARD_RESOLVE      GamePhase = 4  // 牌结算阶段
-	GamePhase_GAME_PHASE_ABILITIES         GamePhase = 5  // 能力阶段
-	GamePhase_GAME_PHASE_INCIDENTS         GamePhase = 6  // 事件阶段
-	GamePhase_GAME_PHASE_DAY_END           GamePhase = 7  // 天结束
-	GamePhase_GAME_PHASE_LOOP_END          GamePhase = 8  // 循环结束
-	GamePhase_GAME_PHASE_GAME_OVER         GamePhase = 9  // 游戏结束
-	GamePhase_GAME_PHASE_PROTAGONIST_GUESS GamePhase = 10 // 最终猜测阶段
+	GamePhase_GAME_PHASE_UNSPECIFIED GamePhase = 0  // 未指定
+	GamePhase_SETUP                  GamePhase = 1  // 游戏设置阶段（准备游戏板、角色等）
+	GamePhase_MASTERMIND_SETUP       GamePhase = 2  // 主谋设置剧本阶段（主谋秘密选择剧本、角色身份等）
+	GamePhase_CARD_PLAY              GamePhase = 3  // 卡牌打出阶段（玩家打出行动牌）
+	GamePhase_CARD_REVEAL            GamePhase = 4  // 卡牌揭示阶段（所有打出的行动牌面朝上）
+	GamePhase_CARD_RESOLVE           GamePhase = 5  // 卡牌结算阶段（根据卡牌类型和优先级结算效果）
+	GamePhase_ABILITIES              GamePhase = 6  // 能力结算阶段（角色能力触发和结算）
+	GamePhase_INCIDENTS              GamePhase = 7  // 事件/悲剧结算阶段（检查悲剧是否触发）
+	GamePhase_DAY_END                GamePhase = 8  // 日末阶段（检查一天是否结束，重置某些状态）
+	GamePhase_LOOP_END               GamePhase = 9  // 循环结束阶段（检查一个循环是否结束，进行时间重置或进入最终猜测）
+	GamePhase_GAME_OVER              GamePhase = 10 // 游戏结束阶段（判断胜负并结束游戏）
+	GamePhase_PROTAGONIST_GUESS      GamePhase = 11 // 主角猜测阶段（可以细化为最终猜测）
+	GamePhase_GAME_PHASE_FIRST_GUESS GamePhase = 12 // 主角首次猜测阶段（主角在游戏过程中进行的非最终猜测）
 )
 
 // Enum value maps for GamePhase.
 var (
 	GamePhase_name = map[int32]string{
 		0:  "GAME_PHASE_UNSPECIFIED",
-		1:  "GAME_PHASE_MORNING",
-		2:  "GAME_PHASE_CARD_PLAY",
-		3:  "GAME_PHASE_CARD_REVEAL",
-		4:  "GAME_PHASE_CARD_RESOLVE",
-		5:  "GAME_PHASE_ABILITIES",
-		6:  "GAME_PHASE_INCIDENTS",
-		7:  "GAME_PHASE_DAY_END",
-		8:  "GAME_PHASE_LOOP_END",
-		9:  "GAME_PHASE_GAME_OVER",
-		10: "GAME_PHASE_PROTAGONIST_GUESS",
+		1:  "SETUP",
+		2:  "MASTERMIND_SETUP",
+		3:  "CARD_PLAY",
+		4:  "CARD_REVEAL",
+		5:  "CARD_RESOLVE",
+		6:  "ABILITIES",
+		7:  "INCIDENTS",
+		8:  "DAY_END",
+		9:  "LOOP_END",
+		10: "GAME_OVER",
+		11: "PROTAGONIST_GUESS",
+		12: "GAME_PHASE_FIRST_GUESS",
 	}
 	GamePhase_value = map[string]int32{
-		"GAME_PHASE_UNSPECIFIED":       0,
-		"GAME_PHASE_MORNING":           1,
-		"GAME_PHASE_CARD_PLAY":         2,
-		"GAME_PHASE_CARD_REVEAL":       3,
-		"GAME_PHASE_CARD_RESOLVE":      4,
-		"GAME_PHASE_ABILITIES":         5,
-		"GAME_PHASE_INCIDENTS":         6,
-		"GAME_PHASE_DAY_END":           7,
-		"GAME_PHASE_LOOP_END":          8,
-		"GAME_PHASE_GAME_OVER":         9,
-		"GAME_PHASE_PROTAGONIST_GUESS": 10,
+		"GAME_PHASE_UNSPECIFIED": 0,
+		"SETUP":                  1,
+		"MASTERMIND_SETUP":       2,
+		"CARD_PLAY":              3,
+		"CARD_REVEAL":            4,
+		"CARD_RESOLVE":           5,
+		"ABILITIES":              6,
+		"INCIDENTS":              7,
+		"DAY_END":                8,
+		"LOOP_END":               9,
+		"GAME_OVER":              10,
+		"PROTAGONIST_GUESS":      11,
+		"GAME_PHASE_FIRST_GUESS": 12,
 	}
 )
 
@@ -188,11 +135,11 @@ func (x GamePhase) String() string {
 }
 
 func (GamePhase) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_v1_enums_proto_enumTypes[2].Descriptor()
+	return file_v1_enums_proto_enumTypes[1].Descriptor()
 }
 
 func (GamePhase) Type() protoreflect.EnumType {
-	return &file_proto_v1_enums_proto_enumTypes[2]
+	return &file_v1_enums_proto_enumTypes[1]
 }
 
 func (x GamePhase) Number() protoreflect.EnumNumber {
@@ -201,65 +148,124 @@ func (x GamePhase) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use GamePhase.Descriptor instead.
 func (GamePhase) EnumDescriptor() ([]byte, []int) {
-	return file_proto_v1_enums_proto_rawDescGZIP(), []int{2}
+	return file_v1_enums_proto_rawDescGZIP(), []int{1}
 }
 
-// GameEventType for GameEvent
+// 卡牌类型枚举
+type CardType int32
+
+const (
+	CardType_CARD_TYPE_UNSPECIFIED CardType = 0 // 未指定
+	CardType_MOVEMENT              CardType = 1 // 移动卡
+	CardType_PARANOIA              CardType = 2 // 妄想卡（调整妄想值）
+	CardType_GOODWILL              CardType = 3 // 好感卡（调整好感值）
+	CardType_INTRIGUE              CardType = 4 // 阴谋卡（调整阴谋值）
+	CardType_SPECIAL               CardType = 5 // 特殊卡（其他特殊效果）
+)
+
+// Enum value maps for CardType.
+var (
+	CardType_name = map[int32]string{
+		0: "CARD_TYPE_UNSPECIFIED",
+		1: "MOVEMENT",
+		2: "PARANOIA",
+		3: "GOODWILL",
+		4: "INTRIGUE",
+		5: "SPECIAL",
+	}
+	CardType_value = map[string]int32{
+		"CARD_TYPE_UNSPECIFIED": 0,
+		"MOVEMENT":              1,
+		"PARANOIA":              2,
+		"GOODWILL":              3,
+		"INTRIGUE":              4,
+		"SPECIAL":               5,
+	}
+)
+
+func (x CardType) Enum() *CardType {
+	p := new(CardType)
+	*p = x
+	return p
+}
+
+func (x CardType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (CardType) Descriptor() protoreflect.EnumDescriptor {
+	return file_v1_enums_proto_enumTypes[2].Descriptor()
+}
+
+func (CardType) Type() protoreflect.EnumType {
+	return &file_v1_enums_proto_enumTypes[2]
+}
+
+func (x CardType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use CardType.Descriptor instead.
+func (CardType) EnumDescriptor() ([]byte, []int) {
+	return file_v1_enums_proto_rawDescGZIP(), []int{2}
+}
+
+// 游戏事件类型枚举
 type GameEventType int32
 
 const (
-	GameEventType_GAME_EVENT_TYPE_UNSPECIFIED        GameEventType = 0
-	GameEventType_GAME_EVENT_TYPE_CARD_PLAYED        GameEventType = 1  // 打出卡牌
-	GameEventType_GAME_EVENT_TYPE_CHARACTER_MOVED    GameEventType = 2  // 角色移动
-	GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED  GameEventType = 3  // 妄想调整
-	GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED  GameEventType = 4  // 好感调整
-	GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED  GameEventType = 5  // 阴谋调整
-	GameEventType_GAME_EVENT_TYPE_ABILITY_USED       GameEventType = 6  // 使用能力
-	GameEventType_GAME_EVENT_TYPE_TRAGEDY_TRIGGERED  GameEventType = 7  // 悲剧触发
-	GameEventType_GAME_EVENT_TYPE_TRAGEDY_PREVENTED  GameEventType = 8  // 悲剧阻止
-	GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED       GameEventType = 9  // 天数推进
-	GameEventType_GAME_EVENT_TYPE_LOOP_RESET         GameEventType = 10 // 循环重置
-	GameEventType_GAME_EVENT_TYPE_GAME_OVER          GameEventType = 11 // 游戏结束
-	GameEventType_GAME_EVENT_TYPE_PLAYER_GUESS       GameEventType = 12 // 玩家猜测
-	GameEventType_GAME_EVENT_TYPE_CHOICE_REQUIRED    GameEventType = 13 // 需要玩家选择
-	GameEventType_GAME_EVENT_TYPE_INCIDENT_TRIGGERED GameEventType = 14 // 事件触发
+	GameEventType_GAME_EVENT_TYPE_UNSPECIFIED GameEventType = 0  // 未指定
+	GameEventType_CHARACTER_MOVED             GameEventType = 1  // 角色移动事件
+	GameEventType_PARANOIA_ADJUSTED           GameEventType = 2  // 妄想值调整事件
+	GameEventType_GOODWILL_ADJUSTED           GameEventType = 3  // 好感值调整事件
+	GameEventType_INTRIGUE_ADJUSTED           GameEventType = 4  // 阴谋值调整事件
+	GameEventType_INCIDENT_TRIGGERED          GameEventType = 5  // 悲剧触发事件
+	GameEventType_INCIDENT_PREVENTED          GameEventType = 6  // 悲剧阻止事件
+	GameEventType_ROLE_REVEALED               GameEventType = 7  // 角色身份揭示事件
+	GameEventType_ABILITY_GRANTED             GameEventType = 8  // 授予能力事件
+	GameEventType_CHOICE_REQUIRED             GameEventType = 9  // 需要玩家选择事件
+	GameEventType_LOOP_WIN                    GameEventType = 10 // 循环胜利事件
+	GameEventType_LOOP_LOSS                   GameEventType = 11 // 循环失败事件
+	GameEventType_FIRST_GUESS_MADE            GameEventType = 12 // 首次猜测事件
+	GameEventType_FINAL_GUESS_MADE            GameEventType = 13 // 最终猜测事件
+	GameEventType_GOODWILL_REFUSAL_TEST       GameEventType = 14 // 好感度拒绝测试事件
 )
 
 // Enum value maps for GameEventType.
 var (
 	GameEventType_name = map[int32]string{
 		0:  "GAME_EVENT_TYPE_UNSPECIFIED",
-		1:  "GAME_EVENT_TYPE_CARD_PLAYED",
-		2:  "GAME_EVENT_TYPE_CHARACTER_MOVED",
-		3:  "GAME_EVENT_TYPE_PARANOIA_ADJUSTED",
-		4:  "GAME_EVENT_TYPE_GOODWILL_ADJUSTED",
-		5:  "GAME_EVENT_TYPE_INTRIGUE_ADJUSTED",
-		6:  "GAME_EVENT_TYPE_ABILITY_USED",
-		7:  "GAME_EVENT_TYPE_TRAGEDY_TRIGGERED",
-		8:  "GAME_EVENT_TYPE_TRAGEDY_PREVENTED",
-		9:  "GAME_EVENT_TYPE_DAY_ADVANCED",
-		10: "GAME_EVENT_TYPE_LOOP_RESET",
-		11: "GAME_EVENT_TYPE_GAME_OVER",
-		12: "GAME_EVENT_TYPE_PLAYER_GUESS",
-		13: "GAME_EVENT_TYPE_CHOICE_REQUIRED",
-		14: "GAME_EVENT_TYPE_INCIDENT_TRIGGERED",
+		1:  "CHARACTER_MOVED",
+		2:  "PARANOIA_ADJUSTED",
+		3:  "GOODWILL_ADJUSTED",
+		4:  "INTRIGUE_ADJUSTED",
+		5:  "INCIDENT_TRIGGERED",
+		6:  "INCIDENT_PREVENTED",
+		7:  "ROLE_REVEALED",
+		8:  "ABILITY_GRANTED",
+		9:  "CHOICE_REQUIRED",
+		10: "LOOP_WIN",
+		11: "LOOP_LOSS",
+		12: "FIRST_GUESS_MADE",
+		13: "FINAL_GUESS_MADE",
+		14: "GOODWILL_REFUSAL_TEST",
 	}
 	GameEventType_value = map[string]int32{
-		"GAME_EVENT_TYPE_UNSPECIFIED":        0,
-		"GAME_EVENT_TYPE_CARD_PLAYED":        1,
-		"GAME_EVENT_TYPE_CHARACTER_MOVED":    2,
-		"GAME_EVENT_TYPE_PARANOIA_ADJUSTED":  3,
-		"GAME_EVENT_TYPE_GOODWILL_ADJUSTED":  4,
-		"GAME_EVENT_TYPE_INTRIGUE_ADJUSTED":  5,
-		"GAME_EVENT_TYPE_ABILITY_USED":       6,
-		"GAME_EVENT_TYPE_TRAGEDY_TRIGGERED":  7,
-		"GAME_EVENT_TYPE_TRAGEDY_PREVENTED":  8,
-		"GAME_EVENT_TYPE_DAY_ADVANCED":       9,
-		"GAME_EVENT_TYPE_LOOP_RESET":         10,
-		"GAME_EVENT_TYPE_GAME_OVER":          11,
-		"GAME_EVENT_TYPE_PLAYER_GUESS":       12,
-		"GAME_EVENT_TYPE_CHOICE_REQUIRED":    13,
-		"GAME_EVENT_TYPE_INCIDENT_TRIGGERED": 14,
+		"GAME_EVENT_TYPE_UNSPECIFIED": 0,
+		"CHARACTER_MOVED":             1,
+		"PARANOIA_ADJUSTED":           2,
+		"GOODWILL_ADJUSTED":           3,
+		"INTRIGUE_ADJUSTED":           4,
+		"INCIDENT_TRIGGERED":          5,
+		"INCIDENT_PREVENTED":          6,
+		"ROLE_REVEALED":               7,
+		"ABILITY_GRANTED":             8,
+		"CHOICE_REQUIRED":             9,
+		"LOOP_WIN":                    10,
+		"LOOP_LOSS":                   11,
+		"FIRST_GUESS_MADE":            12,
+		"FINAL_GUESS_MADE":            13,
+		"GOODWILL_REFUSAL_TEST":       14,
 	}
 )
 
@@ -274,11 +280,11 @@ func (x GameEventType) String() string {
 }
 
 func (GameEventType) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_v1_enums_proto_enumTypes[3].Descriptor()
+	return file_v1_enums_proto_enumTypes[3].Descriptor()
 }
 
 func (GameEventType) Type() protoreflect.EnumType {
-	return &file_proto_v1_enums_proto_enumTypes[3]
+	return &file_v1_enums_proto_enumTypes[3]
 }
 
 func (x GameEventType) Number() protoreflect.EnumNumber {
@@ -287,107 +293,50 @@ func (x GameEventType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use GameEventType.Descriptor instead.
 func (GameEventType) EnumDescriptor() ([]byte, []int) {
-	return file_proto_v1_enums_proto_rawDescGZIP(), []int{3}
+	return file_v1_enums_proto_rawDescGZIP(), []int{3}
 }
 
-// ActionType 定义了玩家可以执行的操作类型。
-type ActionType int32
-
-const (
-	ActionType_ACTION_TYPE_UNSPECIFIED          ActionType = 0
-	ActionType_ACTION_TYPE_PLAY_CARD            ActionType = 1 // 出牌
-	ActionType_ACTION_TYPE_USE_ABILITY          ActionType = 2 // 使用能力
-	ActionType_ACTION_TYPE_MAKE_GUESS           ActionType = 3 // 作出猜测
-	ActionType_ACTION_TYPE_READY_FOR_NEXT_PHASE ActionType = 4 // 准备好进入下一阶段
-)
-
-// Enum value maps for ActionType.
-var (
-	ActionType_name = map[int32]string{
-		0: "ACTION_TYPE_UNSPECIFIED",
-		1: "ACTION_TYPE_PLAY_CARD",
-		2: "ACTION_TYPE_USE_ABILITY",
-		3: "ACTION_TYPE_MAKE_GUESS",
-		4: "ACTION_TYPE_READY_FOR_NEXT_PHASE",
-	}
-	ActionType_value = map[string]int32{
-		"ACTION_TYPE_UNSPECIFIED":          0,
-		"ACTION_TYPE_PLAY_CARD":            1,
-		"ACTION_TYPE_USE_ABILITY":          2,
-		"ACTION_TYPE_MAKE_GUESS":           3,
-		"ACTION_TYPE_READY_FOR_NEXT_PHASE": 4,
-	}
-)
-
-func (x ActionType) Enum() *ActionType {
-	p := new(ActionType)
-	*p = x
-	return p
-}
-
-func (x ActionType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ActionType) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_v1_enums_proto_enumTypes[4].Descriptor()
-}
-
-func (ActionType) Type() protoreflect.EnumType {
-	return &file_proto_v1_enums_proto_enumTypes[4]
-}
-
-func (x ActionType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ActionType.Descriptor instead.
-func (ActionType) EnumDescriptor() ([]byte, []int) {
-	return file_proto_v1_enums_proto_rawDescGZIP(), []int{4}
-}
-
-// RoleType 定义了玩家在游戏中的具体角色。
+// 角色身份类型枚举
 type RoleType int32
 
 const (
-	RoleType_ROLE_TYPE_UNSPECIFIED         RoleType = 0 // 未指定角色类型 (默认值)
-	RoleType_ROLE_TYPE_INNOCENT            RoleType = 1 // 无辜者
-	RoleType_ROLE_TYPE_KILLER              RoleType = 2 // 杀手
-	RoleType_ROLE_TYPE_BRAIN               RoleType = 3 // 大脑
-	RoleType_ROLE_TYPE_KEY_PERSON          RoleType = 4 // 关键人物
-	RoleType_ROLE_TYPE_FRIEND              RoleType = 5 // 朋友
-	RoleType_ROLE_TYPE_CONSPIRACY_THEORIST RoleType = 6 // 阴谋论者
-	RoleType_ROLE_TYPE_CULTIST             RoleType = 7 // 例如：具有善意拒绝的角色
-	// 注意：Mastermind 和 Protagonist 也可以在 PlayerRole 中定义，这里是作为游戏内具体角色的一种。
-	RoleType_ROLE_TYPE_MASTERMIND  RoleType = 8 // LLM 玩家角色 (主谋)
-	RoleType_ROLE_TYPE_PROTAGONIST RoleType = 9 // LLM 玩家角色 (主角)
+	RoleType_ROLE_TYPE_UNSPECIFIED RoleType = 0 // 未指定
+	RoleType_INNOCENT              RoleType = 1 // 无辜者
+	RoleType_KILLER                RoleType = 2 // 杀手
+	RoleType_ACCOMPLICE            RoleType = 3 // 共犯
+	RoleType_PERSON_OF_INTEREST    RoleType = 4 // 嫌疑人
+	RoleType_KEY_PERSON            RoleType = 5 // 关键人物
+	RoleType_FRIEND                RoleType = 6 // 朋友
+	RoleType_LOVER                 RoleType = 7 // 恋人
+	RoleType_CONSPIRACY_THEORIST   RoleType = 8 // 阴谋论者
+	RoleType_CULTIST               RoleType = 9 // 邪教徒
 )
 
 // Enum value maps for RoleType.
 var (
 	RoleType_name = map[int32]string{
 		0: "ROLE_TYPE_UNSPECIFIED",
-		1: "ROLE_TYPE_INNOCENT",
-		2: "ROLE_TYPE_KILLER",
-		3: "ROLE_TYPE_BRAIN",
-		4: "ROLE_TYPE_KEY_PERSON",
-		5: "ROLE_TYPE_FRIEND",
-		6: "ROLE_TYPE_CONSPIRACY_THEORIST",
-		7: "ROLE_TYPE_CULTIST",
-		8: "ROLE_TYPE_MASTERMIND",
-		9: "ROLE_TYPE_PROTAGONIST",
+		1: "INNOCENT",
+		2: "KILLER",
+		3: "ACCOMPLICE",
+		4: "PERSON_OF_INTEREST",
+		5: "KEY_PERSON",
+		6: "FRIEND",
+		7: "LOVER",
+		8: "CONSPIRACY_THEORIST",
+		9: "CULTIST",
 	}
 	RoleType_value = map[string]int32{
-		"ROLE_TYPE_UNSPECIFIED":         0,
-		"ROLE_TYPE_INNOCENT":            1,
-		"ROLE_TYPE_KILLER":              2,
-		"ROLE_TYPE_BRAIN":               3,
-		"ROLE_TYPE_KEY_PERSON":          4,
-		"ROLE_TYPE_FRIEND":              5,
-		"ROLE_TYPE_CONSPIRACY_THEORIST": 6,
-		"ROLE_TYPE_CULTIST":             7,
-		"ROLE_TYPE_MASTERMIND":          8,
-		"ROLE_TYPE_PROTAGONIST":         9,
+		"ROLE_TYPE_UNSPECIFIED": 0,
+		"INNOCENT":              1,
+		"KILLER":                2,
+		"ACCOMPLICE":            3,
+		"PERSON_OF_INTEREST":    4,
+		"KEY_PERSON":            5,
+		"FRIEND":                6,
+		"LOVER":                 7,
+		"CONSPIRACY_THEORIST":   8,
+		"CULTIST":               9,
 	}
 )
 
@@ -402,11 +351,11 @@ func (x RoleType) String() string {
 }
 
 func (RoleType) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_v1_enums_proto_enumTypes[5].Descriptor()
+	return file_v1_enums_proto_enumTypes[4].Descriptor()
 }
 
 func (RoleType) Type() protoreflect.EnumType {
-	return &file_proto_v1_enums_proto_enumTypes[5]
+	return &file_v1_enums_proto_enumTypes[4]
 }
 
 func (x RoleType) Number() protoreflect.EnumNumber {
@@ -415,117 +364,224 @@ func (x RoleType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use RoleType.Descriptor instead.
 func (RoleType) EnumDescriptor() ([]byte, []int) {
-	return file_proto_v1_enums_proto_rawDescGZIP(), []int{5}
+	return file_v1_enums_proto_rawDescGZIP(), []int{4}
 }
 
-// TragedyType 定义了剧本中可能发生的悲剧类型。
-// TragedyType 定义了在游戏中可能发生的悲剧类型。
-type TragedyType int32
+// 悲剧类型枚举
+type IncidentType int32
 
 const (
-	TragedyType_TRAGEDY_TYPE_UNSPECIFIED TragedyType = 0 // 未指定悲剧类型 (默认值)
-	TragedyType_TRAGEDY_TYPE_MURDER      TragedyType = 1 // 谋杀
-	TragedyType_TRAGEDY_TYPE_SUICIDE     TragedyType = 2 // 自杀
-	TragedyType_TRAGEDY_TYPE_SEALED      TragedyType = 3 // 例如：封印物品剧情
+	IncidentType_INCIDENT_TYPE_UNSPECIFIED IncidentType = 0 // 未指定
+	IncidentType_MURDER                    IncidentType = 1 // 谋杀
+	IncidentType_SUICIDE                   IncidentType = 2 // 自杀
+	IncidentType_HOSPITAL_CONSPIRACY       IncidentType = 3 // 医院阴谋
+	IncidentType_MURDER_MYSTERY            IncidentType = 4 // 谋杀之谜
 )
 
-// Enum value maps for TragedyType.
+// Enum value maps for IncidentType.
 var (
-	TragedyType_name = map[int32]string{
-		0: "TRAGEDY_TYPE_UNSPECIFIED",
-		1: "TRAGEDY_TYPE_MURDER",
-		2: "TRAGEDY_TYPE_SUICIDE",
-		3: "TRAGEDY_TYPE_SEALED",
+	IncidentType_name = map[int32]string{
+		0: "INCIDENT_TYPE_UNSPECIFIED",
+		1: "MURDER",
+		2: "SUICIDE",
+		3: "HOSPITAL_CONSPIRACY",
+		4: "MURDER_MYSTERY",
 	}
-	TragedyType_value = map[string]int32{
-		"TRAGEDY_TYPE_UNSPECIFIED": 0,
-		"TRAGEDY_TYPE_MURDER":      1,
-		"TRAGEDY_TYPE_SUICIDE":     2,
-		"TRAGEDY_TYPE_SEALED":      3,
+	IncidentType_value = map[string]int32{
+		"INCIDENT_TYPE_UNSPECIFIED": 0,
+		"MURDER":                    1,
+		"SUICIDE":                   2,
+		"HOSPITAL_CONSPIRACY":       3,
+		"MURDER_MYSTERY":            4,
 	}
 )
 
-func (x TragedyType) Enum() *TragedyType {
-	p := new(TragedyType)
+func (x IncidentType) Enum() *IncidentType {
+	p := new(IncidentType)
 	*p = x
 	return p
 }
 
-func (x TragedyType) String() string {
+func (x IncidentType) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (TragedyType) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_v1_enums_proto_enumTypes[6].Descriptor()
+func (IncidentType) Descriptor() protoreflect.EnumDescriptor {
+	return file_v1_enums_proto_enumTypes[5].Descriptor()
 }
 
-func (TragedyType) Type() protoreflect.EnumType {
-	return &file_proto_v1_enums_proto_enumTypes[6]
+func (IncidentType) Type() protoreflect.EnumType {
+	return &file_v1_enums_proto_enumTypes[5]
 }
 
-func (x TragedyType) Number() protoreflect.EnumNumber {
+func (x IncidentType) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use TragedyType.Descriptor instead.
-func (TragedyType) EnumDescriptor() ([]byte, []int) {
-	return file_proto_v1_enums_proto_rawDescGZIP(), []int{6}
+// Deprecated: Use IncidentType.Descriptor instead.
+func (IncidentType) EnumDescriptor() ([]byte, []int) {
+	return file_v1_enums_proto_rawDescGZIP(), []int{5}
 }
 
-// TriggerType 定义了能力、规则或效果何时被激活或评估。
-// 这个统一的枚举旨在澄清触发机制，明确区分基于游戏阶段的触发和基于事件的触发。
-// 好的设计实践建议将触发条件与效果分离开来。
-// 例如，一个能力可以有一个 `TriggerType` 来定义“何时”检查，以及一个效果列表来定义“做什么”。
+// 剧本类型枚举（主线/支线）
+type TragedyScriptType int32
+
+const (
+	TragedyScriptType_TRAGEDY_SCRIPT_TYPE_UNSPECIFIED TragedyScriptType = 0 // 未指定
+	TragedyScriptType_MAIN_PLOT                       TragedyScriptType = 1 // 主线剧情
+	TragedyScriptType_SUB_PLOT                        TragedyScriptType = 2 // 支线剧情
+)
+
+// Enum value maps for TragedyScriptType.
+var (
+	TragedyScriptType_name = map[int32]string{
+		0: "TRAGEDY_SCRIPT_TYPE_UNSPECIFIED",
+		1: "MAIN_PLOT",
+		2: "SUB_PLOT",
+	}
+	TragedyScriptType_value = map[string]int32{
+		"TRAGEDY_SCRIPT_TYPE_UNSPECIFIED": 0,
+		"MAIN_PLOT":                       1,
+		"SUB_PLOT":                        2,
+	}
+)
+
+func (x TragedyScriptType) Enum() *TragedyScriptType {
+	p := new(TragedyScriptType)
+	*p = x
+	return p
+}
+
+func (x TragedyScriptType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (TragedyScriptType) Descriptor() protoreflect.EnumDescriptor {
+	return file_v1_enums_proto_enumTypes[6].Descriptor()
+}
+
+func (TragedyScriptType) Type() protoreflect.EnumType {
+	return &file_v1_enums_proto_enumTypes[6]
+}
+
+func (x TragedyScriptType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use TragedyScriptType.Descriptor instead.
+func (TragedyScriptType) EnumDescriptor() ([]byte, []int) {
+	return file_v1_enums_proto_rawDescGZIP(), []int{6}
+}
+
+// 地点类型枚举
+type LocationType int32
+
+const (
+	LocationType_LOCATION_TYPE_UNSPECIFIED LocationType = 0 // 未指定
+	LocationType_HOSPITAL                  LocationType = 1 // 医院
+	LocationType_SHRINE                    LocationType = 2 // 神社
+	LocationType_CITY                      LocationType = 3 // 城市
+	LocationType_SCHOOL                    LocationType = 4 // 学校
+)
+
+// Enum value maps for LocationType.
+var (
+	LocationType_name = map[int32]string{
+		0: "LOCATION_TYPE_UNSPECIFIED",
+		1: "HOSPITAL",
+		2: "SHRINE",
+		3: "CITY",
+		4: "SCHOOL",
+	}
+	LocationType_value = map[string]int32{
+		"LOCATION_TYPE_UNSPECIFIED": 0,
+		"HOSPITAL":                  1,
+		"SHRINE":                    2,
+		"CITY":                      3,
+		"SCHOOL":                    4,
+	}
+)
+
+func (x LocationType) Enum() *LocationType {
+	p := new(LocationType)
+	*p = x
+	return p
+}
+
+func (x LocationType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (LocationType) Descriptor() protoreflect.EnumDescriptor {
+	return file_v1_enums_proto_enumTypes[7].Descriptor()
+}
+
+func (LocationType) Type() protoreflect.EnumType {
+	return &file_v1_enums_proto_enumTypes[7]
+}
+
+func (x LocationType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use LocationType.Descriptor instead.
+func (LocationType) EnumDescriptor() ([]byte, []int) {
+	return file_v1_enums_proto_rawDescGZIP(), []int{7}
+}
+
+// 触发器类型枚举（能力或规则何时触发）
 type TriggerType int32
 
 const (
-	TriggerType_TRIGGER_TYPE_UNSPECIFIED TriggerType = 0
-	// --- 设置与循环触发器 ---
-	TriggerType_TRIGGER_TYPE_ON_GAME_SETUP TriggerType = 1 // 在游戏首次设置时触发。用于设置初始角色规则或状态。
-	TriggerType_TRIGGER_TYPE_ON_LOOP_START TriggerType = 2 // 在每个新循环开始时触发。
-	// --- 阶段性触发器 (直接映射到 GamePhase) ---
-	// 这些触发器在相应游戏阶段开始时激活。
-	TriggerType_TRIGGER_TYPE_ON_DAY_START          TriggerType = 3 // 对应 `GAME_PHASE_MORNING`。
-	TriggerType_TRIGGER_TYPE_ON_CARD_PLAY_PHASE    TriggerType = 4 // 对应 `GAME_PHASE_CARD_PLAY`。
-	TriggerType_TRIGGER_TYPE_ON_CARD_REVEAL_PHASE  TriggerType = 5 // 对应 `GAME_PHASE_CARD_REVEAL`。
-	TriggerType_TRIGGER_TYPE_ON_CARD_RESOLVE_PHASE TriggerType = 6 // 对应 `GAME_PHASE_CARD_RESOLVE`。
-	TriggerType_TRIGGER_TYPE_ON_ABILITY_PHASE      TriggerType = 7 // 对应 `GAME_PHASE_ABILITIES`。
-	TriggerType_TRIGGER_TYPE_ON_INCIDENT_PHASE     TriggerType = 8 // 对应 `GAME_PHASE_INCIDENTS`。
-	// --- 事件驱动触发器 (响应 GameEvent) ---
-	// 使用这些触发器的能力/规则需要额外指定它们监听的 `GameEventType`。
-	// 这种设计将“何时”触发（一般性事件）与“具体哪个事件”分离开来，增加了灵活性。
-	TriggerType_TRIGGER_TYPE_ON_GAME_EVENT TriggerType = 15 // 响应一个特定的游戏事件。
-	// --- 持续性/被动触发器 ---
-	TriggerType_TRIGGER_TYPE_PASSIVE TriggerType = 20 // 表示一个持续生效的被动能力或规则。它的效果在任何时候都适用，而不是由单个事件触发。
+	TriggerType_TRIGGER_TYPE_UNSPECIFIED TriggerType = 0  // 未指定
+	TriggerType_ON_GAME_SETUP            TriggerType = 1  // 游戏设置时
+	TriggerType_ON_LOOP_START            TriggerType = 2  // 循环开始时
+	TriggerType_ON_DAY_START             TriggerType = 3  // 每天开始时
+	TriggerType_ON_CARD_PLAY_PHASE       TriggerType = 4  // 卡牌打出阶段
+	TriggerType_ON_CARD_REVEAL_PHASE     TriggerType = 5  // 卡牌揭示阶段
+	TriggerType_ON_CARD_RESOLVE_PHASE    TriggerType = 6  // 卡牌结算阶段
+	TriggerType_ON_ABILITY_PHASE         TriggerType = 7  // 能力结算阶段
+	TriggerType_ON_INCIDENT_PHASE        TriggerType = 8  // 事件结算阶段
+	TriggerType_ON_GAME_EVENT            TriggerType = 9  // 发生特定游戏事件时
+	TriggerType_PASSIVE                  TriggerType = 10 // 被动（一直生效）
+	TriggerType_ON_LOOP_LOSS             TriggerType = 11 // 循环失败时触发
+	TriggerType_ON_LOOP_WIN              TriggerType = 12 // 循环胜利时触发
+	TriggerType_ON_GAME_END              TriggerType = 13 // 游戏结束时触发
 )
 
 // Enum value maps for TriggerType.
 var (
 	TriggerType_name = map[int32]string{
 		0:  "TRIGGER_TYPE_UNSPECIFIED",
-		1:  "TRIGGER_TYPE_ON_GAME_SETUP",
-		2:  "TRIGGER_TYPE_ON_LOOP_START",
-		3:  "TRIGGER_TYPE_ON_DAY_START",
-		4:  "TRIGGER_TYPE_ON_CARD_PLAY_PHASE",
-		5:  "TRIGGER_TYPE_ON_CARD_REVEAL_PHASE",
-		6:  "TRIGGER_TYPE_ON_CARD_RESOLVE_PHASE",
-		7:  "TRIGGER_TYPE_ON_ABILITY_PHASE",
-		8:  "TRIGGER_TYPE_ON_INCIDENT_PHASE",
-		15: "TRIGGER_TYPE_ON_GAME_EVENT",
-		20: "TRIGGER_TYPE_PASSIVE",
+		1:  "ON_GAME_SETUP",
+		2:  "ON_LOOP_START",
+		3:  "ON_DAY_START",
+		4:  "ON_CARD_PLAY_PHASE",
+		5:  "ON_CARD_REVEAL_PHASE",
+		6:  "ON_CARD_RESOLVE_PHASE",
+		7:  "ON_ABILITY_PHASE",
+		8:  "ON_INCIDENT_PHASE",
+		9:  "ON_GAME_EVENT",
+		10: "PASSIVE",
+		11: "ON_LOOP_LOSS",
+		12: "ON_LOOP_WIN",
+		13: "ON_GAME_END",
 	}
 	TriggerType_value = map[string]int32{
-		"TRIGGER_TYPE_UNSPECIFIED":           0,
-		"TRIGGER_TYPE_ON_GAME_SETUP":         1,
-		"TRIGGER_TYPE_ON_LOOP_START":         2,
-		"TRIGGER_TYPE_ON_DAY_START":          3,
-		"TRIGGER_TYPE_ON_CARD_PLAY_PHASE":    4,
-		"TRIGGER_TYPE_ON_CARD_REVEAL_PHASE":  5,
-		"TRIGGER_TYPE_ON_CARD_RESOLVE_PHASE": 6,
-		"TRIGGER_TYPE_ON_ABILITY_PHASE":      7,
-		"TRIGGER_TYPE_ON_INCIDENT_PHASE":     8,
-		"TRIGGER_TYPE_ON_GAME_EVENT":         15,
-		"TRIGGER_TYPE_PASSIVE":               20,
+		"TRIGGER_TYPE_UNSPECIFIED": 0,
+		"ON_GAME_SETUP":            1,
+		"ON_LOOP_START":            2,
+		"ON_DAY_START":             3,
+		"ON_CARD_PLAY_PHASE":       4,
+		"ON_CARD_REVEAL_PHASE":     5,
+		"ON_CARD_RESOLVE_PHASE":    6,
+		"ON_ABILITY_PHASE":         7,
+		"ON_INCIDENT_PHASE":        8,
+		"ON_GAME_EVENT":            9,
+		"PASSIVE":                  10,
+		"ON_LOOP_LOSS":             11,
+		"ON_LOOP_WIN":              12,
+		"ON_GAME_END":              13,
 	}
 )
 
@@ -540,11 +596,11 @@ func (x TriggerType) String() string {
 }
 
 func (TriggerType) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_v1_enums_proto_enumTypes[7].Descriptor()
+	return file_v1_enums_proto_enumTypes[8].Descriptor()
 }
 
 func (TriggerType) Type() protoreflect.EnumType {
-	return &file_proto_v1_enums_proto_enumTypes[7]
+	return &file_v1_enums_proto_enumTypes[8]
 }
 
 func (x TriggerType) Number() protoreflect.EnumNumber {
@@ -553,51 +609,59 @@ func (x TriggerType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TriggerType.Descriptor instead.
 func (TriggerType) EnumDescriptor() ([]byte, []int) {
-	return file_proto_v1_enums_proto_rawDescGZIP(), []int{7}
+	return file_v1_enums_proto_rawDescGZIP(), []int{8}
 }
 
-// EffectType 定义能力或卡牌可能产生的效果类型。
-// 这是组合方法的核心。
+// 效果类型枚举
 type EffectType int32
 
 const (
-	EffectType_EFFECT_TYPE_UNSPECIFIED            EffectType = 0
-	EffectType_EFFECT_TYPE_MOVE_CHARACTER         EffectType = 1 // 移动角色
-	EffectType_EFFECT_TYPE_ADJUST_PARANOIA        EffectType = 2 // 调整妄想
-	EffectType_EFFECT_TYPE_ADJUST_GOODWILL        EffectType = 3 // 调整好感
-	EffectType_EFFECT_TYPE_ADJUST_INTRIGUE        EffectType = 4 // 调整阴谋
-	EffectType_EFFECT_TYPE_REVEAL_ROLE            EffectType = 5 // 用于特定能力，揭示角色
-	EffectType_EFFECT_TYPE_PREVENT_TRAGEDY        EffectType = 6 // 阻止悲剧
-	EffectType_EFFECT_TYPE_GRANT_ABILITY          EffectType = 7 // 授予能力
-	EffectType_EFFECT_TYPE_CHECK_LOCATION_ALONE   EffectType = 8 // 用于悲剧条件，检查地点是否有人独处
-	EffectType_EFFECT_TYPE_CHECK_CHARACTER_STATUS EffectType = 9 // 用于悲剧条件，检查角色状态
+	EffectType_EFFECT_TYPE_UNSPECIFIED     EffectType = 0  // 未指定
+	EffectType_MOVE_CHARACTER              EffectType = 1  // 移动角色
+	EffectType_ADJUST_PARANOIA             EffectType = 2  // 调整妄想值
+	EffectType_ADJUST_GOODWILL             EffectType = 3  // 调整好感值
+	EffectType_ADJUST_INTRIGUE             EffectType = 4  // 调整阴谋值
+	EffectType_FORBID_MOVEMENT             EffectType = 5  // 禁止移动
+	EffectType_FORBID_PARANOIA             EffectType = 6  // 禁止妄想值调整
+	EffectType_FORBID_GOODWILL             EffectType = 7  // 禁止好感值调整
+	EffectType_FORBID_INTRIGUE             EffectType = 8  // 禁止阴谋值调整
+	EffectType_REVEAL_ROLE                 EffectType = 9  // 揭示角色身份
+	EffectType_GRANT_ABILITY               EffectType = 10 // 授予角色能力
+	EffectType_CANCEL_INCIDENT             EffectType = 11 // 取消悲剧事件
+	EffectType_FORCE_GOODWILL_REFUSAL_TEST EffectType = 12 // 强制进行好感度拒绝测试
 )
 
 // Enum value maps for EffectType.
 var (
 	EffectType_name = map[int32]string{
-		0: "EFFECT_TYPE_UNSPECIFIED",
-		1: "EFFECT_TYPE_MOVE_CHARACTER",
-		2: "EFFECT_TYPE_ADJUST_PARANOIA",
-		3: "EFFECT_TYPE_ADJUST_GOODWILL",
-		4: "EFFECT_TYPE_ADJUST_INTRIGUE",
-		5: "EFFECT_TYPE_REVEAL_ROLE",
-		6: "EFFECT_TYPE_PREVENT_TRAGEDY",
-		7: "EFFECT_TYPE_GRANT_ABILITY",
-		8: "EFFECT_TYPE_CHECK_LOCATION_ALONE",
-		9: "EFFECT_TYPE_CHECK_CHARACTER_STATUS",
+		0:  "EFFECT_TYPE_UNSPECIFIED",
+		1:  "MOVE_CHARACTER",
+		2:  "ADJUST_PARANOIA",
+		3:  "ADJUST_GOODWILL",
+		4:  "ADJUST_INTRIGUE",
+		5:  "FORBID_MOVEMENT",
+		6:  "FORBID_PARANOIA",
+		7:  "FORBID_GOODWILL",
+		8:  "FORBID_INTRIGUE",
+		9:  "REVEAL_ROLE",
+		10: "GRANT_ABILITY",
+		11: "CANCEL_INCIDENT",
+		12: "FORCE_GOODWILL_REFUSAL_TEST",
 	}
 	EffectType_value = map[string]int32{
-		"EFFECT_TYPE_UNSPECIFIED":            0,
-		"EFFECT_TYPE_MOVE_CHARACTER":         1,
-		"EFFECT_TYPE_ADJUST_PARANOIA":        2,
-		"EFFECT_TYPE_ADJUST_GOODWILL":        3,
-		"EFFECT_TYPE_ADJUST_INTRIGUE":        4,
-		"EFFECT_TYPE_REVEAL_ROLE":            5,
-		"EFFECT_TYPE_PREVENT_TRAGEDY":        6,
-		"EFFECT_TYPE_GRANT_ABILITY":          7,
-		"EFFECT_TYPE_CHECK_LOCATION_ALONE":   8,
-		"EFFECT_TYPE_CHECK_CHARACTER_STATUS": 9,
+		"EFFECT_TYPE_UNSPECIFIED":     0,
+		"MOVE_CHARACTER":              1,
+		"ADJUST_PARANOIA":             2,
+		"ADJUST_GOODWILL":             3,
+		"ADJUST_INTRIGUE":             4,
+		"FORBID_MOVEMENT":             5,
+		"FORBID_PARANOIA":             6,
+		"FORBID_GOODWILL":             7,
+		"FORBID_INTRIGUE":             8,
+		"REVEAL_ROLE":                 9,
+		"GRANT_ABILITY":               10,
+		"CANCEL_INCIDENT":             11,
+		"FORCE_GOODWILL_REFUSAL_TEST": 12,
 	}
 )
 
@@ -612,11 +676,11 @@ func (x EffectType) String() string {
 }
 
 func (EffectType) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_v1_enums_proto_enumTypes[8].Descriptor()
+	return file_v1_enums_proto_enumTypes[9].Descriptor()
 }
 
 func (EffectType) Type() protoreflect.EnumType {
-	return &file_proto_v1_enums_proto_enumTypes[8]
+	return &file_v1_enums_proto_enumTypes[9]
 }
 
 func (x EffectType) Number() protoreflect.EnumNumber {
@@ -625,184 +689,152 @@ func (x EffectType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use EffectType.Descriptor instead.
 func (EffectType) EnumDescriptor() ([]byte, []int) {
-	return file_proto_v1_enums_proto_rawDescGZIP(), []int{8}
+	return file_v1_enums_proto_rawDescGZIP(), []int{9}
 }
 
-// TargetRuleType 定义悲剧如何选择目标角色。
-type TargetRuleType int32
+var File_v1_enums_proto protoreflect.FileDescriptor
 
-const (
-	TargetRuleType_TARGET_RULE_TYPE_UNSPECIFIED               TargetRuleType = 0
-	TargetRuleType_TARGET_RULE_TYPE_SPECIFIC_CHARACTER        TargetRuleType = 1 // 特定角色
-	TargetRuleType_TARGET_RULE_TYPE_ANY_CHARACTER_AT_LOCATION TargetRuleType = 2 // 在某个地点的任何角色
-)
-
-// Enum value maps for TargetRuleType.
-var (
-	TargetRuleType_name = map[int32]string{
-		0: "TARGET_RULE_TYPE_UNSPECIFIED",
-		1: "TARGET_RULE_TYPE_SPECIFIC_CHARACTER",
-		2: "TARGET_RULE_TYPE_ANY_CHARACTER_AT_LOCATION",
-	}
-	TargetRuleType_value = map[string]int32{
-		"TARGET_RULE_TYPE_UNSPECIFIED":               0,
-		"TARGET_RULE_TYPE_SPECIFIC_CHARACTER":        1,
-		"TARGET_RULE_TYPE_ANY_CHARACTER_AT_LOCATION": 2,
-	}
-)
-
-func (x TargetRuleType) Enum() *TargetRuleType {
-	p := new(TargetRuleType)
-	*p = x
-	return p
-}
-
-func (x TargetRuleType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TargetRuleType) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_v1_enums_proto_enumTypes[9].Descriptor()
-}
-
-func (TargetRuleType) Type() protoreflect.EnumType {
-	return &file_proto_v1_enums_proto_enumTypes[9]
-}
-
-func (x TargetRuleType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TargetRuleType.Descriptor instead.
-func (TargetRuleType) EnumDescriptor() ([]byte, []int) {
-	return file_proto_v1_enums_proto_rawDescGZIP(), []int{9}
-}
-
-var File_proto_v1_enums_proto protoreflect.FileDescriptor
-
-const file_proto_v1_enums_proto_rawDesc = "" +
+const file_v1_enums_proto_rawDesc = "" +
 	"\n" +
-	"\x14proto/v1/enums.proto\x12\bproto.v1*\x9c\x01\n" +
-	"\bCardType\x12\x19\n" +
-	"\x15CARD_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
-	"\x12CARD_TYPE_MOVEMENT\x10\x01\x12\x16\n" +
-	"\x12CARD_TYPE_PARANOIA\x10\x02\x12\x16\n" +
-	"\x12CARD_TYPE_GOODWILL\x10\x03\x12\x16\n" +
-	"\x12CARD_TYPE_INTRIGUE\x10\x04\x12\x15\n" +
-	"\x11CARD_TYPE_SPECIAL\x10\x05*b\n" +
+	"\x0ev1/enums.proto\x12\x02v1*J\n" +
 	"\n" +
 	"PlayerRole\x12\x1b\n" +
-	"\x17PLAYER_ROLE_UNSPECIFIED\x10\x00\x12\x1a\n" +
-	"\x16PLAYER_ROLE_MASTERMIND\x10\x01\x12\x1b\n" +
-	"\x17PLAYER_ROLE_PROTAGONIST\x10\x02*\xb3\x02\n" +
-	"\tGamePhase\x12\x1a\n" +
-	"\x16GAME_PHASE_UNSPECIFIED\x10\x00\x12\x16\n" +
-	"\x12GAME_PHASE_MORNING\x10\x01\x12\x18\n" +
-	"\x14GAME_PHASE_CARD_PLAY\x10\x02\x12\x1a\n" +
-	"\x16GAME_PHASE_CARD_REVEAL\x10\x03\x12\x1b\n" +
-	"\x17GAME_PHASE_CARD_RESOLVE\x10\x04\x12\x18\n" +
-	"\x14GAME_PHASE_ABILITIES\x10\x05\x12\x18\n" +
-	"\x14GAME_PHASE_INCIDENTS\x10\x06\x12\x16\n" +
-	"\x12GAME_PHASE_DAY_END\x10\a\x12\x17\n" +
-	"\x13GAME_PHASE_LOOP_END\x10\b\x12\x18\n" +
-	"\x14GAME_PHASE_GAME_OVER\x10\t\x12 \n" +
-	"\x1cGAME_PHASE_PROTAGONIST_GUESS\x10\n" +
-	"*\xab\x04\n" +
-	"\rGameEventType\x12\x1f\n" +
-	"\x1bGAME_EVENT_TYPE_UNSPECIFIED\x10\x00\x12\x1f\n" +
-	"\x1bGAME_EVENT_TYPE_CARD_PLAYED\x10\x01\x12#\n" +
-	"\x1fGAME_EVENT_TYPE_CHARACTER_MOVED\x10\x02\x12%\n" +
-	"!GAME_EVENT_TYPE_PARANOIA_ADJUSTED\x10\x03\x12%\n" +
-	"!GAME_EVENT_TYPE_GOODWILL_ADJUSTED\x10\x04\x12%\n" +
-	"!GAME_EVENT_TYPE_INTRIGUE_ADJUSTED\x10\x05\x12 \n" +
-	"\x1cGAME_EVENT_TYPE_ABILITY_USED\x10\x06\x12%\n" +
-	"!GAME_EVENT_TYPE_TRAGEDY_TRIGGERED\x10\a\x12%\n" +
-	"!GAME_EVENT_TYPE_TRAGEDY_PREVENTED\x10\b\x12 \n" +
-	"\x1cGAME_EVENT_TYPE_DAY_ADVANCED\x10\t\x12\x1e\n" +
-	"\x1aGAME_EVENT_TYPE_LOOP_RESET\x10\n" +
-	"\x12\x1d\n" +
-	"\x19GAME_EVENT_TYPE_GAME_OVER\x10\v\x12 \n" +
-	"\x1cGAME_EVENT_TYPE_PLAYER_GUESS\x10\f\x12#\n" +
-	"\x1fGAME_EVENT_TYPE_CHOICE_REQUIRED\x10\r\x12&\n" +
-	"\"GAME_EVENT_TYPE_INCIDENT_TRIGGERED\x10\x0e*\xa3\x01\n" +
+	"\x17PLAYER_ROLE_UNSPECIFIED\x10\x00\x12\x0e\n" +
 	"\n" +
-	"ActionType\x12\x1b\n" +
-	"\x17ACTION_TYPE_UNSPECIFIED\x10\x00\x12\x19\n" +
-	"\x15ACTION_TYPE_PLAY_CARD\x10\x01\x12\x1b\n" +
-	"\x17ACTION_TYPE_USE_ABILITY\x10\x02\x12\x1a\n" +
-	"\x16ACTION_TYPE_MAKE_GUESS\x10\x03\x12$\n" +
-	" ACTION_TYPE_READY_FOR_NEXT_PHASE\x10\x04*\x87\x02\n" +
+	"MASTERMIND\x10\x01\x12\x0f\n" +
+	"\vPROTAGONIST\x10\x02*\xf5\x01\n" +
+	"\tGamePhase\x12\x1a\n" +
+	"\x16GAME_PHASE_UNSPECIFIED\x10\x00\x12\t\n" +
+	"\x05SETUP\x10\x01\x12\x14\n" +
+	"\x10MASTERMIND_SETUP\x10\x02\x12\r\n" +
+	"\tCARD_PLAY\x10\x03\x12\x0f\n" +
+	"\vCARD_REVEAL\x10\x04\x12\x10\n" +
+	"\fCARD_RESOLVE\x10\x05\x12\r\n" +
+	"\tABILITIES\x10\x06\x12\r\n" +
+	"\tINCIDENTS\x10\a\x12\v\n" +
+	"\aDAY_END\x10\b\x12\f\n" +
+	"\bLOOP_END\x10\t\x12\r\n" +
+	"\tGAME_OVER\x10\n" +
+	"\x12\x15\n" +
+	"\x11PROTAGONIST_GUESS\x10\v\x12\x1a\n" +
+	"\x16GAME_PHASE_FIRST_GUESS\x10\f*j\n" +
+	"\bCardType\x12\x19\n" +
+	"\x15CARD_TYPE_UNSPECIFIED\x10\x00\x12\f\n" +
+	"\bMOVEMENT\x10\x01\x12\f\n" +
+	"\bPARANOIA\x10\x02\x12\f\n" +
+	"\bGOODWILL\x10\x03\x12\f\n" +
+	"\bINTRIGUE\x10\x04\x12\v\n" +
+	"\aSPECIAL\x10\x05*\xdb\x02\n" +
+	"\rGameEventType\x12\x1f\n" +
+	"\x1bGAME_EVENT_TYPE_UNSPECIFIED\x10\x00\x12\x13\n" +
+	"\x0fCHARACTER_MOVED\x10\x01\x12\x15\n" +
+	"\x11PARANOIA_ADJUSTED\x10\x02\x12\x15\n" +
+	"\x11GOODWILL_ADJUSTED\x10\x03\x12\x15\n" +
+	"\x11INTRIGUE_ADJUSTED\x10\x04\x12\x16\n" +
+	"\x12INCIDENT_TRIGGERED\x10\x05\x12\x16\n" +
+	"\x12INCIDENT_PREVENTED\x10\x06\x12\x11\n" +
+	"\rROLE_REVEALED\x10\a\x12\x13\n" +
+	"\x0fABILITY_GRANTED\x10\b\x12\x13\n" +
+	"\x0fCHOICE_REQUIRED\x10\t\x12\f\n" +
+	"\bLOOP_WIN\x10\n" +
+	"\x12\r\n" +
+	"\tLOOP_LOSS\x10\v\x12\x14\n" +
+	"\x10FIRST_GUESS_MADE\x10\f\x12\x14\n" +
+	"\x10FINAL_GUESS_MADE\x10\r\x12\x19\n" +
+	"\x15GOODWILL_REFUSAL_TEST\x10\x0e*\xb4\x01\n" +
 	"\bRoleType\x12\x19\n" +
-	"\x15ROLE_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
-	"\x12ROLE_TYPE_INNOCENT\x10\x01\x12\x14\n" +
-	"\x10ROLE_TYPE_KILLER\x10\x02\x12\x13\n" +
-	"\x0fROLE_TYPE_BRAIN\x10\x03\x12\x18\n" +
-	"\x14ROLE_TYPE_KEY_PERSON\x10\x04\x12\x14\n" +
-	"\x10ROLE_TYPE_FRIEND\x10\x05\x12!\n" +
-	"\x1dROLE_TYPE_CONSPIRACY_THEORIST\x10\x06\x12\x15\n" +
-	"\x11ROLE_TYPE_CULTIST\x10\a\x12\x18\n" +
-	"\x14ROLE_TYPE_MASTERMIND\x10\b\x12\x19\n" +
-	"\x15ROLE_TYPE_PROTAGONIST\x10\t*w\n" +
-	"\vTragedyType\x12\x1c\n" +
-	"\x18TRAGEDY_TYPE_UNSPECIFIED\x10\x00\x12\x17\n" +
-	"\x13TRAGEDY_TYPE_MURDER\x10\x01\x12\x18\n" +
-	"\x14TRAGEDY_TYPE_SUICIDE\x10\x02\x12\x17\n" +
-	"\x13TRAGEDY_TYPE_SEALED\x10\x03*\xff\x02\n" +
+	"\x15ROLE_TYPE_UNSPECIFIED\x10\x00\x12\f\n" +
+	"\bINNOCENT\x10\x01\x12\n" +
+	"\n" +
+	"\x06KILLER\x10\x02\x12\x0e\n" +
+	"\n" +
+	"ACCOMPLICE\x10\x03\x12\x16\n" +
+	"\x12PERSON_OF_INTEREST\x10\x04\x12\x0e\n" +
+	"\n" +
+	"KEY_PERSON\x10\x05\x12\n" +
+	"\n" +
+	"\x06FRIEND\x10\x06\x12\t\n" +
+	"\x05LOVER\x10\a\x12\x17\n" +
+	"\x13CONSPIRACY_THEORIST\x10\b\x12\v\n" +
+	"\aCULTIST\x10\t*s\n" +
+	"\fIncidentType\x12\x1d\n" +
+	"\x19INCIDENT_TYPE_UNSPECIFIED\x10\x00\x12\n" +
+	"\n" +
+	"\x06MURDER\x10\x01\x12\v\n" +
+	"\aSUICIDE\x10\x02\x12\x17\n" +
+	"\x13HOSPITAL_CONSPIRACY\x10\x03\x12\x12\n" +
+	"\x0eMURDER_MYSTERY\x10\x04*U\n" +
+	"\x11TragedyScriptType\x12#\n" +
+	"\x1fTRAGEDY_SCRIPT_TYPE_UNSPECIFIED\x10\x00\x12\r\n" +
+	"\tMAIN_PLOT\x10\x01\x12\f\n" +
+	"\bSUB_PLOT\x10\x02*]\n" +
+	"\fLocationType\x12\x1d\n" +
+	"\x19LOCATION_TYPE_UNSPECIFIED\x10\x00\x12\f\n" +
+	"\bHOSPITAL\x10\x01\x12\n" +
+	"\n" +
+	"\x06SHRINE\x10\x02\x12\b\n" +
+	"\x04CITY\x10\x03\x12\n" +
+	"\n" +
+	"\x06SCHOOL\x10\x04*\xb1\x02\n" +
 	"\vTriggerType\x12\x1c\n" +
-	"\x18TRIGGER_TYPE_UNSPECIFIED\x10\x00\x12\x1e\n" +
-	"\x1aTRIGGER_TYPE_ON_GAME_SETUP\x10\x01\x12\x1e\n" +
-	"\x1aTRIGGER_TYPE_ON_LOOP_START\x10\x02\x12\x1d\n" +
-	"\x19TRIGGER_TYPE_ON_DAY_START\x10\x03\x12#\n" +
-	"\x1fTRIGGER_TYPE_ON_CARD_PLAY_PHASE\x10\x04\x12%\n" +
-	"!TRIGGER_TYPE_ON_CARD_REVEAL_PHASE\x10\x05\x12&\n" +
-	"\"TRIGGER_TYPE_ON_CARD_RESOLVE_PHASE\x10\x06\x12!\n" +
-	"\x1dTRIGGER_TYPE_ON_ABILITY_PHASE\x10\a\x12\"\n" +
-	"\x1eTRIGGER_TYPE_ON_INCIDENT_PHASE\x10\b\x12\x1e\n" +
-	"\x1aTRIGGER_TYPE_ON_GAME_EVENT\x10\x0f\x12\x18\n" +
-	"\x14TRIGGER_TYPE_PASSIVE\x10\x14*\xd7\x02\n" +
+	"\x18TRIGGER_TYPE_UNSPECIFIED\x10\x00\x12\x11\n" +
+	"\rON_GAME_SETUP\x10\x01\x12\x11\n" +
+	"\rON_LOOP_START\x10\x02\x12\x10\n" +
+	"\fON_DAY_START\x10\x03\x12\x16\n" +
+	"\x12ON_CARD_PLAY_PHASE\x10\x04\x12\x18\n" +
+	"\x14ON_CARD_REVEAL_PHASE\x10\x05\x12\x19\n" +
+	"\x15ON_CARD_RESOLVE_PHASE\x10\x06\x12\x14\n" +
+	"\x10ON_ABILITY_PHASE\x10\a\x12\x15\n" +
+	"\x11ON_INCIDENT_PHASE\x10\b\x12\x11\n" +
+	"\rON_GAME_EVENT\x10\t\x12\v\n" +
+	"\aPASSIVE\x10\n" +
+	"\x12\x10\n" +
+	"\fON_LOOP_LOSS\x10\v\x12\x0f\n" +
+	"\vON_LOOP_WIN\x10\f\x12\x0f\n" +
+	"\vON_GAME_END\x10\r*\xaa\x02\n" +
 	"\n" +
 	"EffectType\x12\x1b\n" +
-	"\x17EFFECT_TYPE_UNSPECIFIED\x10\x00\x12\x1e\n" +
-	"\x1aEFFECT_TYPE_MOVE_CHARACTER\x10\x01\x12\x1f\n" +
-	"\x1bEFFECT_TYPE_ADJUST_PARANOIA\x10\x02\x12\x1f\n" +
-	"\x1bEFFECT_TYPE_ADJUST_GOODWILL\x10\x03\x12\x1f\n" +
-	"\x1bEFFECT_TYPE_ADJUST_INTRIGUE\x10\x04\x12\x1b\n" +
-	"\x17EFFECT_TYPE_REVEAL_ROLE\x10\x05\x12\x1f\n" +
-	"\x1bEFFECT_TYPE_PREVENT_TRAGEDY\x10\x06\x12\x1d\n" +
-	"\x19EFFECT_TYPE_GRANT_ABILITY\x10\a\x12$\n" +
-	" EFFECT_TYPE_CHECK_LOCATION_ALONE\x10\b\x12&\n" +
-	"\"EFFECT_TYPE_CHECK_CHARACTER_STATUS\x10\t*\x8b\x01\n" +
-	"\x0eTargetRuleType\x12 \n" +
-	"\x1cTARGET_RULE_TYPE_UNSPECIFIED\x10\x00\x12'\n" +
-	"#TARGET_RULE_TYPE_SPECIFIC_CHARACTER\x10\x01\x12.\n" +
-	"*TARGET_RULE_TYPE_ANY_CHARACTER_AT_LOCATION\x10\x02B\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\x17EFFECT_TYPE_UNSPECIFIED\x10\x00\x12\x12\n" +
+	"\x0eMOVE_CHARACTER\x10\x01\x12\x13\n" +
+	"\x0fADJUST_PARANOIA\x10\x02\x12\x13\n" +
+	"\x0fADJUST_GOODWILL\x10\x03\x12\x13\n" +
+	"\x0fADJUST_INTRIGUE\x10\x04\x12\x13\n" +
+	"\x0fFORBID_MOVEMENT\x10\x05\x12\x13\n" +
+	"\x0fFORBID_PARANOIA\x10\x06\x12\x13\n" +
+	"\x0fFORBID_GOODWILL\x10\a\x12\x13\n" +
+	"\x0fFORBID_INTRIGUE\x10\b\x12\x0f\n" +
+	"\vREVEAL_ROLE\x10\t\x12\x11\n" +
+	"\rGRANT_ABILITY\x10\n" +
+	"\x12\x13\n" +
+	"\x0fCANCEL_INCIDENT\x10\v\x12\x1f\n" +
+	"\x1bFORCE_GOODWILL_REFUSAL_TEST\x10\fB#Z!tragedylooper/internal/game/v1;v1b\x06proto3"
 
 var (
-	file_proto_v1_enums_proto_rawDescOnce sync.Once
-	file_proto_v1_enums_proto_rawDescData []byte
+	file_v1_enums_proto_rawDescOnce sync.Once
+	file_v1_enums_proto_rawDescData []byte
 )
 
-func file_proto_v1_enums_proto_rawDescGZIP() []byte {
-	file_proto_v1_enums_proto_rawDescOnce.Do(func() {
-		file_proto_v1_enums_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_v1_enums_proto_rawDesc), len(file_proto_v1_enums_proto_rawDesc)))
+func file_v1_enums_proto_rawDescGZIP() []byte {
+	file_v1_enums_proto_rawDescOnce.Do(func() {
+		file_v1_enums_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_v1_enums_proto_rawDesc), len(file_v1_enums_proto_rawDesc)))
 	})
-	return file_proto_v1_enums_proto_rawDescData
+	return file_v1_enums_proto_rawDescData
 }
 
-var file_proto_v1_enums_proto_enumTypes = make([]protoimpl.EnumInfo, 10)
-var file_proto_v1_enums_proto_goTypes = []any{
-	(CardType)(0),       // 0: proto.v1.CardType
-	(PlayerRole)(0),     // 1: proto.v1.PlayerRole
-	(GamePhase)(0),      // 2: proto.v1.GamePhase
-	(GameEventType)(0),  // 3: proto.v1.GameEventType
-	(ActionType)(0),     // 4: proto.v1.ActionType
-	(RoleType)(0),       // 5: proto.v1.RoleType
-	(TragedyType)(0),    // 6: proto.v1.TragedyType
-	(TriggerType)(0),    // 7: proto.v1.TriggerType
-	(EffectType)(0),     // 8: proto.v1.EffectType
-	(TargetRuleType)(0), // 9: proto.v1.TargetRuleType
+var file_v1_enums_proto_enumTypes = make([]protoimpl.EnumInfo, 10)
+var file_v1_enums_proto_goTypes = []any{
+	(PlayerRole)(0),        // 0: v1.PlayerRole
+	(GamePhase)(0),         // 1: v1.GamePhase
+	(CardType)(0),          // 2: v1.CardType
+	(GameEventType)(0),     // 3: v1.GameEventType
+	(RoleType)(0),          // 4: v1.RoleType
+	(IncidentType)(0),      // 5: v1.IncidentType
+	(TragedyScriptType)(0), // 6: v1.TragedyScriptType
+	(LocationType)(0),      // 7: v1.LocationType
+	(TriggerType)(0),       // 8: v1.TriggerType
+	(EffectType)(0),        // 9: v1.EffectType
 }
-var file_proto_v1_enums_proto_depIdxs = []int32{
+var file_v1_enums_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -810,26 +842,26 @@ var file_proto_v1_enums_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_proto_v1_enums_proto_init() }
-func file_proto_v1_enums_proto_init() {
-	if File_proto_v1_enums_proto != nil {
+func init() { file_v1_enums_proto_init() }
+func file_v1_enums_proto_init() {
+	if File_v1_enums_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_v1_enums_proto_rawDesc), len(file_proto_v1_enums_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_enums_proto_rawDesc), len(file_v1_enums_proto_rawDesc)),
 			NumEnums:      10,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_proto_v1_enums_proto_goTypes,
-		DependencyIndexes: file_proto_v1_enums_proto_depIdxs,
-		EnumInfos:         file_proto_v1_enums_proto_enumTypes,
+		GoTypes:           file_v1_enums_proto_goTypes,
+		DependencyIndexes: file_v1_enums_proto_depIdxs,
+		EnumInfos:         file_v1_enums_proto_enumTypes,
 	}.Build()
-	File_proto_v1_enums_proto = out.File
-	file_proto_v1_enums_proto_goTypes = nil
-	file_proto_v1_enums_proto_depIdxs = nil
+	File_v1_enums_proto = out.File
+	file_v1_enums_proto_goTypes = nil
+	file_v1_enums_proto_depIdxs = nil
 }

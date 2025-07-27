@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        (unknown)
-// source: proto/v1/event.proto
+// source: v1/event.proto
 
-package model
+package v1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -23,10 +23,10 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// GameEvent represents an event that occurred in the game.
+// GameEvent 表示游戏中发生的事件。
 type GameEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          GameEventType          `protobuf:"varint,1,opt,name=type,proto3,enum=proto.v1.GameEventType" json:"type,omitempty"`
+	Type          GameEventType          `protobuf:"varint,1,opt,name=type,proto3,enum=v1.GameEventType" json:"type,omitempty"`
 	Payload       *anypb.Any             `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
 	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -35,7 +35,7 @@ type GameEvent struct {
 
 func (x *GameEvent) Reset() {
 	*x = GameEvent{}
-	mi := &file_proto_v1_event_proto_msgTypes[0]
+	mi := &file_v1_event_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -47,7 +47,7 @@ func (x *GameEvent) String() string {
 func (*GameEvent) ProtoMessage() {}
 
 func (x *GameEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_event_proto_msgTypes[0]
+	mi := &file_v1_event_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -60,7 +60,7 @@ func (x *GameEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GameEvent.ProtoReflect.Descriptor instead.
 func (*GameEvent) Descriptor() ([]byte, []int) {
-	return file_proto_v1_event_proto_rawDescGZIP(), []int{0}
+	return file_v1_event_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *GameEvent) GetType() GameEventType {
@@ -87,14 +87,14 @@ func (x *GameEvent) GetTimestamp() *timestamppb.Timestamp {
 type CharacterMovedEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`
-	NewLocation   LocationType           `protobuf:"varint,2,opt,name=new_location,json=newLocation,proto3,enum=proto.v1.LocationType" json:"new_location,omitempty"`
+	NewLocation   LocationType           `protobuf:"varint,2,opt,name=new_location,json=newLocation,proto3,enum=v1.LocationType" json:"new_location,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CharacterMovedEvent) Reset() {
 	*x = CharacterMovedEvent{}
-	mi := &file_proto_v1_event_proto_msgTypes[1]
+	mi := &file_v1_event_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -106,7 +106,7 @@ func (x *CharacterMovedEvent) String() string {
 func (*CharacterMovedEvent) ProtoMessage() {}
 
 func (x *CharacterMovedEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_event_proto_msgTypes[1]
+	mi := &file_v1_event_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -119,7 +119,7 @@ func (x *CharacterMovedEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CharacterMovedEvent.ProtoReflect.Descriptor instead.
 func (*CharacterMovedEvent) Descriptor() ([]byte, []int) {
-	return file_proto_v1_event_proto_rawDescGZIP(), []int{1}
+	return file_v1_event_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *CharacterMovedEvent) GetCharacterId() int32 {
@@ -147,7 +147,7 @@ type ParanoiaAdjustedEvent struct {
 
 func (x *ParanoiaAdjustedEvent) Reset() {
 	*x = ParanoiaAdjustedEvent{}
-	mi := &file_proto_v1_event_proto_msgTypes[2]
+	mi := &file_v1_event_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -159,7 +159,7 @@ func (x *ParanoiaAdjustedEvent) String() string {
 func (*ParanoiaAdjustedEvent) ProtoMessage() {}
 
 func (x *ParanoiaAdjustedEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_event_proto_msgTypes[2]
+	mi := &file_v1_event_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -172,7 +172,7 @@ func (x *ParanoiaAdjustedEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ParanoiaAdjustedEvent.ProtoReflect.Descriptor instead.
 func (*ParanoiaAdjustedEvent) Descriptor() ([]byte, []int) {
-	return file_proto_v1_event_proto_rawDescGZIP(), []int{2}
+	return file_v1_event_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ParanoiaAdjustedEvent) GetCharacterId() int32 {
@@ -207,7 +207,7 @@ type GoodwillAdjustedEvent struct {
 
 func (x *GoodwillAdjustedEvent) Reset() {
 	*x = GoodwillAdjustedEvent{}
-	mi := &file_proto_v1_event_proto_msgTypes[3]
+	mi := &file_v1_event_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -219,7 +219,7 @@ func (x *GoodwillAdjustedEvent) String() string {
 func (*GoodwillAdjustedEvent) ProtoMessage() {}
 
 func (x *GoodwillAdjustedEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_event_proto_msgTypes[3]
+	mi := &file_v1_event_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -232,7 +232,7 @@ func (x *GoodwillAdjustedEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GoodwillAdjustedEvent.ProtoReflect.Descriptor instead.
 func (*GoodwillAdjustedEvent) Descriptor() ([]byte, []int) {
-	return file_proto_v1_event_proto_rawDescGZIP(), []int{3}
+	return file_v1_event_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GoodwillAdjustedEvent) GetCharacterId() int32 {
@@ -267,7 +267,7 @@ type IntrigueAdjustedEvent struct {
 
 func (x *IntrigueAdjustedEvent) Reset() {
 	*x = IntrigueAdjustedEvent{}
-	mi := &file_proto_v1_event_proto_msgTypes[4]
+	mi := &file_v1_event_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -279,7 +279,7 @@ func (x *IntrigueAdjustedEvent) String() string {
 func (*IntrigueAdjustedEvent) ProtoMessage() {}
 
 func (x *IntrigueAdjustedEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_event_proto_msgTypes[4]
+	mi := &file_v1_event_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -292,7 +292,7 @@ func (x *IntrigueAdjustedEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IntrigueAdjustedEvent.ProtoReflect.Descriptor instead.
 func (*IntrigueAdjustedEvent) Descriptor() ([]byte, []int) {
-	return file_proto_v1_event_proto_rawDescGZIP(), []int{4}
+	return file_v1_event_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *IntrigueAdjustedEvent) GetCharacterId() int32 {
@@ -316,28 +316,28 @@ func (x *IntrigueAdjustedEvent) GetNewIntrigue() int32 {
 	return 0
 }
 
-type TragedyTriggeredEvent struct {
+type LoopLossEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TragedyType   TragedyType            `protobuf:"varint,1,opt,name=tragedy_type,json=tragedyType,proto3,enum=proto.v1.TragedyType" json:"tragedy_type,omitempty"`
+	IncidentType  IncidentType           `protobuf:"varint,1,opt,name=incident_type,json=incidentType,proto3,enum=v1.IncidentType" json:"incident_type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *TragedyTriggeredEvent) Reset() {
-	*x = TragedyTriggeredEvent{}
-	mi := &file_proto_v1_event_proto_msgTypes[5]
+func (x *LoopLossEvent) Reset() {
+	*x = LoopLossEvent{}
+	mi := &file_v1_event_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *TragedyTriggeredEvent) String() string {
+func (x *LoopLossEvent) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*TragedyTriggeredEvent) ProtoMessage() {}
+func (*LoopLossEvent) ProtoMessage() {}
 
-func (x *TragedyTriggeredEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_event_proto_msgTypes[5]
+func (x *LoopLossEvent) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_event_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -348,16 +348,52 @@ func (x *TragedyTriggeredEvent) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TragedyTriggeredEvent.ProtoReflect.Descriptor instead.
-func (*TragedyTriggeredEvent) Descriptor() ([]byte, []int) {
-	return file_proto_v1_event_proto_rawDescGZIP(), []int{5}
+// Deprecated: Use LoopLossEvent.ProtoReflect.Descriptor instead.
+func (*LoopLossEvent) Descriptor() ([]byte, []int) {
+	return file_v1_event_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *TragedyTriggeredEvent) GetTragedyType() TragedyType {
+func (x *LoopLossEvent) GetIncidentType() IncidentType {
 	if x != nil {
-		return x.TragedyType
+		return x.IncidentType
 	}
-	return TragedyType_TRAGEDY_TYPE_UNSPECIFIED
+	return IncidentType_INCIDENT_TYPE_UNSPECIFIED
+}
+
+type LoopWinEvent struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LoopWinEvent) Reset() {
+	*x = LoopWinEvent{}
+	mi := &file_v1_event_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LoopWinEvent) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LoopWinEvent) ProtoMessage() {}
+
+func (x *LoopWinEvent) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_event_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LoopWinEvent.ProtoReflect.Descriptor instead.
+func (*LoopWinEvent) Descriptor() ([]byte, []int) {
+	return file_v1_event_proto_rawDescGZIP(), []int{6}
 }
 
 type AbilityUsedEvent struct {
@@ -370,7 +406,7 @@ type AbilityUsedEvent struct {
 
 func (x *AbilityUsedEvent) Reset() {
 	*x = AbilityUsedEvent{}
-	mi := &file_proto_v1_event_proto_msgTypes[6]
+	mi := &file_v1_event_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -382,7 +418,7 @@ func (x *AbilityUsedEvent) String() string {
 func (*AbilityUsedEvent) ProtoMessage() {}
 
 func (x *AbilityUsedEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_event_proto_msgTypes[6]
+	mi := &file_v1_event_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -395,7 +431,7 @@ func (x *AbilityUsedEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AbilityUsedEvent.ProtoReflect.Descriptor instead.
 func (*AbilityUsedEvent) Descriptor() ([]byte, []int) {
-	return file_proto_v1_event_proto_rawDescGZIP(), []int{6}
+	return file_v1_event_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *AbilityUsedEvent) GetCharacterId() int32 {
@@ -422,7 +458,7 @@ type DayAdvancedEvent struct {
 
 func (x *DayAdvancedEvent) Reset() {
 	*x = DayAdvancedEvent{}
-	mi := &file_proto_v1_event_proto_msgTypes[7]
+	mi := &file_v1_event_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -434,7 +470,7 @@ func (x *DayAdvancedEvent) String() string {
 func (*DayAdvancedEvent) ProtoMessage() {}
 
 func (x *DayAdvancedEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_event_proto_msgTypes[7]
+	mi := &file_v1_event_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -447,7 +483,7 @@ func (x *DayAdvancedEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DayAdvancedEvent.ProtoReflect.Descriptor instead.
 func (*DayAdvancedEvent) Descriptor() ([]byte, []int) {
-	return file_proto_v1_event_proto_rawDescGZIP(), []int{7}
+	return file_v1_event_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *DayAdvancedEvent) GetDay() int32 {
@@ -473,7 +509,7 @@ type CardPlayedEvent struct {
 
 func (x *CardPlayedEvent) Reset() {
 	*x = CardPlayedEvent{}
-	mi := &file_proto_v1_event_proto_msgTypes[8]
+	mi := &file_v1_event_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -485,7 +521,7 @@ func (x *CardPlayedEvent) String() string {
 func (*CardPlayedEvent) ProtoMessage() {}
 
 func (x *CardPlayedEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_event_proto_msgTypes[8]
+	mi := &file_v1_event_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -498,7 +534,7 @@ func (x *CardPlayedEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CardPlayedEvent.ProtoReflect.Descriptor instead.
 func (*CardPlayedEvent) Descriptor() ([]byte, []int) {
-	return file_proto_v1_event_proto_rawDescGZIP(), []int{8}
+	return file_v1_event_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *CardPlayedEvent) GetPlayedCards() map[int32]*CardList {
@@ -517,7 +553,7 @@ type LoopResetEvent struct {
 
 func (x *LoopResetEvent) Reset() {
 	*x = LoopResetEvent{}
-	mi := &file_proto_v1_event_proto_msgTypes[9]
+	mi := &file_v1_event_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -529,7 +565,7 @@ func (x *LoopResetEvent) String() string {
 func (*LoopResetEvent) ProtoMessage() {}
 
 func (x *LoopResetEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_event_proto_msgTypes[9]
+	mi := &file_v1_event_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -542,7 +578,7 @@ func (x *LoopResetEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoopResetEvent.ProtoReflect.Descriptor instead.
 func (*LoopResetEvent) Descriptor() ([]byte, []int) {
-	return file_proto_v1_event_proto_rawDescGZIP(), []int{9}
+	return file_v1_event_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *LoopResetEvent) GetLoop() int32 {
@@ -554,14 +590,14 @@ func (x *LoopResetEvent) GetLoop() int32 {
 
 type GameOverEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Winner        PlayerRole             `protobuf:"varint,1,opt,name=winner,proto3,enum=proto.v1.PlayerRole" json:"winner,omitempty"`
+	Winner        PlayerRole             `protobuf:"varint,1,opt,name=winner,proto3,enum=v1.PlayerRole" json:"winner,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GameOverEvent) Reset() {
 	*x = GameOverEvent{}
-	mi := &file_proto_v1_event_proto_msgTypes[10]
+	mi := &file_v1_event_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -573,7 +609,7 @@ func (x *GameOverEvent) String() string {
 func (*GameOverEvent) ProtoMessage() {}
 
 func (x *GameOverEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_event_proto_msgTypes[10]
+	mi := &file_v1_event_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -586,7 +622,7 @@ func (x *GameOverEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GameOverEvent.ProtoReflect.Descriptor instead.
 func (*GameOverEvent) Descriptor() ([]byte, []int) {
-	return file_proto_v1_event_proto_rawDescGZIP(), []int{10}
+	return file_v1_event_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GameOverEvent) GetWinner() PlayerRole {
@@ -596,7 +632,7 @@ func (x *GameOverEvent) GetWinner() PlayerRole {
 	return PlayerRole_PLAYER_ROLE_UNSPECIFIED
 }
 
-// Choice represents a choice a player can make.
+// Choice 表示玩家可以做出的选择。
 type Choice struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Description   string                 `protobuf:"bytes,1,opt,name=description,proto3" json:"description,omitempty"`
@@ -607,7 +643,7 @@ type Choice struct {
 
 func (x *Choice) Reset() {
 	*x = Choice{}
-	mi := &file_proto_v1_event_proto_msgTypes[11]
+	mi := &file_v1_event_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -619,7 +655,7 @@ func (x *Choice) String() string {
 func (*Choice) ProtoMessage() {}
 
 func (x *Choice) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_event_proto_msgTypes[11]
+	mi := &file_v1_event_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -632,7 +668,7 @@ func (x *Choice) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Choice.ProtoReflect.Descriptor instead.
 func (*Choice) Descriptor() ([]byte, []int) {
-	return file_proto_v1_event_proto_rawDescGZIP(), []int{11}
+	return file_v1_event_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *Choice) GetDescription() string {
@@ -651,7 +687,7 @@ func (x *Choice) GetCharacterId() int32 {
 
 type ChoiceRequiredEvent struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// This might need a more complex structure depending on the choices
+	// 这可能需要更复杂的结构，具体取决于选择
 	Choices       []*Choice `protobuf:"bytes,1,rep,name=choices,proto3" json:"choices,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -659,7 +695,7 @@ type ChoiceRequiredEvent struct {
 
 func (x *ChoiceRequiredEvent) Reset() {
 	*x = ChoiceRequiredEvent{}
-	mi := &file_proto_v1_event_proto_msgTypes[12]
+	mi := &file_v1_event_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -671,7 +707,7 @@ func (x *ChoiceRequiredEvent) String() string {
 func (*ChoiceRequiredEvent) ProtoMessage() {}
 
 func (x *ChoiceRequiredEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_event_proto_msgTypes[12]
+	mi := &file_v1_event_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -684,7 +720,7 @@ func (x *ChoiceRequiredEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChoiceRequiredEvent.ProtoReflect.Descriptor instead.
 func (*ChoiceRequiredEvent) Descriptor() ([]byte, []int) {
-	return file_proto_v1_event_proto_rawDescGZIP(), []int{12}
+	return file_v1_event_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ChoiceRequiredEvent) GetChoices() []*Choice {
@@ -707,7 +743,7 @@ type Incident struct {
 
 func (x *Incident) Reset() {
 	*x = Incident{}
-	mi := &file_proto_v1_event_proto_msgTypes[13]
+	mi := &file_v1_event_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -719,7 +755,7 @@ func (x *Incident) String() string {
 func (*Incident) ProtoMessage() {}
 
 func (x *Incident) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_event_proto_msgTypes[13]
+	mi := &file_v1_event_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -732,7 +768,7 @@ func (x *Incident) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Incident.ProtoReflect.Descriptor instead.
 func (*Incident) Descriptor() ([]byte, []int) {
-	return file_proto_v1_event_proto_rawDescGZIP(), []int{13}
+	return file_v1_event_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *Incident) GetName() string {
@@ -779,7 +815,7 @@ type IncidentTriggeredEvent struct {
 
 func (x *IncidentTriggeredEvent) Reset() {
 	*x = IncidentTriggeredEvent{}
-	mi := &file_proto_v1_event_proto_msgTypes[14]
+	mi := &file_v1_event_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -791,7 +827,7 @@ func (x *IncidentTriggeredEvent) String() string {
 func (*IncidentTriggeredEvent) ProtoMessage() {}
 
 func (x *IncidentTriggeredEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_event_proto_msgTypes[14]
+	mi := &file_v1_event_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -804,7 +840,7 @@ func (x *IncidentTriggeredEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IncidentTriggeredEvent.ProtoReflect.Descriptor instead.
 func (*IncidentTriggeredEvent) Descriptor() ([]byte, []int) {
-	return file_proto_v1_event_proto_rawDescGZIP(), []int{14}
+	return file_v1_event_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *IncidentTriggeredEvent) GetIncident() *Incident {
@@ -814,18 +850,18 @@ func (x *IncidentTriggeredEvent) GetIncident() *Incident {
 	return nil
 }
 
-var File_proto_v1_event_proto protoreflect.FileDescriptor
+var File_v1_event_proto protoreflect.FileDescriptor
 
-const file_proto_v1_event_proto_rawDesc = "" +
+const file_v1_event_proto_rawDesc = "" +
 	"\n" +
-	"\x14proto/v1/event.proto\x12\bproto.v1\x1a\x19google/protobuf/any.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13proto/v1/card.proto\x1a\x14proto/v1/enums.proto\x1a\x17proto/v1/location.proto\"\xa2\x01\n" +
-	"\tGameEvent\x12+\n" +
-	"\x04type\x18\x01 \x01(\x0e2\x17.proto.v1.GameEventTypeR\x04type\x12.\n" +
+	"\x0ev1/event.proto\x12\x02v1\x1a\x19google/protobuf/any.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\rv1/card.proto\x1a\x0ev1/enums.proto\"\x9c\x01\n" +
+	"\tGameEvent\x12%\n" +
+	"\x04type\x18\x01 \x01(\x0e2\x11.v1.GameEventTypeR\x04type\x12.\n" +
 	"\apayload\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\apayload\x128\n" +
-	"\ttimestamp\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\"s\n" +
+	"\ttimestamp\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\"m\n" +
 	"\x13CharacterMovedEvent\x12!\n" +
-	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x129\n" +
-	"\fnew_location\x18\x02 \x01(\x0e2\x16.proto.v1.LocationTypeR\vnewLocation\"u\n" +
+	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x123\n" +
+	"\fnew_location\x18\x02 \x01(\x0e2\x10.v1.LocationTypeR\vnewLocation\"u\n" +
 	"\x15ParanoiaAdjustedEvent\x12!\n" +
 	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x12\x16\n" +
 	"\x06amount\x18\x02 \x01(\x05R\x06amount\x12!\n" +
@@ -837,87 +873,90 @@ const file_proto_v1_event_proto_rawDesc = "" +
 	"\x15IntrigueAdjustedEvent\x12!\n" +
 	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x12\x16\n" +
 	"\x06amount\x18\x02 \x01(\x05R\x06amount\x12!\n" +
-	"\fnew_intrigue\x18\x03 \x01(\x05R\vnewIntrigue\"Q\n" +
-	"\x15TragedyTriggeredEvent\x128\n" +
-	"\ftragedy_type\x18\x01 \x01(\x0e2\x15.proto.v1.TragedyTypeR\vtragedyType\"X\n" +
+	"\fnew_intrigue\x18\x03 \x01(\x05R\vnewIntrigue\"F\n" +
+	"\rLoopLossEvent\x125\n" +
+	"\rincident_type\x18\x01 \x01(\x0e2\x10.v1.IncidentTypeR\fincidentType\"\x0e\n" +
+	"\fLoopWinEvent\"X\n" +
 	"\x10AbilityUsedEvent\x12!\n" +
 	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x12!\n" +
 	"\fability_name\x18\x02 \x01(\tR\vabilityName\"8\n" +
 	"\x10DayAdvancedEvent\x12\x10\n" +
 	"\x03day\x18\x01 \x01(\x05R\x03day\x12\x12\n" +
-	"\x04loop\x18\x02 \x01(\x05R\x04loop\"\xb4\x01\n" +
-	"\x0fCardPlayedEvent\x12M\n" +
-	"\fplayed_cards\x18\x01 \x03(\v2*.proto.v1.CardPlayedEvent.PlayedCardsEntryR\vplayedCards\x1aR\n" +
+	"\x04loop\x18\x02 \x01(\x05R\x04loop\"\xa8\x01\n" +
+	"\x0fCardPlayedEvent\x12G\n" +
+	"\fplayed_cards\x18\x01 \x03(\v2$.v1.CardPlayedEvent.PlayedCardsEntryR\vplayedCards\x1aL\n" +
 	"\x10PlayedCardsEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12(\n" +
-	"\x05value\x18\x02 \x01(\v2\x12.proto.v1.CardListR\x05value:\x028\x01\"$\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12\"\n" +
+	"\x05value\x18\x02 \x01(\v2\f.v1.CardListR\x05value:\x028\x01\"$\n" +
 	"\x0eLoopResetEvent\x12\x12\n" +
-	"\x04loop\x18\x01 \x01(\x05R\x04loop\"=\n" +
-	"\rGameOverEvent\x12,\n" +
-	"\x06winner\x18\x01 \x01(\x0e2\x14.proto.v1.PlayerRoleR\x06winner\"M\n" +
+	"\x04loop\x18\x01 \x01(\x05R\x04loop\"7\n" +
+	"\rGameOverEvent\x12&\n" +
+	"\x06winner\x18\x01 \x01(\x0e2\x0e.v1.PlayerRoleR\x06winner\"M\n" +
 	"\x06Choice\x12 \n" +
 	"\vdescription\x18\x01 \x01(\tR\vdescription\x12!\n" +
-	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\"A\n" +
-	"\x13ChoiceRequiredEvent\x12*\n" +
-	"\achoices\x18\x01 \x03(\v2\x10.proto.v1.ChoiceR\achoices\"\x84\x01\n" +
+	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\";\n" +
+	"\x13ChoiceRequiredEvent\x12$\n" +
+	"\achoices\x18\x01 \x03(\v2\n" +
+	".v1.ChoiceR\achoices\"\x84\x01\n" +
 	"\bIncident\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x10\n" +
 	"\x03day\x18\x02 \x01(\x05R\x03day\x12\x18\n" +
 	"\aculprit\x18\x03 \x01(\tR\aculprit\x12\x16\n" +
 	"\x06victim\x18\x04 \x01(\tR\x06victim\x12 \n" +
-	"\vdescription\x18\x05 \x01(\tR\vdescription\"H\n" +
-	"\x16IncidentTriggeredEvent\x12.\n" +
-	"\bincident\x18\x01 \x01(\v2\x12.proto.v1.IncidentR\bincidentB\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\vdescription\x18\x05 \x01(\tR\vdescription\"B\n" +
+	"\x16IncidentTriggeredEvent\x12(\n" +
+	"\bincident\x18\x01 \x01(\v2\f.v1.IncidentR\bincidentB#Z!tragedylooper/internal/game/v1;v1b\x06proto3"
 
 var (
-	file_proto_v1_event_proto_rawDescOnce sync.Once
-	file_proto_v1_event_proto_rawDescData []byte
+	file_v1_event_proto_rawDescOnce sync.Once
+	file_v1_event_proto_rawDescData []byte
 )
 
-func file_proto_v1_event_proto_rawDescGZIP() []byte {
-	file_proto_v1_event_proto_rawDescOnce.Do(func() {
-		file_proto_v1_event_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_v1_event_proto_rawDesc), len(file_proto_v1_event_proto_rawDesc)))
+func file_v1_event_proto_rawDescGZIP() []byte {
+	file_v1_event_proto_rawDescOnce.Do(func() {
+		file_v1_event_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_v1_event_proto_rawDesc), len(file_v1_event_proto_rawDesc)))
 	})
-	return file_proto_v1_event_proto_rawDescData
+	return file_v1_event_proto_rawDescData
 }
 
-var file_proto_v1_event_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
-var file_proto_v1_event_proto_goTypes = []any{
-	(*GameEvent)(nil),              // 0: proto.v1.GameEvent
-	(*CharacterMovedEvent)(nil),    // 1: proto.v1.CharacterMovedEvent
-	(*ParanoiaAdjustedEvent)(nil),  // 2: proto.v1.ParanoiaAdjustedEvent
-	(*GoodwillAdjustedEvent)(nil),  // 3: proto.v1.GoodwillAdjustedEvent
-	(*IntrigueAdjustedEvent)(nil),  // 4: proto.v1.IntrigueAdjustedEvent
-	(*TragedyTriggeredEvent)(nil),  // 5: proto.v1.TragedyTriggeredEvent
-	(*AbilityUsedEvent)(nil),       // 6: proto.v1.AbilityUsedEvent
-	(*DayAdvancedEvent)(nil),       // 7: proto.v1.DayAdvancedEvent
-	(*CardPlayedEvent)(nil),        // 8: proto.v1.CardPlayedEvent
-	(*LoopResetEvent)(nil),         // 9: proto.v1.LoopResetEvent
-	(*GameOverEvent)(nil),          // 10: proto.v1.GameOverEvent
-	(*Choice)(nil),                 // 11: proto.v1.Choice
-	(*ChoiceRequiredEvent)(nil),    // 12: proto.v1.ChoiceRequiredEvent
-	(*Incident)(nil),               // 13: proto.v1.Incident
-	(*IncidentTriggeredEvent)(nil), // 14: proto.v1.IncidentTriggeredEvent
-	nil,                            // 15: proto.v1.CardPlayedEvent.PlayedCardsEntry
-	(GameEventType)(0),             // 16: proto.v1.GameEventType
-	(*anypb.Any)(nil),              // 17: google.protobuf.Any
-	(*timestamppb.Timestamp)(nil),  // 18: google.protobuf.Timestamp
-	(LocationType)(0),              // 19: proto.v1.LocationType
-	(TragedyType)(0),               // 20: proto.v1.TragedyType
-	(PlayerRole)(0),                // 21: proto.v1.PlayerRole
-	(*CardList)(nil),               // 22: proto.v1.CardList
+var file_v1_event_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_v1_event_proto_goTypes = []any{
+	(*GameEvent)(nil),              // 0: v1.GameEvent
+	(*CharacterMovedEvent)(nil),    // 1: v1.CharacterMovedEvent
+	(*ParanoiaAdjustedEvent)(nil),  // 2: v1.ParanoiaAdjustedEvent
+	(*GoodwillAdjustedEvent)(nil),  // 3: v1.GoodwillAdjustedEvent
+	(*IntrigueAdjustedEvent)(nil),  // 4: v1.IntrigueAdjustedEvent
+	(*LoopLossEvent)(nil),          // 5: v1.LoopLossEvent
+	(*LoopWinEvent)(nil),           // 6: v1.LoopWinEvent
+	(*AbilityUsedEvent)(nil),       // 7: v1.AbilityUsedEvent
+	(*DayAdvancedEvent)(nil),       // 8: v1.DayAdvancedEvent
+	(*CardPlayedEvent)(nil),        // 9: v1.CardPlayedEvent
+	(*LoopResetEvent)(nil),         // 10: v1.LoopResetEvent
+	(*GameOverEvent)(nil),          // 11: v1.GameOverEvent
+	(*Choice)(nil),                 // 12: v1.Choice
+	(*ChoiceRequiredEvent)(nil),    // 13: v1.ChoiceRequiredEvent
+	(*Incident)(nil),               // 14: v1.Incident
+	(*IncidentTriggeredEvent)(nil), // 15: v1.IncidentTriggeredEvent
+	nil,                            // 16: v1.CardPlayedEvent.PlayedCardsEntry
+	(GameEventType)(0),             // 17: v1.GameEventType
+	(*anypb.Any)(nil),              // 18: google.protobuf.Any
+	(*timestamppb.Timestamp)(nil),  // 19: google.protobuf.Timestamp
+	(LocationType)(0),              // 20: v1.LocationType
+	(IncidentType)(0),              // 21: v1.IncidentType
+	(PlayerRole)(0),                // 22: v1.PlayerRole
+	(*CardList)(nil),               // 23: v1.CardList
 }
-var file_proto_v1_event_proto_depIdxs = []int32{
-	16, // 0: proto.v1.GameEvent.type:type_name -> proto.v1.GameEventType
-	17, // 1: proto.v1.GameEvent.payload:type_name -> google.protobuf.Any
-	18, // 2: proto.v1.GameEvent.timestamp:type_name -> google.protobuf.Timestamp
-	19, // 3: proto.v1.CharacterMovedEvent.new_location:type_name -> proto.v1.LocationType
-	20, // 4: proto.v1.TragedyTriggeredEvent.tragedy_type:type_name -> proto.v1.TragedyType
-	15, // 5: proto.v1.CardPlayedEvent.played_cards:type_name -> proto.v1.CardPlayedEvent.PlayedCardsEntry
-	21, // 6: proto.v1.GameOverEvent.winner:type_name -> proto.v1.PlayerRole
-	11, // 7: proto.v1.ChoiceRequiredEvent.choices:type_name -> proto.v1.Choice
-	13, // 8: proto.v1.IncidentTriggeredEvent.incident:type_name -> proto.v1.Incident
-	22, // 9: proto.v1.CardPlayedEvent.PlayedCardsEntry.value:type_name -> proto.v1.CardList
+var file_v1_event_proto_depIdxs = []int32{
+	17, // 0: v1.GameEvent.type:type_name -> v1.GameEventType
+	18, // 1: v1.GameEvent.payload:type_name -> google.protobuf.Any
+	19, // 2: v1.GameEvent.timestamp:type_name -> google.protobuf.Timestamp
+	20, // 3: v1.CharacterMovedEvent.new_location:type_name -> v1.LocationType
+	21, // 4: v1.LoopLossEvent.incident_type:type_name -> v1.IncidentType
+	16, // 5: v1.CardPlayedEvent.played_cards:type_name -> v1.CardPlayedEvent.PlayedCardsEntry
+	22, // 6: v1.GameOverEvent.winner:type_name -> v1.PlayerRole
+	12, // 7: v1.ChoiceRequiredEvent.choices:type_name -> v1.Choice
+	14, // 8: v1.IncidentTriggeredEvent.incident:type_name -> v1.Incident
+	23, // 9: v1.CardPlayedEvent.PlayedCardsEntry.value:type_name -> v1.CardList
 	10, // [10:10] is the sub-list for method output_type
 	10, // [10:10] is the sub-list for method input_type
 	10, // [10:10] is the sub-list for extension type_name
@@ -925,29 +964,28 @@ var file_proto_v1_event_proto_depIdxs = []int32{
 	0,  // [0:10] is the sub-list for field type_name
 }
 
-func init() { file_proto_v1_event_proto_init() }
-func file_proto_v1_event_proto_init() {
-	if File_proto_v1_event_proto != nil {
+func init() { file_v1_event_proto_init() }
+func file_v1_event_proto_init() {
+	if File_v1_event_proto != nil {
 		return
 	}
-	file_proto_v1_card_proto_init()
-	file_proto_v1_enums_proto_init()
-	file_proto_v1_location_proto_init()
+	file_v1_card_proto_init()
+	file_v1_enums_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_v1_event_proto_rawDesc), len(file_proto_v1_event_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_event_proto_rawDesc), len(file_v1_event_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_proto_v1_event_proto_goTypes,
-		DependencyIndexes: file_proto_v1_event_proto_depIdxs,
-		MessageInfos:      file_proto_v1_event_proto_msgTypes,
+		GoTypes:           file_v1_event_proto_goTypes,
+		DependencyIndexes: file_v1_event_proto_depIdxs,
+		MessageInfos:      file_v1_event_proto_msgTypes,
 	}.Build()
-	File_proto_v1_event_proto = out.File
-	file_proto_v1_event_proto_goTypes = nil
-	file_proto_v1_event_proto_depIdxs = nil
+	File_v1_event_proto = out.File
+	file_v1_event_proto_goTypes = nil
+	file_v1_event_proto_depIdxs = nil
 }
