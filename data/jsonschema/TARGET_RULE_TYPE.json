@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [
+        "TARGET_RULE_TYPE_UNSPECIFIED",
+        0,
+        "SPECIFIC_CHARACTER",
+        1,
+        "ANY_CHARACTER_AT_LOCATION",
+        2
+    ],
+    "oneOf": [
+        {
+            "type": "string"
+        },
+        {
+            "type": "integer"
+        }
+    ],
+    "title": "TARGETRULETYPE",
+    "description": "TARGET_RULE_TYPE 定义悲剧如何选择目标角色。"
+}

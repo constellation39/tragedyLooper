@@ -5,7 +5,8 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"tragedylooper/internal/game/proto/model"
+
+	model "tragedylooper/internal/game/proto/v1"
 )
 
 func (ge *GameEngine) publishGameEvent(eventType model.GameEventType, payload proto.Message) {
@@ -20,7 +21,7 @@ func (ge *GameEngine) publishGameEvent(eventType model.GameEventType, payload pr
 		Timestamp: timestamppb.Now(),
 	}
 	select {
-	case ge.gameEventChan <- *event:
+	case ge.gameEventChan <- event:
 		// Also record the event in the game state for player views
 		ge.GameState.DayEvents = append(ge.GameState.DayEvents, event)
 		ge.GameState.LoopEvents = append(ge.GameState.LoopEvents, event)

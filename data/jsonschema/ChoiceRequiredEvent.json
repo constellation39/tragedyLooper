@@ -6,7 +6,7 @@
             "properties": {
                 "choices": {
                     "items": {
-                        "$ref": "#/definitions/model.Choice"
+                        "$ref": "#/definitions/model.v1.Choice"
                     },
                     "type": "array",
                     "description": "This might need a more complex structure depending on the choices"
@@ -16,7 +16,7 @@
             "type": "object",
             "title": "Choice Required Event"
         },
-        "model.Choice": {
+        "model.v1.Choice": {
             "properties": {
                 "description": {
                     "type": "string"

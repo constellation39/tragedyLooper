@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [
+        "GAME_EVENT_TYPE_UNSPECIFIED",
+        0,
+        "CARD_PLAYED",
+        1,
+        "CHARACTER_MOVED",
+        2,
+        "PARANOIA_ADJUSTED",
+        3,
+        "GOODWILL_ADJUSTED",
+        4,
+        "INTRIGUE_ADJUSTED",
+        5,
+        "ABILITY_USED",
+        6,
+        "TRAGEDY_TRIGGERED",
+        7,
+        "TRAGEDY_PREVENTED",
+        8,
+        "DAY_ADVANCED",
+        9,
+        "LOOP_RESET",
+        10,
+        "GAME_EVENT_TYPE_GAME_OVER",
+        11,
+        "PLAYER_GUESS",
+        12,
+        "CHOICE_REQUIRED",
+        13
+    ],
+    "oneOf": [
+        {
+            "type": "string"
+        },
+        {
+            "type": "integer"
+        }
+    ],
+    "title": "GAMEEVENTTYPE",
+    "description": "GAME_EVENT_TYPE for GameEvent"
+}

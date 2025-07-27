@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [
+        "CARD_TYPE_UNSPECIFIED",
+        0,
+        "MOVEMENT",
+        1,
+        "PARANOIA",
+        2,
+        "GOODWILL",
+        3,
+        "INTRIGUE",
+        4,
+        "SPECIAL",
+        5
+    ],
+    "oneOf": [
+        {
+            "type": "string"
+        },
+        {
+            "type": "integer"
+        }
+    ],
+    "title": "CARDTYPE",
+    "description": "CARD_TYPE 定义玩家可以打出的卡牌类型。"
+}

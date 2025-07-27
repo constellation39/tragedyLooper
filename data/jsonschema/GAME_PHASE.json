@@ -1,0 +1,37 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [
+        "GAME_PHASE_UNSPECIFIED",
+        0,
+        "MORNING",
+        1,
+        "CARD_PLAY",
+        2,
+        "CARD_REVEAL",
+        3,
+        "CARD_RESOLVE",
+        4,
+        "ABILITIES",
+        5,
+        "INCIDENTS",
+        6,
+        "DAY_END",
+        7,
+        "LOOP_END",
+        8,
+        "GAME_PHASE_GAME_OVER",
+        9,
+        "PROTAGONIST_GUESS",
+        10
+    ],
+    "oneOf": [
+        {
+            "type": "string"
+        },
+        {
+            "type": "integer"
+        }
+    ],
+    "title": "GAMEPHASE",
+    "description": "GAME_PHASE 定义游戏日期的当前阶段。"
+}

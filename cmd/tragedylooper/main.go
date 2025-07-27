@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"tragedylooper/internal/game/proto/model"
+	model "tragedylooper/internal/game/proto/v1"
 
 	"tragedylooper/internal/llm"
 	"tragedylooper/internal/logger"

@@ -1,15 +1,15 @@
 syntax = "proto3";
 
-package model;
+package model.v1;
 
 import "google/protobuf/any.proto";
 import "google/protobuf/timestamp.proto";
-import "proto/model/card.proto";
-import "proto/model/character.proto";
-import "proto/model/enums.proto";
-import "proto/model/event.proto";
-import "proto/model/player.proto";
-import "proto/model/script.proto";
+import "proto/v1/card.proto";
+import "proto/v1/character.proto";
+import "proto/v1/enums.proto";
+import "proto/v1/event.proto";
+import "proto/v1/player.proto";
+import "proto/v1/script.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 

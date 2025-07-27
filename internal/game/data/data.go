@@ -1,6 +1,6 @@
 package data
 
-import "tragedylooper/internal/game/proto/model"
+import model "tragedylooper/internal/game/proto/v1"
 
 var MastermindCards = []*model.Card{
 	// TODO: Add mastermind cards

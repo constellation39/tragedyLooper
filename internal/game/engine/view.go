@@ -2,7 +2,9 @@ package engine
 
 import (
 	"google.golang.org/protobuf/proto"
-	"tragedylooper/internal/game/proto/model"
+
+	"tragedylooper/internal/game/proto/v1"
+	model "tragedylooper/internal/game/proto/v1"
 )
 
 // generatePlayerView creates a filtered view of the game state for a specific player.

@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"log"
 	"time"
-	"tragedylooper/internal/game/proto/model"
+	model "tragedylooper/internal/game/proto/v1"
 
 	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
@@ -53,9 +54,14 @@ func (m *MockLLMClient) GenerateResponse(prompt string, sessionID string) (strin
 			return "", err
 		}
 
+		anyPayload, err := anypb.New(payloadStruct)
+		if err != nil {
+			return "", err
+		}
+
 		mockAction := model.PlayerAction{
 			Type:    model.ActionType_ACTION_TYPE_PLAY_CARD,
-			Payload: payloadStruct,
+			Payload: anyPayload,
 		}
 		actionBytes, _ := protojson.Marshal(&mockAction)
 		return string(actionBytes), nil

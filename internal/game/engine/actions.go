@@ -2,10 +2,12 @@ package engine
 
 import (
 	"fmt"
+
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
-	"tragedylooper/internal/game/proto/model"
+
+	model "tragedylooper/internal/game/proto/v1"
 )
 
 // unmarshalAnyPayload safely unmarshals an anypb.Any into a target protobuf message.

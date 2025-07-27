@@ -1,14 +1,14 @@
 package engine
 
 import (
-	"google.golang.org/protobuf/types/known/timestamppb"
 	"slices"
 	"time"
 
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"tragedylooper/internal/game/data"
-	"tragedylooper/internal/game/proto/model"
+	model "tragedylooper/internal/game/proto/v1"
 	"tragedylooper/internal/llm"
 )
 
@@ -16,7 +16,7 @@ import (
 type GameEngine struct {
 	GameState            *model.GameState
 	requestChan          chan engineRequest
-	gameEventChan        chan model.GameEvent
+	gameEventChan        chan *model.GameEvent
 	gameControlChan      chan struct{}
 	llmClient            llm.Client
 	playerReady          map[int32]bool
@@ -80,7 +80,7 @@ func NewGameEngine(gameID int32, logger *zap.Logger, script *model.Script, playe
 	ge := &GameEngine{
 		GameState:       gs,
 		requestChan:     make(chan engineRequest, 100),
-		gameEventChan:   make(chan model.GameEvent, 100),
+		gameEventChan:   make(chan *model.GameEvent, 100),
 		gameControlChan: make(chan struct{}),
 		llmClient:       llmClient,
 		playerReady:     make(map[int32]bool),
@@ -116,7 +116,7 @@ func (ge *GameEngine) SubmitPlayerAction(action *model.PlayerAction) {
 	}
 }
 
-func (ge *GameEngine) GetGameEvents() <-chan model.GameEvent {
+func (ge *GameEngine) GetGameEvents() <-chan *model.GameEvent {
 	return ge.gameEventChan
 }
 

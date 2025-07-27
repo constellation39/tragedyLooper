@@ -1,12 +1,12 @@
 syntax = "proto3";
 
-package model;
+package model.v1;
 
 import "google/protobuf/any.proto";
 import "google/protobuf/timestamp.proto";
-import "proto/model/card.proto";
-import "proto/model/enums.proto";
-import "proto/model/location.proto";
+import "proto/v1/card.proto";
+import "proto/v1/enums.proto";
+import "proto/v1/location.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 
@@ -65,6 +65,7 @@ message LoopResetEvent {
 message GameOverEvent {
   PlayerRole winner = 1;
 }
+
 // Choice represents a choice a player can make.
 message Choice {
   string description = 1;
@@ -72,5 +73,5 @@ message Choice {
 }
 message ChoiceRequiredEvent {
   // This might need a more complex structure depending on the choices
-    repeated Choice choices = 1;
+  repeated Choice choices = 1;
 }

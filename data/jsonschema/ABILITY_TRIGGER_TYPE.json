@@ -1,0 +1,25 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [
+        "ABILITY_TRIGGER_TYPE_UNSPECIFIED",
+        0,
+        "DAY_START",
+        1,
+        "MASTERMIND_PHASE",
+        2,
+        "GOODWILL_PHASE",
+        3,
+        "PASSIVE",
+        4
+    ],
+    "oneOf": [
+        {
+            "type": "string"
+        },
+        {
+            "type": "integer"
+        }
+    ],
+    "title": "ABILITYTRIGGERTYPE",
+    "description": "ABILITY_TRIGGER_TYPE 定义能力何时可以被触发。"
+}

@@ -40,7 +40,7 @@
                     "description": "AbilityTriggerType 定义能力何时可以被触发。"
                 },
                 "effect": {
-                    "$ref": "#/definitions/model.Effect",
+                    "$ref": "#/definitions/model.v1.Effect",
                     "additionalProperties": true,
                     "description": "实际效果"
                 },
@@ -73,7 +73,7 @@
                     "description": "运行时状态，不用于配置"
                 },
                 "target": {
-                    "$ref": "#/definitions/model.Target",
+                    "$ref": "#/definitions/model.v1.Target",
                     "additionalProperties": true
                 }
             },
@@ -82,7 +82,7 @@
             "title": "Ability 定义角色的特殊技能。",
             "description": "Ability 定义角色的特殊技能。  Ability 定义角色的特殊技能。"
         },
-        "model.AdjustGoodwillEffect": {
+        "model.v1.AdjustGoodwillEffect": {
             "properties": {
                 "amount": {
                     "type": "integer"
@@ -93,7 +93,7 @@
             "title": "Adjust Goodwill Effect",
             "description": "AdjustGoodwillEffect 调整角色的好感度。"
         },
-        "model.AdjustIntrigueEffect": {
+        "model.v1.AdjustIntrigueEffect": {
             "properties": {
                 "amount": {
                     "type": "integer"
@@ -104,7 +104,7 @@
             "title": "Adjust Intrigue Effect",
             "description": "AdjustIntrigueEffect 调整角色的阴谋值。"
         },
-        "model.AdjustParanoiaEffect": {
+        "model.v1.AdjustParanoiaEffect": {
             "properties": {
                 "amount": {
                     "type": "integer"
@@ -115,22 +115,22 @@
             "title": "Adjust Paranoia Effect",
             "description": "AdjustParanoiaEffect 调整角色的妄想值。"
         },
-        "model.Effect": {
+        "model.v1.Effect": {
             "properties": {
                 "move_character_effect": {
-                    "$ref": "#/definitions/model.MoveCharacterEffect",
+                    "$ref": "#/definitions/model.v1.MoveCharacterEffect",
                     "additionalProperties": true
                 },
                 "adjust_paranoia_effect": {
-                    "$ref": "#/definitions/model.AdjustParanoiaEffect",
+                    "$ref": "#/definitions/model.v1.AdjustParanoiaEffect",
                     "additionalProperties": true
                 },
                 "adjust_goodwill_effect": {
-                    "$ref": "#/definitions/model.AdjustGoodwillEffect",
+                    "$ref": "#/definitions/model.v1.AdjustGoodwillEffect",
                     "additionalProperties": true
                 },
                 "adjust_intrigue_effect": {
-                    "$ref": "#/definitions/model.AdjustIntrigueEffect",
+                    "$ref": "#/definitions/model.v1.AdjustIntrigueEffect",
                     "additionalProperties": true
                 }
             },
@@ -139,7 +139,7 @@
             "title": "Effect",
             "description": "Effect 接口定义了一个效果的核心行为。"
         },
-        "model.MoveCharacterEffect": {
+        "model.v1.MoveCharacterEffect": {
             "properties": {
                 "destination": {
                     "enum": [
@@ -171,7 +171,7 @@
             "title": "Move Character Effect",
             "description": "MoveCharacterEffect 移动一个角色到指定地点。"
         },
-        "model.Target": {
+        "model.v1.Target": {
             "properties": {
                 "character_id": {
                     "type": "integer"

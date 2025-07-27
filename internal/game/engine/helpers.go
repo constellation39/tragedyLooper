@@ -3,7 +3,8 @@ package engine
 import (
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
-	"tragedylooper/internal/game/proto/model"
+
+	model "tragedylooper/internal/game/proto/v1"
 )
 
 func (ge *GameEngine) GetCharacter(id int32) (*model.Character, bool) {

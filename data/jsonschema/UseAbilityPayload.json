@@ -11,7 +11,7 @@
                     "type": "integer"
                 },
                 "target": {
-                    "$ref": "#/definitions/model.Target",
+                    "$ref": "#/definitions/model.v1.Target",
                     "additionalProperties": true
                 }
             },
@@ -20,7 +20,7 @@
             "title": "Use Ability Payload",
             "description": "UseAbilityPayload 定义了使用能力动作所需的数据。"
         },
-        "model.Target": {
+        "model.v1.Target": {
             "properties": {
                 "character_id": {
                     "type": "integer"

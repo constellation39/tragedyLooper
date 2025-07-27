@@ -1,9 +1,9 @@
 syntax = "proto3";
 
-package model;
+package model.v1;
 
-import "proto/model/character.proto";
-import "proto/model/tragedy.proto";
+import "proto/v1/character.proto";
+import "proto/v1/tragedy.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 

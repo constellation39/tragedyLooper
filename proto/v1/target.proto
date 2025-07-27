@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package model;
+package model.v1;
 
-import "proto/model/location.proto";
+import "proto/v1/location.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 

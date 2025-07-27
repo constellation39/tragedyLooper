@@ -2,8 +2,10 @@ package engine
 
 import (
 	"fmt"
+
 	"go.uber.org/zap"
-	"tragedylooper/internal/game/proto/model"
+
+	model "tragedylooper/internal/game/proto/v1"
 	"tragedylooper/internal/llm"
 	promptbuilder "tragedylooper/internal/llm/prompt"
 )
