@@ -197,41 +197,13 @@
         },
         "proto.v1.Condition": {
             "properties": {
-                "character_id": {
-                    "type": "integer",
-                    "description": "角色ID"
+                "stat_condition": {
+                    "$ref": "#/definitions/proto.v1.StatCondition",
+                    "additionalProperties": true
                 },
-                "location": {
-                    "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
-                        0,
-                        "LOCATION_TYPE_HOSPITAL",
-                        1,
-                        "LOCATION_TYPE_SHRINE",
-                        2,
-                        "LOCATION_TYPE_CITY",
-                        3,
-                        "LOCATION_TYPE_SCHOOL",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Location Type",
-                    "description": "LocationType 定义游戏中的可能地点。"
-                },
-                "min_paranoia": {
-                    "type": "integer",
-                    "description": "最小妄想指数"
-                },
-                "is_alone": {
-                    "type": "boolean",
-                    "description": "是否独处"
+                "location_condition": {
+                    "$ref": "#/definitions/proto.v1.LocationCondition",
+                    "additionalProperties": true
                 }
             },
             "additionalProperties": true,
@@ -262,6 +234,44 @@
             "type": "object",
             "title": "Effect",
             "description": "Effect 接口定义了一个效果的核心行为。"
+        },
+        "proto.v1.LocationCondition": {
+            "properties": {
+                "character_id": {
+                    "type": "string"
+                },
+                "location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "LocationType 定义游戏中的可能地点。"
+                },
+                "is_alone": {
+                    "type": "boolean",
+                    "description": "是否独处"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Location Condition"
         },
         "proto.v1.MoveCharacterEffect": {
             "properties": {
@@ -294,6 +304,67 @@
             "type": "object",
             "title": "Move Character Effect",
             "description": "MoveCharacterEffect 移动一个角色到指定地点。"
+        },
+        "proto.v1.StatCondition": {
+            "properties": {
+                "character_id": {
+                    "type": "string"
+                },
+                "stat": {
+                    "enum": [
+                        "STAT_UNSPECIFIED",
+                        0,
+                        "STAT_PARANOIA",
+                        1,
+                        "STAT_GOODWILL",
+                        2,
+                        "STAT_INTRIGUE",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Stat",
+                    "description": "Enum for the type of attribute to check"
+                },
+                "operator": {
+                    "enum": [
+                        "OPERATOR_UNSPECIFIED",
+                        0,
+                        "OPERATOR_GREATER_THAN",
+                        1,
+                        "OPERATOR_LESS_THAN",
+                        2,
+                        "OPERATOR_EQUAL_TO",
+                        3,
+                        "OPERATOR_GREATER_THAN_OR_EQUAL_TO",
+                        4,
+                        "OPERATOR_LESS_THAN_OR_EQUAL_TO",
+                        5
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Operator",
+                    "description": "Enum for the comparison operator"
+                },
+                "value": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Stat Condition"
         },
         "proto.v1.Target": {
             "properties": {

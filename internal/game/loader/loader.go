@@ -1,57 +1,76 @@
-
 package loader
 
 import (
 	"encoding/json"
 	"io/ioutil"
-
+	"path/filepath"
 	model "tragedylooper/internal/game/proto/v1"
 )
 
-// LoadScript loads a script from a JSON file.
-func LoadScript(path string) (*model.Script, error) {
-	data, err := ioutil.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-
-	var script model.Script
-	if err := json.Unmarshal(data, &script);
- err != nil {
-		return nil, err
-	}
-
-	return &script, nil
+// GameData holds all the static data for the game.
+type GameData struct {
+	Scripts    map[string]*model.Script
+	Characters map[string]*model.Character
+	Abilities  map[string]*model.Ability
+	Cards      map[string]*model.Card
+	Tragedies  map[string]*model.TragedyCondition
+	Incidents  map[string]*model.Incident
 }
 
-// LoadCharacter loads a character from a JSON file.
-func LoadCharacter(path string) (*model.Character, error) {
-	data, err := ioutil.ReadFile(path)
-	if err != nil {
+// LoadGameData loads all game data from the specified directory.
+func LoadGameData(dataDir string) (*GameData, error) {
+	gameData := &GameData{
+		Scripts:    make(map[string]*model.Script),
+		Characters: make(map[string]*model.Character),
+		Abilities:  make(map[string]*model.Ability),
+		Cards:      make(map[string]*model.Card),
+		Tragedies:  make(map[string]*model.TragedyCondition),
+		Incidents:  make(map[string]*model.Incident),
+	}
+
+	if err := loadData(filepath.Join(dataDir, "scripts"), &gameData.Scripts); err != nil {
+		return nil, err
+	}
+	if err := loadData(filepath.Join(dataDir, "characters"), &gameData.Characters); err != nil {
+		return nil, err
+	}
+	if err := loadData(filepath.Join(dataDir, "abilities"), &gameData.Abilities); err != nil {
+		return nil, err
+	}
+	if err := loadData(filepath.Join(dataDir, "cards"), &gameData.Cards); err != nil {
+		return nil, err
+	}
+	if err := loadData(filepath.Join(dataDir, "tragedies"), &gameData.Tragedies); err != nil {
+		return nil, err
+	}
+	if err := loadData(filepath.Join(dataDir, "incidents"), &gameData.Incidents); err != nil {
 		return nil, err
 	}
 
-	var character model.Character
-	if err := json.Unmarshal(data, &character);
- err != nil {
-		return nil, err
-	}
-
-	return &character, nil
+	return gameData, nil
 }
 
-// LoadAbility loads an ability from a JSON file.
-func LoadAbility(path string) (*model.Ability, error) {
-	data, err := ioutil.ReadFile(path)
+func loadData[T any](dir string, target *map[string]*T) error {
+	files, err := ioutil.ReadDir(dir)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	var ability model.Ability
-	if err := json.Unmarshal(data, &ability);
- err != nil {
-		return nil, err
+	for _, file := range files {
+		if !file.IsDir() {
+			data, err := ioutil.ReadFile(filepath.Join(dir, file.Name()))
+			if err != nil {
+				return err
+			}
+
+			var item T
+			if err := json.Unmarshal(data, &item); err != nil {
+				return err
+			}
+
+			(*target)[file.Name()] = &item
+		}
 	}
 
-	return &ability, nil
+	return nil
 }

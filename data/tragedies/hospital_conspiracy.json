@@ -4,8 +4,12 @@
   "culprit_id": "Politician",
   "conditions": [
     {
-      "character_id": "Politician",
-      "min_intrigue": 5
+      "stat_condition": {
+        "character_id": "Politician",
+        "stat": "STAT_INTRIGUE",
+        "operator": "OPERATOR_GREATER_THAN_OR_EQUAL_TO",
+        "value": 5
+      }
     }
   ],
   "target_rule": "ANY_CHARACTER_AT_LOCATION"

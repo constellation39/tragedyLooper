@@ -1,62 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/Condition",
+    "$ref": "#/definitions/StatCondition",
     "definitions": {
-        "Condition": {
-            "properties": {
-                "stat_condition": {
-                    "$ref": "#/definitions/proto.v1.StatCondition",
-                    "additionalProperties": true
-                },
-                "location_condition": {
-                    "$ref": "#/definitions/proto.v1.LocationCondition",
-                    "additionalProperties": true
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Condition",
-            "description": "Condition 定义悲剧的一个单一条件。"
-        },
-        "proto.v1.LocationCondition": {
-            "properties": {
-                "character_id": {
-                    "type": "string"
-                },
-                "location": {
-                    "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
-                        0,
-                        "LOCATION_TYPE_HOSPITAL",
-                        1,
-                        "LOCATION_TYPE_SHRINE",
-                        2,
-                        "LOCATION_TYPE_CITY",
-                        3,
-                        "LOCATION_TYPE_SCHOOL",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Location Type",
-                    "description": "LocationType 定义游戏中的可能地点。"
-                },
-                "is_alone": {
-                    "type": "boolean",
-                    "description": "是否独处"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Location Condition"
-        },
-        "proto.v1.StatCondition": {
+        "StatCondition": {
             "properties": {
                 "character_id": {
                     "type": "string"

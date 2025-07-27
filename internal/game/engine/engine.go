@@ -41,19 +41,16 @@ type llmActionCompleteRequest struct {
 }
 
 // NewGameEngine creates a new game engine instance.
-func NewGameEngine(gameID int32, logger *zap.Logger, script *model.Script, players map[int32]*model.Player, llmClient llm.Client) *GameEngine {
-	characters := make(map[int32]*model.Character)
+func NewGameEngine(gameID int32, logger *zap.Logger, script *model.Script, players map[int32]*model.Player, llmClient llm.Client, gameData *loader.GameData) *GameEngine {
+	characters := make(map[string]*model.Character)
 	for _, charConfig := range script.Characters {
-		char := &model.Character{
-			Id:              charConfig.Id,
-			Name:            charConfig.Name, // Placeholder
-			CurrentLocation: charConfig.InitialLocation,
-			IsAlive:         true,
-			HiddenRole:      charConfig.HiddenRole,
-			Abilities:       make([]*model.Ability, 0), // Load from data
-			Traits:          []string{},                // Load from data
+		char, ok := gameData.Characters[charConfig.Name+".json"]
+		if !ok {
+			logger.Fatal("Character not found in game data", zap.String("character_name", charConfig.Name))
 		}
-		characters[char.Id] = char
+		char.CurrentLocation = charConfig.Location
+		char.HiddenRole = charConfig.Role
+		characters[char.Name] = char
 	}
 
 	gs := &model.GameState{
@@ -66,8 +63,9 @@ func NewGameEngine(gameID int32, logger *zap.Logger, script *model.Script, playe
 		CurrentPhase:        model.GamePhase_GAME_PHASE_MORNING,
 		ActiveTragedies:     make(map[int32]bool),
 		PreventedTragedies:  make(map[int32]bool),
-		PlayedCardsThisDay:  make(map[int32]*model.CardList),
-		PlayedCardsThisLoop: make(map[int32]*model.CardList),
+		TragedyOccurred:     make(map[int32]bool),
+		PlayedCardsThisDay:  make(map[string]*model.CardList),
+		PlayedCardsThisLoop: make(map[string]*model.CardList),
 		LastUpdateTime:      timestamppb.Now(),
 		DayEvents:           make([]*model.GameEvent, 0),
 		LoopEvents:          make([]*model.GameEvent, 0),
@@ -90,10 +88,10 @@ func NewGameEngine(gameID int32, logger *zap.Logger, script *model.Script, playe
 	for playerID, p := range players {
 		if p.Role == model.PlayerRole_PLAYER_ROLE_MASTERMIND {
 			ge.mastermindPlayerID = playerID
-			p.Hand = slices.Clone(data.MastermindCards)
+			// p.Hand = slices.Clone(data.MastermindCards)
 		} else {
 			ge.protagonistPlayerIDs = append(ge.protagonistPlayerIDs, playerID)
-			p.Hand = slices.Clone(data.ProtagonistCards)
+			// p.Hand = slices.Clone(data.ProtagonistCards)
 		}
 	}
 

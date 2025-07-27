@@ -7,6 +7,20 @@ import "proto/v1/tragedy.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 
+// Enum for different types of game end conditions
+enum GameEndConditionType {
+  GAME_END_CONDITION_TYPE_UNSPECIFIED = 0;
+  // All tragedy plots are disabled/prevented. (Protagonist Win)
+  ALL_TRAGEDIES_PREVENTED = 1;
+  // A tragedy plot is successfully triggered. (Mastermind Win)
+  A_TRAGEDY_OCCURS = 2;
+}
+
+// Defines a single condition for winning or losing the game.
+message GameEndCondition {
+  GameEndConditionType type = 1;
+}
+
 // Script 定义一个特定的游戏场景。
 message Script {
   int32 id = 1; // 唯一标识符
@@ -18,6 +32,6 @@ message Script {
   repeated TragedyCondition tragedies = 7; // 悲剧条件
   int32 loop_count = 8; // 循环总次数
   int32 days_per_loop = 9; // 每循环天数
-  repeated string win_conditions = 10; // 胜利条件
-  repeated string lose_conditions = 11; // 失败条件
+  repeated GameEndCondition win_conditions = 10; // 胜利条件
+  repeated GameEndCondition lose_conditions = 11; // 失败条件
 }

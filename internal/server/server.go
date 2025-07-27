@@ -27,14 +27,14 @@ type Server struct {
 	// 用于发出服务器关闭信号的通道
 	shutdownChan chan struct{}
 	// 可用游戏剧本的映射
-	scripts map[string]*model.Script
+	gameData *loader.GameData
 	// LLM 客户端用于 AI 玩家
 	llmClient llm.Client
 	logger    *zap.Logger
 }
 
 // NewServer 创建一个新的游戏服务器实例。
-func NewServer(scripts map[string]*model.Script, llmClient llm.Client, logger *zap.Logger) *Server {
+func NewServer(gameData *loader.GameData, llmClient llm.Client, logger *zap.Logger) *Server {
 	return &Server{
 		upgrader: websocket.Upgrader{
 			ReadBufferSize:  1024,
@@ -45,7 +45,7 @@ func NewServer(scripts map[string]*model.Script, llmClient llm.Client, logger *z
 		},
 		rooms:        make(map[string]*Room),
 		shutdownChan: make(chan struct{}),
-		scripts:      scripts,
+		gameData:     gameData,
 		llmClient:    llmClient,
 		logger:       logger,
 	}
@@ -137,7 +137,7 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	script, ok := s.scripts[req.ScriptID]
+	script, ok := s.gameData.Scripts[req.ScriptID+".json"]
 	if !ok {
 		http.Error(w, "Script not found", http.StatusNotFound)
 		return
@@ -167,7 +167,7 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		LlmSessionId:       "",
 	}
 
-	gameEngine := engine.NewGameEngine(int32(gameID), ctxLogger, script, players, s.llmClient)
+	gameEngine := engine.NewGameEngine(int32(gameID), ctxLogger, script, players, s.llmClient, s.gameData)
 	room := NewRoom(fmt.Sprintf("%d", gameID), gameEngine, ctxLogger)
 	s.rooms[fmt.Sprintf("%d", gameID)] = room
 

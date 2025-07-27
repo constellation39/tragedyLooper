@@ -45,8 +45,11 @@ func main() {
 		_ = logger.Sync() // Flushes buffer, important for production
 	}()
 
-	// 1. Load game scripts and resources.
-	scripts := loadScripts("data/scripts", logger)
+	// 1. Load all game data.
+	gameData, err := loader.LoadGameData("data")
+	if err != nil {
+		logger.Fatal("Failed to load game data", zap.Error(err))
+	}
 
 	// Initialize LLM client (e.g., OpenAI, Google Gemini)
 	// This would typically involve getting API keys from environment variables.
@@ -54,7 +57,7 @@ func main() {
 	// llmClient := llm.NewOpenAIClient(os.Getenv("OPENAI_API_KEY")) // For actual OpenAI integration
 
 	// 2. Initialize the game server
-	gameServer := server.NewServer(scripts, llmClient, logger)
+	gameServer := server.NewServer(gameData, llmClient, logger)
 
 	// Create a new ServeMux to apply middleware
 	mux := http.NewServeMux()

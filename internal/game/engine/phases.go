@@ -111,22 +111,22 @@ func (ge *GameEngine) handleIncidentsPhase() {
 	for _, tragedy := range ge.GameState.Script.Tragedies {
 		// Check if the tragedy is active for the day and hasn't been prevented
 		if tragedy.Day == ge.GameState.CurrentDay && ge.GameState.ActiveTragedies[int32(tragedy.TragedyType)] && !ge.GameState.PreventedTragedies[int32(tragedy.TragedyType)] {
-			if ge.checkTragedyConditions(tragedy) {
+			if ge.checkConditions(tragedy.Conditions) {
 				ge.logger.Info("Tragedy triggered!", zap.String("tragedy_type", string(tragedy.TragedyType)))
 				ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_TRAGEDY_TRIGGERED, &model.TragedyTriggeredEvent{TragedyType: tragedy.TragedyType})
 				tragedyOccurred = true
+				ge.GameState.TragedyOccurred[int32(tragedy.TragedyType)] = true
 				break // Only one tragedy per day
 			}
 		}
 	}
 
+	if gameOver, winner := ge.checkGameEndConditions(); gameOver {
+		ge.endGame(winner)
+		return
+	}
+
 	if tragedyOccurred {
-		for _, loseCondition := range ge.GameState.Script.LoseConditions {
-			if loseCondition == "A tragedy plot is successfully triggered" { 
-				ge.endGame(model.PlayerRole_PLAYER_ROLE_MASTERMIND)
-				return
-			}
-		}
 		ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_LOOP_END
 	} else {
 		ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_DAY_END
@@ -146,47 +146,15 @@ func (ge *GameEngine) handleDayEndPhase() {
 func (ge *GameEngine) handleLoopEndPhase() {
 	ge.logger.Info("Loop End Phase", zap.Int("loop", int(ge.GameState.CurrentLoop)))
 
-	// Check for win conditions
-	for _, winCondition := range ge.GameState.Script.WinConditions {
-		if winCondition == "All tragedy plots are disabled" {
-			allDisabled := true
-			for _, active := range ge.GameState.ActiveTragedies {
-				if active {
-					allDisabled = false
-					break
-				}
-			}
-			if allDisabled {
-				ge.endGame(model.PlayerRole_PLAYER_ROLE_PROTAGONIST)
-				return
-			}
-		}
-	}
-
-	// Check for Mastermind win condition (a tragedy occurred or final loop ended with un-prevented tragedies)
-	mastermindWins := false
-	for _, tragedy := range ge.GameState.Script.Tragedies {
-		if ge.GameState.ActiveTragedies[int32(tragedy.TragedyType)] && !ge.GameState.PreventedTragedies[int32(tragedy.TragedyType)] {
-			// This check is broad. A more precise check would be if a tragedy *actually occurred* this loop.
-			// For now, we assume any un-prevented tragedy at loop end is a win condition.
-			mastermindWins = true
-			break
-		}
+	if gameOver, winner := ge.checkGameEndConditions(); gameOver {
+		ge.endGame(winner)
+		return
 	}
 
 	// If it's the last loop, the outcome is final.
 	if ge.GameState.CurrentLoop >= ge.GameState.Script.LoopCount {
-		if mastermindWins {
-			ge.endGame(model.PlayerRole_PLAYER_ROLE_MASTERMIND)
-		} else {
-			ge.endGame(model.PlayerRole_PLAYER_ROLE_PROTAGONIST)
-		}
-		return
-	}
-
-	// If a tragedy occurred mid-loop, Mastermind wins immediately.
-	if mastermindWins { // Simplified check, should be based on an actual event.
-		ge.endGame(model.PlayerRole_PLAYER_ROLE_MASTERMIND)
+		// If no one has won by the final loop, Protagonists win by default
+		ge.endGame(model.PlayerRole_PLAYER_ROLE_PROTAGONIST)
 		return
 	}
 

@@ -3,25 +3,38 @@
   "loops": 3,
   "days_per_loop": 4,
   "win_conditions": [
-    "All tragedy plots are disabled"
+    {
+      "type": "ALL_TRAGEDIES_PREVENTED"
+    }
   ],
   "lose_conditions": [
-    "A tragedy plot is successfully triggered"
+    {
+      "type": "A_TRAGEDY_OCCURS"
+    }
   ],
   "main_tragedy": {
     "type": "MURDER_MYSTERY",
     "plot": "The Killer, who is the Doctor, will murder the Target, who is the High School Girl, if they are in the same location and the Killer's paranoia is high enough.",
-    "triggers": [
+    "conditions": [
       {
-        "type": "CULPRIT_IN_LOCATION_WITH_TARGET",
-        "culprit": "Doctor",
-        "target": "High School Girl",
-        "location": "Hospital"
+        "stat_condition": {
+          "character_id": "Doctor",
+          "stat": "STAT_PARANOIA",
+          "operator": "OPERATOR_GREATER_THAN_OR_EQUAL_TO",
+          "value": 4
+        }
       },
       {
-        "type": "CULPRIT_PARANOIA_REACHES_THRESHOLD",
-        "culprit": "Doctor",
-        "threshold": 4
+        "location_condition": {
+          "character_id": "Doctor",
+          "location": "HOSPITAL"
+        }
+      },
+      {
+        "location_condition": {
+          "character_id": "High School Girl",
+          "location": "HOSPITAL"
+        }
       }
     ]
   },
@@ -29,11 +42,14 @@
     {
       "type": "HOSPITAL_CONSPIRACY",
       "plot": "The Hospital Director, who is the Politician, is covering up a medical error. If their intrigue reaches a certain level, they will cause a scandal.",
-      "triggers": [
+      "conditions": [
         {
-          "type": "INTRIGUE_THRESHOLD_REACHED",
-          "character": "Politician",
-          "threshold": 5
+          "stat_condition": {
+            "character_id": "Politician",
+            "stat": "STAT_INTRIGUE",
+            "operator": "OPERATOR_GREATER_THAN_OR_EQUAL_TO",
+            "value": 5
+          }
         }
       ]
     }

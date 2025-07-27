@@ -21,6 +21,118 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// Enum for the type of attribute to check
+type Stat int32
+
+const (
+	Stat_STAT_UNSPECIFIED Stat = 0
+	Stat_STAT_PARANOIA    Stat = 1
+	Stat_STAT_GOODWILL    Stat = 2
+	Stat_STAT_INTRIGUE    Stat = 3
+)
+
+// Enum value maps for Stat.
+var (
+	Stat_name = map[int32]string{
+		0: "STAT_UNSPECIFIED",
+		1: "STAT_PARANOIA",
+		2: "STAT_GOODWILL",
+		3: "STAT_INTRIGUE",
+	}
+	Stat_value = map[string]int32{
+		"STAT_UNSPECIFIED": 0,
+		"STAT_PARANOIA":    1,
+		"STAT_GOODWILL":    2,
+		"STAT_INTRIGUE":    3,
+	}
+)
+
+func (x Stat) Enum() *Stat {
+	p := new(Stat)
+	*p = x
+	return p
+}
+
+func (x Stat) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (Stat) Descriptor() protoreflect.EnumDescriptor {
+	return file_proto_v1_tragedy_proto_enumTypes[0].Descriptor()
+}
+
+func (Stat) Type() protoreflect.EnumType {
+	return &file_proto_v1_tragedy_proto_enumTypes[0]
+}
+
+func (x Stat) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use Stat.Descriptor instead.
+func (Stat) EnumDescriptor() ([]byte, []int) {
+	return file_proto_v1_tragedy_proto_rawDescGZIP(), []int{0}
+}
+
+// Enum for the comparison operator
+type Operator int32
+
+const (
+	Operator_OPERATOR_UNSPECIFIED              Operator = 0
+	Operator_OPERATOR_GREATER_THAN             Operator = 1
+	Operator_OPERATOR_LESS_THAN                Operator = 2
+	Operator_OPERATOR_EQUAL_TO                 Operator = 3
+	Operator_OPERATOR_GREATER_THAN_OR_EQUAL_TO Operator = 4
+	Operator_OPERATOR_LESS_THAN_OR_EQUAL_TO    Operator = 5
+)
+
+// Enum value maps for Operator.
+var (
+	Operator_name = map[int32]string{
+		0: "OPERATOR_UNSPECIFIED",
+		1: "OPERATOR_GREATER_THAN",
+		2: "OPERATOR_LESS_THAN",
+		3: "OPERATOR_EQUAL_TO",
+		4: "OPERATOR_GREATER_THAN_OR_EQUAL_TO",
+		5: "OPERATOR_LESS_THAN_OR_EQUAL_TO",
+	}
+	Operator_value = map[string]int32{
+		"OPERATOR_UNSPECIFIED":              0,
+		"OPERATOR_GREATER_THAN":             1,
+		"OPERATOR_LESS_THAN":                2,
+		"OPERATOR_EQUAL_TO":                 3,
+		"OPERATOR_GREATER_THAN_OR_EQUAL_TO": 4,
+		"OPERATOR_LESS_THAN_OR_EQUAL_TO":    5,
+	}
+)
+
+func (x Operator) Enum() *Operator {
+	p := new(Operator)
+	*p = x
+	return p
+}
+
+func (x Operator) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (Operator) Descriptor() protoreflect.EnumDescriptor {
+	return file_proto_v1_tragedy_proto_enumTypes[1].Descriptor()
+}
+
+func (Operator) Type() protoreflect.EnumType {
+	return &file_proto_v1_tragedy_proto_enumTypes[1]
+}
+
+func (x Operator) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use Operator.Descriptor instead.
+func (Operator) EnumDescriptor() ([]byte, []int) {
+	return file_proto_v1_tragedy_proto_rawDescGZIP(), []int{1}
+}
+
 // TragedyCondition 定义悲剧发生的条件。
 type TragedyCondition struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -124,11 +236,12 @@ func (x *TragedyCondition) GetIsPrevented() bool {
 
 // Condition 定义悲剧的一个单一条件。
 type Condition struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`   // 角色ID
-	Location      LocationType           `protobuf:"varint,2,opt,name=location,proto3,enum=proto.v1.LocationType" json:"location,omitempty"` // 所在位置
-	MinParanoia   int32                  `protobuf:"varint,3,opt,name=min_paranoia,json=minParanoia,proto3" json:"min_paranoia,omitempty"`   // 最小妄想指数
-	IsAlone       bool                   `protobuf:"varint,4,opt,name=is_alone,json=isAlone,proto3" json:"is_alone,omitempty"`               // 是否独处
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to ConditionType:
+	//
+	//	*Condition_StatCondition
+	//	*Condition_LocationCondition
+	ConditionType isCondition_ConditionType `protobuf_oneof:"condition_type"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -163,28 +276,169 @@ func (*Condition) Descriptor() ([]byte, []int) {
 	return file_proto_v1_tragedy_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Condition) GetCharacterId() int32 {
+func (x *Condition) GetConditionType() isCondition_ConditionType {
+	if x != nil {
+		return x.ConditionType
+	}
+	return nil
+}
+
+func (x *Condition) GetStatCondition() *StatCondition {
+	if x != nil {
+		if x, ok := x.ConditionType.(*Condition_StatCondition); ok {
+			return x.StatCondition
+		}
+	}
+	return nil
+}
+
+func (x *Condition) GetLocationCondition() *LocationCondition {
+	if x != nil {
+		if x, ok := x.ConditionType.(*Condition_LocationCondition); ok {
+			return x.LocationCondition
+		}
+	}
+	return nil
+}
+
+type isCondition_ConditionType interface {
+	isCondition_ConditionType()
+}
+
+type Condition_StatCondition struct {
+	StatCondition *StatCondition `protobuf:"bytes,1,opt,name=stat_condition,json=statCondition,proto3,oneof"`
+}
+
+type Condition_LocationCondition struct {
+	LocationCondition *LocationCondition `protobuf:"bytes,2,opt,name=location_condition,json=locationCondition,proto3,oneof"`
+}
+
+func (*Condition_StatCondition) isCondition_ConditionType() {}
+
+func (*Condition_LocationCondition) isCondition_ConditionType() {}
+
+type StatCondition struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CharacterId   string                 `protobuf:"bytes,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`
+	Stat          Stat                   `protobuf:"varint,2,opt,name=stat,proto3,enum=proto.v1.Stat" json:"stat,omitempty"`
+	Operator      Operator               `protobuf:"varint,3,opt,name=operator,proto3,enum=proto.v1.Operator" json:"operator,omitempty"`
+	Value         int32                  `protobuf:"varint,4,opt,name=value,proto3" json:"value,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *StatCondition) Reset() {
+	*x = StatCondition{}
+	mi := &file_proto_v1_tragedy_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StatCondition) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StatCondition) ProtoMessage() {}
+
+func (x *StatCondition) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_v1_tragedy_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StatCondition.ProtoReflect.Descriptor instead.
+func (*StatCondition) Descriptor() ([]byte, []int) {
+	return file_proto_v1_tragedy_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *StatCondition) GetCharacterId() string {
 	if x != nil {
 		return x.CharacterId
+	}
+	return ""
+}
+
+func (x *StatCondition) GetStat() Stat {
+	if x != nil {
+		return x.Stat
+	}
+	return Stat_STAT_UNSPECIFIED
+}
+
+func (x *StatCondition) GetOperator() Operator {
+	if x != nil {
+		return x.Operator
+	}
+	return Operator_OPERATOR_UNSPECIFIED
+}
+
+func (x *StatCondition) GetValue() int32 {
+	if x != nil {
+		return x.Value
 	}
 	return 0
 }
 
-func (x *Condition) GetLocation() LocationType {
+type LocationCondition struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CharacterId   string                 `protobuf:"bytes,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`
+	Location      LocationType           `protobuf:"varint,2,opt,name=location,proto3,enum=proto.v1.LocationType" json:"location,omitempty"`
+	IsAlone       bool                   `protobuf:"varint,3,opt,name=is_alone,json=isAlone,proto3" json:"is_alone,omitempty"` // 是否独处
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LocationCondition) Reset() {
+	*x = LocationCondition{}
+	mi := &file_proto_v1_tragedy_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LocationCondition) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LocationCondition) ProtoMessage() {}
+
+func (x *LocationCondition) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_v1_tragedy_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LocationCondition.ProtoReflect.Descriptor instead.
+func (*LocationCondition) Descriptor() ([]byte, []int) {
+	return file_proto_v1_tragedy_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *LocationCondition) GetCharacterId() string {
+	if x != nil {
+		return x.CharacterId
+	}
+	return ""
+}
+
+func (x *LocationCondition) GetLocation() LocationType {
 	if x != nil {
 		return x.Location
 	}
 	return LocationType_LOCATION_TYPE_UNSPECIFIED
 }
 
-func (x *Condition) GetMinParanoia() int32 {
-	if x != nil {
-		return x.MinParanoia
-	}
-	return 0
-}
-
-func (x *Condition) GetIsAlone() bool {
+func (x *LocationCondition) GetIsAlone() bool {
 	if x != nil {
 		return x.IsAlone
 	}
@@ -208,12 +462,32 @@ const file_proto_v1_tragedy_proto_rawDesc = "" +
 	"targetRule\x12/\n" +
 	"\tabilities\x18\x06 \x03(\v2\x11.proto.v1.AbilityR\tabilities\x12\x1b\n" +
 	"\tis_active\x18\a \x01(\bR\bisActive\x12!\n" +
-	"\fis_prevented\x18\b \x01(\bR\visPrevented\"\xa0\x01\n" +
-	"\tCondition\x12!\n" +
-	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x122\n" +
-	"\blocation\x18\x02 \x01(\x0e2\x16.proto.v1.LocationTypeR\blocation\x12!\n" +
-	"\fmin_paranoia\x18\x03 \x01(\x05R\vminParanoia\x12\x19\n" +
-	"\bis_alone\x18\x04 \x01(\bR\aisAloneB\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\fis_prevented\x18\b \x01(\bR\visPrevented\"\xad\x01\n" +
+	"\tCondition\x12@\n" +
+	"\x0estat_condition\x18\x01 \x01(\v2\x17.proto.v1.StatConditionH\x00R\rstatCondition\x12L\n" +
+	"\x12location_condition\x18\x02 \x01(\v2\x1b.proto.v1.LocationConditionH\x00R\x11locationConditionB\x10\n" +
+	"\x0econdition_type\"\x9c\x01\n" +
+	"\rStatCondition\x12!\n" +
+	"\fcharacter_id\x18\x01 \x01(\tR\vcharacterId\x12\"\n" +
+	"\x04stat\x18\x02 \x01(\x0e2\x0e.proto.v1.StatR\x04stat\x12.\n" +
+	"\boperator\x18\x03 \x01(\x0e2\x12.proto.v1.OperatorR\boperator\x12\x14\n" +
+	"\x05value\x18\x04 \x01(\x05R\x05value\"\x85\x01\n" +
+	"\x11LocationCondition\x12!\n" +
+	"\fcharacter_id\x18\x01 \x01(\tR\vcharacterId\x122\n" +
+	"\blocation\x18\x02 \x01(\x0e2\x16.proto.v1.LocationTypeR\blocation\x12\x19\n" +
+	"\bis_alone\x18\x03 \x01(\bR\aisAlone*U\n" +
+	"\x04Stat\x12\x14\n" +
+	"\x10STAT_UNSPECIFIED\x10\x00\x12\x11\n" +
+	"\rSTAT_PARANOIA\x10\x01\x12\x11\n" +
+	"\rSTAT_GOODWILL\x10\x02\x12\x11\n" +
+	"\rSTAT_INTRIGUE\x10\x03*\xb9\x01\n" +
+	"\bOperator\x12\x18\n" +
+	"\x14OPERATOR_UNSPECIFIED\x10\x00\x12\x19\n" +
+	"\x15OPERATOR_GREATER_THAN\x10\x01\x12\x16\n" +
+	"\x12OPERATOR_LESS_THAN\x10\x02\x12\x15\n" +
+	"\x11OPERATOR_EQUAL_TO\x10\x03\x12%\n" +
+	"!OPERATOR_GREATER_THAN_OR_EQUAL_TO\x10\x04\x12\"\n" +
+	"\x1eOPERATOR_LESS_THAN_OR_EQUAL_TO\x10\x05B\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
 	file_proto_v1_tragedy_proto_rawDescOnce sync.Once
@@ -227,26 +501,35 @@ func file_proto_v1_tragedy_proto_rawDescGZIP() []byte {
 	return file_proto_v1_tragedy_proto_rawDescData
 }
 
-var file_proto_v1_tragedy_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_proto_v1_tragedy_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_proto_v1_tragedy_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_proto_v1_tragedy_proto_goTypes = []any{
-	(*TragedyCondition)(nil), // 0: proto.v1.TragedyCondition
-	(*Condition)(nil),        // 1: proto.v1.Condition
-	(TragedyType)(0),         // 2: proto.v1.TragedyType
-	(TargetRuleType)(0),      // 3: proto.v1.TargetRuleType
-	(*Ability)(nil),          // 4: proto.v1.Ability
-	(LocationType)(0),        // 5: proto.v1.LocationType
+	(Stat)(0),                 // 0: proto.v1.Stat
+	(Operator)(0),             // 1: proto.v1.Operator
+	(*TragedyCondition)(nil),  // 2: proto.v1.TragedyCondition
+	(*Condition)(nil),         // 3: proto.v1.Condition
+	(*StatCondition)(nil),     // 4: proto.v1.StatCondition
+	(*LocationCondition)(nil), // 5: proto.v1.LocationCondition
+	(TragedyType)(0),          // 6: proto.v1.TragedyType
+	(TargetRuleType)(0),       // 7: proto.v1.TargetRuleType
+	(*Ability)(nil),           // 8: proto.v1.Ability
+	(LocationType)(0),         // 9: proto.v1.LocationType
 }
 var file_proto_v1_tragedy_proto_depIdxs = []int32{
-	2, // 0: proto.v1.TragedyCondition.tragedy_type:type_name -> proto.v1.TragedyType
-	1, // 1: proto.v1.TragedyCondition.conditions:type_name -> proto.v1.Condition
-	3, // 2: proto.v1.TragedyCondition.target_rule:type_name -> proto.v1.TargetRuleType
-	4, // 3: proto.v1.TragedyCondition.abilities:type_name -> proto.v1.Ability
-	5, // 4: proto.v1.Condition.location:type_name -> proto.v1.LocationType
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	6, // 0: proto.v1.TragedyCondition.tragedy_type:type_name -> proto.v1.TragedyType
+	3, // 1: proto.v1.TragedyCondition.conditions:type_name -> proto.v1.Condition
+	7, // 2: proto.v1.TragedyCondition.target_rule:type_name -> proto.v1.TargetRuleType
+	8, // 3: proto.v1.TragedyCondition.abilities:type_name -> proto.v1.Ability
+	4, // 4: proto.v1.Condition.stat_condition:type_name -> proto.v1.StatCondition
+	5, // 5: proto.v1.Condition.location_condition:type_name -> proto.v1.LocationCondition
+	0, // 6: proto.v1.StatCondition.stat:type_name -> proto.v1.Stat
+	1, // 7: proto.v1.StatCondition.operator:type_name -> proto.v1.Operator
+	9, // 8: proto.v1.LocationCondition.location:type_name -> proto.v1.LocationType
+	9, // [9:9] is the sub-list for method output_type
+	9, // [9:9] is the sub-list for method input_type
+	9, // [9:9] is the sub-list for extension type_name
+	9, // [9:9] is the sub-list for extension extendee
+	0, // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_proto_v1_tragedy_proto_init() }
@@ -257,18 +540,23 @@ func file_proto_v1_tragedy_proto_init() {
 	file_proto_v1_ability_proto_init()
 	file_proto_v1_enums_proto_init()
 	file_proto_v1_location_proto_init()
+	file_proto_v1_tragedy_proto_msgTypes[1].OneofWrappers = []any{
+		(*Condition_StatCondition)(nil),
+		(*Condition_LocationCondition)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_v1_tragedy_proto_rawDesc), len(file_proto_v1_tragedy_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   2,
+			NumEnums:      2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_proto_v1_tragedy_proto_goTypes,
 		DependencyIndexes: file_proto_v1_tragedy_proto_depIdxs,
+		EnumInfos:         file_proto_v1_tragedy_proto_enumTypes,
 		MessageInfos:      file_proto_v1_tragedy_proto_msgTypes,
 	}.Build()
 	File_proto_v1_tragedy_proto = out.File

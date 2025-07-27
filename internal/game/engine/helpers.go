@@ -1,131 +1,106 @@
 package engine
 
 import (
-	"go.uber.org/zap"
-	"google.golang.org/protobuf/proto"
-
+	"fmt"
 	model "tragedylooper/internal/game/proto/v1"
 )
 
-func (ge *GameEngine) GetCharacter(id int32) (*model.Character, bool) {
-	char, ok := ge.GameState.Characters[id]
-	return char, ok
-}
+func (ge *GameEngine) checkConditions(conditions []*model.Condition) bool {
+	for _, condition := range conditions {
+		switch c := condition.ConditionType.(type) {
+		case *model.Condition_StatCondition:
+			sc := c.StatCondition
+			char, ok := ge.GameState.Characters[sc.CharacterId]
+			if !ok {
+				return false
+			}
 
-func (ge *GameEngine) SetCharacterLocation(id int32, location model.LocationType) {
-	if char, ok := ge.GameState.Characters[id]; ok {
-		char.CurrentLocation = location
-		ge.logger.Info("Character moved", zap.Int32("characterID", id), zap.String("location", string(location)))
-		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_CHARACTER_MOVED, &model.CharacterMovedEvent{CharacterId: id, NewLocation: location})
-	}
-}
+			var statValue int32
+			switch sc.Stat {
+			case model.Stat_STAT_PARANOIA:
+				statValue = char.Paranoia
+			case model.Stat_STAT_GOODWILL:
+				statValue = char.Goodwill
+			case model.Stat_STAT_INTRIGUE:
+				statValue = char.Intrigue
+			}
 
-func (ge *GameEngine) AdjustCharacterParanoia(id int32, amount int32) int32 {
-	if char, ok := ge.GameState.Characters[id]; ok {
-		char.Paranoia += amount
-		ge.logger.Info("Character paranoia adjusted", zap.Int32("characterID", id), zap.Int32("amount", amount), zap.Int32("newParanoia", char.Paranoia))
-		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED, &model.ParanoiaAdjustedEvent{CharacterId: id, Amount: amount, NewParanoia: char.Paranoia})
-		return char.Paranoia
-	}
-	return 0
-}
-
-func (ge *GameEngine) AdjustCharacterGoodwill(id int32, amount int32) int32 {
-	if char, ok := ge.GameState.Characters[id]; ok {
-		char.Goodwill += amount
-		ge.logger.Info("Character goodwill adjusted", zap.Int32("characterID", id), zap.Int32("amount", amount), zap.Int32("newGoodwill", char.Goodwill))
-		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED, &model.GoodwillAdjustedEvent{CharacterId: id, Amount: amount, NewGoodwill: char.Goodwill})
-		return char.Goodwill
-	}
-	return 0
-}
-
-func (ge *GameEngine) AdjustCharacterIntrigue(id int32, amount int32) int32 {
-	if char, ok := ge.GameState.Characters[id]; ok {
-		char.Intrigue += amount
-		ge.logger.Info("Character intrigue adjusted", zap.Int32("characterID", id), zap.Int32("amount", amount), zap.Int32("newIntrigue", char.Intrigue))
-		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED, &model.IntrigueAdjustedEvent{CharacterId: id, Amount: amount, NewIntrigue: char.Intrigue})
-		return char.Intrigue
-	}
-	return 0
-}
-
-func (ge *GameEngine) PublishEvent(eventType model.GameEventType, payload proto.Message) {
-	ge.publishGameEvent(eventType, payload)
-}
-
-// checkTragedyConditions checks if the conditions for a given tragedy are met.
-func (ge *GameEngine) checkTragedyConditions(tragedy *model.TragedyCondition) bool {
-	for _, cond := range tragedy.Conditions {
-		char, ok := ge.GameState.Characters[cond.CharacterId]
-		if !ok || !char.IsAlive {
-			return false // Character not found or not alive
-		}
-		if char.CurrentLocation != cond.Location {
-			return false // Location mismatch
-		}
-		if char.Paranoia < cond.MinParanoia {
-			return false // Paranoia too low
-		}
-		if cond.IsAlone {
-			countAtLocation := 0
-			for _, otherChar := range ge.GameState.Characters {
-				if otherChar.CurrentLocation == cond.Location && otherChar.IsAlive {
-					countAtLocation++
+			switch sc.Operator {
+			case model.Operator_OPERATOR_GREATER_THAN:
+				if !(statValue > sc.Value) {
+					return false
+				}
+			case model.Operator_OPERATOR_LESS_THAN:
+				if !(statValue < sc.Value) {
+					return false
+				}
+			case model.Operator_OPERATOR_EQUAL_TO:
+				if !(statValue == sc.Value) {
+					return false
+				}
+			case model.Operator_OPERATOR_GREATER_THAN_OR_EQUAL_TO:
+				if !(statValue >= sc.Value) {
+					return false
+				}
+			case model.Operator_OPERATOR_LESS_THAN_OR_EQUAL_TO:
+				if !(statValue <= sc.Value) {
+					return false
 				}
 			}
-			if countAtLocation > 1 {
-				return false // Not alone
+
+		case *model.Condition_LocationCondition:
+			lc := c.LocationCondition
+			char, ok := ge.GameState.Characters[lc.CharacterId]
+			if !ok {
+				return false
+			}
+
+			if char.CurrentLocation != lc.Location {
+				return false
+			}
+
+			if lc.IsAlone {
+				for _, otherChar := range ge.GameState.Characters {
+					if otherChar.Id != char.Id && otherChar.CurrentLocation == char.CurrentLocation {
+						return false
+					}
+				}
 			}
 		}
 	}
-	return true // All conditions met
+	return true
 }
 
-// resetLoop resets the game state for a new loop.
-func (ge *GameEngine) resetLoop() {
-	ge.logger.Info("Resetting for new loop...")
-	// Reset characters to their initial script configuration
-	for _, charConfig := range ge.GameState.Script.Characters {
-		if char, ok := ge.GameState.Characters[charConfig.Id]; ok {
-			char.CurrentLocation = charConfig.InitialLocation
-			char.Paranoia = 0
-			char.Goodwill = 0
-			char.Intrigue = 0
-			char.IsAlive = true
-			for i := range char.Abilities {
-				char.Abilities[i].UsedThisLoop = false
+func (ge *GameEngine) checkGameEndConditions() (bool, model.PlayerRole) {
+	// Check for protagonist win conditions
+	for _, wc := range ge.GameState.Script.WinConditions {
+		switch wc.Type {
+		case model.GameEndConditionType_ALL_TRAGEDIES_PREVENTED:
+			allPrevented := true
+			for _, prevented := range ge.GameState.PreventedTragedies {
+				if !prevented {
+					allPrevented = false
+					break
+				}
+			}
+			if allPrevented {
+				return true, model.PlayerRole_PLAYER_ROLE_PROTAGONIST
 			}
 		}
 	}
-	// Reset card usage status for all players
-	for _, player := range ge.GameState.Players {
-		for i := range player.Hand {
-			player.Hand[i].UsedThisLoop = false
+
+	// Check for mastermind win conditions
+	for _, lc := range ge.GameState.Script.LoseConditions {
+		switch lc.Type {
+		case model.GameEndConditionType_A_TRAGEDY_OCCURS:
+			// This is checked within the incident phase, so we just need to see if a tragedy has occurred.
+			for _, occurred := range ge.GameState.TragedyOccurred {
+				if occurred {
+					return true, model.PlayerRole_PLAYER_ROLE_MASTERMIND
+				}
+			}
 		}
 	}
 
-	// Clear loop-specific state
-	ge.GameState.PreventedTragedies = make(map[int32]bool)
-	ge.GameState.PlayedCardsThisDay = make(map[int32]*model.CardList)
-	ge.GameState.PlayedCardsThisLoop = make(map[int32]*model.CardList)
-	ge.GameState.DayEvents = []*model.GameEvent{}
-	ge.GameState.LoopEvents = []*model.GameEvent{}
-
-	ge.logger.Info("Loop reset complete.")
-}
-
-// endGame transitions the game to a finished state.
-func (ge *GameEngine) endGame(winner model.PlayerRole) {
-	ge.logger.Info("Game Over!", zap.String("winner", string(winner)))
-	ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_GAME_OVER
-	ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_OVER, &model.GameOverEvent{Winner: winner})
-	ge.StopGameLoop()
-}
-
-// resetPlayerReadiness resets the ready status for all players.
-func (ge *GameEngine) resetPlayerReadiness() {
-	for playerID := range ge.playerReady {
-		ge.playerReady[playerID] = false
-	}
+	return false, model.PlayerRole_PLAYER_ROLE_UNSPECIFIED
 }
