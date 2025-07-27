@@ -82,11 +82,12 @@ message ChoiceRequiredEvent {
 }
 
 message Incident {
-  string name = 1;
-  int32 day = 2;
-  string culprit = 3;
-  string victim = 4;
-  string description = 5;
+  int32 id = 1;
+  string name = 2;
+  int32 day = 3;
+  string culprit = 4;
+  string victim = 5;
+  string description = 6;
 }
 
 message IncidentTriggeredEvent {

@@ -79,7 +79,7 @@ func (ge *GameEngine) checkGameEndConditions() (bool, model.PlayerRole) {
 	for _, wc := range ge.GameState.Script.WinConditions {
 		if wc.Type == model.GameEndCondition_ALL_TRAGEDIES_PREVENTED {
 			allPrevented := true
-			for _, prevented := range ge.GameState.PreventedIncidents {
+			for _, prevented := range ge.GameState.PreventedTragedies {
 				if !prevented {
 					allPrevented = false
 					break
@@ -95,7 +95,7 @@ func (ge *GameEngine) checkGameEndConditions() (bool, model.PlayerRole) {
 	for _, lc := range ge.GameState.Script.LoseConditions {
 		if lc.Type == model.GameEndCondition_SPECIFIC_TRAGEDY_TRIGGERED {
 			// This is checked within the incident phase, so we just need to see if a tragedy has occurred.
-			for _, active := range ge.GameState.ActiveIncidents {
+			for _, active := range ge.GameState.ActiveTragedies {
 				if !active {
 					return true, model.PlayerRole_MASTERMIND
 				}

@@ -1,12 +1,10 @@
 package engine
 
 import (
-	"slices"
 	"time"
 	"tragedylooper/internal/game/loader"
 
 	"go.uber.org/zap"
-	"tragedylooper/internal/game/data"
 	model "tragedylooper/internal/game/proto/v1"
 	"tragedylooper/internal/llm"
 )
@@ -14,7 +12,7 @@ import (
 // GameEngine manages the state and logic of a single game instance.
 type GameEngine struct {
 	GameState            *model.GameState
-	gameData             *loader.Loader
+	gameData             loader.GameDataAccessor
 	requestChan          chan engineRequest
 	gameEventChan        chan *model.GameEvent
 	gameControlChan      chan struct{}
@@ -42,10 +40,9 @@ type llmActionCompleteRequest struct {
 }
 
 // NewGameEngine creates a new game engine instance.
-func NewGameEngine(gameID string, logger *zap.Logger, script *model.Script, players map[int32]*model.Player, llmClient llm.Client, gameData *loader.Loader) *GameEngine {
+func NewGameEngine(gameID string, logger *zap.Logger, players map[int32]*model.Player, llmClient llm.Client, gameData loader.GameDataAccessor) *GameEngine {
 	gs := &model.GameState{
 		GameId:                  gameID,
-		Script:                  script,
 		Characters:              make(map[int32]*model.Character),
 		Players:                 players,
 		CurrentDay:              1,
@@ -63,8 +60,7 @@ func NewGameEngine(gameID string, logger *zap.Logger, script *model.Script, play
 		CharacterIntrigueLimits: make(map[int32]int32),
 	}
 
-	for _, charConfig := range script.Characters {
-
+	for _, charConfig := range gameData.GetCharacters() {
 		character := &model.Character{}
 
 		gs.Characters[charConfig.Id] = character
@@ -89,10 +85,10 @@ func NewGameEngine(gameID string, logger *zap.Logger, script *model.Script, play
 	for playerID, p := range players {
 		if p.Role == model.PlayerRole_MASTERMIND {
 			ge.mastermindPlayerID = playerID
-			p.Hand = slices.Clone(data.MastermindCards)
+			//p.Hand = slices.Clone(data.MastermindCards)
 		} else {
 			ge.protagonistPlayerIDs = append(ge.protagonistPlayerIDs, playerID)
-			p.Hand = slices.Clone(data.ProtagonistCards)
+			//p.Hand = slices.Clone(data.ProtagonistCards)
 		}
 	}
 
@@ -108,6 +104,10 @@ func (ge *GameEngine) StopGameLoop() {
 }
 
 func (ge *GameEngine) SubmitPlayerAction(playerID int32, action *model.PlayerActionPayload) {
+	if action == nil {
+		ge.logger.Warn("Received nil action from player")
+		return
+	}
 	select {
 	case ge.requestChan <- &llmActionCompleteRequest{playerID: playerID, action: action}:
 	default:
@@ -209,7 +209,7 @@ func (ge *GameEngine) resetLoop() {
 		p.Hand = nil // Or reset to initial cards
 	}
 	ge.GameState.PlayedCardsThisLoop = make(map[int32]bool)
-	ge.GameState.PreventedIncidents = make(map[int32]bool)
+	ge.GameState.PreventedTragedies = make(map[int32]bool)
 	ge.GameState.DayEvents = make([]*model.GameEvent, 0)
 }
 

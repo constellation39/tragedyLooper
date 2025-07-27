@@ -2,13 +2,12 @@ syntax = "proto3";
 
 package v1;
 
+import "v1/card.proto";
 import "v1/character.proto";
 import "v1/enums.proto";
 import "v1/event.proto";
 import "v1/player.proto";
-import "v1/card.proto";
 import "v1/script.proto";
-
 
 option go_package = "tragedylooper/internal/game/v1;v1";
 

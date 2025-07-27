@@ -776,11 +776,12 @@ func (x *ChoiceRequiredEvent) GetChoices() []*Choice {
 
 type Incident struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Day           int32                  `protobuf:"varint,2,opt,name=day,proto3" json:"day,omitempty"`
-	Culprit       string                 `protobuf:"bytes,3,opt,name=culprit,proto3" json:"culprit,omitempty"`
-	Victim        string                 `protobuf:"bytes,4,opt,name=victim,proto3" json:"victim,omitempty"`
-	Description   string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Day           int32                  `protobuf:"varint,3,opt,name=day,proto3" json:"day,omitempty"`
+	Culprit       string                 `protobuf:"bytes,4,opt,name=culprit,proto3" json:"culprit,omitempty"`
+	Victim        string                 `protobuf:"bytes,5,opt,name=victim,proto3" json:"victim,omitempty"`
+	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -813,6 +814,13 @@ func (x *Incident) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Incident.ProtoReflect.Descriptor instead.
 func (*Incident) Descriptor() ([]byte, []int) {
 	return file_v1_event_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *Incident) GetId() int32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
 }
 
 func (x *Incident) GetName() string {
@@ -990,13 +998,14 @@ const file_v1_event_proto_rawDesc = "" +
 	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\";\n" +
 	"\x13ChoiceRequiredEvent\x12$\n" +
 	"\achoices\x18\x01 \x03(\v2\n" +
-	".v1.ChoiceR\achoices\"\x84\x01\n" +
-	"\bIncident\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x10\n" +
-	"\x03day\x18\x02 \x01(\x05R\x03day\x12\x18\n" +
-	"\aculprit\x18\x03 \x01(\tR\aculprit\x12\x16\n" +
-	"\x06victim\x18\x04 \x01(\tR\x06victim\x12 \n" +
-	"\vdescription\x18\x05 \x01(\tR\vdescription\"B\n" +
+	".v1.ChoiceR\achoices\"\x94\x01\n" +
+	"\bIncident\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x10\n" +
+	"\x03day\x18\x03 \x01(\x05R\x03day\x12\x18\n" +
+	"\aculprit\x18\x04 \x01(\tR\aculprit\x12\x16\n" +
+	"\x06victim\x18\x05 \x01(\tR\x06victim\x12 \n" +
+	"\vdescription\x18\x06 \x01(\tR\vdescription\"B\n" +
 	"\x16IncidentTriggeredEvent\x12(\n" +
 	"\bincident\x18\x01 \x01(\v2\f.v1.IncidentR\bincident\"L\n" +
 	"\x15TragedyTriggeredEvent\x123\n" +

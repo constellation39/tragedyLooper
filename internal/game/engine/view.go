@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"fmt"
 	"google.golang.org/protobuf/proto"
 
 	model "tragedylooper/internal/game/proto/v1"
@@ -26,31 +27,49 @@ func (ge *GameEngine) generatePlayerView(playerID int32) *model.PlayerView {
 	}
 
 	// Filter characters based on player role
-	view.Characters = make(map[int32]*model.Character)
+	view.Characters = make(map[int32]*model.PlayerViewCharacter)
 	for id, char := range ge.GameState.Characters {
 		// Create a copy to avoid races and unintended modification of the core state.
 		charCopy := proto.Clone(char).(*model.Character)
-		if player.Role == model.PlayerRole_PLAYER_ROLE_PROTAGONIST {
+		playerViewChar := &model.PlayerViewCharacter{
+			Id:               charCopy.Id,
+			Name:             charCopy.Name,
+			Traits:           charCopy.Traits,
+			CurrentLocation:  charCopy.CurrentLocation,
+			Paranoia:         charCopy.Paranoia,
+			Goodwill:         charCopy.Goodwill,
+			Intrigue:         charCopy.Intrigue,
+			Abilities:        charCopy.Abilities,
+			IsAlive:          charCopy.IsAlive,
+			InPanicMode:      charCopy.InPanicMode,
+			Rules:            charCopy.Rules,
+		}
+		if player.Role == model.PlayerRole_PROTAGONIST {
 			// Hide the true role from Protagonists, showing it as unspecified.
 			// The Mastermind will see the true roles.
-			charCopy.HiddenRole = model.RoleType_ROLE_TYPE_UNSPECIFIED
+			// charCopy.HiddenRole = model.RoleType_ROLE_TYPE_UNSPECIFIED // This field does not exist on PlayerViewCharacter
 		}
-		view.Characters[id] = charCopy
+		view.Characters[id] = playerViewChar
 	}
 
 	// Filter player info
-	view.Players = make(map[int32]*model.Player)
+	view.Players = make(map[string]*model.PlayerViewPlayer)
 	for id, p := range ge.GameState.Players {
 		playerCopy := proto.Clone(p).(*model.Player)
-		if id != playerID {
-			playerCopy.Hand = nil // Hide other players' hands
+		playerViewPlayer := &model.PlayerViewPlayer{
+			Id:   fmt.Sprintf("%d", playerCopy.Id),
+			Name: playerCopy.Name,
+			Role: playerCopy.Role,
 		}
-		view.Players[id] = playerCopy
+		if id != playerID {
+			// playerCopy.Hand = nil // Hide other players' hands - not applicable to PlayerViewPlayer
+		}
+		view.Players[fmt.Sprintf("%d", id)] = playerViewPlayer
 	}
 
 	// Add player-specific info
 	view.YourHand = player.Hand
-	if player.Role == model.PlayerRole_PLAYER_ROLE_PROTAGONIST {
+	if player.Role == model.PlayerRole_PROTAGONIST {
 		view.YourDeductions = player.DeductionKnowledge
 	}
 

@@ -198,7 +198,7 @@ var File_v1_game_proto protoreflect.FileDescriptor
 
 const file_v1_game_proto_rawDesc = "" +
 	"\n" +
-	"\rv1/game.proto\x12\x02v1\x1a\x12v1/character.proto\x1a\x0ev1/enums.proto\x1a\x0ev1/event.proto\x1a\x0fv1/player.proto\x1a\rv1/card.proto\x1a\x0fv1/script.proto\"\xf1\r\n" +
+	"\rv1/game.proto\x12\x02v1\x1a\rv1/card.proto\x1a\x12v1/character.proto\x1a\x0ev1/enums.proto\x1a\x0ev1/event.proto\x1a\x0fv1/player.proto\x1a\x0fv1/script.proto\"\xf1\r\n" +
 	"\tGameState\x12\x17\n" +
 	"\agame_id\x18\x01 \x01(\tR\x06gameId\x12\"\n" +
 	"\x06script\x18\x02 \x01(\v2\n" +
@@ -313,11 +313,11 @@ func file_v1_game_proto_init() {
 	if File_v1_game_proto != nil {
 		return
 	}
+	file_v1_card_proto_init()
 	file_v1_character_proto_init()
 	file_v1_enums_proto_init()
 	file_v1_event_proto_init()
 	file_v1_player_proto_init()
-	file_v1_card_proto_init()
 	file_v1_script_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{

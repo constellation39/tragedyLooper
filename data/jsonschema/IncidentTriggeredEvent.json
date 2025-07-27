@@ -15,6 +15,9 @@
         },
         "v1.Incident": {
             "properties": {
+                "id": {
+                    "type": "integer"
+                },
                 "name": {
                     "type": "string"
                 },

@@ -61,8 +61,8 @@ func (ge *GameEngine) handlePlayCardAction(player *model.Player, payload *model.
 	}
 	playedCard.UsedThisLoop = true // Mark as used
 
-	if _, ok := ge.GameState.PlayedCardsThisDay[playedCard.Id]; !ok {
-		ge.GameState.PlayedCardsThisDay[playedCard.Id] = true
+	if _, ok := ge.GameState.PlayedCardsThisDay[player.Id]; !ok {
+		ge.GameState.PlayedCardsThisDay[player.Id] = playedCard
 	}
 	if _, ok := ge.GameState.PlayedCardsThisLoop[playedCard.Id]; !ok {
 		ge.GameState.PlayedCardsThisLoop[playedCard.Id] = true

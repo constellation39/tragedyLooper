@@ -18,7 +18,7 @@ func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType, ev
 			}
 
 			// 如果是事件驱动的，请检查事件过滤器
-			if triggerType == model.TriggerType_TRIGGER_TYPE_ON_GAME_EVENT {
+			if triggerType == model.TriggerType_ON_GAME_EVENT {
 				if event == nil || !ge.eventMatchesFilter(event, ability.EventFilters) {
 					continue
 				}
@@ -44,7 +44,7 @@ func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType, ev
 				ge.GameState.Characters[char.Id].Abilities[i].UsedThisLoop = true
 			}
 
-			ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_ABILITY_USED, &model.AbilityUsedEvent{CharacterId: char.Id, AbilityName: ability.Name})
+						// ge.publishGameEvent(model.GameEventType_ABILITY_USED, &model.AbilityUsedEvent{CharacterId: char.Id, AbilityName: ability.Name})
 		}
 	}
 }

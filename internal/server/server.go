@@ -11,8 +11,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 	"go.uber.org/zap"
-	"google.golang.org/protobuf/types/known/structpb"
-
 	"tragedylooper/internal/game/engine"
 	"tragedylooper/internal/game/loader"
 	model "tragedylooper/internal/game/proto/v1"
@@ -28,14 +26,14 @@ type Server struct {
 	// 用于发出服务器关闭信号的通道
 	shutdownChan chan struct{}
 	// 可用游戏剧本的映射
-	gameData *loader.GameData
+	gameDataLoader loader.Loader
 	// LLM 客户端用于 AI 玩家
 	llmClient llm.Client
 	logger    *zap.Logger
 }
 
 // NewServer 创建一个新的游戏服务器实例。
-func NewServer(gameData *loader.GameData, llmClient llm.Client, logger *zap.Logger) *Server {
+func NewServer(gameData loader.Loader, llmClient llm.Client, logger *zap.Logger) *Server {
 	return &Server{
 		upgrader: websocket.Upgrader{
 			ReadBufferSize:  1024,
@@ -44,11 +42,11 @@ func NewServer(gameData *loader.GameData, llmClient llm.Client, logger *zap.Logg
 				return true // 允许所有来源进行开发，在生产环境中限制
 			},
 		},
-		rooms:        make(map[string]*Room),
-		shutdownChan: make(chan struct{}),
-		gameData:     gameData,
-		llmClient:    llmClient,
-		logger:       logger,
+		rooms:          make(map[string]*Room),
+		shutdownChan:   make(chan struct{}),
+		gameDataLoader: gameData,
+		llmClient:      llmClient,
+		logger:         logger,
 	}
 }
 
@@ -138,17 +136,13 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	script, ok := s.gameData.Scripts[req.ScriptID+".json"]
-	if !ok {
-		http.Error(w, "Script not found", http.StatusNotFound)
+	gameDataAccessor, err := s.gameDataLoader.LoadGameDataAccessor(req.ScriptID)
+	if err != nil {
+		ctxLogger.Error("Failed to load script", zap.Error(err))
 		return
 	}
 
-	gameID, err := strconv.ParseInt(generateUniqueGameID(), 10, 32)
-	if err != nil {
-		ctxLogger.Error("failed to parse gameID", zap.Error(err))
-		return
-	}
+	gameID := generateUniqueGameID()
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -164,19 +158,19 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		Role:               req.PlayerRole,
 		IsLlm:              req.IsLlm,
 		Hand:               make([]*model.Card, 0), // 卡牌将由游戏引擎处理
-		DeductionKnowledge: make(map[int32]*structpb.Value),
+		DeductionKnowledge: &model.PlayerDeductionKnowledge{},
 		LlmSessionId:       "",
 	}
 
-	gameEngine := engine.NewGameEngine(int32(gameID), ctxLogger, script, players, s.llmClient, s.gameData)
-	room := NewRoom(fmt.Sprintf("%d", gameID), gameEngine, ctxLogger)
-	s.rooms[fmt.Sprintf("%d", gameID)] = room
+	gameEngine := engine.NewGameEngine(gameID, ctxLogger, players, s.llmClient, gameDataAccessor)
+	room := NewRoom(gameID, gameEngine, ctxLogger)
+	s.rooms[gameID] = room
 
 	room.Start() // 启动此房间的游戏引擎循环
 
-	ctxLogger.Info("Room created", zap.String("gameID", fmt.Sprintf("%d", gameID)), zap.Int32("playerID", req.PlayerID), zap.String("scriptID", req.ScriptID))
+	ctxLogger.Info("Room created", zap.String("gameID", gameID), zap.Int32("playerID", req.PlayerID), zap.String("scriptID", req.ScriptID))
 	w.WriteHeader(http.StatusCreated)
-	if err := json.NewEncoder(w).Encode(map[string]string{"game_id": fmt.Sprintf("%d", gameID)}); err != nil {
+	if err := json.NewEncoder(w).Encode(map[string]string{"game_id": gameID}); err != nil {
 		ctxLogger.Error("Error encoding response", zap.Error(err))
 	}
 }
@@ -216,7 +210,7 @@ func (s *Server) HandleJoinRoom(w http.ResponseWriter, r *http.Request) {
 		Role:               req.PlayerRole,
 		IsLlm:              req.IsLlm,
 		Hand:               make([]*model.Card, 0),
-		DeductionKnowledge: make(map[int32]*structpb.Value),
+		DeductionKnowledge: &model.PlayerDeductionKnowledge{},
 	}
 
 	ctxLogger.Info("Player joined room", zap.Int32("playerID", req.PlayerID), zap.String("gameID", req.GameId), zap.String("role", req.PlayerRole.String()))
@@ -234,7 +228,7 @@ func (s *Server) HandleListRooms(w http.ResponseWriter, _ *http.Request) {
 	var roomList []map[string]interface{}
 	for id, room := range s.rooms {
 		// 只列出未满或未开始的房间
-		if room.gameEngine.GameState.CurrentPhase == model.GamePhase_GAME_PHASE_MORNING { // 示例条件
+		if room.gameEngine.GameState.CurrentPhase == model.GamePhase_SETUP { // 示例条件
 			roomList = append(roomList, map[string]interface{}{
 				"id":            id,
 				"script_name":   room.gameEngine.GameState.Script.Name,
@@ -276,15 +270,14 @@ func (c *Client) readPump(_ *Server) {
 			break
 		}
 
-		var action model.PlayerAction
+		var action *model.PlayerActionPayload
 		if err := json.Unmarshal(message, &action); err != nil {
 			c.logger.Warn("Failed to parse incoming message as PlayerAction", zap.Error(err))
 			continue
 		}
-		action.PlayerId = c.playerID
 
 		if c.room != nil {
-			c.room.gameEngine.SubmitPlayerAction(&action)
+			c.room.gameEngine.SubmitPlayerAction(c.playerID, action)
 		} else {
 			c.logger.Warn("Received action but not in a room.")
 		}

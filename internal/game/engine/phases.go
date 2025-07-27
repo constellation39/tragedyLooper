@@ -53,19 +53,29 @@ func (ge *GameEngine) handleCardResolvePhase() {
 
 	// Resolve cards in a specific order if necessary (e.g., by initiative). For now, iterate over players.
 	for playerID, card := range ge.GameState.PlayedCardsThisDay {
-			// The card itself contains the target information, set during the play action.
-			// We construct a payload for the effect system.
-			payload := &model.UseAbilityPayload{
-				Target: card.Target,
+		// The card itself contains the target information, set during the play action.
+		// We construct a payload for the effect system.
+		var payload *model.UseAbilityPayload
+		switch t := card.Target.(type) {
+		case *model.Card_TargetCharacterId:
+			payload = &model.UseAbilityPayload{
+				Target: &model.UseAbilityPayload_TargetCharacterId{TargetCharacterId: t.TargetCharacterId},
 			}
-			if err := ge.applyEffect(card.Effect, nil, payload); err != nil {
-				ge.logger.Error("Error applying card effect",
-					zap.Error(err),
-					zap.String("playerID", fmt.Sprint(playerID)),
-					zap.String("cardName", card.Name),
-				)
+		case *model.Card_TargetLocation:
+			payload = &model.UseAbilityPayload{
+				Target: &model.UseAbilityPayload_TargetLocation{TargetLocation: t.TargetLocation},
 			}
-		ge.GameState.CurrentPhase = model.GamePhase_ABILITIES}
+		}
+
+		if err := ge.applyEffect(card.Effect, nil, payload); err != nil {
+			ge.logger.Error("Error applying card effect",
+				zap.Error(err),
+				zap.String("playerID", fmt.Sprint(playerID)),
+				zap.String("cardName", card.Name),
+			)
+		}
+		ge.GameState.CurrentPhase = model.GamePhase_ABILITIES
+	}
 }
 
 func (ge *GameEngine) handleAbilitiesPhase() {
@@ -140,7 +150,7 @@ func (ge *GameEngine) handleDayEndPhase() {
 
 func (ge *GameEngine) handleLoopEndPhase() {
 	ge.logger.Info("Loop End Phase", zap.Int("loop", int(ge.GameState.CurrentLoop)))
-	ge.checkAndTriggerAbilities(model.TriggerType_TRIGGER_TYPE_ON_LOOP_START, nil)
+	ge.checkAndTriggerAbilities(model.TriggerType_ON_LOOP_START, nil)
 
 	if gameOver, winner := ge.checkGameEndConditions(); gameOver {
 		ge.endGame(winner)
@@ -150,7 +160,7 @@ func (ge *GameEngine) handleLoopEndPhase() {
 	// If it's the last loop, the outcome is final.
 	if ge.GameState.CurrentLoop >= ge.GameState.Script.LoopCount {
 		// If no one has won by the final loop, Protagonists win by default
-		ge.endGame(model.PlayerRole_PLAYER_ROLE_PROTAGONIST)
+		ge.endGame(model.PlayerRole_PROTAGONIST)
 		return
 	}
 
@@ -159,7 +169,7 @@ func (ge *GameEngine) handleLoopEndPhase() {
 	ge.GameState.CurrentLoop++
 	ge.GameState.CurrentDay = 1
 	ge.GameState.CurrentPhase = model.GamePhase_SETUP
-	ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_RESET, &model.LoopResetEvent{Loop: ge.GameState.CurrentLoop})
+	ge.publishGameEvent(model.GameEventType_LOOP_RESET, &model.LoopResetEvent{Loop: ge.GameState.CurrentLoop})
 }
 
 func (ge *GameEngine) handleProtagonistGuessPhase() {
@@ -167,5 +177,5 @@ func (ge *GameEngine) handleProtagonistGuessPhase() {
 	// This phase is triggered by a player action (ActionMakeGuess).
 	// The logic is handled in `handleMakeGuessAction`.
 	// After the guess, the game transitions to GameOver.
-	ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_GAME_OVER
+	ge.GameState.CurrentPhase = model.GamePhase_GAME_OVER
 }

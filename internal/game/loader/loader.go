@@ -1,207 +1,144 @@
 package loader
 
 import (
-	"context"
-	"encoding/json"
 	"fmt"
-	"os"
-	"path/filepath"
 	"sync"
 	"tragedylooper/internal/game/proto/v1"
 )
 
-// Loader defines the interface for loading all static game data from a persistent source.
-// It is kept separate to allow for different data sources (e.g., files, database).
 type Loader interface {
-	LoadAbilities(ctx context.Context) (map[string]*v1.Ability, error)
-	LoadCards(ctx context.Context) (map[string]*v1.Card, error)
-	LoadCharacters(ctx context.Context) (map[string]*v1.Character, error)
-	LoadScript(ctx context.Context, name string) (*v1.Script, error)
-	LoadIncidents(ctx context.Context) (map[string]*v1.Incident, error)
+	LoadGameDataAccessor(name string) (GameDataAccessor, error)
 }
 
-// GameDataAccessor defines an interface for high-performance, cached access to game data.
-// It provides methods to retrieve individual data entries by their ID.
 type GameDataAccessor interface {
-	GetAbility(id string) (*v1.Ability, error)
-	GetCard(id string) (*v1.Card, error)
-	GetCharacter(id string) (*v1.Character, error)
-	GetIncident(id string) (*v1.Incident, error)
-	GetScript(ctx context.Context, name string) (*v1.Script, error)
+	GetAbility(id int32) (*v1.Ability, error)
+	GetCard(id int32) (*v1.Card, error)
+	GetCharacter(id int32) (*v1.Character, error)
+	GetIncident(id int32) (*v1.Incident, error)
+	GetScript() (*v1.Script, error)
+
+	GetAbilities() map[int32]*v1.Ability
+	GetCards() map[int32]*v1.Card
+	GetCharacters() map[int32]*v1.Character
+	GetIncidents() map[int32]*v1.Incident
 }
 
 // jsonLoader implements the Loader interface for loading data from JSON files.
 type jsonLoader struct {
-	dataDir string
+	dataDir  string
+	sync.Map // map[string]GameDataAccessor
 }
 
-// newJSONLoader creates a new loader that reads from the given data directory.
-func newJSONLoader(dataDir string) Loader {
+// NewJSONLoader creates a new loader that reads from the given data directory.
+func NewJSONLoader(dataDir string) Loader {
 	return &jsonLoader{dataDir: dataDir}
-}
-
-func (l *jsonLoader) loadJSONFile(_ context.Context, filename string, v interface{}) error {
-	path := filepath.Join(l.dataDir, filename)
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return fmt.Errorf("failed to read file %s: %w", path, err)
-	}
-	if err := json.Unmarshal(data, v); err != nil {
-		return fmt.Errorf("failed to unmarshal json from %s: %w", path, err)
-	}
-	return nil
-}
-
-func (l *jsonLoader) LoadAbilities(ctx context.Context) (map[string]*v1.Ability, error) {
-	var data struct {
-		Abilities map[string]*v1.Ability `json:"abilities"`
-	}
-	if err := l.loadJSONFile(ctx, "ability.json", &data); err != nil {
-		return nil, err
-	}
-	return data.Abilities, nil
-}
-
-func (l *jsonLoader) LoadCards(ctx context.Context) (map[string]*v1.Card, error) {
-	var data struct {
-		Cards map[string]*v1.Card `json:"cards"`
-	}
-	if err := l.loadJSONFile(ctx, "card.json", &data); err != nil {
-		return nil, err
-	}
-	return data.Cards, nil
-}
-
-func (l *jsonLoader) LoadCharacters(ctx context.Context) (map[string]*v1.Character, error) {
-	var data struct {
-		Characters map[string]*v1.Character `json:"characters"`
-	}
-	if err := l.loadJSONFile(ctx, "character.json", &data); err != nil {
-		return nil, err
-	}
-	return data.Characters, nil
-}
-
-func (l *jsonLoader) LoadScript(ctx context.Context, name string) (*v1.Script, error) {
-	var script v1.Script
-	filename := filepath.Join("scripts", name+".json")
-	if err := l.loadJSONFile(ctx, filename, &script); err != nil {
-		return nil, err
-	}
-	return &script, nil
-}
-
-func (l *jsonLoader) LoadIncidents(ctx context.Context) (map[string]*v1.Incident, error) {
-	var data struct {
-		Incidents map[string]*v1.Incident `json:"incidents"`
-	}
-	if err := l.loadJSONFile(ctx, "IncidentConfig.json", &data); err != nil {
-		return nil, err
-	}
-	return data.Incidents, nil
 }
 
 // gameDataAccessor implements the GameDataAccessor interface.
 // It pre-loads all data using a Loader and stores it in memory for fast access.
 type gameDataAccessor struct {
-	loader           Loader
-	abilities        map[string]*v1.Ability
-	cards            map[string]*v1.Card
-	characters       map[string]*v1.Character
-	incidents        map[string]*v1.Incident
-	scriptCache      map[string]*v1.Script
-	scriptCacheMutex sync.RWMutex
+	loader      Loader
+	abilities   *v1.AbilityLib
+	cards       *v1.CardLib
+	characters  *v1.CharacterLib
+	incidents   *v1.IncidentConfigLib
+	scriptCache *v1.Script
 }
 
-// New creates a new GameDataAccessor by initializing a loader for the given data directory
-// and pre-loading all necessary game data into a cache.
-func New(ctx context.Context, dataDir string) (GameDataAccessor, error) {
-	loader := newJSONLoader(dataDir)
-
-	abilities, err := loader.LoadAbilities(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("failed to load abilities: %w", err)
+func (l *jsonLoader) LoadGameDataAccessor(name string) (GameDataAccessor, error) {
+	if gda, ok := l.Load(name); ok {
+		return gda.(GameDataAccessor), nil
 	}
 
-	cards, err := loader.LoadCards(ctx)
+	abilities, err := LoadAbility(l.dataDir)
 	if err != nil {
-		return nil, fmt.Errorf("failed to load cards: %w", err)
+		panic(fmt.Sprintf("failed to load abilities: %v", err))
 	}
 
-	characters, err := loader.LoadCharacters(ctx)
+	cards, err := LoadCard(l.dataDir)
 	if err != nil {
-		return nil, fmt.Errorf("failed to load characters: %w", err)
+		panic(fmt.Sprintf("failed to load cards: %v", err))
 	}
 
-	incidents, err := loader.LoadIncidents(ctx)
+	characters, err := LoadCharacter(l.dataDir)
 	if err != nil {
-		return nil, fmt.Errorf("failed to load incidents: %w", err)
+		panic(fmt.Sprintf("failed to load characters: %v", err))
 	}
 
-	return &gameDataAccessor{
-		loader:      loader,
+	script, err := LoadScript(l.dataDir, name)
+	if err != nil {
+		panic(fmt.Sprintf("failed to load script %s: %v", name, err))
+	}
+
+	incidents, err := LoadIncidents(l.dataDir)
+	if err != nil {
+		panic(fmt.Sprintf("failed to load incidents for script %s: %v", name, err))
+	}
+
+	gda := &gameDataAccessor{
+		loader:      l,
 		abilities:   abilities,
 		cards:       cards,
 		characters:  characters,
 		incidents:   incidents,
-		scriptCache: make(map[string]*v1.Script),
-	}, nil
+		scriptCache: script,
+	}
+
+	l.Store(name, gda)
+	return gda, nil
 }
 
-func (g *gameDataAccessor) GetAbility(id string) (*v1.Ability, error) {
-	ability, ok := g.abilities[id]
+func (g *gameDataAccessor) GetAbility(id int32) (*v1.Ability, error) {
+	a, ok := g.abilities.Abilities[id]
 	if !ok {
-		return nil, fmt.Errorf("ability with id '%s' not found", id)
+		return nil, fmt.Errorf("ability with id %d not found", id)
 	}
-	return ability, nil
+	return a, nil
 }
 
-func (g *gameDataAccessor) GetCard(id string) (*v1.Card, error) {
-	card, ok := g.cards[id]
+func (g *gameDataAccessor) GetCard(id int32) (*v1.Card, error) {
+	c, ok := g.cards.Cards[id]
 	if !ok {
-		return nil, fmt.Errorf("card with id '%s' not found", id)
+		return nil, fmt.Errorf("card with id %d not found", id)
 	}
-	return card, nil
+	return c, nil
 }
 
-func (g *gameDataAccessor) GetCharacter(id string) (*v1.Character, error) {
-	character, ok := g.characters[id]
+func (g *gameDataAccessor) GetCharacter(id int32) (*v1.CharacterConfig, error) {
+	c, ok := g.characters.Characters[id]
 	if !ok {
-		return nil, fmt.Errorf("character with id '%s' not found", id)
+		return nil, fmt.Errorf("character with id %d not found", id)
 	}
-	return character, nil
+	return c, nil
 }
 
-func (g *gameDataAccessor) GetIncident(id string) (*v1.Incident, error) {
-	incident, ok := g.incidents[id]
+func (g *gameDataAccessor) GetIncident(id int32) (*v1.Incident, error) {
+	i, ok := g.incidents.Incidents[id]
 	if !ok {
-		return nil, fmt.Errorf("incident with id '%s' not found", id)
+		return nil, fmt.Errorf("incident with id %s not found", id)
 	}
-	return incident, nil
+	return i, nil
 }
 
-func (g *gameDataAccessor) GetScript(ctx context.Context, name string) (*v1.Script, error) {
-	g.scriptCacheMutex.RLock()
-	script, found := g.scriptCache[name]
-	g.scriptCacheMutex.RUnlock()
-	if found {
-		return script, nil
+func (g *gameDataAccessor) GetScript() (*v1.Script, error) {
+	if g.scriptCache == nil {
+		return nil, fmt.Errorf("script not loaded")
 	}
+	return g.scriptCache, nil
+}
 
-	g.scriptCacheMutex.Lock()
-	defer g.scriptCacheMutex.Unlock()
+func (g *gameDataAccessor) GetAbilities() map[int32]*v1.Ability {
+	return g.abilities
+}
 
-	// Double-check in case another goroutine loaded it while we were waiting for the lock.
-	script, found = g.scriptCache[name]
-	if found {
-		return script, nil
-	}
+func (g *gameDataAccessor) GetCards() map[int32]*v1.Card {
+	return g.cards
+}
 
-	loadedScript, err := g.loader.LoadScript(ctx, name)
-	if err != nil {
-		return nil, fmt.Errorf("failed to load script '%s': %w", name, err)
-	}
+func (g *gameDataAccessor) GetCharacters() map[int32]*v1.CharacterConfig {
+	return g.characters
+}
 
-	g.scriptCache[name] = loadedScript
-	return loadedScript, nil
+func (g *gameDataAccessor) GetIncidents() map[int32]*v1.IncidentConfig {
+	return g.incidents
 }

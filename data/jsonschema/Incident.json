@@ -4,6 +4,9 @@
     "definitions": {
         "Incident": {
             "properties": {
+                "id": {
+                    "type": "integer"
+                },
                 "name": {
                     "type": "string"
                 },

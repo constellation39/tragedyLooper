@@ -253,19 +253,21 @@ func (x *Tragedy) GetConditions() []*Condition {
 // 剧本信息
 type Script struct {
 	state                   protoimpl.MessageState `protogen:"open.v1"`
-	Id                      int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                            // 剧本唯一ID
-	Name                    string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                         // 剧本名称
-	Description             string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                           // 剧本描述
-	MainPlot                TragedyScriptType      `protobuf:"varint,4,opt,name=main_plot,json=mainPlot,proto3,enum=v1.TragedyScriptType" json:"main_plot,omitempty"`                      // 主线剧情类型
-	SubPlots                []TragedyScriptType    `protobuf:"varint,5,rep,packed,name=sub_plots,json=subPlots,proto3,enum=v1.TragedyScriptType" json:"sub_plots,omitempty"`               // 支线剧情类型列表
-	Characters              []*CharacterConfig     `protobuf:"bytes,6,rep,name=characters,proto3" json:"characters,omitempty"`                                                             // 剧本中角色的初始配置
-	Incidents               []*IncidentConfig      `protobuf:"bytes,7,rep,name=incidents,proto3" json:"incidents,omitempty"`                                                               // 剧本中预设的事件（悲剧）配置
-	LoopCount               int32                  `protobuf:"varint,8,opt,name=loop_count,json=loopCount,proto3" json:"loop_count,omitempty"`                                             // 允许的最大时间循环次数
-	DaysPerLoop             int32                  `protobuf:"varint,9,opt,name=days_per_loop,json=daysPerLoop,proto3" json:"days_per_loop,omitempty"`                                     // 每个循环包含的天数
-	WinConditions           []*GameEndCondition    `protobuf:"bytes,10,rep,name=win_conditions,json=winConditions,proto3" json:"win_conditions,omitempty"`                                 // 胜利条件列表
-	LoseConditions          []*GameEndCondition    `protobuf:"bytes,11,rep,name=lose_conditions,json=loseConditions,proto3" json:"lose_conditions,omitempty"`                              // 失败条件列表
-	SpecialRulesDescription []string               `protobuf:"bytes,12,rep,name=special_rules_description,json=specialRulesDescription,proto3" json:"special_rules_description,omitempty"` // 剧本特有规则的文字描述
-	Tragedies               []*Tragedy             `protobuf:"bytes,13,rep,name=tragedies,proto3" json:"tragedies,omitempty"`                                                              // 剧本中的悲剧列表
+	Id                      int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                              // 剧本唯一ID
+	Name                    string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                           // 剧本名称
+	Description             string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                             // 剧本描述
+	MainPlot                TragedyScriptType      `protobuf:"varint,4,opt,name=main_plot,json=mainPlot,proto3,enum=v1.TragedyScriptType" json:"main_plot,omitempty"`        // 主线剧情类型
+	SubPlots                []TragedyScriptType    `protobuf:"varint,5,rep,packed,name=sub_plots,json=subPlots,proto3,enum=v1.TragedyScriptType" json:"sub_plots,omitempty"` // 支线剧情类型列表
+	Characters              []*CharacterConfig     `protobuf:"bytes,6,rep,name=characters,proto3" json:"characters,omitempty"`                                               // 剧本中角色的初始配置
+	Incidents               []*IncidentConfig      `protobuf:"bytes,7,rep,name=incidents,proto3" json:"incidents,omitempty"`                                                 // 剧本中预设的事件（悲剧）配置
+	LoopCount               int32                  `protobuf:"varint,8,opt,name=loop_count,json=loopCount,proto3" json:"loop_count,omitempty"`                               // 允许的最大时间循环次数
+	DaysPerLoop             int32                  `protobuf:"varint,9,opt,name=days_per_loop,json=daysPerLoop,proto3" json:"days_per_loop,omitempty"`                       // 每个循环包含的天数
+	WinConditions           []*GameEndCondition    `protobuf:"bytes,10,rep,name=win_conditions,json=winConditions,proto3" json:"win_conditions,omitempty"`                   // 胜利条件列表
+	LoseConditions          []*GameEndCondition    `protobuf:"bytes,11,rep,name=lose_conditions,json=loseConditions,proto3" json:"lose_conditions,omitempty"`                // 失败条件列表
+	MastermindCardIds       []string               `protobuf:"bytes,12,rep,name=mastermind_card_ids,json=mastermindCardIds,proto3" json:"mastermind_card_ids,omitempty"`
+	ProtagonistCardIds      []string               `protobuf:"bytes,13,rep,name=protagonist_card_ids,json=protagonistCardIds,proto3" json:"protagonist_card_ids,omitempty"`
+	SpecialRulesDescription []string               `protobuf:"bytes,14,rep,name=special_rules_description,json=specialRulesDescription,proto3" json:"special_rules_description,omitempty"` // 剧本特有规则的文字描述
+	Tragedies               []*Tragedy             `protobuf:"bytes,15,rep,name=tragedies,proto3" json:"tragedies,omitempty"`                                                              // 剧本中的悲剧列表
 	unknownFields           protoimpl.UnknownFields
 	sizeCache               protoimpl.SizeCache
 }
@@ -373,6 +375,20 @@ func (x *Script) GetWinConditions() []*GameEndCondition {
 func (x *Script) GetLoseConditions() []*GameEndCondition {
 	if x != nil {
 		return x.LoseConditions
+	}
+	return nil
+}
+
+func (x *Script) GetMastermindCardIds() []string {
+	if x != nil {
+		return x.MastermindCardIds
+	}
+	return nil
+}
+
+func (x *Script) GetProtagonistCardIds() []string {
+	if x != nil {
+		return x.ProtagonistCardIds
 	}
 	return nil
 }
@@ -500,6 +516,7 @@ type IncidentConfig struct {
 	CulpritCharacterId int32                  `protobuf:"varint,3,opt,name=culprit_character_id,json=culpritCharacterId,proto3" json:"culprit_character_id,omitempty"`   // 导致悲剧发生的角色ID（如果适用，例如谋杀案的凶手）
 	Conditions         []*Condition           `protobuf:"bytes,4,rep,name=conditions,proto3" json:"conditions,omitempty"`                                                // 触发悲剧所需满足的条件列表
 	IsMainPlotIncident bool                   `protobuf:"varint,5,opt,name=is_main_plot_incident,json=isMainPlotIncident,proto3" json:"is_main_plot_incident,omitempty"` // 是否是主线剧情的事件（新增）
+	Name               string                 `protobuf:"bytes,6,opt,name=name,proto3" json:"name,omitempty"`                                                            // bool is_preventable = 6;         // 如果某些事件不可阻止，可以添加此字段
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -567,6 +584,13 @@ func (x *IncidentConfig) GetIsMainPlotIncident() bool {
 		return x.IsMainPlotIncident
 	}
 	return false
+}
+
+func (x *IncidentConfig) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
 }
 
 type IncidentConfigLib struct {
@@ -897,7 +921,7 @@ const file_v1_script_proto_rawDesc = "" +
 	"\x03day\x18\x02 \x01(\x05R\x03day\x12-\n" +
 	"\n" +
 	"conditions\x18\x03 \x03(\v2\r.v1.ConditionR\n" +
-	"conditions\"\xc3\x04\n" +
+	"conditions\"\xa5\x05\n" +
 	"\x06Script\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -913,9 +937,11 @@ const file_v1_script_proto_rawDesc = "" +
 	"\rdays_per_loop\x18\t \x01(\x05R\vdaysPerLoop\x12;\n" +
 	"\x0ewin_conditions\x18\n" +
 	" \x03(\v2\x14.v1.GameEndConditionR\rwinConditions\x12=\n" +
-	"\x0flose_conditions\x18\v \x03(\v2\x14.v1.GameEndConditionR\x0eloseConditions\x12:\n" +
-	"\x19special_rules_description\x18\f \x03(\tR\x17specialRulesDescription\x12)\n" +
-	"\ttragedies\x18\r \x03(\v2\v.v1.TragedyR\ttragedies\"\xeb\x02\n" +
+	"\x0flose_conditions\x18\v \x03(\v2\x14.v1.GameEndConditionR\x0eloseConditions\x12.\n" +
+	"\x13mastermind_card_ids\x18\f \x03(\tR\x11mastermindCardIds\x120\n" +
+	"\x14protagonist_card_ids\x18\r \x03(\tR\x12protagonistCardIds\x12:\n" +
+	"\x19special_rules_description\x18\x0e \x03(\tR\x17specialRulesDescription\x12)\n" +
+	"\ttragedies\x18\x0f \x03(\v2\v.v1.TragedyR\ttragedies\"\xeb\x02\n" +
 	"\x0fCharacterConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12-\n" +
 	"\vhidden_role\x18\x02 \x01(\x0e2\f.v1.RoleTypeR\n" +
@@ -925,7 +951,7 @@ const file_v1_script_proto_rawDesc = "" +
 	"\x10initial_goodwill\x18\x05 \x01(\x05R\x0finitialGoodwill\x12)\n" +
 	"\x10initial_intrigue\x18\x06 \x01(\x05R\x0finitialIntrigue\x12.\n" +
 	"\x13initial_ability_ids\x18\a \x03(\x05R\x11initialAbilityIds\x12+\n" +
-	"\x12is_first_step_role\x18\b \x01(\bR\x0fisFirstStepRole\"\xed\x01\n" +
+	"\x12is_first_step_role\x18\b \x01(\bR\x0fisFirstStepRole\"\x81\x02\n" +
 	"\x0eIncidentConfig\x125\n" +
 	"\rincident_type\x18\x01 \x01(\x0e2\x10.v1.IncidentTypeR\fincidentType\x12\x10\n" +
 	"\x03day\x18\x02 \x01(\x05R\x03day\x120\n" +
@@ -933,7 +959,8 @@ const file_v1_script_proto_rawDesc = "" +
 	"\n" +
 	"conditions\x18\x04 \x03(\v2\r.v1.ConditionR\n" +
 	"conditions\x121\n" +
-	"\x15is_main_plot_incident\x18\x05 \x01(\bR\x12isMainPlotIncident\"\xa9\x01\n" +
+	"\x15is_main_plot_incident\x18\x05 \x01(\bR\x12isMainPlotIncident\x12\x12\n" +
+	"\x04name\x18\x06 \x01(\tR\x04name\"\xa9\x01\n" +
 	"\x11IncidentConfigLib\x12B\n" +
 	"\tincidents\x18\x01 \x03(\v2$.v1.IncidentConfigLib.IncidentsEntryR\tincidents\x1aP\n" +
 	"\x0eIncidentsEntry\x12\x10\n" +

@@ -87,6 +87,18 @@
                     "type": "array",
                     "description": "失败条件列表"
                 },
+                "mastermind_card_ids": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "protagonist_card_ids": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
                 "special_rules_description": {
                     "items": {
                         "type": "string"
@@ -320,6 +332,10 @@
                 "is_main_plot_incident": {
                     "type": "boolean",
                     "description": "是否是主线剧情的事件（新增）"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "bool is_preventable = 6;         // 如果某些事件不可阻止，可以添加此字段"
                 }
             },
             "additionalProperties": true,

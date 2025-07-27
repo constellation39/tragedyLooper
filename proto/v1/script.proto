@@ -6,7 +6,6 @@ import "v1/ability.proto"; // 引入 ability.proto
 import "v1/character.proto"; // 引入 character.proto 以使用 CharacterConfig 中的字段
 import "v1/enums.proto";
 
-
 option go_package = "tragedylooper/internal/game/v1;v1";
 
 // Tragedy represents a tragedy in the script.
@@ -29,8 +28,10 @@ message Script {
   int32 days_per_loop = 9; // 每个循环包含的天数
   repeated GameEndCondition win_conditions = 10; // 胜利条件列表
   repeated GameEndCondition lose_conditions = 11; // 失败条件列表
-  repeated string special_rules_description = 12; // 剧本特有规则的文字描述
-  repeated Tragedy tragedies = 13; // 剧本中的悲剧列表
+  repeated string mastermind_card_ids = 12;
+  repeated string protagonist_card_ids = 13;
+  repeated string special_rules_description = 14; // 剧本特有规则的文字描述
+  repeated Tragedy tragedies = 15; // 剧本中的悲剧列表
 }
 
 // 角色在剧本中的配置
@@ -46,6 +47,10 @@ message CharacterConfig {
   // 可以根据需要增加其他初始状态或元数据，如 paranoia_limit等
 }
 
+message CharacterConfigLib {
+  map<int32, CharacterConfig> characters = 1;
+}
+
 // 事件/悲剧在剧本中的配置
 message IncidentConfig {
   IncidentType incident_type = 1; // 悲剧类型
@@ -53,6 +58,7 @@ message IncidentConfig {
   int32 culprit_character_id = 3; // 导致悲剧发生的角色ID（如果适用，例如谋杀案的凶手）
   repeated Condition conditions = 4; // 触发悲剧所需满足的条件列表
   bool is_main_plot_incident = 5; // 是否是主线剧情的事件（新增）
+  string name = 6;
   // bool is_preventable = 6;         // 如果某些事件不可阻止，可以添加此字段
 }
 
