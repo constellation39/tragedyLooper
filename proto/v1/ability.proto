@@ -22,7 +22,7 @@ message AbilityConfig {
 }
 
 message Ability {
-  int32 id = 1;               // 能力ID，关联到AbilityConfig
+  AbilityConfig config = 1;               // 能力ID，关联到AbilityConfig
   bool used_this_loop = 2;    // 运行时状态：本循环是否已使用
 }
 

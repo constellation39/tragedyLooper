@@ -85,8 +85,9 @@
         },
         "v1.Ability": {
             "properties": {
-                "id": {
-                    "type": "integer",
+                "config": {
+                    "$ref": "#/definitions/v1.AbilityConfig",
+                    "additionalProperties": true,
                     "description": "能力ID，关联到AbilityConfig"
                 },
                 "used_this_loop": {
@@ -97,6 +98,237 @@
             "additionalProperties": true,
             "type": "object",
             "title": "Ability"
+        },
+        "v1.AbilityConfig": {
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "能力唯一ID"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "能力名称"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "能力描述"
+                },
+                "trigger_type": {
+                    "enum": [
+                        "TRIGGER_TYPE_UNSPECIFIED",
+                        0,
+                        "ON_GAME_SETUP",
+                        1,
+                        "ON_LOOP_START",
+                        2,
+                        "ON_DAY_START",
+                        3,
+                        "ON_PHASE_START",
+                        4,
+                        "ON_PHASE_END",
+                        5,
+                        "ON_GAME_EVENT",
+                        6,
+                        "PASSIVE",
+                        7,
+                        "ON_GUESS_MADE",
+                        8,
+                        "ON_GAME_END",
+                        9
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Trigger Type",
+                    "description": "触发器类型（能力或规则何时触发）"
+                },
+                "event_filters": {
+                    "items": {
+                        "enum": [
+                            "GAME_EVENT_TYPE_UNSPECIFIED",
+                            0,
+                            "CHARACTER_MOVED",
+                            1,
+                            "STAT_ADJUSTED",
+                            2,
+                            "INCIDENT_TRIGGERED",
+                            3,
+                            "ROLE_REVEALED",
+                            4,
+                            "CHARACTER_DIED",
+                            5,
+                            "ABILITY_USED",
+                            6,
+                            "CARD_PLAYED",
+                            7,
+                            "DAY_ADVANCED",
+                            8,
+                            "LOOP_RESET",
+                            9
+                        ]
+                    },
+                    "type": "array",
+                    "title": "Game Event Type",
+                    "description": "游戏事件类型（用于能力触发器过滤）"
+                },
+                "effect": {
+                    "$ref": "#/definitions/v1.Effect",
+                    "additionalProperties": true,
+                    "description": "能力效果"
+                },
+                "once_per_loop": {
+                    "type": "boolean",
+                    "description": "是否每循环只能使用一次"
+                },
+                "refusal_role": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "MASTERMIND",
+                        1,
+                        "PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色"
+                },
+                "is_passive": {
+                    "type": "boolean",
+                    "description": "是否为被动能力"
+                },
+                "is_mandatory": {
+                    "type": "boolean",
+                    "description": "是否为强制能力（不可拒绝）"
+                },
+                "priority": {
+                    "type": "integer",
+                    "description": "能力结算优先级"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Ability Config"
+        },
+        "v1.AddTraitEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色"
+                },
+                "trait": {
+                    "type": "string",
+                    "description": "要添加的特征"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Add Trait Effect",
+            "description": "添加特征效果"
+        },
+        "v1.AdjustStatEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色"
+                },
+                "stat_type": {
+                    "enum": [
+                        "STAT_TYPE_UNSPECIFIED",
+                        0,
+                        "PARANOIA",
+                        1,
+                        "GOODWILL",
+                        2,
+                        "INTRIGUE",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Stat Type"
+                },
+                "amount": {
+                    "type": "integer",
+                    "description": "调整量（正数增加，负数减少）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Adjust Stat Effect",
+            "description": "调整属性效果"
+        },
+        "v1.ChangeRoleEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色"
+                },
+                "new_role": {
+                    "enum": [
+                        "ROLE_TYPE_UNSPECIFIED",
+                        0,
+                        "PERSON",
+                        1,
+                        "KILLER",
+                        2,
+                        "BRAIN",
+                        3,
+                        "KEY_PERSON",
+                        4,
+                        "CULTIST",
+                        5,
+                        "FRIEND",
+                        6,
+                        "LOVED_ONE",
+                        7,
+                        "CONSPIRACY_THEORIST",
+                        8,
+                        "SERIAL_KILLER",
+                        9,
+                        "FACTOR",
+                        10,
+                        "WITCH",
+                        11,
+                        "TIME_TRAVELER",
+                        12
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Role Type",
+                    "description": "角色身份类型"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Change Role Effect",
+            "description": "改变身份效果"
         },
         "v1.CharacterRule": {
             "properties": {
@@ -199,6 +431,220 @@
             "title": "Delayed Entry Effect",
             "description": "延迟登场效果"
         },
+        "v1.Effect": {
+            "properties": {
+                "adjust_stat": {
+                    "$ref": "#/definitions/v1.AdjustStatEffect",
+                    "additionalProperties": true,
+                    "description": "调整属性"
+                },
+                "move_character": {
+                    "$ref": "#/definitions/v1.MoveCharacterEffect",
+                    "additionalProperties": true,
+                    "description": "移动角色"
+                },
+                "forbid": {
+                    "$ref": "#/definitions/v1.ForbidEffect",
+                    "additionalProperties": true,
+                    "description": "禁止行动"
+                },
+                "grant_ability": {
+                    "$ref": "#/definitions/v1.GrantAbilityEffect",
+                    "additionalProperties": true,
+                    "description": "授予能力"
+                },
+                "reveal_role": {
+                    "$ref": "#/definitions/v1.RevealRoleEffect",
+                    "additionalProperties": true,
+                    "description": "揭示身份"
+                },
+                "change_role": {
+                    "$ref": "#/definitions/v1.ChangeRoleEffect",
+                    "additionalProperties": true,
+                    "description": "改变身份"
+                },
+                "trigger_incident": {
+                    "$ref": "#/definitions/v1.TriggerIncidentEffect",
+                    "additionalProperties": true,
+                    "description": "触发事件"
+                },
+                "end_game": {
+                    "$ref": "#/definitions/v1.EndGameEffect",
+                    "additionalProperties": true,
+                    "description": "结束游戏"
+                },
+                "add_trait": {
+                    "$ref": "#/definitions/v1.AddTraitEffect",
+                    "additionalProperties": true,
+                    "description": "添加特征"
+                },
+                "remove_trait": {
+                    "$ref": "#/definitions/v1.RemoveTraitEffect",
+                    "additionalProperties": true,
+                    "description": "移除特征"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Effect",
+            "description": "效果，定义了能力、卡牌或规则的具体作用"
+        },
+        "v1.EndGameEffect": {
+            "properties": {
+                "winner": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "MASTERMIND",
+                        1,
+                        "PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色"
+                },
+                "reason": {
+                    "type": "string",
+                    "description": "游戏结束原因描述"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "End Game Effect",
+            "description": "结束游戏效果"
+        },
+        "v1.ForbidEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色"
+                },
+                "forbid_type": {
+                    "enum": [
+                        "FORBID_TYPE_UNSPECIFIED",
+                        0,
+                        "MOVEMENT",
+                        1,
+                        "PARANOIA_CHANGE",
+                        2,
+                        "GOODWILL_CHANGE",
+                        3,
+                        "INTRIGUE_CHANGE",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Forbid Type"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Forbid Effect",
+            "description": "禁止效果"
+        },
+        "v1.GrantAbilityEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色"
+                },
+                "ability_id": {
+                    "type": "integer",
+                    "description": "授予的能力ID"
+                },
+                "is_temporary": {
+                    "type": "boolean",
+                    "description": "是否是临时能力（例如，只持续一天或一循环）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Grant Ability Effect",
+            "description": "授予能力效果"
+        },
+        "v1.MoveCharacterEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色"
+                },
+                "destination": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Move Character Effect",
+            "description": "移动角色效果"
+        },
+        "v1.RemoveTraitEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色"
+                },
+                "trait": {
+                    "type": "string",
+                    "description": "要移除的特征"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Remove Trait Effect",
+            "description": "移除特征效果"
+        },
+        "v1.RevealRoleEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Reveal Role Effect",
+            "description": "揭示身份效果"
+        },
         "v1.SpecialMovementRule": {
             "properties": {
                 "restricted_locations": {
@@ -229,6 +675,121 @@
             "type": "object",
             "title": "Special Movement Rule",
             "description": "特殊移动规则"
+        },
+        "v1.TargetSelector": {
+            "properties": {
+                "selector_type": {
+                    "enum": [
+                        "SELECTOR_TYPE_UNSPECIFIED",
+                        0,
+                        "SPECIFIC_CHARACTER",
+                        1,
+                        "TRIGGERING_CHARACTER",
+                        2,
+                        "CULPRIT",
+                        3,
+                        "VICTIM",
+                        4,
+                        "ANY_CHARACTER_WITH_ROLE",
+                        5,
+                        "ALL_CHARACTERS_AT_LOCATION",
+                        6
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Selector Type"
+                },
+                "character_id": {
+                    "type": "integer",
+                    "description": "当类型为 SPECIFIC_CHARACTER 时使用"
+                },
+                "role_filter": {
+                    "enum": [
+                        "ROLE_TYPE_UNSPECIFIED",
+                        0,
+                        "PERSON",
+                        1,
+                        "KILLER",
+                        2,
+                        "BRAIN",
+                        3,
+                        "KEY_PERSON",
+                        4,
+                        "CULTIST",
+                        5,
+                        "FRIEND",
+                        6,
+                        "LOVED_ONE",
+                        7,
+                        "CONSPIRACY_THEORIST",
+                        8,
+                        "SERIAL_KILLER",
+                        9,
+                        "FACTOR",
+                        10,
+                        "WITCH",
+                        11,
+                        "TIME_TRAVELER",
+                        12
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Role Type",
+                    "description": "角色身份类型"
+                },
+                "location_filter": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Target Selector",
+            "description": "目标选择器，用于动态指定条件或效果的目标"
+        },
+        "v1.TriggerIncidentEffect": {
+            "properties": {
+                "incident_id": {
+                    "type": "integer",
+                    "description": "要触发的事件ID (引用ScriptConfig中的IncidentConfig)"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Trigger Incident Effect",
+            "description": "触发事件效果"
         },
         "v1.TurfSelectionEffect": {
             "properties": {

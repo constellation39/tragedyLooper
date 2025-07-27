@@ -1,0 +1,49 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/PlotConfig",
+    "definitions": {
+        "PlotConfig": {
+            "properties": {
+                "plot_type": {
+                    "enum": [
+                        "PLOT_TYPE_UNSPECIFIED",
+                        0,
+                        "MAIN_PLOT",
+                        1,
+                        "SUB_PLOT",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Plot Type",
+                    "description": "剧情类型"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "剧情名称"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "剧情描述"
+                },
+                "incident_ids": {
+                    "items": {
+                        "type": "integer"
+                    },
+                    "type": "array",
+                    "description": "相关事件ID列表"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Plot Config",
+            "description": "剧情配置"
+        }
+    }
+}

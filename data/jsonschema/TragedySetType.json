@@ -1,0 +1,25 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [
+        "TRAGEDY_SET_TYPE_UNSPECIFIED",
+        0,
+        "BASIC_TRAGEDY",
+        1,
+        "FIRST_STEP",
+        2,
+        "MIDNIGHT_ZONE",
+        3,
+        "GHOSTLY_MIST",
+        4
+    ],
+    "oneOf": [
+        {
+            "type": "string"
+        },
+        {
+            "type": "integer"
+        }
+    ],
+    "title": "Tragedy Set Type",
+    "description": "悲剧集合类型"
+}

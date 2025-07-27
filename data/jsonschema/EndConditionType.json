@@ -1,0 +1,29 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [
+        "END_CONDITION_TYPE_UNSPECIFIED",
+        0,
+        "PROTAGONIST_GUESS_SUCCESS",
+        1,
+        "PROTAGONIST_GUESS_FAIL",
+        2,
+        "MAX_LOOPS_REACHED",
+        3,
+        "SPECIFIC_INCIDENT_TRIGGERED",
+        4,
+        "ALL_INCIDENTS_PREVENTED",
+        5,
+        "CUSTOM_CONDITION",
+        6
+    ],
+    "oneOf": [
+        {
+            "type": "string"
+        },
+        {
+            "type": "integer"
+        }
+    ],
+    "title": "End Condition Type",
+    "description": "游戏结束条件类型"
+}

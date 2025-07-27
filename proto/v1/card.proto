@@ -21,7 +21,7 @@ message CardConfig {
 
 // 卡牌运行时实例
 message Card {
-  int32 id = 1;               // 卡牌ID，关联到CardConfig
+  CardConfig config = 1;               // 卡牌ID，关联到CardConfig
   bool used_this_loop = 2;    // 运行时状态：本循环是否已使用
 }
 

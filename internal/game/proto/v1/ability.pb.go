@@ -147,7 +147,7 @@ func (x *AbilityConfig) GetPriority() int32 {
 
 type Ability struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                           // 能力ID，关联到AbilityConfig
+	Config        *AbilityConfig         `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`                                    // 能力ID，关联到AbilityConfig
 	UsedThisLoop  bool                   `protobuf:"varint,2,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"` // 运行时状态：本循环是否已使用
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -183,11 +183,11 @@ func (*Ability) Descriptor() ([]byte, []int) {
 	return file_v1_ability_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Ability) GetId() int32 {
+func (x *Ability) GetConfig() *AbilityConfig {
 	if x != nil {
-		return x.Id
+		return x.Config
 	}
-	return 0
+	return nil
 }
 
 func (x *Ability) GetUsedThisLoop() bool {
@@ -260,9 +260,9 @@ const file_v1_ability_proto_rawDesc = "" +
 	"is_passive\x18\t \x01(\bR\tisPassive\x12!\n" +
 	"\fis_mandatory\x18\n" +
 	" \x01(\bR\visMandatory\x12\x1a\n" +
-	"\bpriority\x18\v \x01(\x05R\bpriority\"?\n" +
-	"\aAbility\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x12$\n" +
+	"\bpriority\x18\v \x01(\x05R\bpriority\"Z\n" +
+	"\aAbility\x12)\n" +
+	"\x06config\x18\x01 \x01(\v2\x11.v1.AbilityConfigR\x06config\x12$\n" +
 	"\x0eused_this_loop\x18\x02 \x01(\bR\fusedThisLoop\"\xa6\x01\n" +
 	"\x10AbilityConfigLib\x12A\n" +
 	"\tabilities\x18\x01 \x03(\v2#.v1.AbilityConfigLib.AbilitiesEntryR\tabilities\x1aO\n" +
@@ -298,13 +298,14 @@ var file_v1_ability_proto_depIdxs = []int32{
 	5, // 1: v1.AbilityConfig.event_filters:type_name -> v1.GameEventType
 	6, // 2: v1.AbilityConfig.effect:type_name -> v1.Effect
 	7, // 3: v1.AbilityConfig.refusal_role:type_name -> v1.PlayerRole
-	3, // 4: v1.AbilityConfigLib.abilities:type_name -> v1.AbilityConfigLib.AbilitiesEntry
-	0, // 5: v1.AbilityConfigLib.AbilitiesEntry.value:type_name -> v1.AbilityConfig
-	6, // [6:6] is the sub-list for method output_type
-	6, // [6:6] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	0, // 4: v1.Ability.config:type_name -> v1.AbilityConfig
+	3, // 5: v1.AbilityConfigLib.abilities:type_name -> v1.AbilityConfigLib.AbilitiesEntry
+	0, // 6: v1.AbilityConfigLib.AbilitiesEntry.value:type_name -> v1.AbilityConfig
+	7, // [7:7] is the sub-list for method output_type
+	7, // [7:7] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	7, // [7:7] is the sub-list for extension extendee
+	0, // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_v1_ability_proto_init() }

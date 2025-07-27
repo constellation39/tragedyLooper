@@ -125,7 +125,7 @@ func (x *CardConfig) GetPriority() int32 {
 // 卡牌运行时实例
 type Card struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                           // 卡牌ID，关联到CardConfig
+	Config        *CardConfig            `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`                                    // 卡牌ID，关联到CardConfig
 	UsedThisLoop  bool                   `protobuf:"varint,2,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"` // 运行时状态：本循环是否已使用
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -161,11 +161,11 @@ func (*Card) Descriptor() ([]byte, []int) {
 	return file_v1_card_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Card) GetId() int32 {
+func (x *Card) GetConfig() *CardConfig {
 	if x != nil {
-		return x.Id
+		return x.Config
 	}
-	return 0
+	return nil
 }
 
 func (x *Card) GetUsedThisLoop() bool {
@@ -281,9 +281,9 @@ const file_v1_card_proto_rawDesc = "" +
 	"\x06effect\x18\x06 \x01(\v2\n" +
 	".v1.EffectR\x06effect\x12\"\n" +
 	"\ronce_per_loop\x18\a \x01(\bR\voncePerLoop\x12\x1a\n" +
-	"\bpriority\x18\b \x01(\x05R\bpriority\"<\n" +
-	"\x04Card\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x12$\n" +
+	"\bpriority\x18\b \x01(\x05R\bpriority\"T\n" +
+	"\x04Card\x12&\n" +
+	"\x06config\x18\x01 \x01(\v2\x0e.v1.CardConfigR\x06config\x12$\n" +
 	"\x0eused_this_loop\x18\x02 \x01(\bR\fusedThisLoop\"\x8d\x01\n" +
 	"\rCardConfigLib\x122\n" +
 	"\x05cards\x18\x01 \x03(\v2\x1c.v1.CardConfigLib.CardsEntryR\x05cards\x1aH\n" +
@@ -321,14 +321,15 @@ var file_v1_card_proto_depIdxs = []int32{
 	5, // 0: v1.CardConfig.card_type:type_name -> v1.CardType
 	6, // 1: v1.CardConfig.owner_role:type_name -> v1.PlayerRole
 	7, // 2: v1.CardConfig.effect:type_name -> v1.Effect
-	4, // 3: v1.CardConfigLib.cards:type_name -> v1.CardConfigLib.CardsEntry
-	1, // 4: v1.CardList.cards:type_name -> v1.Card
-	0, // 5: v1.CardConfigLib.CardsEntry.value:type_name -> v1.CardConfig
-	6, // [6:6] is the sub-list for method output_type
-	6, // [6:6] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	0, // 3: v1.Card.config:type_name -> v1.CardConfig
+	4, // 4: v1.CardConfigLib.cards:type_name -> v1.CardConfigLib.CardsEntry
+	1, // 5: v1.CardList.cards:type_name -> v1.Card
+	0, // 6: v1.CardConfigLib.CardsEntry.value:type_name -> v1.CardConfig
+	7, // [7:7] is the sub-list for method output_type
+	7, // [7:7] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	7, // [7:7] is the sub-list for extension extendee
+	0, // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_v1_card_proto_init() }

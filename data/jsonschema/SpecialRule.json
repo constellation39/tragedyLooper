@@ -1,21 +1,61 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/PlayerLib",
+    "$ref": "#/definitions/SpecialRule",
     "definitions": {
-        "PlayerLib": {
+        "SpecialRule": {
             "properties": {
-                "players": {
-                    "additionalProperties": {
-                        "$ref": "#/definitions/v1.Player",
-                        "additionalProperties": true
-                    },
-                    "type": "object",
-                    "description": "玩家ID到玩家信息的映射"
+                "name": {
+                    "type": "string",
+                    "description": "规则名称"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "规则描述"
+                },
+                "trigger": {
+                    "enum": [
+                        "TRIGGER_TYPE_UNSPECIFIED",
+                        0,
+                        "ON_GAME_SETUP",
+                        1,
+                        "ON_LOOP_START",
+                        2,
+                        "ON_DAY_START",
+                        3,
+                        "ON_PHASE_START",
+                        4,
+                        "ON_PHASE_END",
+                        5,
+                        "ON_GAME_EVENT",
+                        6,
+                        "PASSIVE",
+                        7,
+                        "ON_GUESS_MADE",
+                        8,
+                        "ON_GAME_END",
+                        9
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Trigger Type",
+                    "description": "触发器类型（能力或规则何时触发）"
+                },
+                "effect": {
+                    "$ref": "#/definitions/v1.Effect",
+                    "additionalProperties": true,
+                    "description": "规则效果"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Player Lib"
+            "title": "Special Rule",
+            "description": "特殊规则"
         },
         "v1.AddTraitEffect": {
             "properties": {
@@ -71,112 +111,6 @@
             "type": "object",
             "title": "Adjust Stat Effect",
             "description": "调整属性效果"
-        },
-        "v1.Card": {
-            "properties": {
-                "config": {
-                    "$ref": "#/definitions/v1.CardConfig",
-                    "additionalProperties": true,
-                    "description": "卡牌ID，关联到CardConfig"
-                },
-                "used_this_loop": {
-                    "type": "boolean",
-                    "description": "运行时状态：本循环是否已使用"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Card",
-            "description": "卡牌运行时实例"
-        },
-        "v1.CardConfig": {
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "卡牌唯一ID"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "卡牌名称"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "卡牌描述"
-                },
-                "card_type": {
-                    "enum": [
-                        "CARD_TYPE_UNSPECIFIED",
-                        0,
-                        "MOVEMENT",
-                        1,
-                        "PARANOIA_PLUS",
-                        2,
-                        "PARANOIA_MINUS",
-                        3,
-                        "GOODWILL_PLUS",
-                        4,
-                        "GOODWILL_MINUS",
-                        5,
-                        "INTRIGUE_PLUS",
-                        6,
-                        "FORBID_MOVEMENT",
-                        7,
-                        "FORBID_PARANOIA",
-                        8,
-                        "FORBID_GOODWILL",
-                        9,
-                        "FORBID_INTRIGUE",
-                        10
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Card Type",
-                    "description": "卡牌类型"
-                },
-                "owner_role": {
-                    "enum": [
-                        "PLAYER_ROLE_UNSPECIFIED",
-                        0,
-                        "MASTERMIND",
-                        1,
-                        "PROTAGONIST",
-                        2
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Player Role",
-                    "description": "玩家角色"
-                },
-                "effect": {
-                    "$ref": "#/definitions/v1.Effect",
-                    "additionalProperties": true,
-                    "description": "卡牌效果"
-                },
-                "once_per_loop": {
-                    "type": "boolean",
-                    "description": "是否每循环只能使用一次"
-                },
-                "priority": {
-                    "type": "integer",
-                    "description": "卡牌结算优先级（同类型卡牌的结算顺序）"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Card Config",
-            "description": "卡牌静态配置"
         },
         "v1.ChangeRoleEffect": {
             "properties": {
@@ -414,135 +348,6 @@
             "type": "object",
             "title": "Move Character Effect",
             "description": "移动角色效果"
-        },
-        "v1.Player": {
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "玩家唯一ID"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "玩家名称"
-                },
-                "role": {
-                    "enum": [
-                        "PLAYER_ROLE_UNSPECIFIED",
-                        0,
-                        "MASTERMIND",
-                        1,
-                        "PROTAGONIST",
-                        2
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Player Role",
-                    "description": "玩家角色"
-                },
-                "is_llm": {
-                    "type": "boolean",
-                    "description": "是否由LLM（大语言模型）控制"
-                },
-                "hand": {
-                    "items": {
-                        "$ref": "#/definitions/v1.Card"
-                    },
-                    "type": "array",
-                    "description": "玩家手牌列表"
-                },
-                "llm_session_id": {
-                    "type": "string",
-                    "description": "如果是LLM，对应的会话ID"
-                },
-                "deduction_knowledge": {
-                    "$ref": "#/definitions/v1.PlayerDeductionKnowledge",
-                    "additionalProperties": true,
-                    "description": "主角的推理知识（仅主角玩家拥有）"
-                },
-                "protagonist_characters_controlled": {
-                    "items": {
-                        "type": "integer"
-                    },
-                    "type": "array",
-                    "description": "如果一个主角玩家控制多个角色牌组，这里列出他们的ID"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Player",
-            "description": "玩家信息"
-        },
-        "v1.PlayerDeductionKnowledge": {
-            "properties": {
-                "guessed_roles": {
-                    "additionalProperties": {
-                        "enum": [
-                            "ROLE_TYPE_UNSPECIFIED",
-                            0,
-                            "PERSON",
-                            1,
-                            "KILLER",
-                            2,
-                            "BRAIN",
-                            3,
-                            "KEY_PERSON",
-                            4,
-                            "CULTIST",
-                            5,
-                            "FRIEND",
-                            6,
-                            "LOVED_ONE",
-                            7,
-                            "CONSPIRACY_THEORIST",
-                            8,
-                            "SERIAL_KILLER",
-                            9,
-                            "FACTOR",
-                            10,
-                            "WITCH",
-                            11,
-                            "TIME_TRAVELER",
-                            12
-                        ],
-                        "oneOf": [
-                            {
-                                "type": "string"
-                            },
-                            {
-                                "type": "integer"
-                            }
-                        ],
-                        "title": "Role Type",
-                        "description": "角色身份类型"
-                    },
-                    "type": "object",
-                    "description": "对角色身份的猜测，键为 character_id"
-                },
-                "clues": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array",
-                    "description": "收集到的线索列表"
-                },
-                "theories": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array",
-                    "description": "推理出的理论列表"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Player Deduction Knowledge",
-            "description": "主角的推理知识"
         },
         "v1.RemoveTraitEffect": {
             "properties": {

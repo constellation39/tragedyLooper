@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "enum": [
-        "TRAGEDY_SCRIPT_TYPE_UNSPECIFIED",
+        "PLOT_TYPE_UNSPECIFIED",
         0,
         "MAIN_PLOT",
         1,
@@ -16,6 +16,6 @@
             "type": "integer"
         }
     ],
-    "title": "Tragedy Script Type",
-    "description": "剧本类型枚举（主线/支线）"
+    "title": "Plot Type",
+    "description": "剧情类型"
 }

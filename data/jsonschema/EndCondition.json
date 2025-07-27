@@ -1,39 +1,53 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/Incident",
+    "$ref": "#/definitions/EndCondition",
     "definitions": {
-        "Incident": {
+        "EndCondition": {
             "properties": {
-                "config": {
-                    "$ref": "#/definitions/v1.IncidentConfig",
-                    "additionalProperties": true,
-                    "description": "事件唯一ID"
+                "type": {
+                    "enum": [
+                        "END_CONDITION_TYPE_UNSPECIFIED",
+                        0,
+                        "PROTAGONIST_GUESS_SUCCESS",
+                        1,
+                        "PROTAGONIST_GUESS_FAIL",
+                        2,
+                        "MAX_LOOPS_REACHED",
+                        3,
+                        "SPECIFIC_INCIDENT_TRIGGERED",
+                        4,
+                        "ALL_INCIDENTS_PREVENTED",
+                        5,
+                        "CUSTOM_CONDITION",
+                        6
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "End Condition Type",
+                    "description": "游戏结束条件类型"
                 },
-                "name": {
-                    "type": "string",
-                    "description": "事件名称"
-                },
-                "day": {
-                    "type": "integer",
-                    "description": "事件发生的日期"
-                },
-                "culprit": {
-                    "type": "string",
-                    "description": "犯人（角色名称或描述）"
-                },
-                "victim": {
-                    "type": "string",
-                    "description": "受害者（角色名称或描述）"
+                "requirements": {
+                    "items": {
+                        "$ref": "#/definitions/v1.Condition"
+                    },
+                    "type": "array",
+                    "description": "具体要求"
                 },
                 "description": {
                     "type": "string",
-                    "description": "事件描述"
+                    "description": "条件描述"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Incident",
-            "description": "事件实例，在游戏运行时创建"
+            "title": "End Condition",
+            "description": "游戏结束条件"
         },
         "v1.CompoundCondition": {
             "properties": {
@@ -146,83 +160,6 @@
             "type": "object",
             "title": "Day Condition",
             "description": "日期条件"
-        },
-        "v1.IncidentConfig": {
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "事件唯一ID（剧本内）"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "事件名称"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "事件描述"
-                },
-                "incident_type": {
-                    "enum": [
-                        "INCIDENT_TYPE_UNSPECIFIED",
-                        0,
-                        "MURDER",
-                        1,
-                        "SUICIDE",
-                        2,
-                        "ACCIDENT",
-                        3,
-                        "DISAPPEARANCE",
-                        4,
-                        "HOSPITAL_CONSPIRACY",
-                        5,
-                        "MURDER_MYSTERY",
-                        6,
-                        "PANIC",
-                        7
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Incident Type",
-                    "description": "事件类型"
-                },
-                "day": {
-                    "type": "integer",
-                    "description": "预定发生日期"
-                },
-                "trigger_conditions": {
-                    "items": {
-                        "$ref": "#/definitions/v1.Condition"
-                    },
-                    "type": "array",
-                    "description": "触发条件列表"
-                },
-                "is_mandatory": {
-                    "type": "boolean",
-                    "description": "是否为必发事件"
-                },
-                "culprit_character_id": {
-                    "type": "integer",
-                    "description": "事件主谋角色ID（如适用）"
-                },
-                "location_id": {
-                    "type": "integer",
-                    "description": "事件发生地点ID（如适用）"
-                },
-                "is_main_plot_incident": {
-                    "type": "boolean",
-                    "description": "是否是主线剧情的事件"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Incident Config",
-            "description": "事件/悲剧在剧本中的配置"
         },
         "v1.LocationCondition": {
             "properties": {

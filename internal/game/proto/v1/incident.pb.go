@@ -24,7 +24,7 @@ const (
 // 事件实例，在游戏运行时创建
 type Incident struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                  // 事件唯一ID
+	Config        *IncidentConfig        `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`           // 事件唯一ID
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`               // 事件名称
 	Day           int32                  `protobuf:"varint,3,opt,name=day,proto3" json:"day,omitempty"`                // 事件发生的日期
 	Culprit       string                 `protobuf:"bytes,4,opt,name=culprit,proto3" json:"culprit,omitempty"`         // 犯人（角色名称或描述）
@@ -64,11 +64,11 @@ func (*Incident) Descriptor() ([]byte, []int) {
 	return file_v1_incident_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Incident) GetId() int32 {
+func (x *Incident) GetConfig() *IncidentConfig {
 	if x != nil {
-		return x.Id
+		return x.Config
 	}
-	return 0
+	return nil
 }
 
 func (x *Incident) GetName() string {
@@ -272,9 +272,9 @@ var File_v1_incident_proto protoreflect.FileDescriptor
 
 const file_v1_incident_proto_rawDesc = "" +
 	"\n" +
-	"\x11v1/incident.proto\x12\x02v1\x1a\x12v1/condition.proto\x1a\x0ev1/enums.proto\"\x94\x01\n" +
-	"\bIncident\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
+	"\x11v1/incident.proto\x12\x02v1\x1a\x12v1/condition.proto\x1a\x0ev1/enums.proto\"\xb0\x01\n" +
+	"\bIncident\x12*\n" +
+	"\x06config\x18\x01 \x01(\v2\x12.v1.IncidentConfigR\x06config\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x10\n" +
 	"\x03day\x18\x03 \x01(\x05R\x03day\x12\x18\n" +
 	"\aculprit\x18\x04 \x01(\tR\aculprit\x12\x16\n" +
@@ -321,15 +321,16 @@ var file_v1_incident_proto_goTypes = []any{
 	(*Condition)(nil),         // 5: v1.Condition
 }
 var file_v1_incident_proto_depIdxs = []int32{
-	4, // 0: v1.IncidentConfig.incident_type:type_name -> v1.IncidentType
-	5, // 1: v1.IncidentConfig.trigger_conditions:type_name -> v1.Condition
-	3, // 2: v1.IncidentConfigLib.incidents:type_name -> v1.IncidentConfigLib.IncidentsEntry
-	1, // 3: v1.IncidentConfigLib.IncidentsEntry.value:type_name -> v1.IncidentConfig
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	1, // 0: v1.Incident.config:type_name -> v1.IncidentConfig
+	4, // 1: v1.IncidentConfig.incident_type:type_name -> v1.IncidentType
+	5, // 2: v1.IncidentConfig.trigger_conditions:type_name -> v1.Condition
+	3, // 3: v1.IncidentConfigLib.incidents:type_name -> v1.IncidentConfigLib.IncidentsEntry
+	1, // 4: v1.IncidentConfigLib.IncidentsEntry.value:type_name -> v1.IncidentConfig
+	5, // [5:5] is the sub-list for method output_type
+	5, // [5:5] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_v1_incident_proto_init() }

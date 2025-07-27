@@ -1,0 +1,39 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/DayCondition",
+    "definitions": {
+        "DayCondition": {
+            "properties": {
+                "comparator": {
+                    "enum": [
+                        "COMPARATOR_UNSPECIFIED",
+                        0,
+                        "BEFORE",
+                        1,
+                        "ON",
+                        2,
+                        "AFTER",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Comparator"
+                },
+                "day": {
+                    "type": "integer",
+                    "description": "目标天数"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Day Condition",
+            "description": "日期条件"
+        }
+    }
+}

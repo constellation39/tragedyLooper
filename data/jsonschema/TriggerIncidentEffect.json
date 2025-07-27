@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/TriggerIncidentEffect",
+    "definitions": {
+        "TriggerIncidentEffect": {
+            "properties": {
+                "incident_id": {
+                    "type": "integer",
+                    "description": "要触发的事件ID (引用ScriptConfig中的IncidentConfig)"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Trigger Incident Effect",
+            "description": "触发事件效果"
+        }
+    }
+}

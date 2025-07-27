@@ -135,7 +135,7 @@ func (x *CharacterConfig) GetDescription() string {
 // 角色运行时实例
 type Character struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	Id              int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                       // 角色ID，关联到CharacterConfig
+	Config          *CharacterConfig       `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`                                                                // 角色ID，关联到CharacterConfig
 	CurrentLocation LocationType           `protobuf:"varint,2,opt,name=current_location,json=currentLocation,proto3,enum=v1.LocationType" json:"current_location,omitempty"` // 当前所在地点
 	Paranoia        int32                  `protobuf:"varint,3,opt,name=paranoia,proto3" json:"paranoia,omitempty"`                                                           // 当前妄想值
 	Goodwill        int32                  `protobuf:"varint,4,opt,name=goodwill,proto3" json:"goodwill,omitempty"`                                                           // 当前好感值
@@ -178,11 +178,11 @@ func (*Character) Descriptor() ([]byte, []int) {
 	return file_v1_character_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Character) GetId() int32 {
+func (x *Character) GetConfig() *CharacterConfig {
 	if x != nil {
-		return x.Id
+		return x.Config
 	}
-	return 0
+	return nil
 }
 
 func (x *Character) GetCurrentLocation() LocationType {
@@ -583,9 +583,9 @@ const file_v1_character_proto_rawDesc = "" +
 	"\vability_ids\x18\a \x03(\x05R\n" +
 	"abilityIds\x12'\n" +
 	"\x05rules\x18\b \x03(\v2\x11.v1.CharacterRuleR\x05rules\x12 \n" +
-	"\vdescription\x18\t \x01(\tR\vdescription\"\xc5\x02\n" +
-	"\tCharacter\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x12;\n" +
+	"\vdescription\x18\t \x01(\tR\vdescription\"\xe2\x02\n" +
+	"\tCharacter\x12+\n" +
+	"\x06config\x18\x01 \x01(\v2\x13.v1.CharacterConfigR\x06config\x12;\n" +
 	"\x10current_location\x18\x02 \x01(\x0e2\x10.v1.LocationTypeR\x0fcurrentLocation\x12\x1a\n" +
 	"\bparanoia\x18\x03 \x01(\x05R\bparanoia\x12\x1a\n" +
 	"\bgoodwill\x18\x04 \x01(\x05R\bgoodwill\x12\x1a\n" +
@@ -650,23 +650,24 @@ var file_v1_character_proto_goTypes = []any{
 }
 var file_v1_character_proto_depIdxs = []int32{
 	3,  // 0: v1.CharacterConfig.rules:type_name -> v1.CharacterRule
-	8,  // 1: v1.Character.current_location:type_name -> v1.LocationType
-	9,  // 2: v1.Character.hidden_role:type_name -> v1.RoleType
-	10, // 3: v1.Character.abilities:type_name -> v1.Ability
-	7,  // 4: v1.CharacterConfigLib.characters:type_name -> v1.CharacterConfigLib.CharactersEntry
-	11, // 5: v1.CharacterRule.trigger:type_name -> v1.TriggerType
-	4,  // 6: v1.CharacterRule.turf_selection_effect:type_name -> v1.TurfSelectionEffect
-	5,  // 7: v1.CharacterRule.delayed_entry_effect:type_name -> v1.DelayedEntryEffect
-	6,  // 8: v1.CharacterRule.special_movement_rule:type_name -> v1.SpecialMovementRule
-	8,  // 9: v1.TurfSelectionEffect.possible_locations:type_name -> v1.LocationType
-	8,  // 10: v1.DelayedEntryEffect.entry_location:type_name -> v1.LocationType
-	8,  // 11: v1.SpecialMovementRule.restricted_locations:type_name -> v1.LocationType
-	0,  // 12: v1.CharacterConfigLib.CharactersEntry.value:type_name -> v1.CharacterConfig
-	13, // [13:13] is the sub-list for method output_type
-	13, // [13:13] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	0,  // 1: v1.Character.config:type_name -> v1.CharacterConfig
+	8,  // 2: v1.Character.current_location:type_name -> v1.LocationType
+	9,  // 3: v1.Character.hidden_role:type_name -> v1.RoleType
+	10, // 4: v1.Character.abilities:type_name -> v1.Ability
+	7,  // 5: v1.CharacterConfigLib.characters:type_name -> v1.CharacterConfigLib.CharactersEntry
+	11, // 6: v1.CharacterRule.trigger:type_name -> v1.TriggerType
+	4,  // 7: v1.CharacterRule.turf_selection_effect:type_name -> v1.TurfSelectionEffect
+	5,  // 8: v1.CharacterRule.delayed_entry_effect:type_name -> v1.DelayedEntryEffect
+	6,  // 9: v1.CharacterRule.special_movement_rule:type_name -> v1.SpecialMovementRule
+	8,  // 10: v1.TurfSelectionEffect.possible_locations:type_name -> v1.LocationType
+	8,  // 11: v1.DelayedEntryEffect.entry_location:type_name -> v1.LocationType
+	8,  // 12: v1.SpecialMovementRule.restricted_locations:type_name -> v1.LocationType
+	0,  // 13: v1.CharacterConfigLib.CharactersEntry.value:type_name -> v1.CharacterConfig
+	14, // [14:14] is the sub-list for method output_type
+	14, // [14:14] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_v1_character_proto_init() }

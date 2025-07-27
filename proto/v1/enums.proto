@@ -62,8 +62,6 @@ enum RoleType {
   TIME_TRAVELER = 12;            // 时间旅行者
 }
 
-
-
 // 事件类型
 enum IncidentType {
   INCIDENT_TYPE_UNSPECIFIED = 0;  // 未指定

@@ -1,0 +1,25 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [
+        "SCRIPT_DIFFICULTY_UNSPECIFIED",
+        0,
+        "EASY",
+        1,
+        "NORMAL",
+        2,
+        "HARD",
+        3,
+        "EXPERT",
+        4
+    ],
+    "oneOf": [
+        {
+            "type": "string"
+        },
+        {
+            "type": "integer"
+        }
+    ],
+    "title": "Script Difficulty",
+    "description": "剧本难度"
+}

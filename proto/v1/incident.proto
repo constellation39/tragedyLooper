@@ -9,7 +9,7 @@ option go_package = "tragedylooper/internal/game/proto/v1;v1";
 
 // 事件实例，在游戏运行时创建
 message Incident {
-  int32 id = 1;           // 事件唯一ID
+  IncidentConfig config = 1;           // 事件唯一ID
   string name = 2;        // 事件名称
   int32 day = 3;          // 事件发生的日期
   string culprit = 4;     // 犯人（角色名称或描述）

@@ -24,7 +24,7 @@ message CharacterConfig {
 
 // 角色运行时实例
 message Character {
-  int32 id = 1;                           // 角色ID，关联到CharacterConfig
+  CharacterConfig config = 1;                           // 角色ID，关联到CharacterConfig
   LocationType current_location = 2;      // 当前所在地点
   int32 paranoia = 3;                     // 当前妄想值
   int32 goodwill = 4;                     // 当前好感值
@@ -45,7 +45,7 @@ message CharacterRule {
   string name = 1;                    // 规则名称
   string description = 2;             // 规则描述
   TriggerType trigger = 3;            // 规则触发时机
-  oneof effect {                        // 规则效果
+  oneof effect {// 规则效果
     TurfSelectionEffect turf_selection_effect = 4;    // 地盘选择效果
     DelayedEntryEffect delayed_entry_effect = 5;      // 延迟登场效果
     SpecialMovementRule special_movement_rule = 6;    // 特殊移动规则

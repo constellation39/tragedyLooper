@@ -1,0 +1,105 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/CharacterInScript",
+    "definitions": {
+        "CharacterInScript": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "角色ID（引用CharacterConfig）"
+                },
+                "hidden_role": {
+                    "enum": [
+                        "ROLE_TYPE_UNSPECIFIED",
+                        0,
+                        "PERSON",
+                        1,
+                        "KILLER",
+                        2,
+                        "BRAIN",
+                        3,
+                        "KEY_PERSON",
+                        4,
+                        "CULTIST",
+                        5,
+                        "FRIEND",
+                        6,
+                        "LOVED_ONE",
+                        7,
+                        "CONSPIRACY_THEORIST",
+                        8,
+                        "SERIAL_KILLER",
+                        9,
+                        "FACTOR",
+                        10,
+                        "WITCH",
+                        11,
+                        "TIME_TRAVELER",
+                        12
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Role Type",
+                    "description": "角色身份类型"
+                },
+                "initial_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                },
+                "initial_paranoia": {
+                    "type": "integer",
+                    "description": "初始妄想值"
+                },
+                "initial_goodwill": {
+                    "type": "integer",
+                    "description": "初始好感值"
+                },
+                "initial_intrigue": {
+                    "type": "integer",
+                    "description": "初始阴谋值"
+                },
+                "additional_ability_ids": {
+                    "items": {
+                        "type": "integer"
+                    },
+                    "type": "array",
+                    "description": "额外能力ID列表（剧本特定）"
+                },
+                "starts_in_game": {
+                    "type": "boolean",
+                    "description": "是否开局就在游戏中"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Character In Script",
+            "description": "剧本中的角色配置"
+        }
+    }
+}
