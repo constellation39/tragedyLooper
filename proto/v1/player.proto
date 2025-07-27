@@ -12,7 +12,7 @@ option go_package = "tragedylooper/internal/game/v1;v1";
 
 // 玩家信息
 message Player {
-  string id = 1;                       // 玩家唯一ID
+  int32 id = 1;                       // 玩家唯一ID
   string name = 2;                     // 玩家名称
   PlayerRole role = 3;                 // 玩家角色 (主谋或主角)
   bool is_llm = 4;                     // 是否由LLM（大语言模型）控制
@@ -20,6 +20,10 @@ message Player {
   string llm_session_id = 6;           // 如果是LLM，对应的会话ID
   PlayerDeductionKnowledge deduction_knowledge = 7; // 主角的推理知识（仅主角玩家拥有）
   repeated int32 protagonist_characters_controlled = 8; // 新增：如果主角玩家可以控制多个主角角色牌组，列出其控制的角色ID列表
+}
+
+message PlayerLib {
+  map<int32, Player> players = 1;
 }
 
 // 主角的推理知识

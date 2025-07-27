@@ -16,6 +16,10 @@ message GameEvent {
   google.protobuf.Timestamp timestamp = 3;
 }
 
+message GameEventLib {
+  map<int32, google.protobuf.Any> events = 1;
+}
+
 message CharacterMovedEvent {
   int32 character_id = 1;
   LocationType new_location = 2;

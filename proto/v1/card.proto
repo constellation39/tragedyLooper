@@ -22,6 +22,10 @@ message Card {
   }
 }
 
+message CardLib {
+  map<int32, Card> cards = 1;
+}
+
 message CardList {
   repeated Card cards = 1;
 }

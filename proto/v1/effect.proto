@@ -25,6 +25,10 @@ message Effect {
   }
 }
 
+message EffectLib {
+  map<string, Effect> effects = 1;
+}
+
 // 移动角色效果
 message MoveCharacterEffect {
   int32 character_id = 1;       // 目标角色ID

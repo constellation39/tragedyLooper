@@ -26,6 +26,10 @@ message Character {
   repeated CharacterRule rules = 15; // 角色特有的规则列表
 }
 
+message CharacterLib {
+  map<int32, Character> characters = 1;
+}
+
 // 角色特殊规则
 message CharacterRule {
   TriggerType trigger = 1;    // 规则触发时机

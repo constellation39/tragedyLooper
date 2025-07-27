@@ -23,3 +23,6 @@ message Ability {
   // 考虑到目标的选择在实际游戏中是动态的，这里可能不需要明确的target字段，而是在Effect中定义target_character_id
 }
 
+message AbilityLib {
+  map<int32, Ability> abilities = 1;
+}
