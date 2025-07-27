@@ -1,28 +1,12 @@
 {
-  "id": "vigilant_protection",
+  "id": 1,
   "name": "Vigilant Protection",
-  "description": "If an incident occurs involving someone you have Goodwill with, you may move to their location and cancel the incident.",
-  "trigger": "OnIncidentOccurs",
-  "conditions": [
-    {
-      "type": "HasGoodwillWith",
-      "parameters": {
-        "characterA": "self",
-        "characterB": "event.protagonist" 
-      }
+  "description": "If an ally is targeted, you can increase your paranoia to protect them.",
+  "trigger_type": "PASSIVE",
+  "effect": {
+    "adjust_paranoia_effect": {
+      "amount": 1
     }
-  ],
-  "effects": [
-    {
-      "type": "MoveCharacter",
-      "parameters": {
-        "target": "self",
-        "destination": "event.location"
-      }
-    },
-    {
-      "type": "CancelEvent",
-      "parameters": {}
-    }
-  ]
+  },
+  "once_per_loop": false
 }

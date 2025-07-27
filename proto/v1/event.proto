@@ -75,3 +75,15 @@ message ChoiceRequiredEvent {
   // This might need a more complex structure depending on the choices
   repeated Choice choices = 1;
 }
+
+message Incident {
+  string name = 1;
+  int32 day = 2;
+  string culprit = 3;
+  string victim = 4;
+  string description = 5;
+}
+
+message IncidentTriggeredEvent {
+  Incident incident = 1;
+}

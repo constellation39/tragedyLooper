@@ -18,4 +18,6 @@ message Script {
   repeated TragedyCondition tragedies = 7; // 悲剧条件
   int32 loop_count = 8; // 循环总次数
   int32 days_per_loop = 9; // 每循环天数
+  repeated string win_conditions = 10; // 胜利条件
+  repeated string lose_conditions = 11; // 失败条件
 }

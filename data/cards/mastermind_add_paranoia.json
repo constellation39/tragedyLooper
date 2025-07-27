@@ -1,0 +1,12 @@
+{
+  "id": 4,
+  "name": "Add Paranoia",
+  "card_type": "PARANOIA",
+  "owner_role": "MASTERMIND",
+  "effect": {
+    "adjust_paranoia_effect": {
+      "amount": 1
+    }
+  },
+  "once_per_loop": false
+}

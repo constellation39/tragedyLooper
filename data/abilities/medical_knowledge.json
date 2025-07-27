@@ -1,23 +1,12 @@
 {
-  "id": "medical_knowledge",
+  "id": 2,
   "name": "Medical Knowledge",
-  "description": "When an incident occurs at the Hospital, the tragedy loop is extended by one day.",
-  "trigger": "OnIncidentOccurs",
-  "conditions": [
-    {
-      "type": "CharacterAtLocation",
-      "parameters": {
-        "character": "self",
-        "location": "Hospital"
-      }
+  "description": "Can perform medical examinations to gain information.",
+  "trigger_type": "MASTERMIND_PHASE",
+  "effect": {
+    "adjust_intrigue_effect": {
+      "amount": -1
     }
-  ],
-  "effects": [
-    {
-      "type": "AddTragedyLoopCounter",
-      "parameters": {
-        "value": -1
-      }
-    }
-  ]
+  },
+  "once_per_loop": true
 }

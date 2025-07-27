@@ -1,0 +1,17 @@
+{
+  "tragedy_type": "MURDER",
+  "day": 2,
+  "culprit_id": "Doctor",
+  "conditions": [
+    {
+      "character_id": "Doctor",
+      "location": "HOSPITAL",
+      "min_paranoia": 4
+    },
+    {
+      "character_id": "High School Girl",
+      "location": "HOSPITAL"
+    }
+  ],
+  "target_rule": "SPECIFIC_CHARACTER"
+}

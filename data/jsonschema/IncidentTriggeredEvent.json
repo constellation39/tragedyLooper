@@ -1,0 +1,39 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/IncidentTriggeredEvent",
+    "definitions": {
+        "IncidentTriggeredEvent": {
+            "properties": {
+                "incident": {
+                    "$ref": "#/definitions/proto.v1.Incident",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Incident Triggered Event"
+        },
+        "proto.v1.Incident": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "day": {
+                    "type": "integer"
+                },
+                "culprit": {
+                    "type": "string"
+                },
+                "victim": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Incident"
+        }
+    }
+}

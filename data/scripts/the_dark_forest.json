@@ -1,0 +1,65 @@
+
+{
+  "id": 2,
+  "name": "The Dark Forest",
+  "description": "A complex scenario involving conspiracy and betrayal.",
+  "main_plot": "The Conspiracy",
+  "sub_plots": ["The Betrayal"],
+  "characters": [
+    {
+      "id": 1,
+      "name": "Office Worker",
+      "initial_location": 3,
+      "hidden_role": 1
+    },
+    {
+      "id": 2,
+      "name": "Hacker",
+      "initial_location": 4,
+      "hidden_role": 3
+    },
+    {
+      "id": 3,
+      "name": "Journalist",
+      "initial_location": 1,
+      "hidden_role": 4
+    },
+    {
+      "id": 4,
+      "name": "Politician",
+      "initial_location": 2,
+      "hidden_role": 2,
+      "is_culprit_for": "The Conspiracy"
+    }
+  ],
+  "tragedies": [
+    {
+      "tragedy_type": 1,
+      "day": 4,
+      "culprit_id": "Politician",
+      "conditions": [
+        {
+          "character_id": 3,
+          "location": 1,
+          "min_paranoia": 3
+        }
+      ],
+      "target_rule": 1
+    },
+    {
+      "tragedy_type": 2,
+      "day": 6,
+      "culprit_id": "Hacker",
+      "conditions": [
+        {
+          "character_id": 2,
+          "location": 4,
+          "is_alone": true
+        }
+      ],
+      "target_rule": 1
+    }
+  ],
+  "loop_count": 5,
+  "days_per_loop": 6
+}

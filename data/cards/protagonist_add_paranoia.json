@@ -1,0 +1,12 @@
+{
+  "id": 2,
+  "name": "Add Paranoia",
+  "card_type": "PARANOIA",
+  "owner_role": "PROTAGONIST",
+  "effect": {
+    "adjust_paranoia_effect": {
+      "amount": 1
+    }
+  },
+  "once_per_loop": false
+}

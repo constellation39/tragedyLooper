@@ -1,0 +1,12 @@
+{
+  "id": 3,
+  "name": "Charisma",
+  "description": "Can influence other characters' goodwill.",
+  "trigger_type": "MASTERMIND_PHASE",
+  "effect": {
+    "adjust_goodwill_effect": {
+      "amount": 1
+    }
+  },
+  "once_per_loop": true
+}

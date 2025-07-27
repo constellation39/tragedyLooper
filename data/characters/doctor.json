@@ -1,12 +1,18 @@
 {
-  "id": "doctor",
-  "name": "The Doctor",
-  "stats": {
-    "paranoia": 2,
-    "intrigue": 3
-  },
+  "id": 2,
+  "name": "Doctor",
+  "traits": ["Medical Professional"],
+  "current_location": "HOSPITAL",
+  "paranoia": 2,
+  "goodwill": 2,
+  "intrigue": 1,
+  "is_alive": true,
   "abilities": [
-    "medical_knowledge",
-    "suspicious_presence"
-  ]
+    {
+      "name": "Medical Knowledge",
+      "description": "Can perform medical examinations to gain information.",
+      "trigger_type": "MASTERMIND_PHASE"
+    }
+  ],
+  "hidden_role": "KILLER"
 }

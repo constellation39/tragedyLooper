@@ -7,12 +7,11 @@
 package model
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -24,18 +23,20 @@ const (
 
 // Script 定义一个特定的游戏场景。
 type Script struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                        // 唯一标识符
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                     // 剧本名称
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                       // 剧本描述
-	MainPlot      string                 `protobuf:"bytes,4,opt,name=main_plot,json=mainPlot,proto3" json:"main_plot,omitempty"`             // 主线剧情
-	SubPlots      []string               `protobuf:"bytes,5,rep,name=sub_plots,json=subPlots,proto3" json:"sub_plots,omitempty"`             // 支线剧情
-	Characters    []*CharacterConfig     `protobuf:"bytes,6,rep,name=characters,proto3" json:"characters,omitempty"`                         // 角色配置
-	Tragedies     []*TragedyCondition    `protobuf:"bytes,7,rep,name=tragedies,proto3" json:"tragedies,omitempty"`                           // 悲剧条件
-	LoopCount     int32                  `protobuf:"varint,8,opt,name=loop_count,json=loopCount,proto3" json:"loop_count,omitempty"`         // 循环总次数
-	DaysPerLoop   int32                  `protobuf:"varint,9,opt,name=days_per_loop,json=daysPerLoop,proto3" json:"days_per_loop,omitempty"` // 每循环天数
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Id             int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                               // 唯一标识符
+	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                            // 剧本名称
+	Description    string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                              // 剧本描述
+	MainPlot       string                 `protobuf:"bytes,4,opt,name=main_plot,json=mainPlot,proto3" json:"main_plot,omitempty"`                    // 主线剧情
+	SubPlots       []string               `protobuf:"bytes,5,rep,name=sub_plots,json=subPlots,proto3" json:"sub_plots,omitempty"`                    // 支线剧情
+	Characters     []*CharacterConfig     `protobuf:"bytes,6,rep,name=characters,proto3" json:"characters,omitempty"`                                // 角色配置
+	Tragedies      []*TragedyCondition    `protobuf:"bytes,7,rep,name=tragedies,proto3" json:"tragedies,omitempty"`                                  // 悲剧条件
+	LoopCount      int32                  `protobuf:"varint,8,opt,name=loop_count,json=loopCount,proto3" json:"loop_count,omitempty"`                // 循环总次数
+	DaysPerLoop    int32                  `protobuf:"varint,9,opt,name=days_per_loop,json=daysPerLoop,proto3" json:"days_per_loop,omitempty"`        // 每循环天数
+	WinConditions  []string               `protobuf:"bytes,10,rep,name=win_conditions,json=winConditions,proto3" json:"win_conditions,omitempty"`    // 胜利条件
+	LoseConditions []string               `protobuf:"bytes,11,rep,name=lose_conditions,json=loseConditions,proto3" json:"lose_conditions,omitempty"` // 失败条件
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *Script) Reset() {
@@ -131,11 +132,25 @@ func (x *Script) GetDaysPerLoop() int32 {
 	return 0
 }
 
+func (x *Script) GetWinConditions() []string {
+	if x != nil {
+		return x.WinConditions
+	}
+	return nil
+}
+
+func (x *Script) GetLoseConditions() []string {
+	if x != nil {
+		return x.LoseConditions
+	}
+	return nil
+}
+
 var File_proto_v1_script_proto protoreflect.FileDescriptor
 
 const file_proto_v1_script_proto_rawDesc = "" +
 	"\n" +
-	"\x15proto/v1/script.proto\x12\bproto.v1\x1a\x18proto/v1/character.proto\x1a\x16proto/v1/tragedy.proto\"\xc0\x02\n" +
+	"\x15proto/v1/script.proto\x12\bproto.v1\x1a\x18proto/v1/character.proto\x1a\x16proto/v1/tragedy.proto\"\x90\x03\n" +
 	"\x06Script\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -148,7 +163,10 @@ const file_proto_v1_script_proto_rawDesc = "" +
 	"\ttragedies\x18\a \x03(\v2\x1a.proto.v1.TragedyConditionR\ttragedies\x12\x1d\n" +
 	"\n" +
 	"loop_count\x18\b \x01(\x05R\tloopCount\x12\"\n" +
-	"\rdays_per_loop\x18\t \x01(\x05R\vdaysPerLoopB\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\rdays_per_loop\x18\t \x01(\x05R\vdaysPerLoop\x12%\n" +
+	"\x0ewin_conditions\x18\n" +
+	" \x03(\tR\rwinConditions\x12'\n" +
+	"\x0flose_conditions\x18\v \x03(\tR\x0eloseConditionsB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
 	file_proto_v1_script_proto_rawDescOnce sync.Once

@@ -1,0 +1,10 @@
+{
+  "id": 3,
+  "name": "Move",
+  "card_type": "MOVEMENT",
+  "owner_role": "MASTERMIND",
+  "effect": {
+    "move_character_effect": {}
+  },
+  "once_per_loop": false
+}

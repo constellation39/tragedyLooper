@@ -1,0 +1,18 @@
+{
+  "id": 4,
+  "name": "Office Worker",
+  "traits": ["Observant"],
+  "current_location": "CITY",
+  "paranoia": 3,
+  "goodwill": 2,
+  "intrigue": 1,
+  "is_alive": true,
+  "abilities": [
+    {
+      "name": "Focused Work",
+      "description": "Can uncover intrigue by focusing on a single location.",
+      "trigger_type": "MASTERMIND_PHASE"
+    }
+  ],
+  "hidden_role": "CONSPIRACY_THEORIST"
+}

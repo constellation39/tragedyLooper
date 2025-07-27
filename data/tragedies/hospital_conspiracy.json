@@ -1,0 +1,12 @@
+{
+  "tragedy_type": "SEALED",
+  "day": 3,
+  "culprit_id": "Politician",
+  "conditions": [
+    {
+      "character_id": "Politician",
+      "min_intrigue": 5
+    }
+  ],
+  "target_rule": "ANY_CHARACTER_AT_LOCATION"
+}

@@ -1,10 +1,15 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
+	"strings"
 	"syscall"
+
+	"tragedylooper/internal/game/loader"
 	model "tragedylooper/internal/game/proto/v1"
 
 	"tragedylooper/internal/llm"
@@ -14,45 +19,41 @@ import (
 	"go.uber.org/zap"
 )
 
+func loadScripts(path string, logger *zap.Logger) map[string]*model.Script {
+	scripts := make(map[string]*model.Script)
+	files, err := filepath.Glob(filepath.Join(path, "*.json"))
+	if err != nil {
+		logger.Fatal("Failed to glob scripts", zap.Error(err))
+	}
+
+	for _, file := range files {
+		script, err := loader.LoadScript(file)
+		if err != nil {
+			logger.Warn("Failed to load script", zap.String("file", file), zap.Error(err))
+			continue
+		}
+		scriptID := strings.TrimSuffix(filepath.Base(file), filepath.Ext(file))
+		scripts[scriptID] = script
+		logger.Info("Loaded script", zap.String("id", scriptID))
+	}
+	return scripts
+}
+
 func main() {
 	logger := logger.New()
 	defer func() {
 		_ = logger.Sync() // Flushes buffer, important for production
 	}()
 
-	// 1. 加载游戏剧本和资源
-	// 在实际应用中，这些将从文件或数据库加载。
-	// 为简单起见，我们使用占位符。
-	scripts := map[string]*model.Script{
-		"basic_script": {
-			Id:          0,
-			Name:        "Basic Tragedy",
-			Description: "A simple script for testing.",
-			LoopCount:   3,
-			DaysPerLoop: 7,
-			Characters: []*model.CharacterConfig{
-				{Id: 0, Name: "boy_student", InitialLocation: model.LocationType_LOCATION_TYPE_SCHOOL, HiddenRole: model.RoleType_ROLE_TYPE_INNOCENT},
-				{Id: 0, Name: "girl_student", InitialLocation: model.LocationType_LOCATION_TYPE_SCHOOL, HiddenRole: model.RoleType_ROLE_TYPE_INNOCENT},
-				{Id: 0, Name: "serial_killer", InitialLocation: model.LocationType_LOCATION_TYPE_CITY, HiddenRole: model.RoleType_ROLE_TYPE_KILLER},
-			},
-			Tragedies: []*model.TragedyCondition{
-				{
-					TragedyType: model.TragedyType_TRAGEDY_TYPE_MURDER,
-					Day:         3, // 谋杀可能发生在第 3 天
-					Conditions: []*model.Condition{
-						{CharacterId: 0, Location: model.LocationType_LOCATION_TYPE_SCHOOL, IsAlone: true},
-					},
-				},
-			},
-		},
-	}
+	// 1. Load game scripts and resources.
+	scripts := loadScripts("data/scripts", logger)
 
-	// 初始化 LLM 客户端（例如，OpenAI，Google Gemini）
-	// 这通常涉及从环境变量获取 API 密钥。
-	llmClient := llm.NewMockLLMClient() // 使用模拟客户端进行演示
-	// llmClient := llm.NewOpenAIClient(os.Getenv("OPENAI_API_KEY")) // 用于实际的 OpenAI 集成
+	// Initialize LLM client (e.g., OpenAI, Google Gemini)
+	// This would typically involve getting API keys from environment variables.
+	llmClient := llm.NewMockLLMClient() // Using a mock client for demonstration
+	// llmClient := llm.NewOpenAIClient(os.Getenv("OPENAI_API_KEY")) // For actual OpenAI integration
 
-	// 2. 初始化游戏服务器
+	// 2. Initialize the game server
 	gameServer := server.NewServer(scripts, llmClient, logger)
 
 	// Create a new ServeMux to apply middleware
@@ -71,15 +72,15 @@ func main() {
 	// In a goroutine, start the HTTP server
 	go func() {
 		if err := http.ListenAndServe(port, loggedMux); err != nil {
-			logger.Fatal("HTTP server failed", zap.Error(err))
+			log.Fatal("HTTP server failed", zap.Error(err))
 		}
 	}()
 
-	// 优雅关闭
+	// Graceful shutdown
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
-	<-sigChan // 阻塞直到收到信号
+	<-sigChan // Block until a signal is received
 	logger.Info("Shutting down server...")
-	gameServer.Shutdown() // 执行任何清理
+	gameServer.Shutdown() // Perform any cleanup
 	logger.Info("Server gracefully stopped.")
 }

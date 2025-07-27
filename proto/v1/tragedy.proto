@@ -8,6 +8,24 @@ import "proto/v1/location.proto";
 
 option go_package = "github.com/user/repo/proto/model";
 
+// Enum for the type of attribute to check
+enum Stat {
+  STAT_UNSPECIFIED = 0;
+  STAT_PARANOIA = 1;
+  STAT_GOODWILL = 2;
+  STAT_INTRIGUE = 3;
+}
+
+// Enum for the comparison operator
+enum Operator {
+  OPERATOR_UNSPECIFIED = 0;
+  OPERATOR_GREATER_THAN = 1;
+  OPERATOR_LESS_THAN = 2;
+  OPERATOR_EQUAL_TO = 3;
+  OPERATOR_GREATER_THAN_OR_EQUAL_TO = 4;
+  OPERATOR_LESS_THAN_OR_EQUAL_TO = 5;
+}
+
 // TragedyCondition 定义悲剧发生的条件。
 message TragedyCondition {
   TragedyType tragedy_type = 1; // 悲剧类型
@@ -22,8 +40,21 @@ message TragedyCondition {
 
 // Condition 定义悲剧的一个单一条件。
 message Condition {
-  int32 character_id = 1; // 角色ID
-  LocationType location = 2; // 所在位置
-  int32 min_paranoia = 3; // 最小妄想指数
-  bool is_alone = 4; // 是否独处
+  oneof condition_type {
+    StatCondition stat_condition = 1;
+    LocationCondition location_condition = 2;
+  }
+}
+
+message StatCondition {
+  string character_id = 1;
+  Stat stat = 2;
+  Operator operator = 3;
+  int32 value = 4;
+}
+
+message LocationCondition {
+  string character_id = 1;
+  LocationType location = 2;
+  bool is_alone = 3; // 是否独处
 }

@@ -1,0 +1,12 @@
+{
+  "id": 5,
+  "name": "Scoop",
+  "description": "Can expose a character's secrets, increasing their paranoia.",
+  "trigger_type": "MASTERMIND_PHASE",
+  "effect": {
+    "adjust_paranoia_effect": {
+      "amount": 2
+    }
+  },
+  "once_per_loop": true
+}

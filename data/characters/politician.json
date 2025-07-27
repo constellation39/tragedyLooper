@@ -1,0 +1,18 @@
+{
+  "id": 3,
+  "name": "Politician",
+  "traits": ["Influential"],
+  "current_location": "CITY",
+  "paranoia": 1,
+  "goodwill": 1,
+  "intrigue": 3,
+  "is_alive": true,
+  "abilities": [
+    {
+      "name": "Charisma",
+      "description": "Can influence other characters' goodwill.",
+      "trigger_type": "MASTERMIND_PHASE"
+    }
+  ],
+  "hidden_role": "HOSPITAL_DIRECTOR"
+}

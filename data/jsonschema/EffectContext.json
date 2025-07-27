@@ -819,6 +819,20 @@
                 "days_per_loop": {
                     "type": "integer",
                     "description": "每循环天数"
+                },
+                "win_conditions": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array",
+                    "description": "胜利条件"
+                },
+                "lose_conditions": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array",
+                    "description": "失败条件"
                 }
             },
             "additionalProperties": true,
