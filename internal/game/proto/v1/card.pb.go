@@ -160,6 +160,50 @@ func (*Card_TargetCharacterId) isCard_Target() {}
 
 func (*Card_TargetLocation) isCard_Target() {}
 
+type CardLib struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Cards         map[int32]*Card        `protobuf:"bytes,1,rep,name=cards,proto3" json:"cards,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CardLib) Reset() {
+	*x = CardLib{}
+	mi := &file_v1_card_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CardLib) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CardLib) ProtoMessage() {}
+
+func (x *CardLib) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_card_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CardLib.ProtoReflect.Descriptor instead.
+func (*CardLib) Descriptor() ([]byte, []int) {
+	return file_v1_card_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *CardLib) GetCards() map[int32]*Card {
+	if x != nil {
+		return x.Cards
+	}
+	return nil
+}
+
 type CardList struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Cards         []*Card                `protobuf:"bytes,1,rep,name=cards,proto3" json:"cards,omitempty"`
@@ -169,7 +213,7 @@ type CardList struct {
 
 func (x *CardList) Reset() {
 	*x = CardList{}
-	mi := &file_v1_card_proto_msgTypes[1]
+	mi := &file_v1_card_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -181,7 +225,7 @@ func (x *CardList) String() string {
 func (*CardList) ProtoMessage() {}
 
 func (x *CardList) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_card_proto_msgTypes[1]
+	mi := &file_v1_card_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -194,7 +238,7 @@ func (x *CardList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CardList.ProtoReflect.Descriptor instead.
 func (*CardList) Descriptor() ([]byte, []int) {
-	return file_v1_card_proto_rawDescGZIP(), []int{1}
+	return file_v1_card_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CardList) GetCards() []*Card {
@@ -221,7 +265,13 @@ const file_v1_card_proto_rawDesc = "" +
 	"\x0eused_this_loop\x18\a \x01(\bR\fusedThisLoop\x120\n" +
 	"\x13target_character_id\x18\b \x01(\x05H\x00R\x11targetCharacterId\x12;\n" +
 	"\x0ftarget_location\x18\t \x01(\x0e2\x10.v1.LocationTypeH\x00R\x0etargetLocationB\b\n" +
-	"\x06target\"*\n" +
+	"\x06target\"{\n" +
+	"\aCardLib\x12,\n" +
+	"\x05cards\x18\x01 \x03(\v2\x16.v1.CardLib.CardsEntryR\x05cards\x1aB\n" +
+	"\n" +
+	"CardsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x1e\n" +
+	"\x05value\x18\x02 \x01(\v2\b.v1.CardR\x05value:\x028\x01\"*\n" +
 	"\bCardList\x12\x1e\n" +
 	"\x05cards\x18\x01 \x03(\v2\b.v1.CardR\x05cardsB#Z!tragedylooper/internal/game/v1;v1b\x06proto3"
 
@@ -237,26 +287,30 @@ func file_v1_card_proto_rawDescGZIP() []byte {
 	return file_v1_card_proto_rawDescData
 }
 
-var file_v1_card_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_v1_card_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_v1_card_proto_goTypes = []any{
 	(*Card)(nil),      // 0: v1.Card
-	(*CardList)(nil),  // 1: v1.CardList
-	(CardType)(0),     // 2: v1.CardType
-	(PlayerRole)(0),   // 3: v1.PlayerRole
-	(*Effect)(nil),    // 4: v1.Effect
-	(LocationType)(0), // 5: v1.LocationType
+	(*CardLib)(nil),   // 1: v1.CardLib
+	(*CardList)(nil),  // 2: v1.CardList
+	nil,               // 3: v1.CardLib.CardsEntry
+	(CardType)(0),     // 4: v1.CardType
+	(PlayerRole)(0),   // 5: v1.PlayerRole
+	(*Effect)(nil),    // 6: v1.Effect
+	(LocationType)(0), // 7: v1.LocationType
 }
 var file_v1_card_proto_depIdxs = []int32{
-	2, // 0: v1.Card.card_type:type_name -> v1.CardType
-	3, // 1: v1.Card.owner_role:type_name -> v1.PlayerRole
-	4, // 2: v1.Card.effect:type_name -> v1.Effect
-	5, // 3: v1.Card.target_location:type_name -> v1.LocationType
-	0, // 4: v1.CardList.cards:type_name -> v1.Card
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	4, // 0: v1.Card.card_type:type_name -> v1.CardType
+	5, // 1: v1.Card.owner_role:type_name -> v1.PlayerRole
+	6, // 2: v1.Card.effect:type_name -> v1.Effect
+	7, // 3: v1.Card.target_location:type_name -> v1.LocationType
+	3, // 4: v1.CardLib.cards:type_name -> v1.CardLib.CardsEntry
+	0, // 5: v1.CardList.cards:type_name -> v1.Card
+	0, // 6: v1.CardLib.CardsEntry.value:type_name -> v1.Card
+	7, // [7:7] is the sub-list for method output_type
+	7, // [7:7] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	7, // [7:7] is the sub-list for extension extendee
+	0, // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_v1_card_proto_init() }
@@ -276,7 +330,7 @@ func file_v1_card_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_card_proto_rawDesc), len(file_v1_card_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

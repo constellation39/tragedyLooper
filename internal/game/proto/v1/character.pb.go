@@ -178,6 +178,50 @@ func (x *Character) GetRules() []*CharacterRule {
 	return nil
 }
 
+type CharacterLib struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Characters    map[int32]*Character   `protobuf:"bytes,1,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CharacterLib) Reset() {
+	*x = CharacterLib{}
+	mi := &file_v1_character_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CharacterLib) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CharacterLib) ProtoMessage() {}
+
+func (x *CharacterLib) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_character_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CharacterLib.ProtoReflect.Descriptor instead.
+func (*CharacterLib) Descriptor() ([]byte, []int) {
+	return file_v1_character_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *CharacterLib) GetCharacters() map[int32]*Character {
+	if x != nil {
+		return x.Characters
+	}
+	return nil
+}
+
 // 角色特殊规则
 type CharacterRule struct {
 	state       protoimpl.MessageState `protogen:"open.v1"`
@@ -194,7 +238,7 @@ type CharacterRule struct {
 
 func (x *CharacterRule) Reset() {
 	*x = CharacterRule{}
-	mi := &file_v1_character_proto_msgTypes[1]
+	mi := &file_v1_character_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -206,7 +250,7 @@ func (x *CharacterRule) String() string {
 func (*CharacterRule) ProtoMessage() {}
 
 func (x *CharacterRule) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_character_proto_msgTypes[1]
+	mi := &file_v1_character_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -219,7 +263,7 @@ func (x *CharacterRule) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CharacterRule.ProtoReflect.Descriptor instead.
 func (*CharacterRule) Descriptor() ([]byte, []int) {
-	return file_v1_character_proto_rawDescGZIP(), []int{1}
+	return file_v1_character_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CharacterRule) GetTrigger() TriggerType {
@@ -288,7 +332,7 @@ type TurfSelectionEffect struct {
 
 func (x *TurfSelectionEffect) Reset() {
 	*x = TurfSelectionEffect{}
-	mi := &file_v1_character_proto_msgTypes[2]
+	mi := &file_v1_character_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -300,7 +344,7 @@ func (x *TurfSelectionEffect) String() string {
 func (*TurfSelectionEffect) ProtoMessage() {}
 
 func (x *TurfSelectionEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_character_proto_msgTypes[2]
+	mi := &file_v1_character_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -313,7 +357,7 @@ func (x *TurfSelectionEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TurfSelectionEffect.ProtoReflect.Descriptor instead.
 func (*TurfSelectionEffect) Descriptor() ([]byte, []int) {
-	return file_v1_character_proto_rawDescGZIP(), []int{2}
+	return file_v1_character_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *TurfSelectionEffect) GetPossibleLocations() []LocationType {
@@ -341,7 +385,7 @@ type DelayedEntryEffect struct {
 
 func (x *DelayedEntryEffect) Reset() {
 	*x = DelayedEntryEffect{}
-	mi := &file_v1_character_proto_msgTypes[3]
+	mi := &file_v1_character_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -353,7 +397,7 @@ func (x *DelayedEntryEffect) String() string {
 func (*DelayedEntryEffect) ProtoMessage() {}
 
 func (x *DelayedEntryEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_character_proto_msgTypes[3]
+	mi := &file_v1_character_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -366,7 +410,7 @@ func (x *DelayedEntryEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DelayedEntryEffect.ProtoReflect.Descriptor instead.
 func (*DelayedEntryEffect) Descriptor() ([]byte, []int) {
-	return file_v1_character_proto_rawDescGZIP(), []int{3}
+	return file_v1_character_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *DelayedEntryEffect) GetDayOfEntry() int32 {
@@ -405,7 +449,14 @@ const file_v1_character_proto_rawDesc = "" +
 	"\x0eparanoia_limit\x18\f \x01(\x05R\rparanoiaLimit\x12%\n" +
 	"\x0egoodwill_limit\x18\r \x01(\x05R\rgoodwillLimit\x12%\n" +
 	"\x0eintrigue_limit\x18\x0e \x01(\x05R\rintrigueLimit\x12'\n" +
-	"\x05rules\x18\x0f \x03(\v2\x11.v1.CharacterRuleR\x05rules\"\x81\x02\n" +
+	"\x05rules\x18\x0f \x03(\v2\x11.v1.CharacterRuleR\x05rules\"\x9e\x01\n" +
+	"\fCharacterLib\x12@\n" +
+	"\n" +
+	"characters\x18\x01 \x03(\v2 .v1.CharacterLib.CharactersEntryR\n" +
+	"characters\x1aL\n" +
+	"\x0fCharactersEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12#\n" +
+	"\x05value\x18\x02 \x01(\v2\r.v1.CharacterR\x05value:\x028\x01\"\x81\x02\n" +
 	"\rCharacterRule\x12)\n" +
 	"\atrigger\x18\x01 \x01(\x0e2\x0f.v1.TriggerTypeR\atrigger\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12M\n" +
@@ -432,32 +483,36 @@ func file_v1_character_proto_rawDescGZIP() []byte {
 	return file_v1_character_proto_rawDescData
 }
 
-var file_v1_character_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_v1_character_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_v1_character_proto_goTypes = []any{
 	(*Character)(nil),           // 0: v1.Character
-	(*CharacterRule)(nil),       // 1: v1.CharacterRule
-	(*TurfSelectionEffect)(nil), // 2: v1.TurfSelectionEffect
-	(*DelayedEntryEffect)(nil),  // 3: v1.DelayedEntryEffect
-	(LocationType)(0),           // 4: v1.LocationType
-	(RoleType)(0),               // 5: v1.RoleType
-	(*Ability)(nil),             // 6: v1.Ability
-	(TriggerType)(0),            // 7: v1.TriggerType
+	(*CharacterLib)(nil),        // 1: v1.CharacterLib
+	(*CharacterRule)(nil),       // 2: v1.CharacterRule
+	(*TurfSelectionEffect)(nil), // 3: v1.TurfSelectionEffect
+	(*DelayedEntryEffect)(nil),  // 4: v1.DelayedEntryEffect
+	nil,                         // 5: v1.CharacterLib.CharactersEntry
+	(LocationType)(0),           // 6: v1.LocationType
+	(RoleType)(0),               // 7: v1.RoleType
+	(*Ability)(nil),             // 8: v1.Ability
+	(TriggerType)(0),            // 9: v1.TriggerType
 }
 var file_v1_character_proto_depIdxs = []int32{
-	4, // 0: v1.Character.current_location:type_name -> v1.LocationType
-	5, // 1: v1.Character.hidden_role:type_name -> v1.RoleType
-	6, // 2: v1.Character.abilities:type_name -> v1.Ability
-	1, // 3: v1.Character.rules:type_name -> v1.CharacterRule
-	7, // 4: v1.CharacterRule.trigger:type_name -> v1.TriggerType
-	2, // 5: v1.CharacterRule.turf_selection_effect:type_name -> v1.TurfSelectionEffect
-	3, // 6: v1.CharacterRule.delayed_entry_effect:type_name -> v1.DelayedEntryEffect
-	4, // 7: v1.TurfSelectionEffect.possible_locations:type_name -> v1.LocationType
-	4, // 8: v1.DelayedEntryEffect.entry_location:type_name -> v1.LocationType
-	9, // [9:9] is the sub-list for method output_type
-	9, // [9:9] is the sub-list for method input_type
-	9, // [9:9] is the sub-list for extension type_name
-	9, // [9:9] is the sub-list for extension extendee
-	0, // [0:9] is the sub-list for field type_name
+	6,  // 0: v1.Character.current_location:type_name -> v1.LocationType
+	7,  // 1: v1.Character.hidden_role:type_name -> v1.RoleType
+	8,  // 2: v1.Character.abilities:type_name -> v1.Ability
+	2,  // 3: v1.Character.rules:type_name -> v1.CharacterRule
+	5,  // 4: v1.CharacterLib.characters:type_name -> v1.CharacterLib.CharactersEntry
+	9,  // 5: v1.CharacterRule.trigger:type_name -> v1.TriggerType
+	3,  // 6: v1.CharacterRule.turf_selection_effect:type_name -> v1.TurfSelectionEffect
+	4,  // 7: v1.CharacterRule.delayed_entry_effect:type_name -> v1.DelayedEntryEffect
+	6,  // 8: v1.TurfSelectionEffect.possible_locations:type_name -> v1.LocationType
+	6,  // 9: v1.DelayedEntryEffect.entry_location:type_name -> v1.LocationType
+	0,  // 10: v1.CharacterLib.CharactersEntry.value:type_name -> v1.Character
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_v1_character_proto_init() }
@@ -467,7 +522,7 @@ func file_v1_character_proto_init() {
 	}
 	file_v1_enums_proto_init()
 	file_v1_ability_proto_init()
-	file_v1_character_proto_msgTypes[1].OneofWrappers = []any{
+	file_v1_character_proto_msgTypes[2].OneofWrappers = []any{
 		(*CharacterRule_TurfSelectionEffect)(nil),
 		(*CharacterRule_DelayedEntryEffect)(nil),
 	}
@@ -477,7 +532,7 @@ func file_v1_character_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_character_proto_rawDesc), len(file_v1_character_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

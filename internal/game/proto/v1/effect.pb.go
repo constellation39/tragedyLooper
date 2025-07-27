@@ -264,6 +264,50 @@ func (*Effect_CancelIncidentEffect) isEffect_EffectOneof() {}
 
 func (*Effect_ForceGoodwillRefusalTest) isEffect_EffectOneof() {}
 
+type EffectLib struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Effects       map[string]*Effect     `protobuf:"bytes,1,rep,name=effects,proto3" json:"effects,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EffectLib) Reset() {
+	*x = EffectLib{}
+	mi := &file_v1_effect_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EffectLib) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EffectLib) ProtoMessage() {}
+
+func (x *EffectLib) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_effect_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EffectLib.ProtoReflect.Descriptor instead.
+func (*EffectLib) Descriptor() ([]byte, []int) {
+	return file_v1_effect_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *EffectLib) GetEffects() map[string]*Effect {
+	if x != nil {
+		return x.Effects
+	}
+	return nil
+}
+
 // 移动角色效果
 type MoveCharacterEffect struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
@@ -275,7 +319,7 @@ type MoveCharacterEffect struct {
 
 func (x *MoveCharacterEffect) Reset() {
 	*x = MoveCharacterEffect{}
-	mi := &file_v1_effect_proto_msgTypes[1]
+	mi := &file_v1_effect_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -287,7 +331,7 @@ func (x *MoveCharacterEffect) String() string {
 func (*MoveCharacterEffect) ProtoMessage() {}
 
 func (x *MoveCharacterEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_effect_proto_msgTypes[1]
+	mi := &file_v1_effect_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -300,7 +344,7 @@ func (x *MoveCharacterEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MoveCharacterEffect.ProtoReflect.Descriptor instead.
 func (*MoveCharacterEffect) Descriptor() ([]byte, []int) {
-	return file_v1_effect_proto_rawDescGZIP(), []int{1}
+	return file_v1_effect_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *MoveCharacterEffect) GetCharacterId() int32 {
@@ -328,7 +372,7 @@ type AdjustParanoiaEffect struct {
 
 func (x *AdjustParanoiaEffect) Reset() {
 	*x = AdjustParanoiaEffect{}
-	mi := &file_v1_effect_proto_msgTypes[2]
+	mi := &file_v1_effect_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -340,7 +384,7 @@ func (x *AdjustParanoiaEffect) String() string {
 func (*AdjustParanoiaEffect) ProtoMessage() {}
 
 func (x *AdjustParanoiaEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_effect_proto_msgTypes[2]
+	mi := &file_v1_effect_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -353,7 +397,7 @@ func (x *AdjustParanoiaEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdjustParanoiaEffect.ProtoReflect.Descriptor instead.
 func (*AdjustParanoiaEffect) Descriptor() ([]byte, []int) {
-	return file_v1_effect_proto_rawDescGZIP(), []int{2}
+	return file_v1_effect_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *AdjustParanoiaEffect) GetCharacterId() int32 {
@@ -381,7 +425,7 @@ type AdjustGoodwillEffect struct {
 
 func (x *AdjustGoodwillEffect) Reset() {
 	*x = AdjustGoodwillEffect{}
-	mi := &file_v1_effect_proto_msgTypes[3]
+	mi := &file_v1_effect_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -393,7 +437,7 @@ func (x *AdjustGoodwillEffect) String() string {
 func (*AdjustGoodwillEffect) ProtoMessage() {}
 
 func (x *AdjustGoodwillEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_effect_proto_msgTypes[3]
+	mi := &file_v1_effect_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -406,7 +450,7 @@ func (x *AdjustGoodwillEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdjustGoodwillEffect.ProtoReflect.Descriptor instead.
 func (*AdjustGoodwillEffect) Descriptor() ([]byte, []int) {
-	return file_v1_effect_proto_rawDescGZIP(), []int{3}
+	return file_v1_effect_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *AdjustGoodwillEffect) GetCharacterId() int32 {
@@ -434,7 +478,7 @@ type AdjustIntrigueEffect struct {
 
 func (x *AdjustIntrigueEffect) Reset() {
 	*x = AdjustIntrigueEffect{}
-	mi := &file_v1_effect_proto_msgTypes[4]
+	mi := &file_v1_effect_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -446,7 +490,7 @@ func (x *AdjustIntrigueEffect) String() string {
 func (*AdjustIntrigueEffect) ProtoMessage() {}
 
 func (x *AdjustIntrigueEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_effect_proto_msgTypes[4]
+	mi := &file_v1_effect_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -459,7 +503,7 @@ func (x *AdjustIntrigueEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdjustIntrigueEffect.ProtoReflect.Descriptor instead.
 func (*AdjustIntrigueEffect) Descriptor() ([]byte, []int) {
-	return file_v1_effect_proto_rawDescGZIP(), []int{4}
+	return file_v1_effect_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *AdjustIntrigueEffect) GetCharacterId() int32 {
@@ -486,7 +530,7 @@ type ForbidMovementEffect struct {
 
 func (x *ForbidMovementEffect) Reset() {
 	*x = ForbidMovementEffect{}
-	mi := &file_v1_effect_proto_msgTypes[5]
+	mi := &file_v1_effect_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -498,7 +542,7 @@ func (x *ForbidMovementEffect) String() string {
 func (*ForbidMovementEffect) ProtoMessage() {}
 
 func (x *ForbidMovementEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_effect_proto_msgTypes[5]
+	mi := &file_v1_effect_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -511,7 +555,7 @@ func (x *ForbidMovementEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ForbidMovementEffect.ProtoReflect.Descriptor instead.
 func (*ForbidMovementEffect) Descriptor() ([]byte, []int) {
-	return file_v1_effect_proto_rawDescGZIP(), []int{5}
+	return file_v1_effect_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ForbidMovementEffect) GetCharacterId() int32 {
@@ -531,7 +575,7 @@ type ForbidParanoiaEffect struct {
 
 func (x *ForbidParanoiaEffect) Reset() {
 	*x = ForbidParanoiaEffect{}
-	mi := &file_v1_effect_proto_msgTypes[6]
+	mi := &file_v1_effect_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -543,7 +587,7 @@ func (x *ForbidParanoiaEffect) String() string {
 func (*ForbidParanoiaEffect) ProtoMessage() {}
 
 func (x *ForbidParanoiaEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_effect_proto_msgTypes[6]
+	mi := &file_v1_effect_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -556,7 +600,7 @@ func (x *ForbidParanoiaEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ForbidParanoiaEffect.ProtoReflect.Descriptor instead.
 func (*ForbidParanoiaEffect) Descriptor() ([]byte, []int) {
-	return file_v1_effect_proto_rawDescGZIP(), []int{6}
+	return file_v1_effect_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ForbidParanoiaEffect) GetCharacterId() int32 {
@@ -576,7 +620,7 @@ type ForbidGoodwillEffect struct {
 
 func (x *ForbidGoodwillEffect) Reset() {
 	*x = ForbidGoodwillEffect{}
-	mi := &file_v1_effect_proto_msgTypes[7]
+	mi := &file_v1_effect_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -588,7 +632,7 @@ func (x *ForbidGoodwillEffect) String() string {
 func (*ForbidGoodwillEffect) ProtoMessage() {}
 
 func (x *ForbidGoodwillEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_effect_proto_msgTypes[7]
+	mi := &file_v1_effect_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -601,7 +645,7 @@ func (x *ForbidGoodwillEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ForbidGoodwillEffect.ProtoReflect.Descriptor instead.
 func (*ForbidGoodwillEffect) Descriptor() ([]byte, []int) {
-	return file_v1_effect_proto_rawDescGZIP(), []int{7}
+	return file_v1_effect_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ForbidGoodwillEffect) GetCharacterId() int32 {
@@ -621,7 +665,7 @@ type ForbidIntrigueEffect struct {
 
 func (x *ForbidIntrigueEffect) Reset() {
 	*x = ForbidIntrigueEffect{}
-	mi := &file_v1_effect_proto_msgTypes[8]
+	mi := &file_v1_effect_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -633,7 +677,7 @@ func (x *ForbidIntrigueEffect) String() string {
 func (*ForbidIntrigueEffect) ProtoMessage() {}
 
 func (x *ForbidIntrigueEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_effect_proto_msgTypes[8]
+	mi := &file_v1_effect_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -646,7 +690,7 @@ func (x *ForbidIntrigueEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ForbidIntrigueEffect.ProtoReflect.Descriptor instead.
 func (*ForbidIntrigueEffect) Descriptor() ([]byte, []int) {
-	return file_v1_effect_proto_rawDescGZIP(), []int{8}
+	return file_v1_effect_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ForbidIntrigueEffect) GetCharacterId() int32 {
@@ -667,7 +711,7 @@ type RevealRoleEffect struct {
 
 func (x *RevealRoleEffect) Reset() {
 	*x = RevealRoleEffect{}
-	mi := &file_v1_effect_proto_msgTypes[9]
+	mi := &file_v1_effect_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -679,7 +723,7 @@ func (x *RevealRoleEffect) String() string {
 func (*RevealRoleEffect) ProtoMessage() {}
 
 func (x *RevealRoleEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_effect_proto_msgTypes[9]
+	mi := &file_v1_effect_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -692,7 +736,7 @@ func (x *RevealRoleEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RevealRoleEffect.ProtoReflect.Descriptor instead.
 func (*RevealRoleEffect) Descriptor() ([]byte, []int) {
-	return file_v1_effect_proto_rawDescGZIP(), []int{9}
+	return file_v1_effect_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *RevealRoleEffect) GetCharacterId() int32 {
@@ -720,7 +764,7 @@ type GrantAbilityEffect struct {
 
 func (x *GrantAbilityEffect) Reset() {
 	*x = GrantAbilityEffect{}
-	mi := &file_v1_effect_proto_msgTypes[10]
+	mi := &file_v1_effect_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -732,7 +776,7 @@ func (x *GrantAbilityEffect) String() string {
 func (*GrantAbilityEffect) ProtoMessage() {}
 
 func (x *GrantAbilityEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_effect_proto_msgTypes[10]
+	mi := &file_v1_effect_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -745,7 +789,7 @@ func (x *GrantAbilityEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GrantAbilityEffect.ProtoReflect.Descriptor instead.
 func (*GrantAbilityEffect) Descriptor() ([]byte, []int) {
-	return file_v1_effect_proto_rawDescGZIP(), []int{10}
+	return file_v1_effect_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GrantAbilityEffect) GetCharacterId() int32 {
@@ -773,7 +817,7 @@ type CancelIncidentEffect struct {
 
 func (x *CancelIncidentEffect) Reset() {
 	*x = CancelIncidentEffect{}
-	mi := &file_v1_effect_proto_msgTypes[11]
+	mi := &file_v1_effect_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -785,7 +829,7 @@ func (x *CancelIncidentEffect) String() string {
 func (*CancelIncidentEffect) ProtoMessage() {}
 
 func (x *CancelIncidentEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_effect_proto_msgTypes[11]
+	mi := &file_v1_effect_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -798,7 +842,7 @@ func (x *CancelIncidentEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelIncidentEffect.ProtoReflect.Descriptor instead.
 func (*CancelIncidentEffect) Descriptor() ([]byte, []int) {
-	return file_v1_effect_proto_rawDescGZIP(), []int{11}
+	return file_v1_effect_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *CancelIncidentEffect) GetIncidentType() IncidentType {
@@ -826,7 +870,7 @@ type ForceGoodwillRefusalTestEffect struct {
 
 func (x *ForceGoodwillRefusalTestEffect) Reset() {
 	*x = ForceGoodwillRefusalTestEffect{}
-	mi := &file_v1_effect_proto_msgTypes[12]
+	mi := &file_v1_effect_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -838,7 +882,7 @@ func (x *ForceGoodwillRefusalTestEffect) String() string {
 func (*ForceGoodwillRefusalTestEffect) ProtoMessage() {}
 
 func (x *ForceGoodwillRefusalTestEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_effect_proto_msgTypes[12]
+	mi := &file_v1_effect_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -851,7 +895,7 @@ func (x *ForceGoodwillRefusalTestEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ForceGoodwillRefusalTestEffect.ProtoReflect.Descriptor instead.
 func (*ForceGoodwillRefusalTestEffect) Descriptor() ([]byte, []int) {
-	return file_v1_effect_proto_rawDescGZIP(), []int{12}
+	return file_v1_effect_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ForceGoodwillRefusalTestEffect) GetProtagonistPlayerId() string {
@@ -887,7 +931,13 @@ const file_v1_effect_proto_rawDesc = "" +
 	" \x01(\v2\x16.v1.GrantAbilityEffectH\x00R\x12grantAbilityEffect\x12P\n" +
 	"\x16cancel_incident_effect\x18\v \x01(\v2\x18.v1.CancelIncidentEffectH\x00R\x14cancelIncidentEffect\x12c\n" +
 	"\x1bforce_goodwill_refusal_test\x18\f \x01(\v2\".v1.ForceGoodwillRefusalTestEffectH\x00R\x18forceGoodwillRefusalTestB\x0e\n" +
-	"\feffect_oneof\"s\n" +
+	"\feffect_oneof\"\x89\x01\n" +
+	"\tEffectLib\x124\n" +
+	"\aeffects\x18\x01 \x03(\v2\x1a.v1.EffectLib.EffectsEntryR\aeffects\x1aF\n" +
+	"\fEffectsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12 \n" +
+	"\x05value\x18\x02 \x01(\v2\n" +
+	".v1.EffectR\x05value:\x028\x01\"s\n" +
 	"\x13MoveCharacterEffect\x12!\n" +
 	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x129\n" +
 	"\x0ftarget_location\x18\x02 \x01(\x0e2\x10.v1.LocationTypeR\x0etargetLocation\"Q\n" +
@@ -934,46 +984,50 @@ func file_v1_effect_proto_rawDescGZIP() []byte {
 	return file_v1_effect_proto_rawDescData
 }
 
-var file_v1_effect_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_v1_effect_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_v1_effect_proto_goTypes = []any{
 	(*Effect)(nil),                         // 0: v1.Effect
-	(*MoveCharacterEffect)(nil),            // 1: v1.MoveCharacterEffect
-	(*AdjustParanoiaEffect)(nil),           // 2: v1.AdjustParanoiaEffect
-	(*AdjustGoodwillEffect)(nil),           // 3: v1.AdjustGoodwillEffect
-	(*AdjustIntrigueEffect)(nil),           // 4: v1.AdjustIntrigueEffect
-	(*ForbidMovementEffect)(nil),           // 5: v1.ForbidMovementEffect
-	(*ForbidParanoiaEffect)(nil),           // 6: v1.ForbidParanoiaEffect
-	(*ForbidGoodwillEffect)(nil),           // 7: v1.ForbidGoodwillEffect
-	(*ForbidIntrigueEffect)(nil),           // 8: v1.ForbidIntrigueEffect
-	(*RevealRoleEffect)(nil),               // 9: v1.RevealRoleEffect
-	(*GrantAbilityEffect)(nil),             // 10: v1.GrantAbilityEffect
-	(*CancelIncidentEffect)(nil),           // 11: v1.CancelIncidentEffect
-	(*ForceGoodwillRefusalTestEffect)(nil), // 12: v1.ForceGoodwillRefusalTestEffect
-	(LocationType)(0),                      // 13: v1.LocationType
-	(RoleType)(0),                          // 14: v1.RoleType
-	(IncidentType)(0),                      // 15: v1.IncidentType
+	(*EffectLib)(nil),                      // 1: v1.EffectLib
+	(*MoveCharacterEffect)(nil),            // 2: v1.MoveCharacterEffect
+	(*AdjustParanoiaEffect)(nil),           // 3: v1.AdjustParanoiaEffect
+	(*AdjustGoodwillEffect)(nil),           // 4: v1.AdjustGoodwillEffect
+	(*AdjustIntrigueEffect)(nil),           // 5: v1.AdjustIntrigueEffect
+	(*ForbidMovementEffect)(nil),           // 6: v1.ForbidMovementEffect
+	(*ForbidParanoiaEffect)(nil),           // 7: v1.ForbidParanoiaEffect
+	(*ForbidGoodwillEffect)(nil),           // 8: v1.ForbidGoodwillEffect
+	(*ForbidIntrigueEffect)(nil),           // 9: v1.ForbidIntrigueEffect
+	(*RevealRoleEffect)(nil),               // 10: v1.RevealRoleEffect
+	(*GrantAbilityEffect)(nil),             // 11: v1.GrantAbilityEffect
+	(*CancelIncidentEffect)(nil),           // 12: v1.CancelIncidentEffect
+	(*ForceGoodwillRefusalTestEffect)(nil), // 13: v1.ForceGoodwillRefusalTestEffect
+	nil,                                    // 14: v1.EffectLib.EffectsEntry
+	(LocationType)(0),                      // 15: v1.LocationType
+	(RoleType)(0),                          // 16: v1.RoleType
+	(IncidentType)(0),                      // 17: v1.IncidentType
 }
 var file_v1_effect_proto_depIdxs = []int32{
-	1,  // 0: v1.Effect.move_character_effect:type_name -> v1.MoveCharacterEffect
-	2,  // 1: v1.Effect.adjust_paranoia_effect:type_name -> v1.AdjustParanoiaEffect
-	3,  // 2: v1.Effect.adjust_goodwill_effect:type_name -> v1.AdjustGoodwillEffect
-	4,  // 3: v1.Effect.adjust_intrigue_effect:type_name -> v1.AdjustIntrigueEffect
-	5,  // 4: v1.Effect.forbid_movement_effect:type_name -> v1.ForbidMovementEffect
-	6,  // 5: v1.Effect.forbid_paranoia_effect:type_name -> v1.ForbidParanoiaEffect
-	7,  // 6: v1.Effect.forbid_goodwill_effect:type_name -> v1.ForbidGoodwillEffect
-	8,  // 7: v1.Effect.forbid_intrigue_effect:type_name -> v1.ForbidIntrigueEffect
-	9,  // 8: v1.Effect.reveal_role_effect:type_name -> v1.RevealRoleEffect
-	10, // 9: v1.Effect.grant_ability_effect:type_name -> v1.GrantAbilityEffect
-	11, // 10: v1.Effect.cancel_incident_effect:type_name -> v1.CancelIncidentEffect
-	12, // 11: v1.Effect.force_goodwill_refusal_test:type_name -> v1.ForceGoodwillRefusalTestEffect
-	13, // 12: v1.MoveCharacterEffect.target_location:type_name -> v1.LocationType
-	14, // 13: v1.RevealRoleEffect.revealed_role:type_name -> v1.RoleType
-	15, // 14: v1.CancelIncidentEffect.incident_type:type_name -> v1.IncidentType
-	15, // [15:15] is the sub-list for method output_type
-	15, // [15:15] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	2,  // 0: v1.Effect.move_character_effect:type_name -> v1.MoveCharacterEffect
+	3,  // 1: v1.Effect.adjust_paranoia_effect:type_name -> v1.AdjustParanoiaEffect
+	4,  // 2: v1.Effect.adjust_goodwill_effect:type_name -> v1.AdjustGoodwillEffect
+	5,  // 3: v1.Effect.adjust_intrigue_effect:type_name -> v1.AdjustIntrigueEffect
+	6,  // 4: v1.Effect.forbid_movement_effect:type_name -> v1.ForbidMovementEffect
+	7,  // 5: v1.Effect.forbid_paranoia_effect:type_name -> v1.ForbidParanoiaEffect
+	8,  // 6: v1.Effect.forbid_goodwill_effect:type_name -> v1.ForbidGoodwillEffect
+	9,  // 7: v1.Effect.forbid_intrigue_effect:type_name -> v1.ForbidIntrigueEffect
+	10, // 8: v1.Effect.reveal_role_effect:type_name -> v1.RevealRoleEffect
+	11, // 9: v1.Effect.grant_ability_effect:type_name -> v1.GrantAbilityEffect
+	12, // 10: v1.Effect.cancel_incident_effect:type_name -> v1.CancelIncidentEffect
+	13, // 11: v1.Effect.force_goodwill_refusal_test:type_name -> v1.ForceGoodwillRefusalTestEffect
+	14, // 12: v1.EffectLib.effects:type_name -> v1.EffectLib.EffectsEntry
+	15, // 13: v1.MoveCharacterEffect.target_location:type_name -> v1.LocationType
+	16, // 14: v1.RevealRoleEffect.revealed_role:type_name -> v1.RoleType
+	17, // 15: v1.CancelIncidentEffect.incident_type:type_name -> v1.IncidentType
+	0,  // 16: v1.EffectLib.EffectsEntry.value:type_name -> v1.Effect
+	17, // [17:17] is the sub-list for method output_type
+	17, // [17:17] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_v1_effect_proto_init() }
@@ -1002,7 +1056,7 @@ func file_v1_effect_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_effect_proto_rawDesc), len(file_v1_effect_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   13,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

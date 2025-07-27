@@ -1,69 +1,20 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/Player",
+    "$ref": "#/definitions/PlayerLib",
     "definitions": {
-        "Player": {
+        "PlayerLib": {
             "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "玩家唯一ID"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "玩家名称"
-                },
-                "role": {
-                    "enum": [
-                        "PLAYER_ROLE_UNSPECIFIED",
-                        0,
-                        "MASTERMIND",
-                        1,
-                        "PROTAGONIST",
-                        2
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Player Role",
-                    "description": "玩家角色枚举"
-                },
-                "is_llm": {
-                    "type": "boolean",
-                    "description": "是否由LLM（大语言模型）控制"
-                },
-                "hand": {
-                    "items": {
-                        "$ref": "#/definitions/v1.Card"
+                "players": {
+                    "additionalProperties": {
+                        "$ref": "#/definitions/v1.Player",
+                        "additionalProperties": true
                     },
-                    "type": "array",
-                    "description": "玩家手牌列表"
-                },
-                "llm_session_id": {
-                    "type": "string",
-                    "description": "如果是LLM，对应的会话ID"
-                },
-                "deduction_knowledge": {
-                    "$ref": "#/definitions/v1.PlayerDeductionKnowledge",
-                    "additionalProperties": true,
-                    "description": "主角的推理知识（仅主角玩家拥有）"
-                },
-                "protagonist_characters_controlled": {
-                    "items": {
-                        "type": "integer"
-                    },
-                    "type": "array",
-                    "description": "新增：如果主角玩家可以控制多个主角角色牌组，列出其控制的角色ID列表"
+                    "type": "object"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Player",
-            "description": "玩家信息"
+            "title": "Player Lib"
         },
         "v1.AdjustGoodwillEffect": {
             "properties": {
@@ -435,6 +386,69 @@
             "type": "object",
             "title": "Move Character Effect",
             "description": "移动角色效果"
+        },
+        "v1.Player": {
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "玩家唯一ID"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "玩家名称"
+                },
+                "role": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "MASTERMIND",
+                        1,
+                        "PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色枚举"
+                },
+                "is_llm": {
+                    "type": "boolean",
+                    "description": "是否由LLM（大语言模型）控制"
+                },
+                "hand": {
+                    "items": {
+                        "$ref": "#/definitions/v1.Card"
+                    },
+                    "type": "array",
+                    "description": "玩家手牌列表"
+                },
+                "llm_session_id": {
+                    "type": "string",
+                    "description": "如果是LLM，对应的会话ID"
+                },
+                "deduction_knowledge": {
+                    "$ref": "#/definitions/v1.PlayerDeductionKnowledge",
+                    "additionalProperties": true,
+                    "description": "主角的推理知识（仅主角玩家拥有）"
+                },
+                "protagonist_characters_controlled": {
+                    "items": {
+                        "type": "integer"
+                    },
+                    "type": "array",
+                    "description": "新增：如果主角玩家可以控制多个主角角色牌组，列出其控制的角色ID列表"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Player",
+            "description": "玩家信息"
         },
         "v1.PlayerDeductionKnowledge": {
             "properties": {

@@ -1,69 +1,20 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/Player",
+    "$ref": "#/definitions/CardLib",
     "definitions": {
-        "Player": {
+        "CardLib": {
             "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "玩家唯一ID"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "玩家名称"
-                },
-                "role": {
-                    "enum": [
-                        "PLAYER_ROLE_UNSPECIFIED",
-                        0,
-                        "MASTERMIND",
-                        1,
-                        "PROTAGONIST",
-                        2
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Player Role",
-                    "description": "玩家角色枚举"
-                },
-                "is_llm": {
-                    "type": "boolean",
-                    "description": "是否由LLM（大语言模型）控制"
-                },
-                "hand": {
-                    "items": {
-                        "$ref": "#/definitions/v1.Card"
+                "cards": {
+                    "additionalProperties": {
+                        "$ref": "#/definitions/v1.Card",
+                        "additionalProperties": true
                     },
-                    "type": "array",
-                    "description": "玩家手牌列表"
-                },
-                "llm_session_id": {
-                    "type": "string",
-                    "description": "如果是LLM，对应的会话ID"
-                },
-                "deduction_knowledge": {
-                    "$ref": "#/definitions/v1.PlayerDeductionKnowledge",
-                    "additionalProperties": true,
-                    "description": "主角的推理知识（仅主角玩家拥有）"
-                },
-                "protagonist_characters_controlled": {
-                    "items": {
-                        "type": "integer"
-                    },
-                    "type": "array",
-                    "description": "新增：如果主角玩家可以控制多个主角角色牌组，列出其控制的角色ID列表"
+                    "type": "object"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Player",
-            "description": "玩家信息"
+            "title": "Card Lib"
         },
         "v1.AdjustGoodwillEffect": {
             "properties": {
@@ -435,66 +386,6 @@
             "type": "object",
             "title": "Move Character Effect",
             "description": "移动角色效果"
-        },
-        "v1.PlayerDeductionKnowledge": {
-            "properties": {
-                "guessed_roles": {
-                    "additionalProperties": {
-                        "enum": [
-                            "ROLE_TYPE_UNSPECIFIED",
-                            0,
-                            "INNOCENT",
-                            1,
-                            "KILLER",
-                            2,
-                            "ACCOMPLICE",
-                            3,
-                            "PERSON_OF_INTEREST",
-                            4,
-                            "KEY_PERSON",
-                            5,
-                            "FRIEND",
-                            6,
-                            "LOVER",
-                            7,
-                            "CONSPIRACY_THEORIST",
-                            8,
-                            "CULTIST",
-                            9
-                        ],
-                        "oneOf": [
-                            {
-                                "type": "string"
-                            },
-                            {
-                                "type": "integer"
-                            }
-                        ],
-                        "title": "Role Type",
-                        "description": "角色身份类型枚举"
-                    },
-                    "type": "object",
-                    "description": "对角色身份的猜测，键为 character_id"
-                },
-                "clues": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array",
-                    "description": "收集到的线索列表"
-                },
-                "theories": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array",
-                    "description": "推理出的理论列表"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Player Deduction Knowledge",
-            "description": "主角的推理知识"
         },
         "v1.RevealRoleEffect": {
             "properties": {

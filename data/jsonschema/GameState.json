@@ -1229,7 +1229,7 @@
         "v1.Player": {
             "properties": {
                 "id": {
-                    "type": "string",
+                    "type": "integer",
                     "description": "玩家唯一ID"
                 },
                 "name": {

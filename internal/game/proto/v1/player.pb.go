@@ -24,7 +24,7 @@ const (
 // 玩家信息
 type Player struct {
 	state                           protoimpl.MessageState    `protogen:"open.v1"`
-	Id                              string                    `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                                            // 玩家唯一ID
+	Id                              int32                     `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                                           // 玩家唯一ID
 	Name                            string                    `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                                                        // 玩家名称
 	Role                            PlayerRole                `protobuf:"varint,3,opt,name=role,proto3,enum=v1.PlayerRole" json:"role,omitempty"`                                                                                    // 玩家角色 (主谋或主角)
 	IsLlm                           bool                      `protobuf:"varint,4,opt,name=is_llm,json=isLlm,proto3" json:"is_llm,omitempty"`                                                                                        // 是否由LLM（大语言模型）控制
@@ -66,11 +66,11 @@ func (*Player) Descriptor() ([]byte, []int) {
 	return file_v1_player_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Player) GetId() string {
+func (x *Player) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 func (x *Player) GetName() string {
@@ -122,6 +122,50 @@ func (x *Player) GetProtagonistCharactersControlled() []int32 {
 	return nil
 }
 
+type PlayerLib struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Players       map[int32]*Player      `protobuf:"bytes,1,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PlayerLib) Reset() {
+	*x = PlayerLib{}
+	mi := &file_v1_player_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PlayerLib) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PlayerLib) ProtoMessage() {}
+
+func (x *PlayerLib) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_player_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PlayerLib.ProtoReflect.Descriptor instead.
+func (*PlayerLib) Descriptor() ([]byte, []int) {
+	return file_v1_player_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *PlayerLib) GetPlayers() map[int32]*Player {
+	if x != nil {
+		return x.Players
+	}
+	return nil
+}
+
 // 主角的推理知识
 type PlayerDeductionKnowledge struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -134,7 +178,7 @@ type PlayerDeductionKnowledge struct {
 
 func (x *PlayerDeductionKnowledge) Reset() {
 	*x = PlayerDeductionKnowledge{}
-	mi := &file_v1_player_proto_msgTypes[1]
+	mi := &file_v1_player_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -146,7 +190,7 @@ func (x *PlayerDeductionKnowledge) String() string {
 func (*PlayerDeductionKnowledge) ProtoMessage() {}
 
 func (x *PlayerDeductionKnowledge) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_player_proto_msgTypes[1]
+	mi := &file_v1_player_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -159,7 +203,7 @@ func (x *PlayerDeductionKnowledge) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlayerDeductionKnowledge.ProtoReflect.Descriptor instead.
 func (*PlayerDeductionKnowledge) Descriptor() ([]byte, []int) {
-	return file_v1_player_proto_rawDescGZIP(), []int{1}
+	return file_v1_player_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *PlayerDeductionKnowledge) GetGuessedRoles() map[int32]RoleType {
@@ -204,7 +248,7 @@ type PlayerView struct {
 
 func (x *PlayerView) Reset() {
 	*x = PlayerView{}
-	mi := &file_v1_player_proto_msgTypes[2]
+	mi := &file_v1_player_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -216,7 +260,7 @@ func (x *PlayerView) String() string {
 func (*PlayerView) ProtoMessage() {}
 
 func (x *PlayerView) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_player_proto_msgTypes[2]
+	mi := &file_v1_player_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -229,7 +273,7 @@ func (x *PlayerView) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlayerView.ProtoReflect.Descriptor instead.
 func (*PlayerView) Descriptor() ([]byte, []int) {
-	return file_v1_player_proto_rawDescGZIP(), []int{2}
+	return file_v1_player_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *PlayerView) GetGameId() string {
@@ -336,7 +380,7 @@ type PlayerViewCharacter struct {
 
 func (x *PlayerViewCharacter) Reset() {
 	*x = PlayerViewCharacter{}
-	mi := &file_v1_player_proto_msgTypes[3]
+	mi := &file_v1_player_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -348,7 +392,7 @@ func (x *PlayerViewCharacter) String() string {
 func (*PlayerViewCharacter) ProtoMessage() {}
 
 func (x *PlayerViewCharacter) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_player_proto_msgTypes[3]
+	mi := &file_v1_player_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -361,7 +405,7 @@ func (x *PlayerViewCharacter) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlayerViewCharacter.ProtoReflect.Descriptor instead.
 func (*PlayerViewCharacter) Descriptor() ([]byte, []int) {
-	return file_v1_player_proto_rawDescGZIP(), []int{3}
+	return file_v1_player_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *PlayerViewCharacter) GetId() int32 {
@@ -453,7 +497,7 @@ type PlayerViewPlayer struct {
 
 func (x *PlayerViewPlayer) Reset() {
 	*x = PlayerViewPlayer{}
-	mi := &file_v1_player_proto_msgTypes[4]
+	mi := &file_v1_player_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -465,7 +509,7 @@ func (x *PlayerViewPlayer) String() string {
 func (*PlayerViewPlayer) ProtoMessage() {}
 
 func (x *PlayerViewPlayer) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_player_proto_msgTypes[4]
+	mi := &file_v1_player_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -478,7 +522,7 @@ func (x *PlayerViewPlayer) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlayerViewPlayer.ProtoReflect.Descriptor instead.
 func (*PlayerViewPlayer) Descriptor() ([]byte, []int) {
-	return file_v1_player_proto_rawDescGZIP(), []int{4}
+	return file_v1_player_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *PlayerViewPlayer) GetId() string {
@@ -508,14 +552,20 @@ const file_v1_player_proto_rawDesc = "" +
 	"\n" +
 	"\x0fv1/player.proto\x12\x02v1\x1a\x0ev1/enums.proto\x1a\rv1/card.proto\x1a\x10v1/ability.proto\x1a\x12v1/character.proto\x1a\x0ev1/event.proto\"\xc6\x02\n" +
 	"\x06Player\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\"\n" +
 	"\x04role\x18\x03 \x01(\x0e2\x0e.v1.PlayerRoleR\x04role\x12\x15\n" +
 	"\x06is_llm\x18\x04 \x01(\bR\x05isLlm\x12\x1c\n" +
 	"\x04hand\x18\x05 \x03(\v2\b.v1.CardR\x04hand\x12$\n" +
 	"\x0ellm_session_id\x18\x06 \x01(\tR\fllmSessionId\x12M\n" +
 	"\x13deduction_knowledge\x18\a \x01(\v2\x1c.v1.PlayerDeductionKnowledgeR\x12deductionKnowledge\x12J\n" +
-	"!protagonist_characters_controlled\x18\b \x03(\x05R\x1fprotagonistCharactersControlled\"\xf0\x01\n" +
+	"!protagonist_characters_controlled\x18\b \x03(\x05R\x1fprotagonistCharactersControlled\"\x89\x01\n" +
+	"\tPlayerLib\x124\n" +
+	"\aplayers\x18\x01 \x03(\v2\x1a.v1.PlayerLib.PlayersEntryR\aplayers\x1aF\n" +
+	"\fPlayersEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12 \n" +
+	"\x05value\x18\x02 \x01(\v2\n" +
+	".v1.PlayerR\x05value:\x028\x01\"\xf0\x01\n" +
 	"\x18PlayerDeductionKnowledge\x12S\n" +
 	"\rguessed_roles\x18\x01 \x03(\v2..v1.PlayerDeductionKnowledge.GuessedRolesEntryR\fguessedRoles\x12\x14\n" +
 	"\x05clues\x18\x02 \x03(\tR\x05clues\x12\x1a\n" +
@@ -583,52 +633,56 @@ func file_v1_player_proto_rawDescGZIP() []byte {
 	return file_v1_player_proto_rawDescData
 }
 
-var file_v1_player_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_v1_player_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_v1_player_proto_goTypes = []any{
 	(*Player)(nil),                   // 0: v1.Player
-	(*PlayerDeductionKnowledge)(nil), // 1: v1.PlayerDeductionKnowledge
-	(*PlayerView)(nil),               // 2: v1.PlayerView
-	(*PlayerViewCharacter)(nil),      // 3: v1.PlayerViewCharacter
-	(*PlayerViewPlayer)(nil),         // 4: v1.PlayerViewPlayer
-	nil,                              // 5: v1.PlayerDeductionKnowledge.GuessedRolesEntry
-	nil,                              // 6: v1.PlayerView.CharactersEntry
-	nil,                              // 7: v1.PlayerView.PlayersEntry
-	nil,                              // 8: v1.PlayerView.ActiveTragediesEntry
-	nil,                              // 9: v1.PlayerView.PreventedTragediesEntry
-	(PlayerRole)(0),                  // 10: v1.PlayerRole
-	(*Card)(nil),                     // 11: v1.Card
-	(GamePhase)(0),                   // 12: v1.GamePhase
-	(*GameEvent)(nil),                // 13: v1.GameEvent
-	(LocationType)(0),                // 14: v1.LocationType
-	(*Ability)(nil),                  // 15: v1.Ability
-	(*CharacterRule)(nil),            // 16: v1.CharacterRule
-	(RoleType)(0),                    // 17: v1.RoleType
+	(*PlayerLib)(nil),                // 1: v1.PlayerLib
+	(*PlayerDeductionKnowledge)(nil), // 2: v1.PlayerDeductionKnowledge
+	(*PlayerView)(nil),               // 3: v1.PlayerView
+	(*PlayerViewCharacter)(nil),      // 4: v1.PlayerViewCharacter
+	(*PlayerViewPlayer)(nil),         // 5: v1.PlayerViewPlayer
+	nil,                              // 6: v1.PlayerLib.PlayersEntry
+	nil,                              // 7: v1.PlayerDeductionKnowledge.GuessedRolesEntry
+	nil,                              // 8: v1.PlayerView.CharactersEntry
+	nil,                              // 9: v1.PlayerView.PlayersEntry
+	nil,                              // 10: v1.PlayerView.ActiveTragediesEntry
+	nil,                              // 11: v1.PlayerView.PreventedTragediesEntry
+	(PlayerRole)(0),                  // 12: v1.PlayerRole
+	(*Card)(nil),                     // 13: v1.Card
+	(GamePhase)(0),                   // 14: v1.GamePhase
+	(*GameEvent)(nil),                // 15: v1.GameEvent
+	(LocationType)(0),                // 16: v1.LocationType
+	(*Ability)(nil),                  // 17: v1.Ability
+	(*CharacterRule)(nil),            // 18: v1.CharacterRule
+	(RoleType)(0),                    // 19: v1.RoleType
 }
 var file_v1_player_proto_depIdxs = []int32{
-	10, // 0: v1.Player.role:type_name -> v1.PlayerRole
-	11, // 1: v1.Player.hand:type_name -> v1.Card
-	1,  // 2: v1.Player.deduction_knowledge:type_name -> v1.PlayerDeductionKnowledge
-	5,  // 3: v1.PlayerDeductionKnowledge.guessed_roles:type_name -> v1.PlayerDeductionKnowledge.GuessedRolesEntry
-	6,  // 4: v1.PlayerView.characters:type_name -> v1.PlayerView.CharactersEntry
-	7,  // 5: v1.PlayerView.players:type_name -> v1.PlayerView.PlayersEntry
-	12, // 6: v1.PlayerView.current_phase:type_name -> v1.GamePhase
-	8,  // 7: v1.PlayerView.active_tragedies:type_name -> v1.PlayerView.ActiveTragediesEntry
-	9,  // 8: v1.PlayerView.prevented_tragedies:type_name -> v1.PlayerView.PreventedTragediesEntry
-	11, // 9: v1.PlayerView.your_hand:type_name -> v1.Card
-	1,  // 10: v1.PlayerView.your_deductions:type_name -> v1.PlayerDeductionKnowledge
-	13, // 11: v1.PlayerView.public_events:type_name -> v1.GameEvent
-	14, // 12: v1.PlayerViewCharacter.current_location:type_name -> v1.LocationType
-	15, // 13: v1.PlayerViewCharacter.abilities:type_name -> v1.Ability
-	16, // 14: v1.PlayerViewCharacter.rules:type_name -> v1.CharacterRule
-	10, // 15: v1.PlayerViewPlayer.role:type_name -> v1.PlayerRole
-	17, // 16: v1.PlayerDeductionKnowledge.GuessedRolesEntry.value:type_name -> v1.RoleType
-	3,  // 17: v1.PlayerView.CharactersEntry.value:type_name -> v1.PlayerViewCharacter
-	4,  // 18: v1.PlayerView.PlayersEntry.value:type_name -> v1.PlayerViewPlayer
-	19, // [19:19] is the sub-list for method output_type
-	19, // [19:19] is the sub-list for method input_type
-	19, // [19:19] is the sub-list for extension type_name
-	19, // [19:19] is the sub-list for extension extendee
-	0,  // [0:19] is the sub-list for field type_name
+	12, // 0: v1.Player.role:type_name -> v1.PlayerRole
+	13, // 1: v1.Player.hand:type_name -> v1.Card
+	2,  // 2: v1.Player.deduction_knowledge:type_name -> v1.PlayerDeductionKnowledge
+	6,  // 3: v1.PlayerLib.players:type_name -> v1.PlayerLib.PlayersEntry
+	7,  // 4: v1.PlayerDeductionKnowledge.guessed_roles:type_name -> v1.PlayerDeductionKnowledge.GuessedRolesEntry
+	8,  // 5: v1.PlayerView.characters:type_name -> v1.PlayerView.CharactersEntry
+	9,  // 6: v1.PlayerView.players:type_name -> v1.PlayerView.PlayersEntry
+	14, // 7: v1.PlayerView.current_phase:type_name -> v1.GamePhase
+	10, // 8: v1.PlayerView.active_tragedies:type_name -> v1.PlayerView.ActiveTragediesEntry
+	11, // 9: v1.PlayerView.prevented_tragedies:type_name -> v1.PlayerView.PreventedTragediesEntry
+	13, // 10: v1.PlayerView.your_hand:type_name -> v1.Card
+	2,  // 11: v1.PlayerView.your_deductions:type_name -> v1.PlayerDeductionKnowledge
+	15, // 12: v1.PlayerView.public_events:type_name -> v1.GameEvent
+	16, // 13: v1.PlayerViewCharacter.current_location:type_name -> v1.LocationType
+	17, // 14: v1.PlayerViewCharacter.abilities:type_name -> v1.Ability
+	18, // 15: v1.PlayerViewCharacter.rules:type_name -> v1.CharacterRule
+	12, // 16: v1.PlayerViewPlayer.role:type_name -> v1.PlayerRole
+	0,  // 17: v1.PlayerLib.PlayersEntry.value:type_name -> v1.Player
+	19, // 18: v1.PlayerDeductionKnowledge.GuessedRolesEntry.value:type_name -> v1.RoleType
+	4,  // 19: v1.PlayerView.CharactersEntry.value:type_name -> v1.PlayerViewCharacter
+	5,  // 20: v1.PlayerView.PlayersEntry.value:type_name -> v1.PlayerViewPlayer
+	21, // [21:21] is the sub-list for method output_type
+	21, // [21:21] is the sub-list for method input_type
+	21, // [21:21] is the sub-list for extension type_name
+	21, // [21:21] is the sub-list for extension extendee
+	0,  // [0:21] is the sub-list for field type_name
 }
 
 func init() { file_v1_player_proto_init() }
@@ -647,7 +701,7 @@ func file_v1_player_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_player_proto_rawDesc), len(file_v1_player_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
