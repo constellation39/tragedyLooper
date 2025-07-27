@@ -40,3 +40,13 @@ message ChooseOptionPayload {
   int32 character_id = 2; // 做出选择的角色（如果选择与角色相关）
   string chosen_option_id = 3; // 选择项的ID
 }
+
+// 通用的玩家操作负载
+message PlayerActionPayload {
+  oneof payload {
+    PlayCardPayload play_card = 1;
+    UseAbilityPayload use_ability = 2;
+    MakeGuessPayload make_guess = 3;
+    ChooseOptionPayload choose_option = 4;
+  }
+}

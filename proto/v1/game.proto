@@ -15,7 +15,7 @@ message GameState {
   string game_id = 1; // 游戏唯一ID
   Script script = 2; // 当前游戏的剧本配置
   map<int32, Character> characters = 3; // 所有角色当前状态的映射，键为 character_id
-  map<string, Player> players = 4; // 所有玩家的映射，键为 player_id
+  map<int32, Player> players = 4; // 所有玩家的映射，键为 player_id
   int32 current_day = 5; // 当前天数
   int32 current_loop = 6; // 当前循环数
   GamePhase current_phase = 7; // 当前游戏阶段

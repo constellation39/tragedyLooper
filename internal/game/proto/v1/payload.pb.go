@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -358,6 +357,121 @@ func (x *ChooseOptionPayload) GetChosenOptionId() string {
 	return ""
 }
 
+// 通用的玩家操作负载
+type PlayerActionPayload struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Payload:
+	//
+	//	*PlayerActionPayload_PlayCard
+	//	*PlayerActionPayload_UseAbility
+	//	*PlayerActionPayload_MakeGuess
+	//	*PlayerActionPayload_ChooseOption
+	Payload       isPlayerActionPayload_Payload `protobuf_oneof:"payload"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PlayerActionPayload) Reset() {
+	*x = PlayerActionPayload{}
+	mi := &file_v1_payload_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PlayerActionPayload) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PlayerActionPayload) ProtoMessage() {}
+
+func (x *PlayerActionPayload) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_payload_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PlayerActionPayload.ProtoReflect.Descriptor instead.
+func (*PlayerActionPayload) Descriptor() ([]byte, []int) {
+	return file_v1_payload_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *PlayerActionPayload) GetPayload() isPlayerActionPayload_Payload {
+	if x != nil {
+		return x.Payload
+	}
+	return nil
+}
+
+func (x *PlayerActionPayload) GetPlayCard() *PlayCardPayload {
+	if x != nil {
+		if x, ok := x.Payload.(*PlayerActionPayload_PlayCard); ok {
+			return x.PlayCard
+		}
+	}
+	return nil
+}
+
+func (x *PlayerActionPayload) GetUseAbility() *UseAbilityPayload {
+	if x != nil {
+		if x, ok := x.Payload.(*PlayerActionPayload_UseAbility); ok {
+			return x.UseAbility
+		}
+	}
+	return nil
+}
+
+func (x *PlayerActionPayload) GetMakeGuess() *MakeGuessPayload {
+	if x != nil {
+		if x, ok := x.Payload.(*PlayerActionPayload_MakeGuess); ok {
+			return x.MakeGuess
+		}
+	}
+	return nil
+}
+
+func (x *PlayerActionPayload) GetChooseOption() *ChooseOptionPayload {
+	if x != nil {
+		if x, ok := x.Payload.(*PlayerActionPayload_ChooseOption); ok {
+			return x.ChooseOption
+		}
+	}
+	return nil
+}
+
+type isPlayerActionPayload_Payload interface {
+	isPlayerActionPayload_Payload()
+}
+
+type PlayerActionPayload_PlayCard struct {
+	PlayCard *PlayCardPayload `protobuf:"bytes,1,opt,name=play_card,json=playCard,proto3,oneof"`
+}
+
+type PlayerActionPayload_UseAbility struct {
+	UseAbility *UseAbilityPayload `protobuf:"bytes,2,opt,name=use_ability,json=useAbility,proto3,oneof"`
+}
+
+type PlayerActionPayload_MakeGuess struct {
+	MakeGuess *MakeGuessPayload `protobuf:"bytes,3,opt,name=make_guess,json=makeGuess,proto3,oneof"`
+}
+
+type PlayerActionPayload_ChooseOption struct {
+	ChooseOption *ChooseOptionPayload `protobuf:"bytes,4,opt,name=choose_option,json=chooseOption,proto3,oneof"`
+}
+
+func (*PlayerActionPayload_PlayCard) isPlayerActionPayload_Payload() {}
+
+func (*PlayerActionPayload_UseAbility) isPlayerActionPayload_Payload() {}
+
+func (*PlayerActionPayload_MakeGuess) isPlayerActionPayload_Payload() {}
+
+func (*PlayerActionPayload_ChooseOption) isPlayerActionPayload_Payload() {}
+
 var File_v1_payload_proto protoreflect.FileDescriptor
 
 const file_v1_payload_proto_rawDesc = "" +
@@ -387,7 +501,15 @@ const file_v1_payload_proto_rawDesc = "" +
 	"\x13ChooseOptionPayload\x12\x1b\n" +
 	"\tplayer_id\x18\x01 \x01(\tR\bplayerId\x12!\n" +
 	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\x12(\n" +
-	"\x10chosen_option_id\x18\x03 \x01(\tR\x0echosenOptionIdB#Z!tragedylooper/internal/game/v1;v1b\x06proto3"
+	"\x10chosen_option_id\x18\x03 \x01(\tR\x0echosenOptionId\"\x85\x02\n" +
+	"\x13PlayerActionPayload\x122\n" +
+	"\tplay_card\x18\x01 \x01(\v2\x13.v1.PlayCardPayloadH\x00R\bplayCard\x128\n" +
+	"\vuse_ability\x18\x02 \x01(\v2\x15.v1.UseAbilityPayloadH\x00R\n" +
+	"useAbility\x125\n" +
+	"\n" +
+	"make_guess\x18\x03 \x01(\v2\x14.v1.MakeGuessPayloadH\x00R\tmakeGuess\x12>\n" +
+	"\rchoose_option\x18\x04 \x01(\v2\x17.v1.ChooseOptionPayloadH\x00R\fchooseOptionB\t\n" +
+	"\apayloadB#Z!tragedylooper/internal/game/v1;v1b\x06proto3"
 
 var (
 	file_v1_payload_proto_rawDescOnce sync.Once
@@ -401,28 +523,33 @@ func file_v1_payload_proto_rawDescGZIP() []byte {
 	return file_v1_payload_proto_rawDescData
 }
 
-var file_v1_payload_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_v1_payload_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_v1_payload_proto_goTypes = []any{
 	(*PlayCardPayload)(nil),     // 0: v1.PlayCardPayload
 	(*UseAbilityPayload)(nil),   // 1: v1.UseAbilityPayload
 	(*MakeGuessPayload)(nil),    // 2: v1.MakeGuessPayload
 	(*ChooseOptionPayload)(nil), // 3: v1.ChooseOptionPayload
-	nil,                         // 4: v1.MakeGuessPayload.GuessedRolesEntry
-	(LocationType)(0),           // 5: v1.LocationType
-	(IncidentType)(0),           // 6: v1.IncidentType
-	(RoleType)(0),               // 7: v1.RoleType
+	(*PlayerActionPayload)(nil), // 4: v1.PlayerActionPayload
+	nil,                         // 5: v1.MakeGuessPayload.GuessedRolesEntry
+	(LocationType)(0),           // 6: v1.LocationType
+	(IncidentType)(0),           // 7: v1.IncidentType
+	(RoleType)(0),               // 8: v1.RoleType
 }
 var file_v1_payload_proto_depIdxs = []int32{
-	5, // 0: v1.PlayCardPayload.target_location:type_name -> v1.LocationType
-	5, // 1: v1.UseAbilityPayload.target_location:type_name -> v1.LocationType
-	6, // 2: v1.UseAbilityPayload.target_incident_type:type_name -> v1.IncidentType
-	4, // 3: v1.MakeGuessPayload.guessed_roles:type_name -> v1.MakeGuessPayload.GuessedRolesEntry
-	7, // 4: v1.MakeGuessPayload.GuessedRolesEntry.value:type_name -> v1.RoleType
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	6, // 0: v1.PlayCardPayload.target_location:type_name -> v1.LocationType
+	6, // 1: v1.UseAbilityPayload.target_location:type_name -> v1.LocationType
+	7, // 2: v1.UseAbilityPayload.target_incident_type:type_name -> v1.IncidentType
+	5, // 3: v1.MakeGuessPayload.guessed_roles:type_name -> v1.MakeGuessPayload.GuessedRolesEntry
+	0, // 4: v1.PlayerActionPayload.play_card:type_name -> v1.PlayCardPayload
+	1, // 5: v1.PlayerActionPayload.use_ability:type_name -> v1.UseAbilityPayload
+	2, // 6: v1.PlayerActionPayload.make_guess:type_name -> v1.MakeGuessPayload
+	3, // 7: v1.PlayerActionPayload.choose_option:type_name -> v1.ChooseOptionPayload
+	8, // 8: v1.MakeGuessPayload.GuessedRolesEntry.value:type_name -> v1.RoleType
+	9, // [9:9] is the sub-list for method output_type
+	9, // [9:9] is the sub-list for method input_type
+	9, // [9:9] is the sub-list for extension type_name
+	9, // [9:9] is the sub-list for extension extendee
+	0, // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_v1_payload_proto_init() }
@@ -440,13 +567,19 @@ func file_v1_payload_proto_init() {
 		(*UseAbilityPayload_TargetLocation)(nil),
 		(*UseAbilityPayload_TargetIncidentType)(nil),
 	}
+	file_v1_payload_proto_msgTypes[4].OneofWrappers = []any{
+		(*PlayerActionPayload_PlayCard)(nil),
+		(*PlayerActionPayload_UseAbility)(nil),
+		(*PlayerActionPayload_MakeGuess)(nil),
+		(*PlayerActionPayload_ChooseOption)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_payload_proto_rawDesc), len(file_v1_payload_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

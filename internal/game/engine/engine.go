@@ -8,7 +8,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"tragedylooper/internal/game/data"
-	"tragedylooper/internal/game/loader"
 	model "tragedylooper/internal/game/proto/v1"
 	"tragedylooper/internal/llm"
 )
@@ -24,7 +23,6 @@ type GameEngine struct {
 	mastermindPlayerID   int32
 	protagonistPlayerIDs []int32
 	characterNameToID    map[string]int32
-	gameData             *loader.GameData
 	logger               *zap.Logger
 }
 
@@ -40,11 +38,11 @@ type getPlayerViewRequest struct {
 // llmActionCompleteRequest is sent when an LLM player has decided on an action.
 type llmActionCompleteRequest struct {
 	playerID int32
-	action   *model.PlayerAction
+	action   *model.PlayerActionPayload
 }
 
 // NewGameEngine creates a new game engine instance.
-func NewGameEngine(gameID int32, logger *zap.Logger, script *model.Script, players map[int32]*model.Player, llmClient llm.Client, gameData *loader.GameData) *GameEngine {
+func NewGameEngine(gameID string, logger *zap.Logger, script *model.Script, players map[int32]*model.Player, llmClient llm.Client, gameData *loader.GameData) *GameEngine {
 	gs := &model.GameState{
 		GameId:              gameID,
 		Script:              script,
