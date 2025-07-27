@@ -18,7 +18,7 @@ func NewPromptBuilder() *PromptBuilder {
 // BuildMastermindPrompt 为主谋 LLM 构建提示词。
 func (pb *PromptBuilder) BuildMastermindPrompt(
 	fullGameState *model.PlayerView, // 主谋获得完整视图
-	script *model.Script,
+	script *model.ScriptConfig,
 	characters map[string]*model.Character, // 主谋看到隐藏身份
 ) string {
 	var sb strings.Builder
@@ -45,15 +45,15 @@ func (pb *PromptBuilder) BuildMastermindPrompt(
 	sb.WriteString("\n--- Characters (including hidden roles) ---\n")
 	for _, char := range characters { // 使用主谋的完整角色映射
 		sb.WriteString(fmt.Sprintf("- %s (Role: %s, Location: %s, Paranoia: %d, Goodwill: %d, Alive: %t)\n",
-			char.Name, char.HiddenRole, char.CurrentLocation, char.Paranoia, char.Goodwill, char.IsAlive))
-		if len(char.Traits) > 0 {
-			sb.WriteString(fmt.Sprintf("  Traits: %s\n", strings.Join(char.Traits, ", ")))
+			char.Config.Name, char.HiddenRole, char.CurrentLocation, char.Paranoia, char.Goodwill, char.IsAlive))
+		if len(char.Config.Traits) > 0 {
+			sb.WriteString(fmt.Sprintf("  Traits: %s\n", strings.Join(char.Config.Traits, ", ")))
 		}
 	}
 
 	sb.WriteString("\n--- Your Hand ---\n")
 	for _, card := range fullGameState.YourHand {
-		sb.WriteString(fmt.Sprintf("- Card: %s (Type: %s, Effect: %+v)\n", card.Name, card.CardType, card.Effect))
+		sb.WriteString(fmt.Sprintf("- Card: %s (Type: %s, Effect: %+v)\n", card.Config.Name, card.Config.CardType, card.Config.Effect))
 	}
 
 	sb.WriteString("\n--- Public Events (This Day) ---\n")
@@ -93,15 +93,15 @@ func (pb *PromptBuilder) BuildProtagonistPrompt(
 	sb.WriteString("\n--- Characters (visible information) ---\n")
 	for _, char := range playerView.Characters { // 主角视图中隐藏了隐藏身份
 		sb.WriteString(fmt.Sprintf("- %s (Location: %s, Paranoia: %d, Goodwill: %d, Alive: %t)\n",
-			char.Name, char.CurrentLocation, char.Paranoia, char.Goodwill, char.IsAlive))
-		if len(char.Traits) > 0 {
-			sb.WriteString(fmt.Sprintf("  Traits: %s\n", strings.Join(char.Traits, ", ")))
+			char.Config.Name, char.CurrentLocation, char.Paranoia, char.Goodwill, char.IsAlive))
+		if len(char.Config.Traits) > 0 {
+			sb.WriteString(fmt.Sprintf("  Traits: %s\n", strings.Join(char.Config.Traits, ", ")))
 		}
 	}
 
 	sb.WriteString("\n--- Your Hand ---\n")
 	for _, card := range playerView.YourHand {
-		sb.WriteString(fmt.Sprintf("- Card: %s (Type: %s, Effect: %+v)\n", card.Name, card.CardType, card.Effect))
+		sb.WriteString(fmt.Sprintf("- Card: %s (Type: %s, Effect: %+v)\n", card.Config.Name, card.Config.CardType, card.Config.Effect))
 	}
 
 	sb.WriteString("\n--- Your Deductions (from previous loops) ---\n")

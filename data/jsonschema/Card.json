@@ -173,7 +173,7 @@
                     "description": "玩家角色"
                 },
                 "effect": {
-                    "$ref": "#/definitions/v1.Effect",
+                    "$ref": "#/definitions/v1.CompoundEffect",
                     "additionalProperties": true,
                     "description": "卡牌效果"
                 },
@@ -244,6 +244,40 @@
             "title": "Change Role Effect",
             "description": "改变身份效果"
         },
+        "v1.CompoundEffect": {
+            "properties": {
+                "operator": {
+                    "enum": [
+                        "OPERATOR_UNSPECIFIED",
+                        0,
+                        "SEQUENCE",
+                        1,
+                        "CHOOSE_ONE",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Operator"
+                },
+                "sub_effects": {
+                    "items": {
+                        "$ref": "#/definitions/v1.Effect"
+                    },
+                    "type": "array",
+                    "description": "子效果列表"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Compound Effect",
+            "description": "复合效果，用于组合多个效果"
+        },
         "v1.Effect": {
             "properties": {
                 "adjust_stat": {
@@ -295,6 +329,11 @@
                     "$ref": "#/definitions/v1.RemoveTraitEffect",
                     "additionalProperties": true,
                     "description": "移除特征"
+                },
+                "compound_effect": {
+                    "$ref": "#/definitions/v1.CompoundEffect",
+                    "additionalProperties": true,
+                    "description": "复合效果"
                 }
             },
             "additionalProperties": true,

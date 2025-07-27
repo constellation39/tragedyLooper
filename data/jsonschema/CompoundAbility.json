@@ -1,15 +1,47 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/AbilityConfig",
+    "$ref": "#/definitions/CompoundAbility",
     "definitions": {
-        "AbilityConfig": {
+        "CompoundAbility": {
+            "properties": {
+                "operator": {
+                    "enum": [
+                        "OPERATOR_UNSPECIFIED",
+                        0,
+                        "AND",
+                        1,
+                        "OR",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Operator"
+                },
+                "sub_abilities": {
+                    "items": {
+                        "$ref": "#/definitions/v1.AbilityConfig"
+                    },
+                    "type": "array"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Compound Ability"
+        },
+        "v1.AbilityConfig": {
             "properties": {
                 "basic": {
                     "$ref": "#/definitions/v1.BasicAbility",
                     "additionalProperties": true
                 },
                 "compound": {
-                    "$ref": "#/definitions/v1.CompoundAbility",
+                    "$ref": "#/definitions/CompoundAbility",
                     "additionalProperties": true
                 }
             },
@@ -189,38 +221,6 @@
             "type": "object",
             "title": "Change Role Effect",
             "description": "改变身份效果"
-        },
-        "v1.CompoundAbility": {
-            "properties": {
-                "operator": {
-                    "enum": [
-                        "OPERATOR_UNSPECIFIED",
-                        0,
-                        "AND",
-                        1,
-                        "OR",
-                        2
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Operator"
-                },
-                "sub_abilities": {
-                    "items": {
-                        "$ref": "#/definitions/AbilityConfig"
-                    },
-                    "type": "array"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Compound Ability"
         },
         "v1.CompoundCondition": {
             "properties": {

@@ -20,7 +20,19 @@ message Effect {
     EndGameEffect end_game = 8;                  // 结束游戏
     AddTraitEffect add_trait = 9;                // 添加特征
     RemoveTraitEffect remove_trait = 10;         // 移除特征
+    CompoundEffect compound_effect = 11;         // 复合效果
   }
+}
+
+// 复合效果，用于组合多个效果
+message CompoundEffect {
+  enum Operator {
+    OPERATOR_UNSPECIFIED = 0;
+    SEQUENCE = 1;     // 顺序执行所有效果
+    CHOOSE_ONE = 2;   // 玩家选择一个效果执行
+  }
+  Operator operator = 1;          // 效果组合操作符
+  repeated Effect sub_effects = 2; // 子效果列表
 }
 
 // 调整属性效果

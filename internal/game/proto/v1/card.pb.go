@@ -29,7 +29,7 @@ type CardConfig struct {
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                  // 卡牌描述
 	CardType      CardType               `protobuf:"varint,4,opt,name=card_type,json=cardType,proto3,enum=v1.CardType" json:"card_type,omitempty"`      // 卡牌类型
 	OwnerRole     PlayerRole             `protobuf:"varint,5,opt,name=owner_role,json=ownerRole,proto3,enum=v1.PlayerRole" json:"owner_role,omitempty"` // 卡牌所属玩家角色（主谋或主角）
-	Effect        *Effect                `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`                                            // 卡牌效果
+	Effect        *CompoundEffect        `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`                                            // 卡牌效果
 	OncePerLoop   bool                   `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`            // 是否每循环只能使用一次
 	Priority      int32                  `protobuf:"varint,8,opt,name=priority,proto3" json:"priority,omitempty"`                                       // 卡牌结算优先级（同类型卡牌的结算顺序）
 	unknownFields protoimpl.UnknownFields
@@ -101,7 +101,7 @@ func (x *CardConfig) GetOwnerRole() PlayerRole {
 	return PlayerRole_PLAYER_ROLE_UNSPECIFIED
 }
 
-func (x *CardConfig) GetEffect() *Effect {
+func (x *CardConfig) GetEffect() *CompoundEffect {
 	if x != nil {
 		return x.Effect
 	}
@@ -315,7 +315,7 @@ var File_v1_card_proto protoreflect.FileDescriptor
 
 const file_v1_card_proto_rawDesc = "" +
 	"\n" +
-	"\rv1/card.proto\x12\x02v1\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\x90\x02\n" +
+	"\rv1/card.proto\x12\x02v1\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\x98\x02\n" +
 	"\n" +
 	"CardConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
@@ -323,9 +323,8 @@ const file_v1_card_proto_rawDesc = "" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12)\n" +
 	"\tcard_type\x18\x04 \x01(\x0e2\f.v1.CardTypeR\bcardType\x12-\n" +
 	"\n" +
-	"owner_role\x18\x05 \x01(\x0e2\x0e.v1.PlayerRoleR\townerRole\x12\"\n" +
-	"\x06effect\x18\x06 \x01(\v2\n" +
-	".v1.EffectR\x06effect\x12\"\n" +
+	"owner_role\x18\x05 \x01(\x0e2\x0e.v1.PlayerRoleR\townerRole\x12*\n" +
+	"\x06effect\x18\x06 \x01(\v2\x12.v1.CompoundEffectR\x06effect\x12\"\n" +
 	"\ronce_per_loop\x18\a \x01(\bR\voncePerLoop\x12\x1a\n" +
 	"\bpriority\x18\b \x01(\x05R\bpriority\"\xcd\x01\n" +
 	"\x04Card\x12&\n" +
@@ -357,20 +356,20 @@ func file_v1_card_proto_rawDescGZIP() []byte {
 
 var file_v1_card_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_v1_card_proto_goTypes = []any{
-	(*CardConfig)(nil),    // 0: v1.CardConfig
-	(*Card)(nil),          // 1: v1.Card
-	(*CardConfigLib)(nil), // 2: v1.CardConfigLib
-	(*CardList)(nil),      // 3: v1.CardList
-	nil,                   // 4: v1.CardConfigLib.CardsEntry
-	(CardType)(0),         // 5: v1.CardType
-	(PlayerRole)(0),       // 6: v1.PlayerRole
-	(*Effect)(nil),        // 7: v1.Effect
-	(LocationType)(0),     // 8: v1.LocationType
+	(*CardConfig)(nil),     // 0: v1.CardConfig
+	(*Card)(nil),           // 1: v1.Card
+	(*CardConfigLib)(nil),  // 2: v1.CardConfigLib
+	(*CardList)(nil),       // 3: v1.CardList
+	nil,                    // 4: v1.CardConfigLib.CardsEntry
+	(CardType)(0),          // 5: v1.CardType
+	(PlayerRole)(0),        // 6: v1.PlayerRole
+	(*CompoundEffect)(nil), // 7: v1.CompoundEffect
+	(LocationType)(0),      // 8: v1.LocationType
 }
 var file_v1_card_proto_depIdxs = []int32{
 	5, // 0: v1.CardConfig.card_type:type_name -> v1.CardType
 	6, // 1: v1.CardConfig.owner_role:type_name -> v1.PlayerRole
-	7, // 2: v1.CardConfig.effect:type_name -> v1.Effect
+	7, // 2: v1.CardConfig.effect:type_name -> v1.CompoundEffect
 	0, // 3: v1.Card.config:type_name -> v1.CardConfig
 	8, // 4: v1.Card.target_location:type_name -> v1.LocationType
 	4, // 5: v1.CardConfigLib.cards:type_name -> v1.CardConfigLib.CardsEntry

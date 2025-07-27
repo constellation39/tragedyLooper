@@ -3,6 +3,7 @@ syntax = "proto3";
 package v1;
 
 import "v1/condition.proto";
+import "v1/effect.proto";
 import "v1/enums.proto";
 
 option go_package = "tragedylooper/internal/game/proto/v1";
@@ -25,10 +26,11 @@ message IncidentConfig {
   IncidentType incident_type = 4;            // 事件类型
   int32 day = 5;                             // 预定发生日期
   repeated Condition trigger_conditions = 6; // 触发条件列表
-  bool is_mandatory = 7;                     // 是否为必发事件
-  int32 culprit_character_id = 8;           // 事件主谋角色ID（如适用）
-  int32 location_id = 9;                     // 事件发生地点ID（如适用）
-  bool is_main_plot_incident = 10; // 是否是主线剧情的事件
+  Effect effect = 7;                         // 事件触发时产生的效果
+  bool is_mandatory = 8;                     // 是否为必发事件
+  int32 culprit_character_id = 9;           // 事件主谋角色ID（如适用）
+  int32 location_id = 10;                     // 事件发生地点ID（如适用）
+  bool is_main_plot_incident = 11;           // 是否是主线剧情的事件
 }
 
 // 事件配置库

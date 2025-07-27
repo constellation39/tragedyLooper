@@ -115,10 +115,11 @@ type IncidentConfig struct {
 	IncidentType       IncidentType           `protobuf:"varint,4,opt,name=incident_type,json=incidentType,proto3,enum=v1.IncidentType" json:"incident_type,omitempty"`   // 事件类型
 	Day                int32                  `protobuf:"varint,5,opt,name=day,proto3" json:"day,omitempty"`                                                              // 预定发生日期
 	TriggerConditions  []*Condition           `protobuf:"bytes,6,rep,name=trigger_conditions,json=triggerConditions,proto3" json:"trigger_conditions,omitempty"`          // 触发条件列表
-	IsMandatory        bool                   `protobuf:"varint,7,opt,name=is_mandatory,json=isMandatory,proto3" json:"is_mandatory,omitempty"`                           // 是否为必发事件
-	CulpritCharacterId int32                  `protobuf:"varint,8,opt,name=culprit_character_id,json=culpritCharacterId,proto3" json:"culprit_character_id,omitempty"`    // 事件主谋角色ID（如适用）
-	LocationId         int32                  `protobuf:"varint,9,opt,name=location_id,json=locationId,proto3" json:"location_id,omitempty"`                              // 事件发生地点ID（如适用）
-	IsMainPlotIncident bool                   `protobuf:"varint,10,opt,name=is_main_plot_incident,json=isMainPlotIncident,proto3" json:"is_main_plot_incident,omitempty"` // 是否是主线剧情的事件
+	Effect             *Effect                `protobuf:"bytes,7,opt,name=effect,proto3" json:"effect,omitempty"`                                                         // 事件触发时产生的效果
+	IsMandatory        bool                   `protobuf:"varint,8,opt,name=is_mandatory,json=isMandatory,proto3" json:"is_mandatory,omitempty"`                           // 是否为必发事件
+	CulpritCharacterId int32                  `protobuf:"varint,9,opt,name=culprit_character_id,json=culpritCharacterId,proto3" json:"culprit_character_id,omitempty"`    // 事件主谋角色ID（如适用）
+	LocationId         int32                  `protobuf:"varint,10,opt,name=location_id,json=locationId,proto3" json:"location_id,omitempty"`                             // 事件发生地点ID（如适用）
+	IsMainPlotIncident bool                   `protobuf:"varint,11,opt,name=is_main_plot_incident,json=isMainPlotIncident,proto3" json:"is_main_plot_incident,omitempty"` // 是否是主线剧情的事件
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -191,6 +192,13 @@ func (x *IncidentConfig) GetDay() int32 {
 func (x *IncidentConfig) GetTriggerConditions() []*Condition {
 	if x != nil {
 		return x.TriggerConditions
+	}
+	return nil
+}
+
+func (x *IncidentConfig) GetEffect() *Effect {
+	if x != nil {
+		return x.Effect
 	}
 	return nil
 }
@@ -272,27 +280,29 @@ var File_v1_incident_proto protoreflect.FileDescriptor
 
 const file_v1_incident_proto_rawDesc = "" +
 	"\n" +
-	"\x11v1/incident.proto\x12\x02v1\x1a\x12v1/condition.proto\x1a\x0ev1/enums.proto\"\xb0\x01\n" +
+	"\x11v1/incident.proto\x12\x02v1\x1a\x12v1/condition.proto\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\xb0\x01\n" +
 	"\bIncident\x12*\n" +
 	"\x06config\x18\x01 \x01(\v2\x12.v1.IncidentConfigR\x06config\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x10\n" +
 	"\x03day\x18\x03 \x01(\x05R\x03day\x12\x18\n" +
 	"\aculprit\x18\x04 \x01(\tR\aculprit\x12\x16\n" +
 	"\x06victim\x18\x05 \x01(\tR\x06victim\x12 \n" +
-	"\vdescription\x18\x06 \x01(\tR\vdescription\"\x86\x03\n" +
+	"\vdescription\x18\x06 \x01(\tR\vdescription\"\xaa\x03\n" +
 	"\x0eIncidentConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x125\n" +
 	"\rincident_type\x18\x04 \x01(\x0e2\x10.v1.IncidentTypeR\fincidentType\x12\x10\n" +
 	"\x03day\x18\x05 \x01(\x05R\x03day\x12<\n" +
-	"\x12trigger_conditions\x18\x06 \x03(\v2\r.v1.ConditionR\x11triggerConditions\x12!\n" +
-	"\fis_mandatory\x18\a \x01(\bR\visMandatory\x120\n" +
-	"\x14culprit_character_id\x18\b \x01(\x05R\x12culpritCharacterId\x12\x1f\n" +
-	"\vlocation_id\x18\t \x01(\x05R\n" +
+	"\x12trigger_conditions\x18\x06 \x03(\v2\r.v1.ConditionR\x11triggerConditions\x12\"\n" +
+	"\x06effect\x18\a \x01(\v2\n" +
+	".v1.EffectR\x06effect\x12!\n" +
+	"\fis_mandatory\x18\b \x01(\bR\visMandatory\x120\n" +
+	"\x14culprit_character_id\x18\t \x01(\x05R\x12culpritCharacterId\x12\x1f\n" +
+	"\vlocation_id\x18\n" +
+	" \x01(\x05R\n" +
 	"locationId\x121\n" +
-	"\x15is_main_plot_incident\x18\n" +
-	" \x01(\bR\x12isMainPlotIncident\"\xa9\x01\n" +
+	"\x15is_main_plot_incident\x18\v \x01(\bR\x12isMainPlotIncident\"\xa9\x01\n" +
 	"\x11IncidentConfigLib\x12B\n" +
 	"\tincidents\x18\x01 \x03(\v2$.v1.IncidentConfigLib.IncidentsEntryR\tincidents\x1aP\n" +
 	"\x0eIncidentsEntry\x12\x10\n" +
@@ -319,18 +329,20 @@ var file_v1_incident_proto_goTypes = []any{
 	nil,                       // 3: v1.IncidentConfigLib.IncidentsEntry
 	(IncidentType)(0),         // 4: v1.IncidentType
 	(*Condition)(nil),         // 5: v1.Condition
+	(*Effect)(nil),            // 6: v1.Effect
 }
 var file_v1_incident_proto_depIdxs = []int32{
 	1, // 0: v1.Incident.config:type_name -> v1.IncidentConfig
 	4, // 1: v1.IncidentConfig.incident_type:type_name -> v1.IncidentType
 	5, // 2: v1.IncidentConfig.trigger_conditions:type_name -> v1.Condition
-	3, // 3: v1.IncidentConfigLib.incidents:type_name -> v1.IncidentConfigLib.IncidentsEntry
-	1, // 4: v1.IncidentConfigLib.IncidentsEntry.value:type_name -> v1.IncidentConfig
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	6, // 3: v1.IncidentConfig.effect:type_name -> v1.Effect
+	3, // 4: v1.IncidentConfigLib.incidents:type_name -> v1.IncidentConfigLib.IncidentsEntry
+	1, // 5: v1.IncidentConfigLib.IncidentsEntry.value:type_name -> v1.IncidentConfig
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_v1_incident_proto_init() }
@@ -339,6 +351,7 @@ func file_v1_incident_proto_init() {
 		return
 	}
 	file_v1_condition_proto_init()
+	file_v1_effect_proto_init()
 	file_v1_enums_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{

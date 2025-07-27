@@ -1,39 +1,17 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/SpecialRule",
+    "$ref": "#/definitions/CompoundEffect",
     "definitions": {
-        "SpecialRule": {
+        "CompoundEffect": {
             "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "规则名称"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "规则描述"
-                },
-                "trigger": {
+                "operator": {
                     "enum": [
-                        "TRIGGER_TYPE_UNSPECIFIED",
+                        "OPERATOR_UNSPECIFIED",
                         0,
-                        "ON_GAME_SETUP",
+                        "SEQUENCE",
                         1,
-                        "ON_LOOP_START",
-                        2,
-                        "ON_DAY_START",
-                        3,
-                        "ON_PHASE_START",
-                        4,
-                        "ON_PHASE_END",
-                        5,
-                        "ON_GAME_EVENT",
-                        6,
-                        "PASSIVE",
-                        7,
-                        "ON_GUESS_MADE",
-                        8,
-                        "ON_GAME_END",
-                        9
+                        "CHOOSE_ONE",
+                        2
                     ],
                     "oneOf": [
                         {
@@ -43,19 +21,20 @@
                             "type": "integer"
                         }
                     ],
-                    "title": "Trigger Type",
-                    "description": "触发器类型（能力或规则何时触发）"
+                    "title": "Operator"
                 },
-                "effect": {
-                    "$ref": "#/definitions/v1.Effect",
-                    "additionalProperties": true,
-                    "description": "规则效果"
+                "sub_effects": {
+                    "items": {
+                        "$ref": "#/definitions/v1.Effect"
+                    },
+                    "type": "array",
+                    "description": "子效果列表"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Special Rule",
-            "description": "特殊规则"
+            "title": "Compound Effect",
+            "description": "复合效果，用于组合多个效果"
         },
         "v1.AddTraitEffect": {
             "properties": {
@@ -165,40 +144,6 @@
             "title": "Change Role Effect",
             "description": "改变身份效果"
         },
-        "v1.CompoundEffect": {
-            "properties": {
-                "operator": {
-                    "enum": [
-                        "OPERATOR_UNSPECIFIED",
-                        0,
-                        "SEQUENCE",
-                        1,
-                        "CHOOSE_ONE",
-                        2
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Operator"
-                },
-                "sub_effects": {
-                    "items": {
-                        "$ref": "#/definitions/v1.Effect"
-                    },
-                    "type": "array",
-                    "description": "子效果列表"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Compound Effect",
-            "description": "复合效果，用于组合多个效果"
-        },
         "v1.Effect": {
             "properties": {
                 "adjust_stat": {
@@ -252,7 +197,7 @@
                     "description": "移除特征"
                 },
                 "compound_effect": {
-                    "$ref": "#/definitions/v1.CompoundEffect",
+                    "$ref": "#/definitions/CompoundEffect",
                     "additionalProperties": true,
                     "description": "复合效果"
                 }

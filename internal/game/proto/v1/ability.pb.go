@@ -21,19 +21,62 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type CompoundAbility_Operator int32
+
+const (
+	CompoundAbility_OPERATOR_UNSPECIFIED CompoundAbility_Operator = 0
+	CompoundAbility_AND                  CompoundAbility_Operator = 1
+	CompoundAbility_OR                   CompoundAbility_Operator = 2
+)
+
+// Enum value maps for CompoundAbility_Operator.
+var (
+	CompoundAbility_Operator_name = map[int32]string{
+		0: "OPERATOR_UNSPECIFIED",
+		1: "AND",
+		2: "OR",
+	}
+	CompoundAbility_Operator_value = map[string]int32{
+		"OPERATOR_UNSPECIFIED": 0,
+		"AND":                  1,
+		"OR":                   2,
+	}
+)
+
+func (x CompoundAbility_Operator) Enum() *CompoundAbility_Operator {
+	p := new(CompoundAbility_Operator)
+	*p = x
+	return p
+}
+
+func (x CompoundAbility_Operator) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (CompoundAbility_Operator) Descriptor() protoreflect.EnumDescriptor {
+	return file_v1_ability_proto_enumTypes[0].Descriptor()
+}
+
+func (CompoundAbility_Operator) Type() protoreflect.EnumType {
+	return &file_v1_ability_proto_enumTypes[0]
+}
+
+func (x CompoundAbility_Operator) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use CompoundAbility_Operator.Descriptor instead.
+func (CompoundAbility_Operator) EnumDescriptor() ([]byte, []int) {
+	return file_v1_ability_proto_rawDescGZIP(), []int{2, 0}
+}
+
 type AbilityConfig struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                      // 能力唯一ID
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                   // 能力名称
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                     // 能力描述
-	TriggerType   TriggerType            `protobuf:"varint,4,opt,name=trigger_type,json=triggerType,proto3,enum=v1.TriggerType" json:"trigger_type,omitempty"`             // 能力触发时机
-	EventFilters  []GameEventType        `protobuf:"varint,5,rep,packed,name=event_filters,json=eventFilters,proto3,enum=v1.GameEventType" json:"event_filters,omitempty"` // 可选：游戏事件触发时的过滤器
-	Effect        *Effect                `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`                                                               // 能力效果
-	OncePerLoop   bool                   `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`                               // 是否每循环只能使用一次
-	RefusalRole   PlayerRole             `protobuf:"varint,8,opt,name=refusal_role,json=refusalRole,proto3,enum=v1.PlayerRole" json:"refusal_role,omitempty"`              // 可以拒绝此能力的玩家角色
-	IsPassive     bool                   `protobuf:"varint,9,opt,name=is_passive,json=isPassive,proto3" json:"is_passive,omitempty"`                                       // 是否为被动能力
-	IsMandatory   bool                   `protobuf:"varint,10,opt,name=is_mandatory,json=isMandatory,proto3" json:"is_mandatory,omitempty"`                                // 是否为强制能力（不可拒绝）
-	Priority      int32                  `protobuf:"varint,11,opt,name=priority,proto3" json:"priority,omitempty"`                                                         // 能力结算优先级
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to AbilityType:
+	//
+	//	*AbilityConfig_Basic
+	//	*AbilityConfig_Compound
+	AbilityType   isAbilityConfig_AbilityType `protobuf_oneof:"ability_type"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -68,81 +111,213 @@ func (*AbilityConfig) Descriptor() ([]byte, []int) {
 	return file_v1_ability_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *AbilityConfig) GetId() int32 {
+func (x *AbilityConfig) GetAbilityType() isAbilityConfig_AbilityType {
+	if x != nil {
+		return x.AbilityType
+	}
+	return nil
+}
+
+func (x *AbilityConfig) GetBasic() *BasicAbility {
+	if x != nil {
+		if x, ok := x.AbilityType.(*AbilityConfig_Basic); ok {
+			return x.Basic
+		}
+	}
+	return nil
+}
+
+func (x *AbilityConfig) GetCompound() *CompoundAbility {
+	if x != nil {
+		if x, ok := x.AbilityType.(*AbilityConfig_Compound); ok {
+			return x.Compound
+		}
+	}
+	return nil
+}
+
+type isAbilityConfig_AbilityType interface {
+	isAbilityConfig_AbilityType()
+}
+
+type AbilityConfig_Basic struct {
+	Basic *BasicAbility `protobuf:"bytes,1,opt,name=basic,proto3,oneof"`
+}
+
+type AbilityConfig_Compound struct {
+	Compound *CompoundAbility `protobuf:"bytes,2,opt,name=compound,proto3,oneof"`
+}
+
+func (*AbilityConfig_Basic) isAbilityConfig_AbilityType() {}
+
+func (*AbilityConfig_Compound) isAbilityConfig_AbilityType() {}
+
+type BasicAbility struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Id                int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                         // 能力唯一ID
+	Name              string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                      // 能力名称
+	Description       string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                        // 能力描述
+	TriggerConditions *CompoundCondition     `protobuf:"bytes,4,opt,name=trigger_conditions,json=triggerConditions,proto3" json:"trigger_conditions,omitempty"`   // 能力触发条件
+	Effects           *CompoundEffect        `protobuf:"bytes,6,opt,name=effects,proto3" json:"effects,omitempty"`                                                // 能力效果
+	OncePerLoop       bool                   `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`                  // 是否每循环只能使用一次
+	RefusalRole       PlayerRole             `protobuf:"varint,8,opt,name=refusal_role,json=refusalRole,proto3,enum=v1.PlayerRole" json:"refusal_role,omitempty"` // 可以拒绝此能力的玩家角色
+	IsPassive         bool                   `protobuf:"varint,9,opt,name=is_passive,json=isPassive,proto3" json:"is_passive,omitempty"`                          // 是否为被动能力
+	IsMandatory       bool                   `protobuf:"varint,10,opt,name=is_mandatory,json=isMandatory,proto3" json:"is_mandatory,omitempty"`                   // 是否为强制能力（不可拒绝）
+	Priority          int32                  `protobuf:"varint,11,opt,name=priority,proto3" json:"priority,omitempty"`                                            // 能力结算优先级
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *BasicAbility) Reset() {
+	*x = BasicAbility{}
+	mi := &file_v1_ability_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BasicAbility) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BasicAbility) ProtoMessage() {}
+
+func (x *BasicAbility) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_ability_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BasicAbility.ProtoReflect.Descriptor instead.
+func (*BasicAbility) Descriptor() ([]byte, []int) {
+	return file_v1_ability_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *BasicAbility) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-func (x *AbilityConfig) GetName() string {
+func (x *BasicAbility) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *AbilityConfig) GetDescription() string {
+func (x *BasicAbility) GetDescription() string {
 	if x != nil {
 		return x.Description
 	}
 	return ""
 }
 
-func (x *AbilityConfig) GetTriggerType() TriggerType {
+func (x *BasicAbility) GetTriggerConditions() *CompoundCondition {
 	if x != nil {
-		return x.TriggerType
-	}
-	return TriggerType_TRIGGER_TYPE_UNSPECIFIED
-}
-
-func (x *AbilityConfig) GetEventFilters() []GameEventType {
-	if x != nil {
-		return x.EventFilters
+		return x.TriggerConditions
 	}
 	return nil
 }
 
-func (x *AbilityConfig) GetEffect() *Effect {
+func (x *BasicAbility) GetEffects() *CompoundEffect {
 	if x != nil {
-		return x.Effect
+		return x.Effects
 	}
 	return nil
 }
 
-func (x *AbilityConfig) GetOncePerLoop() bool {
+func (x *BasicAbility) GetOncePerLoop() bool {
 	if x != nil {
 		return x.OncePerLoop
 	}
 	return false
 }
 
-func (x *AbilityConfig) GetRefusalRole() PlayerRole {
+func (x *BasicAbility) GetRefusalRole() PlayerRole {
 	if x != nil {
 		return x.RefusalRole
 	}
 	return PlayerRole_PLAYER_ROLE_UNSPECIFIED
 }
 
-func (x *AbilityConfig) GetIsPassive() bool {
+func (x *BasicAbility) GetIsPassive() bool {
 	if x != nil {
 		return x.IsPassive
 	}
 	return false
 }
 
-func (x *AbilityConfig) GetIsMandatory() bool {
+func (x *BasicAbility) GetIsMandatory() bool {
 	if x != nil {
 		return x.IsMandatory
 	}
 	return false
 }
 
-func (x *AbilityConfig) GetPriority() int32 {
+func (x *BasicAbility) GetPriority() int32 {
 	if x != nil {
 		return x.Priority
 	}
 	return 0
+}
+
+type CompoundAbility struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Operator      CompoundAbility_Operator `protobuf:"varint,1,opt,name=operator,proto3,enum=v1.CompoundAbility_Operator" json:"operator,omitempty"`
+	SubAbilities  []*AbilityConfig         `protobuf:"bytes,2,rep,name=sub_abilities,json=subAbilities,proto3" json:"sub_abilities,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CompoundAbility) Reset() {
+	*x = CompoundAbility{}
+	mi := &file_v1_ability_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CompoundAbility) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CompoundAbility) ProtoMessage() {}
+
+func (x *CompoundAbility) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_ability_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CompoundAbility.ProtoReflect.Descriptor instead.
+func (*CompoundAbility) Descriptor() ([]byte, []int) {
+	return file_v1_ability_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CompoundAbility) GetOperator() CompoundAbility_Operator {
+	if x != nil {
+		return x.Operator
+	}
+	return CompoundAbility_OPERATOR_UNSPECIFIED
+}
+
+func (x *CompoundAbility) GetSubAbilities() []*AbilityConfig {
+	if x != nil {
+		return x.SubAbilities
+	}
+	return nil
 }
 
 type Ability struct {
@@ -155,7 +330,7 @@ type Ability struct {
 
 func (x *Ability) Reset() {
 	*x = Ability{}
-	mi := &file_v1_ability_proto_msgTypes[1]
+	mi := &file_v1_ability_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -167,7 +342,7 @@ func (x *Ability) String() string {
 func (*Ability) ProtoMessage() {}
 
 func (x *Ability) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ability_proto_msgTypes[1]
+	mi := &file_v1_ability_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -180,7 +355,7 @@ func (x *Ability) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Ability.ProtoReflect.Descriptor instead.
 func (*Ability) Descriptor() ([]byte, []int) {
-	return file_v1_ability_proto_rawDescGZIP(), []int{1}
+	return file_v1_ability_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *Ability) GetConfig() *AbilityConfig {
@@ -206,7 +381,7 @@ type AbilityConfigLib struct {
 
 func (x *AbilityConfigLib) Reset() {
 	*x = AbilityConfigLib{}
-	mi := &file_v1_ability_proto_msgTypes[2]
+	mi := &file_v1_ability_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -218,7 +393,7 @@ func (x *AbilityConfigLib) String() string {
 func (*AbilityConfigLib) ProtoMessage() {}
 
 func (x *AbilityConfigLib) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ability_proto_msgTypes[2]
+	mi := &file_v1_ability_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -231,7 +406,7 @@ func (x *AbilityConfigLib) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AbilityConfigLib.ProtoReflect.Descriptor instead.
 func (*AbilityConfigLib) Descriptor() ([]byte, []int) {
-	return file_v1_ability_proto_rawDescGZIP(), []int{2}
+	return file_v1_ability_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *AbilityConfigLib) GetAbilities() map[int32]*AbilityConfig {
@@ -245,22 +420,31 @@ var File_v1_ability_proto protoreflect.FileDescriptor
 
 const file_v1_ability_proto_rawDesc = "" +
 	"\n" +
-	"\x10v1/ability.proto\x12\x02v1\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\x9a\x03\n" +
-	"\rAbilityConfig\x12\x0e\n" +
+	"\x10v1/ability.proto\x12\x02v1\x1a\x12v1/condition.proto\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"|\n" +
+	"\rAbilityConfig\x12(\n" +
+	"\x05basic\x18\x01 \x01(\v2\x10.v1.BasicAbilityH\x00R\x05basic\x121\n" +
+	"\bcompound\x18\x02 \x01(\v2\x13.v1.CompoundAbilityH\x00R\bcompoundB\x0e\n" +
+	"\fability_type\"\xfd\x02\n" +
+	"\fBasicAbility\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x122\n" +
-	"\ftrigger_type\x18\x04 \x01(\x0e2\x0f.v1.TriggerTypeR\vtriggerType\x126\n" +
-	"\revent_filters\x18\x05 \x03(\x0e2\x11.v1.GameEventTypeR\feventFilters\x12\"\n" +
-	"\x06effect\x18\x06 \x01(\v2\n" +
-	".v1.EffectR\x06effect\x12\"\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12D\n" +
+	"\x12trigger_conditions\x18\x04 \x01(\v2\x15.v1.CompoundConditionR\x11triggerConditions\x12,\n" +
+	"\aeffects\x18\x06 \x01(\v2\x12.v1.CompoundEffectR\aeffects\x12\"\n" +
 	"\ronce_per_loop\x18\a \x01(\bR\voncePerLoop\x121\n" +
 	"\frefusal_role\x18\b \x01(\x0e2\x0e.v1.PlayerRoleR\vrefusalRole\x12\x1d\n" +
 	"\n" +
 	"is_passive\x18\t \x01(\bR\tisPassive\x12!\n" +
 	"\fis_mandatory\x18\n" +
 	" \x01(\bR\visMandatory\x12\x1a\n" +
-	"\bpriority\x18\v \x01(\x05R\bpriority\"Z\n" +
+	"\bpriority\x18\v \x01(\x05R\bpriority\"\xba\x01\n" +
+	"\x0fCompoundAbility\x128\n" +
+	"\boperator\x18\x01 \x01(\x0e2\x1c.v1.CompoundAbility.OperatorR\boperator\x126\n" +
+	"\rsub_abilities\x18\x02 \x03(\v2\x11.v1.AbilityConfigR\fsubAbilities\"5\n" +
+	"\bOperator\x12\x18\n" +
+	"\x14OPERATOR_UNSPECIFIED\x10\x00\x12\a\n" +
+	"\x03AND\x10\x01\x12\x06\n" +
+	"\x02OR\x10\x02\"Z\n" +
 	"\aAbility\x12)\n" +
 	"\x06config\x18\x01 \x01(\v2\x11.v1.AbilityConfigR\x06config\x12$\n" +
 	"\x0eused_this_loop\x18\x02 \x01(\bR\fusedThisLoop\"\xa6\x01\n" +
@@ -282,30 +466,36 @@ func file_v1_ability_proto_rawDescGZIP() []byte {
 	return file_v1_ability_proto_rawDescData
 }
 
-var file_v1_ability_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_v1_ability_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_v1_ability_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_v1_ability_proto_goTypes = []any{
-	(*AbilityConfig)(nil),    // 0: v1.AbilityConfig
-	(*Ability)(nil),          // 1: v1.Ability
-	(*AbilityConfigLib)(nil), // 2: v1.AbilityConfigLib
-	nil,                      // 3: v1.AbilityConfigLib.AbilitiesEntry
-	(TriggerType)(0),         // 4: v1.TriggerType
-	(GameEventType)(0),       // 5: v1.GameEventType
-	(*Effect)(nil),           // 6: v1.Effect
-	(PlayerRole)(0),          // 7: v1.PlayerRole
+	(CompoundAbility_Operator)(0), // 0: v1.CompoundAbility.Operator
+	(*AbilityConfig)(nil),         // 1: v1.AbilityConfig
+	(*BasicAbility)(nil),          // 2: v1.BasicAbility
+	(*CompoundAbility)(nil),       // 3: v1.CompoundAbility
+	(*Ability)(nil),               // 4: v1.Ability
+	(*AbilityConfigLib)(nil),      // 5: v1.AbilityConfigLib
+	nil,                           // 6: v1.AbilityConfigLib.AbilitiesEntry
+	(*CompoundCondition)(nil),     // 7: v1.CompoundCondition
+	(*CompoundEffect)(nil),        // 8: v1.CompoundEffect
+	(PlayerRole)(0),               // 9: v1.PlayerRole
 }
 var file_v1_ability_proto_depIdxs = []int32{
-	4, // 0: v1.AbilityConfig.trigger_type:type_name -> v1.TriggerType
-	5, // 1: v1.AbilityConfig.event_filters:type_name -> v1.GameEventType
-	6, // 2: v1.AbilityConfig.effect:type_name -> v1.Effect
-	7, // 3: v1.AbilityConfig.refusal_role:type_name -> v1.PlayerRole
-	0, // 4: v1.Ability.config:type_name -> v1.AbilityConfig
-	3, // 5: v1.AbilityConfigLib.abilities:type_name -> v1.AbilityConfigLib.AbilitiesEntry
-	0, // 6: v1.AbilityConfigLib.AbilitiesEntry.value:type_name -> v1.AbilityConfig
-	7, // [7:7] is the sub-list for method output_type
-	7, // [7:7] is the sub-list for method input_type
-	7, // [7:7] is the sub-list for extension type_name
-	7, // [7:7] is the sub-list for extension extendee
-	0, // [0:7] is the sub-list for field type_name
+	2,  // 0: v1.AbilityConfig.basic:type_name -> v1.BasicAbility
+	3,  // 1: v1.AbilityConfig.compound:type_name -> v1.CompoundAbility
+	7,  // 2: v1.BasicAbility.trigger_conditions:type_name -> v1.CompoundCondition
+	8,  // 3: v1.BasicAbility.effects:type_name -> v1.CompoundEffect
+	9,  // 4: v1.BasicAbility.refusal_role:type_name -> v1.PlayerRole
+	0,  // 5: v1.CompoundAbility.operator:type_name -> v1.CompoundAbility.Operator
+	1,  // 6: v1.CompoundAbility.sub_abilities:type_name -> v1.AbilityConfig
+	1,  // 7: v1.Ability.config:type_name -> v1.AbilityConfig
+	6,  // 8: v1.AbilityConfigLib.abilities:type_name -> v1.AbilityConfigLib.AbilitiesEntry
+	1,  // 9: v1.AbilityConfigLib.AbilitiesEntry.value:type_name -> v1.AbilityConfig
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_v1_ability_proto_init() }
@@ -313,20 +503,26 @@ func file_v1_ability_proto_init() {
 	if File_v1_ability_proto != nil {
 		return
 	}
+	file_v1_condition_proto_init()
 	file_v1_effect_proto_init()
 	file_v1_enums_proto_init()
+	file_v1_ability_proto_msgTypes[0].OneofWrappers = []any{
+		(*AbilityConfig_Basic)(nil),
+		(*AbilityConfig_Compound)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_ability_proto_rawDesc), len(file_v1_ability_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   4,
+			NumEnums:      1,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_v1_ability_proto_goTypes,
 		DependencyIndexes: file_v1_ability_proto_depIdxs,
+		EnumInfos:         file_v1_ability_proto_enumTypes,
 		MessageInfos:      file_v1_ability_proto_msgTypes,
 	}.Build()
 	File_v1_ability_proto = out.File

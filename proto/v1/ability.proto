@@ -2,23 +2,40 @@ syntax = "proto3";
 
 package v1;
 
+import "v1/condition.proto";
 import "v1/effect.proto";
 import "v1/enums.proto";
 
 option go_package = "tragedylooper/internal/game/proto/v1";
 
 message AbilityConfig {
+  oneof ability_type {
+    BasicAbility basic = 1;
+    CompoundAbility compound = 2;
+  }
+}
+
+message BasicAbility {
   int32 id = 1;                              // 能力唯一ID
   string name = 2;                           // 能力名称
   string description = 3;                    // 能力描述
-  TriggerType trigger_type = 4;              // 能力触发时机
-  repeated GameEventType event_filters = 5;  // 可选：游戏事件触发时的过滤器
-  Effect effect = 6;                         // 能力效果
+  repeated CompoundCondition trigger_conditions = 4; // 能力触发条件
+  repeated CompoundEffect effects = 6;               // 能力效果
   bool once_per_loop = 7;                    // 是否每循环只能使用一次
   PlayerRole refusal_role = 8;               // 可以拒绝此能力的玩家角色
   bool is_passive = 9;                       // 是否为被动能力
   bool is_mandatory = 10;                    // 是否为强制能力（不可拒绝）
   int32 priority = 11;                       // 能力结算优先级
+}
+
+message CompoundAbility {
+  enum Operator {
+    OPERATOR_UNSPECIFIED = 0;
+    AND = 1;
+    OR = 2;
+  }
+  Operator operator = 1;
+  repeated AbilityConfig sub_abilities = 2;
 }
 
 message Ability {
