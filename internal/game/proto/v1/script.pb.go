@@ -135,7 +135,7 @@ var File_proto_v1_script_proto protoreflect.FileDescriptor
 
 const file_proto_v1_script_proto_rawDesc = "" +
 	"\n" +
-	"\x15proto/v1/script.proto\x12\bmodel.v1\x1a\x18proto/v1/character.proto\x1a\x16proto/v1/tragedy.proto\"\xc0\x02\n" +
+	"\x15proto/v1/script.proto\x12\bproto.v1\x1a\x18proto/v1/character.proto\x1a\x16proto/v1/tragedy.proto\"\xc0\x02\n" +
 	"\x06Script\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -143,9 +143,9 @@ const file_proto_v1_script_proto_rawDesc = "" +
 	"\tmain_plot\x18\x04 \x01(\tR\bmainPlot\x12\x1b\n" +
 	"\tsub_plots\x18\x05 \x03(\tR\bsubPlots\x129\n" +
 	"\n" +
-	"characters\x18\x06 \x03(\v2\x19.model.v1.CharacterConfigR\n" +
+	"characters\x18\x06 \x03(\v2\x19.proto.v1.CharacterConfigR\n" +
 	"characters\x128\n" +
-	"\ttragedies\x18\a \x03(\v2\x1a.model.v1.TragedyConditionR\ttragedies\x12\x1d\n" +
+	"\ttragedies\x18\a \x03(\v2\x1a.proto.v1.TragedyConditionR\ttragedies\x12\x1d\n" +
 	"\n" +
 	"loop_count\x18\b \x01(\x05R\tloopCount\x12\"\n" +
 	"\rdays_per_loop\x18\t \x01(\x05R\vdaysPerLoopB\"Z github.com/user/repo/proto/modelb\x06proto3"
@@ -164,13 +164,13 @@ func file_proto_v1_script_proto_rawDescGZIP() []byte {
 
 var file_proto_v1_script_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_proto_v1_script_proto_goTypes = []any{
-	(*Script)(nil),           // 0: model.v1.Script
-	(*CharacterConfig)(nil),  // 1: model.v1.CharacterConfig
-	(*TragedyCondition)(nil), // 2: model.v1.TragedyCondition
+	(*Script)(nil),           // 0: proto.v1.Script
+	(*CharacterConfig)(nil),  // 1: proto.v1.CharacterConfig
+	(*TragedyCondition)(nil), // 2: proto.v1.TragedyCondition
 }
 var file_proto_v1_script_proto_depIdxs = []int32{
-	1, // 0: model.v1.Script.characters:type_name -> model.v1.CharacterConfig
-	2, // 1: model.v1.Script.tragedies:type_name -> model.v1.TragedyCondition
+	1, // 0: proto.v1.Script.characters:type_name -> proto.v1.CharacterConfig
+	2, // 1: proto.v1.Script.tragedies:type_name -> proto.v1.TragedyCondition
 	2, // [2:2] is the sub-list for method output_type
 	2, // [2:2] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name

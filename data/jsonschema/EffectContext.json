@@ -5,7 +5,7 @@
         "EffectContext": {
             "properties": {
                 "game_state": {
-                    "$ref": "#/definitions/model.v1.GameState",
+                    "$ref": "#/definitions/proto.v1.GameState",
                     "additionalProperties": true
                 }
             },
@@ -14,7 +14,7 @@
             "title": "Effect Context",
             "description": "EffectContext provides the context in which an effect is executed."
         },
-        "model.v1.Ability": {
+        "proto.v1.Ability": {
             "properties": {
                 "id": {
                     "type": "integer"
@@ -52,7 +52,7 @@
                     "description": "AbilityTriggerType 定义能力何时可以被触发。"
                 },
                 "effect": {
-                    "$ref": "#/definitions/model.v1.Effect",
+                    "$ref": "#/definitions/proto.v1.Effect",
                     "additionalProperties": true,
                     "description": "实际效果"
                 },
@@ -85,7 +85,7 @@
                     "description": "运行时状态，不用于配置"
                 },
                 "target": {
-                    "$ref": "#/definitions/model.v1.Target",
+                    "$ref": "#/definitions/proto.v1.Target",
                     "additionalProperties": true
                 }
             },
@@ -94,7 +94,7 @@
             "title": "Ability 定义角色的特殊技能。",
             "description": "Ability 定义角色的特殊技能。  Ability 定义角色的特殊技能。"
         },
-        "model.v1.AdjustGoodwillEffect": {
+        "proto.v1.AdjustGoodwillEffect": {
             "properties": {
                 "amount": {
                     "type": "integer"
@@ -105,7 +105,7 @@
             "title": "Adjust Goodwill Effect",
             "description": "AdjustGoodwillEffect 调整角色的好感度。"
         },
-        "model.v1.AdjustIntrigueEffect": {
+        "proto.v1.AdjustIntrigueEffect": {
             "properties": {
                 "amount": {
                     "type": "integer"
@@ -116,7 +116,7 @@
             "title": "Adjust Intrigue Effect",
             "description": "AdjustIntrigueEffect 调整角色的阴谋值。"
         },
-        "model.v1.AdjustParanoiaEffect": {
+        "proto.v1.AdjustParanoiaEffect": {
             "properties": {
                 "amount": {
                     "type": "integer"
@@ -127,7 +127,7 @@
             "title": "Adjust Paranoia Effect",
             "description": "AdjustParanoiaEffect 调整角色的妄想值。"
         },
-        "model.v1.Card": {
+        "proto.v1.Card": {
             "properties": {
                 "id": {
                     "type": "integer",
@@ -184,7 +184,7 @@
                     "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
                 },
                 "effect": {
-                    "$ref": "#/definitions/model.v1.Effect",
+                    "$ref": "#/definitions/proto.v1.Effect",
                     "additionalProperties": true,
                     "description": "卡牌效果"
                 },
@@ -197,7 +197,7 @@
                     "description": "运行时状态"
                 },
                 "target": {
-                    "$ref": "#/definitions/model.v1.Target",
+                    "$ref": "#/definitions/proto.v1.Target",
                     "additionalProperties": true
                 }
             },
@@ -206,11 +206,11 @@
             "title": "Card 表示一张行动卡。",
             "description": "Card 表示一张行动卡。  Card 表示一张行动卡。"
         },
-        "model.v1.CardList": {
+        "proto.v1.CardList": {
             "properties": {
                 "cards": {
                     "items": {
-                        "$ref": "#/definitions/model.v1.Card"
+                        "$ref": "#/definitions/proto.v1.Card"
                     },
                     "type": "array"
                 }
@@ -219,7 +219,7 @@
             "type": "object",
             "title": "Card List"
         },
-        "model.v1.Character": {
+        "proto.v1.Character": {
             "properties": {
                 "id": {
                     "type": "integer",
@@ -278,7 +278,7 @@
                 },
                 "abilities": {
                     "items": {
-                        "$ref": "#/definitions/model.v1.Ability"
+                        "$ref": "#/definitions/proto.v1.Ability"
                     },
                     "type": "array",
                     "description": "角色能力"
@@ -323,7 +323,7 @@
             "title": "Character",
             "description": "Character 表示游戏中的一个角色。"
         },
-        "model.v1.CharacterConfig": {
+        "proto.v1.CharacterConfig": {
             "properties": {
                 "id": {
                     "type": "integer",
@@ -401,7 +401,7 @@
             "title": "Character Config",
             "description": "CharacterConfig 定义特定剧本中角色的初始状态。"
         },
-        "model.v1.Condition": {
+        "proto.v1.Condition": {
             "properties": {
                 "character_id": {
                     "type": "integer",
@@ -445,22 +445,22 @@
             "title": "Condition",
             "description": "Condition 定义悲剧的一个单一条件。"
         },
-        "model.v1.Effect": {
+        "proto.v1.Effect": {
             "properties": {
                 "move_character_effect": {
-                    "$ref": "#/definitions/model.v1.MoveCharacterEffect",
+                    "$ref": "#/definitions/proto.v1.MoveCharacterEffect",
                     "additionalProperties": true
                 },
                 "adjust_paranoia_effect": {
-                    "$ref": "#/definitions/model.v1.AdjustParanoiaEffect",
+                    "$ref": "#/definitions/proto.v1.AdjustParanoiaEffect",
                     "additionalProperties": true
                 },
                 "adjust_goodwill_effect": {
-                    "$ref": "#/definitions/model.v1.AdjustGoodwillEffect",
+                    "$ref": "#/definitions/proto.v1.AdjustGoodwillEffect",
                     "additionalProperties": true
                 },
                 "adjust_intrigue_effect": {
-                    "$ref": "#/definitions/model.v1.AdjustIntrigueEffect",
+                    "$ref": "#/definitions/proto.v1.AdjustIntrigueEffect",
                     "additionalProperties": true
                 }
             },
@@ -469,7 +469,7 @@
             "title": "Effect",
             "description": "Effect 接口定义了一个效果的核心行为。"
         },
-        "model.v1.GameEvent": {
+        "proto.v1.GameEvent": {
             "properties": {
                 "type": {
                     "enum": [
@@ -539,20 +539,20 @@
             "title": "Game Event",
             "description": "GameEvent represents an event that occurred in the game."
         },
-        "model.v1.GameState": {
+        "proto.v1.GameState": {
             "properties": {
                 "game_id": {
                     "type": "integer",
                     "description": "游戏唯一标识符"
                 },
                 "script": {
-                    "$ref": "#/definitions/model.v1.Script",
+                    "$ref": "#/definitions/proto.v1.Script",
                     "additionalProperties": true,
                     "description": "当前使用的剧本"
                 },
                 "characters": {
                     "additionalProperties": {
-                        "$ref": "#/definitions/model.v1.Character",
+                        "$ref": "#/definitions/proto.v1.Character",
                         "additionalProperties": true
                     },
                     "type": "object",
@@ -560,7 +560,7 @@
                 },
                 "players": {
                     "additionalProperties": {
-                        "$ref": "#/definitions/model.v1.Player",
+                        "$ref": "#/definitions/proto.v1.Player",
                         "additionalProperties": true
                     },
                     "type": "object",
@@ -626,7 +626,7 @@
                 },
                 "played_cards_this_day": {
                     "additionalProperties": {
-                        "$ref": "#/definitions/model.v1.CardList",
+                        "$ref": "#/definitions/proto.v1.CardList",
                         "additionalProperties": true
                     },
                     "type": "object",
@@ -634,7 +634,7 @@
                 },
                 "played_cards_this_loop": {
                     "additionalProperties": {
-                        "$ref": "#/definitions/model.v1.CardList",
+                        "$ref": "#/definitions/proto.v1.CardList",
                         "additionalProperties": true
                     },
                     "type": "object",
@@ -647,14 +647,14 @@
                 },
                 "day_events": {
                     "items": {
-                        "$ref": "#/definitions/model.v1.GameEvent"
+                        "$ref": "#/definitions/proto.v1.GameEvent"
                     },
                     "type": "array",
                     "description": "当天发生的事件"
                 },
                 "loop_events": {
                     "items": {
-                        "$ref": "#/definitions/model.v1.GameEvent"
+                        "$ref": "#/definitions/proto.v1.GameEvent"
                     },
                     "type": "array",
                     "description": "本循环发生的事件"
@@ -665,7 +665,7 @@
             "title": "Game State",
             "description": "GameState 表示游戏实例的权威当前状态。"
         },
-        "model.v1.MoveCharacterEffect": {
+        "proto.v1.MoveCharacterEffect": {
             "properties": {
                 "destination": {
                     "enum": [
@@ -697,7 +697,7 @@
             "title": "Move Character Effect",
             "description": "MoveCharacterEffect 移动一个角色到指定地点。"
         },
-        "model.v1.Player": {
+        "proto.v1.Player": {
             "properties": {
                 "id": {
                     "type": "integer",
@@ -733,7 +733,7 @@
                 },
                 "hand": {
                     "items": {
-                        "$ref": "#/definitions/model.v1.Card"
+                        "$ref": "#/definitions/proto.v1.Card"
                     },
                     "type": "array",
                     "description": "玩家手牌"
@@ -773,7 +773,7 @@
             "title": "Player",
             "description": "Player 表示一个连接的玩家（人类或 LLM）。"
         },
-        "model.v1.Script": {
+        "proto.v1.Script": {
             "properties": {
                 "id": {
                     "type": "integer",
@@ -800,14 +800,14 @@
                 },
                 "characters": {
                     "items": {
-                        "$ref": "#/definitions/model.v1.CharacterConfig"
+                        "$ref": "#/definitions/proto.v1.CharacterConfig"
                     },
                     "type": "array",
                     "description": "角色配置"
                 },
                 "tragedies": {
                     "items": {
-                        "$ref": "#/definitions/model.v1.TragedyCondition"
+                        "$ref": "#/definitions/proto.v1.TragedyCondition"
                     },
                     "type": "array",
                     "description": "悲剧条件"
@@ -826,7 +826,7 @@
             "title": "Script",
             "description": "Script 定义一个特定的游戏场景。"
         },
-        "model.v1.Target": {
+        "proto.v1.Target": {
             "properties": {
                 "character_id": {
                     "type": "integer"
@@ -860,7 +860,7 @@
             "type": "object",
             "title": "Target"
         },
-        "model.v1.TragedyCondition": {
+        "proto.v1.TragedyCondition": {
             "properties": {
                 "tragedy_type": {
                     "enum": [
@@ -894,7 +894,7 @@
                 },
                 "conditions": {
                     "items": {
-                        "$ref": "#/definitions/model.v1.Condition"
+                        "$ref": "#/definitions/proto.v1.Condition"
                     },
                     "type": "array",
                     "description": "必须满足的条件列表"
@@ -921,7 +921,7 @@
                 },
                 "abilities": {
                     "items": {
-                        "$ref": "#/definitions/model.v1.Ability"
+                        "$ref": "#/definitions/proto.v1.Ability"
                     },
                     "type": "array",
                     "description": "悲剧发生时触发的能力"

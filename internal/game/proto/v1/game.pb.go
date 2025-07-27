@@ -33,7 +33,7 @@ type GameState struct {
 	Players             map[int32]*Player      `protobuf:"bytes,4,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                         // 游戏中所有玩家的映射
 	CurrentDay          int32                  `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                                                                           // 当前天数
 	CurrentLoop         int32                  `protobuf:"varint,6,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                                                                        // 当前循环次数
-	CurrentPhase        GamePhase              `protobuf:"varint,7,opt,name=current_phase,json=currentPhase,proto3,enum=model.v1.GamePhase" json:"current_phase,omitempty"`                                                                             // 当前游戏阶段
+	CurrentPhase        GamePhase              `protobuf:"varint,7,opt,name=current_phase,json=currentPhase,proto3,enum=proto.v1.GamePhase" json:"current_phase,omitempty"`                                                                             // 当前游戏阶段
 	ActiveTragedies     map[int32]bool         `protobuf:"bytes,8,rep,name=active_tragedies,json=activeTragedies,proto3" json:"active_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                 // 此剧本中活跃的悲剧, key is TragedyType
 	PreventedTragedies  map[int32]bool         `protobuf:"bytes,9,rep,name=prevented_tragedies,json=preventedTragedies,proto3" json:"prevented_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`        // 此循环中已被阻止的悲剧, key is TragedyType
 	PlayedCardsThisDay  map[int32]*CardList    `protobuf:"bytes,10,rep,name=played_cards_this_day,json=playedCardsThisDay,proto3" json:"played_cards_this_day,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`    // 当天玩家打出的牌
@@ -223,7 +223,7 @@ type PlayerAction struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	PlayerId      int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`
 	GameId        int32                  `protobuf:"varint,2,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`
-	Type          ActionType             `protobuf:"varint,3,opt,name=type,proto3,enum=model.v1.ActionType" json:"type,omitempty"`
+	Type          ActionType             `protobuf:"varint,3,opt,name=type,proto3,enum=proto.v1.ActionType" json:"type,omitempty"`
 	Payload       *anypb.Any             `protobuf:"bytes,4,opt,name=payload,proto3" json:"payload,omitempty"` // e.g., PlayCardPayload, UseAbilityPayload
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -291,35 +291,35 @@ var File_proto_v1_game_proto protoreflect.FileDescriptor
 
 const file_proto_v1_game_proto_rawDesc = "" +
 	"\n" +
-	"\x13proto/v1/game.proto\x12\bmodel.v1\x1a\x19google/protobuf/any.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13proto/v1/card.proto\x1a\x18proto/v1/character.proto\x1a\x14proto/v1/enums.proto\x1a\x14proto/v1/event.proto\x1a\x15proto/v1/player.proto\x1a\x15proto/v1/script.proto\"\xd7\n" +
+	"\x13proto/v1/game.proto\x12\bproto.v1\x1a\x19google/protobuf/any.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13proto/v1/card.proto\x1a\x18proto/v1/character.proto\x1a\x14proto/v1/enums.proto\x1a\x14proto/v1/event.proto\x1a\x15proto/v1/player.proto\x1a\x15proto/v1/script.proto\"\xd7\n" +
 	"\n" +
 	"\tGameState\x12\x17\n" +
 	"\agame_id\x18\x01 \x01(\x05R\x06gameId\x12(\n" +
-	"\x06script\x18\x02 \x01(\v2\x10.model.v1.ScriptR\x06script\x12C\n" +
+	"\x06script\x18\x02 \x01(\v2\x10.proto.v1.ScriptR\x06script\x12C\n" +
 	"\n" +
-	"characters\x18\x03 \x03(\v2#.model.v1.GameState.CharactersEntryR\n" +
+	"characters\x18\x03 \x03(\v2#.proto.v1.GameState.CharactersEntryR\n" +
 	"characters\x12:\n" +
-	"\aplayers\x18\x04 \x03(\v2 .model.v1.GameState.PlayersEntryR\aplayers\x12\x1f\n" +
+	"\aplayers\x18\x04 \x03(\v2 .proto.v1.GameState.PlayersEntryR\aplayers\x12\x1f\n" +
 	"\vcurrent_day\x18\x05 \x01(\x05R\n" +
 	"currentDay\x12!\n" +
 	"\fcurrent_loop\x18\x06 \x01(\x05R\vcurrentLoop\x128\n" +
-	"\rcurrent_phase\x18\a \x01(\x0e2\x13.model.v1.GamePhaseR\fcurrentPhase\x12S\n" +
-	"\x10active_tragedies\x18\b \x03(\v2(.model.v1.GameState.ActiveTragediesEntryR\x0factiveTragedies\x12\\\n" +
-	"\x13prevented_tragedies\x18\t \x03(\v2+.model.v1.GameState.PreventedTragediesEntryR\x12preventedTragedies\x12^\n" +
+	"\rcurrent_phase\x18\a \x01(\x0e2\x13.proto.v1.GamePhaseR\fcurrentPhase\x12S\n" +
+	"\x10active_tragedies\x18\b \x03(\v2(.proto.v1.GameState.ActiveTragediesEntryR\x0factiveTragedies\x12\\\n" +
+	"\x13prevented_tragedies\x18\t \x03(\v2+.proto.v1.GameState.PreventedTragediesEntryR\x12preventedTragedies\x12^\n" +
 	"\x15played_cards_this_day\x18\n" +
-	" \x03(\v2+.model.v1.GameState.PlayedCardsThisDayEntryR\x12playedCardsThisDay\x12a\n" +
-	"\x16played_cards_this_loop\x18\v \x03(\v2,.model.v1.GameState.PlayedCardsThisLoopEntryR\x13playedCardsThisLoop\x12D\n" +
+	" \x03(\v2+.proto.v1.GameState.PlayedCardsThisDayEntryR\x12playedCardsThisDay\x12a\n" +
+	"\x16played_cards_this_loop\x18\v \x03(\v2,.proto.v1.GameState.PlayedCardsThisLoopEntryR\x13playedCardsThisLoop\x12D\n" +
 	"\x10last_update_time\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\x0elastUpdateTime\x122\n" +
 	"\n" +
-	"day_events\x18\r \x03(\v2\x13.model.v1.GameEventR\tdayEvents\x124\n" +
-	"\vloop_events\x18\x0e \x03(\v2\x13.model.v1.GameEventR\n" +
+	"day_events\x18\r \x03(\v2\x13.proto.v1.GameEventR\tdayEvents\x124\n" +
+	"\vloop_events\x18\x0e \x03(\v2\x13.proto.v1.GameEventR\n" +
 	"loopEvents\x1aR\n" +
 	"\x0fCharactersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12)\n" +
-	"\x05value\x18\x02 \x01(\v2\x13.model.v1.CharacterR\x05value:\x028\x01\x1aL\n" +
+	"\x05value\x18\x02 \x01(\v2\x13.proto.v1.CharacterR\x05value:\x028\x01\x1aL\n" +
 	"\fPlayersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12&\n" +
-	"\x05value\x18\x02 \x01(\v2\x10.model.v1.PlayerR\x05value:\x028\x01\x1aB\n" +
+	"\x05value\x18\x02 \x01(\v2\x10.proto.v1.PlayerR\x05value:\x028\x01\x1aB\n" +
 	"\x14ActiveTragediesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aE\n" +
@@ -328,17 +328,17 @@ const file_proto_v1_game_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aY\n" +
 	"\x17PlayedCardsThisDayEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12(\n" +
-	"\x05value\x18\x02 \x01(\v2\x12.model.v1.CardListR\x05value:\x028\x01\x1aZ\n" +
+	"\x05value\x18\x02 \x01(\v2\x12.proto.v1.CardListR\x05value:\x028\x01\x1aZ\n" +
 	"\x18PlayedCardsThisLoopEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12(\n" +
-	"\x05value\x18\x02 \x01(\v2\x12.model.v1.CardListR\x05value:\x028\x01\"C\n" +
+	"\x05value\x18\x02 \x01(\v2\x12.proto.v1.CardListR\x05value:\x028\x01\"C\n" +
 	"\rEffectContext\x122\n" +
 	"\n" +
-	"game_state\x18\x01 \x01(\v2\x13.model.v1.GameStateR\tgameState\"\x9e\x01\n" +
+	"game_state\x18\x01 \x01(\v2\x13.proto.v1.GameStateR\tgameState\"\x9e\x01\n" +
 	"\fPlayerAction\x12\x1b\n" +
 	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12\x17\n" +
 	"\agame_id\x18\x02 \x01(\x05R\x06gameId\x12(\n" +
-	"\x04type\x18\x03 \x01(\x0e2\x14.model.v1.ActionTypeR\x04type\x12.\n" +
+	"\x04type\x18\x03 \x01(\x0e2\x14.proto.v1.ActionTypeR\x04type\x12.\n" +
 	"\apayload\x18\x04 \x01(\v2\x14.google.protobuf.AnyR\apayloadB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
@@ -355,44 +355,44 @@ func file_proto_v1_game_proto_rawDescGZIP() []byte {
 
 var file_proto_v1_game_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_proto_v1_game_proto_goTypes = []any{
-	(*GameState)(nil),             // 0: model.v1.GameState
-	(*EffectContext)(nil),         // 1: model.v1.EffectContext
-	(*PlayerAction)(nil),          // 2: model.v1.PlayerAction
-	nil,                           // 3: model.v1.GameState.CharactersEntry
-	nil,                           // 4: model.v1.GameState.PlayersEntry
-	nil,                           // 5: model.v1.GameState.ActiveTragediesEntry
-	nil,                           // 6: model.v1.GameState.PreventedTragediesEntry
-	nil,                           // 7: model.v1.GameState.PlayedCardsThisDayEntry
-	nil,                           // 8: model.v1.GameState.PlayedCardsThisLoopEntry
-	(*Script)(nil),                // 9: model.v1.Script
-	(GamePhase)(0),                // 10: model.v1.GamePhase
+	(*GameState)(nil),             // 0: proto.v1.GameState
+	(*EffectContext)(nil),         // 1: proto.v1.EffectContext
+	(*PlayerAction)(nil),          // 2: proto.v1.PlayerAction
+	nil,                           // 3: proto.v1.GameState.CharactersEntry
+	nil,                           // 4: proto.v1.GameState.PlayersEntry
+	nil,                           // 5: proto.v1.GameState.ActiveTragediesEntry
+	nil,                           // 6: proto.v1.GameState.PreventedTragediesEntry
+	nil,                           // 7: proto.v1.GameState.PlayedCardsThisDayEntry
+	nil,                           // 8: proto.v1.GameState.PlayedCardsThisLoopEntry
+	(*Script)(nil),                // 9: proto.v1.Script
+	(GamePhase)(0),                // 10: proto.v1.GamePhase
 	(*timestamppb.Timestamp)(nil), // 11: google.protobuf.Timestamp
-	(*GameEvent)(nil),             // 12: model.v1.GameEvent
-	(ActionType)(0),               // 13: model.v1.ActionType
+	(*GameEvent)(nil),             // 12: proto.v1.GameEvent
+	(ActionType)(0),               // 13: proto.v1.ActionType
 	(*anypb.Any)(nil),             // 14: google.protobuf.Any
-	(*Character)(nil),             // 15: model.v1.Character
-	(*Player)(nil),                // 16: model.v1.Player
-	(*CardList)(nil),              // 17: model.v1.CardList
+	(*Character)(nil),             // 15: proto.v1.Character
+	(*Player)(nil),                // 16: proto.v1.Player
+	(*CardList)(nil),              // 17: proto.v1.CardList
 }
 var file_proto_v1_game_proto_depIdxs = []int32{
-	9,  // 0: model.v1.GameState.script:type_name -> model.v1.Script
-	3,  // 1: model.v1.GameState.characters:type_name -> model.v1.GameState.CharactersEntry
-	4,  // 2: model.v1.GameState.players:type_name -> model.v1.GameState.PlayersEntry
-	10, // 3: model.v1.GameState.current_phase:type_name -> model.v1.GamePhase
-	5,  // 4: model.v1.GameState.active_tragedies:type_name -> model.v1.GameState.ActiveTragediesEntry
-	6,  // 5: model.v1.GameState.prevented_tragedies:type_name -> model.v1.GameState.PreventedTragediesEntry
-	7,  // 6: model.v1.GameState.played_cards_this_day:type_name -> model.v1.GameState.PlayedCardsThisDayEntry
-	8,  // 7: model.v1.GameState.played_cards_this_loop:type_name -> model.v1.GameState.PlayedCardsThisLoopEntry
-	11, // 8: model.v1.GameState.last_update_time:type_name -> google.protobuf.Timestamp
-	12, // 9: model.v1.GameState.day_events:type_name -> model.v1.GameEvent
-	12, // 10: model.v1.GameState.loop_events:type_name -> model.v1.GameEvent
-	0,  // 11: model.v1.EffectContext.game_state:type_name -> model.v1.GameState
-	13, // 12: model.v1.PlayerAction.type:type_name -> model.v1.ActionType
-	14, // 13: model.v1.PlayerAction.payload:type_name -> google.protobuf.Any
-	15, // 14: model.v1.GameState.CharactersEntry.value:type_name -> model.v1.Character
-	16, // 15: model.v1.GameState.PlayersEntry.value:type_name -> model.v1.Player
-	17, // 16: model.v1.GameState.PlayedCardsThisDayEntry.value:type_name -> model.v1.CardList
-	17, // 17: model.v1.GameState.PlayedCardsThisLoopEntry.value:type_name -> model.v1.CardList
+	9,  // 0: proto.v1.GameState.script:type_name -> proto.v1.Script
+	3,  // 1: proto.v1.GameState.characters:type_name -> proto.v1.GameState.CharactersEntry
+	4,  // 2: proto.v1.GameState.players:type_name -> proto.v1.GameState.PlayersEntry
+	10, // 3: proto.v1.GameState.current_phase:type_name -> proto.v1.GamePhase
+	5,  // 4: proto.v1.GameState.active_tragedies:type_name -> proto.v1.GameState.ActiveTragediesEntry
+	6,  // 5: proto.v1.GameState.prevented_tragedies:type_name -> proto.v1.GameState.PreventedTragediesEntry
+	7,  // 6: proto.v1.GameState.played_cards_this_day:type_name -> proto.v1.GameState.PlayedCardsThisDayEntry
+	8,  // 7: proto.v1.GameState.played_cards_this_loop:type_name -> proto.v1.GameState.PlayedCardsThisLoopEntry
+	11, // 8: proto.v1.GameState.last_update_time:type_name -> google.protobuf.Timestamp
+	12, // 9: proto.v1.GameState.day_events:type_name -> proto.v1.GameEvent
+	12, // 10: proto.v1.GameState.loop_events:type_name -> proto.v1.GameEvent
+	0,  // 11: proto.v1.EffectContext.game_state:type_name -> proto.v1.GameState
+	13, // 12: proto.v1.PlayerAction.type:type_name -> proto.v1.ActionType
+	14, // 13: proto.v1.PlayerAction.payload:type_name -> google.protobuf.Any
+	15, // 14: proto.v1.GameState.CharactersEntry.value:type_name -> proto.v1.Character
+	16, // 15: proto.v1.GameState.PlayersEntry.value:type_name -> proto.v1.Player
+	17, // 16: proto.v1.GameState.PlayedCardsThisDayEntry.value:type_name -> proto.v1.CardList
+	17, // 17: proto.v1.GameState.PlayedCardsThisLoopEntry.value:type_name -> proto.v1.CardList
 	18, // [18:18] is the sub-list for method output_type
 	18, // [18:18] is the sub-list for method input_type
 	18, // [18:18] is the sub-list for extension type_name

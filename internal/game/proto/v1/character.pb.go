@@ -28,13 +28,13 @@ type Character struct {
 	Id              int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                             // 唯一标识符
 	Name            string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                          // 角色名称
 	Traits          []string               `protobuf:"bytes,3,rep,name=traits,proto3" json:"traits,omitempty"`                                                                      // 角色特征，例如：["Student", "Journalist"]
-	CurrentLocation LocationType           `protobuf:"varint,4,opt,name=current_location,json=currentLocation,proto3,enum=model.v1.LocationType" json:"current_location,omitempty"` // 当前所在位置
+	CurrentLocation LocationType           `protobuf:"varint,4,opt,name=current_location,json=currentLocation,proto3,enum=proto.v1.LocationType" json:"current_location,omitempty"` // 当前所在位置
 	Paranoia        int32                  `protobuf:"varint,5,opt,name=paranoia,proto3" json:"paranoia,omitempty"`                                                                 // 妄想指数
 	Goodwill        int32                  `protobuf:"varint,6,opt,name=goodwill,proto3" json:"goodwill,omitempty"`                                                                 // 好感度
 	Intrigue        int32                  `protobuf:"varint,7,opt,name=intrigue,proto3" json:"intrigue,omitempty"`                                                                 // 阴谋标记
 	IsAlive         bool                   `protobuf:"varint,8,opt,name=is_alive,json=isAlive,proto3" json:"is_alive,omitempty"`                                                    // 是否存活
 	Abilities       []*Ability             `protobuf:"bytes,9,rep,name=abilities,proto3" json:"abilities,omitempty"`                                                                // 角色能力
-	HiddenRole      RoleType               `protobuf:"varint,10,opt,name=hidden_role,json=hiddenRole,proto3,enum=model.v1.RoleType" json:"hidden_role,omitempty"`                   // 角色的隐藏身份，对主角隐藏，仅供主谋查看
+	HiddenRole      RoleType               `protobuf:"varint,10,opt,name=hidden_role,json=hiddenRole,proto3,enum=proto.v1.RoleType" json:"hidden_role,omitempty"`                   // 角色的隐藏身份，对主角隐藏，仅供主谋查看
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -144,8 +144,8 @@ type CharacterConfig struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	Id              int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                             // 引用基础角色定义
 	Name            string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                          // 角色名称
-	InitialLocation LocationType           `protobuf:"varint,3,opt,name=initial_location,json=initialLocation,proto3,enum=model.v1.LocationType" json:"initial_location,omitempty"` // 初始位置
-	HiddenRole      RoleType               `protobuf:"varint,4,opt,name=hidden_role,json=hiddenRole,proto3,enum=model.v1.RoleType" json:"hidden_role,omitempty"`                    // 此剧本中角色的秘密身份
+	InitialLocation LocationType           `protobuf:"varint,3,opt,name=initial_location,json=initialLocation,proto3,enum=proto.v1.LocationType" json:"initial_location,omitempty"` // 初始位置
+	HiddenRole      RoleType               `protobuf:"varint,4,opt,name=hidden_role,json=hiddenRole,proto3,enum=proto.v1.RoleType" json:"hidden_role,omitempty"`                    // 此剧本中角色的秘密身份
 	IsCulpritFor    string                 `protobuf:"bytes,5,opt,name=is_culprit_for,json=isCulpritFor,proto3" json:"is_culprit_for,omitempty"`                                    // 如果此角色是特定悲剧的嫌疑犯
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
@@ -220,25 +220,25 @@ var File_proto_v1_character_proto protoreflect.FileDescriptor
 
 const file_proto_v1_character_proto_rawDesc = "" +
 	"\n" +
-	"\x18proto/v1/character.proto\x12\bmodel.v1\x1a\x16proto/v1/ability.proto\x1a\x14proto/v1/enums.proto\x1a\x17proto/v1/location.proto\"\xdf\x02\n" +
+	"\x18proto/v1/character.proto\x12\bproto.v1\x1a\x16proto/v1/ability.proto\x1a\x14proto/v1/enums.proto\x1a\x17proto/v1/location.proto\"\xdf\x02\n" +
 	"\tCharacter\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
 	"\x06traits\x18\x03 \x03(\tR\x06traits\x12A\n" +
-	"\x10current_location\x18\x04 \x01(\x0e2\x16.model.v1.LocationTypeR\x0fcurrentLocation\x12\x1a\n" +
+	"\x10current_location\x18\x04 \x01(\x0e2\x16.proto.v1.LocationTypeR\x0fcurrentLocation\x12\x1a\n" +
 	"\bparanoia\x18\x05 \x01(\x05R\bparanoia\x12\x1a\n" +
 	"\bgoodwill\x18\x06 \x01(\x05R\bgoodwill\x12\x1a\n" +
 	"\bintrigue\x18\a \x01(\x05R\bintrigue\x12\x19\n" +
 	"\bis_alive\x18\b \x01(\bR\aisAlive\x12/\n" +
-	"\tabilities\x18\t \x03(\v2\x11.model.v1.AbilityR\tabilities\x123\n" +
+	"\tabilities\x18\t \x03(\v2\x11.proto.v1.AbilityR\tabilities\x123\n" +
 	"\vhidden_role\x18\n" +
-	" \x01(\x0e2\x12.model.v1.RoleTypeR\n" +
+	" \x01(\x0e2\x12.proto.v1.RoleTypeR\n" +
 	"hiddenRole\"\xd3\x01\n" +
 	"\x0fCharacterConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12A\n" +
-	"\x10initial_location\x18\x03 \x01(\x0e2\x16.model.v1.LocationTypeR\x0finitialLocation\x123\n" +
-	"\vhidden_role\x18\x04 \x01(\x0e2\x12.model.v1.RoleTypeR\n" +
+	"\x10initial_location\x18\x03 \x01(\x0e2\x16.proto.v1.LocationTypeR\x0finitialLocation\x123\n" +
+	"\vhidden_role\x18\x04 \x01(\x0e2\x12.proto.v1.RoleTypeR\n" +
 	"hiddenRole\x12$\n" +
 	"\x0eis_culprit_for\x18\x05 \x01(\tR\fisCulpritForB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
@@ -256,18 +256,18 @@ func file_proto_v1_character_proto_rawDescGZIP() []byte {
 
 var file_proto_v1_character_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_v1_character_proto_goTypes = []any{
-	(*Character)(nil),       // 0: model.v1.Character
-	(*CharacterConfig)(nil), // 1: model.v1.CharacterConfig
-	(LocationType)(0),       // 2: model.v1.LocationType
-	(*Ability)(nil),         // 3: model.v1.Ability
-	(RoleType)(0),           // 4: model.v1.RoleType
+	(*Character)(nil),       // 0: proto.v1.Character
+	(*CharacterConfig)(nil), // 1: proto.v1.CharacterConfig
+	(LocationType)(0),       // 2: proto.v1.LocationType
+	(*Ability)(nil),         // 3: proto.v1.Ability
+	(RoleType)(0),           // 4: proto.v1.RoleType
 }
 var file_proto_v1_character_proto_depIdxs = []int32{
-	2, // 0: model.v1.Character.current_location:type_name -> model.v1.LocationType
-	3, // 1: model.v1.Character.abilities:type_name -> model.v1.Ability
-	4, // 2: model.v1.Character.hidden_role:type_name -> model.v1.RoleType
-	2, // 3: model.v1.CharacterConfig.initial_location:type_name -> model.v1.LocationType
-	4, // 4: model.v1.CharacterConfig.hidden_role:type_name -> model.v1.RoleType
+	2, // 0: proto.v1.Character.current_location:type_name -> proto.v1.LocationType
+	3, // 1: proto.v1.Character.abilities:type_name -> proto.v1.Ability
+	4, // 2: proto.v1.Character.hidden_role:type_name -> proto.v1.RoleType
+	2, // 3: proto.v1.CharacterConfig.initial_location:type_name -> proto.v1.LocationType
+	4, // 4: proto.v1.CharacterConfig.hidden_role:type_name -> proto.v1.RoleType
 	5, // [5:5] is the sub-list for method output_type
 	5, // [5:5] is the sub-list for method input_type
 	5, // [5:5] is the sub-list for extension type_name

@@ -97,7 +97,7 @@ type Target_CharacterId struct {
 }
 
 type Target_Location struct {
-	Location LocationType `protobuf:"varint,2,opt,name=location,proto3,enum=model.v1.LocationType,oneof"`
+	Location LocationType `protobuf:"varint,2,opt,name=location,proto3,enum=proto.v1.LocationType,oneof"`
 }
 
 func (*Target_CharacterId) isTarget_TargetOneof() {}
@@ -108,10 +108,10 @@ var File_proto_v1_target_proto protoreflect.FileDescriptor
 
 const file_proto_v1_target_proto_rawDesc = "" +
 	"\n" +
-	"\x15proto/v1/target.proto\x12\bmodel.v1\x1a\x17proto/v1/location.proto\"s\n" +
+	"\x15proto/v1/target.proto\x12\bproto.v1\x1a\x17proto/v1/location.proto\"s\n" +
 	"\x06Target\x12#\n" +
 	"\fcharacter_id\x18\x01 \x01(\x05H\x00R\vcharacterId\x124\n" +
-	"\blocation\x18\x02 \x01(\x0e2\x16.model.v1.LocationTypeH\x00R\blocationB\x0e\n" +
+	"\blocation\x18\x02 \x01(\x0e2\x16.proto.v1.LocationTypeH\x00R\blocationB\x0e\n" +
 	"\ftarget_oneofB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
@@ -128,11 +128,11 @@ func file_proto_v1_target_proto_rawDescGZIP() []byte {
 
 var file_proto_v1_target_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_proto_v1_target_proto_goTypes = []any{
-	(*Target)(nil),    // 0: model.v1.Target
-	(LocationType)(0), // 1: model.v1.LocationType
+	(*Target)(nil),    // 0: proto.v1.Target
+	(LocationType)(0), // 1: proto.v1.LocationType
 }
 var file_proto_v1_target_proto_depIdxs = []int32{
-	1, // 0: model.v1.Target.location:type_name -> model.v1.LocationType
+	1, // 0: proto.v1.Target.location:type_name -> proto.v1.LocationType
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

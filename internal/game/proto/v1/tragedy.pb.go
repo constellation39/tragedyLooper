@@ -25,11 +25,11 @@ const (
 // TragedyCondition 定义悲剧发生的条件。
 type TragedyCondition struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TragedyType   TragedyType            `protobuf:"varint,1,opt,name=tragedy_type,json=tragedyType,proto3,enum=model.v1.TragedyType" json:"tragedy_type,omitempty"` // 悲剧类型
+	TragedyType   TragedyType            `protobuf:"varint,1,opt,name=tragedy_type,json=tragedyType,proto3,enum=proto.v1.TragedyType" json:"tragedy_type,omitempty"` // 悲剧类型
 	Day           int32                  `protobuf:"varint,2,opt,name=day,proto3" json:"day,omitempty"`                                                              // 悲剧可能发生的日期
 	CulpritId     string                 `protobuf:"bytes,3,opt,name=culprit_id,json=culpritId,proto3" json:"culprit_id,omitempty"`                                  // 嫌疑人ID
 	Conditions    []*Condition           `protobuf:"bytes,4,rep,name=conditions,proto3" json:"conditions,omitempty"`                                                 // 必须满足的条件列表
-	TargetRule    TargetRuleType         `protobuf:"varint,5,opt,name=target_rule,json=targetRule,proto3,enum=model.v1.TargetRuleType" json:"target_rule,omitempty"` // 目标规则
+	TargetRule    TargetRuleType         `protobuf:"varint,5,opt,name=target_rule,json=targetRule,proto3,enum=proto.v1.TargetRuleType" json:"target_rule,omitempty"` // 目标规则
 	Abilities     []*Ability             `protobuf:"bytes,6,rep,name=abilities,proto3" json:"abilities,omitempty"`                                                   // 悲剧发生时触发的能力
 	IsActive      bool                   `protobuf:"varint,7,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`                                    // 运行时状态：此悲剧当前是否在剧本中活跃？
 	IsPrevented   bool                   `protobuf:"varint,8,opt,name=is_prevented,json=isPrevented,proto3" json:"is_prevented,omitempty"`                           // 运行时状态：此悲剧是否已被阻止？
@@ -127,7 +127,7 @@ func (x *TragedyCondition) GetIsPrevented() bool {
 type Condition struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`   // 角色ID
-	Location      LocationType           `protobuf:"varint,2,opt,name=location,proto3,enum=model.v1.LocationType" json:"location,omitempty"` // 所在位置
+	Location      LocationType           `protobuf:"varint,2,opt,name=location,proto3,enum=proto.v1.LocationType" json:"location,omitempty"` // 所在位置
 	MinParanoia   int32                  `protobuf:"varint,3,opt,name=min_paranoia,json=minParanoia,proto3" json:"min_paranoia,omitempty"`   // 最小妄想指数
 	IsAlone       bool                   `protobuf:"varint,4,opt,name=is_alone,json=isAlone,proto3" json:"is_alone,omitempty"`               // 是否独处
 	unknownFields protoimpl.UnknownFields
@@ -196,23 +196,23 @@ var File_proto_v1_tragedy_proto protoreflect.FileDescriptor
 
 const file_proto_v1_tragedy_proto_rawDesc = "" +
 	"\n" +
-	"\x16proto/v1/tragedy.proto\x12\bmodel.v1\x1a\x16proto/v1/ability.proto\x1a\x14proto/v1/enums.proto\x1a\x17proto/v1/location.proto\"\xde\x02\n" +
+	"\x16proto/v1/tragedy.proto\x12\bproto.v1\x1a\x16proto/v1/ability.proto\x1a\x14proto/v1/enums.proto\x1a\x17proto/v1/location.proto\"\xde\x02\n" +
 	"\x10TragedyCondition\x128\n" +
-	"\ftragedy_type\x18\x01 \x01(\x0e2\x15.model.v1.TragedyTypeR\vtragedyType\x12\x10\n" +
+	"\ftragedy_type\x18\x01 \x01(\x0e2\x15.proto.v1.TragedyTypeR\vtragedyType\x12\x10\n" +
 	"\x03day\x18\x02 \x01(\x05R\x03day\x12\x1d\n" +
 	"\n" +
 	"culprit_id\x18\x03 \x01(\tR\tculpritId\x123\n" +
 	"\n" +
-	"conditions\x18\x04 \x03(\v2\x13.model.v1.ConditionR\n" +
+	"conditions\x18\x04 \x03(\v2\x13.proto.v1.ConditionR\n" +
 	"conditions\x129\n" +
-	"\vtarget_rule\x18\x05 \x01(\x0e2\x18.model.v1.TargetRuleTypeR\n" +
+	"\vtarget_rule\x18\x05 \x01(\x0e2\x18.proto.v1.TargetRuleTypeR\n" +
 	"targetRule\x12/\n" +
-	"\tabilities\x18\x06 \x03(\v2\x11.model.v1.AbilityR\tabilities\x12\x1b\n" +
+	"\tabilities\x18\x06 \x03(\v2\x11.proto.v1.AbilityR\tabilities\x12\x1b\n" +
 	"\tis_active\x18\a \x01(\bR\bisActive\x12!\n" +
 	"\fis_prevented\x18\b \x01(\bR\visPrevented\"\xa0\x01\n" +
 	"\tCondition\x12!\n" +
 	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x122\n" +
-	"\blocation\x18\x02 \x01(\x0e2\x16.model.v1.LocationTypeR\blocation\x12!\n" +
+	"\blocation\x18\x02 \x01(\x0e2\x16.proto.v1.LocationTypeR\blocation\x12!\n" +
 	"\fmin_paranoia\x18\x03 \x01(\x05R\vminParanoia\x12\x19\n" +
 	"\bis_alone\x18\x04 \x01(\bR\aisAloneB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
@@ -230,19 +230,19 @@ func file_proto_v1_tragedy_proto_rawDescGZIP() []byte {
 
 var file_proto_v1_tragedy_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_v1_tragedy_proto_goTypes = []any{
-	(*TragedyCondition)(nil), // 0: model.v1.TragedyCondition
-	(*Condition)(nil),        // 1: model.v1.Condition
-	(TragedyType)(0),         // 2: model.v1.TragedyType
-	(TargetRuleType)(0),      // 3: model.v1.TargetRuleType
-	(*Ability)(nil),          // 4: model.v1.Ability
-	(LocationType)(0),        // 5: model.v1.LocationType
+	(*TragedyCondition)(nil), // 0: proto.v1.TragedyCondition
+	(*Condition)(nil),        // 1: proto.v1.Condition
+	(TragedyType)(0),         // 2: proto.v1.TragedyType
+	(TargetRuleType)(0),      // 3: proto.v1.TargetRuleType
+	(*Ability)(nil),          // 4: proto.v1.Ability
+	(LocationType)(0),        // 5: proto.v1.LocationType
 }
 var file_proto_v1_tragedy_proto_depIdxs = []int32{
-	2, // 0: model.v1.TragedyCondition.tragedy_type:type_name -> model.v1.TragedyType
-	1, // 1: model.v1.TragedyCondition.conditions:type_name -> model.v1.Condition
-	3, // 2: model.v1.TragedyCondition.target_rule:type_name -> model.v1.TargetRuleType
-	4, // 3: model.v1.TragedyCondition.abilities:type_name -> model.v1.Ability
-	5, // 4: model.v1.Condition.location:type_name -> model.v1.LocationType
+	2, // 0: proto.v1.TragedyCondition.tragedy_type:type_name -> proto.v1.TragedyType
+	1, // 1: proto.v1.TragedyCondition.conditions:type_name -> proto.v1.Condition
+	3, // 2: proto.v1.TragedyCondition.target_rule:type_name -> proto.v1.TargetRuleType
+	4, // 3: proto.v1.TragedyCondition.abilities:type_name -> proto.v1.Ability
+	5, // 4: proto.v1.Condition.location:type_name -> proto.v1.LocationType
 	5, // [5:5] is the sub-list for method output_type
 	5, // [5:5] is the sub-list for method input_type
 	5, // [5:5] is the sub-list for extension type_name

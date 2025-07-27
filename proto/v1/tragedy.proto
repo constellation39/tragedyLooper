@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package model.v1;
+package proto.v1;
 
 import "proto/v1/ability.proto";
 import "proto/v1/enums.proto";

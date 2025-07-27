@@ -3,7 +3,6 @@ package engine
 import (
 	"google.golang.org/protobuf/proto"
 
-	"tragedylooper/internal/game/proto/v1"
 	model "tragedylooper/internal/game/proto/v1"
 )
 

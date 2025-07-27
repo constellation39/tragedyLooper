@@ -27,7 +27,7 @@ const (
 // GameEvent represents an event that occurred in the game.
 type GameEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          GameEventType          `protobuf:"varint,1,opt,name=type,proto3,enum=model.v1.GameEventType" json:"type,omitempty"`
+	Type          GameEventType          `protobuf:"varint,1,opt,name=type,proto3,enum=proto.v1.GameEventType" json:"type,omitempty"`
 	Payload       *anypb.Any             `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
 	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -88,7 +88,7 @@ func (x *GameEvent) GetTimestamp() *timestamppb.Timestamp {
 type CharacterMovedEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`
-	NewLocation   LocationType           `protobuf:"varint,2,opt,name=new_location,json=newLocation,proto3,enum=model.v1.LocationType" json:"new_location,omitempty"`
+	NewLocation   LocationType           `protobuf:"varint,2,opt,name=new_location,json=newLocation,proto3,enum=proto.v1.LocationType" json:"new_location,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -319,7 +319,7 @@ func (x *IntrigueAdjustedEvent) GetNewIntrigue() int32 {
 
 type TragedyTriggeredEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TragedyType   TragedyType            `protobuf:"varint,1,opt,name=tragedy_type,json=tragedyType,proto3,enum=model.v1.TragedyType" json:"tragedy_type,omitempty"`
+	TragedyType   TragedyType            `protobuf:"varint,1,opt,name=tragedy_type,json=tragedyType,proto3,enum=proto.v1.TragedyType" json:"tragedy_type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -555,7 +555,7 @@ func (x *LoopResetEvent) GetLoop() int32 {
 
 type GameOverEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Winner        PlayerRole             `protobuf:"varint,1,opt,name=winner,proto3,enum=model.v1.PlayerRole" json:"winner,omitempty"`
+	Winner        PlayerRole             `protobuf:"varint,1,opt,name=winner,proto3,enum=proto.v1.PlayerRole" json:"winner,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -699,14 +699,14 @@ var File_proto_v1_event_proto protoreflect.FileDescriptor
 
 const file_proto_v1_event_proto_rawDesc = "" +
 	"\n" +
-	"\x14proto/v1/event.proto\x12\bmodel.v1\x1a\x19google/protobuf/any.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13proto/v1/card.proto\x1a\x14proto/v1/enums.proto\x1a\x17proto/v1/location.proto\"\xa2\x01\n" +
+	"\x14proto/v1/event.proto\x12\bproto.v1\x1a\x19google/protobuf/any.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13proto/v1/card.proto\x1a\x14proto/v1/enums.proto\x1a\x17proto/v1/location.proto\"\xa2\x01\n" +
 	"\tGameEvent\x12+\n" +
-	"\x04type\x18\x01 \x01(\x0e2\x17.model.v1.GameEventTypeR\x04type\x12.\n" +
+	"\x04type\x18\x01 \x01(\x0e2\x17.proto.v1.GameEventTypeR\x04type\x12.\n" +
 	"\apayload\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\apayload\x128\n" +
 	"\ttimestamp\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\"s\n" +
 	"\x13CharacterMovedEvent\x12!\n" +
 	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x129\n" +
-	"\fnew_location\x18\x02 \x01(\x0e2\x16.model.v1.LocationTypeR\vnewLocation\"u\n" +
+	"\fnew_location\x18\x02 \x01(\x0e2\x16.proto.v1.LocationTypeR\vnewLocation\"u\n" +
 	"\x15ParanoiaAdjustedEvent\x12!\n" +
 	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x12\x16\n" +
 	"\x06amount\x18\x02 \x01(\x05R\x06amount\x12!\n" +
@@ -720,7 +720,7 @@ const file_proto_v1_event_proto_rawDesc = "" +
 	"\x06amount\x18\x02 \x01(\x05R\x06amount\x12!\n" +
 	"\fnew_intrigue\x18\x03 \x01(\x05R\vnewIntrigue\"Q\n" +
 	"\x15TragedyTriggeredEvent\x128\n" +
-	"\ftragedy_type\x18\x01 \x01(\x0e2\x15.model.v1.TragedyTypeR\vtragedyType\"X\n" +
+	"\ftragedy_type\x18\x01 \x01(\x0e2\x15.proto.v1.TragedyTypeR\vtragedyType\"X\n" +
 	"\x10AbilityUsedEvent\x12!\n" +
 	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x12!\n" +
 	"\fability_name\x18\x02 \x01(\tR\vabilityName\"8\n" +
@@ -728,19 +728,19 @@ const file_proto_v1_event_proto_rawDesc = "" +
 	"\x03day\x18\x01 \x01(\x05R\x03day\x12\x12\n" +
 	"\x04loop\x18\x02 \x01(\x05R\x04loop\"\xb4\x01\n" +
 	"\x0fCardPlayedEvent\x12M\n" +
-	"\fplayed_cards\x18\x01 \x03(\v2*.model.v1.CardPlayedEvent.PlayedCardsEntryR\vplayedCards\x1aR\n" +
+	"\fplayed_cards\x18\x01 \x03(\v2*.proto.v1.CardPlayedEvent.PlayedCardsEntryR\vplayedCards\x1aR\n" +
 	"\x10PlayedCardsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12(\n" +
-	"\x05value\x18\x02 \x01(\v2\x12.model.v1.CardListR\x05value:\x028\x01\"$\n" +
+	"\x05value\x18\x02 \x01(\v2\x12.proto.v1.CardListR\x05value:\x028\x01\"$\n" +
 	"\x0eLoopResetEvent\x12\x12\n" +
 	"\x04loop\x18\x01 \x01(\x05R\x04loop\"=\n" +
 	"\rGameOverEvent\x12,\n" +
-	"\x06winner\x18\x01 \x01(\x0e2\x14.model.v1.PlayerRoleR\x06winner\"M\n" +
+	"\x06winner\x18\x01 \x01(\x0e2\x14.proto.v1.PlayerRoleR\x06winner\"M\n" +
 	"\x06Choice\x12 \n" +
 	"\vdescription\x18\x01 \x01(\tR\vdescription\x12!\n" +
 	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\"A\n" +
 	"\x13ChoiceRequiredEvent\x12*\n" +
-	"\achoices\x18\x01 \x03(\v2\x10.model.v1.ChoiceR\achoicesB\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\achoices\x18\x01 \x03(\v2\x10.proto.v1.ChoiceR\achoicesB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
 	file_proto_v1_event_proto_rawDescOnce sync.Once
@@ -756,38 +756,38 @@ func file_proto_v1_event_proto_rawDescGZIP() []byte {
 
 var file_proto_v1_event_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_proto_v1_event_proto_goTypes = []any{
-	(*GameEvent)(nil),             // 0: model.v1.GameEvent
-	(*CharacterMovedEvent)(nil),   // 1: model.v1.CharacterMovedEvent
-	(*ParanoiaAdjustedEvent)(nil), // 2: model.v1.ParanoiaAdjustedEvent
-	(*GoodwillAdjustedEvent)(nil), // 3: model.v1.GoodwillAdjustedEvent
-	(*IntrigueAdjustedEvent)(nil), // 4: model.v1.IntrigueAdjustedEvent
-	(*TragedyTriggeredEvent)(nil), // 5: model.v1.TragedyTriggeredEvent
-	(*AbilityUsedEvent)(nil),      // 6: model.v1.AbilityUsedEvent
-	(*DayAdvancedEvent)(nil),      // 7: model.v1.DayAdvancedEvent
-	(*CardPlayedEvent)(nil),       // 8: model.v1.CardPlayedEvent
-	(*LoopResetEvent)(nil),        // 9: model.v1.LoopResetEvent
-	(*GameOverEvent)(nil),         // 10: model.v1.GameOverEvent
-	(*Choice)(nil),                // 11: model.v1.Choice
-	(*ChoiceRequiredEvent)(nil),   // 12: model.v1.ChoiceRequiredEvent
-	nil,                           // 13: model.v1.CardPlayedEvent.PlayedCardsEntry
-	(GameEventType)(0),            // 14: model.v1.GameEventType
+	(*GameEvent)(nil),             // 0: proto.v1.GameEvent
+	(*CharacterMovedEvent)(nil),   // 1: proto.v1.CharacterMovedEvent
+	(*ParanoiaAdjustedEvent)(nil), // 2: proto.v1.ParanoiaAdjustedEvent
+	(*GoodwillAdjustedEvent)(nil), // 3: proto.v1.GoodwillAdjustedEvent
+	(*IntrigueAdjustedEvent)(nil), // 4: proto.v1.IntrigueAdjustedEvent
+	(*TragedyTriggeredEvent)(nil), // 5: proto.v1.TragedyTriggeredEvent
+	(*AbilityUsedEvent)(nil),      // 6: proto.v1.AbilityUsedEvent
+	(*DayAdvancedEvent)(nil),      // 7: proto.v1.DayAdvancedEvent
+	(*CardPlayedEvent)(nil),       // 8: proto.v1.CardPlayedEvent
+	(*LoopResetEvent)(nil),        // 9: proto.v1.LoopResetEvent
+	(*GameOverEvent)(nil),         // 10: proto.v1.GameOverEvent
+	(*Choice)(nil),                // 11: proto.v1.Choice
+	(*ChoiceRequiredEvent)(nil),   // 12: proto.v1.ChoiceRequiredEvent
+	nil,                           // 13: proto.v1.CardPlayedEvent.PlayedCardsEntry
+	(GameEventType)(0),            // 14: proto.v1.GameEventType
 	(*anypb.Any)(nil),             // 15: google.protobuf.Any
 	(*timestamppb.Timestamp)(nil), // 16: google.protobuf.Timestamp
-	(LocationType)(0),             // 17: model.v1.LocationType
-	(TragedyType)(0),              // 18: model.v1.TragedyType
-	(PlayerRole)(0),               // 19: model.v1.PlayerRole
-	(*CardList)(nil),              // 20: model.v1.CardList
+	(LocationType)(0),             // 17: proto.v1.LocationType
+	(TragedyType)(0),              // 18: proto.v1.TragedyType
+	(PlayerRole)(0),               // 19: proto.v1.PlayerRole
+	(*CardList)(nil),              // 20: proto.v1.CardList
 }
 var file_proto_v1_event_proto_depIdxs = []int32{
-	14, // 0: model.v1.GameEvent.type:type_name -> model.v1.GameEventType
-	15, // 1: model.v1.GameEvent.payload:type_name -> google.protobuf.Any
-	16, // 2: model.v1.GameEvent.timestamp:type_name -> google.protobuf.Timestamp
-	17, // 3: model.v1.CharacterMovedEvent.new_location:type_name -> model.v1.LocationType
-	18, // 4: model.v1.TragedyTriggeredEvent.tragedy_type:type_name -> model.v1.TragedyType
-	13, // 5: model.v1.CardPlayedEvent.played_cards:type_name -> model.v1.CardPlayedEvent.PlayedCardsEntry
-	19, // 6: model.v1.GameOverEvent.winner:type_name -> model.v1.PlayerRole
-	11, // 7: model.v1.ChoiceRequiredEvent.choices:type_name -> model.v1.Choice
-	20, // 8: model.v1.CardPlayedEvent.PlayedCardsEntry.value:type_name -> model.v1.CardList
+	14, // 0: proto.v1.GameEvent.type:type_name -> proto.v1.GameEventType
+	15, // 1: proto.v1.GameEvent.payload:type_name -> google.protobuf.Any
+	16, // 2: proto.v1.GameEvent.timestamp:type_name -> google.protobuf.Timestamp
+	17, // 3: proto.v1.CharacterMovedEvent.new_location:type_name -> proto.v1.LocationType
+	18, // 4: proto.v1.TragedyTriggeredEvent.tragedy_type:type_name -> proto.v1.TragedyType
+	13, // 5: proto.v1.CardPlayedEvent.played_cards:type_name -> proto.v1.CardPlayedEvent.PlayedCardsEntry
+	19, // 6: proto.v1.GameOverEvent.winner:type_name -> proto.v1.PlayerRole
+	11, // 7: proto.v1.ChoiceRequiredEvent.choices:type_name -> proto.v1.Choice
+	20, // 8: proto.v1.CardPlayedEvent.PlayedCardsEntry.value:type_name -> proto.v1.CardList
 	9,  // [9:9] is the sub-list for method output_type
 	9,  // [9:9] is the sub-list for method input_type
 	9,  // [9:9] is the sub-list for extension type_name

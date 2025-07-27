@@ -140,7 +140,7 @@ func (*Effect_AdjustIntrigueEffect) isEffect_EffectOneof() {}
 // MoveCharacterEffect 移动一个角色到指定地点。
 type MoveCharacterEffect struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Destination   LocationType           `protobuf:"varint,1,opt,name=destination,proto3,enum=model.v1.LocationType" json:"destination,omitempty"`
+	Destination   LocationType           `protobuf:"varint,1,opt,name=destination,proto3,enum=proto.v1.LocationType" json:"destination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -321,15 +321,15 @@ var File_proto_v1_effect_proto protoreflect.FileDescriptor
 
 const file_proto_v1_effect_proto_rawDesc = "" +
 	"\n" +
-	"\x15proto/v1/effect.proto\x12\bmodel.v1\x1a\x17proto/v1/location.proto\"\xf5\x02\n" +
+	"\x15proto/v1/effect.proto\x12\bproto.v1\x1a\x17proto/v1/location.proto\"\xf5\x02\n" +
 	"\x06Effect\x12S\n" +
-	"\x15move_character_effect\x18\x01 \x01(\v2\x1d.model.v1.MoveCharacterEffectH\x00R\x13moveCharacterEffect\x12V\n" +
-	"\x16adjust_paranoia_effect\x18\x02 \x01(\v2\x1e.model.v1.AdjustParanoiaEffectH\x00R\x14adjustParanoiaEffect\x12V\n" +
-	"\x16adjust_goodwill_effect\x18\x03 \x01(\v2\x1e.model.v1.AdjustGoodwillEffectH\x00R\x14adjustGoodwillEffect\x12V\n" +
-	"\x16adjust_intrigue_effect\x18\x04 \x01(\v2\x1e.model.v1.AdjustIntrigueEffectH\x00R\x14adjustIntrigueEffectB\x0e\n" +
+	"\x15move_character_effect\x18\x01 \x01(\v2\x1d.proto.v1.MoveCharacterEffectH\x00R\x13moveCharacterEffect\x12V\n" +
+	"\x16adjust_paranoia_effect\x18\x02 \x01(\v2\x1e.proto.v1.AdjustParanoiaEffectH\x00R\x14adjustParanoiaEffect\x12V\n" +
+	"\x16adjust_goodwill_effect\x18\x03 \x01(\v2\x1e.proto.v1.AdjustGoodwillEffectH\x00R\x14adjustGoodwillEffect\x12V\n" +
+	"\x16adjust_intrigue_effect\x18\x04 \x01(\v2\x1e.proto.v1.AdjustIntrigueEffectH\x00R\x14adjustIntrigueEffectB\x0e\n" +
 	"\feffect_oneof\"O\n" +
 	"\x13MoveCharacterEffect\x128\n" +
-	"\vdestination\x18\x01 \x01(\x0e2\x16.model.v1.LocationTypeR\vdestination\".\n" +
+	"\vdestination\x18\x01 \x01(\x0e2\x16.proto.v1.LocationTypeR\vdestination\".\n" +
 	"\x14AdjustParanoiaEffect\x12\x16\n" +
 	"\x06amount\x18\x01 \x01(\x05R\x06amount\".\n" +
 	"\x14AdjustGoodwillEffect\x12\x16\n" +
@@ -351,19 +351,19 @@ func file_proto_v1_effect_proto_rawDescGZIP() []byte {
 
 var file_proto_v1_effect_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_proto_v1_effect_proto_goTypes = []any{
-	(*Effect)(nil),               // 0: model.v1.Effect
-	(*MoveCharacterEffect)(nil),  // 1: model.v1.MoveCharacterEffect
-	(*AdjustParanoiaEffect)(nil), // 2: model.v1.AdjustParanoiaEffect
-	(*AdjustGoodwillEffect)(nil), // 3: model.v1.AdjustGoodwillEffect
-	(*AdjustIntrigueEffect)(nil), // 4: model.v1.AdjustIntrigueEffect
-	(LocationType)(0),            // 5: model.v1.LocationType
+	(*Effect)(nil),               // 0: proto.v1.Effect
+	(*MoveCharacterEffect)(nil),  // 1: proto.v1.MoveCharacterEffect
+	(*AdjustParanoiaEffect)(nil), // 2: proto.v1.AdjustParanoiaEffect
+	(*AdjustGoodwillEffect)(nil), // 3: proto.v1.AdjustGoodwillEffect
+	(*AdjustIntrigueEffect)(nil), // 4: proto.v1.AdjustIntrigueEffect
+	(LocationType)(0),            // 5: proto.v1.LocationType
 }
 var file_proto_v1_effect_proto_depIdxs = []int32{
-	1, // 0: model.v1.Effect.move_character_effect:type_name -> model.v1.MoveCharacterEffect
-	2, // 1: model.v1.Effect.adjust_paranoia_effect:type_name -> model.v1.AdjustParanoiaEffect
-	3, // 2: model.v1.Effect.adjust_goodwill_effect:type_name -> model.v1.AdjustGoodwillEffect
-	4, // 3: model.v1.Effect.adjust_intrigue_effect:type_name -> model.v1.AdjustIntrigueEffect
-	5, // 4: model.v1.MoveCharacterEffect.destination:type_name -> model.v1.LocationType
+	1, // 0: proto.v1.Effect.move_character_effect:type_name -> proto.v1.MoveCharacterEffect
+	2, // 1: proto.v1.Effect.adjust_paranoia_effect:type_name -> proto.v1.AdjustParanoiaEffect
+	3, // 2: proto.v1.Effect.adjust_goodwill_effect:type_name -> proto.v1.AdjustGoodwillEffect
+	4, // 3: proto.v1.Effect.adjust_intrigue_effect:type_name -> proto.v1.AdjustIntrigueEffect
+	5, // 4: proto.v1.MoveCharacterEffect.destination:type_name -> proto.v1.LocationType
 	5, // [5:5] is the sub-list for method output_type
 	5, // [5:5] is the sub-list for method input_type
 	5, // [5:5] is the sub-list for extension type_name

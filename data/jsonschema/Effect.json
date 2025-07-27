@@ -5,19 +5,19 @@
         "Effect": {
             "properties": {
                 "move_character_effect": {
-                    "$ref": "#/definitions/model.v1.MoveCharacterEffect",
+                    "$ref": "#/definitions/proto.v1.MoveCharacterEffect",
                     "additionalProperties": true
                 },
                 "adjust_paranoia_effect": {
-                    "$ref": "#/definitions/model.v1.AdjustParanoiaEffect",
+                    "$ref": "#/definitions/proto.v1.AdjustParanoiaEffect",
                     "additionalProperties": true
                 },
                 "adjust_goodwill_effect": {
-                    "$ref": "#/definitions/model.v1.AdjustGoodwillEffect",
+                    "$ref": "#/definitions/proto.v1.AdjustGoodwillEffect",
                     "additionalProperties": true
                 },
                 "adjust_intrigue_effect": {
-                    "$ref": "#/definitions/model.v1.AdjustIntrigueEffect",
+                    "$ref": "#/definitions/proto.v1.AdjustIntrigueEffect",
                     "additionalProperties": true
                 }
             },
@@ -26,7 +26,7 @@
             "title": "Effect",
             "description": "Effect 接口定义了一个效果的核心行为。"
         },
-        "model.v1.AdjustGoodwillEffect": {
+        "proto.v1.AdjustGoodwillEffect": {
             "properties": {
                 "amount": {
                     "type": "integer"
@@ -37,7 +37,7 @@
             "title": "Adjust Goodwill Effect",
             "description": "AdjustGoodwillEffect 调整角色的好感度。"
         },
-        "model.v1.AdjustIntrigueEffect": {
+        "proto.v1.AdjustIntrigueEffect": {
             "properties": {
                 "amount": {
                     "type": "integer"
@@ -48,7 +48,7 @@
             "title": "Adjust Intrigue Effect",
             "description": "AdjustIntrigueEffect 调整角色的阴谋值。"
         },
-        "model.v1.AdjustParanoiaEffect": {
+        "proto.v1.AdjustParanoiaEffect": {
             "properties": {
                 "amount": {
                     "type": "integer"
@@ -59,7 +59,7 @@
             "title": "Adjust Paranoia Effect",
             "description": "AdjustParanoiaEffect 调整角色的妄想值。"
         },
-        "model.v1.MoveCharacterEffect": {
+        "proto.v1.MoveCharacterEffect": {
             "properties": {
                 "destination": {
                     "enum": [

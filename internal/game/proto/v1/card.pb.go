@@ -27,8 +27,8 @@ type Card struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                         // 唯一标识符
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                      // 卡牌名称
-	CardType      CardType               `protobuf:"varint,3,opt,name=card_type,json=cardType,proto3,enum=model.v1.CardType" json:"card_type,omitempty"`      // 卡牌类型
-	OwnerRole     PlayerRole             `protobuf:"varint,4,opt,name=owner_role,json=ownerRole,proto3,enum=model.v1.PlayerRole" json:"owner_role,omitempty"` // 所属玩家角色（主谋或主角）
+	CardType      CardType               `protobuf:"varint,3,opt,name=card_type,json=cardType,proto3,enum=proto.v1.CardType" json:"card_type,omitempty"`      // 卡牌类型
+	OwnerRole     PlayerRole             `protobuf:"varint,4,opt,name=owner_role,json=ownerRole,proto3,enum=proto.v1.PlayerRole" json:"owner_role,omitempty"` // 所属玩家角色（主谋或主角）
 	Effect        *Effect                `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`                                                  // 卡牌效果
 	OncePerLoop   bool                   `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`                  // 每循环只能使用一次
 	UsedThisLoop  bool                   `protobuf:"varint,8,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"`               // 运行时状态
@@ -171,19 +171,19 @@ var File_proto_v1_card_proto protoreflect.FileDescriptor
 
 const file_proto_v1_card_proto_rawDesc = "" +
 	"\n" +
-	"\x13proto/v1/card.proto\x12\bmodel.v1\x1a\x15proto/v1/effect.proto\x1a\x14proto/v1/enums.proto\x1a\x15proto/v1/target.proto\"\xae\x02\n" +
+	"\x13proto/v1/card.proto\x12\bproto.v1\x1a\x15proto/v1/effect.proto\x1a\x14proto/v1/enums.proto\x1a\x15proto/v1/target.proto\"\xae\x02\n" +
 	"\x04Card\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12/\n" +
-	"\tcard_type\x18\x03 \x01(\x0e2\x12.model.v1.CardTypeR\bcardType\x123\n" +
+	"\tcard_type\x18\x03 \x01(\x0e2\x12.proto.v1.CardTypeR\bcardType\x123\n" +
 	"\n" +
-	"owner_role\x18\x04 \x01(\x0e2\x14.model.v1.PlayerRoleR\townerRole\x12(\n" +
-	"\x06effect\x18\x06 \x01(\v2\x10.model.v1.EffectR\x06effect\x12\"\n" +
+	"owner_role\x18\x04 \x01(\x0e2\x14.proto.v1.PlayerRoleR\townerRole\x12(\n" +
+	"\x06effect\x18\x06 \x01(\v2\x10.proto.v1.EffectR\x06effect\x12\"\n" +
 	"\ronce_per_loop\x18\a \x01(\bR\voncePerLoop\x12$\n" +
 	"\x0eused_this_loop\x18\b \x01(\bR\fusedThisLoop\x12(\n" +
-	"\x06target\x18\t \x01(\v2\x10.model.v1.TargetR\x06target\"0\n" +
+	"\x06target\x18\t \x01(\v2\x10.proto.v1.TargetR\x06target\"0\n" +
 	"\bCardList\x12$\n" +
-	"\x05cards\x18\x01 \x03(\v2\x0e.model.v1.CardR\x05cardsB\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\x05cards\x18\x01 \x03(\v2\x0e.proto.v1.CardR\x05cardsB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
 	file_proto_v1_card_proto_rawDescOnce sync.Once
@@ -199,19 +199,19 @@ func file_proto_v1_card_proto_rawDescGZIP() []byte {
 
 var file_proto_v1_card_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_v1_card_proto_goTypes = []any{
-	(*Card)(nil),     // 0: model.v1.Card
-	(*CardList)(nil), // 1: model.v1.CardList
-	(CardType)(0),    // 2: model.v1.CardType
-	(PlayerRole)(0),  // 3: model.v1.PlayerRole
-	(*Effect)(nil),   // 4: model.v1.Effect
-	(*Target)(nil),   // 5: model.v1.Target
+	(*Card)(nil),     // 0: proto.v1.Card
+	(*CardList)(nil), // 1: proto.v1.CardList
+	(CardType)(0),    // 2: proto.v1.CardType
+	(PlayerRole)(0),  // 3: proto.v1.PlayerRole
+	(*Effect)(nil),   // 4: proto.v1.Effect
+	(*Target)(nil),   // 5: proto.v1.Target
 }
 var file_proto_v1_card_proto_depIdxs = []int32{
-	2, // 0: model.v1.Card.card_type:type_name -> model.v1.CardType
-	3, // 1: model.v1.Card.owner_role:type_name -> model.v1.PlayerRole
-	4, // 2: model.v1.Card.effect:type_name -> model.v1.Effect
-	5, // 3: model.v1.Card.target:type_name -> model.v1.Target
-	0, // 4: model.v1.CardList.cards:type_name -> model.v1.Card
+	2, // 0: proto.v1.Card.card_type:type_name -> proto.v1.CardType
+	3, // 1: proto.v1.Card.owner_role:type_name -> proto.v1.PlayerRole
+	4, // 2: proto.v1.Card.effect:type_name -> proto.v1.Effect
+	5, // 3: proto.v1.Card.target:type_name -> proto.v1.Target
+	0, // 4: proto.v1.CardList.cards:type_name -> proto.v1.Card
 	5, // [5:5] is the sub-list for method output_type
 	5, // [5:5] is the sub-list for method input_type
 	5, // [5:5] is the sub-list for extension type_name

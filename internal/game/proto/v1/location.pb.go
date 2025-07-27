@@ -82,7 +82,7 @@ var File_proto_v1_location_proto protoreflect.FileDescriptor
 
 const file_proto_v1_location_proto_rawDesc = "" +
 	"\n" +
-	"\x17proto/v1/location.proto\x12\bmodel.v1*\x95\x01\n" +
+	"\x17proto/v1/location.proto\x12\bproto.v1*\x95\x01\n" +
 	"\fLocationType\x12\x1d\n" +
 	"\x19LOCATION_TYPE_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16LOCATION_TYPE_HOSPITAL\x10\x01\x12\x18\n" +
@@ -104,7 +104,7 @@ func file_proto_v1_location_proto_rawDescGZIP() []byte {
 
 var file_proto_v1_location_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_proto_v1_location_proto_goTypes = []any{
-	(LocationType)(0), // 0: model.v1.LocationType
+	(LocationType)(0), // 0: proto.v1.LocationType
 }
 var file_proto_v1_location_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type

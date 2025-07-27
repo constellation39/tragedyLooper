@@ -652,7 +652,7 @@ var File_proto_v1_enums_proto protoreflect.FileDescriptor
 
 const file_proto_v1_enums_proto_rawDesc = "" +
 	"\n" +
-	"\x14proto/v1/enums.proto\x12\bmodel.v1*\x9c\x01\n" +
+	"\x14proto/v1/enums.proto\x12\bproto.v1*\x9c\x01\n" +
 	"\bCardType\x12\x19\n" +
 	"\x15CARD_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
 	"\x12CARD_TYPE_MOVEMENT\x10\x01\x12\x16\n" +
@@ -754,16 +754,16 @@ func file_proto_v1_enums_proto_rawDescGZIP() []byte {
 
 var file_proto_v1_enums_proto_enumTypes = make([]protoimpl.EnumInfo, 10)
 var file_proto_v1_enums_proto_goTypes = []any{
-	(CardType)(0),           // 0: model.v1.CardType
-	(PlayerRole)(0),         // 1: model.v1.PlayerRole
-	(GamePhase)(0),          // 2: model.v1.GamePhase
-	(GameEventType)(0),      // 3: model.v1.GameEventType
-	(ActionType)(0),         // 4: model.v1.ActionType
-	(RoleType)(0),           // 5: model.v1.RoleType
-	(TragedyType)(0),        // 6: model.v1.TragedyType
-	(AbilityTriggerType)(0), // 7: model.v1.AbilityTriggerType
-	(EffectType)(0),         // 8: model.v1.EffectType
-	(TargetRuleType)(0),     // 9: model.v1.TargetRuleType
+	(CardType)(0),           // 0: proto.v1.CardType
+	(PlayerRole)(0),         // 1: proto.v1.PlayerRole
+	(GamePhase)(0),          // 2: proto.v1.GamePhase
+	(GameEventType)(0),      // 3: proto.v1.GameEventType
+	(ActionType)(0),         // 4: proto.v1.ActionType
+	(RoleType)(0),           // 5: proto.v1.RoleType
+	(TragedyType)(0),        // 6: proto.v1.TragedyType
+	(AbilityTriggerType)(0), // 7: proto.v1.AbilityTriggerType
+	(EffectType)(0),         // 8: proto.v1.EffectType
+	(TargetRuleType)(0),     // 9: proto.v1.TargetRuleType
 }
 var file_proto_v1_enums_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type

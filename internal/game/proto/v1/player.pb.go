@@ -28,7 +28,7 @@ type Player struct {
 	state              protoimpl.MessageState    `protogen:"open.v1"`
 	Id                 int32                     `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                                                                     // 唯一标识符
 	Name               string                    `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                                                                                  // 玩家名称
-	Role               PlayerRole                `protobuf:"varint,3,opt,name=role,proto3,enum=model.v1.PlayerRole" json:"role,omitempty"`                                                                                                        // 玩家角色（主谋或主角）
+	Role               PlayerRole                `protobuf:"varint,3,opt,name=role,proto3,enum=proto.v1.PlayerRole" json:"role,omitempty"`                                                                                                        // 玩家角色（主谋或主角）
 	IsLlm              bool                      `protobuf:"varint,4,opt,name=is_llm,json=isLlm,proto3" json:"is_llm,omitempty"`                                                                                                                  // 是否为LLM玩家
 	Hand               []*Card                   `protobuf:"bytes,5,rep,name=hand,proto3" json:"hand,omitempty"`                                                                                                                                  // 玩家手牌
 	DeductionKnowledge map[int32]*structpb.Value `protobuf:"bytes,6,rep,name=deduction_knowledge,json=deductionKnowledge,proto3" json:"deduction_knowledge,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 主角的推理知识
@@ -125,7 +125,7 @@ type PlayerView struct {
 	Players            map[int32]*Player         `protobuf:"bytes,4,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                  // 玩家信息（敏感信息已移除）
 	CurrentDay         int32                     `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                                                                    // 当前天数
 	CurrentLoop        int32                     `protobuf:"varint,6,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                                                                 // 当前循环次数
-	CurrentPhase       GamePhase                 `protobuf:"varint,7,opt,name=current_phase,json=currentPhase,proto3,enum=model.v1.GamePhase" json:"current_phase,omitempty"`                                                                      // 当前游戏阶段
+	CurrentPhase       GamePhase                 `protobuf:"varint,7,opt,name=current_phase,json=currentPhase,proto3,enum=proto.v1.GamePhase" json:"current_phase,omitempty"`                                                                      // 当前游戏阶段
 	ActiveTragedies    map[int32]bool            `protobuf:"bytes,8,rep,name=active_tragedies,json=activeTragedies,proto3" json:"active_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`          // 活跃的悲剧（公开信息）, key is TragedyType
 	PreventedTragedies map[int32]bool            `protobuf:"bytes,9,rep,name=prevented_tragedies,json=preventedTragedies,proto3" json:"prevented_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 已阻止的悲剧（公开信息）, key is TragedyType
 	YourHand           []*Card                   `protobuf:"bytes,10,rep,name=your_hand,json=yourHand,proto3" json:"your_hand,omitempty"`                                                                                                          // 你的手牌（仅对请求玩家可见）
@@ -253,14 +253,14 @@ var File_proto_v1_player_proto protoreflect.FileDescriptor
 
 const file_proto_v1_player_proto_rawDesc = "" +
 	"\n" +
-	"\x15proto/v1/player.proto\x12\bmodel.v1\x1a\x1cgoogle/protobuf/struct.proto\x1a\x13proto/v1/card.proto\x1a\x18proto/v1/character.proto\x1a\x14proto/v1/enums.proto\x1a\x14proto/v1/event.proto\"\xf1\x02\n" +
+	"\x15proto/v1/player.proto\x12\bproto.v1\x1a\x1cgoogle/protobuf/struct.proto\x1a\x13proto/v1/card.proto\x1a\x18proto/v1/character.proto\x1a\x14proto/v1/enums.proto\x1a\x14proto/v1/event.proto\"\xf1\x02\n" +
 	"\x06Player\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12(\n" +
-	"\x04role\x18\x03 \x01(\x0e2\x14.model.v1.PlayerRoleR\x04role\x12\x15\n" +
+	"\x04role\x18\x03 \x01(\x0e2\x14.proto.v1.PlayerRoleR\x04role\x12\x15\n" +
 	"\x06is_llm\x18\x04 \x01(\bR\x05isLlm\x12\"\n" +
-	"\x04hand\x18\x05 \x03(\v2\x0e.model.v1.CardR\x04hand\x12Y\n" +
-	"\x13deduction_knowledge\x18\x06 \x03(\v2(.model.v1.Player.DeductionKnowledgeEntryR\x12deductionKnowledge\x12$\n" +
+	"\x04hand\x18\x05 \x03(\v2\x0e.proto.v1.CardR\x04hand\x12Y\n" +
+	"\x13deduction_knowledge\x18\x06 \x03(\v2(.proto.v1.Player.DeductionKnowledgeEntryR\x12deductionKnowledge\x12$\n" +
 	"\x0ellm_session_id\x18\a \x01(\tR\fllmSessionId\x1a]\n" +
 	"\x17DeductionKnowledgeEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12,\n" +
@@ -270,25 +270,25 @@ const file_proto_v1_player_proto_rawDesc = "" +
 	"\agame_id\x18\x01 \x01(\x05R\x06gameId\x12\x1b\n" +
 	"\tscript_id\x18\x02 \x01(\x05R\bscriptId\x12D\n" +
 	"\n" +
-	"characters\x18\x03 \x03(\v2$.model.v1.PlayerView.CharactersEntryR\n" +
+	"characters\x18\x03 \x03(\v2$.proto.v1.PlayerView.CharactersEntryR\n" +
 	"characters\x12;\n" +
-	"\aplayers\x18\x04 \x03(\v2!.model.v1.PlayerView.PlayersEntryR\aplayers\x12\x1f\n" +
+	"\aplayers\x18\x04 \x03(\v2!.proto.v1.PlayerView.PlayersEntryR\aplayers\x12\x1f\n" +
 	"\vcurrent_day\x18\x05 \x01(\x05R\n" +
 	"currentDay\x12!\n" +
 	"\fcurrent_loop\x18\x06 \x01(\x05R\vcurrentLoop\x128\n" +
-	"\rcurrent_phase\x18\a \x01(\x0e2\x13.model.v1.GamePhaseR\fcurrentPhase\x12T\n" +
-	"\x10active_tragedies\x18\b \x03(\v2).model.v1.PlayerView.ActiveTragediesEntryR\x0factiveTragedies\x12]\n" +
-	"\x13prevented_tragedies\x18\t \x03(\v2,.model.v1.PlayerView.PreventedTragediesEntryR\x12preventedTragedies\x12+\n" +
+	"\rcurrent_phase\x18\a \x01(\x0e2\x13.proto.v1.GamePhaseR\fcurrentPhase\x12T\n" +
+	"\x10active_tragedies\x18\b \x03(\v2).proto.v1.PlayerView.ActiveTragediesEntryR\x0factiveTragedies\x12]\n" +
+	"\x13prevented_tragedies\x18\t \x03(\v2,.proto.v1.PlayerView.PreventedTragediesEntryR\x12preventedTragedies\x12+\n" +
 	"\tyour_hand\x18\n" +
-	" \x03(\v2\x0e.model.v1.CardR\byourHand\x12Q\n" +
-	"\x0fyour_deductions\x18\v \x03(\v2(.model.v1.PlayerView.YourDeductionsEntryR\x0eyourDeductions\x128\n" +
-	"\rpublic_events\x18\f \x03(\v2\x13.model.v1.GameEventR\fpublicEvents\x1aR\n" +
+	" \x03(\v2\x0e.proto.v1.CardR\byourHand\x12Q\n" +
+	"\x0fyour_deductions\x18\v \x03(\v2(.proto.v1.PlayerView.YourDeductionsEntryR\x0eyourDeductions\x128\n" +
+	"\rpublic_events\x18\f \x03(\v2\x13.proto.v1.GameEventR\fpublicEvents\x1aR\n" +
 	"\x0fCharactersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12)\n" +
-	"\x05value\x18\x02 \x01(\v2\x13.model.v1.CharacterR\x05value:\x028\x01\x1aL\n" +
+	"\x05value\x18\x02 \x01(\v2\x13.proto.v1.CharacterR\x05value:\x028\x01\x1aL\n" +
 	"\fPlayersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12&\n" +
-	"\x05value\x18\x02 \x01(\v2\x10.model.v1.PlayerR\x05value:\x028\x01\x1aB\n" +
+	"\x05value\x18\x02 \x01(\v2\x10.proto.v1.PlayerR\x05value:\x028\x01\x1aB\n" +
 	"\x14ActiveTragediesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aE\n" +
@@ -313,37 +313,37 @@ func file_proto_v1_player_proto_rawDescGZIP() []byte {
 
 var file_proto_v1_player_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_proto_v1_player_proto_goTypes = []any{
-	(*Player)(nil),         // 0: model.v1.Player
-	(*PlayerView)(nil),     // 1: model.v1.PlayerView
-	nil,                    // 2: model.v1.Player.DeductionKnowledgeEntry
-	nil,                    // 3: model.v1.PlayerView.CharactersEntry
-	nil,                    // 4: model.v1.PlayerView.PlayersEntry
-	nil,                    // 5: model.v1.PlayerView.ActiveTragediesEntry
-	nil,                    // 6: model.v1.PlayerView.PreventedTragediesEntry
-	nil,                    // 7: model.v1.PlayerView.YourDeductionsEntry
-	(PlayerRole)(0),        // 8: model.v1.PlayerRole
-	(*Card)(nil),           // 9: model.v1.Card
-	(GamePhase)(0),         // 10: model.v1.GamePhase
-	(*GameEvent)(nil),      // 11: model.v1.GameEvent
+	(*Player)(nil),         // 0: proto.v1.Player
+	(*PlayerView)(nil),     // 1: proto.v1.PlayerView
+	nil,                    // 2: proto.v1.Player.DeductionKnowledgeEntry
+	nil,                    // 3: proto.v1.PlayerView.CharactersEntry
+	nil,                    // 4: proto.v1.PlayerView.PlayersEntry
+	nil,                    // 5: proto.v1.PlayerView.ActiveTragediesEntry
+	nil,                    // 6: proto.v1.PlayerView.PreventedTragediesEntry
+	nil,                    // 7: proto.v1.PlayerView.YourDeductionsEntry
+	(PlayerRole)(0),        // 8: proto.v1.PlayerRole
+	(*Card)(nil),           // 9: proto.v1.Card
+	(GamePhase)(0),         // 10: proto.v1.GamePhase
+	(*GameEvent)(nil),      // 11: proto.v1.GameEvent
 	(*structpb.Value)(nil), // 12: google.protobuf.Value
-	(*Character)(nil),      // 13: model.v1.Character
+	(*Character)(nil),      // 13: proto.v1.Character
 }
 var file_proto_v1_player_proto_depIdxs = []int32{
-	8,  // 0: model.v1.Player.role:type_name -> model.v1.PlayerRole
-	9,  // 1: model.v1.Player.hand:type_name -> model.v1.Card
-	2,  // 2: model.v1.Player.deduction_knowledge:type_name -> model.v1.Player.DeductionKnowledgeEntry
-	3,  // 3: model.v1.PlayerView.characters:type_name -> model.v1.PlayerView.CharactersEntry
-	4,  // 4: model.v1.PlayerView.players:type_name -> model.v1.PlayerView.PlayersEntry
-	10, // 5: model.v1.PlayerView.current_phase:type_name -> model.v1.GamePhase
-	5,  // 6: model.v1.PlayerView.active_tragedies:type_name -> model.v1.PlayerView.ActiveTragediesEntry
-	6,  // 7: model.v1.PlayerView.prevented_tragedies:type_name -> model.v1.PlayerView.PreventedTragediesEntry
-	9,  // 8: model.v1.PlayerView.your_hand:type_name -> model.v1.Card
-	7,  // 9: model.v1.PlayerView.your_deductions:type_name -> model.v1.PlayerView.YourDeductionsEntry
-	11, // 10: model.v1.PlayerView.public_events:type_name -> model.v1.GameEvent
-	12, // 11: model.v1.Player.DeductionKnowledgeEntry.value:type_name -> google.protobuf.Value
-	13, // 12: model.v1.PlayerView.CharactersEntry.value:type_name -> model.v1.Character
-	0,  // 13: model.v1.PlayerView.PlayersEntry.value:type_name -> model.v1.Player
-	12, // 14: model.v1.PlayerView.YourDeductionsEntry.value:type_name -> google.protobuf.Value
+	8,  // 0: proto.v1.Player.role:type_name -> proto.v1.PlayerRole
+	9,  // 1: proto.v1.Player.hand:type_name -> proto.v1.Card
+	2,  // 2: proto.v1.Player.deduction_knowledge:type_name -> proto.v1.Player.DeductionKnowledgeEntry
+	3,  // 3: proto.v1.PlayerView.characters:type_name -> proto.v1.PlayerView.CharactersEntry
+	4,  // 4: proto.v1.PlayerView.players:type_name -> proto.v1.PlayerView.PlayersEntry
+	10, // 5: proto.v1.PlayerView.current_phase:type_name -> proto.v1.GamePhase
+	5,  // 6: proto.v1.PlayerView.active_tragedies:type_name -> proto.v1.PlayerView.ActiveTragediesEntry
+	6,  // 7: proto.v1.PlayerView.prevented_tragedies:type_name -> proto.v1.PlayerView.PreventedTragediesEntry
+	9,  // 8: proto.v1.PlayerView.your_hand:type_name -> proto.v1.Card
+	7,  // 9: proto.v1.PlayerView.your_deductions:type_name -> proto.v1.PlayerView.YourDeductionsEntry
+	11, // 10: proto.v1.PlayerView.public_events:type_name -> proto.v1.GameEvent
+	12, // 11: proto.v1.Player.DeductionKnowledgeEntry.value:type_name -> google.protobuf.Value
+	13, // 12: proto.v1.PlayerView.CharactersEntry.value:type_name -> proto.v1.Character
+	0,  // 13: proto.v1.PlayerView.PlayersEntry.value:type_name -> proto.v1.Player
+	12, // 14: proto.v1.PlayerView.YourDeductionsEntry.value:type_name -> google.protobuf.Value
 	15, // [15:15] is the sub-list for method output_type
 	15, // [15:15] is the sub-list for method input_type
 	15, // [15:15] is the sub-list for extension type_name

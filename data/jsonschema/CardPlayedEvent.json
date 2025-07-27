@@ -6,7 +6,7 @@
             "properties": {
                 "played_cards": {
                     "additionalProperties": {
-                        "$ref": "#/definitions/model.v1.CardList",
+                        "$ref": "#/definitions/proto.v1.CardList",
                         "additionalProperties": true
                     },
                     "type": "object"
@@ -16,7 +16,7 @@
             "type": "object",
             "title": "Card Played Event"
         },
-        "model.v1.AdjustGoodwillEffect": {
+        "proto.v1.AdjustGoodwillEffect": {
             "properties": {
                 "amount": {
                     "type": "integer"
@@ -27,7 +27,7 @@
             "title": "Adjust Goodwill Effect",
             "description": "AdjustGoodwillEffect 调整角色的好感度。"
         },
-        "model.v1.AdjustIntrigueEffect": {
+        "proto.v1.AdjustIntrigueEffect": {
             "properties": {
                 "amount": {
                     "type": "integer"
@@ -38,7 +38,7 @@
             "title": "Adjust Intrigue Effect",
             "description": "AdjustIntrigueEffect 调整角色的阴谋值。"
         },
-        "model.v1.AdjustParanoiaEffect": {
+        "proto.v1.AdjustParanoiaEffect": {
             "properties": {
                 "amount": {
                     "type": "integer"
@@ -49,7 +49,7 @@
             "title": "Adjust Paranoia Effect",
             "description": "AdjustParanoiaEffect 调整角色的妄想值。"
         },
-        "model.v1.Card": {
+        "proto.v1.Card": {
             "properties": {
                 "id": {
                     "type": "integer",
@@ -106,7 +106,7 @@
                     "description": "PlayerRole 定义连接玩家的角色（人类或 LLM）。"
                 },
                 "effect": {
-                    "$ref": "#/definitions/model.v1.Effect",
+                    "$ref": "#/definitions/proto.v1.Effect",
                     "additionalProperties": true,
                     "description": "卡牌效果"
                 },
@@ -119,7 +119,7 @@
                     "description": "运行时状态"
                 },
                 "target": {
-                    "$ref": "#/definitions/model.v1.Target",
+                    "$ref": "#/definitions/proto.v1.Target",
                     "additionalProperties": true
                 }
             },
@@ -128,11 +128,11 @@
             "title": "Card 表示一张行动卡。",
             "description": "Card 表示一张行动卡。  Card 表示一张行动卡。"
         },
-        "model.v1.CardList": {
+        "proto.v1.CardList": {
             "properties": {
                 "cards": {
                     "items": {
-                        "$ref": "#/definitions/model.v1.Card"
+                        "$ref": "#/definitions/proto.v1.Card"
                     },
                     "type": "array"
                 }
@@ -141,22 +141,22 @@
             "type": "object",
             "title": "Card List"
         },
-        "model.v1.Effect": {
+        "proto.v1.Effect": {
             "properties": {
                 "move_character_effect": {
-                    "$ref": "#/definitions/model.v1.MoveCharacterEffect",
+                    "$ref": "#/definitions/proto.v1.MoveCharacterEffect",
                     "additionalProperties": true
                 },
                 "adjust_paranoia_effect": {
-                    "$ref": "#/definitions/model.v1.AdjustParanoiaEffect",
+                    "$ref": "#/definitions/proto.v1.AdjustParanoiaEffect",
                     "additionalProperties": true
                 },
                 "adjust_goodwill_effect": {
-                    "$ref": "#/definitions/model.v1.AdjustGoodwillEffect",
+                    "$ref": "#/definitions/proto.v1.AdjustGoodwillEffect",
                     "additionalProperties": true
                 },
                 "adjust_intrigue_effect": {
-                    "$ref": "#/definitions/model.v1.AdjustIntrigueEffect",
+                    "$ref": "#/definitions/proto.v1.AdjustIntrigueEffect",
                     "additionalProperties": true
                 }
             },
@@ -165,7 +165,7 @@
             "title": "Effect",
             "description": "Effect 接口定义了一个效果的核心行为。"
         },
-        "model.v1.MoveCharacterEffect": {
+        "proto.v1.MoveCharacterEffect": {
             "properties": {
                 "destination": {
                     "enum": [
@@ -197,7 +197,7 @@
             "title": "Move Character Effect",
             "description": "MoveCharacterEffect 移动一个角色到指定地点。"
         },
-        "model.v1.Target": {
+        "proto.v1.Target": {
             "properties": {
                 "character_id": {
                     "type": "integer"

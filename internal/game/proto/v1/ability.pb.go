@@ -28,10 +28,10 @@ type Ability struct {
 	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                    // 能力名称
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                      // 能力描述
-	TriggerType   AbilityTriggerType     `protobuf:"varint,4,opt,name=trigger_type,json=triggerType,proto3,enum=model.v1.AbilityTriggerType" json:"trigger_type,omitempty"` // 触发时机
+	TriggerType   AbilityTriggerType     `protobuf:"varint,4,opt,name=trigger_type,json=triggerType,proto3,enum=proto.v1.AbilityTriggerType" json:"trigger_type,omitempty"` // 触发时机
 	Effect        *Effect                `protobuf:"bytes,5,opt,name=effect,proto3" json:"effect,omitempty"`                                                                // 实际效果
 	OncePerLoop   bool                   `protobuf:"varint,6,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`                                // 每循环只能使用一次
-	RefusalRole   PlayerRole             `protobuf:"varint,7,opt,name=refusal_role,json=refusalRole,proto3,enum=model.v1.PlayerRole" json:"refusal_role,omitempty"`         // 如果有，指定拒绝此善意能力的特定角色身份
+	RefusalRole   PlayerRole             `protobuf:"varint,7,opt,name=refusal_role,json=refusalRole,proto3,enum=proto.v1.PlayerRole" json:"refusal_role,omitempty"`         // 如果有，指定拒绝此善意能力的特定角色身份
 	UsedThisLoop  bool                   `protobuf:"varint,8,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"`                             // 运行时状态，不用于配置
 	Target        *Target                `protobuf:"bytes,9,opt,name=target,proto3" json:"target,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -135,17 +135,17 @@ var File_proto_v1_ability_proto protoreflect.FileDescriptor
 
 const file_proto_v1_ability_proto_rawDesc = "" +
 	"\n" +
-	"\x16proto/v1/ability.proto\x12\bmodel.v1\x1a\x15proto/v1/effect.proto\x1a\x14proto/v1/enums.proto\x1a\x15proto/v1/target.proto\"\xe7\x02\n" +
+	"\x16proto/v1/ability.proto\x12\bproto.v1\x1a\x15proto/v1/effect.proto\x1a\x14proto/v1/enums.proto\x1a\x15proto/v1/target.proto\"\xe7\x02\n" +
 	"\aAbility\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12?\n" +
-	"\ftrigger_type\x18\x04 \x01(\x0e2\x1c.model.v1.AbilityTriggerTypeR\vtriggerType\x12(\n" +
-	"\x06effect\x18\x05 \x01(\v2\x10.model.v1.EffectR\x06effect\x12\"\n" +
+	"\ftrigger_type\x18\x04 \x01(\x0e2\x1c.proto.v1.AbilityTriggerTypeR\vtriggerType\x12(\n" +
+	"\x06effect\x18\x05 \x01(\v2\x10.proto.v1.EffectR\x06effect\x12\"\n" +
 	"\ronce_per_loop\x18\x06 \x01(\bR\voncePerLoop\x127\n" +
-	"\frefusal_role\x18\a \x01(\x0e2\x14.model.v1.PlayerRoleR\vrefusalRole\x12$\n" +
+	"\frefusal_role\x18\a \x01(\x0e2\x14.proto.v1.PlayerRoleR\vrefusalRole\x12$\n" +
 	"\x0eused_this_loop\x18\b \x01(\bR\fusedThisLoop\x12(\n" +
-	"\x06target\x18\t \x01(\v2\x10.model.v1.TargetR\x06targetB\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\x06target\x18\t \x01(\v2\x10.proto.v1.TargetR\x06targetB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
 	file_proto_v1_ability_proto_rawDescOnce sync.Once
@@ -161,17 +161,17 @@ func file_proto_v1_ability_proto_rawDescGZIP() []byte {
 
 var file_proto_v1_ability_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_proto_v1_ability_proto_goTypes = []any{
-	(*Ability)(nil),         // 0: model.v1.Ability
-	(AbilityTriggerType)(0), // 1: model.v1.AbilityTriggerType
-	(*Effect)(nil),          // 2: model.v1.Effect
-	(PlayerRole)(0),         // 3: model.v1.PlayerRole
-	(*Target)(nil),          // 4: model.v1.Target
+	(*Ability)(nil),         // 0: proto.v1.Ability
+	(AbilityTriggerType)(0), // 1: proto.v1.AbilityTriggerType
+	(*Effect)(nil),          // 2: proto.v1.Effect
+	(PlayerRole)(0),         // 3: proto.v1.PlayerRole
+	(*Target)(nil),          // 4: proto.v1.Target
 }
 var file_proto_v1_ability_proto_depIdxs = []int32{
-	1, // 0: model.v1.Ability.trigger_type:type_name -> model.v1.AbilityTriggerType
-	2, // 1: model.v1.Ability.effect:type_name -> model.v1.Effect
-	3, // 2: model.v1.Ability.refusal_role:type_name -> model.v1.PlayerRole
-	4, // 3: model.v1.Ability.target:type_name -> model.v1.Target
+	1, // 0: proto.v1.Ability.trigger_type:type_name -> proto.v1.AbilityTriggerType
+	2, // 1: proto.v1.Ability.effect:type_name -> proto.v1.Effect
+	3, // 2: proto.v1.Ability.refusal_role:type_name -> proto.v1.PlayerRole
+	4, // 3: proto.v1.Ability.target:type_name -> proto.v1.Target
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
