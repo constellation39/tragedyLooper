@@ -19,4 +19,5 @@ message Ability {
   PlayerRole refusal_role = 7; // 如果有，指定拒绝此善意能力的特定角色身份
   bool used_this_loop = 8; // 运行时状态，不用于配置
   Target target = 9;
+  int32 cost = 10; // Cost in goodwill to use the ability
 }

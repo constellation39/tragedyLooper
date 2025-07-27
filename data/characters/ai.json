@@ -1,0 +1,18 @@
+{
+  "name": "A.I.",
+  "abilities": [
+    {
+      "id": 10,
+      "name": "Information Analysis",
+      "description": "Can analyze data to uncover hidden truths.",
+      "trigger_type": "ABILITY_TRIGGER_TYPE_PLAYER_ACTION",
+      "effect": {
+        "adjust_intrigue_effect": {
+          "amount": -2
+        }
+      },
+      "cost": 1,
+      "once_per_loop": true
+    }
+  ]
+}

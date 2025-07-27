@@ -1,0 +1,18 @@
+{
+  "name": "Conspiracy Theorist",
+  "abilities": [
+    {
+      "id": 9,
+      "name": "Hidden Agenda",
+      "description": "A character with a hidden agenda.",
+      "trigger_type": "ABILITY_TRIGGER_TYPE_PLAYER_ACTION",
+      "effect": {
+        "adjust_intrigue_effect": {
+          "amount": 2
+        }
+      },
+      "cost": 1,
+      "once_per_loop": true
+    }
+  ]
+}

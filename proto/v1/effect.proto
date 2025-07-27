@@ -13,6 +13,10 @@ message Effect {
     AdjustParanoiaEffect adjust_paranoia_effect = 2;
     AdjustGoodwillEffect adjust_goodwill_effect = 3;
     AdjustIntrigueEffect adjust_intrigue_effect = 4;
+    ForbidMovementEffect forbid_movement_effect = 5;
+    ForbidParanoiaEffect forbid_paranoia_effect = 6;
+    ForbidGoodwillEffect forbid_goodwill_effect = 7;
+    ForbidIntrigueEffect forbid_intrigue_effect = 8;
   }
 }
 
@@ -35,3 +39,15 @@ message AdjustGoodwillEffect {
 message AdjustIntrigueEffect {
   int32 amount = 1;
 }
+
+// ForbidMovementEffect 禁止角色移动。
+message ForbidMovementEffect {}
+
+// ForbidParanoiaEffect 禁止妄想值增加。
+message ForbidParanoiaEffect {}
+
+// ForbidGoodwillEffect 禁止好感度增加。
+message ForbidGoodwillEffect {}
+
+// ForbidIntrigueEffect 禁止阴谋值增加。
+message ForbidIntrigueEffect {}

@@ -5,7 +5,7 @@
   "owner_role": "PLAYER_ROLE_PROTAGONIST",
   "effect": {
     "adjust_paranoia_effect": {
-      "amount": 1
+      "amount": -1
     }
   },
   "once_per_loop": false

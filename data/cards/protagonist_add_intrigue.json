@@ -1,0 +1,12 @@
+{
+  "id": 6,
+  "name": "Add Intrigue",
+  "card_type": "CARD_TYPE_INTRIGUE",
+  "owner_role": "PLAYER_ROLE_PROTAGONIST",
+  "effect": {
+    "adjust_intrigue_effect": {
+      "amount": 1
+    }
+  },
+  "once_per_loop": false
+}

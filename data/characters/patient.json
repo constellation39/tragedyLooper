@@ -1,0 +1,18 @@
+{
+  "name": "Patient",
+  "abilities": [
+    {
+      "id": 27,
+      "name": "Weakened",
+      "description": "Is in a weakened state and easily influenced.",
+      "trigger_type": "ABILITY_TRIGGER_TYPE_PASSIVE",
+      "effect": {
+        "adjust_paranoia_effect": {
+          "amount": 1
+        }
+      },
+      "cost": 0,
+      "once_per_loop": false
+    }
+  ]
+}

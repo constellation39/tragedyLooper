@@ -1,0 +1,18 @@
+{
+  "name": "Young Girl",
+  "abilities": [
+    {
+      "id": 35,
+      "name": "Innocence",
+      "description": "An innocent young girl.",
+      "trigger_type": "ABILITY_TRIGGER_TYPE_PASSIVE",
+      "effect": {
+        "adjust_goodwill_effect": {
+          "amount": 1
+        }
+      },
+      "cost": 0,
+      "once_per_loop": false
+    }
+  ]
+}

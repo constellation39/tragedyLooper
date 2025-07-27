@@ -1,0 +1,18 @@
+{
+  "name": "Friend",
+  "abilities": [
+    {
+      "id": 7,
+      "name": "Trusting Heart",
+      "description": "A character who is an ally to the protagonists.",
+      "trigger_type": "ABILITY_TRIGGER_TYPE_PLAYER_ACTION",
+      "effect": {
+        "adjust_goodwill_effect": {
+          "amount": 1
+        }
+      },
+      "cost": 1,
+      "once_per_loop": true
+    }
+  ]
+}

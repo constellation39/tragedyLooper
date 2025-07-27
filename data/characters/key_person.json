@@ -1,0 +1,14 @@
+{
+  "name": "Key Person",
+  "abilities": [
+    {
+      "id": 25,
+      "name": "Fated",
+      "description": "This character is central to the plot.",
+      "trigger_type": "ABILITY_TRIGGER_TYPE_PASSIVE",
+      "effect": {},
+      "cost": 0,
+      "once_per_loop": false
+    }
+  ]
+}

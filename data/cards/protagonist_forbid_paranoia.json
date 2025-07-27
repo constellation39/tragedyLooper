@@ -1,0 +1,10 @@
+{
+  "id": 10,
+  "name": "Forbid Paranoia",
+  "card_type": "CARD_TYPE_PARANOIA",
+  "owner_role": "PLAYER_ROLE_PROTAGONIST",
+  "effect": {
+    "forbid_paranoia_effect": {}
+  },
+  "once_per_loop": false
+}

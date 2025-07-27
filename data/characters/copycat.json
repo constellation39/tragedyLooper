@@ -1,0 +1,14 @@
+{
+  "name": "Copycat",
+  "abilities": [
+    {
+      "id": 32,
+      "name": "Mimic",
+      "description": "Can copy another character's ability.",
+      "trigger_type": "ABILITY_TRIGGER_TYPE_PLAYER_ACTION",
+      "effect": {},
+      "cost": 2,
+      "once_per_loop": true
+    }
+  ]
+}
