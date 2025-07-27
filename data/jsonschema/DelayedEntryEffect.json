@@ -6,7 +6,7 @@
             "properties": {
                 "day_of_entry": {
                     "type": "integer",
-                    "description": "The day the character enters"
+                    "description": "角色登场的日期"
                 },
                 "entry_location": {
                     "enum": [
@@ -36,7 +36,7 @@
             "additionalProperties": true,
             "type": "object",
             "title": "Delayed Entry Effect",
-            "description": "DelayedEntryEffect causes a character to enter the game on a specific day."
+            "description": "延迟登场效果（例如某些角色在特定天数才登场）"
         }
     }
 }

@@ -2,49 +2,92 @@ syntax = "proto3";
 
 package v1;
 
-import "v1/character.proto";
 import "v1/condition.proto";
 import "v1/enums.proto";
-import "v1/incident.proto";
 
 option go_package = "tragedylooper/internal/game/proto/v1;v1";
 
-// Tragedy represents a tragedy in the script.
-message Tragedy {
-  IncidentType tragedy_type = 1;
-  int32 day = 2;
-  repeated Condition conditions = 3;
+// 剧本配置
+message ScriptConfig {
+  int32 id = 1;                                    // 剧本唯一ID
+  string name = 2;                                 // 剧本名称
+  string description = 3;                          // 剧本描述
+  TragedySetType tragedy_set = 4;                 // 悲剧集合类型
+  ScriptDifficulty difficulty = 5;                // 剧本难度
+
+  // 剧情配置
+  PlotConfig main_plot = 6;                        // 主线剧情配置
+  repeated PlotConfig sub_plots = 7;               // 支线剧情配置列表
+
+  // 角色配置
+  repeated CharacterInScript characters = 8;       // 剧本中的角色配置
+
+  // 事件配置
+  repeated IncidentConfig incidents = 9;           // 剧本中的事件配置
+
+  // 游戏规则
+  int32 loop_count = 10;                           // 最大循环次数
+  int32 days_per_loop = 11;                        // 每循环天数
+  repeated SpecialRule special_rules = 12;         // 特殊规则列表
+
+  // 卡牌配置
+  repeated int32 mastermind_card_ids = 13;        // 主谋可用卡牌ID列表
+  repeated int32 protagonist_card_ids = 14;       // 主角可用卡牌ID列表
+
+  // 胜负条件
+  repeated EndCondition win_conditions = 15;       // 胜利条件列表
+  repeated EndCondition lose_conditions = 16;      // 失败条件列表
 }
 
-// 剧本信息
-message Script {
-  int32 id = 1; // 剧本唯一ID
-  string name = 2; // 剧本名称
-  string description = 3; // 剧本描述
-  TragedyScriptType main_plot = 4; // 主线剧情类型
-  repeated TragedyScriptType sub_plots = 5; // 支线剧情类型列表
-  repeated CharacterConfig characters = 6; // 剧本中角色的初始配置
-  repeated IncidentConfig incidents = 7; // 剧本中预设的事件（悲剧）配置
-  int32 loop_count = 8; // 允许的最大时间循环次数
-  int32 days_per_loop = 9; // 每个循环包含的天数
-  repeated GameEndCondition win_conditions = 10; // 胜利条件列表
-  repeated GameEndCondition lose_conditions = 11; // 失败条件列表
-  repeated int32 mastermind_card_ids = 12; // IDs of cards available to the Mastermind.
-  repeated int32 protagonist_card_ids = 13; // IDs of cards available to the Protagonists.
-  repeated string special_rules_description = 14; // 剧本特有规则的文字描述
-  repeated Tragedy tragedies = 15; // 剧本中的悲剧列表
+// 剧本中的角色配置
+message CharacterInScript {
+  int32 character_id = 1;                   // 角色ID（引用CharacterConfig）
+  RoleType hidden_role = 2;                 // 在此剧本中的隐藏身份
+  LocationType initial_location = 3;        // 初始位置
+  int32 initial_paranoia = 4;               // 初始妄想值
+  int32 initial_goodwill = 5;               // 初始好感值
+  int32 initial_intrigue = 6;               // 初始阴谋值
+  repeated int32 additional_ability_ids = 7; // 额外能力ID列表（剧本特定）
+  bool starts_in_game = 8;                  // 是否开局就在游戏中
+}
+
+// 剧情配置
+message PlotConfig {
+  PlotType plot_type = 1;           // 剧情类型
+  string name = 2;                  // 剧情名称
+  string description = 3;           // 剧情描述
+  repeated int32 incident_ids = 4; // 相关事件ID列表
+}
+
+// 事件配置
+message IncidentConfig {
+  int32 id = 1;                              // 事件唯一ID（剧本内）
+  string name = 2;                           // 事件名称
+  string description = 3;                    // 事件描述
+  IncidentType incident_type = 4;            // 事件类型
+  int32 day = 5;                             // 预定发生日期
+  repeated Condition trigger_conditions = 6; // 触发条件列表
+  bool is_mandatory = 7;                     // 是否为必发事件
+  int32 culprit_character_id = 8;           // 事件主谋角色ID（如适用）
+  int32 location_id = 9;                     // 事件发生地点ID（如适用）
+}
+
+// 特殊规则
+message SpecialRule {
+  string name = 1;              // 规则名称
+  string description = 2;       // 规则描述
+  TriggerType trigger = 3;      // 触发时机
+  Effect effect = 4;            // 规则效果
 }
 
 // 游戏结束条件
-message GameEndCondition {
-  enum ConditionType {// 条件类型
-    CONDITION_TYPE_UNSPECIFIED = 0; // 未指定
-    ALL_TRAGEDIES_PREVENTED = 1; // 所有悲剧都被阻止
-    SPECIFIC_TRAGEDY_TRIGGERED = 2; // 特定悲剧被触发
-    MAX_LOOPS_REACHED = 3; // 达到最大循环次数
-    PROTAGONIST_GUESSED_CORRECTLY = 4; // 主角猜测正确
-    PROTAGONIST_GUESSED_INCORRECTLY = 5; // 主角猜测错误
-  }
-  ConditionType type = 1; // 结束条件类型
-  optional IncidentType incident_type = 2; // 仅当 SPECIFIC_TRAGEDY_TRIGGERED 时使用，指定被触发的悲剧类型
+message EndCondition {
+  EndConditionType type = 1;              // 条件类型
+  repeated Condition requirements = 2;    // 具体要求
+  string description = 3;                 // 条件描述
+}
+
+// 剧本配置库
+message ScriptConfigLib {
+  map<int32, ScriptConfig> scripts = 1;  // 剧本ID到配置的映射
 }

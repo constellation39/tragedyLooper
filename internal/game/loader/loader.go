@@ -104,12 +104,31 @@ func (g *gameDataAccessor) GetCard(id int32) (*v1.Card, error) {
 	return c, nil
 }
 
-func (g *gameDataAccessor) GetCharacter(id int32) (*v1.CharacterConfig, error) {
+func (g *gameDataAccessor) GetCharacter(id int32) (*v1.Character, error) {
 	c, ok := g.characters.Characters[id]
 	if !ok {
 		return nil, fmt.Errorf("character with id %d not found", id)
 	}
-	return c, nil
+
+	charConfig, ok := g.scriptCache.CharacterSettings[id]
+	if !ok {
+		return nil, fmt.Errorf("character config with id %d not found in script", id)
+	}
+
+	// Create a new Character instance and populate it
+	character := &v1.Character{
+		Id:              c.Id,
+		Name:            c.Name,
+		Rules:           c.Rules,
+		HiddenRole:      charConfig.HiddenRole,
+		InitialLocation: charConfig.InitialLocation,
+		InitialParanoia: charConfig.InitialParanoia,
+		InitialGoodwill: charConfig.InitialGoodwill,
+		InitialIntrigue: charConfig.InitialIntrigue,
+		IsFirstStepRole: charConfig.IsFirstStepRole,
+	}
+
+	return character, nil
 }
 
 func (g *gameDataAccessor) GetIncident(id int32) (*v1.Incident, error) {
@@ -135,8 +154,8 @@ func (g *gameDataAccessor) GetCards() map[int32]*v1.Card {
 	return g.cards
 }
 
-func (g *gameDataAccessor) GetCharacters() map[int32]*v1.CharacterConfig {
-	return g.characters
+func (g *gameDataAccessor) GetCharacters() map[int32]*v1.Character {
+	return g.characters.Characters
 }
 
 func (g *gameDataAccessor) GetIncidents() map[int32]*v1.IncidentConfig {

@@ -125,7 +125,11 @@
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "Character ID"
+                    "description": "角色ID"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "角色名称"
                 },
                 "hidden_role": {
                     "enum": [
@@ -187,32 +191,103 @@
                 },
                 "initial_paranoia": {
                     "type": "integer",
-                    "description": "Initial paranoia"
+                    "description": "角色初始妄想值"
                 },
                 "initial_goodwill": {
                     "type": "integer",
-                    "description": "Initial goodwill"
+                    "description": "角色初始好感值"
                 },
                 "initial_intrigue": {
                     "type": "integer",
-                    "description": "Initial intrigue"
+                    "description": "角色初始阴谋值"
                 },
                 "initial_ability_ids": {
                     "items": {
                         "type": "integer"
                     },
                     "type": "array",
-                    "description": "List of initial ability IDs"
+                    "description": "角色初始拥有的能力ID列表"
                 },
                 "is_first_step_role": {
                     "type": "boolean",
-                    "description": "Whether this is a First Step role for this script"
+                    "description": "是否为First Step身份（新版中此概念用于特定剧本）"
+                },
+                "rules": {
+                    "items": {
+                        "$ref": "#/definitions/v1.CharacterRule"
+                    },
+                    "type": "array",
+                    "description": "角色特有的规则列表"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Character Config",
-            "description": "CharacterConfig defines a character's initial setup for a specific script."
+            "description": "角色在剧本中的配置"
+        },
+        "v1.CharacterRule": {
+            "properties": {
+                "trigger": {
+                    "enum": [
+                        "TRIGGER_TYPE_UNSPECIFIED",
+                        0,
+                        "ON_GAME_SETUP",
+                        1,
+                        "ON_LOOP_START",
+                        2,
+                        "ON_DAY_START",
+                        3,
+                        "ON_CARD_PLAY_PHASE",
+                        4,
+                        "ON_CARD_REVEAL_PHASE",
+                        5,
+                        "ON_CARD_RESOLVE_PHASE",
+                        6,
+                        "ON_ABILITY_PHASE",
+                        7,
+                        "ON_INCIDENT_PHASE",
+                        8,
+                        "ON_GAME_EVENT",
+                        9,
+                        "PASSIVE",
+                        10,
+                        "ON_LOOP_LOSS",
+                        11,
+                        "ON_LOOP_WIN",
+                        12,
+                        "ON_GAME_END",
+                        13
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Trigger Type",
+                    "description": "触发器类型枚举（能力或规则何时触发）"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "规则描述"
+                },
+                "turf_selection_effect": {
+                    "$ref": "#/definitions/v1.TurfSelectionEffect",
+                    "additionalProperties": true,
+                    "description": "地盘选择效果"
+                },
+                "delayed_entry_effect": {
+                    "$ref": "#/definitions/v1.DelayedEntryEffect",
+                    "additionalProperties": true,
+                    "description": "延迟登场效果"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Character Rule",
+            "description": "角色特殊规则"
         },
         "v1.Condition": {
             "properties": {
@@ -231,6 +306,42 @@
             "type": "object",
             "title": "Condition",
             "description": "条件的通用消息，使用 oneof 包含各种具体条件"
+        },
+        "v1.DelayedEntryEffect": {
+            "properties": {
+                "day_of_entry": {
+                    "type": "integer",
+                    "description": "角色登场的日期"
+                },
+                "entry_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型枚举"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Delayed Entry Effect",
+            "description": "延迟登场效果（例如某些角色在特定天数才登场）"
         },
         "v1.GameEndCondition": {
             "properties": {
@@ -493,6 +604,37 @@
             "type": "object",
             "title": "Tragedy",
             "description": "Tragedy represents a tragedy in the script."
+        },
+        "v1.TurfSelectionEffect": {
+            "properties": {
+                "possible_locations": {
+                    "items": {
+                        "enum": [
+                            "LOCATION_TYPE_UNSPECIFIED",
+                            0,
+                            "HOSPITAL",
+                            1,
+                            "SHRINE",
+                            2,
+                            "CITY",
+                            3,
+                            "SCHOOL",
+                            4
+                        ]
+                    },
+                    "type": "array",
+                    "title": "Location Type",
+                    "description": "地点类型枚举"
+                },
+                "prompt": {
+                    "type": "string",
+                    "description": "给玩家的提示语"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Turf Selection Effect",
+            "description": "地盘选择效果（例如某些角色开局可以选择初始地点）"
         }
     }
 }

@@ -7,27 +7,25 @@ import "v1/enums.proto";
 
 option go_package = "tragedylooper/internal/game/proto/v1;v1";
 
-// AbilityConfig represents the static configuration of an ability.
 message AbilityConfig {
-  int32 id = 1; // Unique ID for the ability configuration
-  string name = 2; // Name of the ability
-  string description = 3; // Description of the ability
-  TriggerType trigger_type = 4; // When the ability triggers
-  repeated GameEventType event_filters = 5; // Optional: Filters for ON_GAME_EVENT trigger type
-  Effect effect = 6; // The effect of the ability
-  bool once_per_loop = 7; // Whether the ability can be used only once per loop
-  PlayerRole refusal_role = 8; // The player role that can refuse this ability
-  bool is_passive = 10; // Whether this is a passive ability
-  bool is_mandatory = 11; // Whether this ability is mandatory
+  int32 id = 1;                              // 能力唯一ID
+  string name = 2;                           // 能力名称
+  string description = 3;                    // 能力描述
+  TriggerType trigger_type = 4;              // 能力触发时机
+  repeated GameEventType event_filters = 5;  // 可选：游戏事件触发时的过滤器
+  Effect effect = 6;                         // 能力效果
+  bool once_per_loop = 7;                    // 是否每循环只能使用一次
+  PlayerRole refusal_role = 8;               // 可以拒绝此能力的玩家角色
+  bool is_passive = 9;                       // 是否为被动能力
+  bool is_mandatory = 10;                    // 是否为强制能力（不可拒绝）
+  int32 priority = 11;                       // 能力结算优先级
 }
 
-// Ability represents a runtime instance of an ability.
 message Ability {
-  int32 id = 1; // The ID of the ability, linking to an AbilityConfig
-  bool used_this_loop = 2; // Runtime state: whether this ability has been used in the current loop
+  int32 id = 1;               // 能力ID，关联到AbilityConfig
+  bool used_this_loop = 2;    // 运行时状态：本循环是否已使用
 }
 
-// AbilityConfigLib holds a library of ability configurations.
 message AbilityConfigLib {
-  map<int32, AbilityConfig> abilities = 1;
+  map<int32, AbilityConfig> abilities = 1;  // 能力ID到配置的映射
 }

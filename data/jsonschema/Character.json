@@ -6,7 +6,18 @@
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "The ID of the character, linking to CharacterData"
+                    "description": "角色唯一ID"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "角色名称"
+                },
+                "traits": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array",
+                    "description": "角色特征，例如“学生”、“记者”"
                 },
                 "current_location": {
                     "enum": [
@@ -34,15 +45,15 @@
                 },
                 "paranoia": {
                     "type": "integer",
-                    "description": "Current paranoia level"
+                    "description": "妄想值"
                 },
                 "goodwill": {
                     "type": "integer",
-                    "description": "Current goodwill level"
+                    "description": "好感值"
                 },
                 "intrigue": {
                     "type": "integer",
-                    "description": "Current intrigue level"
+                    "description": "阴谋值"
                 },
                 "hidden_role": {
                     "enum": [
@@ -83,40 +94,40 @@
                         "$ref": "#/definitions/v1.Ability"
                     },
                     "type": "array",
-                    "description": "List of abilities the character possesses"
+                    "description": "角色拥有的能力列表"
                 },
                 "is_alive": {
                     "type": "boolean",
-                    "description": "Whether the character is alive"
+                    "description": "角色是否存活"
                 },
                 "in_panic_mode": {
                     "type": "boolean",
-                    "description": "Whether the character is in panic mode"
+                    "description": "是否处于恐慌模式（新增字段）"
                 },
                 "paranoia_limit": {
                     "type": "integer",
-                    "description": "Paranoia limit"
+                    "description": "妄想值上限，考虑作为剧本或游戏状态的一部分"
                 },
                 "goodwill_limit": {
                     "type": "integer",
-                    "description": "Goodwill limit"
+                    "description": "好感值上限"
                 },
                 "intrigue_limit": {
                     "type": "integer",
-                    "description": "Intrigue limit"
+                    "description": "阴谋值上限"
                 },
                 "rules": {
                     "items": {
                         "$ref": "#/definitions/v1.CharacterRule"
                     },
                     "type": "array",
-                    "description": "List of special rules affecting the character"
+                    "description": "角色特有的规则列表"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Character",
-            "description": "Character represents the dynamic, runtime state of a character in a game."
+            "description": "角色信息"
         },
         "v1.Ability": {
             "properties": {
@@ -180,29 +191,29 @@
                 },
                 "description": {
                     "type": "string",
-                    "description": "Description of the rule"
+                    "description": "规则描述"
                 },
                 "turf_selection_effect": {
                     "$ref": "#/definitions/v1.TurfSelectionEffect",
                     "additionalProperties": true,
-                    "description": "Effect for selecting a starting location"
+                    "description": "地盘选择效果"
                 },
                 "delayed_entry_effect": {
                     "$ref": "#/definitions/v1.DelayedEntryEffect",
                     "additionalProperties": true,
-                    "description": "Effect for delayed entry into the game"
+                    "description": "延迟登场效果"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Character Rule",
-            "description": "CharacterRule defines a special rule that applies to a character."
+            "description": "角色特殊规则"
         },
         "v1.DelayedEntryEffect": {
             "properties": {
                 "day_of_entry": {
                     "type": "integer",
-                    "description": "The day the character enters"
+                    "description": "角色登场的日期"
                 },
                 "entry_location": {
                     "enum": [
@@ -232,7 +243,7 @@
             "additionalProperties": true,
             "type": "object",
             "title": "Delayed Entry Effect",
-            "description": "DelayedEntryEffect causes a character to enter the game on a specific day."
+            "description": "延迟登场效果（例如某些角色在特定天数才登场）"
         },
         "v1.TurfSelectionEffect": {
             "properties": {
@@ -257,13 +268,13 @@
                 },
                 "prompt": {
                     "type": "string",
-                    "description": "Prompt message for the player"
+                    "description": "给玩家的提示语"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Turf Selection Effect",
-            "description": "TurfSelectionEffect allows a character to choose their starting location."
+            "description": "地盘选择效果（例如某些角色开局可以选择初始地点）"
         }
     }
 }

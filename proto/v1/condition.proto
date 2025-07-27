@@ -1,3 +1,4 @@
+// --- condition.proto ---
 syntax = "proto3";
 
 package v1;
@@ -6,41 +7,107 @@ import "v1/enums.proto";
 
 option go_package = "tragedylooper/internal/game/proto/v1;v1";
 
-// 条件的通用消息，使用 oneof 包含各种具体条件
+// 条件，用于规则、事件和效果的触发判断
 message Condition {
-  oneof condition_type {// 条件类型，只会有其中一个
-    StatCondition stat_condition = 1; // 属性条件（例如，妄想值达到某阈值）
-    LocationCondition location_condition = 2; // 地点条件（例如，角色在特定地点）
-    // 可以扩展其他条件，例如 RoleCondition（角色身份条件）, TraitCondition（角色特征条件）
+  oneof condition_type {
+    StatCondition stat_condition = 1;           // 属性条件
+    LocationCondition location_condition = 2;   // 地点条件
+    RoleCondition role_condition = 3;           // 身份条件
+    TraitCondition trait_condition = 4;         // 特征条件
+    DayCondition day_condition = 5;             // 日期条件
+    PlayerCondition player_condition = 6;       // 玩家条件
+    CompoundCondition compound_condition = 7;   // 复合条件 (AND/OR/NOT)
   }
+}
+
+// 复合条件，用于组合多个条件
+message CompoundCondition {
+  enum Operator {
+    OPERATOR_UNSPECIFIED = 0; // 未指定
+    AND = 1;                  // 逻辑与
+    OR = 2;                   // 逻辑或
+    NOT = 3;                  // 逻辑非（作用于第一个条件）
+  }
+  Operator operator = 1;          // 逻辑操作符
+  repeated Condition sub_conditions = 2; // 子条件列表
 }
 
 // 属性条件
 message StatCondition {
-  int32 character_id = 1; // 目标角色ID
-  enum StatType {// 属性类型
-    STAT_TYPE_UNSPECIFIED = 0; // 未指定
-    PARANOIA_STAT = 1; // 妄想值
-    GOODWILL_STAT = 2; // 好感值
-    INTRIGUE_STAT = 3; // 阴谋值
+  TargetSelector target = 1;    // 目标角色选择器
+  enum StatType {
+    STAT_TYPE_UNSPECIFIED = 0;  // 未指定
+    PARANOIA = 1;               // 妄想
+    GOODWILL = 2;               // 好感
+    INTRIGUE = 3;               // 阴谋
   }
-  StatType stat_type = 2; // 要检查的属性类型
-  enum Comparator {// 比较符
+  StatType stat_type = 2;       // 检查的属性类型
+  enum Comparator {
     COMPARATOR_UNSPECIFIED = 0; // 未指定
-    GREATER_THAN = 1; // 大于
-    LESS_THAN = 2; // 小于
-    EQUAL_TO = 3; // 等于
-    GREATER_THAN_OR_EQUAL = 4; // 大于等于
-    LESS_THAN_OR_EQUAL = 5; // 小于等于
+    GREATER_THAN = 1;           // 大于
+    LESS_THAN = 2;              // 小于
+    EQUAL_TO = 3;               // 等于
+    GREATER_THAN_OR_EQUAL = 4;  // 大于等于
+    LESS_THAN_OR_EQUAL = 5;     // 小于等于
   }
-  Comparator comparator = 3; // 比较符
-  int32 value = 4; // 比较的值
+  Comparator comparator = 3;    // 比较符
+  int32 value = 4;              // 比较的值
 }
 
 // 地点条件
 message LocationCondition {
-  int32 character_id = 1; // 目标角色ID
-  LocationType location = 2; // 目标地点
-  bool is_alone = 3; // 是否在该地点独处
-  bool not_alone = 4; // 是否在该地点不独处
+  TargetSelector target = 1;    // 目标角色选择器
+  LocationType location = 2;    // 目标地点
+  bool is_at_location = 3;      // 是否在该地点 (默认为true)
+  bool is_alone = 4;            // 是否在该地点独处
+  bool not_alone = 5;           // 是否在该地点不独处
+}
+
+// 身份条件
+message RoleCondition {
+  TargetSelector target = 1;    // 目标角色选择器
+  RoleType role = 2;            // 目标身份
+  bool has_role = 3;            // 是否拥有该身份 (默认为true)
+}
+
+// 特征条件
+message TraitCondition {
+  TargetSelector target = 1;    // 目标角色选择器
+  string trait = 2;             // 目标特征
+  bool has_trait = 3;           // 是否拥有该特征 (默认为true)
+}
+
+// 日期条件
+message DayCondition {
+  enum Comparator {
+    COMPARATOR_UNSPECIFIED = 0; // 未指定
+    BEFORE = 1;                 // 在某天之前
+    ON = 2;                     // 在某天当天
+    AFTER = 3;                  // 在某天之后
+  }
+  Comparator comparator = 1;    // 比较符
+  int32 day = 2;                // 目标天数
+}
+
+// 玩家条件
+message PlayerCondition {
+  PlayerRole player_role = 1;   // 目标玩家角色
+  // 可扩展：例如检查玩家是否已使用某张牌
+}
+
+// 目标选择器，用于动态指定条件或效果的目标
+message TargetSelector {
+  enum SelectorType {
+    SELECTOR_TYPE_UNSPECIFIED = 0; // 未指定
+    SPECIFIC_CHARACTER = 1;        // 指定的某个角色
+    TRIGGERING_CHARACTER = 2;      // 触发事件的角色
+    CULPRIT = 3;                   // 事件的犯人
+    VICTIM = 4;                    // 事件的受害者
+    ANY_CHARACTER_WITH_ROLE = 5;   // 任意一个有指定身份的角色
+    ALL_CHARACTERS_AT_LOCATION = 6;// 在某地的所有角色
+  }
+  SelectorType selector_type = 1;   // 选择器类型
+  int32 character_id = 2;           // 当类型为 SPECIFIC_CHARACTER 时使用
+  RoleType role_filter = 3;         // 当类型为 ANY_CHARACTER_WITH_ROLE 时使用
+  LocationType location_filter = 4; // 当类型为 ALL_CHARACTERS_AT_LOCATION 时使用
 }

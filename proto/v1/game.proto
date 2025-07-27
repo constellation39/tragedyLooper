@@ -14,15 +14,14 @@ option go_package = "tragedylooper/internal/game/proto/v1;v1";
 // 游戏当前状态
 message GameState {
   string game_id = 1; // 游戏唯一ID
-  Script script = 2; // 当前游戏的剧本配置
   map<int32, Character> characters = 3; // 所有角色当前状态的映射，键为 character_id
-  map<int32, Player> players = 4; // 所有玩家的映射，键为 player_id
+  map<string, Player> players = 4; // 所有玩家的映射，键为 player_id
   int32 current_day = 5; // 当前天数
   int32 current_loop = 6; // 当前循环数
   GamePhase current_phase = 7; // 当前游戏阶段
   map<int32, bool> active_tragedies = 8; // 当前循环中已激活（满足条件）的悲剧，键为 TragedyType
   map<int32, bool> prevented_tragedies = 9; // 当前循环中已被阻止的悲剧，键为 TragedyType
-  map<int32, Card> played_cards_this_day = 10; // Cards played today, keyed by player_id.
+  map<string, Card> played_cards_this_day = 10; // Cards played today, keyed by player_id.
   map<int32, bool> played_cards_this_loop = 11; // IDs of cards played in this loop.
   int64 last_update_time = 12; // 最后更新时间戳 (Unix timestamp)
   repeated GameEvent day_events = 13; // 本日发生的事件日志
@@ -34,7 +33,7 @@ message GameState {
 
 // 玩家信息
 message Player {
-  int32 id = 1; // 玩家唯一ID
+  string id = 1; // 玩家唯一ID
   string name = 2; // 玩家名称
   PlayerRole role = 3; // 玩家角色 (主谋或主角)
   bool is_llm = 4; // 是否由LLM（大语言模型）控制
@@ -45,7 +44,7 @@ message Player {
 }
 
 message PlayerLib {
-  map<int32, Player> players = 1;
+  map<string, Player> players = 1;
 }
 
 // 主角的推理知识
