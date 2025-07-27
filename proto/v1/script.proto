@@ -47,9 +47,13 @@ message IncidentConfig {
   // bool is_preventable = 6;         // 如果某些事件不可阻止，可以添加此字段
 }
 
+message IncidentConfigLib {
+  map<int32, IncidentConfig> incidents = 1;
+}
+
 // 条件的通用消息，使用 oneof 包含各种具体条件
 message Condition {
-  oneof condition_type { // 条件类型，只会有其中一个
+  oneof condition_type {// 条件类型，只会有其中一个
     StatCondition stat_condition = 1;     // 属性条件（例如，妄想值达到某阈值）
     LocationCondition location_condition = 2; // 地点条件（例如，角色在特定地点）
     // 可以扩展其他条件，例如 RoleCondition（角色身份条件）, TraitCondition（角色特征条件）
@@ -59,14 +63,14 @@ message Condition {
 // 属性条件
 message StatCondition {
   int32 character_id = 1; // 目标角色ID
-  enum StatType {         // 属性类型
+  enum StatType {// 属性类型
     STAT_TYPE_UNSPECIFIED = 0; // 未指定
     PARANOIA_STAT = 1;         // 妄想值
     GOODWILL_STAT = 2;         // 好感值
     INTRIGUE_STAT = 3;         // 阴谋值
   }
   StatType stat_type = 2; // 要检查的属性类型
-  enum Comparator {       // 比较符
+  enum Comparator {// 比较符
     COMPARATOR_UNSPECIFIED = 0; // 未指定
     GREATER_THAN = 1;           // 大于
     LESS_THAN = 2;              // 小于
@@ -88,7 +92,7 @@ message LocationCondition {
 
 // 游戏结束条件
 message GameEndCondition {
-  enum ConditionType {             // 条件类型
+  enum ConditionType {// 条件类型
     CONDITION_TYPE_UNSPECIFIED = 0;   // 未指定
     ALL_TRAGEDIES_PREVENTED = 1;      // 所有悲剧都被阻止
     SPECIFIC_TRAGEDY_TRIGGERED = 2;   // 特定悲剧被触发

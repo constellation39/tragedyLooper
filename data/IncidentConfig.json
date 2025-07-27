@@ -1,0 +1,17 @@
+{
+    "incidents": {
+        "1": {
+            "name": "Murder",
+            "day": 2,
+            "culprit": "Doctor",
+            "victim": "High School Girl",
+            "description": "A murder occurs at the hospital."
+        },
+        "2": {
+            "name": "Suicide",
+            "day": 3,
+            "culprit": "Office Worker",
+            "description": "A key witness commits suicide."
+        }
+    }
+}
