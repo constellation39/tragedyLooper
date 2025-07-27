@@ -38,8 +38,8 @@ func (pb *PromptBuilder) BuildMastermindPrompt(
 	//	sb.WriteString(fmt.Sprintf("Sub Plots: %s\n", strings.Join(script.SubPlots, ", ")))
 	//}
 	sb.WriteString("Tragedies to trigger:\n")
-	for _, t := range script.Tragedies {
-		sb.WriteString(fmt.Sprintf("- %s (Day %d, Culprit: %s, Conditions: %+v)\n", t.TragedyType, t.Day, t.CulpritId, t.Conditions))
+	for _, t := range script.Incidents {
+		sb.WriteString(fmt.Sprintf("- %s (Day %d, Culprit: %d, Conditions: %+v)\n", t.IncidentType, t.Day, t.CulpritCharacterId, t.Conditions))
 	}
 
 	sb.WriteString("\n--- Characters (including hidden roles) ---\n")

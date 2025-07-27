@@ -7,8 +7,8 @@ import (
 	model "tragedylooper/internal/game/proto/v1"
 
 	"google.golang.org/protobuf/encoding/protojson"
-	"google.golang.org/protobuf/types/known/anypb"
-	"google.golang.org/protobuf/types/known/structpb"
+	
+	
 )
 
 // LLMClient 定义与 LLM 交互的接口。
@@ -31,10 +31,9 @@ func (m *MockLLMClient) GenerateResponse(prompt string, sessionID string) (strin
 	// 简单的模拟逻辑：如果提示包含“play card”，则返回卡牌动作。
 	// 实际中，LLM 将解析复杂的游戏状态并做出决策。
 	if len(prompt) > 100 && prompt[len(prompt)-100:] == "Please provide your action in JSON format." {
-		// 示例主谋打出一张偏执卡
 		playCardPayload := &model.PlayCardPayload{
 			CardId: 1, // 假设存在这张卡
-			Target: &model.Target{TargetOneof: &model.Target_CharacterId{CharacterId: 2}},
+			Target: &model.PlayCardPayload_TargetCharacterId{TargetCharacterId: 2},
 		}
 		// Marshal the payload to JSON
 		jsonBytes, err := protojson.Marshal(playCardPayload)
@@ -48,20 +47,14 @@ func (m *MockLLMClient) GenerateResponse(prompt string, sessionID string) (strin
 			return "", err
 		}
 
-		// Convert the map to a structpb.Struct
-		payloadStruct, err := structpb.NewStruct(data)
-		if err != nil {
-			return "", err
-		}
+		
 
-		anyPayload, err := anypb.New(payloadStruct)
-		if err != nil {
-			return "", err
-		}
+		
 
-		mockAction := model.PlayerAction{
-			Type:    model.ActionType_ACTION_TYPE_PLAY_CARD,
-			Payload: anyPayload,
+		mockAction := model.PlayerActionPayload{
+			Payload: &model.PlayerActionPayload_PlayCard{
+				PlayCard: playCardPayload,
+			},
 		}
 		actionBytes, _ := protojson.Marshal(&mockAction)
 		return string(actionBytes), nil

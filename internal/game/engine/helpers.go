@@ -24,46 +24,38 @@ func (ge *GameEngine) checkSingleCondition(condition *model.Condition) bool {
 }
 
 func (ge *GameEngine) checkStatCondition(sc *model.StatCondition) bool {
-	charID, ok := ge.characterNameToID[sc.CharacterId]
-	if !ok {
-		return false
-	}
-	char, ok := ge.GameState.Characters[charID]
+	char, ok := ge.GameState.Characters[sc.CharacterId]
 	if !ok {
 		return false
 	}
 
 	var statValue int32
-	switch sc.Stat {
-	case model.Stat_STAT_PARANOIA:
+	switch sc.StatType {
+	case model.StatCondition_PARANOIA_STAT:
 		statValue = char.Paranoia
-	case model.Stat_STAT_GOODWILL:
+	case model.StatCondition_GOODWILL_STAT:
 		statValue = char.Goodwill
-	case model.Stat_STAT_INTRIGUE:
+	case model.StatCondition_INTRIGUE_STAT:
 		statValue = char.Intrigue
 	}
 
-	switch sc.Operator {
-	case model.Operator_OPERATOR_GREATER_THAN:
+	switch sc.Comparator {
+	case model.StatCondition_GREATER_THAN:
 		return statValue > sc.Value
-	case model.Operator_OPERATOR_LESS_THAN:
+	case model.StatCondition_LESS_THAN:
 		return statValue < sc.Value
-	case model.Operator_OPERATOR_EQUAL_TO:
+	case model.StatCondition_EQUAL_TO:
 		return statValue == sc.Value
-	case model.Operator_OPERATOR_GREATER_THAN_OR_EQUAL_TO:
+	case model.StatCondition_GREATER_THAN_OR_EQUAL:
 		return statValue >= sc.Value
-	case model.Operator_OPERATOR_LESS_THAN_OR_EQUAL_TO:
+	case model.StatCondition_LESS_THAN_OR_EQUAL:
 		return statValue <= sc.Value
 	}
 	return false
 }
 
 func (ge *GameEngine) checkLocationCondition(lc *model.LocationCondition) bool {
-	charID, ok := ge.characterNameToID[lc.CharacterId]
-	if !ok {
-		return false
-	}
-	char, ok := ge.GameState.Characters[charID]
+	char, ok := ge.GameState.Characters[lc.CharacterId]
 	if !ok {
 		return false
 	}
@@ -85,27 +77,27 @@ func (ge *GameEngine) checkLocationCondition(lc *model.LocationCondition) bool {
 func (ge *GameEngine) checkGameEndConditions() (bool, model.PlayerRole) {
 	// Check for protagonist win conditions
 	for _, wc := range ge.GameState.Script.WinConditions {
-		if wc.Type == model.GameEndConditionType_GAME_END_CONDITION_TYPE_ALL_TRAGEDIES_PREVENTED {
+		if wc.Type == model.GameEndCondition_ALL_TRAGEDIES_PREVENTED {
 			allPrevented := true
-			for _, prevented := range ge.GameState.PreventedTragedies {
+			for _, prevented := range ge.GameState.PreventedIncidents {
 				if !prevented {
 					allPrevented = false
 					break
 				}
 			}
 			if allPrevented {
-				return true, model.PlayerRole_PLAYER_ROLE_PROTAGONIST
+				return true, model.PlayerRole_PROTAGONIST
 			}
 		}
 	}
 
 	// Check for mastermind win conditions
 	for _, lc := range ge.GameState.Script.LoseConditions {
-		if lc.Type == model.GameEndConditionType_GAME_END_CONDITION_TYPE_A_TRAGEDY_OCCURS {
+		if lc.Type == model.GameEndCondition_SPECIFIC_TRAGEDY_TRIGGERED {
 			// This is checked within the incident phase, so we just need to see if a tragedy has occurred.
-			for _, active := range ge.GameState.ActiveTragedies {
+			for _, active := range ge.GameState.ActiveIncidents {
 				if !active {
-					return true, model.PlayerRole_PLAYER_ROLE_MASTERMIND
+					return true, model.PlayerRole_MASTERMIND
 				}
 			}
 		}

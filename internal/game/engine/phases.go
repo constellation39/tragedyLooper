@@ -12,16 +12,16 @@ import (
 func (ge *GameEngine) handleMorningPhase() {
 	ge.logger.Info("Morning Phase", zap.Int("loop", int(ge.GameState.CurrentLoop)), zap.Int("day", int(ge.GameState.CurrentDay)))
 	ge.resetPlayerReadiness()
-	ge.GameState.PlayedCardsThisDay = make(map[int32]*model.CardList) // Clear cards for the new day
+	ge.GameState.PlayedCardsThisDay = make(map[int32]bool) // Clear cards for the new day
 
-	ge.checkAndTriggerAbilities(model.TriggerType_TRIGGER_TYPE_ON_DAY_START, nil)
+	ge.checkAndTriggerAbilities(model.TriggerType_ON_DAY_START, nil)
 
-	ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_CARD_PLAY
-	ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED, &model.DayAdvancedEvent{Day: ge.GameState.CurrentDay, Loop: ge.GameState.CurrentLoop})
+	ge.GameState.CurrentPhase = model.GamePhase_CARD_PLAY
+	ge.publishGameEvent(model.GameEventType_DAY_ADVANCED, &model.DayAdvancedEvent{Day: ge.GameState.CurrentDay, Loop: ge.GameState.CurrentLoop})
 }
 
 func (ge *GameEngine) handleCardPlayPhase() {
-	ge.checkAndTriggerAbilities(model.TriggerType_TRIGGER_TYPE_ON_CARD_PLAY_PHASE, nil)
+	ge.checkAndTriggerAbilities(model.TriggerType_ON_CARD_PLAY_PHASE, nil)
 
 	allPlayersReady := true
 	for playerID, player := range ge.GameState.Players {
@@ -36,15 +36,15 @@ func (ge *GameEngine) handleCardPlayPhase() {
 
 	if allPlayersReady {
 		ge.logger.Info("All players ready for Card Reveal.")
-		ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_CARD_REVEAL
+		ge.GameState.CurrentPhase = model.GamePhase_CARD_REVEAL
 	}
 }
 
 func (ge *GameEngine) handleCardRevealPhase() {
 	ge.logger.Info("Card Reveal Phase")
-	ge.checkAndTriggerAbilities(model.TriggerType_TRIGGER_TYPE_ON_CARD_REVEAL_PHASE, nil)
-	ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_CARD_PLAYED, &model.CardPlayedEvent{PlayedCards: ge.GameState.PlayedCardsThisDay})
-	ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_CARD_RESOLVE
+	ge.checkAndTriggerAbilities(model.TriggerType_ON_CARD_REVEAL_PHASE, nil)
+	// ge.publishGameEvent(model.GameEventType_CARD_PLAYED, &model.CardPlayedEvent{PlayedCards: ge.GameState.PlayedCardsThisDay})
+	ge.GameState.CurrentPhase = model.GamePhase_CARD_RESOLVE
 }
 
 func (ge *GameEngine) handleCardResolvePhase() {

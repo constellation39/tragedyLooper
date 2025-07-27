@@ -87,7 +87,7 @@ const (
 	GamePhase_LOOP_END               GamePhase = 9  // 循环结束阶段（检查一个循环是否结束，进行时间重置或进入最终猜测）
 	GamePhase_GAME_OVER              GamePhase = 10 // 游戏结束阶段（判断胜负并结束游戏）
 	GamePhase_PROTAGONIST_GUESS      GamePhase = 11 // 主角猜测阶段（可以细化为最终猜测）
-	GamePhase_GAME_PHASE_FIRST_GUESS GamePhase = 12 // 主角首次猜测阶段（主角在游戏过程中进行的非最终猜测）
+	GamePhase_FIRST_GUESS            GamePhase = 12 // 主角首次猜测阶段（主角在游戏过程中进行的非最终猜测）
 )
 
 // Enum value maps for GamePhase.
@@ -105,7 +105,7 @@ var (
 		9:  "LOOP_END",
 		10: "GAME_OVER",
 		11: "PROTAGONIST_GUESS",
-		12: "GAME_PHASE_FIRST_GUESS",
+		12: "FIRST_GUESS",
 	}
 	GamePhase_value = map[string]int32{
 		"GAME_PHASE_UNSPECIFIED": 0,
@@ -120,7 +120,7 @@ var (
 		"LOOP_END":               9,
 		"GAME_OVER":              10,
 		"PROTAGONIST_GUESS":      11,
-		"GAME_PHASE_FIRST_GUESS": 12,
+		"FIRST_GUESS":            12,
 	}
 )
 
@@ -702,7 +702,7 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\x17PLAYER_ROLE_UNSPECIFIED\x10\x00\x12\x0e\n" +
 	"\n" +
 	"MASTERMIND\x10\x01\x12\x0f\n" +
-	"\vPROTAGONIST\x10\x02*\xf5\x01\n" +
+	"\vPROTAGONIST\x10\x02*\xea\x01\n" +
 	"\tGamePhase\x12\x1a\n" +
 	"\x16GAME_PHASE_UNSPECIFIED\x10\x00\x12\t\n" +
 	"\x05SETUP\x10\x01\x12\x14\n" +
@@ -716,8 +716,8 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\bLOOP_END\x10\t\x12\r\n" +
 	"\tGAME_OVER\x10\n" +
 	"\x12\x15\n" +
-	"\x11PROTAGONIST_GUESS\x10\v\x12\x1a\n" +
-	"\x16GAME_PHASE_FIRST_GUESS\x10\f*j\n" +
+	"\x11PROTAGONIST_GUESS\x10\v\x12\x0f\n" +
+	"\vFIRST_GUESS\x10\f*j\n" +
 	"\bCardType\x12\x19\n" +
 	"\x15CARD_TYPE_UNSPECIFIED\x10\x00\x12\f\n" +
 	"\bMOVEMENT\x10\x01\x12\f\n" +

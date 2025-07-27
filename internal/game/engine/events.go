@@ -33,7 +33,7 @@ func (ge *GameEngine) publishGameEvent(eventType model.GameEventType, payload pr
 func (ge *GameEngine) processEvent(event *model.GameEvent) {
 	// This function applies the consequences of a resolved effect event to the game state.
 	switch event.Type {
-	case model.GameEventType_GAME_EVENT_TYPE_CHARACTER_MOVED:
+	case model.GameEventType_CHARACTER_MOVED:
 		var e model.CharacterMovedEvent
 		if err := event.Payload.UnmarshalTo(&e); err != nil {
 			ge.logger.Error("Failed to unmarshal CharacterMovedEvent", zap.Error(err))
@@ -42,7 +42,7 @@ func (ge *GameEngine) processEvent(event *model.GameEvent) {
 		if char, ok := ge.GameState.Characters[e.CharacterId]; ok {
 			char.CurrentLocation = e.NewLocation
 		}
-	case model.GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED:
+	case model.GameEventType_PARANOIA_ADJUSTED:
 		var e model.ParanoiaAdjustedEvent
 		if err := event.Payload.UnmarshalTo(&e); err != nil {
 			ge.logger.Error("Failed to unmarshal ParanoiaAdjustedEvent", zap.Error(err))
@@ -51,7 +51,7 @@ func (ge *GameEngine) processEvent(event *model.GameEvent) {
 		if char, ok := ge.GameState.Characters[e.CharacterId]; ok {
 			char.Paranoia += e.Amount
 		}
-	case model.GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED:
+	case model.GameEventType_GOODWILL_ADJUSTED:
 		var e model.GoodwillAdjustedEvent
 		if err := event.Payload.UnmarshalTo(&e); err != nil {
 			ge.logger.Error("Failed to unmarshal GoodwillAdjustedEvent", zap.Error(err))
@@ -60,7 +60,7 @@ func (ge *GameEngine) processEvent(event *model.GameEvent) {
 		if char, ok := ge.GameState.Characters[e.CharacterId]; ok {
 			char.Goodwill += e.Amount
 		}
-	case model.GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED:
+	case model.GameEventType_INTRIGUE_ADJUSTED:
 		var e model.IntrigueAdjustedEvent
 		if err := event.Payload.UnmarshalTo(&e); err != nil {
 			ge.logger.Error("Failed to unmarshal IntrigueAdjustedEvent", zap.Error(err))

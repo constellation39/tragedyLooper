@@ -6,24 +6,22 @@ import (
 )
 
 func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload) error {
-	ctx := &model.EffectContext{GameState: ge.GameState}
-
 	// First, see if the effect requires a choice from the player.
-	choices, err := resolveEffectChoices(ctx, effect, ability)
+	choices, err := resolveEffectChoices(ge.GameState, effect, ability)
 	if err != nil {
 		return fmt.Errorf("error resolving choices: %w", err)
 	}
 
 	// If choices are available and no specific target was provided in the payload, ask the player.
 	// A more robust check might be needed, e.g., checking if payload.Target is fully specified.
-	if len(choices) > 1 && (payload.Target == nil || payload.Target.GetCharacterId() == 0) {
+	if len(choices) > 1 && (payload.Target == nil || payload.GetTargetCharacterId() == 0) {
 		choiceEvent := &model.ChoiceRequiredEvent{Choices: choices}
-		ge.publishGameEvent(model.GameEventType_GAME_EVENT_TYPE_CHOICE_REQUIRED, choiceEvent)
+		ge.publishGameEvent(model.GameEventType_CHOICE_REQUIRED, choiceEvent)
 		return nil // Stop processing and wait for a player action with the choice.
 	}
 
 	// If a choice was made or not required, execute the effect.
-	events, err := executeEffect(ge, ctx, effect, ability, payload)
+	events, err := executeEffect(ge, ge.GameState, effect, ability, payload)
 	if err != nil {
 		return fmt.Errorf("error executing effect: %w", err)
 	}
@@ -36,7 +34,7 @@ func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, 
 	return nil
 }
 
-func resolveEffectChoices(ctx *model.EffectContext, effect *model.Effect, ability *model.Ability) ([]*model.Choice, error) {
+func resolveEffectChoices(state *model.GameState, effect *model.Effect, ability *model.Ability) ([]*model.Choice, error) {
 	switch t := effect.EffectOneof.(type) {
 	case *model.Effect_MoveCharacterEffect:
 		// No choices needed for this effect
@@ -55,19 +53,19 @@ func resolveEffectChoices(ctx *model.EffectContext, effect *model.Effect, abilit
 	}
 }
 
-func executeEffect(ge *GameEngine, ctx *model.EffectContext, effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload) ([]*model.GameEvent, error) {
+func executeEffect(ge *GameEngine, state *model.GameState, effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload) ([]*model.GameEvent, error) {
 	switch t := effect.EffectOneof.(type) {
 	case *model.Effect_MoveCharacterEffect:
-		ge.SetCharacterLocation(payload.GetCharacterId(), t.MoveCharacterEffect.Destination)
+		ge.SetCharacterLocation(t.MoveCharacterEffect.CharacterId, t.MoveCharacterEffect.TargetLocation)
 		return nil, nil
 	case *model.Effect_AdjustParanoiaEffect:
-		ge.AdjustCharacterParanoia(payload.GetCharacterId(), t.AdjustParanoiaEffect.Amount)
+		ge.AdjustCharacterParanoia(t.AdjustParanoiaEffect.CharacterId, t.AdjustParanoiaEffect.Amount)
 		return nil, nil
 	case *model.Effect_AdjustGoodwillEffect:
-		ge.AdjustCharacterGoodwill(payload.GetCharacterId(), t.AdjustGoodwillEffect.Amount)
+		ge.AdjustCharacterGoodwill(t.AdjustGoodwillEffect.CharacterId, t.AdjustGoodwillEffect.Amount)
 		return nil, nil
 	case *model.Effect_AdjustIntrigueEffect:
-		ge.AdjustCharacterIntrigue(payload.GetCharacterId(), t.AdjustIntrigueEffect.Amount)
+		ge.AdjustCharacterIntrigue(t.AdjustIntrigueEffect.CharacterId, t.AdjustIntrigueEffect.Amount)
 		return nil, nil
 	default:
 		return nil, fmt.Errorf("unknown effect type: %T", t)

@@ -23,7 +23,7 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID int32) {
 	playerView := ge.GetPlayerView(playerID) // Get a safe, filtered view of the game state
 	pBuilder := promptbuilder.NewPromptBuilder()
 	var prompt string
-	if player.Role == model.PlayerRole_PLAYER_ROLE_MASTERMIND {
+	if player.Role == model.PlayerRole_MASTERMIND {
 		charactersWithStringKeys := make(map[string]*model.Character)
 		for id, char := range ge.GameState.Characters {
 			charactersWithStringKeys[fmt.Sprint(id)] = char
@@ -31,8 +31,8 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID int32) {
 		prompt = pBuilder.BuildMastermindPrompt(playerView, ge.GameState.Script, charactersWithStringKeys)
 	} else {
 		deductionKnowledgeWithStringKeys := make(map[string]string)
-		for id, value := range player.DeductionKnowledge {
-			deductionKnowledgeWithStringKeys[fmt.Sprint(id)] = value.String()
+		for id, value := range player.DeductionKnowledge.Entries {
+			deductionKnowledgeWithStringKeys[fmt.Sprint(id)] = value
 		}
 		prompt = pBuilder.BuildProtagonistPrompt(playerView, deductionKnowledgeWithStringKeys)
 	}
@@ -44,7 +44,7 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID int32) {
 			// Submit a default action to unblock the game
 			ge.requestChan <- &llmActionCompleteRequest{
 				playerID: playerID,
-				action:   &model.PlayerAction{PlayerId: playerID, GameId: ge.GameState.GameId, Type: model.ActionType_ACTION_TYPE_READY_FOR_NEXT_PHASE},
+				action:   &model.PlayerActionPayload{},
 			}
 			return
 		}
@@ -56,7 +56,7 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID int32) {
 			// Submit a default action to unblock the game
 			ge.requestChan <- &llmActionCompleteRequest{
 				playerID: playerID,
-				action:   &model.PlayerAction{PlayerId: playerID, GameId: ge.GameState.GameId, Type: model.ActionType_ACTION_TYPE_READY_FOR_NEXT_PHASE},
+				action:   &model.PlayerActionPayload{},
 			}
 			return
 		}
@@ -71,3 +71,4 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID int32) {
 		}
 	}()
 }
+

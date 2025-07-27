@@ -25,7 +25,7 @@
         10,
         "PROTAGONIST_GUESS",
         11,
-        "GAME_PHASE_FIRST_GUESS",
+        "FIRST_GUESS",
         12
     ],
     "oneOf": [

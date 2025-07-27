@@ -1,54 +1,36 @@
 package engine
 
 import (
-	"fmt"
-
 	"go.uber.org/zap"
-	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/known/anypb"
-
 	model "tragedylooper/internal/game/proto/v1"
 )
 
-// unmarshalAnyPayload safely unmarshals an anypb.Any into a target protobuf message.
-func unmarshalAnyPayload(payload *anypb.Any, target proto.Message) error {
-	if payload == nil {
-		return fmt.Errorf("action payload is nil for target type %T", target)
-	}
-	return payload.UnmarshalTo(target)
-}
-
 // --- Player Action Handlers ---
 
-func (ge *GameEngine) handlePlayerAction(action *model.PlayerAction) {
-	player, ok := ge.GameState.Players[action.PlayerId]
+func (ge *GameEngine) handlePlayerAction(playerID int32, action *model.PlayerActionPayload) {
+	player, ok := ge.GameState.Players[playerID]
 	if !ok {
-		ge.logger.Warn("Action from unknown player", zap.Int32("playerID", action.PlayerId))
+		ge.logger.Warn("Action from unknown player", zap.Int32("playerID", playerID))
 		return
 	}
 
-	ge.logger.Info("Handling player action", zap.String("player", player.Name), zap.String("actionType", string(action.Type)))
+	ge.logger.Info("Handling player action", zap.String("player", player.Name), zap.Any("action", action.Payload))
 
-	switch action.Type {
-	case model.ActionType_ACTION_TYPE_PLAY_CARD:
-		ge.handlePlayCardAction(player, action)
-	case model.ActionType_ACTION_TYPE_USE_ABILITY:
-		ge.handleUseAbilityAction(player, action)
-	case model.ActionType_ACTION_TYPE_MAKE_GUESS:
-		ge.handleMakeGuessAction(action)
-	case model.ActionType_ACTION_TYPE_READY_FOR_NEXT_PHASE:
-		ge.handleReadyForNextPhaseAction(player)
+	switch p := action.Payload.(type) {
+	case *model.PlayerActionPayload_PlayCard:
+		ge.handlePlayCardAction(player, p.PlayCard)
+	case *model.PlayerActionPayload_UseAbility:
+		ge.handleUseAbilityAction(player, p.UseAbility)
+	case *model.PlayerActionPayload_MakeGuess:
+		ge.handleMakeGuessAction(p.MakeGuess)
+	case *model.PlayerActionPayload_ChooseOption:
+		// TODO: Handle ChooseOption
 	default:
-		ge.logger.Warn("Unknown action type", zap.String("actionType", string(action.Type)))
+		ge.logger.Warn("Unknown action type", zap.Any("action", action.Payload))
 	}
 }
 
-func (ge *GameEngine) handlePlayCardAction(player *model.Player, action *model.PlayerAction) {
-	var payload model.PlayCardPayload
-	if err := unmarshalAnyPayload(action.Payload, &payload); err != nil {
-		ge.logger.Error("Failed to unmarshal PlayCardPayload", zap.Error(err))
-		return
-	}
+func (ge *GameEngine) handlePlayCardAction(player *model.Player, payload *model.PlayCardPayload) {
 
 	var playedCard *model.Card
 	cardFound := false
@@ -71,27 +53,25 @@ func (ge *GameEngine) handlePlayCardAction(player *model.Player, action *model.P
 	}
 
 	// Add target info to the card instance before storing it
-	playedCard.Target = payload.Target
+	switch t := payload.Target.(type) {
+	case *model.PlayCardPayload_TargetCharacterId:
+		playedCard.Target = &model.Card_TargetCharacterId{TargetCharacterId: t.TargetCharacterId}
+	case *model.PlayCardPayload_TargetLocation:
+		playedCard.Target = &model.Card_TargetLocation{TargetLocation: t.TargetLocation}
+	}
 	playedCard.UsedThisLoop = true // Mark as used
 
-	if _, ok := ge.GameState.PlayedCardsThisDay[player.Id]; !ok {
-		ge.GameState.PlayedCardsThisDay[player.Id] = &model.CardList{}
+	if _, ok := ge.GameState.PlayedCardsThisDay[playedCard.Id]; !ok {
+		ge.GameState.PlayedCardsThisDay[playedCard.Id] = true
 	}
-	if _, ok := ge.GameState.PlayedCardsThisLoop[player.Id]; !ok {
-		ge.GameState.PlayedCardsThisLoop[player.Id] = &model.CardList{}
+	if _, ok := ge.GameState.PlayedCardsThisLoop[playedCard.Id]; !ok {
+		ge.GameState.PlayedCardsThisLoop[playedCard.Id] = true
 	}
 
-	ge.GameState.PlayedCardsThisDay[player.Id].Cards = append(ge.GameState.PlayedCardsThisDay[player.Id].Cards, playedCard)
-	ge.GameState.PlayedCardsThisLoop[player.Id].Cards = append(ge.GameState.PlayedCardsThisLoop[player.Id].Cards, playedCard)
 	ge.playerReady[player.Id] = true
 }
 
-func (ge *GameEngine) handleUseAbilityAction(player *model.Player, action *model.PlayerAction) {
-	var payload model.UseAbilityPayload
-	if err := unmarshalAnyPayload(action.Payload, &payload); err != nil {
-		ge.logger.Error("Failed to unmarshal UseAbilityPayload", zap.Error(err))
-		return
-	}
+func (ge *GameEngine) handleUseAbilityAction(player *model.Player, payload *model.UseAbilityPayload) {
 
 	var ability *model.Ability
 	abilityFound := false
@@ -114,7 +94,7 @@ func (ge *GameEngine) handleUseAbilityAction(player *model.Player, action *model
 		return
 	}
 
-	if err := ge.applyEffect(ability.Effect, ability, &payload); err != nil {
+	if err := ge.applyEffect(ability.Effect, ability, payload); err != nil {
 		ge.logger.Error("Failed to apply effect for ability", zap.String("abilityName", ability.Name), zap.Error(err))
 		return
 	}
@@ -124,21 +104,7 @@ func (ge *GameEngine) handleUseAbilityAction(player *model.Player, action *model
 	}
 }
 
-func (ge *GameEngine) handleReadyForNextPhaseAction(player *model.Player) {
-	ge.playerReady[player.Id] = true
-}
-
-func (ge *GameEngine) handleMakeGuessAction(action *model.PlayerAction) {
-	if ge.GameState.CurrentPhase != model.GamePhase_GAME_PHASE_PROTAGONIST_GUESS {
-		ge.logger.Warn("MakeGuess action received outside of the guess phase")
-		return
-	}
-
-	var payload model.MakeGuessPayload
-	if err := unmarshalAnyPayload(action.Payload, &payload); err != nil {
-		ge.logger.Error("Failed to unmarshal MakeGuessPayload", zap.Error(err))
-		return
-	}
+func (ge *GameEngine) handleMakeGuessAction(payload *model.MakeGuessPayload) {
 
 	correctGuesses := 0
 	totalCharactersToGuess := 0
@@ -157,8 +123,8 @@ func (ge *GameEngine) handleMakeGuessAction(action *model.PlayerAction) {
 	}
 
 	if totalCharactersToGuess > 0 && correctGuesses == totalCharactersToGuess {
-		ge.endGame(model.PlayerRole_PLAYER_ROLE_PROTAGONIST)
+		ge.endGame(model.PlayerRole_PROTAGONIST)
 	} else {
-		ge.endGame(model.PlayerRole_PLAYER_ROLE_MASTERMIND)
+		ge.endGame(model.PlayerRole_MASTERMIND)
 	}
 }
