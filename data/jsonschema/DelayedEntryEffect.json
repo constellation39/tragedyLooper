@@ -6,7 +6,7 @@
             "properties": {
                 "day_of_entry": {
                     "type": "integer",
-                    "description": "角色登场的日期"
+                    "description": "登场日期"
                 },
                 "entry_location": {
                     "enum": [
@@ -30,13 +30,13 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "地点类型枚举"
+                    "description": "地点类型（也可通过LocationConfig扩展）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Delayed Entry Effect",
-            "description": "延迟登场效果（例如某些角色在特定天数才登场）"
+            "description": "延迟登场效果"
         }
     }
 }

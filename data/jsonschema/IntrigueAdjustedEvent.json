@@ -5,18 +5,22 @@
         "IntrigueAdjustedEvent": {
             "properties": {
                 "character_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "角色ID"
                 },
                 "amount": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "调整量"
                 },
                 "new_intrigue": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "调整后的新阴谋值"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Intrigue Adjusted Event"
+            "title": "Intrigue Adjusted Event",
+            "description": "阴谋值调整事件"
         }
     }
 }

@@ -5,15 +5,18 @@
         "DayAdvancedEvent": {
             "properties": {
                 "day": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "新的天数"
                 },
                 "loop": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "当前的循环数"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Day Advanced Event"
+            "title": "Day Advanced Event",
+            "description": "天数推进事件"
         }
     }
 }

@@ -6,19 +6,23 @@
             "properties": {
                 "play_card": {
                     "$ref": "#/definitions/v1.PlayCardPayload",
-                    "additionalProperties": true
+                    "additionalProperties": true,
+                    "description": "打出卡牌的负载"
                 },
                 "use_ability": {
                     "$ref": "#/definitions/v1.UseAbilityPayload",
-                    "additionalProperties": true
+                    "additionalProperties": true,
+                    "description": "使用能力的负载"
                 },
                 "make_guess": {
                     "$ref": "#/definitions/v1.MakeGuessPayload",
-                    "additionalProperties": true
+                    "additionalProperties": true,
+                    "description": "进行猜测的负载"
                 },
                 "choose_option": {
                     "$ref": "#/definitions/v1.ChooseOptionPayload",
-                    "additionalProperties": true
+                    "additionalProperties": true,
+                    "description": "进行选择的负载"
                 }
             },
             "additionalProperties": true,
@@ -29,7 +33,7 @@
         "v1.ChooseOptionPayload": {
             "properties": {
                 "player_id": {
-                    "type": "string",
+                    "type": "integer",
                     "description": "执行操作的玩家ID"
                 },
                 "character_id": {
@@ -49,7 +53,7 @@
         "v1.MakeGuessPayload": {
             "properties": {
                 "player_id": {
-                    "type": "string",
+                    "type": "integer",
                     "description": "执行操作的玩家ID"
                 },
                 "guessed_roles": {
@@ -57,24 +61,30 @@
                         "enum": [
                             "ROLE_TYPE_UNSPECIFIED",
                             0,
-                            "INNOCENT",
+                            "PERSON",
                             1,
                             "KILLER",
                             2,
-                            "ACCOMPLICE",
+                            "BRAIN",
                             3,
-                            "PERSON_OF_INTEREST",
-                            4,
                             "KEY_PERSON",
+                            4,
+                            "CULTIST",
                             5,
                             "FRIEND",
                             6,
-                            "LOVER",
+                            "LOVED_ONE",
                             7,
                             "CONSPIRACY_THEORIST",
                             8,
-                            "CULTIST",
-                            9
+                            "SERIAL_KILLER",
+                            9,
+                            "FACTOR",
+                            10,
+                            "WITCH",
+                            11,
+                            "TIME_TRAVELER",
+                            12
                         ],
                         "oneOf": [
                             {
@@ -85,7 +95,7 @@
                             }
                         ],
                         "title": "Role Type",
-                        "description": "角色身份类型枚举"
+                        "description": "角色身份类型"
                     },
                     "type": "object",
                     "description": "猜测的角色身份映射，键为 character_id"
@@ -99,7 +109,7 @@
         "v1.PlayCardPayload": {
             "properties": {
                 "player_id": {
-                    "type": "string",
+                    "type": "integer",
                     "description": "执行操作的玩家ID"
                 },
                 "card_id": {
@@ -132,7 +142,7 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "地点类型枚举"
+                    "description": "地点类型（也可通过LocationConfig扩展）"
                 }
             },
             "additionalProperties": true,
@@ -143,7 +153,7 @@
         "v1.UseAbilityPayload": {
             "properties": {
                 "player_id": {
-                    "type": "string",
+                    "type": "integer",
                     "description": "执行操作的玩家ID"
                 },
                 "character_id": {
@@ -180,7 +190,7 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "地点类型枚举"
+                    "description": "地点类型（也可通过LocationConfig扩展）"
                 },
                 "target_incident_type": {
                     "enum": [
@@ -190,10 +200,16 @@
                         1,
                         "SUICIDE",
                         2,
-                        "HOSPITAL_CONSPIRACY",
+                        "ACCIDENT",
                         3,
+                        "DISAPPEARANCE",
+                        4,
+                        "HOSPITAL_CONSPIRACY",
+                        5,
                         "MURDER_MYSTERY",
-                        4
+                        6,
+                        "PANIC",
+                        7
                     ],
                     "oneOf": [
                         {
@@ -204,7 +220,7 @@
                         }
                     ],
                     "title": "Incident Type",
-                    "description": "悲剧类型枚举"
+                    "description": "事件类型"
                 }
             },
             "additionalProperties": true,

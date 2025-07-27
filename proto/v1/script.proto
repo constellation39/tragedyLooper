@@ -4,6 +4,8 @@ package v1;
 
 import "v1/condition.proto";
 import "v1/enums.proto";
+import "v1/incident.proto";
+import "v1/effect.proto";
 
 option go_package = "tragedylooper/internal/game/proto/v1;v1";
 
@@ -57,19 +59,6 @@ message PlotConfig {
   string name = 2;                  // 剧情名称
   string description = 3;           // 剧情描述
   repeated int32 incident_ids = 4; // 相关事件ID列表
-}
-
-// 事件配置
-message IncidentConfig {
-  int32 id = 1;                              // 事件唯一ID（剧本内）
-  string name = 2;                           // 事件名称
-  string description = 3;                    // 事件描述
-  IncidentType incident_type = 4;            // 事件类型
-  int32 day = 5;                             // 预定发生日期
-  repeated Condition trigger_conditions = 6; // 触发条件列表
-  bool is_mandatory = 7;                     // 是否为必发事件
-  int32 culprit_character_id = 8;           // 事件主谋角色ID（如适用）
-  int32 location_id = 9;                     // 事件发生地点ID（如适用）
 }
 
 // 特殊规则

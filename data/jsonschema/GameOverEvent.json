@@ -22,12 +22,13 @@
                         }
                     ],
                     "title": "Player Role",
-                    "description": "玩家角色枚举"
+                    "description": "玩家角色"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Game Over Event"
+            "title": "Game Over Event",
+            "description": "游戏结束事件"
         }
     }
 }

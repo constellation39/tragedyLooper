@@ -1,4 +1,5 @@
 // --- character.proto ---
+
 syntax = "proto3";
 
 package v1;
@@ -44,7 +45,7 @@ message CharacterRule {
   string name = 1;                    // 规则名称
   string description = 2;             // 规则描述
   TriggerType trigger = 3;            // 规则触发时机
-  oneof effect {// 规则效果
+  oneof effect {                        // 规则效果
     TurfSelectionEffect turf_selection_effect = 4;    // 地盘选择效果
     DelayedEntryEffect delayed_entry_effect = 5;      // 延迟登场效果
     SpecialMovementRule special_movement_rule = 6;    // 特殊移动规则

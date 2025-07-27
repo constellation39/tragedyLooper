@@ -26,9 +26,9 @@ const (
 // GameEvent 表示游戏中发生的事件。
 type GameEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          GameEventType          `protobuf:"varint,1,opt,name=type,proto3,enum=v1.GameEventType" json:"type,omitempty"`
-	Payload       *anypb.Any             `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
-	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Type          GameEventType          `protobuf:"varint,1,opt,name=type,proto3,enum=v1.GameEventType" json:"type,omitempty"` // 事件类型
+	Payload       *anypb.Any             `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`                  // 事件的具体负载
+	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"`              // 事件发生的时间戳
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -84,9 +84,10 @@ func (x *GameEvent) GetTimestamp() *timestamppb.Timestamp {
 	return nil
 }
 
+// 事件库，用于存储和管理游戏中的所有事件
 type GameEventLib struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Events        map[int32]*anypb.Any   `protobuf:"bytes,1,rep,name=events,proto3" json:"events,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Events        map[int32]*anypb.Any   `protobuf:"bytes,1,rep,name=events,proto3" json:"events,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 事件ID到事件负载的映射
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -128,10 +129,11 @@ func (x *GameEventLib) GetEvents() map[int32]*anypb.Any {
 	return nil
 }
 
+// 角色移动事件
 type CharacterMovedEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`
-	NewLocation   LocationType           `protobuf:"varint,2,opt,name=new_location,json=newLocation,proto3,enum=v1.LocationType" json:"new_location,omitempty"`
+	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`                      // 移动的角色ID
+	NewLocation   LocationType           `protobuf:"varint,2,opt,name=new_location,json=newLocation,proto3,enum=v1.LocationType" json:"new_location,omitempty"` // 移动到的新地点
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -180,11 +182,12 @@ func (x *CharacterMovedEvent) GetNewLocation() LocationType {
 	return LocationType_LOCATION_TYPE_UNSPECIFIED
 }
 
+// 妄想值调整事件
 type ParanoiaAdjustedEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`
-	Amount        int32                  `protobuf:"varint,2,opt,name=amount,proto3" json:"amount,omitempty"`
-	NewParanoia   int32                  `protobuf:"varint,3,opt,name=new_paranoia,json=newParanoia,proto3" json:"new_paranoia,omitempty"`
+	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"` // 角色ID
+	Amount        int32                  `protobuf:"varint,2,opt,name=amount,proto3" json:"amount,omitempty"`                              // 调整量
+	NewParanoia   int32                  `protobuf:"varint,3,opt,name=new_paranoia,json=newParanoia,proto3" json:"new_paranoia,omitempty"` // 调整后的新妄想值
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -240,11 +243,12 @@ func (x *ParanoiaAdjustedEvent) GetNewParanoia() int32 {
 	return 0
 }
 
+// 好感值调整事件
 type GoodwillAdjustedEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`
-	Amount        int32                  `protobuf:"varint,2,opt,name=amount,proto3" json:"amount,omitempty"`
-	NewGoodwill   int32                  `protobuf:"varint,3,opt,name=new_goodwill,json=newGoodwill,proto3" json:"new_goodwill,omitempty"`
+	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"` // 角色ID
+	Amount        int32                  `protobuf:"varint,2,opt,name=amount,proto3" json:"amount,omitempty"`                              // 调整量
+	NewGoodwill   int32                  `protobuf:"varint,3,opt,name=new_goodwill,json=newGoodwill,proto3" json:"new_goodwill,omitempty"` // 调整后的新好感值
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -300,11 +304,12 @@ func (x *GoodwillAdjustedEvent) GetNewGoodwill() int32 {
 	return 0
 }
 
+// 阴谋值调整事件
 type IntrigueAdjustedEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`
-	Amount        int32                  `protobuf:"varint,2,opt,name=amount,proto3" json:"amount,omitempty"`
-	NewIntrigue   int32                  `protobuf:"varint,3,opt,name=new_intrigue,json=newIntrigue,proto3" json:"new_intrigue,omitempty"`
+	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"` // 角色ID
+	Amount        int32                  `protobuf:"varint,2,opt,name=amount,proto3" json:"amount,omitempty"`                              // 调整量
+	NewIntrigue   int32                  `protobuf:"varint,3,opt,name=new_intrigue,json=newIntrigue,proto3" json:"new_intrigue,omitempty"` // 调整后的新阴谋值
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -360,9 +365,10 @@ func (x *IntrigueAdjustedEvent) GetNewIntrigue() int32 {
 	return 0
 }
 
+// 循环失败事件
 type LoopLossEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	IncidentType  IncidentType           `protobuf:"varint,1,opt,name=incident_type,json=incidentType,proto3,enum=v1.IncidentType" json:"incident_type,omitempty"`
+	IncidentType  IncidentType           `protobuf:"varint,1,opt,name=incident_type,json=incidentType,proto3,enum=v1.IncidentType" json:"incident_type,omitempty"` // 导致失败的事件类型
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -404,6 +410,7 @@ func (x *LoopLossEvent) GetIncidentType() IncidentType {
 	return IncidentType_INCIDENT_TYPE_UNSPECIFIED
 }
 
+// 循环胜利事件
 type LoopWinEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -440,10 +447,11 @@ func (*LoopWinEvent) Descriptor() ([]byte, []int) {
 	return file_v1_event_proto_rawDescGZIP(), []int{7}
 }
 
+// 能力使用事件
 type AbilityUsedEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`
-	AbilityName   string                 `protobuf:"bytes,2,opt,name=ability_name,json=abilityName,proto3" json:"ability_name,omitempty"`
+	CharacterId   int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"` // 使用能力的角色ID
+	AbilityName   string                 `protobuf:"bytes,2,opt,name=ability_name,json=abilityName,proto3" json:"ability_name,omitempty"`  // 使用的能力名称
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -492,10 +500,11 @@ func (x *AbilityUsedEvent) GetAbilityName() string {
 	return ""
 }
 
+// 天数推进事件
 type DayAdvancedEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Day           int32                  `protobuf:"varint,1,opt,name=day,proto3" json:"day,omitempty"`
-	Loop          int32                  `protobuf:"varint,2,opt,name=loop,proto3" json:"loop,omitempty"`
+	Day           int32                  `protobuf:"varint,1,opt,name=day,proto3" json:"day,omitempty"`   // 新的天数
+	Loop          int32                  `protobuf:"varint,2,opt,name=loop,proto3" json:"loop,omitempty"` // 当前的循环数
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -544,9 +553,10 @@ func (x *DayAdvancedEvent) GetLoop() int32 {
 	return 0
 }
 
+// 卡牌打出事件
 type CardPlayedEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PlayedCards   map[int32]*CardList    `protobuf:"bytes,1,rep,name=played_cards,json=playedCards,proto3" json:"played_cards,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	PlayedCards   map[int32]*CardList    `protobuf:"bytes,1,rep,name=played_cards,json=playedCards,proto3" json:"played_cards,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // key为玩家ID，value为该玩家打出的卡牌列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -588,9 +598,10 @@ func (x *CardPlayedEvent) GetPlayedCards() map[int32]*CardList {
 	return nil
 }
 
+// 循环重置事件
 type LoopResetEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Loop          int32                  `protobuf:"varint,1,opt,name=loop,proto3" json:"loop,omitempty"`
+	Loop          int32                  `protobuf:"varint,1,opt,name=loop,proto3" json:"loop,omitempty"` // 新的循环数
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -632,9 +643,10 @@ func (x *LoopResetEvent) GetLoop() int32 {
 	return 0
 }
 
+// 游戏结束事件
 type GameOverEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Winner        PlayerRole             `protobuf:"varint,1,opt,name=winner,proto3,enum=v1.PlayerRole" json:"winner,omitempty"`
+	Winner        PlayerRole             `protobuf:"varint,1,opt,name=winner,proto3,enum=v1.PlayerRole" json:"winner,omitempty"` // 胜利的玩家角色
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -679,8 +691,8 @@ func (x *GameOverEvent) GetWinner() PlayerRole {
 // Choice 表示玩家可以做出的选择。
 type Choice struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Description   string                 `protobuf:"bytes,1,opt,name=description,proto3" json:"description,omitempty"`
-	CharacterId   int32                  `protobuf:"varint,2,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`
+	Description   string                 `protobuf:"bytes,1,opt,name=description,proto3" json:"description,omitempty"`                     // 选项的描述
+	CharacterId   int32                  `protobuf:"varint,2,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"` // 与该选项相关的角色ID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -729,10 +741,11 @@ func (x *Choice) GetCharacterId() int32 {
 	return 0
 }
 
+// 需要玩家做出选择的事件
 type ChoiceRequiredEvent struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 这可能需要更复杂的结构，具体取决于选择
-	Choices       []*Choice `protobuf:"bytes,1,rep,name=choices,proto3" json:"choices,omitempty"`
+	Choices       []*Choice `protobuf:"bytes,1,rep,name=choices,proto3" json:"choices,omitempty"` // 提供给玩家的选项列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -774,9 +787,10 @@ func (x *ChoiceRequiredEvent) GetChoices() []*Choice {
 	return nil
 }
 
+// 事件触发事件
 type IncidentTriggeredEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Incident      *Incident              `protobuf:"bytes,1,opt,name=incident,proto3" json:"incident,omitempty"`
+	Incident      *Incident              `protobuf:"bytes,1,opt,name=incident,proto3" json:"incident,omitempty"` // 被触发的事件详情
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -818,9 +832,10 @@ func (x *IncidentTriggeredEvent) GetIncident() *Incident {
 	return nil
 }
 
+// 悲剧触发事件
 type TragedyTriggeredEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TragedyType   IncidentType           `protobuf:"varint,1,opt,name=tragedy_type,json=tragedyType,proto3,enum=v1.IncidentType" json:"tragedy_type,omitempty"`
+	TragedyType   IncidentType           `protobuf:"varint,1,opt,name=tragedy_type,json=tragedyType,proto3,enum=v1.IncidentType" json:"tragedy_type,omitempty"` // 被触发的悲剧类型
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

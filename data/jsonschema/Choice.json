@@ -5,10 +5,12 @@
         "Choice": {
             "properties": {
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "选项的描述"
                 },
                 "character_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "与该选项相关的角色ID"
                 }
             },
             "additionalProperties": true,

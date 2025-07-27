@@ -21,19 +21,19 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// AbilityConfig represents the static configuration of an ability.
 type AbilityConfig struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                      // Unique ID for the ability configuration
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                   // Name of the ability
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                     // Description of the ability
-	TriggerType   TriggerType            `protobuf:"varint,4,opt,name=trigger_type,json=triggerType,proto3,enum=v1.TriggerType" json:"trigger_type,omitempty"`             // When the ability triggers
-	EventFilters  []GameEventType        `protobuf:"varint,5,rep,packed,name=event_filters,json=eventFilters,proto3,enum=v1.GameEventType" json:"event_filters,omitempty"` // Optional: Filters for ON_GAME_EVENT trigger type
-	Effect        *Effect                `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`                                                               // The effect of the ability
-	OncePerLoop   bool                   `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`                               // Whether the ability can be used only once per loop
-	RefusalRole   PlayerRole             `protobuf:"varint,8,opt,name=refusal_role,json=refusalRole,proto3,enum=v1.PlayerRole" json:"refusal_role,omitempty"`              // The player role that can refuse this ability
-	IsPassive     bool                   `protobuf:"varint,10,opt,name=is_passive,json=isPassive,proto3" json:"is_passive,omitempty"`                                      // Whether this is a passive ability
-	IsMandatory   bool                   `protobuf:"varint,11,opt,name=is_mandatory,json=isMandatory,proto3" json:"is_mandatory,omitempty"`                                // Whether this ability is mandatory
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                      // 能力唯一ID
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                   // 能力名称
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                     // 能力描述
+	TriggerType   TriggerType            `protobuf:"varint,4,opt,name=trigger_type,json=triggerType,proto3,enum=v1.TriggerType" json:"trigger_type,omitempty"`             // 能力触发时机
+	EventFilters  []GameEventType        `protobuf:"varint,5,rep,packed,name=event_filters,json=eventFilters,proto3,enum=v1.GameEventType" json:"event_filters,omitempty"` // 可选：游戏事件触发时的过滤器
+	Effect        *Effect                `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`                                                               // 能力效果
+	OncePerLoop   bool                   `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`                               // 是否每循环只能使用一次
+	RefusalRole   PlayerRole             `protobuf:"varint,8,opt,name=refusal_role,json=refusalRole,proto3,enum=v1.PlayerRole" json:"refusal_role,omitempty"`              // 可以拒绝此能力的玩家角色
+	IsPassive     bool                   `protobuf:"varint,9,opt,name=is_passive,json=isPassive,proto3" json:"is_passive,omitempty"`                                       // 是否为被动能力
+	IsMandatory   bool                   `protobuf:"varint,10,opt,name=is_mandatory,json=isMandatory,proto3" json:"is_mandatory,omitempty"`                                // 是否为强制能力（不可拒绝）
+	Priority      int32                  `protobuf:"varint,11,opt,name=priority,proto3" json:"priority,omitempty"`                                                         // 能力结算优先级
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -138,11 +138,17 @@ func (x *AbilityConfig) GetIsMandatory() bool {
 	return false
 }
 
-// Ability represents a runtime instance of an ability.
+func (x *AbilityConfig) GetPriority() int32 {
+	if x != nil {
+		return x.Priority
+	}
+	return 0
+}
+
 type Ability struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                           // The ID of the ability, linking to an AbilityConfig
-	UsedThisLoop  bool                   `protobuf:"varint,2,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"` // Runtime state: whether this ability has been used in the current loop
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                           // 能力ID，关联到AbilityConfig
+	UsedThisLoop  bool                   `protobuf:"varint,2,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"` // 运行时状态：本循环是否已使用
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -191,10 +197,9 @@ func (x *Ability) GetUsedThisLoop() bool {
 	return false
 }
 
-// AbilityConfigLib holds a library of ability configurations.
 type AbilityConfigLib struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	Abilities     map[int32]*AbilityConfig `protobuf:"bytes,1,rep,name=abilities,proto3" json:"abilities,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Abilities     map[int32]*AbilityConfig `protobuf:"bytes,1,rep,name=abilities,proto3" json:"abilities,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 能力ID到配置的映射
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -240,7 +245,7 @@ var File_v1_ability_proto protoreflect.FileDescriptor
 
 const file_v1_ability_proto_rawDesc = "" +
 	"\n" +
-	"\x10v1/ability.proto\x12\x02v1\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\xfe\x02\n" +
+	"\x10v1/ability.proto\x12\x02v1\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\x9a\x03\n" +
 	"\rAbilityConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -252,9 +257,10 @@ const file_v1_ability_proto_rawDesc = "" +
 	"\ronce_per_loop\x18\a \x01(\bR\voncePerLoop\x121\n" +
 	"\frefusal_role\x18\b \x01(\x0e2\x0e.v1.PlayerRoleR\vrefusalRole\x12\x1d\n" +
 	"\n" +
-	"is_passive\x18\n" +
-	" \x01(\bR\tisPassive\x12!\n" +
-	"\fis_mandatory\x18\v \x01(\bR\visMandatory\"?\n" +
+	"is_passive\x18\t \x01(\bR\tisPassive\x12!\n" +
+	"\fis_mandatory\x18\n" +
+	" \x01(\bR\visMandatory\x12\x1a\n" +
+	"\bpriority\x18\v \x01(\x05R\bpriority\"?\n" +
 	"\aAbility\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12$\n" +
 	"\x0eused_this_loop\x18\x02 \x01(\bR\fusedThisLoop\"\xa6\x01\n" +

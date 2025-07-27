@@ -5,14 +5,24 @@
         0,
         "MOVEMENT",
         1,
-        "PARANOIA",
+        "PARANOIA_PLUS",
         2,
-        "GOODWILL",
+        "PARANOIA_MINUS",
         3,
-        "INTRIGUE",
+        "GOODWILL_PLUS",
         4,
-        "SPECIAL",
-        5
+        "GOODWILL_MINUS",
+        5,
+        "INTRIGUE_PLUS",
+        6,
+        "FORBID_MOVEMENT",
+        7,
+        "FORBID_PARANOIA",
+        8,
+        "FORBID_GOODWILL",
+        9,
+        "FORBID_INTRIGUE",
+        10
     ],
     "oneOf": [
         {
@@ -23,5 +33,5 @@
         }
     ],
     "title": "Card Type",
-    "description": "卡牌类型枚举"
+    "description": "卡牌类型"
 }

@@ -5,27 +5,34 @@
         "Incident": {
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "事件唯一ID"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "事件名称"
                 },
                 "day": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "事件发生的日期"
                 },
                 "culprit": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "犯人（角色名称或描述）"
                 },
                 "victim": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "受害者（角色名称或描述）"
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "事件描述"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Incident"
+            "title": "Incident",
+            "description": "事件实例，在游戏运行时创建"
         }
     }
 }

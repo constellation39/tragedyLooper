@@ -9,24 +9,30 @@
                         "enum": [
                             "ROLE_TYPE_UNSPECIFIED",
                             0,
-                            "INNOCENT",
+                            "PERSON",
                             1,
                             "KILLER",
                             2,
-                            "ACCOMPLICE",
+                            "BRAIN",
                             3,
-                            "PERSON_OF_INTEREST",
-                            4,
                             "KEY_PERSON",
+                            4,
+                            "CULTIST",
                             5,
                             "FRIEND",
                             6,
-                            "LOVER",
+                            "LOVED_ONE",
                             7,
                             "CONSPIRACY_THEORIST",
                             8,
-                            "CULTIST",
-                            9
+                            "SERIAL_KILLER",
+                            9,
+                            "FACTOR",
+                            10,
+                            "WITCH",
+                            11,
+                            "TIME_TRAVELER",
+                            12
                         ],
                         "oneOf": [
                             {
@@ -37,7 +43,7 @@
                             }
                         ],
                         "title": "Role Type",
-                        "description": "角色身份类型枚举"
+                        "description": "角色身份类型"
                     },
                     "type": "object",
                     "description": "对角色身份的猜测，键为 character_id"

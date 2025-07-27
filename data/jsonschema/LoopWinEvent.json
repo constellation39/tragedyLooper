@@ -5,7 +5,8 @@
         "LoopWinEvent": {
             "additionalProperties": true,
             "type": "object",
-            "title": "Loop Win Event"
+            "title": "Loop Win Event",
+            "description": "循环胜利事件"
         }
     }
 }

@@ -5,7 +5,7 @@
         "PlayerViewPlayer": {
             "properties": {
                 "id": {
-                    "type": "string",
+                    "type": "integer",
                     "description": "玩家唯一ID"
                 },
                 "name": {
@@ -30,7 +30,7 @@
                         }
                     ],
                     "title": "Player Role",
-                    "description": "玩家角色枚举"
+                    "description": "玩家角色"
                 }
             },
             "additionalProperties": true,

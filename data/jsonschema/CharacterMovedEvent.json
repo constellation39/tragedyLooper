@@ -5,7 +5,8 @@
         "CharacterMovedEvent": {
             "properties": {
                 "character_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "移动的角色ID"
                 },
                 "new_location": {
                     "enum": [
@@ -29,12 +30,13 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "地点类型枚举"
+                    "description": "地点类型（也可通过LocationConfig扩展）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Character Moved Event"
+            "title": "Character Moved Event",
+            "description": "角色移动事件"
         }
     }
 }

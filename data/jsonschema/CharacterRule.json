@@ -4,6 +4,14 @@
     "definitions": {
         "CharacterRule": {
             "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "规则名称"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "规则描述"
+                },
                 "trigger": {
                     "enum": [
                         "TRIGGER_TYPE_UNSPECIFIED",
@@ -14,26 +22,18 @@
                         2,
                         "ON_DAY_START",
                         3,
-                        "ON_CARD_PLAY_PHASE",
+                        "ON_PHASE_START",
                         4,
-                        "ON_CARD_REVEAL_PHASE",
+                        "ON_PHASE_END",
                         5,
-                        "ON_CARD_RESOLVE_PHASE",
-                        6,
-                        "ON_ABILITY_PHASE",
-                        7,
-                        "ON_INCIDENT_PHASE",
-                        8,
                         "ON_GAME_EVENT",
-                        9,
+                        6,
                         "PASSIVE",
-                        10,
-                        "ON_LOOP_LOSS",
-                        11,
-                        "ON_LOOP_WIN",
-                        12,
+                        7,
+                        "ON_GUESS_MADE",
+                        8,
                         "ON_GAME_END",
-                        13
+                        9
                     ],
                     "oneOf": [
                         {
@@ -44,11 +44,7 @@
                         }
                     ],
                     "title": "Trigger Type",
-                    "description": "触发器类型枚举（能力或规则何时触发）"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "规则描述"
+                    "description": "触发器类型（能力或规则何时触发）"
                 },
                 "turf_selection_effect": {
                     "$ref": "#/definitions/v1.TurfSelectionEffect",
@@ -59,6 +55,11 @@
                     "$ref": "#/definitions/v1.DelayedEntryEffect",
                     "additionalProperties": true,
                     "description": "延迟登场效果"
+                },
+                "special_movement_rule": {
+                    "$ref": "#/definitions/v1.SpecialMovementRule",
+                    "additionalProperties": true,
+                    "description": "特殊移动规则"
                 }
             },
             "additionalProperties": true,
@@ -70,7 +71,7 @@
             "properties": {
                 "day_of_entry": {
                     "type": "integer",
-                    "description": "角色登场的日期"
+                    "description": "登场日期"
                 },
                 "entry_location": {
                     "enum": [
@@ -94,13 +95,44 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "地点类型枚举"
+                    "description": "地点类型（也可通过LocationConfig扩展）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Delayed Entry Effect",
-            "description": "延迟登场效果（例如某些角色在特定天数才登场）"
+            "description": "延迟登场效果"
+        },
+        "v1.SpecialMovementRule": {
+            "properties": {
+                "restricted_locations": {
+                    "items": {
+                        "enum": [
+                            "LOCATION_TYPE_UNSPECIFIED",
+                            0,
+                            "HOSPITAL",
+                            1,
+                            "SHRINE",
+                            2,
+                            "CITY",
+                            3,
+                            "SCHOOL",
+                            4
+                        ]
+                    },
+                    "type": "array",
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "规则描述"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Special Movement Rule",
+            "description": "特殊移动规则"
         },
         "v1.TurfSelectionEffect": {
             "properties": {
@@ -121,17 +153,17 @@
                     },
                     "type": "array",
                     "title": "Location Type",
-                    "description": "地点类型枚举"
+                    "description": "地点类型（也可通过LocationConfig扩展）"
                 },
                 "prompt": {
                     "type": "string",
-                    "description": "给玩家的提示语"
+                    "description": "给玩家的提示信息"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Turf Selection Effect",
-            "description": "地盘选择效果（例如某些角色开局可以选择初始地点）"
+            "description": "地盘选择效果"
         }
     }
 }

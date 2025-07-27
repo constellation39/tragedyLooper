@@ -21,17 +21,17 @@
                     },
                     "type": "array",
                     "title": "Location Type",
-                    "description": "地点类型枚举"
+                    "description": "地点类型（也可通过LocationConfig扩展）"
                 },
                 "prompt": {
                     "type": "string",
-                    "description": "给玩家的提示语"
+                    "description": "给玩家的提示信息"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Turf Selection Effect",
-            "description": "地盘选择效果（例如某些角色开局可以选择初始地点）"
+            "description": "地盘选择效果"
         }
     }
 }

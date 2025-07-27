@@ -44,26 +44,28 @@
                         1,
                         "MASTERMIND_SETUP",
                         2,
-                        "CARD_PLAY",
+                        "LOOP_START",
                         3,
-                        "CARD_REVEAL",
+                        "DAY_START",
                         4,
-                        "CARD_RESOLVE",
+                        "CARD_PLAY",
                         5,
-                        "ABILITIES",
+                        "CARD_REVEAL",
                         6,
-                        "INCIDENTS",
+                        "CARD_RESOLVE",
                         7,
-                        "DAY_END",
+                        "ABILITIES",
                         8,
-                        "LOOP_END",
+                        "INCIDENTS",
                         9,
-                        "GAME_OVER",
+                        "DAY_END",
                         10,
-                        "PROTAGONIST_GUESS",
+                        "LOOP_END",
                         11,
-                        "FIRST_GUESS",
-                        12
+                        "PROTAGONIST_GUESS",
+                        12,
+                        "GAME_OVER",
+                        13
                     ],
                     "oneOf": [
                         {
@@ -74,7 +76,7 @@
                         }
                     ],
                     "title": "Game Phase",
-                    "description": "游戏阶段枚举"
+                    "description": "游戏阶段"
                 },
                 "active_tragedies": {
                     "additionalProperties": {
@@ -119,36 +121,43 @@
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "The ID of the ability, linking to an AbilityConfig"
+                    "description": "能力ID，关联到AbilityConfig"
                 },
                 "used_this_loop": {
                     "type": "boolean",
-                    "description": "Runtime state: whether this ability has been used in the current loop"
+                    "description": "运行时状态：本循环是否已使用"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Ability",
-            "description": "Ability represents a runtime instance of an ability."
+            "title": "Ability"
         },
         "v1.Card": {
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "The ID of the card, linking to a CardConfig"
+                    "description": "卡牌ID，关联到CardConfig"
                 },
                 "used_this_loop": {
                     "type": "boolean",
-                    "description": "Runtime state: whether this card has been used in the current loop"
+                    "description": "运行时状态：本循环是否已使用"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Card",
-            "description": "Card represents a runtime instance of a card."
+            "description": "卡牌运行时实例"
         },
         "v1.CharacterRule": {
             "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "规则名称"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "规则描述"
+                },
                 "trigger": {
                     "enum": [
                         "TRIGGER_TYPE_UNSPECIFIED",
@@ -159,26 +168,18 @@
                         2,
                         "ON_DAY_START",
                         3,
-                        "ON_CARD_PLAY_PHASE",
+                        "ON_PHASE_START",
                         4,
-                        "ON_CARD_REVEAL_PHASE",
+                        "ON_PHASE_END",
                         5,
-                        "ON_CARD_RESOLVE_PHASE",
-                        6,
-                        "ON_ABILITY_PHASE",
-                        7,
-                        "ON_INCIDENT_PHASE",
-                        8,
                         "ON_GAME_EVENT",
-                        9,
+                        6,
                         "PASSIVE",
-                        10,
-                        "ON_LOOP_LOSS",
-                        11,
-                        "ON_LOOP_WIN",
-                        12,
+                        7,
+                        "ON_GUESS_MADE",
+                        8,
                         "ON_GAME_END",
-                        13
+                        9
                     ],
                     "oneOf": [
                         {
@@ -189,11 +190,7 @@
                         }
                     ],
                     "title": "Trigger Type",
-                    "description": "触发器类型枚举（能力或规则何时触发）"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "规则描述"
+                    "description": "触发器类型（能力或规则何时触发）"
                 },
                 "turf_selection_effect": {
                     "$ref": "#/definitions/v1.TurfSelectionEffect",
@@ -204,6 +201,11 @@
                     "$ref": "#/definitions/v1.DelayedEntryEffect",
                     "additionalProperties": true,
                     "description": "延迟登场效果"
+                },
+                "special_movement_rule": {
+                    "$ref": "#/definitions/v1.SpecialMovementRule",
+                    "additionalProperties": true,
+                    "description": "特殊移动规则"
                 }
             },
             "additionalProperties": true,
@@ -215,7 +217,7 @@
             "properties": {
                 "day_of_entry": {
                     "type": "integer",
-                    "description": "角色登场的日期"
+                    "description": "登场日期"
                 },
                 "entry_location": {
                     "enum": [
@@ -239,13 +241,13 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "地点类型枚举"
+                    "description": "地点类型（也可通过LocationConfig扩展）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Delayed Entry Effect",
-            "description": "延迟登场效果（例如某些角色在特定天数才登场）"
+            "description": "延迟登场效果"
         },
         "v1.GameEvent": {
             "properties": {
@@ -255,40 +257,22 @@
                         0,
                         "CHARACTER_MOVED",
                         1,
-                        "PARANOIA_ADJUSTED",
+                        "STAT_ADJUSTED",
                         2,
-                        "GOODWILL_ADJUSTED",
-                        3,
-                        "INTRIGUE_ADJUSTED",
-                        4,
                         "INCIDENT_TRIGGERED",
-                        5,
-                        "INCIDENT_PREVENTED",
-                        6,
+                        3,
                         "ROLE_REVEALED",
+                        4,
+                        "CHARACTER_DIED",
+                        5,
+                        "ABILITY_USED",
+                        6,
+                        "CARD_PLAYED",
                         7,
-                        "ABILITY_GRANTED",
-                        8,
-                        "CHOICE_REQUIRED",
-                        9,
-                        "LOOP_WIN",
-                        10,
-                        "LOOP_LOSS",
-                        11,
-                        "FIRST_GUESS_MADE",
-                        12,
-                        "FINAL_GUESS_MADE",
-                        13,
-                        "GOODWILL_REFUSAL_TEST",
-                        14,
-                        "LOOP_OVER",
-                        15,
                         "DAY_ADVANCED",
-                        16,
-                        "TRAGEDY_TRIGGERED",
-                        17,
+                        8,
                         "LOOP_RESET",
-                        18
+                        9
                     ],
                     "oneOf": [
                         {
@@ -299,7 +283,7 @@
                         }
                     ],
                     "title": "Game Event Type",
-                    "description": "游戏事件类型枚举"
+                    "description": "游戏事件类型（用于能力触发器过滤）"
                 },
                 "payload": {
                     "properties": {
@@ -315,10 +299,12 @@
                         }
                     },
                     "additionalProperties": true,
-                    "type": "object"
+                    "type": "object",
+                    "description": "事件的具体负载"
                 },
                 "timestamp": {
                     "type": "string",
+                    "description": "事件发生的时间戳",
                     "format": "date-time"
                 }
             },
@@ -334,24 +320,30 @@
                         "enum": [
                             "ROLE_TYPE_UNSPECIFIED",
                             0,
-                            "INNOCENT",
+                            "PERSON",
                             1,
                             "KILLER",
                             2,
-                            "ACCOMPLICE",
+                            "BRAIN",
                             3,
-                            "PERSON_OF_INTEREST",
-                            4,
                             "KEY_PERSON",
+                            4,
+                            "CULTIST",
                             5,
                             "FRIEND",
                             6,
-                            "LOVER",
+                            "LOVED_ONE",
                             7,
                             "CONSPIRACY_THEORIST",
                             8,
-                            "CULTIST",
-                            9
+                            "SERIAL_KILLER",
+                            9,
+                            "FACTOR",
+                            10,
+                            "WITCH",
+                            11,
+                            "TIME_TRAVELER",
+                            12
                         ],
                         "oneOf": [
                             {
@@ -362,7 +354,7 @@
                             }
                         ],
                         "title": "Role Type",
-                        "description": "角色身份类型枚举"
+                        "description": "角色身份类型"
                     },
                     "type": "object",
                     "description": "对角色身份的猜测，键为 character_id"
@@ -426,7 +418,7 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "地点类型枚举"
+                    "description": "地点类型（也可通过LocationConfig扩展）"
                 },
                 "paranoia": {
                     "type": "integer",
@@ -471,7 +463,7 @@
         "v1.PlayerViewPlayer": {
             "properties": {
                 "id": {
-                    "type": "string",
+                    "type": "integer",
                     "description": "玩家唯一ID"
                 },
                 "name": {
@@ -496,13 +488,44 @@
                         }
                     ],
                     "title": "Player Role",
-                    "description": "玩家角色枚举"
+                    "description": "玩家角色"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Player View Player",
             "description": "玩家视角下的其他玩家信息（不包含私密数据）"
+        },
+        "v1.SpecialMovementRule": {
+            "properties": {
+                "restricted_locations": {
+                    "items": {
+                        "enum": [
+                            "LOCATION_TYPE_UNSPECIFIED",
+                            0,
+                            "HOSPITAL",
+                            1,
+                            "SHRINE",
+                            2,
+                            "CITY",
+                            3,
+                            "SCHOOL",
+                            4
+                        ]
+                    },
+                    "type": "array",
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "规则描述"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Special Movement Rule",
+            "description": "特殊移动规则"
         },
         "v1.TurfSelectionEffect": {
             "properties": {
@@ -523,17 +546,17 @@
                     },
                     "type": "array",
                     "title": "Location Type",
-                    "description": "地点类型枚举"
+                    "description": "地点类型（也可通过LocationConfig扩展）"
                 },
                 "prompt": {
                     "type": "string",
-                    "description": "给玩家的提示语"
+                    "description": "给玩家的提示信息"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Turf Selection Effect",
-            "description": "地盘选择效果（例如某些角色开局可以选择初始地点）"
+            "description": "地盘选择效果"
         }
     }
 }

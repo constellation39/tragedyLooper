@@ -9,26 +9,18 @@
         2,
         "ON_DAY_START",
         3,
-        "ON_CARD_PLAY_PHASE",
+        "ON_PHASE_START",
         4,
-        "ON_CARD_REVEAL_PHASE",
+        "ON_PHASE_END",
         5,
-        "ON_CARD_RESOLVE_PHASE",
-        6,
-        "ON_ABILITY_PHASE",
-        7,
-        "ON_INCIDENT_PHASE",
-        8,
         "ON_GAME_EVENT",
-        9,
+        6,
         "PASSIVE",
-        10,
-        "ON_LOOP_LOSS",
-        11,
-        "ON_LOOP_WIN",
-        12,
+        7,
+        "ON_GUESS_MADE",
+        8,
         "ON_GAME_END",
-        13
+        9
     ],
     "oneOf": [
         {
@@ -39,5 +31,5 @@
         }
     ],
     "title": "Trigger Type",
-    "description": "触发器类型枚举（能力或规则何时触发）"
+    "description": "触发器类型（能力或规则何时触发）"
 }

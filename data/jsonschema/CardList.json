@@ -8,29 +8,30 @@
                     "items": {
                         "$ref": "#/definitions/v1.Card"
                     },
-                    "type": "array"
+                    "type": "array",
+                    "description": "卡牌实例列表"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Card List",
-            "description": "CardList holds a list of card instances."
+            "description": "卡牌列表"
         },
         "v1.Card": {
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "The ID of the card, linking to a CardConfig"
+                    "description": "卡牌ID，关联到CardConfig"
                 },
                 "used_this_loop": {
                     "type": "boolean",
-                    "description": "Runtime state: whether this card has been used in the current loop"
+                    "description": "运行时状态：本循环是否已使用"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Card",
-            "description": "Card represents a runtime instance of a card."
+            "description": "卡牌运行时实例"
         }
     }
 }

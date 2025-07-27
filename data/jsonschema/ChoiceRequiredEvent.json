@@ -9,20 +9,23 @@
                         "$ref": "#/definitions/v1.Choice"
                     },
                     "type": "array",
-                    "description": "这可能需要更复杂的结构，具体取决于选择"
+                    "description": "这可能需要更复杂的结构，具体取决于选择  提供给玩家的选项列表"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Choice Required Event"
+            "title": "Choice Required Event",
+            "description": "需要玩家做出选择的事件"
         },
         "v1.Choice": {
             "properties": {
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "选项的描述"
                 },
                 "character_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "与该选项相关的角色ID"
                 }
             },
             "additionalProperties": true,

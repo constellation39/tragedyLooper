@@ -4,11 +4,12 @@
     "definitions": {
         "MoveCharacterEffect": {
             "properties": {
-                "character_id": {
-                    "type": "integer",
-                    "description": "目标角色ID"
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色"
                 },
-                "target_location": {
+                "destination": {
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
@@ -30,13 +31,116 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "地点类型枚举"
+                    "description": "地点类型（也可通过LocationConfig扩展）"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Move Character Effect",
             "description": "移动角色效果"
+        },
+        "v1.TargetSelector": {
+            "properties": {
+                "selector_type": {
+                    "enum": [
+                        "SELECTOR_TYPE_UNSPECIFIED",
+                        0,
+                        "SPECIFIC_CHARACTER",
+                        1,
+                        "TRIGGERING_CHARACTER",
+                        2,
+                        "CULPRIT",
+                        3,
+                        "VICTIM",
+                        4,
+                        "ANY_CHARACTER_WITH_ROLE",
+                        5,
+                        "ALL_CHARACTERS_AT_LOCATION",
+                        6
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Selector Type"
+                },
+                "character_id": {
+                    "type": "integer",
+                    "description": "当类型为 SPECIFIC_CHARACTER 时使用"
+                },
+                "role_filter": {
+                    "enum": [
+                        "ROLE_TYPE_UNSPECIFIED",
+                        0,
+                        "PERSON",
+                        1,
+                        "KILLER",
+                        2,
+                        "BRAIN",
+                        3,
+                        "KEY_PERSON",
+                        4,
+                        "CULTIST",
+                        5,
+                        "FRIEND",
+                        6,
+                        "LOVED_ONE",
+                        7,
+                        "CONSPIRACY_THEORIST",
+                        8,
+                        "SERIAL_KILLER",
+                        9,
+                        "FACTOR",
+                        10,
+                        "WITCH",
+                        11,
+                        "TIME_TRAVELER",
+                        12
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Role Type",
+                    "description": "角色身份类型"
+                },
+                "location_filter": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Target Selector",
+            "description": "目标选择器，用于动态指定条件或效果的目标"
         }
     }
 }

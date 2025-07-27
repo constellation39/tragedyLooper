@@ -12,10 +12,16 @@
                         1,
                         "SUICIDE",
                         2,
-                        "HOSPITAL_CONSPIRACY",
+                        "ACCIDENT",
                         3,
+                        "DISAPPEARANCE",
+                        4,
+                        "HOSPITAL_CONSPIRACY",
+                        5,
                         "MURDER_MYSTERY",
-                        4
+                        6,
+                        "PANIC",
+                        7
                     ],
                     "oneOf": [
                         {
@@ -26,12 +32,13 @@
                         }
                     ],
                     "title": "Incident Type",
-                    "description": "悲剧类型枚举"
+                    "description": "事件类型"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Loop Loss Event"
+            "title": "Loop Loss Event",
+            "description": "循环失败事件"
         }
     }
 }

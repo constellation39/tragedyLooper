@@ -8,11 +8,6 @@
                     "type": "string",
                     "description": "游戏唯一ID"
                 },
-                "script": {
-                    "$ref": "#/definitions/v1.Script",
-                    "additionalProperties": true,
-                    "description": "当前游戏的剧本配置"
-                },
                 "characters": {
                     "additionalProperties": {
                         "$ref": "#/definitions/v1.Character",
@@ -45,26 +40,28 @@
                         1,
                         "MASTERMIND_SETUP",
                         2,
-                        "CARD_PLAY",
+                        "LOOP_START",
                         3,
-                        "CARD_REVEAL",
+                        "DAY_START",
                         4,
-                        "CARD_RESOLVE",
+                        "CARD_PLAY",
                         5,
-                        "ABILITIES",
+                        "CARD_REVEAL",
                         6,
-                        "INCIDENTS",
+                        "CARD_RESOLVE",
                         7,
-                        "DAY_END",
+                        "ABILITIES",
                         8,
-                        "LOOP_END",
+                        "INCIDENTS",
                         9,
-                        "GAME_OVER",
+                        "DAY_END",
                         10,
-                        "PROTAGONIST_GUESS",
+                        "LOOP_END",
                         11,
-                        "FIRST_GUESS",
-                        12
+                        "PROTAGONIST_GUESS",
+                        12,
+                        "GAME_OVER",
+                        13
                     ],
                     "oneOf": [
                         {
@@ -75,7 +72,7 @@
                         }
                     ],
                     "title": "Game Phase",
-                    "description": "游戏阶段枚举"
+                    "description": "游戏阶段"
                 },
                 "active_tragedies": {
                     "additionalProperties": {
@@ -97,14 +94,14 @@
                         "additionalProperties": true
                     },
                     "type": "object",
-                    "description": "Cards played today, keyed by player_id."
+                    "description": "今天打出的牌，键为 player_id"
                 },
                 "played_cards_this_loop": {
                     "additionalProperties": {
                         "type": "boolean"
                     },
                     "type": "object",
-                    "description": "IDs of cards played in this loop."
+                    "description": "本循环中已打出的牌的ID"
                 },
                 "last_update_time": {
                     "type": "string",
@@ -129,21 +126,21 @@
                         "type": "integer"
                     },
                     "type": "object",
-                    "description": "每个角色的妄想上限映射（新增）"
+                    "description": "每个角色的妄想上限映射"
                 },
                 "character_goodwill_limits": {
                     "additionalProperties": {
                         "type": "integer"
                     },
                     "type": "object",
-                    "description": "每个角色的好感度上限映射（新增）"
+                    "description": "每个角色的好感度上限映射"
                 },
                 "character_intrigue_limits": {
                     "additionalProperties": {
                         "type": "integer"
                     },
                     "type": "object",
-                    "description": "每个角色的阴谋上限映射（新增）"
+                    "description": "每个角色的阴谋上限映射"
                 }
             },
             "additionalProperties": true,
@@ -155,50 +152,38 @@
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "The ID of the ability, linking to an AbilityConfig"
+                    "description": "能力ID，关联到AbilityConfig"
                 },
                 "used_this_loop": {
                     "type": "boolean",
-                    "description": "Runtime state: whether this ability has been used in the current loop"
+                    "description": "运行时状态：本循环是否已使用"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Ability",
-            "description": "Ability represents a runtime instance of an ability."
+            "title": "Ability"
         },
         "v1.Card": {
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "The ID of the card, linking to a CardConfig"
+                    "description": "卡牌ID，关联到CardConfig"
                 },
                 "used_this_loop": {
                     "type": "boolean",
-                    "description": "Runtime state: whether this card has been used in the current loop"
+                    "description": "运行时状态：本循环是否已使用"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Card",
-            "description": "Card represents a runtime instance of a card."
+            "description": "卡牌运行时实例"
         },
         "v1.Character": {
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "角色唯一ID"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "角色名称"
-                },
-                "traits": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array",
-                    "description": "角色特征，例如“学生”、“记者”"
+                    "description": "角色ID，关联到CharacterConfig"
                 },
                 "current_location": {
                     "enum": [
@@ -222,42 +207,48 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "地点类型枚举"
+                    "description": "地点类型（也可通过LocationConfig扩展）"
                 },
                 "paranoia": {
                     "type": "integer",
-                    "description": "妄想值"
+                    "description": "当前妄想值"
                 },
                 "goodwill": {
                     "type": "integer",
-                    "description": "好感值"
+                    "description": "当前好感值"
                 },
                 "intrigue": {
                     "type": "integer",
-                    "description": "阴谋值"
+                    "description": "当前阴谋值"
                 },
                 "hidden_role": {
                     "enum": [
                         "ROLE_TYPE_UNSPECIFIED",
                         0,
-                        "INNOCENT",
+                        "PERSON",
                         1,
                         "KILLER",
                         2,
-                        "ACCOMPLICE",
+                        "BRAIN",
                         3,
-                        "PERSON_OF_INTEREST",
-                        4,
                         "KEY_PERSON",
+                        4,
+                        "CULTIST",
                         5,
                         "FRIEND",
                         6,
-                        "LOVER",
+                        "LOVED_ONE",
                         7,
                         "CONSPIRACY_THEORIST",
                         8,
-                        "CULTIST",
-                        9
+                        "SERIAL_KILLER",
+                        9,
+                        "FACTOR",
+                        10,
+                        "WITCH",
+                        11,
+                        "TIME_TRAVELER",
+                        12
                     ],
                     "oneOf": [
                         {
@@ -268,327 +259,28 @@
                         }
                     ],
                     "title": "Role Type",
-                    "description": "角色身份类型枚举"
+                    "description": "角色身份类型"
                 },
                 "abilities": {
                     "items": {
                         "$ref": "#/definitions/v1.Ability"
                     },
                     "type": "array",
-                    "description": "角色拥有的能力列表"
+                    "description": "拥有的能力实例列表"
                 },
                 "is_alive": {
                     "type": "boolean",
-                    "description": "角色是否存活"
+                    "description": "是否存活"
                 },
                 "in_panic_mode": {
                     "type": "boolean",
-                    "description": "是否处于恐慌模式（新增字段）"
-                },
-                "paranoia_limit": {
-                    "type": "integer",
-                    "description": "妄想值上限，考虑作为剧本或游戏状态的一部分"
-                },
-                "goodwill_limit": {
-                    "type": "integer",
-                    "description": "好感值上限"
-                },
-                "intrigue_limit": {
-                    "type": "integer",
-                    "description": "阴谋值上限"
-                },
-                "rules": {
-                    "items": {
-                        "$ref": "#/definitions/v1.CharacterRule"
-                    },
-                    "type": "array",
-                    "description": "角色特有的规则列表"
+                    "description": "是否处于恐慌模式"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Character",
-            "description": "角色信息"
-        },
-        "v1.CharacterConfig": {
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "角色ID"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "角色名称"
-                },
-                "hidden_role": {
-                    "enum": [
-                        "ROLE_TYPE_UNSPECIFIED",
-                        0,
-                        "INNOCENT",
-                        1,
-                        "KILLER",
-                        2,
-                        "ACCOMPLICE",
-                        3,
-                        "PERSON_OF_INTEREST",
-                        4,
-                        "KEY_PERSON",
-                        5,
-                        "FRIEND",
-                        6,
-                        "LOVER",
-                        7,
-                        "CONSPIRACY_THEORIST",
-                        8,
-                        "CULTIST",
-                        9
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Role Type",
-                    "description": "角色身份类型枚举"
-                },
-                "initial_location": {
-                    "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
-                        0,
-                        "HOSPITAL",
-                        1,
-                        "SHRINE",
-                        2,
-                        "CITY",
-                        3,
-                        "SCHOOL",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Location Type",
-                    "description": "地点类型枚举"
-                },
-                "initial_paranoia": {
-                    "type": "integer",
-                    "description": "角色初始妄想值"
-                },
-                "initial_goodwill": {
-                    "type": "integer",
-                    "description": "角色初始好感值"
-                },
-                "initial_intrigue": {
-                    "type": "integer",
-                    "description": "角色初始阴谋值"
-                },
-                "initial_ability_ids": {
-                    "items": {
-                        "type": "integer"
-                    },
-                    "type": "array",
-                    "description": "角色初始拥有的能力ID列表"
-                },
-                "is_first_step_role": {
-                    "type": "boolean",
-                    "description": "是否为First Step身份（新版中此概念用于特定剧本）"
-                },
-                "rules": {
-                    "items": {
-                        "$ref": "#/definitions/v1.CharacterRule"
-                    },
-                    "type": "array",
-                    "description": "角色特有的规则列表"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Character Config",
-            "description": "角色在剧本中的配置"
-        },
-        "v1.CharacterRule": {
-            "properties": {
-                "trigger": {
-                    "enum": [
-                        "TRIGGER_TYPE_UNSPECIFIED",
-                        0,
-                        "ON_GAME_SETUP",
-                        1,
-                        "ON_LOOP_START",
-                        2,
-                        "ON_DAY_START",
-                        3,
-                        "ON_CARD_PLAY_PHASE",
-                        4,
-                        "ON_CARD_REVEAL_PHASE",
-                        5,
-                        "ON_CARD_RESOLVE_PHASE",
-                        6,
-                        "ON_ABILITY_PHASE",
-                        7,
-                        "ON_INCIDENT_PHASE",
-                        8,
-                        "ON_GAME_EVENT",
-                        9,
-                        "PASSIVE",
-                        10,
-                        "ON_LOOP_LOSS",
-                        11,
-                        "ON_LOOP_WIN",
-                        12,
-                        "ON_GAME_END",
-                        13
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Trigger Type",
-                    "description": "触发器类型枚举（能力或规则何时触发）"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "规则描述"
-                },
-                "turf_selection_effect": {
-                    "$ref": "#/definitions/v1.TurfSelectionEffect",
-                    "additionalProperties": true,
-                    "description": "地盘选择效果"
-                },
-                "delayed_entry_effect": {
-                    "$ref": "#/definitions/v1.DelayedEntryEffect",
-                    "additionalProperties": true,
-                    "description": "延迟登场效果"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Character Rule",
-            "description": "角色特殊规则"
-        },
-        "v1.Condition": {
-            "properties": {
-                "stat_condition": {
-                    "$ref": "#/definitions/v1.StatCondition",
-                    "additionalProperties": true,
-                    "description": "属性条件（例如，妄想值达到某阈值）"
-                },
-                "location_condition": {
-                    "$ref": "#/definitions/v1.LocationCondition",
-                    "additionalProperties": true,
-                    "description": "地点条件（例如，角色在特定地点）"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Condition",
-            "description": "条件的通用消息，使用 oneof 包含各种具体条件"
-        },
-        "v1.DelayedEntryEffect": {
-            "properties": {
-                "day_of_entry": {
-                    "type": "integer",
-                    "description": "角色登场的日期"
-                },
-                "entry_location": {
-                    "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
-                        0,
-                        "HOSPITAL",
-                        1,
-                        "SHRINE",
-                        2,
-                        "CITY",
-                        3,
-                        "SCHOOL",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Location Type",
-                    "description": "地点类型枚举"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Delayed Entry Effect",
-            "description": "延迟登场效果（例如某些角色在特定天数才登场）"
-        },
-        "v1.GameEndCondition": {
-            "properties": {
-                "type": {
-                    "enum": [
-                        "CONDITION_TYPE_UNSPECIFIED",
-                        0,
-                        "ALL_TRAGEDIES_PREVENTED",
-                        1,
-                        "SPECIFIC_TRAGEDY_TRIGGERED",
-                        2,
-                        "MAX_LOOPS_REACHED",
-                        3,
-                        "PROTAGONIST_GUESSED_CORRECTLY",
-                        4,
-                        "PROTAGONIST_GUESSED_INCORRECTLY",
-                        5
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Condition Type",
-                    "description": "条件类型"
-                },
-                "incident_type": {
-                    "enum": [
-                        "INCIDENT_TYPE_UNSPECIFIED",
-                        0,
-                        "MURDER",
-                        1,
-                        "SUICIDE",
-                        2,
-                        "HOSPITAL_CONSPIRACY",
-                        3,
-                        "MURDER_MYSTERY",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Incident Type",
-                    "description": "悲剧类型枚举"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Game End Condition",
-            "description": "游戏结束条件"
+            "description": "角色运行时实例"
         },
         "v1.GameEvent": {
             "properties": {
@@ -598,40 +290,22 @@
                         0,
                         "CHARACTER_MOVED",
                         1,
-                        "PARANOIA_ADJUSTED",
+                        "STAT_ADJUSTED",
                         2,
-                        "GOODWILL_ADJUSTED",
-                        3,
-                        "INTRIGUE_ADJUSTED",
-                        4,
                         "INCIDENT_TRIGGERED",
-                        5,
-                        "INCIDENT_PREVENTED",
-                        6,
+                        3,
                         "ROLE_REVEALED",
+                        4,
+                        "CHARACTER_DIED",
+                        5,
+                        "ABILITY_USED",
+                        6,
+                        "CARD_PLAYED",
                         7,
-                        "ABILITY_GRANTED",
-                        8,
-                        "CHOICE_REQUIRED",
-                        9,
-                        "LOOP_WIN",
-                        10,
-                        "LOOP_LOSS",
-                        11,
-                        "FIRST_GUESS_MADE",
-                        12,
-                        "FINAL_GUESS_MADE",
-                        13,
-                        "GOODWILL_REFUSAL_TEST",
-                        14,
-                        "LOOP_OVER",
-                        15,
                         "DAY_ADVANCED",
-                        16,
-                        "TRAGEDY_TRIGGERED",
-                        17,
+                        8,
                         "LOOP_RESET",
-                        18
+                        9
                     ],
                     "oneOf": [
                         {
@@ -642,7 +316,7 @@
                         }
                     ],
                     "title": "Game Event Type",
-                    "description": "游戏事件类型枚举"
+                    "description": "游戏事件类型（用于能力触发器过滤）"
                 },
                 "payload": {
                     "properties": {
@@ -658,10 +332,12 @@
                         }
                     },
                     "additionalProperties": true,
-                    "type": "object"
+                    "type": "object",
+                    "description": "事件的具体负载"
                 },
                 "timestamp": {
                     "type": "string",
+                    "description": "事件发生的时间戳",
                     "format": "date-time"
                 }
             },
@@ -669,105 +345,6 @@
             "type": "object",
             "title": "Game Event",
             "description": "GameEvent 表示游戏中发生的事件。"
-        },
-        "v1.IncidentConfig": {
-            "properties": {
-                "incident_type": {
-                    "enum": [
-                        "INCIDENT_TYPE_UNSPECIFIED",
-                        0,
-                        "MURDER",
-                        1,
-                        "SUICIDE",
-                        2,
-                        "HOSPITAL_CONSPIRACY",
-                        3,
-                        "MURDER_MYSTERY",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Incident Type",
-                    "description": "悲剧类型枚举"
-                },
-                "day": {
-                    "type": "integer",
-                    "description": "悲剧预设发生的日期（第几天）"
-                },
-                "culprit_character_id": {
-                    "type": "integer",
-                    "description": "导致悲剧发生的角色ID（如果适用，例如谋杀案的凶手）"
-                },
-                "conditions": {
-                    "items": {
-                        "$ref": "#/definitions/v1.Condition"
-                    },
-                    "type": "array",
-                    "description": "触发悲剧所需满足的条件列表"
-                },
-                "is_main_plot_incident": {
-                    "type": "boolean",
-                    "description": "是否是主线剧情的事件（新增）"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "bool is_preventable = 6;         // 如果某些事件不可阻止，可以添加此字段"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Incident Config",
-            "description": "事件/悲剧在剧本中的配置"
-        },
-        "v1.LocationCondition": {
-            "properties": {
-                "character_id": {
-                    "type": "integer",
-                    "description": "目标角色ID"
-                },
-                "location": {
-                    "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
-                        0,
-                        "HOSPITAL",
-                        1,
-                        "SHRINE",
-                        2,
-                        "CITY",
-                        3,
-                        "SCHOOL",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Location Type",
-                    "description": "地点类型枚举"
-                },
-                "is_alone": {
-                    "type": "boolean",
-                    "description": "是否在该地点独处"
-                },
-                "not_alone": {
-                    "type": "boolean",
-                    "description": "是否在该地点不独处"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Location Condition",
-            "description": "地点条件"
         },
         "v1.Player": {
             "properties": {
@@ -797,7 +374,7 @@
                         }
                     ],
                     "title": "Player Role",
-                    "description": "玩家角色枚举"
+                    "description": "玩家角色"
                 },
                 "is_llm": {
                     "type": "boolean",
@@ -824,7 +401,7 @@
                         "type": "integer"
                     },
                     "type": "array",
-                    "description": "If a protagonist player controls multiple character decks, this lists their IDs."
+                    "description": "如果一个主角玩家控制多个角色牌组，这里列出他们的ID"
                 }
             },
             "additionalProperties": true,
@@ -839,24 +416,30 @@
                         "enum": [
                             "ROLE_TYPE_UNSPECIFIED",
                             0,
-                            "INNOCENT",
+                            "PERSON",
                             1,
                             "KILLER",
                             2,
-                            "ACCOMPLICE",
+                            "BRAIN",
                             3,
-                            "PERSON_OF_INTEREST",
-                            4,
                             "KEY_PERSON",
+                            4,
+                            "CULTIST",
                             5,
                             "FRIEND",
                             6,
-                            "LOVER",
+                            "LOVED_ONE",
                             7,
                             "CONSPIRACY_THEORIST",
                             8,
-                            "CULTIST",
-                            9
+                            "SERIAL_KILLER",
+                            9,
+                            "FACTOR",
+                            10,
+                            "WITCH",
+                            11,
+                            "TIME_TRAVELER",
+                            12
                         ],
                         "oneOf": [
                             {
@@ -867,7 +450,7 @@
                             }
                         ],
                         "title": "Role Type",
-                        "description": "角色身份类型枚举"
+                        "description": "角色身份类型"
                     },
                     "type": "object",
                     "description": "对角色身份的猜测，键为 character_id"
@@ -891,261 +474,6 @@
             "type": "object",
             "title": "Player Deduction Knowledge",
             "description": "主角的推理知识"
-        },
-        "v1.Script": {
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "剧本唯一ID"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "剧本名称"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "剧本描述"
-                },
-                "main_plot": {
-                    "enum": [
-                        "TRAGEDY_SCRIPT_TYPE_UNSPECIFIED",
-                        0,
-                        "MAIN_PLOT",
-                        1,
-                        "SUB_PLOT",
-                        2
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Tragedy Script Type",
-                    "description": "剧本类型枚举（主线/支线）"
-                },
-                "sub_plots": {
-                    "items": {
-                        "enum": [
-                            "TRAGEDY_SCRIPT_TYPE_UNSPECIFIED",
-                            0,
-                            "MAIN_PLOT",
-                            1,
-                            "SUB_PLOT",
-                            2
-                        ]
-                    },
-                    "type": "array",
-                    "title": "Tragedy Script Type",
-                    "description": "剧本类型枚举（主线/支线）"
-                },
-                "characters": {
-                    "items": {
-                        "$ref": "#/definitions/v1.CharacterConfig"
-                    },
-                    "type": "array",
-                    "description": "剧本中角色的初始配置"
-                },
-                "incidents": {
-                    "items": {
-                        "$ref": "#/definitions/v1.IncidentConfig"
-                    },
-                    "type": "array",
-                    "description": "剧本中预设的事件（悲剧）配置"
-                },
-                "loop_count": {
-                    "type": "integer",
-                    "description": "允许的最大时间循环次数"
-                },
-                "days_per_loop": {
-                    "type": "integer",
-                    "description": "每个循环包含的天数"
-                },
-                "win_conditions": {
-                    "items": {
-                        "$ref": "#/definitions/v1.GameEndCondition"
-                    },
-                    "type": "array",
-                    "description": "胜利条件列表"
-                },
-                "lose_conditions": {
-                    "items": {
-                        "$ref": "#/definitions/v1.GameEndCondition"
-                    },
-                    "type": "array",
-                    "description": "失败条件列表"
-                },
-                "mastermind_card_ids": {
-                    "items": {
-                        "type": "integer"
-                    },
-                    "type": "array",
-                    "description": "IDs of cards available to the Mastermind."
-                },
-                "protagonist_card_ids": {
-                    "items": {
-                        "type": "integer"
-                    },
-                    "type": "array",
-                    "description": "IDs of cards available to the Protagonists."
-                },
-                "special_rules_description": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array",
-                    "description": "剧本特有规则的文字描述"
-                },
-                "tragedies": {
-                    "items": {
-                        "$ref": "#/definitions/v1.Tragedy"
-                    },
-                    "type": "array",
-                    "description": "剧本中的悲剧列表"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Script",
-            "description": "剧本信息"
-        },
-        "v1.StatCondition": {
-            "properties": {
-                "character_id": {
-                    "type": "integer",
-                    "description": "目标角色ID"
-                },
-                "stat_type": {
-                    "enum": [
-                        "STAT_TYPE_UNSPECIFIED",
-                        0,
-                        "PARANOIA_STAT",
-                        1,
-                        "GOODWILL_STAT",
-                        2,
-                        "INTRIGUE_STAT",
-                        3
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Stat Type",
-                    "description": "属性类型"
-                },
-                "comparator": {
-                    "enum": [
-                        "COMPARATOR_UNSPECIFIED",
-                        0,
-                        "GREATER_THAN",
-                        1,
-                        "LESS_THAN",
-                        2,
-                        "EQUAL_TO",
-                        3,
-                        "GREATER_THAN_OR_EQUAL",
-                        4,
-                        "LESS_THAN_OR_EQUAL",
-                        5
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Comparator",
-                    "description": "比较符"
-                },
-                "value": {
-                    "type": "integer",
-                    "description": "比较的值"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Stat Condition",
-            "description": "属性条件"
-        },
-        "v1.Tragedy": {
-            "properties": {
-                "tragedy_type": {
-                    "enum": [
-                        "INCIDENT_TYPE_UNSPECIFIED",
-                        0,
-                        "MURDER",
-                        1,
-                        "SUICIDE",
-                        2,
-                        "HOSPITAL_CONSPIRACY",
-                        3,
-                        "MURDER_MYSTERY",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Incident Type",
-                    "description": "悲剧类型枚举"
-                },
-                "day": {
-                    "type": "integer"
-                },
-                "conditions": {
-                    "items": {
-                        "$ref": "#/definitions/v1.Condition"
-                    },
-                    "type": "array"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Tragedy",
-            "description": "Tragedy represents a tragedy in the script."
-        },
-        "v1.TurfSelectionEffect": {
-            "properties": {
-                "possible_locations": {
-                    "items": {
-                        "enum": [
-                            "LOCATION_TYPE_UNSPECIFIED",
-                            0,
-                            "HOSPITAL",
-                            1,
-                            "SHRINE",
-                            2,
-                            "CITY",
-                            3,
-                            "SCHOOL",
-                            4
-                        ]
-                    },
-                    "type": "array",
-                    "title": "Location Type",
-                    "description": "地点类型枚举"
-                },
-                "prompt": {
-                    "type": "string",
-                    "description": "给玩家的提示语"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Turf Selection Effect",
-            "description": "地盘选择效果（例如某些角色开局可以选择初始地点）"
         }
     }
 }

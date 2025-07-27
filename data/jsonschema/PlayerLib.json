@@ -9,7 +9,8 @@
                         "$ref": "#/definitions/v1.Player",
                         "additionalProperties": true
                     },
-                    "type": "object"
+                    "type": "object",
+                    "description": "玩家ID到玩家信息的映射"
                 }
             },
             "additionalProperties": true,
@@ -20,17 +21,17 @@
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "The ID of the card, linking to a CardConfig"
+                    "description": "卡牌ID，关联到CardConfig"
                 },
                 "used_this_loop": {
                     "type": "boolean",
-                    "description": "Runtime state: whether this card has been used in the current loop"
+                    "description": "运行时状态：本循环是否已使用"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Card",
-            "description": "Card represents a runtime instance of a card."
+            "description": "卡牌运行时实例"
         },
         "v1.Player": {
             "properties": {
@@ -60,7 +61,7 @@
                         }
                     ],
                     "title": "Player Role",
-                    "description": "玩家角色枚举"
+                    "description": "玩家角色"
                 },
                 "is_llm": {
                     "type": "boolean",
@@ -87,7 +88,7 @@
                         "type": "integer"
                     },
                     "type": "array",
-                    "description": "If a protagonist player controls multiple character decks, this lists their IDs."
+                    "description": "如果一个主角玩家控制多个角色牌组，这里列出他们的ID"
                 }
             },
             "additionalProperties": true,
@@ -102,24 +103,30 @@
                         "enum": [
                             "ROLE_TYPE_UNSPECIFIED",
                             0,
-                            "INNOCENT",
+                            "PERSON",
                             1,
                             "KILLER",
                             2,
-                            "ACCOMPLICE",
+                            "BRAIN",
                             3,
-                            "PERSON_OF_INTEREST",
-                            4,
                             "KEY_PERSON",
+                            4,
+                            "CULTIST",
                             5,
                             "FRIEND",
                             6,
-                            "LOVER",
+                            "LOVED_ONE",
                             7,
                             "CONSPIRACY_THEORIST",
                             8,
-                            "CULTIST",
-                            9
+                            "SERIAL_KILLER",
+                            9,
+                            "FACTOR",
+                            10,
+                            "WITCH",
+                            11,
+                            "TIME_TRAVELER",
+                            12
                         ],
                         "oneOf": [
                             {
@@ -130,7 +137,7 @@
                             }
                         ],
                         "title": "Role Type",
-                        "description": "角色身份类型枚举"
+                        "description": "角色身份类型"
                     },
                     "type": "object",
                     "description": "对角色身份的猜测，键为 character_id"

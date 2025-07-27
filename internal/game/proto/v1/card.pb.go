@@ -21,15 +21,17 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// CardConfig represents the static configuration of a card.
+// 卡牌静态配置
 type CardConfig struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                   // Unique ID for the card configuration
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                // Name of the card
-	CardType      CardType               `protobuf:"varint,3,opt,name=card_type,json=cardType,proto3,enum=v1.CardType" json:"card_type,omitempty"`      // Type of the card
-	OwnerRole     PlayerRole             `protobuf:"varint,4,opt,name=owner_role,json=ownerRole,proto3,enum=v1.PlayerRole" json:"owner_role,omitempty"` // The player role this card belongs to (Mastermind or Protagonist)
-	Effect        *Effect                `protobuf:"bytes,5,opt,name=effect,proto3" json:"effect,omitempty"`                                            // The effect of the card
-	OncePerLoop   bool                   `protobuf:"varint,6,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`            // Whether the card can be used only once per loop
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                   // 卡牌唯一ID
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                // 卡牌名称
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                  // 卡牌描述
+	CardType      CardType               `protobuf:"varint,4,opt,name=card_type,json=cardType,proto3,enum=v1.CardType" json:"card_type,omitempty"`      // 卡牌类型
+	OwnerRole     PlayerRole             `protobuf:"varint,5,opt,name=owner_role,json=ownerRole,proto3,enum=v1.PlayerRole" json:"owner_role,omitempty"` // 卡牌所属玩家角色（主谋或主角）
+	Effect        *Effect                `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`                                            // 卡牌效果
+	OncePerLoop   bool                   `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`            // 是否每循环只能使用一次
+	Priority      int32                  `protobuf:"varint,8,opt,name=priority,proto3" json:"priority,omitempty"`                                       // 卡牌结算优先级（同类型卡牌的结算顺序）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -78,6 +80,13 @@ func (x *CardConfig) GetName() string {
 	return ""
 }
 
+func (x *CardConfig) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
 func (x *CardConfig) GetCardType() CardType {
 	if x != nil {
 		return x.CardType
@@ -106,11 +115,18 @@ func (x *CardConfig) GetOncePerLoop() bool {
 	return false
 }
 
-// Card represents a runtime instance of a card.
+func (x *CardConfig) GetPriority() int32 {
+	if x != nil {
+		return x.Priority
+	}
+	return 0
+}
+
+// 卡牌运行时实例
 type Card struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                           // The ID of the card, linking to a CardConfig
-	UsedThisLoop  bool                   `protobuf:"varint,2,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"` // Runtime state: whether this card has been used in the current loop
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                           // 卡牌ID，关联到CardConfig
+	UsedThisLoop  bool                   `protobuf:"varint,2,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"` // 运行时状态：本循环是否已使用
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -159,10 +175,10 @@ func (x *Card) GetUsedThisLoop() bool {
 	return false
 }
 
-// CardConfigLib holds a library of card configurations.
+// 卡牌配置库
 type CardConfigLib struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Cards         map[int32]*CardConfig  `protobuf:"bytes,1,rep,name=cards,proto3" json:"cards,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Cards         map[int32]*CardConfig  `protobuf:"bytes,1,rep,name=cards,proto3" json:"cards,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 卡牌ID到配置的映射
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -204,10 +220,10 @@ func (x *CardConfigLib) GetCards() map[int32]*CardConfig {
 	return nil
 }
 
-// CardList holds a list of card instances.
+// 卡牌列表
 type CardList struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Cards         []*Card                `protobuf:"bytes,1,rep,name=cards,proto3" json:"cards,omitempty"`
+	Cards         []*Card                `protobuf:"bytes,1,rep,name=cards,proto3" json:"cards,omitempty"` // 卡牌实例列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -253,17 +269,19 @@ var File_v1_card_proto protoreflect.FileDescriptor
 
 const file_v1_card_proto_rawDesc = "" +
 	"\n" +
-	"\rv1/card.proto\x12\x02v1\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\xd2\x01\n" +
+	"\rv1/card.proto\x12\x02v1\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\x90\x02\n" +
 	"\n" +
 	"CardConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12)\n" +
-	"\tcard_type\x18\x03 \x01(\x0e2\f.v1.CardTypeR\bcardType\x12-\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12)\n" +
+	"\tcard_type\x18\x04 \x01(\x0e2\f.v1.CardTypeR\bcardType\x12-\n" +
 	"\n" +
-	"owner_role\x18\x04 \x01(\x0e2\x0e.v1.PlayerRoleR\townerRole\x12\"\n" +
-	"\x06effect\x18\x05 \x01(\v2\n" +
+	"owner_role\x18\x05 \x01(\x0e2\x0e.v1.PlayerRoleR\townerRole\x12\"\n" +
+	"\x06effect\x18\x06 \x01(\v2\n" +
 	".v1.EffectR\x06effect\x12\"\n" +
-	"\ronce_per_loop\x18\x06 \x01(\bR\voncePerLoop\"<\n" +
+	"\ronce_per_loop\x18\a \x01(\bR\voncePerLoop\x12\x1a\n" +
+	"\bpriority\x18\b \x01(\x05R\bpriority\"<\n" +
 	"\x04Card\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12$\n" +
 	"\x0eused_this_loop\x18\x02 \x01(\bR\fusedThisLoop\"\x8d\x01\n" +

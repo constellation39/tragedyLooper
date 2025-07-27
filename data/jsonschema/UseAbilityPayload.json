@@ -5,7 +5,7 @@
         "UseAbilityPayload": {
             "properties": {
                 "player_id": {
-                    "type": "string",
+                    "type": "integer",
                     "description": "执行操作的玩家ID"
                 },
                 "character_id": {
@@ -42,7 +42,7 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "地点类型枚举"
+                    "description": "地点类型（也可通过LocationConfig扩展）"
                 },
                 "target_incident_type": {
                     "enum": [
@@ -52,10 +52,16 @@
                         1,
                         "SUICIDE",
                         2,
-                        "HOSPITAL_CONSPIRACY",
+                        "ACCIDENT",
                         3,
+                        "DISAPPEARANCE",
+                        4,
+                        "HOSPITAL_CONSPIRACY",
+                        5,
                         "MURDER_MYSTERY",
-                        4
+                        6,
+                        "PANIC",
+                        7
                     ],
                     "oneOf": [
                         {
@@ -66,7 +72,7 @@
                         }
                     ],
                     "title": "Incident Type",
-                    "description": "悲剧类型枚举"
+                    "description": "事件类型"
                 }
             },
             "additionalProperties": true,

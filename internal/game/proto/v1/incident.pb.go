@@ -21,14 +21,15 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 事件实例，在游戏运行时创建
 type Incident struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Day           int32                  `protobuf:"varint,3,opt,name=day,proto3" json:"day,omitempty"`
-	Culprit       string                 `protobuf:"bytes,4,opt,name=culprit,proto3" json:"culprit,omitempty"`
-	Victim        string                 `protobuf:"bytes,5,opt,name=victim,proto3" json:"victim,omitempty"`
-	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                  // 事件唯一ID
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`               // 事件名称
+	Day           int32                  `protobuf:"varint,3,opt,name=day,proto3" json:"day,omitempty"`                // 事件发生的日期
+	Culprit       string                 `protobuf:"bytes,4,opt,name=culprit,proto3" json:"culprit,omitempty"`         // 犯人（角色名称或描述）
+	Victim        string                 `protobuf:"bytes,5,opt,name=victim,proto3" json:"victim,omitempty"`           // 受害者（角色名称或描述）
+	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"` // 事件描述
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -108,12 +109,16 @@ func (x *Incident) GetDescription() string {
 // 事件/悲剧在剧本中的配置
 type IncidentConfig struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
-	IncidentType       IncidentType           `protobuf:"varint,1,opt,name=incident_type,json=incidentType,proto3,enum=v1.IncidentType" json:"incident_type,omitempty"`  // 悲剧类型
-	Day                int32                  `protobuf:"varint,2,opt,name=day,proto3" json:"day,omitempty"`                                                             // 悲剧预设发生的日期（第几天）
-	CulpritCharacterId int32                  `protobuf:"varint,3,opt,name=culprit_character_id,json=culpritCharacterId,proto3" json:"culprit_character_id,omitempty"`   // 导致悲剧发生的角色ID（如果适用，例如谋杀案的凶手）
-	Conditions         []*Condition           `protobuf:"bytes,4,rep,name=conditions,proto3" json:"conditions,omitempty"`                                                // 触发悲剧所需满足的条件列表
-	IsMainPlotIncident bool                   `protobuf:"varint,5,opt,name=is_main_plot_incident,json=isMainPlotIncident,proto3" json:"is_main_plot_incident,omitempty"` // 是否是主线剧情的事件（新增）
-	Name               string                 `protobuf:"bytes,6,opt,name=name,proto3" json:"name,omitempty"`                                                            // bool is_preventable = 6;         // 如果某些事件不可阻止，可以添加此字段
+	Id                 int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                // 事件唯一ID（剧本内）
+	Name               string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                             // 事件名称
+	Description        string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                               // 事件描述
+	IncidentType       IncidentType           `protobuf:"varint,4,opt,name=incident_type,json=incidentType,proto3,enum=v1.IncidentType" json:"incident_type,omitempty"`   // 事件类型
+	Day                int32                  `protobuf:"varint,5,opt,name=day,proto3" json:"day,omitempty"`                                                              // 预定发生日期
+	TriggerConditions  []*Condition           `protobuf:"bytes,6,rep,name=trigger_conditions,json=triggerConditions,proto3" json:"trigger_conditions,omitempty"`          // 触发条件列表
+	IsMandatory        bool                   `protobuf:"varint,7,opt,name=is_mandatory,json=isMandatory,proto3" json:"is_mandatory,omitempty"`                           // 是否为必发事件
+	CulpritCharacterId int32                  `protobuf:"varint,8,opt,name=culprit_character_id,json=culpritCharacterId,proto3" json:"culprit_character_id,omitempty"`    // 事件主谋角色ID（如适用）
+	LocationId         int32                  `protobuf:"varint,9,opt,name=location_id,json=locationId,proto3" json:"location_id,omitempty"`                              // 事件发生地点ID（如适用）
+	IsMainPlotIncident bool                   `protobuf:"varint,10,opt,name=is_main_plot_incident,json=isMainPlotIncident,proto3" json:"is_main_plot_incident,omitempty"` // 是否是主线剧情的事件
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -148,6 +153,27 @@ func (*IncidentConfig) Descriptor() ([]byte, []int) {
 	return file_v1_incident_proto_rawDescGZIP(), []int{1}
 }
 
+func (x *IncidentConfig) GetId() int32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *IncidentConfig) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *IncidentConfig) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
 func (x *IncidentConfig) GetIncidentType() IncidentType {
 	if x != nil {
 		return x.IncidentType
@@ -162,6 +188,20 @@ func (x *IncidentConfig) GetDay() int32 {
 	return 0
 }
 
+func (x *IncidentConfig) GetTriggerConditions() []*Condition {
+	if x != nil {
+		return x.TriggerConditions
+	}
+	return nil
+}
+
+func (x *IncidentConfig) GetIsMandatory() bool {
+	if x != nil {
+		return x.IsMandatory
+	}
+	return false
+}
+
 func (x *IncidentConfig) GetCulpritCharacterId() int32 {
 	if x != nil {
 		return x.CulpritCharacterId
@@ -169,11 +209,11 @@ func (x *IncidentConfig) GetCulpritCharacterId() int32 {
 	return 0
 }
 
-func (x *IncidentConfig) GetConditions() []*Condition {
+func (x *IncidentConfig) GetLocationId() int32 {
 	if x != nil {
-		return x.Conditions
+		return x.LocationId
 	}
-	return nil
+	return 0
 }
 
 func (x *IncidentConfig) GetIsMainPlotIncident() bool {
@@ -183,16 +223,10 @@ func (x *IncidentConfig) GetIsMainPlotIncident() bool {
 	return false
 }
 
-func (x *IncidentConfig) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
+// 事件配置库
 type IncidentConfigLib struct {
 	state         protoimpl.MessageState    `protogen:"open.v1"`
-	Incidents     map[int32]*IncidentConfig `protobuf:"bytes,1,rep,name=incidents,proto3" json:"incidents,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Incidents     map[int32]*IncidentConfig `protobuf:"bytes,1,rep,name=incidents,proto3" json:"incidents,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 事件ID到配置的映射
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -245,16 +279,20 @@ const file_v1_incident_proto_rawDesc = "" +
 	"\x03day\x18\x03 \x01(\x05R\x03day\x12\x18\n" +
 	"\aculprit\x18\x04 \x01(\tR\aculprit\x12\x16\n" +
 	"\x06victim\x18\x05 \x01(\tR\x06victim\x12 \n" +
-	"\vdescription\x18\x06 \x01(\tR\vdescription\"\x81\x02\n" +
-	"\x0eIncidentConfig\x125\n" +
-	"\rincident_type\x18\x01 \x01(\x0e2\x10.v1.IncidentTypeR\fincidentType\x12\x10\n" +
-	"\x03day\x18\x02 \x01(\x05R\x03day\x120\n" +
-	"\x14culprit_character_id\x18\x03 \x01(\x05R\x12culpritCharacterId\x12-\n" +
-	"\n" +
-	"conditions\x18\x04 \x03(\v2\r.v1.ConditionR\n" +
-	"conditions\x121\n" +
-	"\x15is_main_plot_incident\x18\x05 \x01(\bR\x12isMainPlotIncident\x12\x12\n" +
-	"\x04name\x18\x06 \x01(\tR\x04name\"\xa9\x01\n" +
+	"\vdescription\x18\x06 \x01(\tR\vdescription\"\x86\x03\n" +
+	"\x0eIncidentConfig\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x125\n" +
+	"\rincident_type\x18\x04 \x01(\x0e2\x10.v1.IncidentTypeR\fincidentType\x12\x10\n" +
+	"\x03day\x18\x05 \x01(\x05R\x03day\x12<\n" +
+	"\x12trigger_conditions\x18\x06 \x03(\v2\r.v1.ConditionR\x11triggerConditions\x12!\n" +
+	"\fis_mandatory\x18\a \x01(\bR\visMandatory\x120\n" +
+	"\x14culprit_character_id\x18\b \x01(\x05R\x12culpritCharacterId\x12\x1f\n" +
+	"\vlocation_id\x18\t \x01(\x05R\n" +
+	"locationId\x121\n" +
+	"\x15is_main_plot_incident\x18\n" +
+	" \x01(\bR\x12isMainPlotIncident\"\xa9\x01\n" +
 	"\x11IncidentConfigLib\x12B\n" +
 	"\tincidents\x18\x01 \x03(\v2$.v1.IncidentConfigLib.IncidentsEntryR\tincidents\x1aP\n" +
 	"\x0eIncidentsEntry\x12\x10\n" +
@@ -284,7 +322,7 @@ var file_v1_incident_proto_goTypes = []any{
 }
 var file_v1_incident_proto_depIdxs = []int32{
 	4, // 0: v1.IncidentConfig.incident_type:type_name -> v1.IncidentType
-	5, // 1: v1.IncidentConfig.conditions:type_name -> v1.Condition
+	5, // 1: v1.IncidentConfig.trigger_conditions:type_name -> v1.Condition
 	3, // 2: v1.IncidentConfigLib.incidents:type_name -> v1.IncidentConfigLib.IncidentsEntry
 	1, // 3: v1.IncidentConfigLib.IncidentsEntry.value:type_name -> v1.IncidentConfig
 	4, // [4:4] is the sub-list for method output_type

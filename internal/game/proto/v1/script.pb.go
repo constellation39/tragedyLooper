@@ -21,88 +21,49 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type GameEndCondition_ConditionType int32
-
-const (
-	GameEndCondition_CONDITION_TYPE_UNSPECIFIED      GameEndCondition_ConditionType = 0 // 未指定
-	GameEndCondition_ALL_TRAGEDIES_PREVENTED         GameEndCondition_ConditionType = 1 // 所有悲剧都被阻止
-	GameEndCondition_SPECIFIC_TRAGEDY_TRIGGERED      GameEndCondition_ConditionType = 2 // 特定悲剧被触发
-	GameEndCondition_MAX_LOOPS_REACHED               GameEndCondition_ConditionType = 3 // 达到最大循环次数
-	GameEndCondition_PROTAGONIST_GUESSED_CORRECTLY   GameEndCondition_ConditionType = 4 // 主角猜测正确
-	GameEndCondition_PROTAGONIST_GUESSED_INCORRECTLY GameEndCondition_ConditionType = 5 // 主角猜测错误
-)
-
-// Enum value maps for GameEndCondition_ConditionType.
-var (
-	GameEndCondition_ConditionType_name = map[int32]string{
-		0: "CONDITION_TYPE_UNSPECIFIED",
-		1: "ALL_TRAGEDIES_PREVENTED",
-		2: "SPECIFIC_TRAGEDY_TRIGGERED",
-		3: "MAX_LOOPS_REACHED",
-		4: "PROTAGONIST_GUESSED_CORRECTLY",
-		5: "PROTAGONIST_GUESSED_INCORRECTLY",
-	}
-	GameEndCondition_ConditionType_value = map[string]int32{
-		"CONDITION_TYPE_UNSPECIFIED":      0,
-		"ALL_TRAGEDIES_PREVENTED":         1,
-		"SPECIFIC_TRAGEDY_TRIGGERED":      2,
-		"MAX_LOOPS_REACHED":               3,
-		"PROTAGONIST_GUESSED_CORRECTLY":   4,
-		"PROTAGONIST_GUESSED_INCORRECTLY": 5,
-	}
-)
-
-func (x GameEndCondition_ConditionType) Enum() *GameEndCondition_ConditionType {
-	p := new(GameEndCondition_ConditionType)
-	*p = x
-	return p
+// 剧本配置
+type ScriptConfig struct {
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	Id          int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                          // 剧本唯一ID
+	Name        string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                       // 剧本名称
+	Description string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                         // 剧本描述
+	TragedySet  TragedySetType         `protobuf:"varint,4,opt,name=tragedy_set,json=tragedySet,proto3,enum=v1.TragedySetType" json:"tragedy_set,omitempty"` // 悲剧集合类型
+	Difficulty  ScriptDifficulty       `protobuf:"varint,5,opt,name=difficulty,proto3,enum=v1.ScriptDifficulty" json:"difficulty,omitempty"`                 // 剧本难度
+	// 剧情配置
+	MainPlot *PlotConfig   `protobuf:"bytes,6,opt,name=main_plot,json=mainPlot,proto3" json:"main_plot,omitempty"` // 主线剧情配置
+	SubPlots []*PlotConfig `protobuf:"bytes,7,rep,name=sub_plots,json=subPlots,proto3" json:"sub_plots,omitempty"` // 支线剧情配置列表
+	// 角色配置
+	Characters []*CharacterInScript `protobuf:"bytes,8,rep,name=characters,proto3" json:"characters,omitempty"` // 剧本中的角色配置
+	// 事件配置
+	Incidents []*IncidentConfig `protobuf:"bytes,9,rep,name=incidents,proto3" json:"incidents,omitempty"` // 剧本中的事件配置
+	// 游戏规则
+	LoopCount    int32          `protobuf:"varint,10,opt,name=loop_count,json=loopCount,proto3" json:"loop_count,omitempty"`         // 最大循环次数
+	DaysPerLoop  int32          `protobuf:"varint,11,opt,name=days_per_loop,json=daysPerLoop,proto3" json:"days_per_loop,omitempty"` // 每循环天数
+	SpecialRules []*SpecialRule `protobuf:"bytes,12,rep,name=special_rules,json=specialRules,proto3" json:"special_rules,omitempty"` // 特殊规则列表
+	// 卡牌配置
+	MastermindCardIds  []int32 `protobuf:"varint,13,rep,packed,name=mastermind_card_ids,json=mastermindCardIds,proto3" json:"mastermind_card_ids,omitempty"`    // 主谋可用卡牌ID列表
+	ProtagonistCardIds []int32 `protobuf:"varint,14,rep,packed,name=protagonist_card_ids,json=protagonistCardIds,proto3" json:"protagonist_card_ids,omitempty"` // 主角可用卡牌ID列表
+	// 胜负条件
+	WinConditions  []*EndCondition `protobuf:"bytes,15,rep,name=win_conditions,json=winConditions,proto3" json:"win_conditions,omitempty"`    // 胜利条件列表
+	LoseConditions []*EndCondition `protobuf:"bytes,16,rep,name=lose_conditions,json=loseConditions,proto3" json:"lose_conditions,omitempty"` // 失败条件列表
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
-func (x GameEndCondition_ConditionType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (GameEndCondition_ConditionType) Descriptor() protoreflect.EnumDescriptor {
-	return file_v1_script_proto_enumTypes[0].Descriptor()
-}
-
-func (GameEndCondition_ConditionType) Type() protoreflect.EnumType {
-	return &file_v1_script_proto_enumTypes[0]
-}
-
-func (x GameEndCondition_ConditionType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use GameEndCondition_ConditionType.Descriptor instead.
-func (GameEndCondition_ConditionType) EnumDescriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{2, 0}
-}
-
-// Tragedy represents a tragedy in the script.
-type Tragedy struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	TragedyType   IncidentType           `protobuf:"varint,1,opt,name=tragedy_type,json=tragedyType,proto3,enum=v1.IncidentType" json:"tragedy_type,omitempty"`
-	Day           int32                  `protobuf:"varint,2,opt,name=day,proto3" json:"day,omitempty"`
-	Conditions    []*Condition           `protobuf:"bytes,3,rep,name=conditions,proto3" json:"conditions,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Tragedy) Reset() {
-	*x = Tragedy{}
+func (x *ScriptConfig) Reset() {
+	*x = ScriptConfig{}
 	mi := &file_v1_script_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Tragedy) String() string {
+func (x *ScriptConfig) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Tragedy) ProtoMessage() {}
+func (*ScriptConfig) ProtoMessage() {}
 
-func (x *Tragedy) ProtoReflect() protoreflect.Message {
+func (x *ScriptConfig) ProtoReflect() protoreflect.Message {
 	mi := &file_v1_script_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -114,212 +75,249 @@ func (x *Tragedy) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Tragedy.ProtoReflect.Descriptor instead.
-func (*Tragedy) Descriptor() ([]byte, []int) {
+// Deprecated: Use ScriptConfig.ProtoReflect.Descriptor instead.
+func (*ScriptConfig) Descriptor() ([]byte, []int) {
 	return file_v1_script_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Tragedy) GetTragedyType() IncidentType {
-	if x != nil {
-		return x.TragedyType
-	}
-	return IncidentType_INCIDENT_TYPE_UNSPECIFIED
-}
-
-func (x *Tragedy) GetDay() int32 {
-	if x != nil {
-		return x.Day
-	}
-	return 0
-}
-
-func (x *Tragedy) GetConditions() []*Condition {
-	if x != nil {
-		return x.Conditions
-	}
-	return nil
-}
-
-// 剧本信息
-type Script struct {
-	state                   protoimpl.MessageState `protogen:"open.v1"`
-	Id                      int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                            // 剧本唯一ID
-	Name                    string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                         // 剧本名称
-	Description             string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                           // 剧本描述
-	MainPlot                TragedyScriptType      `protobuf:"varint,4,opt,name=main_plot,json=mainPlot,proto3,enum=v1.TragedyScriptType" json:"main_plot,omitempty"`                      // 主线剧情类型
-	SubPlots                []TragedyScriptType    `protobuf:"varint,5,rep,packed,name=sub_plots,json=subPlots,proto3,enum=v1.TragedyScriptType" json:"sub_plots,omitempty"`               // 支线剧情类型列表
-	Characters              []*CharacterConfig     `protobuf:"bytes,6,rep,name=characters,proto3" json:"characters,omitempty"`                                                             // 剧本中角色的初始配置
-	Incidents               []*IncidentConfig      `protobuf:"bytes,7,rep,name=incidents,proto3" json:"incidents,omitempty"`                                                               // 剧本中预设的事件（悲剧）配置
-	LoopCount               int32                  `protobuf:"varint,8,opt,name=loop_count,json=loopCount,proto3" json:"loop_count,omitempty"`                                             // 允许的最大时间循环次数
-	DaysPerLoop             int32                  `protobuf:"varint,9,opt,name=days_per_loop,json=daysPerLoop,proto3" json:"days_per_loop,omitempty"`                                     // 每个循环包含的天数
-	WinConditions           []*GameEndCondition    `protobuf:"bytes,10,rep,name=win_conditions,json=winConditions,proto3" json:"win_conditions,omitempty"`                                 // 胜利条件列表
-	LoseConditions          []*GameEndCondition    `protobuf:"bytes,11,rep,name=lose_conditions,json=loseConditions,proto3" json:"lose_conditions,omitempty"`                              // 失败条件列表
-	MastermindCardIds       []int32                `protobuf:"varint,12,rep,packed,name=mastermind_card_ids,json=mastermindCardIds,proto3" json:"mastermind_card_ids,omitempty"`           // IDs of cards available to the Mastermind.
-	ProtagonistCardIds      []int32                `protobuf:"varint,13,rep,packed,name=protagonist_card_ids,json=protagonistCardIds,proto3" json:"protagonist_card_ids,omitempty"`        // IDs of cards available to the Protagonists.
-	SpecialRulesDescription []string               `protobuf:"bytes,14,rep,name=special_rules_description,json=specialRulesDescription,proto3" json:"special_rules_description,omitempty"` // 剧本特有规则的文字描述
-	Tragedies               []*Tragedy             `protobuf:"bytes,15,rep,name=tragedies,proto3" json:"tragedies,omitempty"`                                                              // 剧本中的悲剧列表
-	unknownFields           protoimpl.UnknownFields
-	sizeCache               protoimpl.SizeCache
-}
-
-func (x *Script) Reset() {
-	*x = Script{}
-	mi := &file_v1_script_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Script) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Script) ProtoMessage() {}
-
-func (x *Script) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Script.ProtoReflect.Descriptor instead.
-func (*Script) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *Script) GetId() int32 {
+func (x *ScriptConfig) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-func (x *Script) GetName() string {
+func (x *ScriptConfig) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *Script) GetDescription() string {
+func (x *ScriptConfig) GetDescription() string {
 	if x != nil {
 		return x.Description
 	}
 	return ""
 }
 
-func (x *Script) GetMainPlot() TragedyScriptType {
+func (x *ScriptConfig) GetTragedySet() TragedySetType {
+	if x != nil {
+		return x.TragedySet
+	}
+	return TragedySetType_TRAGEDY_SET_TYPE_UNSPECIFIED
+}
+
+func (x *ScriptConfig) GetDifficulty() ScriptDifficulty {
+	if x != nil {
+		return x.Difficulty
+	}
+	return ScriptDifficulty_SCRIPT_DIFFICULTY_UNSPECIFIED
+}
+
+func (x *ScriptConfig) GetMainPlot() *PlotConfig {
 	if x != nil {
 		return x.MainPlot
 	}
-	return TragedyScriptType_TRAGEDY_SCRIPT_TYPE_UNSPECIFIED
+	return nil
 }
 
-func (x *Script) GetSubPlots() []TragedyScriptType {
+func (x *ScriptConfig) GetSubPlots() []*PlotConfig {
 	if x != nil {
 		return x.SubPlots
 	}
 	return nil
 }
 
-func (x *Script) GetCharacters() []*CharacterConfig {
+func (x *ScriptConfig) GetCharacters() []*CharacterInScript {
 	if x != nil {
 		return x.Characters
 	}
 	return nil
 }
 
-func (x *Script) GetIncidents() []*IncidentConfig {
+func (x *ScriptConfig) GetIncidents() []*IncidentConfig {
 	if x != nil {
 		return x.Incidents
 	}
 	return nil
 }
 
-func (x *Script) GetLoopCount() int32 {
+func (x *ScriptConfig) GetLoopCount() int32 {
 	if x != nil {
 		return x.LoopCount
 	}
 	return 0
 }
 
-func (x *Script) GetDaysPerLoop() int32 {
+func (x *ScriptConfig) GetDaysPerLoop() int32 {
 	if x != nil {
 		return x.DaysPerLoop
 	}
 	return 0
 }
 
-func (x *Script) GetWinConditions() []*GameEndCondition {
+func (x *ScriptConfig) GetSpecialRules() []*SpecialRule {
 	if x != nil {
-		return x.WinConditions
+		return x.SpecialRules
 	}
 	return nil
 }
 
-func (x *Script) GetLoseConditions() []*GameEndCondition {
-	if x != nil {
-		return x.LoseConditions
-	}
-	return nil
-}
-
-func (x *Script) GetMastermindCardIds() []int32 {
+func (x *ScriptConfig) GetMastermindCardIds() []int32 {
 	if x != nil {
 		return x.MastermindCardIds
 	}
 	return nil
 }
 
-func (x *Script) GetProtagonistCardIds() []int32 {
+func (x *ScriptConfig) GetProtagonistCardIds() []int32 {
 	if x != nil {
 		return x.ProtagonistCardIds
 	}
 	return nil
 }
 
-func (x *Script) GetSpecialRulesDescription() []string {
+func (x *ScriptConfig) GetWinConditions() []*EndCondition {
 	if x != nil {
-		return x.SpecialRulesDescription
+		return x.WinConditions
 	}
 	return nil
 }
 
-func (x *Script) GetTragedies() []*Tragedy {
+func (x *ScriptConfig) GetLoseConditions() []*EndCondition {
 	if x != nil {
-		return x.Tragedies
+		return x.LoseConditions
 	}
 	return nil
 }
 
-// 游戏结束条件
-type GameEndCondition struct {
-	state         protoimpl.MessageState         `protogen:"open.v1"`
-	Type          GameEndCondition_ConditionType `protobuf:"varint,1,opt,name=type,proto3,enum=v1.GameEndCondition_ConditionType" json:"type,omitempty"`                         // 结束条件类型
-	IncidentType  *IncidentType                  `protobuf:"varint,2,opt,name=incident_type,json=incidentType,proto3,enum=v1.IncidentType,oneof" json:"incident_type,omitempty"` // 仅当 SPECIFIC_TRAGEDY_TRIGGERED 时使用，指定被触发的悲剧类型
+// 剧本中的角色配置
+type CharacterInScript struct {
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	CharacterId          int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`                                     // 角色ID（引用CharacterConfig）
+	HiddenRole           RoleType               `protobuf:"varint,2,opt,name=hidden_role,json=hiddenRole,proto3,enum=v1.RoleType" json:"hidden_role,omitempty"`                       // 在此剧本中的隐藏身份
+	InitialLocation      LocationType           `protobuf:"varint,3,opt,name=initial_location,json=initialLocation,proto3,enum=v1.LocationType" json:"initial_location,omitempty"`    // 初始位置
+	InitialParanoia      int32                  `protobuf:"varint,4,opt,name=initial_paranoia,json=initialParanoia,proto3" json:"initial_paranoia,omitempty"`                         // 初始妄想值
+	InitialGoodwill      int32                  `protobuf:"varint,5,opt,name=initial_goodwill,json=initialGoodwill,proto3" json:"initial_goodwill,omitempty"`                         // 初始好感值
+	InitialIntrigue      int32                  `protobuf:"varint,6,opt,name=initial_intrigue,json=initialIntrigue,proto3" json:"initial_intrigue,omitempty"`                         // 初始阴谋值
+	AdditionalAbilityIds []int32                `protobuf:"varint,7,rep,packed,name=additional_ability_ids,json=additionalAbilityIds,proto3" json:"additional_ability_ids,omitempty"` // 额外能力ID列表（剧本特定）
+	StartsInGame         bool                   `protobuf:"varint,8,opt,name=starts_in_game,json=startsInGame,proto3" json:"starts_in_game,omitempty"`                                // 是否开局就在游戏中
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *CharacterInScript) Reset() {
+	*x = CharacterInScript{}
+	mi := &file_v1_script_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CharacterInScript) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CharacterInScript) ProtoMessage() {}
+
+func (x *CharacterInScript) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_script_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CharacterInScript.ProtoReflect.Descriptor instead.
+func (*CharacterInScript) Descriptor() ([]byte, []int) {
+	return file_v1_script_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *CharacterInScript) GetCharacterId() int32 {
+	if x != nil {
+		return x.CharacterId
+	}
+	return 0
+}
+
+func (x *CharacterInScript) GetHiddenRole() RoleType {
+	if x != nil {
+		return x.HiddenRole
+	}
+	return RoleType_ROLE_TYPE_UNSPECIFIED
+}
+
+func (x *CharacterInScript) GetInitialLocation() LocationType {
+	if x != nil {
+		return x.InitialLocation
+	}
+	return LocationType_LOCATION_TYPE_UNSPECIFIED
+}
+
+func (x *CharacterInScript) GetInitialParanoia() int32 {
+	if x != nil {
+		return x.InitialParanoia
+	}
+	return 0
+}
+
+func (x *CharacterInScript) GetInitialGoodwill() int32 {
+	if x != nil {
+		return x.InitialGoodwill
+	}
+	return 0
+}
+
+func (x *CharacterInScript) GetInitialIntrigue() int32 {
+	if x != nil {
+		return x.InitialIntrigue
+	}
+	return 0
+}
+
+func (x *CharacterInScript) GetAdditionalAbilityIds() []int32 {
+	if x != nil {
+		return x.AdditionalAbilityIds
+	}
+	return nil
+}
+
+func (x *CharacterInScript) GetStartsInGame() bool {
+	if x != nil {
+		return x.StartsInGame
+	}
+	return false
+}
+
+// 剧情配置
+type PlotConfig struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PlotType      PlotType               `protobuf:"varint,1,opt,name=plot_type,json=plotType,proto3,enum=v1.PlotType" json:"plot_type,omitempty"` // 剧情类型
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                           // 剧情名称
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                             // 剧情描述
+	IncidentIds   []int32                `protobuf:"varint,4,rep,packed,name=incident_ids,json=incidentIds,proto3" json:"incident_ids,omitempty"`  // 相关事件ID列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GameEndCondition) Reset() {
-	*x = GameEndCondition{}
+func (x *PlotConfig) Reset() {
+	*x = PlotConfig{}
 	mi := &file_v1_script_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GameEndCondition) String() string {
+func (x *PlotConfig) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GameEndCondition) ProtoMessage() {}
+func (*PlotConfig) ProtoMessage() {}
 
-func (x *GameEndCondition) ProtoReflect() protoreflect.Message {
+func (x *PlotConfig) ProtoReflect() protoreflect.Message {
 	mi := &file_v1_script_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -331,67 +329,274 @@ func (x *GameEndCondition) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GameEndCondition.ProtoReflect.Descriptor instead.
-func (*GameEndCondition) Descriptor() ([]byte, []int) {
+// Deprecated: Use PlotConfig.ProtoReflect.Descriptor instead.
+func (*PlotConfig) Descriptor() ([]byte, []int) {
 	return file_v1_script_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GameEndCondition) GetType() GameEndCondition_ConditionType {
+func (x *PlotConfig) GetPlotType() PlotType {
+	if x != nil {
+		return x.PlotType
+	}
+	return PlotType_PLOT_TYPE_UNSPECIFIED
+}
+
+func (x *PlotConfig) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *PlotConfig) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *PlotConfig) GetIncidentIds() []int32 {
+	if x != nil {
+		return x.IncidentIds
+	}
+	return nil
+}
+
+// 特殊规则
+type SpecialRule struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`                            // 规则名称
+	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`              // 规则描述
+	Trigger       TriggerType            `protobuf:"varint,3,opt,name=trigger,proto3,enum=v1.TriggerType" json:"trigger,omitempty"` // 触发时机
+	Effect        *Effect                `protobuf:"bytes,4,opt,name=effect,proto3" json:"effect,omitempty"`                        // 规则效果
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SpecialRule) Reset() {
+	*x = SpecialRule{}
+	mi := &file_v1_script_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SpecialRule) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SpecialRule) ProtoMessage() {}
+
+func (x *SpecialRule) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_script_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SpecialRule.ProtoReflect.Descriptor instead.
+func (*SpecialRule) Descriptor() ([]byte, []int) {
+	return file_v1_script_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *SpecialRule) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *SpecialRule) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *SpecialRule) GetTrigger() TriggerType {
+	if x != nil {
+		return x.Trigger
+	}
+	return TriggerType_TRIGGER_TYPE_UNSPECIFIED
+}
+
+func (x *SpecialRule) GetEffect() *Effect {
+	if x != nil {
+		return x.Effect
+	}
+	return nil
+}
+
+// 游戏结束条件
+type EndCondition struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Type          EndConditionType       `protobuf:"varint,1,opt,name=type,proto3,enum=v1.EndConditionType" json:"type,omitempty"` // 条件类型
+	Requirements  []*Condition           `protobuf:"bytes,2,rep,name=requirements,proto3" json:"requirements,omitempty"`           // 具体要求
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`             // 条件描述
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EndCondition) Reset() {
+	*x = EndCondition{}
+	mi := &file_v1_script_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EndCondition) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EndCondition) ProtoMessage() {}
+
+func (x *EndCondition) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_script_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EndCondition.ProtoReflect.Descriptor instead.
+func (*EndCondition) Descriptor() ([]byte, []int) {
+	return file_v1_script_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *EndCondition) GetType() EndConditionType {
 	if x != nil {
 		return x.Type
 	}
-	return GameEndCondition_CONDITION_TYPE_UNSPECIFIED
+	return EndConditionType_END_CONDITION_TYPE_UNSPECIFIED
 }
 
-func (x *GameEndCondition) GetIncidentType() IncidentType {
-	if x != nil && x.IncidentType != nil {
-		return *x.IncidentType
+func (x *EndCondition) GetRequirements() []*Condition {
+	if x != nil {
+		return x.Requirements
 	}
-	return IncidentType_INCIDENT_TYPE_UNSPECIFIED
+	return nil
+}
+
+func (x *EndCondition) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+// 剧本配置库
+type ScriptConfigLib struct {
+	state         protoimpl.MessageState  `protogen:"open.v1"`
+	Scripts       map[int32]*ScriptConfig `protobuf:"bytes,1,rep,name=scripts,proto3" json:"scripts,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 剧本ID到配置的映射
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ScriptConfigLib) Reset() {
+	*x = ScriptConfigLib{}
+	mi := &file_v1_script_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ScriptConfigLib) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ScriptConfigLib) ProtoMessage() {}
+
+func (x *ScriptConfigLib) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_script_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ScriptConfigLib.ProtoReflect.Descriptor instead.
+func (*ScriptConfigLib) Descriptor() ([]byte, []int) {
+	return file_v1_script_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *ScriptConfigLib) GetScripts() map[int32]*ScriptConfig {
+	if x != nil {
+		return x.Scripts
+	}
+	return nil
 }
 
 var File_v1_script_proto protoreflect.FileDescriptor
 
 const file_v1_script_proto_rawDesc = "" +
 	"\n" +
-	"\x0fv1/script.proto\x12\x02v1\x1a\x12v1/character.proto\x1a\x12v1/condition.proto\x1a\x0ev1/enums.proto\x1a\x11v1/incident.proto\"\x7f\n" +
-	"\aTragedy\x123\n" +
-	"\ftragedy_type\x18\x01 \x01(\x0e2\x10.v1.IncidentTypeR\vtragedyType\x12\x10\n" +
-	"\x03day\x18\x02 \x01(\x05R\x03day\x12-\n" +
-	"\n" +
-	"conditions\x18\x03 \x03(\v2\r.v1.ConditionR\n" +
-	"conditions\"\xa5\x05\n" +
-	"\x06Script\x12\x0e\n" +
+	"\x0fv1/script.proto\x12\x02v1\x1a\x12v1/condition.proto\x1a\x0ev1/enums.proto\x1a\x11v1/incident.proto\x1a\x0fv1/effect.proto\"\xd1\x05\n" +
+	"\fScriptConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x122\n" +
-	"\tmain_plot\x18\x04 \x01(\x0e2\x15.v1.TragedyScriptTypeR\bmainPlot\x122\n" +
-	"\tsub_plots\x18\x05 \x03(\x0e2\x15.v1.TragedyScriptTypeR\bsubPlots\x123\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x123\n" +
+	"\vtragedy_set\x18\x04 \x01(\x0e2\x12.v1.TragedySetTypeR\n" +
+	"tragedySet\x124\n" +
 	"\n" +
-	"characters\x18\x06 \x03(\v2\x13.v1.CharacterConfigR\n" +
+	"difficulty\x18\x05 \x01(\x0e2\x14.v1.ScriptDifficultyR\n" +
+	"difficulty\x12+\n" +
+	"\tmain_plot\x18\x06 \x01(\v2\x0e.v1.PlotConfigR\bmainPlot\x12+\n" +
+	"\tsub_plots\x18\a \x03(\v2\x0e.v1.PlotConfigR\bsubPlots\x125\n" +
+	"\n" +
+	"characters\x18\b \x03(\v2\x15.v1.CharacterInScriptR\n" +
 	"characters\x120\n" +
-	"\tincidents\x18\a \x03(\v2\x12.v1.IncidentConfigR\tincidents\x12\x1d\n" +
+	"\tincidents\x18\t \x03(\v2\x12.v1.IncidentConfigR\tincidents\x12\x1d\n" +
 	"\n" +
-	"loop_count\x18\b \x01(\x05R\tloopCount\x12\"\n" +
-	"\rdays_per_loop\x18\t \x01(\x05R\vdaysPerLoop\x12;\n" +
-	"\x0ewin_conditions\x18\n" +
-	" \x03(\v2\x14.v1.GameEndConditionR\rwinConditions\x12=\n" +
-	"\x0flose_conditions\x18\v \x03(\v2\x14.v1.GameEndConditionR\x0eloseConditions\x12.\n" +
-	"\x13mastermind_card_ids\x18\f \x03(\x05R\x11mastermindCardIds\x120\n" +
-	"\x14protagonist_card_ids\x18\r \x03(\x05R\x12protagonistCardIds\x12:\n" +
-	"\x19special_rules_description\x18\x0e \x03(\tR\x17specialRulesDescription\x12)\n" +
-	"\ttragedies\x18\x0f \x03(\v2\v.v1.TragedyR\ttragedies\"\xe6\x02\n" +
-	"\x10GameEndCondition\x126\n" +
-	"\x04type\x18\x01 \x01(\x0e2\".v1.GameEndCondition.ConditionTypeR\x04type\x12:\n" +
-	"\rincident_type\x18\x02 \x01(\x0e2\x10.v1.IncidentTypeH\x00R\fincidentType\x88\x01\x01\"\xcb\x01\n" +
-	"\rConditionType\x12\x1e\n" +
-	"\x1aCONDITION_TYPE_UNSPECIFIED\x10\x00\x12\x1b\n" +
-	"\x17ALL_TRAGEDIES_PREVENTED\x10\x01\x12\x1e\n" +
-	"\x1aSPECIFIC_TRAGEDY_TRIGGERED\x10\x02\x12\x15\n" +
-	"\x11MAX_LOOPS_REACHED\x10\x03\x12!\n" +
-	"\x1dPROTAGONIST_GUESSED_CORRECTLY\x10\x04\x12#\n" +
-	"\x1fPROTAGONIST_GUESSED_INCORRECTLY\x10\x05B\x10\n" +
-	"\x0e_incident_typeB)Z'tragedylooper/internal/game/proto/v1;v1b\x06proto3"
+	"loop_count\x18\n" +
+	" \x01(\x05R\tloopCount\x12\"\n" +
+	"\rdays_per_loop\x18\v \x01(\x05R\vdaysPerLoop\x124\n" +
+	"\rspecial_rules\x18\f \x03(\v2\x0f.v1.SpecialRuleR\fspecialRules\x12.\n" +
+	"\x13mastermind_card_ids\x18\r \x03(\x05R\x11mastermindCardIds\x120\n" +
+	"\x14protagonist_card_ids\x18\x0e \x03(\x05R\x12protagonistCardIds\x127\n" +
+	"\x0ewin_conditions\x18\x0f \x03(\v2\x10.v1.EndConditionR\rwinConditions\x129\n" +
+	"\x0flose_conditions\x18\x10 \x03(\v2\x10.v1.EndConditionR\x0eloseConditions\"\xff\x02\n" +
+	"\x11CharacterInScript\x12!\n" +
+	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x12-\n" +
+	"\vhidden_role\x18\x02 \x01(\x0e2\f.v1.RoleTypeR\n" +
+	"hiddenRole\x12;\n" +
+	"\x10initial_location\x18\x03 \x01(\x0e2\x10.v1.LocationTypeR\x0finitialLocation\x12)\n" +
+	"\x10initial_paranoia\x18\x04 \x01(\x05R\x0finitialParanoia\x12)\n" +
+	"\x10initial_goodwill\x18\x05 \x01(\x05R\x0finitialGoodwill\x12)\n" +
+	"\x10initial_intrigue\x18\x06 \x01(\x05R\x0finitialIntrigue\x124\n" +
+	"\x16additional_ability_ids\x18\a \x03(\x05R\x14additionalAbilityIds\x12$\n" +
+	"\x0estarts_in_game\x18\b \x01(\bR\fstartsInGame\"\x90\x01\n" +
+	"\n" +
+	"PlotConfig\x12)\n" +
+	"\tplot_type\x18\x01 \x01(\x0e2\f.v1.PlotTypeR\bplotType\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12!\n" +
+	"\fincident_ids\x18\x04 \x03(\x05R\vincidentIds\"\x92\x01\n" +
+	"\vSpecialRule\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\x12)\n" +
+	"\atrigger\x18\x03 \x01(\x0e2\x0f.v1.TriggerTypeR\atrigger\x12\"\n" +
+	"\x06effect\x18\x04 \x01(\v2\n" +
+	".v1.EffectR\x06effect\"\x8d\x01\n" +
+	"\fEndCondition\x12(\n" +
+	"\x04type\x18\x01 \x01(\x0e2\x14.v1.EndConditionTypeR\x04type\x121\n" +
+	"\frequirements\x18\x02 \x03(\v2\r.v1.ConditionR\frequirements\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\"\x9b\x01\n" +
+	"\x0fScriptConfigLib\x12:\n" +
+	"\ascripts\x18\x01 \x03(\v2 .v1.ScriptConfigLib.ScriptsEntryR\ascripts\x1aL\n" +
+	"\fScriptsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12&\n" +
+	"\x05value\x18\x02 \x01(\v2\x10.v1.ScriptConfigR\x05value:\x028\x01B)Z'tragedylooper/internal/game/proto/v1;v1b\x06proto3"
 
 var (
 	file_v1_script_proto_rawDescOnce sync.Once
@@ -405,36 +610,50 @@ func file_v1_script_proto_rawDescGZIP() []byte {
 	return file_v1_script_proto_rawDescData
 }
 
-var file_v1_script_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_v1_script_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_v1_script_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_v1_script_proto_goTypes = []any{
-	(GameEndCondition_ConditionType)(0), // 0: v1.GameEndCondition.ConditionType
-	(*Tragedy)(nil),                     // 1: v1.Tragedy
-	(*Script)(nil),                      // 2: v1.Script
-	(*GameEndCondition)(nil),            // 3: v1.GameEndCondition
-	(IncidentType)(0),                   // 4: v1.IncidentType
-	(*Condition)(nil),                   // 5: v1.Condition
-	(TragedyScriptType)(0),              // 6: v1.TragedyScriptType
-	(*CharacterConfig)(nil),             // 7: v1.CharacterConfig
-	(*IncidentConfig)(nil),              // 8: v1.IncidentConfig
+	(*ScriptConfig)(nil),      // 0: v1.ScriptConfig
+	(*CharacterInScript)(nil), // 1: v1.CharacterInScript
+	(*PlotConfig)(nil),        // 2: v1.PlotConfig
+	(*SpecialRule)(nil),       // 3: v1.SpecialRule
+	(*EndCondition)(nil),      // 4: v1.EndCondition
+	(*ScriptConfigLib)(nil),   // 5: v1.ScriptConfigLib
+	nil,                       // 6: v1.ScriptConfigLib.ScriptsEntry
+	(TragedySetType)(0),       // 7: v1.TragedySetType
+	(ScriptDifficulty)(0),     // 8: v1.ScriptDifficulty
+	(*IncidentConfig)(nil),    // 9: v1.IncidentConfig
+	(RoleType)(0),             // 10: v1.RoleType
+	(LocationType)(0),         // 11: v1.LocationType
+	(PlotType)(0),             // 12: v1.PlotType
+	(TriggerType)(0),          // 13: v1.TriggerType
+	(*Effect)(nil),            // 14: v1.Effect
+	(EndConditionType)(0),     // 15: v1.EndConditionType
+	(*Condition)(nil),         // 16: v1.Condition
 }
 var file_v1_script_proto_depIdxs = []int32{
-	4,  // 0: v1.Tragedy.tragedy_type:type_name -> v1.IncidentType
-	5,  // 1: v1.Tragedy.conditions:type_name -> v1.Condition
-	6,  // 2: v1.Script.main_plot:type_name -> v1.TragedyScriptType
-	6,  // 3: v1.Script.sub_plots:type_name -> v1.TragedyScriptType
-	7,  // 4: v1.Script.characters:type_name -> v1.CharacterConfig
-	8,  // 5: v1.Script.incidents:type_name -> v1.IncidentConfig
-	3,  // 6: v1.Script.win_conditions:type_name -> v1.GameEndCondition
-	3,  // 7: v1.Script.lose_conditions:type_name -> v1.GameEndCondition
-	1,  // 8: v1.Script.tragedies:type_name -> v1.Tragedy
-	0,  // 9: v1.GameEndCondition.type:type_name -> v1.GameEndCondition.ConditionType
-	4,  // 10: v1.GameEndCondition.incident_type:type_name -> v1.IncidentType
-	11, // [11:11] is the sub-list for method output_type
-	11, // [11:11] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	7,  // 0: v1.ScriptConfig.tragedy_set:type_name -> v1.TragedySetType
+	8,  // 1: v1.ScriptConfig.difficulty:type_name -> v1.ScriptDifficulty
+	2,  // 2: v1.ScriptConfig.main_plot:type_name -> v1.PlotConfig
+	2,  // 3: v1.ScriptConfig.sub_plots:type_name -> v1.PlotConfig
+	1,  // 4: v1.ScriptConfig.characters:type_name -> v1.CharacterInScript
+	9,  // 5: v1.ScriptConfig.incidents:type_name -> v1.IncidentConfig
+	3,  // 6: v1.ScriptConfig.special_rules:type_name -> v1.SpecialRule
+	4,  // 7: v1.ScriptConfig.win_conditions:type_name -> v1.EndCondition
+	4,  // 8: v1.ScriptConfig.lose_conditions:type_name -> v1.EndCondition
+	10, // 9: v1.CharacterInScript.hidden_role:type_name -> v1.RoleType
+	11, // 10: v1.CharacterInScript.initial_location:type_name -> v1.LocationType
+	12, // 11: v1.PlotConfig.plot_type:type_name -> v1.PlotType
+	13, // 12: v1.SpecialRule.trigger:type_name -> v1.TriggerType
+	14, // 13: v1.SpecialRule.effect:type_name -> v1.Effect
+	15, // 14: v1.EndCondition.type:type_name -> v1.EndConditionType
+	16, // 15: v1.EndCondition.requirements:type_name -> v1.Condition
+	6,  // 16: v1.ScriptConfigLib.scripts:type_name -> v1.ScriptConfigLib.ScriptsEntry
+	0,  // 17: v1.ScriptConfigLib.ScriptsEntry.value:type_name -> v1.ScriptConfig
+	18, // [18:18] is the sub-list for method output_type
+	18, // [18:18] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_v1_script_proto_init() }
@@ -442,24 +661,22 @@ func file_v1_script_proto_init() {
 	if File_v1_script_proto != nil {
 		return
 	}
-	file_v1_character_proto_init()
 	file_v1_condition_proto_init()
 	file_v1_enums_proto_init()
 	file_v1_incident_proto_init()
-	file_v1_script_proto_msgTypes[2].OneofWrappers = []any{}
+	file_v1_effect_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_script_proto_rawDesc), len(file_v1_script_proto_rawDesc)),
-			NumEnums:      1,
-			NumMessages:   3,
+			NumEnums:      0,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_v1_script_proto_goTypes,
 		DependencyIndexes: file_v1_script_proto_depIdxs,
-		EnumInfos:         file_v1_script_proto_enumTypes,
 		MessageInfos:      file_v1_script_proto_msgTypes,
 	}.Build()
 	File_v1_script_proto = out.File

@@ -5,12 +5,14 @@
         "LoopResetEvent": {
             "properties": {
                 "loop": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "新的循环数"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Loop Reset Event"
+            "title": "Loop Reset Event",
+            "description": "循环重置事件"
         }
     }
 }

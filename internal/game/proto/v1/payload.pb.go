@@ -24,8 +24,8 @@ const (
 // 玩家打出卡牌的操作负载
 type PlayCardPayload struct {
 	state    protoimpl.MessageState `protogen:"open.v1"`
-	PlayerId string                 `protobuf:"bytes,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"` // 执行操作的玩家ID
-	CardId   int32                  `protobuf:"varint,2,opt,name=card_id,json=cardId,proto3" json:"card_id,omitempty"`      // 打出的卡牌ID
+	PlayerId int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"` // 执行操作的玩家ID
+	CardId   int32                  `protobuf:"varint,2,opt,name=card_id,json=cardId,proto3" json:"card_id,omitempty"`       // 打出的卡牌ID
 	// Types that are valid to be assigned to Target:
 	//
 	//	*PlayCardPayload_TargetCharacterId
@@ -65,11 +65,11 @@ func (*PlayCardPayload) Descriptor() ([]byte, []int) {
 	return file_v1_payload_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PlayCardPayload) GetPlayerId() string {
+func (x *PlayCardPayload) GetPlayerId() int32 {
 	if x != nil {
 		return x.PlayerId
 	}
-	return ""
+	return 0
 }
 
 func (x *PlayCardPayload) GetCardId() int32 {
@@ -123,7 +123,7 @@ func (*PlayCardPayload_TargetLocation) isPlayCardPayload_Target() {}
 // 玩家使用能力的操作负载
 type UseAbilityPayload struct {
 	state       protoimpl.MessageState `protogen:"open.v1"`
-	PlayerId    string                 `protobuf:"bytes,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`           // 执行操作的玩家ID
+	PlayerId    int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`          // 执行操作的玩家ID
 	CharacterId int32                  `protobuf:"varint,2,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"` // 哪个角色的能力被使用
 	AbilityId   int32                  `protobuf:"varint,3,opt,name=ability_id,json=abilityId,proto3" json:"ability_id,omitempty"`       // 哪个能力被使用
 	// Types that are valid to be assigned to Target:
@@ -166,11 +166,11 @@ func (*UseAbilityPayload) Descriptor() ([]byte, []int) {
 	return file_v1_payload_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *UseAbilityPayload) GetPlayerId() string {
+func (x *UseAbilityPayload) GetPlayerId() int32 {
 	if x != nil {
 		return x.PlayerId
 	}
-	return ""
+	return 0
 }
 
 func (x *UseAbilityPayload) GetCharacterId() int32 {
@@ -246,7 +246,7 @@ func (*UseAbilityPayload_TargetIncidentType) isUseAbilityPayload_Target() {}
 // 主角玩家进行猜测的操作负载
 type MakeGuessPayload struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PlayerId      string                 `protobuf:"bytes,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`                                                                                                          // 执行操作的玩家ID
+	PlayerId      int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`                                                                                                         // 执行操作的玩家ID
 	GuessedRoles  map[int32]RoleType     `protobuf:"bytes,2,rep,name=guessed_roles,json=guessedRoles,proto3" json:"guessed_roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=v1.RoleType"` // 猜测的角色身份映射，键为 character_id
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -282,11 +282,11 @@ func (*MakeGuessPayload) Descriptor() ([]byte, []int) {
 	return file_v1_payload_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *MakeGuessPayload) GetPlayerId() string {
+func (x *MakeGuessPayload) GetPlayerId() int32 {
 	if x != nil {
 		return x.PlayerId
 	}
-	return ""
+	return 0
 }
 
 func (x *MakeGuessPayload) GetGuessedRoles() map[int32]RoleType {
@@ -299,7 +299,7 @@ func (x *MakeGuessPayload) GetGuessedRoles() map[int32]RoleType {
 // 玩家进行选择的操作负载（例如，在需要选择地盘或目标时）
 type ChooseOptionPayload struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	PlayerId       string                 `protobuf:"bytes,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`                     // 执行操作的玩家ID
+	PlayerId       int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`                    // 执行操作的玩家ID
 	CharacterId    int32                  `protobuf:"varint,2,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`           // 做出选择的角色（如果选择与角色相关）
 	ChosenOptionId string                 `protobuf:"bytes,3,opt,name=chosen_option_id,json=chosenOptionId,proto3" json:"chosen_option_id,omitempty"` // 选择项的ID
 	unknownFields  protoimpl.UnknownFields
@@ -336,11 +336,11 @@ func (*ChooseOptionPayload) Descriptor() ([]byte, []int) {
 	return file_v1_payload_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ChooseOptionPayload) GetPlayerId() string {
+func (x *ChooseOptionPayload) GetPlayerId() int32 {
 	if x != nil {
 		return x.PlayerId
 	}
-	return ""
+	return 0
 }
 
 func (x *ChooseOptionPayload) GetCharacterId() int32 {
@@ -449,19 +449,19 @@ type isPlayerActionPayload_Payload interface {
 }
 
 type PlayerActionPayload_PlayCard struct {
-	PlayCard *PlayCardPayload `protobuf:"bytes,1,opt,name=play_card,json=playCard,proto3,oneof"`
+	PlayCard *PlayCardPayload `protobuf:"bytes,1,opt,name=play_card,json=playCard,proto3,oneof"` // 打出卡牌的负载
 }
 
 type PlayerActionPayload_UseAbility struct {
-	UseAbility *UseAbilityPayload `protobuf:"bytes,2,opt,name=use_ability,json=useAbility,proto3,oneof"`
+	UseAbility *UseAbilityPayload `protobuf:"bytes,2,opt,name=use_ability,json=useAbility,proto3,oneof"` // 使用能力的负载
 }
 
 type PlayerActionPayload_MakeGuess struct {
-	MakeGuess *MakeGuessPayload `protobuf:"bytes,3,opt,name=make_guess,json=makeGuess,proto3,oneof"`
+	MakeGuess *MakeGuessPayload `protobuf:"bytes,3,opt,name=make_guess,json=makeGuess,proto3,oneof"` // 进行猜测的负载
 }
 
 type PlayerActionPayload_ChooseOption struct {
-	ChooseOption *ChooseOptionPayload `protobuf:"bytes,4,opt,name=choose_option,json=chooseOption,proto3,oneof"`
+	ChooseOption *ChooseOptionPayload `protobuf:"bytes,4,opt,name=choose_option,json=chooseOption,proto3,oneof"` // 进行选择的负载
 }
 
 func (*PlayerActionPayload_PlayCard) isPlayerActionPayload_Payload() {}
@@ -478,13 +478,13 @@ const file_v1_payload_proto_rawDesc = "" +
 	"\n" +
 	"\x10v1/payload.proto\x12\x02v1\x1a\x0ev1/enums.proto\"\xc0\x01\n" +
 	"\x0fPlayCardPayload\x12\x1b\n" +
-	"\tplayer_id\x18\x01 \x01(\tR\bplayerId\x12\x17\n" +
+	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12\x17\n" +
 	"\acard_id\x18\x02 \x01(\x05R\x06cardId\x120\n" +
 	"\x13target_character_id\x18\x03 \x01(\x05H\x00R\x11targetCharacterId\x12;\n" +
 	"\x0ftarget_location\x18\x04 \x01(\x0e2\x10.v1.LocationTypeH\x00R\x0etargetLocationB\b\n" +
 	"\x06target\"\xb1\x02\n" +
 	"\x11UseAbilityPayload\x12\x1b\n" +
-	"\tplayer_id\x18\x01 \x01(\tR\bplayerId\x12!\n" +
+	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12!\n" +
 	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\x12\x1d\n" +
 	"\n" +
 	"ability_id\x18\x03 \x01(\x05R\tabilityId\x120\n" +
@@ -493,13 +493,13 @@ const file_v1_payload_proto_rawDesc = "" +
 	"\x14target_incident_type\x18\x06 \x01(\x0e2\x10.v1.IncidentTypeH\x00R\x12targetIncidentTypeB\b\n" +
 	"\x06target\"\xcb\x01\n" +
 	"\x10MakeGuessPayload\x12\x1b\n" +
-	"\tplayer_id\x18\x01 \x01(\tR\bplayerId\x12K\n" +
+	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12K\n" +
 	"\rguessed_roles\x18\x02 \x03(\v2&.v1.MakeGuessPayload.GuessedRolesEntryR\fguessedRoles\x1aM\n" +
 	"\x11GuessedRolesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\"\n" +
 	"\x05value\x18\x02 \x01(\x0e2\f.v1.RoleTypeR\x05value:\x028\x01\"\x7f\n" +
 	"\x13ChooseOptionPayload\x12\x1b\n" +
-	"\tplayer_id\x18\x01 \x01(\tR\bplayerId\x12!\n" +
+	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12!\n" +
 	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\x12(\n" +
 	"\x10chosen_option_id\x18\x03 \x01(\tR\x0echosenOptionId\"\x85\x02\n" +
 	"\x13PlayerActionPayload\x122\n" +

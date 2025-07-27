@@ -6,18 +6,7 @@
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "角色唯一ID"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "角色名称"
-                },
-                "traits": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array",
-                    "description": "角色特征，例如“学生”、“记者”"
+                    "description": "角色ID，关联到CharacterConfig"
                 },
                 "current_location": {
                     "enum": [
@@ -41,42 +30,48 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "地点类型枚举"
+                    "description": "地点类型（也可通过LocationConfig扩展）"
                 },
                 "paranoia": {
                     "type": "integer",
-                    "description": "妄想值"
+                    "description": "当前妄想值"
                 },
                 "goodwill": {
                     "type": "integer",
-                    "description": "好感值"
+                    "description": "当前好感值"
                 },
                 "intrigue": {
                     "type": "integer",
-                    "description": "阴谋值"
+                    "description": "当前阴谋值"
                 },
                 "hidden_role": {
                     "enum": [
                         "ROLE_TYPE_UNSPECIFIED",
                         0,
-                        "INNOCENT",
+                        "PERSON",
                         1,
                         "KILLER",
                         2,
-                        "ACCOMPLICE",
+                        "BRAIN",
                         3,
-                        "PERSON_OF_INTEREST",
-                        4,
                         "KEY_PERSON",
+                        4,
+                        "CULTIST",
                         5,
                         "FRIEND",
                         6,
-                        "LOVER",
+                        "LOVED_ONE",
                         7,
                         "CONSPIRACY_THEORIST",
                         8,
-                        "CULTIST",
-                        9
+                        "SERIAL_KILLER",
+                        9,
+                        "FACTOR",
+                        10,
+                        "WITCH",
+                        11,
+                        "TIME_TRAVELER",
+                        12
                     ],
                     "oneOf": [
                         {
@@ -87,194 +82,43 @@
                         }
                     ],
                     "title": "Role Type",
-                    "description": "角色身份类型枚举"
+                    "description": "角色身份类型"
                 },
                 "abilities": {
                     "items": {
                         "$ref": "#/definitions/v1.Ability"
                     },
                     "type": "array",
-                    "description": "角色拥有的能力列表"
+                    "description": "拥有的能力实例列表"
                 },
                 "is_alive": {
                     "type": "boolean",
-                    "description": "角色是否存活"
+                    "description": "是否存活"
                 },
                 "in_panic_mode": {
                     "type": "boolean",
-                    "description": "是否处于恐慌模式（新增字段）"
-                },
-                "paranoia_limit": {
-                    "type": "integer",
-                    "description": "妄想值上限，考虑作为剧本或游戏状态的一部分"
-                },
-                "goodwill_limit": {
-                    "type": "integer",
-                    "description": "好感值上限"
-                },
-                "intrigue_limit": {
-                    "type": "integer",
-                    "description": "阴谋值上限"
-                },
-                "rules": {
-                    "items": {
-                        "$ref": "#/definitions/v1.CharacterRule"
-                    },
-                    "type": "array",
-                    "description": "角色特有的规则列表"
+                    "description": "是否处于恐慌模式"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Character",
-            "description": "角色信息"
+            "description": "角色运行时实例"
         },
         "v1.Ability": {
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "The ID of the ability, linking to an AbilityConfig"
+                    "description": "能力ID，关联到AbilityConfig"
                 },
                 "used_this_loop": {
                     "type": "boolean",
-                    "description": "Runtime state: whether this ability has been used in the current loop"
+                    "description": "运行时状态：本循环是否已使用"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Ability",
-            "description": "Ability represents a runtime instance of an ability."
-        },
-        "v1.CharacterRule": {
-            "properties": {
-                "trigger": {
-                    "enum": [
-                        "TRIGGER_TYPE_UNSPECIFIED",
-                        0,
-                        "ON_GAME_SETUP",
-                        1,
-                        "ON_LOOP_START",
-                        2,
-                        "ON_DAY_START",
-                        3,
-                        "ON_CARD_PLAY_PHASE",
-                        4,
-                        "ON_CARD_REVEAL_PHASE",
-                        5,
-                        "ON_CARD_RESOLVE_PHASE",
-                        6,
-                        "ON_ABILITY_PHASE",
-                        7,
-                        "ON_INCIDENT_PHASE",
-                        8,
-                        "ON_GAME_EVENT",
-                        9,
-                        "PASSIVE",
-                        10,
-                        "ON_LOOP_LOSS",
-                        11,
-                        "ON_LOOP_WIN",
-                        12,
-                        "ON_GAME_END",
-                        13
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Trigger Type",
-                    "description": "触发器类型枚举（能力或规则何时触发）"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "规则描述"
-                },
-                "turf_selection_effect": {
-                    "$ref": "#/definitions/v1.TurfSelectionEffect",
-                    "additionalProperties": true,
-                    "description": "地盘选择效果"
-                },
-                "delayed_entry_effect": {
-                    "$ref": "#/definitions/v1.DelayedEntryEffect",
-                    "additionalProperties": true,
-                    "description": "延迟登场效果"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Character Rule",
-            "description": "角色特殊规则"
-        },
-        "v1.DelayedEntryEffect": {
-            "properties": {
-                "day_of_entry": {
-                    "type": "integer",
-                    "description": "角色登场的日期"
-                },
-                "entry_location": {
-                    "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
-                        0,
-                        "HOSPITAL",
-                        1,
-                        "SHRINE",
-                        2,
-                        "CITY",
-                        3,
-                        "SCHOOL",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Location Type",
-                    "description": "地点类型枚举"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Delayed Entry Effect",
-            "description": "延迟登场效果（例如某些角色在特定天数才登场）"
-        },
-        "v1.TurfSelectionEffect": {
-            "properties": {
-                "possible_locations": {
-                    "items": {
-                        "enum": [
-                            "LOCATION_TYPE_UNSPECIFIED",
-                            0,
-                            "HOSPITAL",
-                            1,
-                            "SHRINE",
-                            2,
-                            "CITY",
-                            3,
-                            "SCHOOL",
-                            4
-                        ]
-                    },
-                    "type": "array",
-                    "title": "Location Type",
-                    "description": "地点类型枚举"
-                },
-                "prompt": {
-                    "type": "string",
-                    "description": "给玩家的提示语"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Turf Selection Effect",
-            "description": "地盘选择效果（例如某些角色开局可以选择初始地点）"
+            "title": "Ability"
         }
     }
 }

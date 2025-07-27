@@ -21,12 +21,14 @@
                         "additionalProperties": true,
                         "type": "object"
                     },
-                    "type": "object"
+                    "type": "object",
+                    "description": "事件ID到事件负载的映射"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Game Event Lib"
+            "title": "Game Event Lib",
+            "description": "事件库，用于存储和管理游戏中的所有事件"
         }
     }
 }

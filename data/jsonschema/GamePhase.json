@@ -7,26 +7,28 @@
         1,
         "MASTERMIND_SETUP",
         2,
-        "CARD_PLAY",
+        "LOOP_START",
         3,
-        "CARD_REVEAL",
+        "DAY_START",
         4,
-        "CARD_RESOLVE",
+        "CARD_PLAY",
         5,
-        "ABILITIES",
+        "CARD_REVEAL",
         6,
-        "INCIDENTS",
+        "CARD_RESOLVE",
         7,
-        "DAY_END",
+        "ABILITIES",
         8,
-        "LOOP_END",
+        "INCIDENTS",
         9,
-        "GAME_OVER",
+        "DAY_END",
         10,
-        "PROTAGONIST_GUESS",
+        "LOOP_END",
         11,
-        "FIRST_GUESS",
-        12
+        "PROTAGONIST_GUESS",
+        12,
+        "GAME_OVER",
+        13
     ],
     "oneOf": [
         {
@@ -37,5 +39,5 @@
         }
     ],
     "title": "Game Phase",
-    "description": "游戏阶段枚举"
+    "description": "游戏阶段"
 }

@@ -98,13 +98,13 @@ message PlayerCondition {
 // 目标选择器，用于动态指定条件或效果的目标
 message TargetSelector {
   enum SelectorType {
-    SELECTOR_TYPE_UNSPECIFIED = 0; // 未指定
-    SPECIFIC_CHARACTER = 1;        // 指定的某个角色
-    TRIGGERING_CHARACTER = 2;      // 触发事件的角色
-    CULPRIT = 3;                   // 事件的犯人
-    VICTIM = 4;                    // 事件的受害者
-    ANY_CHARACTER_WITH_ROLE = 5;   // 任意一个有指定身份的角色
-    ALL_CHARACTERS_AT_LOCATION = 6;// 在某地的所有角色
+    SELECTOR_TYPE_UNSPECIFIED = 0;      // 未指定
+    SPECIFIC_CHARACTER = 1;             // 指定的某个角色
+    TRIGGERING_CHARACTER = 2;           // 触发事件的角色
+    CULPRIT = 3;                        // 事件的犯人
+    VICTIM = 4;                         // 事件的受害者
+    ANY_CHARACTER_WITH_ROLE = 5;        // 任意一个有指定身份的角色
+    ALL_CHARACTERS_AT_LOCATION = 6;     // 在某地的所有角色
   }
   SelectorType selector_type = 1;   // 选择器类型
   int32 character_id = 2;           // 当类型为 SPECIFIC_CHARACTER 时使用

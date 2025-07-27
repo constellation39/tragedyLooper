@@ -5,18 +5,22 @@
         "GoodwillAdjustedEvent": {
             "properties": {
                 "character_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "角色ID"
                 },
                 "amount": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "调整量"
                 },
                 "new_goodwill": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "调整后的新好感值"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Goodwill Adjusted Event"
+            "title": "Goodwill Adjusted Event",
+            "description": "好感值调整事件"
         }
     }
 }

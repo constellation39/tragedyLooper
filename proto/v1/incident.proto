@@ -7,26 +7,31 @@ import "v1/enums.proto";
 
 option go_package = "tragedylooper/internal/game/proto/v1;v1";
 
+// 事件实例，在游戏运行时创建
 message Incident {
-  int32 id = 1;
-  string name = 2;
-  int32 day = 3;
-  string culprit = 4;
-  string victim = 5;
-  string description = 6;
+  int32 id = 1;           // 事件唯一ID
+  string name = 2;        // 事件名称
+  int32 day = 3;          // 事件发生的日期
+  string culprit = 4;     // 犯人（角色名称或描述）
+  string victim = 5;      // 受害者（角色名称或描述）
+  string description = 6; // 事件描述
 }
 
 // 事件/悲剧在剧本中的配置
 message IncidentConfig {
-  IncidentType incident_type = 1; // 悲剧类型
-  int32 day = 2; // 悲剧预设发生的日期（第几天）
-  int32 culprit_character_id = 3; // 导致悲剧发生的角色ID（如果适用，例如谋杀案的凶手）
-  repeated Condition conditions = 4; // 触发悲剧所需满足的条件列表
-  bool is_main_plot_incident = 5; // 是否是主线剧情的事件（新增）
-  string name = 6;
-  // bool is_preventable = 6;         // 如果某些事件不可阻止，可以添加此字段
+  int32 id = 1;                              // 事件唯一ID（剧本内）
+  string name = 2;                           // 事件名称
+  string description = 3;                    // 事件描述
+  IncidentType incident_type = 4;            // 事件类型
+  int32 day = 5;                             // 预定发生日期
+  repeated Condition trigger_conditions = 6; // 触发条件列表
+  bool is_mandatory = 7;                     // 是否为必发事件
+  int32 culprit_character_id = 8;           // 事件主谋角色ID（如适用）
+  int32 location_id = 9;                     // 事件发生地点ID（如适用）
+  bool is_main_plot_incident = 10; // 是否是主线剧情的事件
 }
 
+// 事件配置库
 message IncidentConfigLib {
-  map<int32, IncidentConfig> incidents = 1;
+  map<int32, IncidentConfig> incidents = 1; // 事件ID到配置的映射
 }

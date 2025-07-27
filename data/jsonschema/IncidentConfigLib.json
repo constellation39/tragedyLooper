@@ -9,33 +9,141 @@
                         "$ref": "#/definitions/v1.IncidentConfig",
                         "additionalProperties": true
                     },
-                    "type": "object"
+                    "type": "object",
+                    "description": "事件ID到配置的映射"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Incident Config Lib"
+            "title": "Incident Config Lib",
+            "description": "事件配置库"
+        },
+        "v1.CompoundCondition": {
+            "properties": {
+                "operator": {
+                    "enum": [
+                        "OPERATOR_UNSPECIFIED",
+                        0,
+                        "AND",
+                        1,
+                        "OR",
+                        2,
+                        "NOT",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Operator"
+                },
+                "sub_conditions": {
+                    "items": {
+                        "$ref": "#/definitions/v1.Condition"
+                    },
+                    "type": "array",
+                    "description": "子条件列表"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Compound Condition",
+            "description": "复合条件，用于组合多个条件"
         },
         "v1.Condition": {
             "properties": {
                 "stat_condition": {
                     "$ref": "#/definitions/v1.StatCondition",
                     "additionalProperties": true,
-                    "description": "属性条件（例如，妄想值达到某阈值）"
+                    "description": "属性条件"
                 },
                 "location_condition": {
                     "$ref": "#/definitions/v1.LocationCondition",
                     "additionalProperties": true,
-                    "description": "地点条件（例如，角色在特定地点）"
+                    "description": "地点条件"
+                },
+                "role_condition": {
+                    "$ref": "#/definitions/v1.RoleCondition",
+                    "additionalProperties": true,
+                    "description": "身份条件"
+                },
+                "trait_condition": {
+                    "$ref": "#/definitions/v1.TraitCondition",
+                    "additionalProperties": true,
+                    "description": "特征条件"
+                },
+                "day_condition": {
+                    "$ref": "#/definitions/v1.DayCondition",
+                    "additionalProperties": true,
+                    "description": "日期条件"
+                },
+                "player_condition": {
+                    "$ref": "#/definitions/v1.PlayerCondition",
+                    "additionalProperties": true,
+                    "description": "玩家条件"
+                },
+                "compound_condition": {
+                    "$ref": "#/definitions/v1.CompoundCondition",
+                    "additionalProperties": true,
+                    "description": "复合条件 (AND/OR/NOT)"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Condition",
-            "description": "条件的通用消息，使用 oneof 包含各种具体条件"
+            "description": "条件，用于规则、事件和效果的触发判断"
+        },
+        "v1.DayCondition": {
+            "properties": {
+                "comparator": {
+                    "enum": [
+                        "COMPARATOR_UNSPECIFIED",
+                        0,
+                        "BEFORE",
+                        1,
+                        "ON",
+                        2,
+                        "AFTER",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Comparator"
+                },
+                "day": {
+                    "type": "integer",
+                    "description": "目标天数"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Day Condition",
+            "description": "日期条件"
         },
         "v1.IncidentConfig": {
             "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "事件唯一ID（剧本内）"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "事件名称"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "事件描述"
+                },
                 "incident_type": {
                     "enum": [
                         "INCIDENT_TYPE_UNSPECIFIED",
@@ -44,10 +152,16 @@
                         1,
                         "SUICIDE",
                         2,
-                        "HOSPITAL_CONSPIRACY",
+                        "ACCIDENT",
                         3,
+                        "DISAPPEARANCE",
+                        4,
+                        "HOSPITAL_CONSPIRACY",
+                        5,
                         "MURDER_MYSTERY",
-                        4
+                        6,
+                        "PANIC",
+                        7
                     ],
                     "oneOf": [
                         {
@@ -58,30 +172,34 @@
                         }
                     ],
                     "title": "Incident Type",
-                    "description": "悲剧类型枚举"
+                    "description": "事件类型"
                 },
                 "day": {
                     "type": "integer",
-                    "description": "悲剧预设发生的日期（第几天）"
+                    "description": "预定发生日期"
                 },
-                "culprit_character_id": {
-                    "type": "integer",
-                    "description": "导致悲剧发生的角色ID（如果适用，例如谋杀案的凶手）"
-                },
-                "conditions": {
+                "trigger_conditions": {
                     "items": {
                         "$ref": "#/definitions/v1.Condition"
                     },
                     "type": "array",
-                    "description": "触发悲剧所需满足的条件列表"
+                    "description": "触发条件列表"
+                },
+                "is_mandatory": {
+                    "type": "boolean",
+                    "description": "是否为必发事件"
+                },
+                "culprit_character_id": {
+                    "type": "integer",
+                    "description": "事件主谋角色ID（如适用）"
+                },
+                "location_id": {
+                    "type": "integer",
+                    "description": "事件发生地点ID（如适用）"
                 },
                 "is_main_plot_incident": {
                     "type": "boolean",
-                    "description": "是否是主线剧情的事件（新增）"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "bool is_preventable = 6;         // 如果某些事件不可阻止，可以添加此字段"
+                    "description": "是否是主线剧情的事件"
                 }
             },
             "additionalProperties": true,
@@ -91,9 +209,10 @@
         },
         "v1.LocationCondition": {
             "properties": {
-                "character_id": {
-                    "type": "integer",
-                    "description": "目标角色ID"
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色选择器"
                 },
                 "location": {
                     "enum": [
@@ -117,7 +236,11 @@
                         }
                     ],
                     "title": "Location Type",
-                    "description": "地点类型枚举"
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                },
+                "is_at_location": {
+                    "type": "boolean",
+                    "description": "是否在该地点 (默认为true)"
                 },
                 "is_alone": {
                     "type": "boolean",
@@ -133,21 +256,107 @@
             "title": "Location Condition",
             "description": "地点条件"
         },
+        "v1.PlayerCondition": {
+            "properties": {
+                "player_role": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "MASTERMIND",
+                        1,
+                        "PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Player Condition",
+            "description": "玩家条件"
+        },
+        "v1.RoleCondition": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色选择器"
+                },
+                "role": {
+                    "enum": [
+                        "ROLE_TYPE_UNSPECIFIED",
+                        0,
+                        "PERSON",
+                        1,
+                        "KILLER",
+                        2,
+                        "BRAIN",
+                        3,
+                        "KEY_PERSON",
+                        4,
+                        "CULTIST",
+                        5,
+                        "FRIEND",
+                        6,
+                        "LOVED_ONE",
+                        7,
+                        "CONSPIRACY_THEORIST",
+                        8,
+                        "SERIAL_KILLER",
+                        9,
+                        "FACTOR",
+                        10,
+                        "WITCH",
+                        11,
+                        "TIME_TRAVELER",
+                        12
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Role Type",
+                    "description": "角色身份类型"
+                },
+                "has_role": {
+                    "type": "boolean",
+                    "description": "是否拥有该身份 (默认为true)"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Role Condition",
+            "description": "身份条件"
+        },
         "v1.StatCondition": {
             "properties": {
-                "character_id": {
-                    "type": "integer",
-                    "description": "目标角色ID"
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色选择器"
                 },
                 "stat_type": {
                     "enum": [
                         "STAT_TYPE_UNSPECIFIED",
                         0,
-                        "PARANOIA_STAT",
+                        "PARANOIA",
                         1,
-                        "GOODWILL_STAT",
+                        "GOODWILL",
                         2,
-                        "INTRIGUE_STAT",
+                        "INTRIGUE",
                         3
                     ],
                     "oneOf": [
@@ -158,8 +367,7 @@
                             "type": "integer"
                         }
                     ],
-                    "title": "Stat Type",
-                    "description": "属性类型"
+                    "title": "Stat Type"
                 },
                 "comparator": {
                     "enum": [
@@ -184,8 +392,7 @@
                             "type": "integer"
                         }
                     ],
-                    "title": "Comparator",
-                    "description": "比较符"
+                    "title": "Comparator"
                 },
                 "value": {
                     "type": "integer",
@@ -196,6 +403,130 @@
             "type": "object",
             "title": "Stat Condition",
             "description": "属性条件"
+        },
+        "v1.TargetSelector": {
+            "properties": {
+                "selector_type": {
+                    "enum": [
+                        "SELECTOR_TYPE_UNSPECIFIED",
+                        0,
+                        "SPECIFIC_CHARACTER",
+                        1,
+                        "TRIGGERING_CHARACTER",
+                        2,
+                        "CULPRIT",
+                        3,
+                        "VICTIM",
+                        4,
+                        "ANY_CHARACTER_WITH_ROLE",
+                        5,
+                        "ALL_CHARACTERS_AT_LOCATION",
+                        6
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Selector Type"
+                },
+                "character_id": {
+                    "type": "integer",
+                    "description": "当类型为 SPECIFIC_CHARACTER 时使用"
+                },
+                "role_filter": {
+                    "enum": [
+                        "ROLE_TYPE_UNSPECIFIED",
+                        0,
+                        "PERSON",
+                        1,
+                        "KILLER",
+                        2,
+                        "BRAIN",
+                        3,
+                        "KEY_PERSON",
+                        4,
+                        "CULTIST",
+                        5,
+                        "FRIEND",
+                        6,
+                        "LOVED_ONE",
+                        7,
+                        "CONSPIRACY_THEORIST",
+                        8,
+                        "SERIAL_KILLER",
+                        9,
+                        "FACTOR",
+                        10,
+                        "WITCH",
+                        11,
+                        "TIME_TRAVELER",
+                        12
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Role Type",
+                    "description": "角色身份类型"
+                },
+                "location_filter": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Target Selector",
+            "description": "目标选择器，用于动态指定条件或效果的目标"
+        },
+        "v1.TraitCondition": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色选择器"
+                },
+                "trait": {
+                    "type": "string",
+                    "description": "目标特征"
+                },
+                "has_trait": {
+                    "type": "boolean",
+                    "description": "是否拥有该特征 (默认为true)"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Trait Condition",
+            "description": "特征条件"
         }
     }
 }

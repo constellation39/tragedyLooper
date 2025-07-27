@@ -5,15 +5,18 @@
         "AbilityUsedEvent": {
             "properties": {
                 "character_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "使用能力的角色ID"
                 },
                 "ability_name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "使用的能力名称"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Ability Used Event"
+            "title": "Ability Used Event",
+            "description": "能力使用事件"
         }
     }
 }

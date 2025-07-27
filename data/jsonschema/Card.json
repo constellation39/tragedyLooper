@@ -6,17 +6,17 @@
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "The ID of the card, linking to a CardConfig"
+                    "description": "卡牌ID，关联到CardConfig"
                 },
                 "used_this_loop": {
                     "type": "boolean",
-                    "description": "Runtime state: whether this card has been used in the current loop"
+                    "description": "运行时状态：本循环是否已使用"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Card",
-            "description": "Card represents a runtime instance of a card."
+            "description": "卡牌运行时实例"
         }
     }
 }
