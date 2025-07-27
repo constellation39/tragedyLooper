@@ -7,11 +7,12 @@
 package v1
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -550,7 +551,7 @@ var File_v1_player_proto protoreflect.FileDescriptor
 
 const file_v1_player_proto_rawDesc = "" +
 	"\n" +
-	"\x0fv1/player.proto\x12\x02v1\x1a\x0ev1/enums.proto\x1a\rv1/card.proto\x1a\x10v1/ability.proto\x1a\x12v1/character.proto\x1a\x0ev1/event.proto\"\xc6\x02\n" +
+	"\x0fv1/player.proto\x12\x02v1\x1a\x10v1/ability.proto\x1a\rv1/card.proto\x1a\x12v1/character.proto\x1a\x0ev1/enums.proto\x1a\x0ev1/event.proto\"\xc6\x02\n" +
 	"\x06Player\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\"\n" +
@@ -690,10 +691,10 @@ func file_v1_player_proto_init() {
 	if File_v1_player_proto != nil {
 		return
 	}
-	file_v1_enums_proto_init()
-	file_v1_card_proto_init()
 	file_v1_ability_proto_init()
+	file_v1_card_proto_init()
 	file_v1_character_proto_init()
+	file_v1_enums_proto_init()
 	file_v1_event_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{

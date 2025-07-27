@@ -2,27 +2,27 @@ syntax = "proto3";
 
 package v1;
 
-import "v1/enums.proto";
 import "v1/ability.proto";
+import "v1/enums.proto";
 
 option go_package = "tragedylooper/internal/game/v1;v1";
 
 // 角色信息
 message Character {
-  int32 id = 1;                     // 角色唯一ID
-  string name = 2;                  // 角色名称
-  repeated string traits = 3;       // 角色特征，例如“学生”、“记者”
+  int32 id = 1; // 角色唯一ID
+  string name = 2; // 角色名称
+  repeated string traits = 3; // 角色特征，例如“学生”、“记者”
   LocationType current_location = 4; // 角色当前所在地点
-  int32 paranoia = 5;               // 妄想值
-  int32 goodwill = 6;               // 好感值
-  int32 intrigue = 7;               // 阴谋值
-  RoleType hidden_role = 8;         // 隐藏身份
-  repeated Ability abilities = 9;   // 角色拥有的能力列表
-  bool is_alive = 10;               // 角色是否存活
-  bool in_panic_mode = 11;          // 是否处于恐慌模式（新增字段）
-  int32 paranoia_limit = 12;      // 妄想值上限，考虑作为剧本或游戏状态的一部分
-  int32 goodwill_limit = 13;      // 好感值上限
-  int32 intrigue_limit = 14;      // 阴谋值上限
+  int32 paranoia = 5; // 妄想值
+  int32 goodwill = 6; // 好感值
+  int32 intrigue = 7; // 阴谋值
+  RoleType hidden_role = 8; // 隐藏身份
+  repeated Ability abilities = 9; // 角色拥有的能力列表
+  bool is_alive = 10; // 角色是否存活
+  bool in_panic_mode = 11; // 是否处于恐慌模式（新增字段）
+  int32 paranoia_limit = 12; // 妄想值上限，考虑作为剧本或游戏状态的一部分
+  int32 goodwill_limit = 13; // 好感值上限
+  int32 intrigue_limit = 14; // 阴谋值上限
   repeated CharacterRule rules = 15; // 角色特有的规则列表
 }
 
@@ -32,11 +32,11 @@ message CharacterLib {
 
 // 角色特殊规则
 message CharacterRule {
-  TriggerType trigger = 1;    // 规则触发时机
-  string description = 2;     // 规则描述
+  TriggerType trigger = 1; // 规则触发时机
+  string description = 2; // 规则描述
   oneof effect {// 规则效果，只会有其中一个
-    TurfSelectionEffect turf_selection_effect = 3;   // 地盘选择效果
-    DelayedEntryEffect delayed_entry_effect = 4;     // 延迟登场效果
+    TurfSelectionEffect turf_selection_effect = 3; // 地盘选择效果
+    DelayedEntryEffect delayed_entry_effect = 4; // 延迟登场效果
     // 可以在此扩展其他特定角色规则的效果
   }
 }
@@ -44,11 +44,11 @@ message CharacterRule {
 // 地盘选择效果（例如某些角色开局可以选择初始地点）
 message TurfSelectionEffect {
   repeated LocationType possible_locations = 1; // 可选择的地点的列表
-  string prompt = 2;                            // 给玩家的提示语
+  string prompt = 2; // 给玩家的提示语
 }
 
 // 延迟登场效果（例如某些角色在特定天数才登场）
 message DelayedEntryEffect {
-  int32 day_of_entry = 1;     // 角色登场的日期
+  int32 day_of_entry = 1; // 角色登场的日期
   LocationType entry_location = 2; // 角色登场地点
 }

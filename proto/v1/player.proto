@@ -2,22 +2,22 @@ syntax = "proto3";
 
 package v1;
 
-import "v1/enums.proto";
-import "v1/card.proto";
 import "v1/ability.proto";
+import "v1/card.proto";
 import "v1/character.proto";
+import "v1/enums.proto";
 import "v1/event.proto";
 
 option go_package = "tragedylooper/internal/game/v1;v1";
 
 // 玩家信息
 message Player {
-  int32 id = 1;                       // 玩家唯一ID
-  string name = 2;                     // 玩家名称
-  PlayerRole role = 3;                 // 玩家角色 (主谋或主角)
-  bool is_llm = 4;                     // 是否由LLM（大语言模型）控制
-  repeated Card hand = 5;              // 玩家手牌列表
-  string llm_session_id = 6;           // 如果是LLM，对应的会话ID
+  int32 id = 1; // 玩家唯一ID
+  string name = 2; // 玩家名称
+  PlayerRole role = 3; // 玩家角色 (主谋或主角)
+  bool is_llm = 4; // 是否由LLM（大语言模型）控制
+  repeated Card hand = 5; // 玩家手牌列表
+  string llm_session_id = 6; // 如果是LLM，对应的会话ID
   PlayerDeductionKnowledge deduction_knowledge = 7; // 主角的推理知识（仅主角玩家拥有）
   repeated int32 protagonist_characters_controlled = 8; // 新增：如果主角玩家可以控制多个主角角色牌组，列出其控制的角色ID列表
 }
@@ -29,47 +29,47 @@ message PlayerLib {
 // 主角的推理知识
 message PlayerDeductionKnowledge {
   map<int32, RoleType> guessed_roles = 1; // 对角色身份的猜测，键为 character_id
-  repeated string clues = 2;              // 收集到的线索列表
-  repeated string theories = 3;           // 推理出的理论列表
+  repeated string clues = 2; // 收集到的线索列表
+  repeated string theories = 3; // 推理出的理论列表
 }
 
 // 玩家视角下的游戏状态（用于向特定玩家展示信息，隐藏其他玩家的秘密信息）
 message PlayerView {
-  string game_id = 1;                       // 游戏唯一ID
-  int32 script_id = 2;                      // 剧本ID
+  string game_id = 1; // 游戏唯一ID
+  int32 script_id = 2; // 剧本ID
   map<int32, PlayerViewCharacter> characters = 3; // 玩家视角下的角色状态映射 (隐藏身份已移除)
-  map<string, PlayerViewPlayer> players = 4;    // 玩家视角下的其他玩家信息 (手牌等可能隐藏)
-  int32 current_day = 5;                    // 当前天数
-  int32 current_loop = 6;                   // 当前循环数
-  GamePhase current_phase = 7;              // 当前游戏阶段
+  map<string, PlayerViewPlayer> players = 4; // 玩家视角下的其他玩家信息 (手牌等可能隐藏)
+  int32 current_day = 5; // 当前天数
+  int32 current_loop = 6; // 当前循环数
+  GamePhase current_phase = 7; // 当前游戏阶段
   map<int32, bool> active_tragedies = 8; // 已触发的悲剧
   map<int32, bool> prevented_tragedies = 9; // 已阻止的悲剧
-  repeated Card your_hand = 10;             // 当前玩家的手牌列表
+  repeated Card your_hand = 10; // 当前玩家的手牌列表
   PlayerDeductionKnowledge your_deductions = 11; // 当前玩家的推理知识
-  repeated GameEvent public_events = 12;    // 对所有玩家公开的事件日志
+  repeated GameEvent public_events = 12; // 对所有玩家公开的事件日志
   // 可以在此添加其他公开信息
 }
 
 // 玩家视角下的角色信息（不包含隐藏身份）
 message PlayerViewCharacter {
-  int32 id = 1;                     // 角色唯一ID
-  string name = 2;                  // 角色名称
-  repeated string traits = 3;       // 角色特征
+  int32 id = 1; // 角色唯一ID
+  string name = 2; // 角色名称
+  repeated string traits = 3; // 角色特征
   LocationType current_location = 4; // 角色当前所在地点
-  int32 paranoia = 5;               // 妄想值
-  int32 goodwill = 6;               // 好感值
-  int32 intrigue = 7;               // 阴谋值
-  repeated Ability abilities = 8;   // 角色拥有的能力列表
-  bool is_alive = 9;                // 角色是否存活
-  bool in_panic_mode = 10;          // 是否处于恐慌模式
+  int32 paranoia = 5; // 妄想值
+  int32 goodwill = 6; // 好感值
+  int32 intrigue = 7; // 阴谋值
+  repeated Ability abilities = 8; // 角色拥有的能力列表
+  bool is_alive = 9; // 角色是否存活
+  bool in_panic_mode = 10; // 是否处于恐慌模式
   repeated CharacterRule rules = 11; // 角色特有规则
   // 隐藏身份 (hidden_role) 不会在这里显示
 }
 
 // 玩家视角下的其他玩家信息（不包含私密数据）
 message PlayerViewPlayer {
-  string id = 1;       // 玩家唯一ID
-  string name = 2;     // 玩家名称
+  string id = 1; // 玩家唯一ID
+  string name = 2; // 玩家名称
   PlayerRole role = 3; // 玩家角色
   // 手牌 (hand) 和推理知识 (deduction_knowledge) 不会在这里显示给其他玩家
 }

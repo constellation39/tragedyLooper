@@ -2,23 +2,23 @@ syntax = "proto3";
 
 package v1;
 
-import "v1/enums.proto";
+import "v1/ability.proto"; // 引入 ability.proto
 import "v1/character.proto"; // 引入 character.proto 以使用 CharacterConfig 中的字段
-import "v1/ability.proto";   // 引入 ability.proto
+import "v1/enums.proto";
 
 option go_package = "tragedylooper/internal/game/v1;v1";
 
 // 剧本信息
 message Script {
-  int32 id = 1;                       // 剧本唯一ID
-  string name = 2;                    // 剧本名称
-  string description = 3;             // 剧本描述
-  TragedyScriptType main_plot = 4;    // 主线剧情类型
+  int32 id = 1; // 剧本唯一ID
+  string name = 2; // 剧本名称
+  string description = 3; // 剧本描述
+  TragedyScriptType main_plot = 4; // 主线剧情类型
   repeated TragedyScriptType sub_plots = 5; // 支线剧情类型列表
   repeated CharacterConfig characters = 6; // 剧本中角色的初始配置
-  repeated IncidentConfig incidents = 7;   // 剧本中预设的事件（悲剧）配置
-  int32 loop_count = 8;               // 允许的最大时间循环次数
-  int32 days_per_loop = 9;            // 每个循环包含的天数
+  repeated IncidentConfig incidents = 7; // 剧本中预设的事件（悲剧）配置
+  int32 loop_count = 8; // 允许的最大时间循环次数
+  int32 days_per_loop = 9; // 每个循环包含的天数
   repeated GameEndCondition win_conditions = 10; // 胜利条件列表
   repeated GameEndCondition lose_conditions = 11; // 失败条件列表
   repeated string special_rules_description = 12; // 剧本特有规则的文字描述
@@ -26,24 +26,24 @@ message Script {
 
 // 角色在剧本中的配置
 message CharacterConfig {
-  int32 character_id = 1;            // 角色ID
-  RoleType hidden_role = 2;          // 角色在当前剧本中的隐藏身份
+  int32 character_id = 1; // 角色ID
+  RoleType hidden_role = 2; // 角色在当前剧本中的隐藏身份
   LocationType initial_location = 3; // 角色初始所在地点
-  int32 initial_paranoia = 4;        // 角色初始妄想值
-  int32 initial_goodwill = 5;        // 角色初始好感值
-  int32 initial_intrigue = 6;        // 角色初始阴谋值
+  int32 initial_paranoia = 4; // 角色初始妄想值
+  int32 initial_goodwill = 5; // 角色初始好感值
+  int32 initial_intrigue = 6; // 角色初始阴谋值
   repeated int32 initial_ability_ids = 7; // 角色初始拥有的能力ID列表
-  bool is_first_step_role = 8;       // 是否为First Step身份（新版中此概念用于特定剧本）
+  bool is_first_step_role = 8; // 是否为First Step身份（新版中此概念用于特定剧本）
   // 可以根据需要增加其他初始状态或元数据，如 paranoia_limit等
 }
 
 // 事件/悲剧在剧本中的配置
 message IncidentConfig {
-  IncidentType incident_type = 1;    // 悲剧类型
-  int32 day = 2;                     // 悲剧预设发生的日期（第几天）
-  int32 culprit_character_id = 3;    // 导致悲剧发生的角色ID（如果适用，例如谋杀案的凶手）
-  repeated Condition conditions = 4;  // 触发悲剧所需满足的条件列表
-  bool is_main_plot_incident = 5;    // 是否是主线剧情的事件（新增）
+  IncidentType incident_type = 1; // 悲剧类型
+  int32 day = 2; // 悲剧预设发生的日期（第几天）
+  int32 culprit_character_id = 3; // 导致悲剧发生的角色ID（如果适用，例如谋杀案的凶手）
+  repeated Condition conditions = 4; // 触发悲剧所需满足的条件列表
+  bool is_main_plot_incident = 5; // 是否是主线剧情的事件（新增）
   // bool is_preventable = 6;         // 如果某些事件不可阻止，可以添加此字段
 }
 
@@ -54,7 +54,7 @@ message IncidentConfigLib {
 // 条件的通用消息，使用 oneof 包含各种具体条件
 message Condition {
   oneof condition_type {// 条件类型，只会有其中一个
-    StatCondition stat_condition = 1;     // 属性条件（例如，妄想值达到某阈值）
+    StatCondition stat_condition = 1; // 属性条件（例如，妄想值达到某阈值）
     LocationCondition location_condition = 2; // 地点条件（例如，角色在特定地点）
     // 可以扩展其他条件，例如 RoleCondition（角色身份条件）, TraitCondition（角色特征条件）
   }
@@ -65,41 +65,41 @@ message StatCondition {
   int32 character_id = 1; // 目标角色ID
   enum StatType {// 属性类型
     STAT_TYPE_UNSPECIFIED = 0; // 未指定
-    PARANOIA_STAT = 1;         // 妄想值
-    GOODWILL_STAT = 2;         // 好感值
-    INTRIGUE_STAT = 3;         // 阴谋值
+    PARANOIA_STAT = 1; // 妄想值
+    GOODWILL_STAT = 2; // 好感值
+    INTRIGUE_STAT = 3; // 阴谋值
   }
   StatType stat_type = 2; // 要检查的属性类型
   enum Comparator {// 比较符
     COMPARATOR_UNSPECIFIED = 0; // 未指定
-    GREATER_THAN = 1;           // 大于
-    LESS_THAN = 2;              // 小于
-    EQUAL_TO = 3;               // 等于
-    GREATER_THAN_OR_EQUAL = 4;  // 大于等于
-    LESS_THAN_OR_EQUAL = 5;     // 小于等于
+    GREATER_THAN = 1; // 大于
+    LESS_THAN = 2; // 小于
+    EQUAL_TO = 3; // 等于
+    GREATER_THAN_OR_EQUAL = 4; // 大于等于
+    LESS_THAN_OR_EQUAL = 5; // 小于等于
   }
   Comparator comparator = 3; // 比较符
-  int32 value = 4;           // 比较的值
+  int32 value = 4; // 比较的值
 }
 
 // 地点条件
 message LocationCondition {
-  int32 character_id = 1;   // 目标角色ID
+  int32 character_id = 1; // 目标角色ID
   LocationType location = 2; // 目标地点
-  bool is_alone = 3;        // 是否在该地点独处
-  bool not_alone = 4;       // 是否在该地点不独处
+  bool is_alone = 3; // 是否在该地点独处
+  bool not_alone = 4; // 是否在该地点不独处
 }
 
 // 游戏结束条件
 message GameEndCondition {
   enum ConditionType {// 条件类型
-    CONDITION_TYPE_UNSPECIFIED = 0;   // 未指定
-    ALL_TRAGEDIES_PREVENTED = 1;      // 所有悲剧都被阻止
-    SPECIFIC_TRAGEDY_TRIGGERED = 2;   // 特定悲剧被触发
-    MAX_LOOPS_REACHED = 3;            // 达到最大循环次数
+    CONDITION_TYPE_UNSPECIFIED = 0; // 未指定
+    ALL_TRAGEDIES_PREVENTED = 1; // 所有悲剧都被阻止
+    SPECIFIC_TRAGEDY_TRIGGERED = 2; // 特定悲剧被触发
+    MAX_LOOPS_REACHED = 3; // 达到最大循环次数
     PROTAGONIST_GUESSED_CORRECTLY = 4; // 主角猜测正确
     PROTAGONIST_GUESSED_INCORRECTLY = 5; // 主角猜测错误
   }
-  ConditionType type = 1;           // 结束条件类型
+  ConditionType type = 1; // 结束条件类型
   optional IncidentType incident_type = 2; // 仅当 SPECIFIC_TRAGEDY_TRIGGERED 时使用，指定被触发的悲剧类型
 }

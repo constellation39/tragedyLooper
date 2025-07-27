@@ -7,51 +7,51 @@ option go_package = "tragedylooper/internal/game/v1;v1";
 // 玩家角色枚举
 enum PlayerRole {
   PLAYER_ROLE_UNSPECIFIED = 0; // 未指定
-  MASTERMIND = 1;              // 主谋
-  PROTAGONIST = 2;             // 主角
+  MASTERMIND = 1; // 主谋
+  PROTAGONIST = 2; // 主角
 }
 
 // 游戏阶段枚举
 enum GamePhase {
-  GAME_PHASE_UNSPECIFIED = 0;      // 未指定
-  SETUP = 1;            // 游戏设置阶段（准备游戏板、角色等）
+  GAME_PHASE_UNSPECIFIED = 0; // 未指定
+  SETUP = 1; // 游戏设置阶段（准备游戏板、角色等）
   MASTERMIND_SETUP = 2; // 主谋设置剧本阶段（主谋秘密选择剧本、角色身份等）
-  CARD_PLAY = 3;                   // 卡牌打出阶段（玩家打出行动牌）
-  CARD_REVEAL = 4;                 // 卡牌揭示阶段（所有打出的行动牌面朝上）
-  CARD_RESOLVE = 5;                // 卡牌结算阶段（根据卡牌类型和优先级结算效果）
-  ABILITIES = 6;                   // 能力结算阶段（角色能力触发和结算）
-  INCIDENTS = 7;                   // 事件/悲剧结算阶段（检查悲剧是否触发）
-  DAY_END = 8;                     // 日末阶段（检查一天是否结束，重置某些状态）
-  LOOP_END = 9;                    // 循环结束阶段（检查一个循环是否结束，进行时间重置或进入最终猜测）
-  GAME_OVER = 10;                  // 游戏结束阶段（判断胜负并结束游戏）
-  PROTAGONIST_GUESS = 11;          // 主角猜测阶段（可以细化为最终猜测）
-  GAME_PHASE_FIRST_GUESS = 12;     // 主角首次猜测阶段（主角在游戏过程中进行的非最终猜测）
+  CARD_PLAY = 3; // 卡牌打出阶段（玩家打出行动牌）
+  CARD_REVEAL = 4; // 卡牌揭示阶段（所有打出的行动牌面朝上）
+  CARD_RESOLVE = 5; // 卡牌结算阶段（根据卡牌类型和优先级结算效果）
+  ABILITIES = 6; // 能力结算阶段（角色能力触发和结算）
+  INCIDENTS = 7; // 事件/悲剧结算阶段（检查悲剧是否触发）
+  DAY_END = 8; // 日末阶段（检查一天是否结束，重置某些状态）
+  LOOP_END = 9; // 循环结束阶段（检查一个循环是否结束，进行时间重置或进入最终猜测）
+  GAME_OVER = 10; // 游戏结束阶段（判断胜负并结束游戏）
+  PROTAGONIST_GUESS = 11; // 主角猜测阶段（可以细化为最终猜测）
+  GAME_PHASE_FIRST_GUESS = 12; // 主角首次猜测阶段（主角在游戏过程中进行的非最终猜测）
 }
 
 // 卡牌类型枚举
 enum CardType {
   CARD_TYPE_UNSPECIFIED = 0; // 未指定
-  MOVEMENT = 1;              // 移动卡
-  PARANOIA = 2;              // 妄想卡（调整妄想值）
-  GOODWILL = 3;              // 好感卡（调整好感值）
-  INTRIGUE = 4;              // 阴谋卡（调整阴谋值）
-  SPECIAL = 5;               // 特殊卡（其他特殊效果）
+  MOVEMENT = 1; // 移动卡
+  PARANOIA = 2; // 妄想卡（调整妄想值）
+  GOODWILL = 3; // 好感卡（调整好感值）
+  INTRIGUE = 4; // 阴谋卡（调整阴谋值）
+  SPECIAL = 5; // 特殊卡（其他特殊效果）
 }
 
 // 游戏事件类型枚举
 enum GameEventType {
-  GAME_EVENT_TYPE_UNSPECIFIED = 0;      // 未指定
-  CHARACTER_MOVED = 1;  // 角色移动事件
+  GAME_EVENT_TYPE_UNSPECIFIED = 0; // 未指定
+  CHARACTER_MOVED = 1; // 角色移动事件
   PARANOIA_ADJUSTED = 2; // 妄想值调整事件
   GOODWILL_ADJUSTED = 3; // 好感值调整事件
   INTRIGUE_ADJUSTED = 4; // 阴谋值调整事件
   INCIDENT_TRIGGERED = 5; // 悲剧触发事件
   INCIDENT_PREVENTED = 6; // 悲剧阻止事件
-  ROLE_REVEALED = 7;    // 角色身份揭示事件
-  ABILITY_GRANTED = 8;  // 授予能力事件
-  CHOICE_REQUIRED = 9;  // 需要玩家选择事件
-  LOOP_WIN = 10;        // 循环胜利事件
-  LOOP_LOSS = 11;       // 循环失败事件
+  ROLE_REVEALED = 7; // 角色身份揭示事件
+  ABILITY_GRANTED = 8; // 授予能力事件
+  CHOICE_REQUIRED = 9; // 需要玩家选择事件
+  LOOP_WIN = 10; // 循环胜利事件
+  LOOP_LOSS = 11; // 循环失败事件
   FIRST_GUESS_MADE = 12; // 首次猜测事件
   FINAL_GUESS_MADE = 13; // 最终猜测事件
   GOODWILL_REFUSAL_TEST = 14; // 好感度拒绝测试事件
@@ -60,76 +60,76 @@ enum GameEventType {
 // 角色身份类型枚举
 enum RoleType {
   ROLE_TYPE_UNSPECIFIED = 0; // 未指定
-  INNOCENT = 1;              // 无辜者
-  KILLER = 2;                // 杀手
-  ACCOMPLICE = 3;            // 共犯
-  PERSON_OF_INTEREST = 4;    // 嫌疑人
-  KEY_PERSON = 5;            // 关键人物
-  FRIEND = 6;                // 朋友
-  LOVER = 7;                 // 恋人
-  CONSPIRACY_THEORIST = 8;   // 阴谋论者
-  CULTIST = 9;               // 邪教徒
+  INNOCENT = 1; // 无辜者
+  KILLER = 2; // 杀手
+  ACCOMPLICE = 3; // 共犯
+  PERSON_OF_INTEREST = 4; // 嫌疑人
+  KEY_PERSON = 5; // 关键人物
+  FRIEND = 6; // 朋友
+  LOVER = 7; // 恋人
+  CONSPIRACY_THEORIST = 8; // 阴谋论者
+  CULTIST = 9; // 邪教徒
   // 可以根据具体剧本扩展更多角色类型
 }
 
 // 悲剧类型枚举
 enum IncidentType {
   INCIDENT_TYPE_UNSPECIFIED = 0; // 未指定
-  MURDER = 1;                    // 谋杀
-  SUICIDE = 2;                   // 自杀
-  HOSPITAL_CONSPIRACY = 3;       // 医院阴谋
-  MURDER_MYSTERY = 4;            // 谋杀之谜
+  MURDER = 1; // 谋杀
+  SUICIDE = 2; // 自杀
+  HOSPITAL_CONSPIRACY = 3; // 医院阴谋
+  MURDER_MYSTERY = 4; // 谋杀之谜
   // 可以根据具体剧本扩展更多悲剧类型
 }
 
 // 剧本类型枚举（主线/支线）
 enum TragedyScriptType {
   TRAGEDY_SCRIPT_TYPE_UNSPECIFIED = 0; // 未指定
-  MAIN_PLOT = 1;                     // 主线剧情
-  SUB_PLOT = 2;                      // 支线剧情
+  MAIN_PLOT = 1; // 主线剧情
+  SUB_PLOT = 2; // 支线剧情
 }
 
 // 地点类型枚举
 enum LocationType {
   LOCATION_TYPE_UNSPECIFIED = 0; // 未指定
-  HOSPITAL = 1;                  // 医院
-  SHRINE = 2;                    // 神社
-  CITY = 3;                      // 城市
-  SCHOOL = 4;                    // 学校
+  HOSPITAL = 1; // 医院
+  SHRINE = 2; // 神社
+  CITY = 3; // 城市
+  SCHOOL = 4; // 学校
   // 可以根据具体剧本扩展更多地点
 }
 
 // 触发器类型枚举（能力或规则何时触发）
 enum TriggerType {
-  TRIGGER_TYPE_UNSPECIFIED = 0;      // 未指定
-  ON_GAME_SETUP = 1;                 // 游戏设置时
-  ON_LOOP_START = 2;                 // 循环开始时
-  ON_DAY_START = 3;                  // 每天开始时
-  ON_CARD_PLAY_PHASE = 4;            // 卡牌打出阶段
-  ON_CARD_REVEAL_PHASE = 5;          // 卡牌揭示阶段
-  ON_CARD_RESOLVE_PHASE = 6;         // 卡牌结算阶段
-  ON_ABILITY_PHASE = 7;              // 能力结算阶段
-  ON_INCIDENT_PHASE = 8;             // 事件结算阶段
-  ON_GAME_EVENT = 9;                 // 发生特定游戏事件时
-  PASSIVE = 10;                      // 被动（一直生效）
-  ON_LOOP_LOSS = 11;                 // 循环失败时触发
-  ON_LOOP_WIN = 12;                  // 循环胜利时触发
-  ON_GAME_END = 13;                  // 游戏结束时触发
+  TRIGGER_TYPE_UNSPECIFIED = 0; // 未指定
+  ON_GAME_SETUP = 1; // 游戏设置时
+  ON_LOOP_START = 2; // 循环开始时
+  ON_DAY_START = 3; // 每天开始时
+  ON_CARD_PLAY_PHASE = 4; // 卡牌打出阶段
+  ON_CARD_REVEAL_PHASE = 5; // 卡牌揭示阶段
+  ON_CARD_RESOLVE_PHASE = 6; // 卡牌结算阶段
+  ON_ABILITY_PHASE = 7; // 能力结算阶段
+  ON_INCIDENT_PHASE = 8; // 事件结算阶段
+  ON_GAME_EVENT = 9; // 发生特定游戏事件时
+  PASSIVE = 10; // 被动（一直生效）
+  ON_LOOP_LOSS = 11; // 循环失败时触发
+  ON_LOOP_WIN = 12; // 循环胜利时触发
+  ON_GAME_END = 13; // 游戏结束时触发
 }
 
 // 效果类型枚举
 enum EffectType {
-  EFFECT_TYPE_UNSPECIFIED = 0;       // 未指定
-  MOVE_CHARACTER = 1;                // 移动角色
-  ADJUST_PARANOIA = 2;               // 调整妄想值
-  ADJUST_GOODWILL = 3;               // 调整好感值
-  ADJUST_INTRIGUE = 4;               // 调整阴谋值
-  FORBID_MOVEMENT = 5;               // 禁止移动
-  FORBID_PARANOIA = 6;               // 禁止妄想值调整
-  FORBID_GOODWILL = 7;               // 禁止好感值调整
-  FORBID_INTRIGUE = 8;               // 禁止阴谋值调整
-  REVEAL_ROLE = 9;                   // 揭示角色身份
-  GRANT_ABILITY = 10;                // 授予角色能力
-  CANCEL_INCIDENT = 11;              // 取消悲剧事件
-  FORCE_GOODWILL_REFUSAL_TEST = 12;  // 强制进行好感度拒绝测试
+  EFFECT_TYPE_UNSPECIFIED = 0; // 未指定
+  MOVE_CHARACTER = 1; // 移动角色
+  ADJUST_PARANOIA = 2; // 调整妄想值
+  ADJUST_GOODWILL = 3; // 调整好感值
+  ADJUST_INTRIGUE = 4; // 调整阴谋值
+  FORBID_MOVEMENT = 5; // 禁止移动
+  FORBID_PARANOIA = 6; // 禁止妄想值调整
+  FORBID_GOODWILL = 7; // 禁止好感值调整
+  FORBID_INTRIGUE = 8; // 禁止阴谋值调整
+  REVEAL_ROLE = 9; // 揭示角色身份
+  GRANT_ABILITY = 10; // 授予角色能力
+  CANCEL_INCIDENT = 11; // 取消悲剧事件
+  FORCE_GOODWILL_REFUSAL_TEST = 12; // 强制进行好感度拒绝测试
 }

@@ -7,11 +7,12 @@
 package v1
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -70,7 +71,7 @@ func (x StatCondition_StatType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StatCondition_StatType.Descriptor instead.
 func (StatCondition_StatType) EnumDescriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{4, 0}
+	return file_v1_script_proto_rawDescGZIP(), []int{5, 0}
 }
 
 type StatCondition_Comparator int32
@@ -128,7 +129,7 @@ func (x StatCondition_Comparator) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StatCondition_Comparator.Descriptor instead.
 func (StatCondition_Comparator) EnumDescriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{4, 1}
+	return file_v1_script_proto_rawDescGZIP(), []int{5, 1}
 }
 
 type GameEndCondition_ConditionType int32
@@ -186,7 +187,7 @@ func (x GameEndCondition_ConditionType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use GameEndCondition_ConditionType.Descriptor instead.
 func (GameEndCondition_ConditionType) EnumDescriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{6, 0}
+	return file_v1_script_proto_rawDescGZIP(), []int{7, 0}
 }
 
 // 剧本信息
@@ -500,6 +501,50 @@ func (x *IncidentConfig) GetIsMainPlotIncident() bool {
 	return false
 }
 
+type IncidentConfigLib struct {
+	state         protoimpl.MessageState    `protogen:"open.v1"`
+	Incidents     map[int32]*IncidentConfig `protobuf:"bytes,1,rep,name=incidents,proto3" json:"incidents,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *IncidentConfigLib) Reset() {
+	*x = IncidentConfigLib{}
+	mi := &file_v1_script_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *IncidentConfigLib) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*IncidentConfigLib) ProtoMessage() {}
+
+func (x *IncidentConfigLib) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_script_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use IncidentConfigLib.ProtoReflect.Descriptor instead.
+func (*IncidentConfigLib) Descriptor() ([]byte, []int) {
+	return file_v1_script_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *IncidentConfigLib) GetIncidents() map[int32]*IncidentConfig {
+	if x != nil {
+		return x.Incidents
+	}
+	return nil
+}
+
 // 条件的通用消息，使用 oneof 包含各种具体条件
 type Condition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -514,7 +559,7 @@ type Condition struct {
 
 func (x *Condition) Reset() {
 	*x = Condition{}
-	mi := &file_v1_script_proto_msgTypes[3]
+	mi := &file_v1_script_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -526,7 +571,7 @@ func (x *Condition) String() string {
 func (*Condition) ProtoMessage() {}
 
 func (x *Condition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[3]
+	mi := &file_v1_script_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -539,7 +584,7 @@ func (x *Condition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Condition.ProtoReflect.Descriptor instead.
 func (*Condition) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{3}
+	return file_v1_script_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Condition) GetConditionType() isCondition_ConditionType {
@@ -596,7 +641,7 @@ type StatCondition struct {
 
 func (x *StatCondition) Reset() {
 	*x = StatCondition{}
-	mi := &file_v1_script_proto_msgTypes[4]
+	mi := &file_v1_script_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -608,7 +653,7 @@ func (x *StatCondition) String() string {
 func (*StatCondition) ProtoMessage() {}
 
 func (x *StatCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[4]
+	mi := &file_v1_script_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -621,7 +666,7 @@ func (x *StatCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatCondition.ProtoReflect.Descriptor instead.
 func (*StatCondition) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{4}
+	return file_v1_script_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *StatCondition) GetCharacterId() int32 {
@@ -665,7 +710,7 @@ type LocationCondition struct {
 
 func (x *LocationCondition) Reset() {
 	*x = LocationCondition{}
-	mi := &file_v1_script_proto_msgTypes[5]
+	mi := &file_v1_script_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -677,7 +722,7 @@ func (x *LocationCondition) String() string {
 func (*LocationCondition) ProtoMessage() {}
 
 func (x *LocationCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[5]
+	mi := &file_v1_script_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -690,7 +735,7 @@ func (x *LocationCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LocationCondition.ProtoReflect.Descriptor instead.
 func (*LocationCondition) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{5}
+	return file_v1_script_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *LocationCondition) GetCharacterId() int32 {
@@ -732,7 +777,7 @@ type GameEndCondition struct {
 
 func (x *GameEndCondition) Reset() {
 	*x = GameEndCondition{}
-	mi := &file_v1_script_proto_msgTypes[6]
+	mi := &file_v1_script_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -744,7 +789,7 @@ func (x *GameEndCondition) String() string {
 func (*GameEndCondition) ProtoMessage() {}
 
 func (x *GameEndCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_script_proto_msgTypes[6]
+	mi := &file_v1_script_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -757,7 +802,7 @@ func (x *GameEndCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GameEndCondition.ProtoReflect.Descriptor instead.
 func (*GameEndCondition) Descriptor() ([]byte, []int) {
-	return file_v1_script_proto_rawDescGZIP(), []int{6}
+	return file_v1_script_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GameEndCondition) GetType() GameEndCondition_ConditionType {
@@ -778,7 +823,7 @@ var File_v1_script_proto protoreflect.FileDescriptor
 
 const file_v1_script_proto_rawDesc = "" +
 	"\n" +
-	"\x0fv1/script.proto\x12\x02v1\x1a\x0ev1/enums.proto\x1a\x12v1/character.proto\x1a\x10v1/ability.proto\"\x98\x04\n" +
+	"\x0fv1/script.proto\x12\x02v1\x1a\x10v1/ability.proto\x1a\x12v1/character.proto\x1a\x0ev1/enums.proto\"\x98\x04\n" +
 	"\x06Script\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -813,7 +858,12 @@ const file_v1_script_proto_rawDesc = "" +
 	"\n" +
 	"conditions\x18\x04 \x03(\v2\r.v1.ConditionR\n" +
 	"conditions\x121\n" +
-	"\x15is_main_plot_incident\x18\x05 \x01(\bR\x12isMainPlotIncident\"\xa1\x01\n" +
+	"\x15is_main_plot_incident\x18\x05 \x01(\bR\x12isMainPlotIncident\"\xa9\x01\n" +
+	"\x11IncidentConfigLib\x12B\n" +
+	"\tincidents\x18\x01 \x03(\v2$.v1.IncidentConfigLib.IncidentsEntryR\tincidents\x1aP\n" +
+	"\x0eIncidentsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12(\n" +
+	"\x05value\x18\x02 \x01(\v2\x12.v1.IncidentConfigR\x05value:\x028\x01\"\xa1\x01\n" +
 	"\tCondition\x12:\n" +
 	"\x0estat_condition\x18\x01 \x01(\v2\x11.v1.StatConditionH\x00R\rstatCondition\x12F\n" +
 	"\x12location_condition\x18\x02 \x01(\v2\x15.v1.LocationConditionH\x00R\x11locationConditionB\x10\n" +
@@ -868,7 +918,7 @@ func file_v1_script_proto_rawDescGZIP() []byte {
 }
 
 var file_v1_script_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_v1_script_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_v1_script_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_v1_script_proto_goTypes = []any{
 	(StatCondition_StatType)(0),         // 0: v1.StatCondition.StatType
 	(StatCondition_Comparator)(0),       // 1: v1.StatCondition.Comparator
@@ -876,38 +926,42 @@ var file_v1_script_proto_goTypes = []any{
 	(*Script)(nil),                      // 3: v1.Script
 	(*CharacterConfig)(nil),             // 4: v1.CharacterConfig
 	(*IncidentConfig)(nil),              // 5: v1.IncidentConfig
-	(*Condition)(nil),                   // 6: v1.Condition
-	(*StatCondition)(nil),               // 7: v1.StatCondition
-	(*LocationCondition)(nil),           // 8: v1.LocationCondition
-	(*GameEndCondition)(nil),            // 9: v1.GameEndCondition
-	(TragedyScriptType)(0),              // 10: v1.TragedyScriptType
-	(RoleType)(0),                       // 11: v1.RoleType
-	(LocationType)(0),                   // 12: v1.LocationType
-	(IncidentType)(0),                   // 13: v1.IncidentType
+	(*IncidentConfigLib)(nil),           // 6: v1.IncidentConfigLib
+	(*Condition)(nil),                   // 7: v1.Condition
+	(*StatCondition)(nil),               // 8: v1.StatCondition
+	(*LocationCondition)(nil),           // 9: v1.LocationCondition
+	(*GameEndCondition)(nil),            // 10: v1.GameEndCondition
+	nil,                                 // 11: v1.IncidentConfigLib.IncidentsEntry
+	(TragedyScriptType)(0),              // 12: v1.TragedyScriptType
+	(RoleType)(0),                       // 13: v1.RoleType
+	(LocationType)(0),                   // 14: v1.LocationType
+	(IncidentType)(0),                   // 15: v1.IncidentType
 }
 var file_v1_script_proto_depIdxs = []int32{
-	10, // 0: v1.Script.main_plot:type_name -> v1.TragedyScriptType
-	10, // 1: v1.Script.sub_plots:type_name -> v1.TragedyScriptType
+	12, // 0: v1.Script.main_plot:type_name -> v1.TragedyScriptType
+	12, // 1: v1.Script.sub_plots:type_name -> v1.TragedyScriptType
 	4,  // 2: v1.Script.characters:type_name -> v1.CharacterConfig
 	5,  // 3: v1.Script.incidents:type_name -> v1.IncidentConfig
-	9,  // 4: v1.Script.win_conditions:type_name -> v1.GameEndCondition
-	9,  // 5: v1.Script.lose_conditions:type_name -> v1.GameEndCondition
-	11, // 6: v1.CharacterConfig.hidden_role:type_name -> v1.RoleType
-	12, // 7: v1.CharacterConfig.initial_location:type_name -> v1.LocationType
-	13, // 8: v1.IncidentConfig.incident_type:type_name -> v1.IncidentType
-	6,  // 9: v1.IncidentConfig.conditions:type_name -> v1.Condition
-	7,  // 10: v1.Condition.stat_condition:type_name -> v1.StatCondition
-	8,  // 11: v1.Condition.location_condition:type_name -> v1.LocationCondition
-	0,  // 12: v1.StatCondition.stat_type:type_name -> v1.StatCondition.StatType
-	1,  // 13: v1.StatCondition.comparator:type_name -> v1.StatCondition.Comparator
-	12, // 14: v1.LocationCondition.location:type_name -> v1.LocationType
-	2,  // 15: v1.GameEndCondition.type:type_name -> v1.GameEndCondition.ConditionType
-	13, // 16: v1.GameEndCondition.incident_type:type_name -> v1.IncidentType
-	17, // [17:17] is the sub-list for method output_type
-	17, // [17:17] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	10, // 4: v1.Script.win_conditions:type_name -> v1.GameEndCondition
+	10, // 5: v1.Script.lose_conditions:type_name -> v1.GameEndCondition
+	13, // 6: v1.CharacterConfig.hidden_role:type_name -> v1.RoleType
+	14, // 7: v1.CharacterConfig.initial_location:type_name -> v1.LocationType
+	15, // 8: v1.IncidentConfig.incident_type:type_name -> v1.IncidentType
+	7,  // 9: v1.IncidentConfig.conditions:type_name -> v1.Condition
+	11, // 10: v1.IncidentConfigLib.incidents:type_name -> v1.IncidentConfigLib.IncidentsEntry
+	8,  // 11: v1.Condition.stat_condition:type_name -> v1.StatCondition
+	9,  // 12: v1.Condition.location_condition:type_name -> v1.LocationCondition
+	0,  // 13: v1.StatCondition.stat_type:type_name -> v1.StatCondition.StatType
+	1,  // 14: v1.StatCondition.comparator:type_name -> v1.StatCondition.Comparator
+	14, // 15: v1.LocationCondition.location:type_name -> v1.LocationType
+	2,  // 16: v1.GameEndCondition.type:type_name -> v1.GameEndCondition.ConditionType
+	15, // 17: v1.GameEndCondition.incident_type:type_name -> v1.IncidentType
+	5,  // 18: v1.IncidentConfigLib.IncidentsEntry.value:type_name -> v1.IncidentConfig
+	19, // [19:19] is the sub-list for method output_type
+	19, // [19:19] is the sub-list for method input_type
+	19, // [19:19] is the sub-list for extension type_name
+	19, // [19:19] is the sub-list for extension extendee
+	0,  // [0:19] is the sub-list for field type_name
 }
 
 func init() { file_v1_script_proto_init() }
@@ -915,21 +969,21 @@ func file_v1_script_proto_init() {
 	if File_v1_script_proto != nil {
 		return
 	}
-	file_v1_enums_proto_init()
-	file_v1_character_proto_init()
 	file_v1_ability_proto_init()
-	file_v1_script_proto_msgTypes[3].OneofWrappers = []any{
+	file_v1_character_proto_init()
+	file_v1_enums_proto_init()
+	file_v1_script_proto_msgTypes[4].OneofWrappers = []any{
 		(*Condition_StatCondition)(nil),
 		(*Condition_LocationCondition)(nil),
 	}
-	file_v1_script_proto_msgTypes[6].OneofWrappers = []any{}
+	file_v1_script_proto_msgTypes[7].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_script_proto_rawDesc), len(file_v1_script_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   7,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

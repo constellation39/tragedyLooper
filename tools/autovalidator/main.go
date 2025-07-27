@@ -14,6 +14,9 @@ func main() {
 	dataDir := "data"
 	schemaDir := "data/jsonschema"
 
+	// Validate files in the root of the data directory
+	validateRootDataFiles(dataDir, schemaDir)
+
 	// Get all subdirectories in the data directory
 	dataSubDirs, err := ioutil.ReadDir(dataDir)
 	if err != nil {
@@ -70,5 +73,30 @@ func validateFile(schemaPath, docPath string) {
 		for _, desc := range result.Errors() {
 			fmt.Printf("- %s\n", desc)
 		}
+	}
+}
+
+func validateRootDataFiles(dataDir, schemaDir string) {
+	filesToValidate := map[string]string{
+		"ability.json":   "AbilityLib.json",
+		"card.json":      "CardLib.json",
+		"character.json": "CharacterLib.json",
+		"incidents.json": "IncidentLib.json",
+	}
+
+	for dataFile, schemaFile := range filesToValidate {
+		jsonFile := filepath.Join(dataDir, dataFile)
+		schemaPath := filepath.Join(schemaDir, schemaFile)
+
+		if _, err := os.Stat(jsonFile); os.IsNotExist(err) {
+			continue
+		}
+
+		if _, err := os.Stat(schemaPath); os.IsNotExist(err) {
+			fmt.Printf("Skipping file %s: schema %s not found\n", jsonFile, schemaPath)
+			continue
+		}
+
+		validateFile(schemaPath, jsonFile)
 	}
 }

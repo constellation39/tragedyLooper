@@ -7,11 +7,12 @@
 package v1
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -431,7 +432,7 @@ var File_v1_character_proto protoreflect.FileDescriptor
 
 const file_v1_character_proto_rawDesc = "" +
 	"\n" +
-	"\x12v1/character.proto\x12\x02v1\x1a\x0ev1/enums.proto\x1a\x10v1/ability.proto\"\x8f\x04\n" +
+	"\x12v1/character.proto\x12\x02v1\x1a\x10v1/ability.proto\x1a\x0ev1/enums.proto\"\x8f\x04\n" +
 	"\tCharacter\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
@@ -520,8 +521,8 @@ func file_v1_character_proto_init() {
 	if File_v1_character_proto != nil {
 		return
 	}
-	file_v1_enums_proto_init()
 	file_v1_ability_proto_init()
+	file_v1_enums_proto_init()
 	file_v1_character_proto_msgTypes[2].OneofWrappers = []any{
 		(*CharacterRule_TurfSelectionEffect)(nil),
 		(*CharacterRule_DelayedEntryEffect)(nil),

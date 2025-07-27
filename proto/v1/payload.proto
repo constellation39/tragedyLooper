@@ -8,19 +8,19 @@ option go_package = "tragedylooper/internal/game/v1;v1";
 
 // 玩家打出卡牌的操作负载
 message PlayCardPayload {
-  string player_id = 1;                // 执行操作的玩家ID
-  int32 card_id = 2;                   // 打出的卡牌ID
+  string player_id = 1; // 执行操作的玩家ID
+  int32 card_id = 2; // 打出的卡牌ID
   oneof target {
-    int32 target_character_id = 3;       // 卡牌的目标角色ID
+    int32 target_character_id = 3; // 卡牌的目标角色ID
     LocationType target_location = 4; // 如果是移动卡，指定目标地点
   }
 }
 
 // 玩家使用能力的操作负载
 message UseAbilityPayload {
-  string player_id = 1;                // 执行操作的玩家ID
-  int32 character_id = 2;              // 哪个角色的能力被使用
-  int32 ability_id = 3;                // 哪个能力被使用
+  string player_id = 1; // 执行操作的玩家ID
+  int32 character_id = 2; // 哪个角色的能力被使用
+  int32 ability_id = 3; // 哪个能力被使用
   oneof target {
     int32 target_character_id = 4; // 如果能力有目标角色，指定其ID
     LocationType target_location = 5; // 如果能力有目标地点，指定其地点
@@ -30,13 +30,13 @@ message UseAbilityPayload {
 
 // 主角玩家进行猜测的操作负载
 message MakeGuessPayload {
-  string player_id = 1;                  // 执行操作的玩家ID
+  string player_id = 1; // 执行操作的玩家ID
   map<int32, RoleType> guessed_roles = 2; // 猜测的角色身份映射，键为 character_id
 }
 
 // 玩家进行选择的操作负载（例如，在需要选择地盘或目标时）
 message ChooseOptionPayload {
-  string player_id = 1;          // 执行操作的玩家ID
-  int32 character_id = 2;        // 做出选择的角色（如果选择与角色相关）
-  string chosen_option_id = 3;   // 选择项的ID
+  string player_id = 1; // 执行操作的玩家ID
+  int32 character_id = 2; // 做出选择的角色（如果选择与角色相关）
+  string chosen_option_id = 3; // 选择项的ID
 }

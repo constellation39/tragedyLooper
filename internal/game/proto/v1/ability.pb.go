@@ -7,11 +7,12 @@
 package v1
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -194,7 +195,7 @@ var File_v1_ability_proto protoreflect.FileDescriptor
 
 const file_v1_ability_proto_rawDesc = "" +
 	"\n" +
-	"\x10v1/ability.proto\x12\x02v1\x1a\x0ev1/enums.proto\x1a\x0fv1/effect.proto\"\x9e\x03\n" +
+	"\x10v1/ability.proto\x12\x02v1\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\x9e\x03\n" +
 	"\aAbility\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -258,8 +259,8 @@ func file_v1_ability_proto_init() {
 	if File_v1_ability_proto != nil {
 		return
 	}
-	file_v1_enums_proto_init()
 	file_v1_effect_proto_init()
+	file_v1_enums_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

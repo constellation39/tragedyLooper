@@ -7,11 +7,12 @@
 package v1
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -252,7 +253,7 @@ var File_v1_card_proto protoreflect.FileDescriptor
 
 const file_v1_card_proto_rawDesc = "" +
 	"\n" +
-	"\rv1/card.proto\x12\x02v1\x1a\x0ev1/enums.proto\x1a\x0fv1/effect.proto\"\xeb\x02\n" +
+	"\rv1/card.proto\x12\x02v1\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\xeb\x02\n" +
 	"\x04Card\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12)\n" +
@@ -318,8 +319,8 @@ func file_v1_card_proto_init() {
 	if File_v1_card_proto != nil {
 		return
 	}
-	file_v1_enums_proto_init()
 	file_v1_effect_proto_init()
+	file_v1_enums_proto_init()
 	file_v1_card_proto_msgTypes[0].OneofWrappers = []any{
 		(*Card_TargetCharacterId)(nil),
 		(*Card_TargetLocation)(nil),

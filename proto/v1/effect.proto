@@ -9,17 +9,17 @@ option go_package = "tragedylooper/internal/game/v1;v1";
 // 效果的通用消息，使用 oneof 包含各种具体效果
 message Effect {
   oneof effect_oneof {// 效果类型，只会有其中一个
-    MoveCharacterEffect move_character_effect = 1;               // 移动角色效果
-    AdjustParanoiaEffect adjust_paranoia_effect = 2;             // 调整妄想值效果
-    AdjustGoodwillEffect adjust_goodwill_effect = 3;             // 调整好感值效果
-    AdjustIntrigueEffect adjust_intrigue_effect = 4;             // 调整阴谋值效果
-    ForbidMovementEffect forbid_movement_effect = 5;             // 禁止移动效果
-    ForbidParanoiaEffect forbid_paranoia_effect = 6;             // 禁止妄想值调整效果
-    ForbidGoodwillEffect forbid_goodwill_effect = 7;             // 禁止好感值调整效果
-    ForbidIntrigueEffect forbid_intrigue_effect = 8;             // 禁止阴谋值调整效果
-    RevealRoleEffect reveal_role_effect = 9;                     // 揭示角色身份效果（新增）
-    GrantAbilityEffect grant_ability_effect = 10;                // 授予角色能力效果（新增）
-    CancelIncidentEffect cancel_incident_effect = 11;            // 取消悲剧事件效果（新增）
+    MoveCharacterEffect move_character_effect = 1; // 移动角色效果
+    AdjustParanoiaEffect adjust_paranoia_effect = 2; // 调整妄想值效果
+    AdjustGoodwillEffect adjust_goodwill_effect = 3; // 调整好感值效果
+    AdjustIntrigueEffect adjust_intrigue_effect = 4; // 调整阴谋值效果
+    ForbidMovementEffect forbid_movement_effect = 5; // 禁止移动效果
+    ForbidParanoiaEffect forbid_paranoia_effect = 6; // 禁止妄想值调整效果
+    ForbidGoodwillEffect forbid_goodwill_effect = 7; // 禁止好感值调整效果
+    ForbidIntrigueEffect forbid_intrigue_effect = 8; // 禁止阴谋值调整效果
+    RevealRoleEffect reveal_role_effect = 9; // 揭示角色身份效果（新增）
+    GrantAbilityEffect grant_ability_effect = 10; // 授予角色能力效果（新增）
+    CancelIncidentEffect cancel_incident_effect = 11; // 取消悲剧事件效果（新增）
     ForceGoodwillRefusalTestEffect force_goodwill_refusal_test = 12; // 强制进行好感度拒绝测试效果（新增）
     // 可以在此扩展其他效果类型
   }
@@ -31,26 +31,26 @@ message EffectLib {
 
 // 移动角色效果
 message MoveCharacterEffect {
-  int32 character_id = 1;       // 目标角色ID
+  int32 character_id = 1; // 目标角色ID
   LocationType target_location = 2; // 目标地点
 }
 
 // 调整妄想值效果
 message AdjustParanoiaEffect {
   int32 character_id = 1; // 目标角色ID
-  int32 amount = 2;       // 调整量（正数增加，负数减少）
+  int32 amount = 2; // 调整量（正数增加，负数减少）
 }
 
 // 调整好感值效果
 message AdjustGoodwillEffect {
   int32 character_id = 1; // 目标角色ID
-  int32 amount = 2;       // 调整量（正数增加，负数减少）
+  int32 amount = 2; // 调整量（正数增加，负数减少）
 }
 
 // 调整阴谋值效果
 message AdjustIntrigueEffect {
   int32 character_id = 1; // 目标角色ID
-  int32 amount = 2;       // 调整量（正数增加，负数减少）
+  int32 amount = 2; // 调整量（正数增加，负数减少）
 }
 
 // 禁止移动效果
@@ -82,17 +82,17 @@ message RevealRoleEffect {
 // 授予角色能力效果
 message GrantAbilityEffect {
   int32 character_id = 1; // 目标角色ID
-  int32 ability_id = 2;   // 授予的能力ID
+  int32 ability_id = 2; // 授予的能力ID
 }
 
 // 取消悲剧事件效果
 message CancelIncidentEffect {
   IncidentType incident_type = 1; // 要取消的悲剧类型
-  int32 incident_day = 2;         // 要取消的悲剧发生在哪一天
+  int32 incident_day = 2; // 要取消的悲剧发生在哪一天
 }
 
 // 强制进行好感度拒绝测试效果
 message ForceGoodwillRefusalTestEffect {
   string protagonist_player_id = 1; // 哪个主角玩家触发了测试
-  int32 character_id = 2;         // 哪个角色的好感度能力被拒绝
+  int32 character_id = 2; // 哪个角色的好感度能力被拒绝
 }

@@ -4,12 +4,12 @@
   "days_per_loop": 4,
   "win_conditions": [
     {
-      "type": "GAME_END_CONDITION_TYPE_ALL_TRAGEDIES_PREVENTED"
+      "type": "ALL_TRAGEDIES_PREVENTED"
     }
   ],
   "lose_conditions": [
     {
-      "type": "GAME_END_CONDITION_TYPE_A_TRAGEDY_OCCURS"
+      "type": "SPECIFIC_TRAGEDY_TRIGGERED"
     }
   ],
   "main_tragedy": {

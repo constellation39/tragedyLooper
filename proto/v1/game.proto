@@ -2,30 +2,30 @@ syntax = "proto3";
 
 package v1;
 
-import "v1/enums.proto";
-import "v1/script.proto";
 import "v1/character.proto";
-import "v1/player.proto";
+import "v1/enums.proto";
 import "v1/event.proto";
+import "v1/player.proto";
+import "v1/script.proto";
 
 option go_package = "tragedylooper/internal/game/v1;v1";
 
 // 游戏当前状态
 message GameState {
-  string game_id = 1;                       // 游戏唯一ID
-  Script script = 2;                        // 当前游戏的剧本配置
-  map<int32, Character> characters = 3;     // 所有角色当前状态的映射，键为 character_id
-  map<string, Player> players = 4;          // 所有玩家的映射，键为 player_id
-  int32 current_day = 5;                    // 当前天数
-  int32 current_loop = 6;                   // 当前循环数
-  GamePhase current_phase = 7;              // 当前游戏阶段
+  string game_id = 1; // 游戏唯一ID
+  Script script = 2; // 当前游戏的剧本配置
+  map<int32, Character> characters = 3; // 所有角色当前状态的映射，键为 character_id
+  map<string, Player> players = 4; // 所有玩家的映射，键为 player_id
+  int32 current_day = 5; // 当前天数
+  int32 current_loop = 6; // 当前循环数
+  GamePhase current_phase = 7; // 当前游戏阶段
   map<int32, bool> active_incidents = 8; // 当前循环中已激活（满足条件）的悲剧，键为 IncidentType
   map<int32, bool> prevented_incidents = 9; // 当前循环中已被阻止的悲剧，键为 IncidentType
   repeated int32 played_cards_this_day = 10; // 本日已打出的卡牌ID列表
   repeated int32 played_cards_this_loop = 11; // 本循环已打出的卡牌ID列表
-  int64 last_update_time = 12;              // 最后更新时间戳 (Unix timestamp)
-  repeated GameEvent day_events = 13;       // 本日发生的事件日志
-  repeated GameEvent loop_events = 14;      // 本循环发生的事件日志
+  int64 last_update_time = 12; // 最后更新时间戳 (Unix timestamp)
+  repeated GameEvent day_events = 13; // 本日发生的事件日志
+  repeated GameEvent loop_events = 14; // 本循环发生的事件日志
   map<int32, int32> character_paranoia_limits = 15; // 每个角色的妄想上限映射（新增）
   map<int32, int32> character_goodwill_limits = 16; // 每个角色的好感度上限映射（新增）
   map<int32, int32> character_intrigue_limits = 17; // 每个角色的阴谋上限映射（新增）
