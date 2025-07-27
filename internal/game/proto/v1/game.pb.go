@@ -27,14 +27,14 @@ type GameState struct {
 	GameId                  string                 `protobuf:"bytes,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`                                                                                                                                   // 游戏唯一ID
 	Script                  *Script                `protobuf:"bytes,2,opt,name=script,proto3" json:"script,omitempty"`                                                                                                                                                 // 当前游戏的剧本配置
 	Characters              map[int32]*Character   `protobuf:"bytes,3,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                              // 所有角色当前状态的映射，键为 character_id
-	Players                 map[string]*Player     `protobuf:"bytes,4,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                                     // 所有玩家的映射，键为 player_id
+	Players                 map[int32]*Player      `protobuf:"bytes,4,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                                    // 所有玩家的映射，键为 player_id
 	CurrentDay              int32                  `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                                                                                      // 当前天数
 	CurrentLoop             int32                  `protobuf:"varint,6,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                                                                                   // 当前循环数
 	CurrentPhase            GamePhase              `protobuf:"varint,7,opt,name=current_phase,json=currentPhase,proto3,enum=v1.GamePhase" json:"current_phase,omitempty"`                                                                                              // 当前游戏阶段
 	ActiveIncidents         map[int32]bool         `protobuf:"bytes,8,rep,name=active_incidents,json=activeIncidents,proto3" json:"active_incidents,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                            // 当前循环中已激活（满足条件）的悲剧，键为 IncidentType
 	PreventedIncidents      map[int32]bool         `protobuf:"bytes,9,rep,name=prevented_incidents,json=preventedIncidents,proto3" json:"prevented_incidents,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                   // 当前循环中已被阻止的悲剧，键为 IncidentType
-	PlayedCardsThisDay      []int32                `protobuf:"varint,10,rep,packed,name=played_cards_this_day,json=playedCardsThisDay,proto3" json:"played_cards_this_day,omitempty"`                                                                                  // 本日已打出的卡牌ID列表
-	PlayedCardsThisLoop     []int32                `protobuf:"varint,11,rep,packed,name=played_cards_this_loop,json=playedCardsThisLoop,proto3" json:"played_cards_this_loop,omitempty"`                                                                               // 本循环已打出的卡牌ID列表
+	PlayedCardsThisDay      map[int32]bool         `protobuf:"bytes,10,rep,name=played_cards_this_day,json=playedCardsThisDay,proto3" json:"played_cards_this_day,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`              // 本日已打出的卡牌ID列表
+	PlayedCardsThisLoop     map[int32]bool         `protobuf:"bytes,11,rep,name=played_cards_this_loop,json=playedCardsThisLoop,proto3" json:"played_cards_this_loop,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`           // 本循环已打出的卡牌ID列表
 	LastUpdateTime          int64                  `protobuf:"varint,12,opt,name=last_update_time,json=lastUpdateTime,proto3" json:"last_update_time,omitempty"`                                                                                                       // 最后更新时间戳 (Unix timestamp)
 	DayEvents               []*GameEvent           `protobuf:"bytes,13,rep,name=day_events,json=dayEvents,proto3" json:"day_events,omitempty"`                                                                                                                         // 本日发生的事件日志
 	LoopEvents              []*GameEvent           `protobuf:"bytes,14,rep,name=loop_events,json=loopEvents,proto3" json:"loop_events,omitempty"`                                                                                                                      // 本循环发生的事件日志
@@ -96,7 +96,7 @@ func (x *GameState) GetCharacters() map[int32]*Character {
 	return nil
 }
 
-func (x *GameState) GetPlayers() map[string]*Player {
+func (x *GameState) GetPlayers() map[int32]*Player {
 	if x != nil {
 		return x.Players
 	}
@@ -138,14 +138,14 @@ func (x *GameState) GetPreventedIncidents() map[int32]bool {
 	return nil
 }
 
-func (x *GameState) GetPlayedCardsThisDay() []int32 {
+func (x *GameState) GetPlayedCardsThisDay() map[int32]bool {
 	if x != nil {
 		return x.PlayedCardsThisDay
 	}
 	return nil
 }
 
-func (x *GameState) GetPlayedCardsThisLoop() []int32 {
+func (x *GameState) GetPlayedCardsThisLoop() map[int32]bool {
 	if x != nil {
 		return x.PlayedCardsThisLoop
 	}
@@ -198,7 +198,7 @@ var File_v1_game_proto protoreflect.FileDescriptor
 
 const file_v1_game_proto_rawDesc = "" +
 	"\n" +
-	"\rv1/game.proto\x12\x02v1\x1a\x12v1/character.proto\x1a\x0ev1/enums.proto\x1a\x0ev1/event.proto\x1a\x0fv1/player.proto\x1a\x0fv1/script.proto\"\x89\f\n" +
+	"\rv1/game.proto\x12\x02v1\x1a\x12v1/character.proto\x1a\x0ev1/enums.proto\x1a\x0ev1/event.proto\x1a\x0fv1/player.proto\x1a\x0fv1/script.proto\"\xe7\r\n" +
 	"\tGameState\x12\x17\n" +
 	"\agame_id\x18\x01 \x01(\tR\x06gameId\x12\"\n" +
 	"\x06script\x18\x02 \x01(\v2\n" +
@@ -212,10 +212,10 @@ const file_v1_game_proto_rawDesc = "" +
 	"\fcurrent_loop\x18\x06 \x01(\x05R\vcurrentLoop\x122\n" +
 	"\rcurrent_phase\x18\a \x01(\x0e2\r.v1.GamePhaseR\fcurrentPhase\x12M\n" +
 	"\x10active_incidents\x18\b \x03(\v2\".v1.GameState.ActiveIncidentsEntryR\x0factiveIncidents\x12V\n" +
-	"\x13prevented_incidents\x18\t \x03(\v2%.v1.GameState.PreventedIncidentsEntryR\x12preventedIncidents\x121\n" +
+	"\x13prevented_incidents\x18\t \x03(\v2%.v1.GameState.PreventedIncidentsEntryR\x12preventedIncidents\x12X\n" +
 	"\x15played_cards_this_day\x18\n" +
-	" \x03(\x05R\x12playedCardsThisDay\x123\n" +
-	"\x16played_cards_this_loop\x18\v \x03(\x05R\x13playedCardsThisLoop\x12(\n" +
+	" \x03(\v2%.v1.GameState.PlayedCardsThisDayEntryR\x12playedCardsThisDay\x12[\n" +
+	"\x16played_cards_this_loop\x18\v \x03(\v2&.v1.GameState.PlayedCardsThisLoopEntryR\x13playedCardsThisLoop\x12(\n" +
 	"\x10last_update_time\x18\f \x01(\x03R\x0elastUpdateTime\x12,\n" +
 	"\n" +
 	"day_events\x18\r \x03(\v2\r.v1.GameEventR\tdayEvents\x12.\n" +
@@ -228,13 +228,19 @@ const file_v1_game_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12#\n" +
 	"\x05value\x18\x02 \x01(\v2\r.v1.CharacterR\x05value:\x028\x01\x1aF\n" +
 	"\fPlayersEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12 \n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12 \n" +
 	"\x05value\x18\x02 \x01(\v2\n" +
 	".v1.PlayerR\x05value:\x028\x01\x1aB\n" +
 	"\x14ActiveIncidentsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aE\n" +
 	"\x17PreventedIncidentsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aE\n" +
+	"\x17PlayedCardsThisDayEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aF\n" +
+	"\x18PlayedCardsThisLoopEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aJ\n" +
 	"\x1cCharacterParanoiaLimitsEntry\x12\x10\n" +
@@ -259,41 +265,45 @@ func file_v1_game_proto_rawDescGZIP() []byte {
 	return file_v1_game_proto_rawDescData
 }
 
-var file_v1_game_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_v1_game_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_v1_game_proto_goTypes = []any{
 	(*GameState)(nil), // 0: v1.GameState
 	nil,               // 1: v1.GameState.CharactersEntry
 	nil,               // 2: v1.GameState.PlayersEntry
 	nil,               // 3: v1.GameState.ActiveIncidentsEntry
 	nil,               // 4: v1.GameState.PreventedIncidentsEntry
-	nil,               // 5: v1.GameState.CharacterParanoiaLimitsEntry
-	nil,               // 6: v1.GameState.CharacterGoodwillLimitsEntry
-	nil,               // 7: v1.GameState.CharacterIntrigueLimitsEntry
-	(*Script)(nil),    // 8: v1.Script
-	(GamePhase)(0),    // 9: v1.GamePhase
-	(*GameEvent)(nil), // 10: v1.GameEvent
-	(*Character)(nil), // 11: v1.Character
-	(*Player)(nil),    // 12: v1.Player
+	nil,               // 5: v1.GameState.PlayedCardsThisDayEntry
+	nil,               // 6: v1.GameState.PlayedCardsThisLoopEntry
+	nil,               // 7: v1.GameState.CharacterParanoiaLimitsEntry
+	nil,               // 8: v1.GameState.CharacterGoodwillLimitsEntry
+	nil,               // 9: v1.GameState.CharacterIntrigueLimitsEntry
+	(*Script)(nil),    // 10: v1.Script
+	(GamePhase)(0),    // 11: v1.GamePhase
+	(*GameEvent)(nil), // 12: v1.GameEvent
+	(*Character)(nil), // 13: v1.Character
+	(*Player)(nil),    // 14: v1.Player
 }
 var file_v1_game_proto_depIdxs = []int32{
-	8,  // 0: v1.GameState.script:type_name -> v1.Script
+	10, // 0: v1.GameState.script:type_name -> v1.Script
 	1,  // 1: v1.GameState.characters:type_name -> v1.GameState.CharactersEntry
 	2,  // 2: v1.GameState.players:type_name -> v1.GameState.PlayersEntry
-	9,  // 3: v1.GameState.current_phase:type_name -> v1.GamePhase
+	11, // 3: v1.GameState.current_phase:type_name -> v1.GamePhase
 	3,  // 4: v1.GameState.active_incidents:type_name -> v1.GameState.ActiveIncidentsEntry
 	4,  // 5: v1.GameState.prevented_incidents:type_name -> v1.GameState.PreventedIncidentsEntry
-	10, // 6: v1.GameState.day_events:type_name -> v1.GameEvent
-	10, // 7: v1.GameState.loop_events:type_name -> v1.GameEvent
-	5,  // 8: v1.GameState.character_paranoia_limits:type_name -> v1.GameState.CharacterParanoiaLimitsEntry
-	6,  // 9: v1.GameState.character_goodwill_limits:type_name -> v1.GameState.CharacterGoodwillLimitsEntry
-	7,  // 10: v1.GameState.character_intrigue_limits:type_name -> v1.GameState.CharacterIntrigueLimitsEntry
-	11, // 11: v1.GameState.CharactersEntry.value:type_name -> v1.Character
-	12, // 12: v1.GameState.PlayersEntry.value:type_name -> v1.Player
-	13, // [13:13] is the sub-list for method output_type
-	13, // [13:13] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	5,  // 6: v1.GameState.played_cards_this_day:type_name -> v1.GameState.PlayedCardsThisDayEntry
+	6,  // 7: v1.GameState.played_cards_this_loop:type_name -> v1.GameState.PlayedCardsThisLoopEntry
+	12, // 8: v1.GameState.day_events:type_name -> v1.GameEvent
+	12, // 9: v1.GameState.loop_events:type_name -> v1.GameEvent
+	7,  // 10: v1.GameState.character_paranoia_limits:type_name -> v1.GameState.CharacterParanoiaLimitsEntry
+	8,  // 11: v1.GameState.character_goodwill_limits:type_name -> v1.GameState.CharacterGoodwillLimitsEntry
+	9,  // 12: v1.GameState.character_intrigue_limits:type_name -> v1.GameState.CharacterIntrigueLimitsEntry
+	13, // 13: v1.GameState.CharactersEntry.value:type_name -> v1.Character
+	14, // 14: v1.GameState.PlayersEntry.value:type_name -> v1.Player
+	15, // [15:15] is the sub-list for method output_type
+	15, // [15:15] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_v1_game_proto_init() }
@@ -312,7 +322,7 @@ func file_v1_game_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_game_proto_rawDesc), len(file_v1_game_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

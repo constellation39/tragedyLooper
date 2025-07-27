@@ -92,17 +92,17 @@
                     "description": "当前循环中已被阻止的悲剧，键为 IncidentType"
                 },
                 "played_cards_this_day": {
-                    "items": {
-                        "type": "integer"
+                    "additionalProperties": {
+                        "type": "boolean"
                     },
-                    "type": "array",
+                    "type": "object",
                     "description": "本日已打出的卡牌ID列表"
                 },
                 "played_cards_this_loop": {
-                    "items": {
-                        "type": "integer"
+                    "additionalProperties": {
+                        "type": "boolean"
                     },
-                    "type": "array",
+                    "type": "object",
                     "description": "本循环已打出的卡牌ID列表"
                 },
                 "last_update_time": {
@@ -608,7 +608,7 @@
         },
         "v1.CharacterConfig": {
             "properties": {
-                "character_id": {
+                "id": {
                     "type": "integer",
                     "description": "角色ID"
                 },

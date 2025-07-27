@@ -26,7 +26,7 @@ message Script {
 
 // 角色在剧本中的配置
 message CharacterConfig {
-  int32 character_id = 1; // 角色ID
+  int32 id = 1; // 角色ID
   RoleType hidden_role = 2; // 角色在当前剧本中的隐藏身份
   LocationType initial_location = 3; // 角色初始所在地点
   int32 initial_paranoia = 4; // 角色初始妄想值

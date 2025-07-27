@@ -3,10 +3,9 @@ package engine
 import (
 	"slices"
 	"time"
+	"tragedylooper/internal/game/loader"
 
 	"go.uber.org/zap"
-	"google.golang.org/protobuf/types/known/timestamppb"
-
 	"tragedylooper/internal/game/data"
 	model "tragedylooper/internal/game/proto/v1"
 	"tragedylooper/internal/llm"
@@ -42,32 +41,32 @@ type llmActionCompleteRequest struct {
 }
 
 // NewGameEngine creates a new game engine instance.
-func NewGameEngine(gameID string, logger *zap.Logger, script *model.Script, players map[int32]*model.Player, llmClient llm.Client, gameData *loader.GameData) *GameEngine {
+func NewGameEngine(gameID string, logger *zap.Logger, script *model.Script, players map[int32]*model.Player, llmClient llm.Client, gameData *loader.Loader) *GameEngine {
 	gs := &model.GameState{
-		GameId:              gameID,
-		Script:              script,
-		Characters:          make(map[int32]*model.Character),
-		Players:             players,
-		CurrentDay:          1,
-		CurrentLoop:         1,
-		CurrentPhase:        model.GamePhase_GAME_PHASE_MORNING,
-		ActiveTragedies:     make(map[int32]bool),
-		PreventedTragedies:  make(map[int32]bool),
-		PlayedCardsThisDay:  make(map[int32]*model.CardList),
-		PlayedCardsThisLoop: make(map[int32]*model.CardList),
-		LastUpdateTime:      timestamppb.Now(),
-		DayEvents:           make([]*model.GameEvent, 0),
-		LoopEvents:          make([]*model.GameEvent, 0),
+		GameId:                  gameID,
+		Script:                  script,
+		Characters:              make(map[int32]*model.Character),
+		Players:                 players,
+		CurrentDay:              1,
+		CurrentLoop:             1,
+		CurrentPhase:            model.GamePhase_SETUP,
+		ActiveIncidents:         make(map[int32]bool),
+		PreventedIncidents:      make(map[int32]bool),
+		PlayedCardsThisDay:      make(map[int32]bool),
+		PlayedCardsThisLoop:     make(map[int32]bool),
+		LastUpdateTime:          time.Now().Unix(),
+		DayEvents:               make([]*model.GameEvent),
+		LoopEvents:              make([]*model.GameEvent),
+		CharacterParanoiaLimits: make(map[int32]int32),
+		CharacterGoodwillLimits: make(map[int32]int32),
+		CharacterIntrigueLimits: make(map[int32]int32),
 	}
 
 	for _, charConfig := range script.Characters {
-		char, ok := gameData.Characters[charConfig.Name+".json"]
-		if !ok {
-			logger.Fatal("Character not found in game data", zap.String("character_name", charConfig.Name))
-		}
-		char.CurrentLocation = charConfig.InitialLocation
-		char.HiddenRole = charConfig.HiddenRole
-		gs.Characters[char.Id] = char
+
+		character := &model.Character{}
+
+		gs.Characters[charConfig.Id] = character
 	}
 
 	for _, t := range script.Tragedies {

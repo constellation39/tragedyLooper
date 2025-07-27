@@ -4,7 +4,7 @@
     "definitions": {
         "CharacterConfig": {
             "properties": {
-                "character_id": {
+                "id": {
                     "type": "integer",
                     "description": "角色ID"
                 },

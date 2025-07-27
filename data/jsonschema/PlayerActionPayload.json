@@ -1,0 +1,216 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/PlayerActionPayload",
+    "definitions": {
+        "PlayerActionPayload": {
+            "properties": {
+                "play_card": {
+                    "$ref": "#/definitions/v1.PlayCardPayload",
+                    "additionalProperties": true
+                },
+                "use_ability": {
+                    "$ref": "#/definitions/v1.UseAbilityPayload",
+                    "additionalProperties": true
+                },
+                "make_guess": {
+                    "$ref": "#/definitions/v1.MakeGuessPayload",
+                    "additionalProperties": true
+                },
+                "choose_option": {
+                    "$ref": "#/definitions/v1.ChooseOptionPayload",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Player Action Payload",
+            "description": "通用的玩家操作负载"
+        },
+        "v1.ChooseOptionPayload": {
+            "properties": {
+                "player_id": {
+                    "type": "string",
+                    "description": "执行操作的玩家ID"
+                },
+                "character_id": {
+                    "type": "integer",
+                    "description": "做出选择的角色（如果选择与角色相关）"
+                },
+                "chosen_option_id": {
+                    "type": "string",
+                    "description": "选择项的ID"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Choose Option Payload",
+            "description": "玩家进行选择的操作负载（例如，在需要选择地盘或目标时）"
+        },
+        "v1.MakeGuessPayload": {
+            "properties": {
+                "player_id": {
+                    "type": "string",
+                    "description": "执行操作的玩家ID"
+                },
+                "guessed_roles": {
+                    "additionalProperties": {
+                        "enum": [
+                            "ROLE_TYPE_UNSPECIFIED",
+                            0,
+                            "INNOCENT",
+                            1,
+                            "KILLER",
+                            2,
+                            "ACCOMPLICE",
+                            3,
+                            "PERSON_OF_INTEREST",
+                            4,
+                            "KEY_PERSON",
+                            5,
+                            "FRIEND",
+                            6,
+                            "LOVER",
+                            7,
+                            "CONSPIRACY_THEORIST",
+                            8,
+                            "CULTIST",
+                            9
+                        ],
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "integer"
+                            }
+                        ],
+                        "title": "Role Type",
+                        "description": "角色身份类型枚举"
+                    },
+                    "type": "object",
+                    "description": "猜测的角色身份映射，键为 character_id"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Make Guess Payload",
+            "description": "主角玩家进行猜测的操作负载"
+        },
+        "v1.PlayCardPayload": {
+            "properties": {
+                "player_id": {
+                    "type": "string",
+                    "description": "执行操作的玩家ID"
+                },
+                "card_id": {
+                    "type": "integer",
+                    "description": "打出的卡牌ID"
+                },
+                "target_character_id": {
+                    "type": "integer",
+                    "description": "卡牌的目标角色ID"
+                },
+                "target_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型枚举"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Play Card Payload",
+            "description": "玩家打出卡牌的操作负载"
+        },
+        "v1.UseAbilityPayload": {
+            "properties": {
+                "player_id": {
+                    "type": "string",
+                    "description": "执行操作的玩家ID"
+                },
+                "character_id": {
+                    "type": "integer",
+                    "description": "哪个角色的能力被使用"
+                },
+                "ability_id": {
+                    "type": "integer",
+                    "description": "哪个能力被使用"
+                },
+                "target_character_id": {
+                    "type": "integer",
+                    "description": "如果能力有目标角色，指定其ID"
+                },
+                "target_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型枚举"
+                },
+                "target_incident_type": {
+                    "enum": [
+                        "INCIDENT_TYPE_UNSPECIFIED",
+                        0,
+                        "MURDER",
+                        1,
+                        "SUICIDE",
+                        2,
+                        "HOSPITAL_CONSPIRACY",
+                        3,
+                        "MURDER_MYSTERY",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Incident Type",
+                    "description": "悲剧类型枚举"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Use Ability Payload",
+            "description": "玩家使用能力的操作负载"
+        }
+    }
+}

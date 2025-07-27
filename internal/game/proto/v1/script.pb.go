@@ -325,7 +325,7 @@ func (x *Script) GetSpecialRulesDescription() []string {
 // 角色在剧本中的配置
 type CharacterConfig struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	CharacterId       int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`                                  // 角色ID
+	Id                int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                       // 角色ID
 	HiddenRole        RoleType               `protobuf:"varint,2,opt,name=hidden_role,json=hiddenRole,proto3,enum=v1.RoleType" json:"hidden_role,omitempty"`                    // 角色在当前剧本中的隐藏身份
 	InitialLocation   LocationType           `protobuf:"varint,3,opt,name=initial_location,json=initialLocation,proto3,enum=v1.LocationType" json:"initial_location,omitempty"` // 角色初始所在地点
 	InitialParanoia   int32                  `protobuf:"varint,4,opt,name=initial_paranoia,json=initialParanoia,proto3" json:"initial_paranoia,omitempty"`                      // 角色初始妄想值
@@ -367,9 +367,9 @@ func (*CharacterConfig) Descriptor() ([]byte, []int) {
 	return file_v1_script_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CharacterConfig) GetCharacterId() int32 {
+func (x *CharacterConfig) GetId() int32 {
 	if x != nil {
-		return x.CharacterId
+		return x.Id
 	}
 	return 0
 }
@@ -839,9 +839,9 @@ const file_v1_script_proto_rawDesc = "" +
 	"\x0ewin_conditions\x18\n" +
 	" \x03(\v2\x14.v1.GameEndConditionR\rwinConditions\x12=\n" +
 	"\x0flose_conditions\x18\v \x03(\v2\x14.v1.GameEndConditionR\x0eloseConditions\x12:\n" +
-	"\x19special_rules_description\x18\f \x03(\tR\x17specialRulesDescription\"\xfe\x02\n" +
-	"\x0fCharacterConfig\x12!\n" +
-	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x12-\n" +
+	"\x19special_rules_description\x18\f \x03(\tR\x17specialRulesDescription\"\xeb\x02\n" +
+	"\x0fCharacterConfig\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12-\n" +
 	"\vhidden_role\x18\x02 \x01(\x0e2\f.v1.RoleTypeR\n" +
 	"hiddenRole\x12;\n" +
 	"\x10initial_location\x18\x03 \x01(\x0e2\x10.v1.LocationTypeR\x0finitialLocation\x12)\n" +
