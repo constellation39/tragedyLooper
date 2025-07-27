@@ -1,0 +1,12 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/ForbidMovementEffect",
+    "definitions": {
+        "ForbidMovementEffect": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Forbid Movement Effect",
+            "description": "ForbidMovementEffect 禁止角色移动。"
+        }
+    }
+}

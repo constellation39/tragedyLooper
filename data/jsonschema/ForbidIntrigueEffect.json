@@ -1,0 +1,12 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/ForbidIntrigueEffect",
+    "definitions": {
+        "ForbidIntrigueEffect": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Forbid Intrigue Effect",
+            "description": "ForbidIntrigueEffect 禁止阴谋值增加。"
+        }
+    }
+}

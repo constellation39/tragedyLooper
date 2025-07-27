@@ -128,8 +128,9 @@ func convertScript(sj *scriptJSON) *model.Script {
 }
 
 type characterJSON struct {
-	Name      string   `json:"name"`
-	Abilities []string `json:"abilities"`
+	Name      string               `json:"name"`
+	Abilities []string             `json:"abilities"`
+	Rules     []*model.CharacterRule `json:"rules"`
 }
 
 type abilityJSON struct {
@@ -175,7 +176,7 @@ func loadData[T any](dir string, target *map[string]*T, gameData ...*GameData) e
 				if err := json.Unmarshal(data, &item); err != nil {
 					return err
 				}
-				character := &model.Character{Name: item.Name}
+				character := &model.Character{Name: item.Name, Rules: item.Rules}
 				for _, abilityName := range item.Abilities {
 					if ability, ok := gameData[0].Abilities[abilityName]; ok {
 						character.Abilities = append(character.Abilities, ability)

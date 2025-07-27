@@ -20,6 +20,33 @@ message Character {
   bool is_alive = 8; // 是否存活
   repeated Ability abilities = 9; // 角色能力
   RoleType hidden_role = 10; // 角色的隐藏身份，对主角隐藏，仅供主谋查看
+  repeated CharacterRule rules = 11; // 角色的特殊规则
+}
+
+// CharacterRule 定义角色的特殊规则。
+message CharacterRule {
+  RuleTriggerType trigger = 1;
+  string description = 2;
+  oneof effect {
+    TurfSelectionEffect turf_selection = 3;
+    DelayedEntryEffect delayed_entry = 4;
+  }
+}
+
+// RuleTriggerType 定义规则何时被评估。
+enum RuleTriggerType {
+  RULE_TRIGGER_TYPE_UNSPECIFIED = 0;
+  ON_GAME_SETUP = 1; // 在游戏设置阶段触发
+  ON_LOOP_START = 2; // 在每个循环开始时触发
+  LOCATION_RESOLUTION = 3; // 在解析角色位置时触发
+}
+
+// TurfSelectionEffect 表示需要为 Boss 选择地盘。
+message TurfSelectionEffect {
+}
+
+// DelayedEntryEffect 表示角色延迟登场。
+message DelayedEntryEffect {
 }
 
 // CharacterConfig 定义特定剧本中角色的初始状态。

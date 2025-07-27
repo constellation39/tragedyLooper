@@ -10,7 +10,13 @@
         "ABILITY_TRIGGER_TYPE_GOODWILL_PHASE",
         3,
         "ABILITY_TRIGGER_TYPE_PASSIVE",
-        4
+        4,
+        "ABILITY_TRIGGER_TYPE_CARD_RESOLUTION",
+        5,
+        "ABILITY_TRIGGER_TYPE_INCIDENT",
+        6,
+        "ABILITY_TRIGGER_TYPE_PLAYER_ACTION",
+        7
     ],
     "oneOf": [
         {

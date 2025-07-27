@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/SpecialConditions",
+    "definitions": {
+        "SpecialConditions": {
+            "properties": {
+                "turf_selection": {
+                    "type": "boolean",
+                    "description": "Boss 的地盘选择"
+                },
+                "delayed_entry": {
+                    "type": "boolean",
+                    "description": "Godly Being 的延迟登场"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Special Conditions",
+            "description": "SpecialConditions 定义角色的特殊规则。"
+        }
+    }
+}

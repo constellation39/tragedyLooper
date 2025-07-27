@@ -1,0 +1,12 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/ForbidGoodwillEffect",
+    "definitions": {
+        "ForbidGoodwillEffect": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Forbid Goodwill Effect",
+            "description": "ForbidGoodwillEffect 禁止好感度增加。"
+        }
+    }
+}

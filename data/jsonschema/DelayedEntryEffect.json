@@ -1,0 +1,12 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/DelayedEntryEffect",
+    "definitions": {
+        "DelayedEntryEffect": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Delayed Entry Effect",
+            "description": "DelayedEntryEffect 表示角色延迟登场。"
+        }
+    }
+}

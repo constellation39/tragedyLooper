@@ -14,5 +14,14 @@
       "cost": 1,
       "once_per_loop": true
     }
+  ],
+  "rules": [
+    {
+      "trigger": "ON_GAME_SETUP",
+      "description": "The Mastermind chooses a location to be the Boss's turf.",
+      "effect": {
+        "turf_selection": {}
+      }
+    }
   ]
 }

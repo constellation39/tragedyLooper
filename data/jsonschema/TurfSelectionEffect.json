@@ -1,0 +1,12 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/TurfSelectionEffect",
+    "definitions": {
+        "TurfSelectionEffect": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Turf Selection Effect",
+            "description": "TurfSelectionEffect 表示需要为 Boss 选择地盘。"
+        }
+    }
+}

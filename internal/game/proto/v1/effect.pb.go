@@ -30,6 +30,10 @@ type Effect struct {
 	//	*Effect_AdjustParanoiaEffect
 	//	*Effect_AdjustGoodwillEffect
 	//	*Effect_AdjustIntrigueEffect
+	//	*Effect_ForbidMovementEffect
+	//	*Effect_ForbidParanoiaEffect
+	//	*Effect_ForbidGoodwillEffect
+	//	*Effect_ForbidIntrigueEffect
 	EffectOneof   isEffect_EffectOneof `protobuf_oneof:"effect_oneof"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -108,6 +112,42 @@ func (x *Effect) GetAdjustIntrigueEffect() *AdjustIntrigueEffect {
 	return nil
 }
 
+func (x *Effect) GetForbidMovementEffect() *ForbidMovementEffect {
+	if x != nil {
+		if x, ok := x.EffectOneof.(*Effect_ForbidMovementEffect); ok {
+			return x.ForbidMovementEffect
+		}
+	}
+	return nil
+}
+
+func (x *Effect) GetForbidParanoiaEffect() *ForbidParanoiaEffect {
+	if x != nil {
+		if x, ok := x.EffectOneof.(*Effect_ForbidParanoiaEffect); ok {
+			return x.ForbidParanoiaEffect
+		}
+	}
+	return nil
+}
+
+func (x *Effect) GetForbidGoodwillEffect() *ForbidGoodwillEffect {
+	if x != nil {
+		if x, ok := x.EffectOneof.(*Effect_ForbidGoodwillEffect); ok {
+			return x.ForbidGoodwillEffect
+		}
+	}
+	return nil
+}
+
+func (x *Effect) GetForbidIntrigueEffect() *ForbidIntrigueEffect {
+	if x != nil {
+		if x, ok := x.EffectOneof.(*Effect_ForbidIntrigueEffect); ok {
+			return x.ForbidIntrigueEffect
+		}
+	}
+	return nil
+}
+
 type isEffect_EffectOneof interface {
 	isEffect_EffectOneof()
 }
@@ -128,6 +168,22 @@ type Effect_AdjustIntrigueEffect struct {
 	AdjustIntrigueEffect *AdjustIntrigueEffect `protobuf:"bytes,4,opt,name=adjust_intrigue_effect,json=adjustIntrigueEffect,proto3,oneof"`
 }
 
+type Effect_ForbidMovementEffect struct {
+	ForbidMovementEffect *ForbidMovementEffect `protobuf:"bytes,5,opt,name=forbid_movement_effect,json=forbidMovementEffect,proto3,oneof"`
+}
+
+type Effect_ForbidParanoiaEffect struct {
+	ForbidParanoiaEffect *ForbidParanoiaEffect `protobuf:"bytes,6,opt,name=forbid_paranoia_effect,json=forbidParanoiaEffect,proto3,oneof"`
+}
+
+type Effect_ForbidGoodwillEffect struct {
+	ForbidGoodwillEffect *ForbidGoodwillEffect `protobuf:"bytes,7,opt,name=forbid_goodwill_effect,json=forbidGoodwillEffect,proto3,oneof"`
+}
+
+type Effect_ForbidIntrigueEffect struct {
+	ForbidIntrigueEffect *ForbidIntrigueEffect `protobuf:"bytes,8,opt,name=forbid_intrigue_effect,json=forbidIntrigueEffect,proto3,oneof"`
+}
+
 func (*Effect_MoveCharacterEffect) isEffect_EffectOneof() {}
 
 func (*Effect_AdjustParanoiaEffect) isEffect_EffectOneof() {}
@@ -135,6 +191,14 @@ func (*Effect_AdjustParanoiaEffect) isEffect_EffectOneof() {}
 func (*Effect_AdjustGoodwillEffect) isEffect_EffectOneof() {}
 
 func (*Effect_AdjustIntrigueEffect) isEffect_EffectOneof() {}
+
+func (*Effect_ForbidMovementEffect) isEffect_EffectOneof() {}
+
+func (*Effect_ForbidParanoiaEffect) isEffect_EffectOneof() {}
+
+func (*Effect_ForbidGoodwillEffect) isEffect_EffectOneof() {}
+
+func (*Effect_ForbidIntrigueEffect) isEffect_EffectOneof() {}
 
 // MoveCharacterEffect 移动一个角色到指定地点。
 type MoveCharacterEffect struct {
@@ -316,16 +380,168 @@ func (x *AdjustIntrigueEffect) GetAmount() int32 {
 	return 0
 }
 
+// ForbidMovementEffect 禁止角色移动。
+type ForbidMovementEffect struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ForbidMovementEffect) Reset() {
+	*x = ForbidMovementEffect{}
+	mi := &file_proto_v1_effect_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ForbidMovementEffect) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ForbidMovementEffect) ProtoMessage() {}
+
+func (x *ForbidMovementEffect) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_v1_effect_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ForbidMovementEffect.ProtoReflect.Descriptor instead.
+func (*ForbidMovementEffect) Descriptor() ([]byte, []int) {
+	return file_proto_v1_effect_proto_rawDescGZIP(), []int{5}
+}
+
+// ForbidParanoiaEffect 禁止妄想值增加。
+type ForbidParanoiaEffect struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ForbidParanoiaEffect) Reset() {
+	*x = ForbidParanoiaEffect{}
+	mi := &file_proto_v1_effect_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ForbidParanoiaEffect) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ForbidParanoiaEffect) ProtoMessage() {}
+
+func (x *ForbidParanoiaEffect) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_v1_effect_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ForbidParanoiaEffect.ProtoReflect.Descriptor instead.
+func (*ForbidParanoiaEffect) Descriptor() ([]byte, []int) {
+	return file_proto_v1_effect_proto_rawDescGZIP(), []int{6}
+}
+
+// ForbidGoodwillEffect 禁止好感度增加。
+type ForbidGoodwillEffect struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ForbidGoodwillEffect) Reset() {
+	*x = ForbidGoodwillEffect{}
+	mi := &file_proto_v1_effect_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ForbidGoodwillEffect) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ForbidGoodwillEffect) ProtoMessage() {}
+
+func (x *ForbidGoodwillEffect) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_v1_effect_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ForbidGoodwillEffect.ProtoReflect.Descriptor instead.
+func (*ForbidGoodwillEffect) Descriptor() ([]byte, []int) {
+	return file_proto_v1_effect_proto_rawDescGZIP(), []int{7}
+}
+
+// ForbidIntrigueEffect 禁止阴谋值增加。
+type ForbidIntrigueEffect struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ForbidIntrigueEffect) Reset() {
+	*x = ForbidIntrigueEffect{}
+	mi := &file_proto_v1_effect_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ForbidIntrigueEffect) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ForbidIntrigueEffect) ProtoMessage() {}
+
+func (x *ForbidIntrigueEffect) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_v1_effect_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ForbidIntrigueEffect.ProtoReflect.Descriptor instead.
+func (*ForbidIntrigueEffect) Descriptor() ([]byte, []int) {
+	return file_proto_v1_effect_proto_rawDescGZIP(), []int{8}
+}
+
 var File_proto_v1_effect_proto protoreflect.FileDescriptor
 
 const file_proto_v1_effect_proto_rawDesc = "" +
 	"\n" +
-	"\x15proto/v1/effect.proto\x12\bproto.v1\x1a\x17proto/v1/location.proto\"\xf5\x02\n" +
+	"\x15proto/v1/effect.proto\x12\bproto.v1\x1a\x17proto/v1/location.proto\"\xd5\x05\n" +
 	"\x06Effect\x12S\n" +
 	"\x15move_character_effect\x18\x01 \x01(\v2\x1d.proto.v1.MoveCharacterEffectH\x00R\x13moveCharacterEffect\x12V\n" +
 	"\x16adjust_paranoia_effect\x18\x02 \x01(\v2\x1e.proto.v1.AdjustParanoiaEffectH\x00R\x14adjustParanoiaEffect\x12V\n" +
 	"\x16adjust_goodwill_effect\x18\x03 \x01(\v2\x1e.proto.v1.AdjustGoodwillEffectH\x00R\x14adjustGoodwillEffect\x12V\n" +
-	"\x16adjust_intrigue_effect\x18\x04 \x01(\v2\x1e.proto.v1.AdjustIntrigueEffectH\x00R\x14adjustIntrigueEffectB\x0e\n" +
+	"\x16adjust_intrigue_effect\x18\x04 \x01(\v2\x1e.proto.v1.AdjustIntrigueEffectH\x00R\x14adjustIntrigueEffect\x12V\n" +
+	"\x16forbid_movement_effect\x18\x05 \x01(\v2\x1e.proto.v1.ForbidMovementEffectH\x00R\x14forbidMovementEffect\x12V\n" +
+	"\x16forbid_paranoia_effect\x18\x06 \x01(\v2\x1e.proto.v1.ForbidParanoiaEffectH\x00R\x14forbidParanoiaEffect\x12V\n" +
+	"\x16forbid_goodwill_effect\x18\a \x01(\v2\x1e.proto.v1.ForbidGoodwillEffectH\x00R\x14forbidGoodwillEffect\x12V\n" +
+	"\x16forbid_intrigue_effect\x18\b \x01(\v2\x1e.proto.v1.ForbidIntrigueEffectH\x00R\x14forbidIntrigueEffectB\x0e\n" +
 	"\feffect_oneof\"O\n" +
 	"\x13MoveCharacterEffect\x128\n" +
 	"\vdestination\x18\x01 \x01(\x0e2\x16.proto.v1.LocationTypeR\vdestination\".\n" +
@@ -334,7 +550,11 @@ const file_proto_v1_effect_proto_rawDesc = "" +
 	"\x14AdjustGoodwillEffect\x12\x16\n" +
 	"\x06amount\x18\x01 \x01(\x05R\x06amount\".\n" +
 	"\x14AdjustIntrigueEffect\x12\x16\n" +
-	"\x06amount\x18\x01 \x01(\x05R\x06amountB\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\x06amount\x18\x01 \x01(\x05R\x06amount\"\x16\n" +
+	"\x14ForbidMovementEffect\"\x16\n" +
+	"\x14ForbidParanoiaEffect\"\x16\n" +
+	"\x14ForbidGoodwillEffect\"\x16\n" +
+	"\x14ForbidIntrigueEffectB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
 	file_proto_v1_effect_proto_rawDescOnce sync.Once
@@ -348,26 +568,34 @@ func file_proto_v1_effect_proto_rawDescGZIP() []byte {
 	return file_proto_v1_effect_proto_rawDescData
 }
 
-var file_proto_v1_effect_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_proto_v1_effect_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_proto_v1_effect_proto_goTypes = []any{
 	(*Effect)(nil),               // 0: proto.v1.Effect
 	(*MoveCharacterEffect)(nil),  // 1: proto.v1.MoveCharacterEffect
 	(*AdjustParanoiaEffect)(nil), // 2: proto.v1.AdjustParanoiaEffect
 	(*AdjustGoodwillEffect)(nil), // 3: proto.v1.AdjustGoodwillEffect
 	(*AdjustIntrigueEffect)(nil), // 4: proto.v1.AdjustIntrigueEffect
-	(LocationType)(0),            // 5: proto.v1.LocationType
+	(*ForbidMovementEffect)(nil), // 5: proto.v1.ForbidMovementEffect
+	(*ForbidParanoiaEffect)(nil), // 6: proto.v1.ForbidParanoiaEffect
+	(*ForbidGoodwillEffect)(nil), // 7: proto.v1.ForbidGoodwillEffect
+	(*ForbidIntrigueEffect)(nil), // 8: proto.v1.ForbidIntrigueEffect
+	(LocationType)(0),            // 9: proto.v1.LocationType
 }
 var file_proto_v1_effect_proto_depIdxs = []int32{
 	1, // 0: proto.v1.Effect.move_character_effect:type_name -> proto.v1.MoveCharacterEffect
 	2, // 1: proto.v1.Effect.adjust_paranoia_effect:type_name -> proto.v1.AdjustParanoiaEffect
 	3, // 2: proto.v1.Effect.adjust_goodwill_effect:type_name -> proto.v1.AdjustGoodwillEffect
 	4, // 3: proto.v1.Effect.adjust_intrigue_effect:type_name -> proto.v1.AdjustIntrigueEffect
-	5, // 4: proto.v1.MoveCharacterEffect.destination:type_name -> proto.v1.LocationType
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	5, // 4: proto.v1.Effect.forbid_movement_effect:type_name -> proto.v1.ForbidMovementEffect
+	6, // 5: proto.v1.Effect.forbid_paranoia_effect:type_name -> proto.v1.ForbidParanoiaEffect
+	7, // 6: proto.v1.Effect.forbid_goodwill_effect:type_name -> proto.v1.ForbidGoodwillEffect
+	8, // 7: proto.v1.Effect.forbid_intrigue_effect:type_name -> proto.v1.ForbidIntrigueEffect
+	9, // 8: proto.v1.MoveCharacterEffect.destination:type_name -> proto.v1.LocationType
+	9, // [9:9] is the sub-list for method output_type
+	9, // [9:9] is the sub-list for method input_type
+	9, // [9:9] is the sub-list for extension type_name
+	9, // [9:9] is the sub-list for extension extendee
+	0, // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_proto_v1_effect_proto_init() }
@@ -381,6 +609,10 @@ func file_proto_v1_effect_proto_init() {
 		(*Effect_AdjustParanoiaEffect)(nil),
 		(*Effect_AdjustGoodwillEffect)(nil),
 		(*Effect_AdjustIntrigueEffect)(nil),
+		(*Effect_ForbidMovementEffect)(nil),
+		(*Effect_ForbidParanoiaEffect)(nil),
+		(*Effect_ForbidGoodwillEffect)(nil),
+		(*Effect_ForbidIntrigueEffect)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -388,7 +620,7 @@ func file_proto_v1_effect_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_v1_effect_proto_rawDesc), len(file_proto_v1_effect_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

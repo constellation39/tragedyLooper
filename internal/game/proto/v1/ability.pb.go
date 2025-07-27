@@ -33,6 +33,7 @@ type Ability struct {
 	RefusalRole   PlayerRole             `protobuf:"varint,7,opt,name=refusal_role,json=refusalRole,proto3,enum=proto.v1.PlayerRole" json:"refusal_role,omitempty"`         // 如果有，指定拒绝此善意能力的特定角色身份
 	UsedThisLoop  bool                   `protobuf:"varint,8,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"`                             // 运行时状态，不用于配置
 	Target        *Target                `protobuf:"bytes,9,opt,name=target,proto3" json:"target,omitempty"`
+	Cost          int32                  `protobuf:"varint,10,opt,name=cost,proto3" json:"cost,omitempty"` // Cost in goodwill to use the ability
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -130,11 +131,18 @@ func (x *Ability) GetTarget() *Target {
 	return nil
 }
 
+func (x *Ability) GetCost() int32 {
+	if x != nil {
+		return x.Cost
+	}
+	return 0
+}
+
 var File_proto_v1_ability_proto protoreflect.FileDescriptor
 
 const file_proto_v1_ability_proto_rawDesc = "" +
 	"\n" +
-	"\x16proto/v1/ability.proto\x12\bproto.v1\x1a\x15proto/v1/effect.proto\x1a\x14proto/v1/enums.proto\x1a\x15proto/v1/target.proto\"\xe7\x02\n" +
+	"\x16proto/v1/ability.proto\x12\bproto.v1\x1a\x15proto/v1/effect.proto\x1a\x14proto/v1/enums.proto\x1a\x15proto/v1/target.proto\"\xfb\x02\n" +
 	"\aAbility\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -144,7 +152,9 @@ const file_proto_v1_ability_proto_rawDesc = "" +
 	"\ronce_per_loop\x18\x06 \x01(\bR\voncePerLoop\x127\n" +
 	"\frefusal_role\x18\a \x01(\x0e2\x14.proto.v1.PlayerRoleR\vrefusalRole\x12$\n" +
 	"\x0eused_this_loop\x18\b \x01(\bR\fusedThisLoop\x12(\n" +
-	"\x06target\x18\t \x01(\v2\x10.proto.v1.TargetR\x06targetB\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\x06target\x18\t \x01(\v2\x10.proto.v1.TargetR\x06target\x12\x12\n" +
+	"\x04cost\x18\n" +
+	" \x01(\x05R\x04costB\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
 	file_proto_v1_ability_proto_rawDescOnce sync.Once

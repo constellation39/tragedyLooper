@@ -21,6 +21,59 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// RuleTriggerType 定义规则何时被评估。
+type RuleTriggerType int32
+
+const (
+	RuleTriggerType_RULE_TRIGGER_TYPE_UNSPECIFIED RuleTriggerType = 0
+	RuleTriggerType_ON_GAME_SETUP                 RuleTriggerType = 1 // 在游戏设置阶段触发
+	RuleTriggerType_ON_LOOP_START                 RuleTriggerType = 2 // 在每个循环开始时触发
+	RuleTriggerType_LOCATION_RESOLUTION           RuleTriggerType = 3 // 在解析角色位置时触发
+)
+
+// Enum value maps for RuleTriggerType.
+var (
+	RuleTriggerType_name = map[int32]string{
+		0: "RULE_TRIGGER_TYPE_UNSPECIFIED",
+		1: "ON_GAME_SETUP",
+		2: "ON_LOOP_START",
+		3: "LOCATION_RESOLUTION",
+	}
+	RuleTriggerType_value = map[string]int32{
+		"RULE_TRIGGER_TYPE_UNSPECIFIED": 0,
+		"ON_GAME_SETUP":                 1,
+		"ON_LOOP_START":                 2,
+		"LOCATION_RESOLUTION":           3,
+	}
+)
+
+func (x RuleTriggerType) Enum() *RuleTriggerType {
+	p := new(RuleTriggerType)
+	*p = x
+	return p
+}
+
+func (x RuleTriggerType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (RuleTriggerType) Descriptor() protoreflect.EnumDescriptor {
+	return file_proto_v1_character_proto_enumTypes[0].Descriptor()
+}
+
+func (RuleTriggerType) Type() protoreflect.EnumType {
+	return &file_proto_v1_character_proto_enumTypes[0]
+}
+
+func (x RuleTriggerType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use RuleTriggerType.Descriptor instead.
+func (RuleTriggerType) EnumDescriptor() ([]byte, []int) {
+	return file_proto_v1_character_proto_rawDescGZIP(), []int{0}
+}
+
 // Character 表示游戏中的一个角色。
 type Character struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
@@ -34,6 +87,7 @@ type Character struct {
 	IsAlive         bool                   `protobuf:"varint,8,opt,name=is_alive,json=isAlive,proto3" json:"is_alive,omitempty"`                                                    // 是否存活
 	Abilities       []*Ability             `protobuf:"bytes,9,rep,name=abilities,proto3" json:"abilities,omitempty"`                                                                // 角色能力
 	HiddenRole      RoleType               `protobuf:"varint,10,opt,name=hidden_role,json=hiddenRole,proto3,enum=proto.v1.RoleType" json:"hidden_role,omitempty"`                   // 角色的隐藏身份，对主角隐藏，仅供主谋查看
+	Rules           []*CharacterRule       `protobuf:"bytes,11,rep,name=rules,proto3" json:"rules,omitempty"`                                                                       // 角色的特殊规则
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -138,6 +192,186 @@ func (x *Character) GetHiddenRole() RoleType {
 	return RoleType_ROLE_TYPE_UNSPECIFIED
 }
 
+func (x *Character) GetRules() []*CharacterRule {
+	if x != nil {
+		return x.Rules
+	}
+	return nil
+}
+
+// CharacterRule 定义角色的特殊规则。
+type CharacterRule struct {
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	Trigger     RuleTriggerType        `protobuf:"varint,1,opt,name=trigger,proto3,enum=proto.v1.RuleTriggerType" json:"trigger,omitempty"`
+	Description string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	// Types that are valid to be assigned to Effect:
+	//
+	//	*CharacterRule_TurfSelection
+	//	*CharacterRule_DelayedEntry
+	Effect        isCharacterRule_Effect `protobuf_oneof:"effect"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CharacterRule) Reset() {
+	*x = CharacterRule{}
+	mi := &file_proto_v1_character_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CharacterRule) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CharacterRule) ProtoMessage() {}
+
+func (x *CharacterRule) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_v1_character_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CharacterRule.ProtoReflect.Descriptor instead.
+func (*CharacterRule) Descriptor() ([]byte, []int) {
+	return file_proto_v1_character_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *CharacterRule) GetTrigger() RuleTriggerType {
+	if x != nil {
+		return x.Trigger
+	}
+	return RuleTriggerType_RULE_TRIGGER_TYPE_UNSPECIFIED
+}
+
+func (x *CharacterRule) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *CharacterRule) GetEffect() isCharacterRule_Effect {
+	if x != nil {
+		return x.Effect
+	}
+	return nil
+}
+
+func (x *CharacterRule) GetTurfSelection() *TurfSelectionEffect {
+	if x != nil {
+		if x, ok := x.Effect.(*CharacterRule_TurfSelection); ok {
+			return x.TurfSelection
+		}
+	}
+	return nil
+}
+
+func (x *CharacterRule) GetDelayedEntry() *DelayedEntryEffect {
+	if x != nil {
+		if x, ok := x.Effect.(*CharacterRule_DelayedEntry); ok {
+			return x.DelayedEntry
+		}
+	}
+	return nil
+}
+
+type isCharacterRule_Effect interface {
+	isCharacterRule_Effect()
+}
+
+type CharacterRule_TurfSelection struct {
+	TurfSelection *TurfSelectionEffect `protobuf:"bytes,3,opt,name=turf_selection,json=turfSelection,proto3,oneof"`
+}
+
+type CharacterRule_DelayedEntry struct {
+	DelayedEntry *DelayedEntryEffect `protobuf:"bytes,4,opt,name=delayed_entry,json=delayedEntry,proto3,oneof"`
+}
+
+func (*CharacterRule_TurfSelection) isCharacterRule_Effect() {}
+
+func (*CharacterRule_DelayedEntry) isCharacterRule_Effect() {}
+
+// TurfSelectionEffect 表示需要为 Boss 选择地盘。
+type TurfSelectionEffect struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TurfSelectionEffect) Reset() {
+	*x = TurfSelectionEffect{}
+	mi := &file_proto_v1_character_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TurfSelectionEffect) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TurfSelectionEffect) ProtoMessage() {}
+
+func (x *TurfSelectionEffect) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_v1_character_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TurfSelectionEffect.ProtoReflect.Descriptor instead.
+func (*TurfSelectionEffect) Descriptor() ([]byte, []int) {
+	return file_proto_v1_character_proto_rawDescGZIP(), []int{2}
+}
+
+// DelayedEntryEffect 表示角色延迟登场。
+type DelayedEntryEffect struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DelayedEntryEffect) Reset() {
+	*x = DelayedEntryEffect{}
+	mi := &file_proto_v1_character_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DelayedEntryEffect) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DelayedEntryEffect) ProtoMessage() {}
+
+func (x *DelayedEntryEffect) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_v1_character_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DelayedEntryEffect.ProtoReflect.Descriptor instead.
+func (*DelayedEntryEffect) Descriptor() ([]byte, []int) {
+	return file_proto_v1_character_proto_rawDescGZIP(), []int{3}
+}
+
 // CharacterConfig 定义特定剧本中角色的初始状态。
 type CharacterConfig struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
@@ -152,7 +386,7 @@ type CharacterConfig struct {
 
 func (x *CharacterConfig) Reset() {
 	*x = CharacterConfig{}
-	mi := &file_proto_v1_character_proto_msgTypes[1]
+	mi := &file_proto_v1_character_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -164,7 +398,7 @@ func (x *CharacterConfig) String() string {
 func (*CharacterConfig) ProtoMessage() {}
 
 func (x *CharacterConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_v1_character_proto_msgTypes[1]
+	mi := &file_proto_v1_character_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -177,7 +411,7 @@ func (x *CharacterConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CharacterConfig.ProtoReflect.Descriptor instead.
 func (*CharacterConfig) Descriptor() ([]byte, []int) {
-	return file_proto_v1_character_proto_rawDescGZIP(), []int{1}
+	return file_proto_v1_character_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *CharacterConfig) GetId() int32 {
@@ -219,7 +453,7 @@ var File_proto_v1_character_proto protoreflect.FileDescriptor
 
 const file_proto_v1_character_proto_rawDesc = "" +
 	"\n" +
-	"\x18proto/v1/character.proto\x12\bproto.v1\x1a\x16proto/v1/ability.proto\x1a\x14proto/v1/enums.proto\x1a\x17proto/v1/location.proto\"\xdf\x02\n" +
+	"\x18proto/v1/character.proto\x12\bproto.v1\x1a\x16proto/v1/ability.proto\x1a\x14proto/v1/enums.proto\x1a\x17proto/v1/location.proto\"\x8e\x03\n" +
 	"\tCharacter\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
@@ -232,14 +466,28 @@ const file_proto_v1_character_proto_rawDesc = "" +
 	"\tabilities\x18\t \x03(\v2\x11.proto.v1.AbilityR\tabilities\x123\n" +
 	"\vhidden_role\x18\n" +
 	" \x01(\x0e2\x12.proto.v1.RoleTypeR\n" +
-	"hiddenRole\"\xd3\x01\n" +
+	"hiddenRole\x12-\n" +
+	"\x05rules\x18\v \x03(\v2\x17.proto.v1.CharacterRuleR\x05rules\"\xfd\x01\n" +
+	"\rCharacterRule\x123\n" +
+	"\atrigger\x18\x01 \x01(\x0e2\x19.proto.v1.RuleTriggerTypeR\atrigger\x12 \n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\x12F\n" +
+	"\x0eturf_selection\x18\x03 \x01(\v2\x1d.proto.v1.TurfSelectionEffectH\x00R\rturfSelection\x12C\n" +
+	"\rdelayed_entry\x18\x04 \x01(\v2\x1c.proto.v1.DelayedEntryEffectH\x00R\fdelayedEntryB\b\n" +
+	"\x06effect\"\x15\n" +
+	"\x13TurfSelectionEffect\"\x14\n" +
+	"\x12DelayedEntryEffect\"\xd3\x01\n" +
 	"\x0fCharacterConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12A\n" +
 	"\x10initial_location\x18\x03 \x01(\x0e2\x16.proto.v1.LocationTypeR\x0finitialLocation\x123\n" +
 	"\vhidden_role\x18\x04 \x01(\x0e2\x12.proto.v1.RoleTypeR\n" +
 	"hiddenRole\x12$\n" +
-	"\x0eis_culprit_for\x18\x05 \x01(\tR\fisCulpritForB\"Z github.com/user/repo/proto/modelb\x06proto3"
+	"\x0eis_culprit_for\x18\x05 \x01(\tR\fisCulpritFor*s\n" +
+	"\x0fRuleTriggerType\x12!\n" +
+	"\x1dRULE_TRIGGER_TYPE_UNSPECIFIED\x10\x00\x12\x11\n" +
+	"\rON_GAME_SETUP\x10\x01\x12\x11\n" +
+	"\rON_LOOP_START\x10\x02\x12\x17\n" +
+	"\x13LOCATION_RESOLUTION\x10\x03B\"Z github.com/user/repo/proto/modelb\x06proto3"
 
 var (
 	file_proto_v1_character_proto_rawDescOnce sync.Once
@@ -253,25 +501,34 @@ func file_proto_v1_character_proto_rawDescGZIP() []byte {
 	return file_proto_v1_character_proto_rawDescData
 }
 
-var file_proto_v1_character_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_proto_v1_character_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_proto_v1_character_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_proto_v1_character_proto_goTypes = []any{
-	(*Character)(nil),       // 0: proto.v1.Character
-	(*CharacterConfig)(nil), // 1: proto.v1.CharacterConfig
-	(LocationType)(0),       // 2: proto.v1.LocationType
-	(*Ability)(nil),         // 3: proto.v1.Ability
-	(RoleType)(0),           // 4: proto.v1.RoleType
+	(RuleTriggerType)(0),        // 0: proto.v1.RuleTriggerType
+	(*Character)(nil),           // 1: proto.v1.Character
+	(*CharacterRule)(nil),       // 2: proto.v1.CharacterRule
+	(*TurfSelectionEffect)(nil), // 3: proto.v1.TurfSelectionEffect
+	(*DelayedEntryEffect)(nil),  // 4: proto.v1.DelayedEntryEffect
+	(*CharacterConfig)(nil),     // 5: proto.v1.CharacterConfig
+	(LocationType)(0),           // 6: proto.v1.LocationType
+	(*Ability)(nil),             // 7: proto.v1.Ability
+	(RoleType)(0),               // 8: proto.v1.RoleType
 }
 var file_proto_v1_character_proto_depIdxs = []int32{
-	2, // 0: proto.v1.Character.current_location:type_name -> proto.v1.LocationType
-	3, // 1: proto.v1.Character.abilities:type_name -> proto.v1.Ability
-	4, // 2: proto.v1.Character.hidden_role:type_name -> proto.v1.RoleType
-	2, // 3: proto.v1.CharacterConfig.initial_location:type_name -> proto.v1.LocationType
-	4, // 4: proto.v1.CharacterConfig.hidden_role:type_name -> proto.v1.RoleType
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	6, // 0: proto.v1.Character.current_location:type_name -> proto.v1.LocationType
+	7, // 1: proto.v1.Character.abilities:type_name -> proto.v1.Ability
+	8, // 2: proto.v1.Character.hidden_role:type_name -> proto.v1.RoleType
+	2, // 3: proto.v1.Character.rules:type_name -> proto.v1.CharacterRule
+	0, // 4: proto.v1.CharacterRule.trigger:type_name -> proto.v1.RuleTriggerType
+	3, // 5: proto.v1.CharacterRule.turf_selection:type_name -> proto.v1.TurfSelectionEffect
+	4, // 6: proto.v1.CharacterRule.delayed_entry:type_name -> proto.v1.DelayedEntryEffect
+	6, // 7: proto.v1.CharacterConfig.initial_location:type_name -> proto.v1.LocationType
+	8, // 8: proto.v1.CharacterConfig.hidden_role:type_name -> proto.v1.RoleType
+	9, // [9:9] is the sub-list for method output_type
+	9, // [9:9] is the sub-list for method input_type
+	9, // [9:9] is the sub-list for extension type_name
+	9, // [9:9] is the sub-list for extension extendee
+	0, // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_proto_v1_character_proto_init() }
@@ -282,18 +539,23 @@ func file_proto_v1_character_proto_init() {
 	file_proto_v1_ability_proto_init()
 	file_proto_v1_enums_proto_init()
 	file_proto_v1_location_proto_init()
+	file_proto_v1_character_proto_msgTypes[1].OneofWrappers = []any{
+		(*CharacterRule_TurfSelection)(nil),
+		(*CharacterRule_DelayedEntry)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_v1_character_proto_rawDesc), len(file_proto_v1_character_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   2,
+			NumEnums:      1,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_proto_v1_character_proto_goTypes,
 		DependencyIndexes: file_proto_v1_character_proto_depIdxs,
+		EnumInfos:         file_proto_v1_character_proto_enumTypes,
 		MessageInfos:      file_proto_v1_character_proto_msgTypes,
 	}.Build()
 	File_proto_v1_character_proto = out.File

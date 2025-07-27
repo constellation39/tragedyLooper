@@ -1,0 +1,59 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/CharacterRule",
+    "definitions": {
+        "CharacterRule": {
+            "properties": {
+                "trigger": {
+                    "enum": [
+                        "RULE_TRIGGER_TYPE_UNSPECIFIED",
+                        0,
+                        "ON_GAME_SETUP",
+                        1,
+                        "ON_LOOP_START",
+                        2,
+                        "LOCATION_RESOLUTION",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Rule Trigger Type",
+                    "description": "RuleTriggerType 定义规则何时被评估。"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "turf_selection": {
+                    "$ref": "#/definitions/proto.v1.TurfSelectionEffect",
+                    "additionalProperties": true
+                },
+                "delayed_entry": {
+                    "$ref": "#/definitions/proto.v1.DelayedEntryEffect",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Character Rule",
+            "description": "CharacterRule 定义角色的特殊规则。"
+        },
+        "proto.v1.DelayedEntryEffect": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Delayed Entry Effect",
+            "description": "DelayedEntryEffect 表示角色延迟登场。"
+        },
+        "proto.v1.TurfSelectionEffect": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Turf Selection Effect",
+            "description": "TurfSelectionEffect 表示需要为 Boss 选择地盘。"
+        }
+    }
+}

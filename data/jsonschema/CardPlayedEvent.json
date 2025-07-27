@@ -158,12 +158,52 @@
                 "adjust_intrigue_effect": {
                     "$ref": "#/definitions/proto.v1.AdjustIntrigueEffect",
                     "additionalProperties": true
+                },
+                "forbid_movement_effect": {
+                    "$ref": "#/definitions/proto.v1.ForbidMovementEffect",
+                    "additionalProperties": true
+                },
+                "forbid_paranoia_effect": {
+                    "$ref": "#/definitions/proto.v1.ForbidParanoiaEffect",
+                    "additionalProperties": true
+                },
+                "forbid_goodwill_effect": {
+                    "$ref": "#/definitions/proto.v1.ForbidGoodwillEffect",
+                    "additionalProperties": true
+                },
+                "forbid_intrigue_effect": {
+                    "$ref": "#/definitions/proto.v1.ForbidIntrigueEffect",
+                    "additionalProperties": true
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Effect",
             "description": "Effect 接口定义了一个效果的核心行为。"
+        },
+        "proto.v1.ForbidGoodwillEffect": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Forbid Goodwill Effect",
+            "description": "ForbidGoodwillEffect 禁止好感度增加。"
+        },
+        "proto.v1.ForbidIntrigueEffect": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Forbid Intrigue Effect",
+            "description": "ForbidIntrigueEffect 禁止阴谋值增加。"
+        },
+        "proto.v1.ForbidMovementEffect": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Forbid Movement Effect",
+            "description": "ForbidMovementEffect 禁止角色移动。"
+        },
+        "proto.v1.ForbidParanoiaEffect": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Forbid Paranoia Effect",
+            "description": "ForbidParanoiaEffect 禁止妄想值增加。"
         },
         "proto.v1.MoveCharacterEffect": {
             "properties": {
