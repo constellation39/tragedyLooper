@@ -9,8 +9,6 @@ import "proto/v1/target.proto";
 option go_package = "github.com/user/repo/proto/model";
 
 // Ability 定义角色的特殊技能。
-
-// Ability 定义角色的特殊技能。
 message Ability {
   int32 id = 1;
   string name = 2; // 能力名称

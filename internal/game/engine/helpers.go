@@ -85,7 +85,7 @@ func (ge *GameEngine) checkLocationCondition(lc *model.LocationCondition) bool {
 func (ge *GameEngine) checkGameEndConditions() (bool, model.PlayerRole) {
 	// Check for protagonist win conditions
 	for _, wc := range ge.GameState.Script.WinConditions {
-		if wc.Type == model.GameEndConditionType_ALL_TRAGEDIES_PREVENTED {
+		if wc.Type == model.GameEndConditionType_GAME_END_CONDITION_TYPE_ALL_TRAGEDIES_PREVENTED {
 			allPrevented := true
 			for _, prevented := range ge.GameState.PreventedTragedies {
 				if !prevented {
@@ -101,7 +101,7 @@ func (ge *GameEngine) checkGameEndConditions() (bool, model.PlayerRole) {
 
 	// Check for mastermind win conditions
 	for _, lc := range ge.GameState.Script.LoseConditions {
-		if lc.Type == model.GameEndConditionType_A_TRAGEDY_OCCURS {
+		if lc.Type == model.GameEndConditionType_GAME_END_CONDITION_TYPE_A_TRAGEDY_OCCURS {
 			// This is checked within the incident phase, so we just need to see if a tragedy has occurred.
 			for _, active := range ge.GameState.ActiveTragedies {
 				if !active {
