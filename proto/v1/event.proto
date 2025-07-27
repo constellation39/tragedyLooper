@@ -8,7 +8,7 @@ import "v1/card.proto";
 import "v1/enums.proto";
 import "v1/incident.proto";
 
-option go_package = "tragedylooper/internal/game/proto/v1;v1";
+option go_package = "tragedylooper/internal/game/proto/v1";
 
 // GameEvent 表示游戏中发生的事件。
 message GameEvent {

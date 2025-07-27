@@ -4,16 +4,16 @@
   "days_per_loop": 4,
   "win_conditions": [
     {
-      "type": "ALL_TRAGEDIES_PREVENTED"
+      "type": "ALL_INCIDENTS_PREVENTED"
     }
   ],
   "lose_conditions": [
     {
-      "type": "SPECIFIC_TRAGEDY_TRIGGERED"
+      "type": "SPECIFIC_INCIDENT_TRIGGERED"
     }
   ],
-  "mastermind_card_ids": ["3", "4", "7", "8", "11", "13", "15"],
-  "protagonist_card_ids": ["1", "2", "5", "6", "9", "10", "12", "14"],
+  "mastermind_card_ids": [3, 4, 7, 8, 11, 13, 15],
+  "protagonist_card_ids": [1, 2, 5, 6, 9, 10, 12, 14],
   "main_tragedy": {
     "type": "MURDER_MYSTERY",
     "plot": "The Killer, who is the Doctor, will murder the Target, who is the High School Girl, if they are in the same location and the Killer's paranoia is high enough.",

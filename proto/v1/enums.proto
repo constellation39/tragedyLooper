@@ -1,9 +1,8 @@
-// --- enums.proto ---
 syntax = "proto3";
 
 package v1;
 
-option go_package = "tragedylooper/internal/game/proto/v1;v1";
+option go_package = "tragedylooper/internal/game/proto/v1";
 
 // 玩家角色
 enum PlayerRole {

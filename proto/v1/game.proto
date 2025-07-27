@@ -9,7 +9,7 @@ import "v1/enums.proto";
 import "v1/event.proto";
 import "v1/script.proto";
 
-option go_package = "tragedylooper/internal/game/proto/v1;v1";
+option go_package = "tragedylooper/internal/game/proto/v1";
 
 // 游戏当前状态
 message GameState {

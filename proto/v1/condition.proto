@@ -1,11 +1,10 @@
-// --- condition.proto ---
 syntax = "proto3";
 
 package v1;
 
 import "v1/enums.proto";
 
-option go_package = "tragedylooper/internal/game/proto/v1;v1";
+option go_package = "tragedylooper/internal/game/proto/v1";
 
 // 条件，用于规则、事件和效果的触发判断
 message Condition {

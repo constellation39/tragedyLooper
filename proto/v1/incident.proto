@@ -5,7 +5,7 @@ package v1;
 import "v1/condition.proto";
 import "v1/enums.proto";
 
-option go_package = "tragedylooper/internal/game/proto/v1;v1";
+option go_package = "tragedylooper/internal/game/proto/v1";
 
 // 事件实例，在游戏运行时创建
 message Incident {

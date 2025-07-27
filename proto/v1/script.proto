@@ -7,7 +7,7 @@ import "v1/enums.proto";
 import "v1/incident.proto";
 import "v1/effect.proto";
 
-option go_package = "tragedylooper/internal/game/proto/v1;v1";
+option go_package = "tragedylooper/internal/game/proto/v1";
 
 // 剧本配置
 message ScriptConfig {

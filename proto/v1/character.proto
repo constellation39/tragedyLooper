@@ -1,5 +1,3 @@
-// --- character.proto ---
-
 syntax = "proto3";
 
 package v1;
@@ -7,7 +5,7 @@ package v1;
 import "v1/enums.proto";
 import "v1/ability.proto";
 
-option go_package = "tragedylooper/internal/game/proto/v1;v1";
+option go_package = "tragedylooper/internal/game/proto/v1";
 
 // 角色静态配置（全局角色库）
 message CharacterConfig {

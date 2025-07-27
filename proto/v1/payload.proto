@@ -4,7 +4,7 @@ package v1;
 
 import "v1/enums.proto";
 
-option go_package = "tragedylooper/internal/game/proto/v1;v1";
+option go_package = "tragedylooper/internal/game/proto/v1";
 
 // 玩家打出卡牌的操作负载
 message PlayCardPayload {

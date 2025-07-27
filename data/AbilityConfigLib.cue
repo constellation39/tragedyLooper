@@ -1,0 +1,57 @@
+abilities: {
+	"1": {
+		id:           1
+		name:         "Vigilant Protection"
+		description:  "If an ally is targeted, you can increase your paranoia to protect them."
+		trigger_type: "PASSIVE"
+		effect: adjust_paranoia_effect: amount: 1
+		once_per_loop: false
+	}
+	"2": {
+		id:           2
+		name:         "Medical Knowledge"
+		description:  "Can perform medical examinations to gain information."
+		trigger_type: "ON_PHASE_START"
+		effect: adjust_intrigue_effect: amount: -1
+		once_per_loop: true
+	}
+	"3": {
+		id:           3
+		name:         "Charisma"
+		description:  "Can influence other characters' goodwill."
+		trigger_type: "ON_PHASE_START"
+		effect: adjust_goodwill_effect: amount: 1
+		once_per_loop: true
+	}
+	"4": {
+		id:           4
+		name:         "Focused Work"
+		description:  "Can uncover intrigue by focusing on a single location."
+		trigger_type: "ON_PHASE_START"
+		effect: adjust_intrigue_effect: amount: -2
+		once_per_loop: true
+	}
+	"5": {
+		id:           5
+		name:         "Scoop"
+		description:  "Can expose a character's secrets, increasing their paranoia."
+		trigger_type: "ON_PHASE_START"
+		effect: adjust_paranoia_effect: amount: 2
+		once_per_loop: true
+	}
+	"6": {
+		id:           6
+		name:         "Information Leak"
+		description:  "Can reveal a character's location to all players."
+		trigger_type: "ON_PHASE_START"
+		effect: adjust_intrigue_effect: amount: 1
+		once_per_loop: true
+	}
+	"101": {
+		id:           101
+		name:         "Suspicious Presence"
+		description:  "At the end of each day, all other characters at the same location have their paranoia increased by 1."
+		trigger_type: "ON_DAY_START"
+		effect: adjust_paranoia_effect: amount: 1
+	}
+}

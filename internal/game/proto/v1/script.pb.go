@@ -495,7 +495,7 @@ func (x *EndCondition) GetDescription() string {
 // 剧本配置库
 type ScriptConfigLib struct {
 	state         protoimpl.MessageState  `protogen:"open.v1"`
-	Scripts       map[int32]*ScriptConfig `protobuf:"bytes,1,rep,name=scripts,proto3" json:"scripts,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 剧本ID到配置的映射
+	Scripts       map[int32]*ScriptConfig `protobuf:"bytes,1,rep,name=ScriptConfig,proto3" json:"ScriptConfig,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 剧本ID到配置的映射
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -593,7 +593,7 @@ const file_v1_script_proto_rawDesc = "" +
 	"\frequirements\x18\x02 \x03(\v2\r.v1.ConditionR\frequirements\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\"\x9b\x01\n" +
 	"\x0fScriptConfigLib\x12:\n" +
-	"\ascripts\x18\x01 \x03(\v2 .v1.ScriptConfigLib.ScriptsEntryR\ascripts\x1aL\n" +
+	"\aScriptConfig\x18\x01 \x03(\v2 .v1.ScriptConfigLib.ScriptsEntryR\aScriptConfig\x1aL\n" +
 	"\fScriptsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12&\n" +
 	"\x05value\x18\x02 \x01(\v2\x10.v1.ScriptConfigR\x05value:\x028\x01B)Z'tragedylooper/internal/game/proto/v1;v1b\x06proto3"
@@ -647,7 +647,7 @@ var file_v1_script_proto_depIdxs = []int32{
 	14, // 13: v1.SpecialRule.effect:type_name -> v1.Effect
 	15, // 14: v1.EndCondition.type:type_name -> v1.EndConditionType
 	16, // 15: v1.EndCondition.requirements:type_name -> v1.Condition
-	6,  // 16: v1.ScriptConfigLib.scripts:type_name -> v1.ScriptConfigLib.ScriptsEntry
+	6,  // 16: v1.ScriptConfigLib.ScriptConfig:type_name -> v1.ScriptConfigLib.ScriptsEntry
 	0,  // 17: v1.ScriptConfigLib.ScriptsEntry.value:type_name -> v1.ScriptConfig
 	18, // [18:18] is the sub-list for method output_type
 	18, // [18:18] is the sub-list for method input_type

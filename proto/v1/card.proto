@@ -5,7 +5,7 @@ package v1;
 import "v1/effect.proto";
 import "v1/enums.proto";
 
-option go_package = "tragedylooper/internal/game/proto/v1;v1";
+option go_package = "tragedylooper/internal/game/proto/v1";
 
 // 卡牌静态配置
 message CardConfig {

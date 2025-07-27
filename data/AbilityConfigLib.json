@@ -17,7 +17,7 @@
       "id": 2,
       "name": "Medical Knowledge",
       "description": "Can perform medical examinations to gain information.",
-      "trigger_type": "ON_CARD_PLAY_PHASE",
+      "trigger_type": "ON_PHASE_START",
       "effect": {
         "adjust_intrigue_effect": {
           "amount": -1
@@ -29,7 +29,7 @@
       "id": 3,
       "name": "Charisma",
       "description": "Can influence other characters' goodwill.",
-      "trigger_type": "ON_CARD_PLAY_PHASE",
+      "trigger_type": "ON_PHASE_START",
       "effect": {
         "adjust_goodwill_effect": {
           "amount": 1
@@ -41,7 +41,7 @@
       "id": 4,
       "name": "Focused Work",
       "description": "Can uncover intrigue by focusing on a single location.",
-      "trigger_type": "ON_CARD_PLAY_PHASE",
+      "trigger_type": "ON_PHASE_START",
       "effect": {
         "adjust_intrigue_effect": {
           "amount": -2
@@ -53,7 +53,7 @@
       "id": 5,
       "name": "Scoop",
       "description": "Can expose a character's secrets, increasing their paranoia.",
-      "trigger_type": "ON_CARD_PLAY_PHASE",
+      "trigger_type": "ON_PHASE_START",
       "effect": {
         "adjust_paranoia_effect": {
           "amount": 2
@@ -65,7 +65,7 @@
       "id": 6,
       "name": "Information Leak",
       "description": "Can reveal a character's location to all players.",
-      "trigger_type": "ON_CARD_PLAY_PHASE",
+      "trigger_type": "ON_PHASE_START",
       "effect": {
         "adjust_intrigue_effect": {
           "amount": 1
