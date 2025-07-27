@@ -1,18 +1,6 @@
 {
-  "id": 5,
   "name": "Journalist",
-  "traits": ["Inquisitive"],
-  "current_location": "CITY",
-  "paranoia": 2,
-  "goodwill": 3,
-  "intrigue": 2,
-  "is_alive": true,
   "abilities": [
-    {
-      "name": "Scoop",
-      "description": "Can expose a character's secrets, increasing their paranoia.",
-      "trigger_type": "MASTERMIND_PHASE"
-    }
-  ],
-  "hidden_role": "FRIEND"
+    "scoop.json"
+  ]
 }

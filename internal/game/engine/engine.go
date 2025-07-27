@@ -88,10 +88,10 @@ func NewGameEngine(gameID int32, logger *zap.Logger, script *model.Script, playe
 	for playerID, p := range players {
 		if p.Role == model.PlayerRole_PLAYER_ROLE_MASTERMIND {
 			ge.mastermindPlayerID = playerID
-			// p.Hand = slices.Clone(data.MastermindCards)
+			p.Hand = slices.Clone(data.MastermindCards)
 		} else {
 			ge.protagonistPlayerIDs = append(ge.protagonistPlayerIDs, playerID)
-			// p.Hand = slices.Clone(data.ProtagonistCards)
+			p.Hand = slices.Clone(data.ProtagonistCards)
 		}
 	}
 

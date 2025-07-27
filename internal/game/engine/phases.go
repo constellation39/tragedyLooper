@@ -80,20 +80,23 @@ func (ge *GameEngine) handleCardResolvePhase() {
 
 func (ge *GameEngine) handleAbilitiesPhase() {
 	ge.logger.Info("Abilities Phase")
-	// This phase can be complex, involving player choices.
-	// For now, we assume a simple flow where the Mastermind might use an ability.
-	mastermindPlayer := ge.GameState.Players[ge.mastermindPlayerID]
-	if !ge.playerReady[mastermindPlayer.Id] {
-		if mastermindPlayer.IsLlm {
-			go ge.triggerLLMPlayerAction(mastermindPlayer.Id)
+
+	allPlayersReady := true
+	for playerID, player := range ge.GameState.Players {
+		if ge.playerReady[playerID] {
+			continue
 		}
-		return // Wait for mastermind action/readiness
+		if player.IsLlm {
+			go ge.triggerLLMPlayerAction(playerID)
+		}
+		allPlayersReady = false
 	}
 
-	// After mastermind, protagonists might act. This requires more state and player interaction.
-	// For now, we'll just move to the next phase.
-	ge.resetPlayerReadiness()
-	ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_INCIDENTS
+	if allPlayersReady {
+		ge.logger.Info("All players ready for Incidents Phase.")
+		ge.resetPlayerReadiness()
+		ge.GameState.CurrentPhase = model.GamePhase_GAME_PHASE_INCIDENTS
+	}
 }
 
 func (ge *GameEngine) handleIncidentsPhase() {
