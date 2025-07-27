@@ -7,12 +7,11 @@
 package model
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -446,6 +445,66 @@ func (x *LocationCondition) GetIsAlone() bool {
 	return false
 }
 
+type Tragedy struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Culprit       string                 `protobuf:"bytes,2,opt,name=culprit,proto3" json:"culprit,omitempty"`
+	Conditions    []*TragedyCondition    `protobuf:"bytes,3,rep,name=conditions,proto3" json:"conditions,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Tragedy) Reset() {
+	*x = Tragedy{}
+	mi := &file_proto_v1_tragedy_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Tragedy) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Tragedy) ProtoMessage() {}
+
+func (x *Tragedy) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_v1_tragedy_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Tragedy.ProtoReflect.Descriptor instead.
+func (*Tragedy) Descriptor() ([]byte, []int) {
+	return file_proto_v1_tragedy_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *Tragedy) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Tragedy) GetCulprit() string {
+	if x != nil {
+		return x.Culprit
+	}
+	return ""
+}
+
+func (x *Tragedy) GetConditions() []*TragedyCondition {
+	if x != nil {
+		return x.Conditions
+	}
+	return nil
+}
+
 var File_proto_v1_tragedy_proto protoreflect.FileDescriptor
 
 const file_proto_v1_tragedy_proto_rawDesc = "" +
@@ -476,7 +535,13 @@ const file_proto_v1_tragedy_proto_rawDesc = "" +
 	"\x11LocationCondition\x12!\n" +
 	"\fcharacter_id\x18\x01 \x01(\tR\vcharacterId\x122\n" +
 	"\blocation\x18\x02 \x01(\x0e2\x16.proto.v1.LocationTypeR\blocation\x12\x19\n" +
-	"\bis_alone\x18\x03 \x01(\bR\aisAlone*U\n" +
+	"\bis_alone\x18\x03 \x01(\bR\aisAlone\"s\n" +
+	"\aTragedy\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
+	"\aculprit\x18\x02 \x01(\tR\aculprit\x12:\n" +
+	"\n" +
+	"conditions\x18\x03 \x03(\v2\x1a.proto.v1.TragedyConditionR\n" +
+	"conditions*U\n" +
 	"\x04Stat\x12\x14\n" +
 	"\x10STAT_UNSPECIFIED\x10\x00\x12\x11\n" +
 	"\rSTAT_PARANOIA\x10\x01\x12\x11\n" +
@@ -503,7 +568,7 @@ func file_proto_v1_tragedy_proto_rawDescGZIP() []byte {
 }
 
 var file_proto_v1_tragedy_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_proto_v1_tragedy_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_proto_v1_tragedy_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_proto_v1_tragedy_proto_goTypes = []any{
 	(Stat)(0),                 // 0: proto.v1.Stat
 	(Operator)(0),             // 1: proto.v1.Operator
@@ -511,26 +576,28 @@ var file_proto_v1_tragedy_proto_goTypes = []any{
 	(*Condition)(nil),         // 3: proto.v1.Condition
 	(*StatCondition)(nil),     // 4: proto.v1.StatCondition
 	(*LocationCondition)(nil), // 5: proto.v1.LocationCondition
-	(TragedyType)(0),          // 6: proto.v1.TragedyType
-	(TargetRuleType)(0),       // 7: proto.v1.TargetRuleType
-	(*Ability)(nil),           // 8: proto.v1.Ability
-	(LocationType)(0),         // 9: proto.v1.LocationType
+	(*Tragedy)(nil),           // 6: proto.v1.Tragedy
+	(TragedyType)(0),          // 7: proto.v1.TragedyType
+	(TargetRuleType)(0),       // 8: proto.v1.TargetRuleType
+	(*Ability)(nil),           // 9: proto.v1.Ability
+	(LocationType)(0),         // 10: proto.v1.LocationType
 }
 var file_proto_v1_tragedy_proto_depIdxs = []int32{
-	6, // 0: proto.v1.TragedyCondition.tragedy_type:type_name -> proto.v1.TragedyType
-	3, // 1: proto.v1.TragedyCondition.conditions:type_name -> proto.v1.Condition
-	7, // 2: proto.v1.TragedyCondition.target_rule:type_name -> proto.v1.TargetRuleType
-	8, // 3: proto.v1.TragedyCondition.abilities:type_name -> proto.v1.Ability
-	4, // 4: proto.v1.Condition.stat_condition:type_name -> proto.v1.StatCondition
-	5, // 5: proto.v1.Condition.location_condition:type_name -> proto.v1.LocationCondition
-	0, // 6: proto.v1.StatCondition.stat:type_name -> proto.v1.Stat
-	1, // 7: proto.v1.StatCondition.operator:type_name -> proto.v1.Operator
-	9, // 8: proto.v1.LocationCondition.location:type_name -> proto.v1.LocationType
-	9, // [9:9] is the sub-list for method output_type
-	9, // [9:9] is the sub-list for method input_type
-	9, // [9:9] is the sub-list for extension type_name
-	9, // [9:9] is the sub-list for extension extendee
-	0, // [0:9] is the sub-list for field type_name
+	7,  // 0: proto.v1.TragedyCondition.tragedy_type:type_name -> proto.v1.TragedyType
+	3,  // 1: proto.v1.TragedyCondition.conditions:type_name -> proto.v1.Condition
+	8,  // 2: proto.v1.TragedyCondition.target_rule:type_name -> proto.v1.TargetRuleType
+	9,  // 3: proto.v1.TragedyCondition.abilities:type_name -> proto.v1.Ability
+	4,  // 4: proto.v1.Condition.stat_condition:type_name -> proto.v1.StatCondition
+	5,  // 5: proto.v1.Condition.location_condition:type_name -> proto.v1.LocationCondition
+	0,  // 6: proto.v1.StatCondition.stat:type_name -> proto.v1.Stat
+	1,  // 7: proto.v1.StatCondition.operator:type_name -> proto.v1.Operator
+	10, // 8: proto.v1.LocationCondition.location:type_name -> proto.v1.LocationType
+	2,  // 9: proto.v1.Tragedy.conditions:type_name -> proto.v1.TragedyCondition
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_proto_v1_tragedy_proto_init() }
@@ -551,7 +618,7 @@ func file_proto_v1_tragedy_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_v1_tragedy_proto_rawDesc), len(file_proto_v1_tragedy_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

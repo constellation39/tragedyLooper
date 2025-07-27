@@ -124,8 +124,8 @@
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Card 表示一张行动卡。",
-            "description": "Card 表示一张行动卡。  Card 表示一张行动卡。"
+            "title": "Card",
+            "description": "Card 表示一张行动卡。"
         },
         "proto.v1.Effect": {
             "properties": {

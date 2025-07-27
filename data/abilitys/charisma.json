@@ -2,7 +2,7 @@
   "id": 3,
   "name": "Charisma",
   "description": "Can influence other characters' goodwill.",
-  "trigger_type": "MASTERMIND_PHASE",
+  "trigger_type": "ABILITY_TRIGGER_TYPE_MASTERMIND_PHASE",
   "effect": {
     "adjust_goodwill_effect": {
       "amount": 1

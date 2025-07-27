@@ -1,6 +1,16 @@
 {
   "name": "Office Worker",
   "abilities": [
-    "suspicious_presence.json"
+    {
+      "id": 101,
+      "name": "Suspicious Presence",
+      "description": "At the end of each day, all other characters at the same location have their paranoia increased by 1.",
+      "trigger_type": "ABILITY_TRIGGER_TYPE_DAY_START",
+      "effect": {
+        "adjust_paranoia_effect": {
+          "amount": 1
+        }
+      }
+    }
   ]
 }

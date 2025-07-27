@@ -1,73 +1,25 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/Script",
+    "$ref": "#/definitions/Tragedy",
     "definitions": {
-        "Script": {
+        "Tragedy": {
             "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "唯一标识符"
-                },
                 "name": {
-                    "type": "string",
-                    "description": "剧本名称"
+                    "type": "string"
                 },
-                "description": {
-                    "type": "string",
-                    "description": "剧本描述"
+                "culprit": {
+                    "type": "string"
                 },
-                "main_plot": {
-                    "type": "string",
-                    "description": "主线剧情"
-                },
-                "sub_plots": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array",
-                    "description": "支线剧情"
-                },
-                "characters": {
-                    "items": {
-                        "$ref": "#/definitions/proto.v1.CharacterConfig"
-                    },
-                    "type": "array",
-                    "description": "角色配置"
-                },
-                "tragedies": {
+                "conditions": {
                     "items": {
                         "$ref": "#/definitions/proto.v1.TragedyCondition"
                     },
-                    "type": "array",
-                    "description": "悲剧条件"
-                },
-                "loop_count": {
-                    "type": "integer",
-                    "description": "循环总次数"
-                },
-                "days_per_loop": {
-                    "type": "integer",
-                    "description": "每循环天数"
-                },
-                "win_conditions": {
-                    "items": {
-                        "$ref": "#/definitions/proto.v1.GameEndCondition"
-                    },
-                    "type": "array",
-                    "description": "胜利条件"
-                },
-                "lose_conditions": {
-                    "items": {
-                        "$ref": "#/definitions/proto.v1.GameEndCondition"
-                    },
-                    "type": "array",
-                    "description": "失败条件"
+                    "type": "array"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Script",
-            "description": "Script 定义一个特定的游戏场景。"
+            "title": "Tragedy"
         },
         "proto.v1.Ability": {
             "properties": {
@@ -182,84 +134,6 @@
             "title": "Adjust Paranoia Effect",
             "description": "AdjustParanoiaEffect 调整角色的妄想值。"
         },
-        "proto.v1.CharacterConfig": {
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "引用基础角色定义"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "角色名称"
-                },
-                "initial_location": {
-                    "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
-                        0,
-                        "LOCATION_TYPE_HOSPITAL",
-                        1,
-                        "LOCATION_TYPE_SHRINE",
-                        2,
-                        "LOCATION_TYPE_CITY",
-                        3,
-                        "LOCATION_TYPE_SCHOOL",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Location Type",
-                    "description": "LocationType 定义游戏中的可能地点。"
-                },
-                "hidden_role": {
-                    "enum": [
-                        "ROLE_TYPE_UNSPECIFIED",
-                        0,
-                        "ROLE_TYPE_INNOCENT",
-                        1,
-                        "ROLE_TYPE_KILLER",
-                        2,
-                        "ROLE_TYPE_BRAIN",
-                        3,
-                        "ROLE_TYPE_KEY_PERSON",
-                        4,
-                        "ROLE_TYPE_FRIEND",
-                        5,
-                        "ROLE_TYPE_CONSPIRACY_THEORIST",
-                        6,
-                        "ROLE_TYPE_CULTIST",
-                        7,
-                        "ROLE_TYPE_MASTERMIND",
-                        8,
-                        "ROLE_TYPE_PROTAGONIST",
-                        9
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Role Type",
-                    "description": "RoleType 定义了玩家在游戏中的具体角色。"
-                },
-                "is_culprit_for": {
-                    "type": "string",
-                    "description": "如果此角色是特定悲剧的嫌疑犯"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Character Config",
-            "description": "CharacterConfig 定义特定剧本中角色的初始状态。"
-        },
         "proto.v1.Condition": {
             "properties": {
                 "stat_condition": {
@@ -299,34 +173,6 @@
             "type": "object",
             "title": "Effect",
             "description": "Effect 接口定义了一个效果的核心行为。"
-        },
-        "proto.v1.GameEndCondition": {
-            "properties": {
-                "type": {
-                    "enum": [
-                        "GAME_END_CONDITION_TYPE_UNSPECIFIED",
-                        0,
-                        "GAME_END_CONDITION_TYPE_ALL_TRAGEDIES_PREVENTED",
-                        1,
-                        "GAME_END_CONDITION_TYPE_A_TRAGEDY_OCCURS",
-                        2
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Game End Condition Type",
-                    "description": "Enum for different types of game end conditions"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Game End Condition",
-            "description": "Defines a single condition for winning or losing the game."
         },
         "proto.v1.LocationCondition": {
             "properties": {

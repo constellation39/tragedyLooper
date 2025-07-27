@@ -79,8 +79,8 @@
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Ability 定义角色的特殊技能。",
-            "description": "Ability 定义角色的特殊技能。  Ability 定义角色的特殊技能。"
+            "title": "Ability",
+            "description": "Ability 定义角色的特殊技能。"
         },
         "proto.v1.AdjustGoodwillEffect": {
             "properties": {

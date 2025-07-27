@@ -1,6 +1,17 @@
 {
   "name": "High School Girl",
   "abilities": [
-    "vigilant_protection.json"
+    {
+      "id": 1,
+      "name": "Vigilant Protection",
+      "description": "If an ally is targeted, you can increase your paranoia to protect them.",
+      "trigger_type": "ABILITY_TRIGGER_TYPE_PASSIVE",
+      "effect": {
+        "adjust_paranoia_effect": {
+          "amount": 1
+        }
+      },
+      "once_per_loop": false
+    }
   ]
 }

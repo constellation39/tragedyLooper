@@ -38,6 +38,11 @@ clean:
 	@echo "Cleaning..."
 	@$(SHELL_PREFIX) go run ./tools/rmrf bin
 
+# Validate data files
+validate-data:
+	@echo "Validating data files..."
+	@$(SHELL_PREFIX) go run ./tools/autovalidator/main.go
+
 # Lint the code
 lint: format
 	@echo "Linting..."

@@ -1,8 +1,8 @@
 {
   "id": 1,
   "name": "Move",
-  "card_type": "MOVEMENT",
-  "owner_role": "PROTAGONIST",
+  "card_type": "CARD_TYPE_MOVEMENT",
+  "owner_role": "PLAYER_ROLE_PROTAGONIST",
   "effect": {
     "move_character_effect": {}
   },

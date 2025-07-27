@@ -1,6 +1,17 @@
 {
   "name": "Doctor",
   "abilities": [
-    "medical_knowledge.json"
+    {
+      "id": 2,
+      "name": "Medical Knowledge",
+      "description": "Can perform medical examinations to gain information.",
+      "trigger_type": "ABILITY_TRIGGER_TYPE_MASTERMIND_PHASE",
+      "effect": {
+        "adjust_intrigue_effect": {
+          "amount": -1
+        }
+      },
+      "once_per_loop": true
+    }
   ]
 }

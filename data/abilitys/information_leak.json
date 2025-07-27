@@ -2,7 +2,7 @@
   "id": 6,
   "name": "Information Leak",
   "description": "Can reveal a character's location to all players.",
-  "trigger_type": "MASTERMIND_PHASE",
+  "trigger_type": "ABILITY_TRIGGER_TYPE_MASTERMIND_PHASE",
   "effect": {
     "adjust_intrigue_effect": {
       "amount": 1

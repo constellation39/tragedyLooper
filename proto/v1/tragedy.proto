@@ -58,3 +58,9 @@ message LocationCondition {
   LocationType location = 2;
   bool is_alone = 3; // 是否独处
 }
+
+message Tragedy {
+  string name = 1;
+  string culprit = 2;
+  repeated TragedyCondition conditions = 3;
+}

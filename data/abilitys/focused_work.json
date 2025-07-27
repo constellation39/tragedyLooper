@@ -2,7 +2,7 @@
   "id": 4,
   "name": "Focused Work",
   "description": "Can uncover intrigue by focusing on a single location.",
-  "trigger_type": "MASTERMIND_PHASE",
+  "trigger_type": "ABILITY_TRIGGER_TYPE_MASTERMIND_PHASE",
   "effect": {
     "adjust_intrigue_effect": {
       "amount": -2

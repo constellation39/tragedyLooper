@@ -1,8 +1,8 @@
 {
   "id": 4,
   "name": "Add Paranoia",
-  "card_type": "PARANOIA",
-  "owner_role": "MASTERMIND",
+  "card_type": "CARD_TYPE_PARANOIA",
+  "owner_role": "PLAYER_ROLE_MASTERMIND",
   "effect": {
     "adjust_paranoia_effect": {
       "amount": 1
