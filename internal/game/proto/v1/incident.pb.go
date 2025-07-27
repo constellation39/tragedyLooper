@@ -297,7 +297,7 @@ const file_v1_incident_proto_rawDesc = "" +
 	"\tincidents\x18\x01 \x03(\v2$.v1.IncidentConfigLib.IncidentsEntryR\tincidents\x1aP\n" +
 	"\x0eIncidentsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12(\n" +
-	"\x05value\x18\x02 \x01(\v2\x12.v1.IncidentConfigR\x05value:\x028\x01B)Z'tragedylooper/internal/game/proto/v1;v1b\x06proto3"
+	"\x05value\x18\x02 \x01(\v2\x12.v1.IncidentConfigR\x05value:\x028\x01B&Z$tragedylooper/internal/game/proto/v1b\x06proto3"
 
 var (
 	file_v1_incident_proto_rawDescOnce sync.Once

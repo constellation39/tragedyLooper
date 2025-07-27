@@ -124,9 +124,14 @@ func (x *CardConfig) GetPriority() int32 {
 
 // 卡牌运行时实例
 type Card struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Config        *CardConfig            `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`                                    // 卡牌ID，关联到CardConfig
-	UsedThisLoop  bool                   `protobuf:"varint,2,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"` // 运行时状态：本循环是否已使用
+	state        protoimpl.MessageState `protogen:"open.v1"`
+	Config       *CardConfig            `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`                                    // 卡牌ID，关联到CardConfig
+	UsedThisLoop bool                   `protobuf:"varint,2,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"` // 运行时状态：本循环是否已使用
+	// Types that are valid to be assigned to Target:
+	//
+	//	*Card_TargetCharacterId
+	//	*Card_TargetLocation
+	Target        isCard_Target `protobuf_oneof:"target"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -174,6 +179,47 @@ func (x *Card) GetUsedThisLoop() bool {
 	}
 	return false
 }
+
+func (x *Card) GetTarget() isCard_Target {
+	if x != nil {
+		return x.Target
+	}
+	return nil
+}
+
+func (x *Card) GetTargetCharacterId() int32 {
+	if x != nil {
+		if x, ok := x.Target.(*Card_TargetCharacterId); ok {
+			return x.TargetCharacterId
+		}
+	}
+	return 0
+}
+
+func (x *Card) GetTargetLocation() LocationType {
+	if x != nil {
+		if x, ok := x.Target.(*Card_TargetLocation); ok {
+			return x.TargetLocation
+		}
+	}
+	return LocationType_LOCATION_TYPE_UNSPECIFIED
+}
+
+type isCard_Target interface {
+	isCard_Target()
+}
+
+type Card_TargetCharacterId struct {
+	TargetCharacterId int32 `protobuf:"varint,3,opt,name=target_character_id,json=targetCharacterId,proto3,oneof"` // 如果能力有目标角色，指定其ID
+}
+
+type Card_TargetLocation struct {
+	TargetLocation LocationType `protobuf:"varint,4,opt,name=target_location,json=targetLocation,proto3,enum=v1.LocationType,oneof"` // 如果能力有目标地点，指定其地点
+}
+
+func (*Card_TargetCharacterId) isCard_Target() {}
+
+func (*Card_TargetLocation) isCard_Target() {}
 
 // 卡牌配置库
 type CardConfigLib struct {
@@ -281,10 +327,13 @@ const file_v1_card_proto_rawDesc = "" +
 	"\x06effect\x18\x06 \x01(\v2\n" +
 	".v1.EffectR\x06effect\x12\"\n" +
 	"\ronce_per_loop\x18\a \x01(\bR\voncePerLoop\x12\x1a\n" +
-	"\bpriority\x18\b \x01(\x05R\bpriority\"T\n" +
+	"\bpriority\x18\b \x01(\x05R\bpriority\"\xcd\x01\n" +
 	"\x04Card\x12&\n" +
 	"\x06config\x18\x01 \x01(\v2\x0e.v1.CardConfigR\x06config\x12$\n" +
-	"\x0eused_this_loop\x18\x02 \x01(\bR\fusedThisLoop\"\x8d\x01\n" +
+	"\x0eused_this_loop\x18\x02 \x01(\bR\fusedThisLoop\x120\n" +
+	"\x13target_character_id\x18\x03 \x01(\x05H\x00R\x11targetCharacterId\x12;\n" +
+	"\x0ftarget_location\x18\x04 \x01(\x0e2\x10.v1.LocationTypeH\x00R\x0etargetLocationB\b\n" +
+	"\x06target\"\x8d\x01\n" +
 	"\rCardConfigLib\x122\n" +
 	"\x05cards\x18\x01 \x03(\v2\x1c.v1.CardConfigLib.CardsEntryR\x05cards\x1aH\n" +
 	"\n" +
@@ -292,7 +341,7 @@ const file_v1_card_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12$\n" +
 	"\x05value\x18\x02 \x01(\v2\x0e.v1.CardConfigR\x05value:\x028\x01\"*\n" +
 	"\bCardList\x12\x1e\n" +
-	"\x05cards\x18\x01 \x03(\v2\b.v1.CardR\x05cardsB)Z'tragedylooper/internal/game/proto/v1;v1b\x06proto3"
+	"\x05cards\x18\x01 \x03(\v2\b.v1.CardR\x05cardsB&Z$tragedylooper/internal/game/proto/v1b\x06proto3"
 
 var (
 	file_v1_card_proto_rawDescOnce sync.Once
@@ -316,20 +365,22 @@ var file_v1_card_proto_goTypes = []any{
 	(CardType)(0),         // 5: v1.CardType
 	(PlayerRole)(0),       // 6: v1.PlayerRole
 	(*Effect)(nil),        // 7: v1.Effect
+	(LocationType)(0),     // 8: v1.LocationType
 }
 var file_v1_card_proto_depIdxs = []int32{
 	5, // 0: v1.CardConfig.card_type:type_name -> v1.CardType
 	6, // 1: v1.CardConfig.owner_role:type_name -> v1.PlayerRole
 	7, // 2: v1.CardConfig.effect:type_name -> v1.Effect
 	0, // 3: v1.Card.config:type_name -> v1.CardConfig
-	4, // 4: v1.CardConfigLib.cards:type_name -> v1.CardConfigLib.CardsEntry
-	1, // 5: v1.CardList.cards:type_name -> v1.Card
-	0, // 6: v1.CardConfigLib.CardsEntry.value:type_name -> v1.CardConfig
-	7, // [7:7] is the sub-list for method output_type
-	7, // [7:7] is the sub-list for method input_type
-	7, // [7:7] is the sub-list for extension type_name
-	7, // [7:7] is the sub-list for extension extendee
-	0, // [0:7] is the sub-list for field type_name
+	8, // 4: v1.Card.target_location:type_name -> v1.LocationType
+	4, // 5: v1.CardConfigLib.cards:type_name -> v1.CardConfigLib.CardsEntry
+	1, // 6: v1.CardList.cards:type_name -> v1.Card
+	0, // 7: v1.CardConfigLib.CardsEntry.value:type_name -> v1.CardConfig
+	8, // [8:8] is the sub-list for method output_type
+	8, // [8:8] is the sub-list for method input_type
+	8, // [8:8] is the sub-list for extension type_name
+	8, // [8:8] is the sub-list for extension extendee
+	0, // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_v1_card_proto_init() }
@@ -339,6 +390,10 @@ func file_v1_card_proto_init() {
 	}
 	file_v1_effect_proto_init()
 	file_v1_enums_proto_init()
+	file_v1_card_proto_msgTypes[1].OneofWrappers = []any{
+		(*Card_TargetCharacterId)(nil),
+		(*Card_TargetLocation)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

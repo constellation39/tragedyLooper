@@ -12,7 +12,7 @@ import (
 // GameEngine manages the state and logic of a single game instance.
 type GameEngine struct {
 	GameState            *model.GameState
-	gameData             loader.GameDataAccessor
+	gameData             loader.GameConfigAccessor
 	requestChan          chan engineRequest
 	gameEventChan        chan *model.GameEvent
 	gameControlChan      chan struct{}
@@ -40,7 +40,7 @@ type llmActionCompleteRequest struct {
 }
 
 // NewGameEngine creates a new game engine instance.
-func NewGameEngine(gameID string, logger *zap.Logger, players map[int32]*model.Player, llmClient llm.Client, gameData loader.GameDataAccessor) *GameEngine {
+func NewGameEngine(gameID string, logger *zap.Logger, players map[int32]*model.Player, llmClient llm.Client, gameData loader.GameConfigAccessor) *GameEngine {
 	gs := &model.GameState{
 		GameId:                  gameID,
 		Characters:              make(map[int32]*model.Character),

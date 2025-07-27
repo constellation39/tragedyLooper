@@ -352,6 +352,34 @@
                 "used_this_loop": {
                     "type": "boolean",
                     "description": "运行时状态：本循环是否已使用"
+                },
+                "target_character_id": {
+                    "type": "integer",
+                    "description": "如果能力有目标角色，指定其ID"
+                },
+                "target_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
                 }
             },
             "additionalProperties": true,

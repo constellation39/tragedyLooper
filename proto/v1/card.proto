@@ -23,6 +23,10 @@ message CardConfig {
 message Card {
   CardConfig config = 1;               // 卡牌ID，关联到CardConfig
   bool used_this_loop = 2;    // 运行时状态：本循环是否已使用
+  oneof target {
+    int32 target_character_id = 3;  // 如果能力有目标角色，指定其ID
+    LocationType target_location = 4; // 如果能力有目标地点，指定其地点
+  }
 }
 
 // 卡牌配置库

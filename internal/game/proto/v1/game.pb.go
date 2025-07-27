@@ -835,7 +835,7 @@ const file_v1_game_proto_rawDesc = "" +
 	"\x10PlayerViewPlayer\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\"\n" +
-	"\x04role\x18\x03 \x01(\x0e2\x0e.v1.PlayerRoleR\x04roleB)Z'tragedylooper/internal/game/proto/v1;v1b\x06proto3"
+	"\x04role\x18\x03 \x01(\x0e2\x0e.v1.PlayerRoleR\x04roleB&Z$tragedylooper/internal/game/proto/v1b\x06proto3"
 
 var (
 	file_v1_game_proto_rawDescOnce sync.Once

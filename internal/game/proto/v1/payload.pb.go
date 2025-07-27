@@ -509,7 +509,7 @@ const file_v1_payload_proto_rawDesc = "" +
 	"\n" +
 	"make_guess\x18\x03 \x01(\v2\x14.v1.MakeGuessPayloadH\x00R\tmakeGuess\x12>\n" +
 	"\rchoose_option\x18\x04 \x01(\v2\x17.v1.ChooseOptionPayloadH\x00R\fchooseOptionB\t\n" +
-	"\apayloadB)Z'tragedylooper/internal/game/proto/v1;v1b\x06proto3"
+	"\apayloadB&Z$tragedylooper/internal/game/proto/v1b\x06proto3"
 
 var (
 	file_v1_payload_proto_rawDescOnce sync.Once

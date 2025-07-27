@@ -35,9 +35,9 @@ func (ge *GameEngine) handlePlayCardAction(player *model.Player, payload *model.
 	var playedCard *model.Card
 	cardFound := false
 	for i, card := range player.Hand {
-		if card.Id == payload.CardId {
-			if card.OncePerLoop && card.UsedThisLoop {
-				ge.logger.Warn("Attempted to play a card that was already used this loop", zap.Int32("cardID", card.Id))
+		if card.Config.Id == payload.CardId {
+			if card.Config.OncePerLoop && card.UsedThisLoop {
+				ge.logger.Warn("Attempted to play a card that was already used this loop", zap.Int32("cardID", card.Config.Id))
 				return // Card already used
 			}
 			playedCard = card
@@ -64,8 +64,8 @@ func (ge *GameEngine) handlePlayCardAction(player *model.Player, payload *model.
 	if _, ok := ge.GameState.PlayedCardsThisDay[player.Id]; !ok {
 		ge.GameState.PlayedCardsThisDay[player.Id] = playedCard
 	}
-	if _, ok := ge.GameState.PlayedCardsThisLoop[playedCard.Id]; !ok {
-		ge.GameState.PlayedCardsThisLoop[playedCard.Id] = true
+	if _, ok := ge.GameState.PlayedCardsThisLoop[playedCard.Config.Id]; !ok {
+		ge.GameState.PlayedCardsThisLoop[playedCard.Config.Id] = true
 	}
 
 	ge.playerReady[player.Id] = true
@@ -82,7 +82,7 @@ func (ge *GameEngine) handleUseAbilityAction(player *model.Player, payload *mode
 	}
 
 	for i := range char.Abilities {
-		if char.Abilities[i].Id == payload.AbilityId {
+		if char.Abilities[i].Config.Id == payload.AbilityId {
 			ability = char.Abilities[i]
 			abilityFound = true
 			break
@@ -94,12 +94,12 @@ func (ge *GameEngine) handleUseAbilityAction(player *model.Player, payload *mode
 		return
 	}
 
-	if err := ge.applyEffect(ability.Effect, ability, payload); err != nil {
-		ge.logger.Error("Failed to apply effect for ability", zap.String("abilityName", ability.Name), zap.Error(err))
+	if err := ge.applyEffect(ability.Config.Effect, ability, payload); err != nil {
+		ge.logger.Error("Failed to apply effect for ability", zap.String("abilityName", ability.Config.Name), zap.Error(err))
 		return
 	}
 
-	if ability.OncePerLoop {
+	if ability.Config.OncePerLoop {
 		ability.UsedThisLoop = true
 	}
 }

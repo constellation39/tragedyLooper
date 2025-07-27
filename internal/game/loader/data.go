@@ -24,18 +24,18 @@ func loadDataFromJSON[T any](filePath string) (T, error) {
 	return items, nil
 }
 
-func LoadAbility(dataDir string) (*v1.AbilityLib, error) {
+func LoadAbility(dataDir string) (*v1.AbilityConfigLib, error) {
 	filePath := filepath.Join(dataDir, "AbilityConfigLib.json")
-	abilities, err := loadDataFromJSON[*v1.AbilityLib](filePath)
+	abilities, err := loadDataFromJSON[*v1.AbilityConfigLib](filePath)
 	if err != nil {
 		return nil, err
 	}
 	return abilities, nil
 }
 
-func LoadCard(dataDir string) (*v1.CardLib, error) {
+func LoadCard(dataDir string) (*v1.CardConfigLib, error) {
 	filePath := filepath.Join(dataDir, "CardConfigLib.json")
-	cards, err := loadDataFromJSON[*v1.CardLib](filePath)
+	cards, err := loadDataFromJSON[*v1.CardConfigLib](filePath)
 	if err != nil {
 		return nil, err
 	}
@@ -43,18 +43,18 @@ func LoadCard(dataDir string) (*v1.CardLib, error) {
 	return cards, nil
 }
 
-func LoadCharacter(dataDir string) (*v1.CharacterLib, error) {
+func LoadCharacter(dataDir string) (*v1.CharacterConfigLib, error) {
 	filePath := filepath.Join(dataDir, "CharacterConfigLib.json")
-	characters, err := loadDataFromJSON[*v1.CharacterLib](filePath)
+	characters, err := loadDataFromJSON[*v1.CharacterConfigLib](filePath)
 	if err != nil {
 		return nil, err
 	}
 	return characters, nil
 }
 
-func LoadScript(dataDir, scriptName string) (*v1.Script, error) {
+func LoadScript(dataDir, scriptName string) (*v1.ScriptConfig, error) {
 	filePath := filepath.Join(dataDir, "ScriptConfig", scriptName+".json")
-	script, err := loadDataFromJSON[*v1.Script](filePath)
+	script, err := loadDataFromJSON[*v1.ScriptConfig](filePath)
 	if err != nil {
 		return nil, err
 	}

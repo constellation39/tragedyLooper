@@ -933,7 +933,7 @@ const file_v1_event_proto_rawDesc = "" +
 	"\x16IncidentTriggeredEvent\x12(\n" +
 	"\bincident\x18\x01 \x01(\v2\f.v1.IncidentR\bincident\"L\n" +
 	"\x15TragedyTriggeredEvent\x123\n" +
-	"\ftragedy_type\x18\x01 \x01(\x0e2\x10.v1.IncidentTypeR\vtragedyTypeB)Z'tragedylooper/internal/game/proto/v1;v1b\x06proto3"
+	"\ftragedy_type\x18\x01 \x01(\x0e2\x10.v1.IncidentTypeR\vtragedyTypeB&Z$tragedylooper/internal/game/proto/v1b\x06proto3"
 
 var (
 	file_v1_event_proto_rawDescOnce sync.Once
