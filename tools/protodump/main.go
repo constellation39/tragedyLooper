@@ -9,8 +9,7 @@ import (
 
 func main() {
 	if err := run(); err != nil {
-		fmt.Fprintf(os.Stderr, "error: %v
-", err)
+		fmt.Fprintf(os.Stderr, "error: %v", err)
 		os.Exit(1)
 	}
 }
@@ -26,17 +25,14 @@ func run() error {
 
 	for _, file := range files {
 		if !file.IsDir() && strings.HasSuffix(file.Name(), ".proto") {
-			content.WriteString(fmt.Sprintf("// --- %s ---
-", file.Name()))
+			content.WriteString(fmt.Sprintf("// --- %s ---", file.Name()))
 			filePath := filepath.Join(protoDir, file.Name())
 			fileContent, err := os.ReadFile(filePath)
 			if err != nil {
 				return fmt.Errorf("reading file %s: %w", filePath, err)
 			}
 			content.Write(fileContent)
-			content.WriteString("
-
-")
+			content.WriteString("")
 		}
 	}
 
@@ -50,7 +46,6 @@ func run() error {
 		return fmt.Errorf("writing to temp file: %w", err)
 	}
 
-	fmt.Printf("Proto files dumped to: %s
-", tmpFile.Name())
+	fmt.Printf("Proto files dumped to: %s", tmpFile.Name())
 	return nil
 }

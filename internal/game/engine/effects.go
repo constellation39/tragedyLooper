@@ -27,7 +27,7 @@ func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, 
 	return nil
 }
 
-func (ge *GameEngine) resolveEffectChoices(state *model.GameState, effect *model.Effect, _ *model.Ability, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
+func (ge *GameEngine) resolveEffectChoices(state *model.GameState, effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
 	switch t := effect.EffectType.(type) {
 	case *model.Effect_CompoundEffect:
 		switch t.CompoundEffect.Operator {
