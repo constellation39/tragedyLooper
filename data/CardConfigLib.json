@@ -6,7 +6,11 @@
             "card_type": "MOVEMENT",
             "owner_role": "PROTAGONIST",
             "effect": {
-                "move_character_effect": {}
+                "sub_effects": [
+                    {
+                        "move_character": {}
+                    }
+                ]
             },
             "once_per_loop": false
         },
@@ -16,10 +20,14 @@
             "card_type": "PARANOIA_MINUS",
             "owner_role": "PROTAGONIST",
             "effect": {
-                "adjust_stat": {
-                    "stat_type": "PARANOIA",
-                    "amount": -1
-                }
+                "sub_effects": [
+                    {
+                        "adjust_stat": {
+                            "stat_type": "PARANOIA",
+                            "amount": -1
+                        }
+                    }
+                ]
             },
             "once_per_loop": false
         },
@@ -29,7 +37,11 @@
             "card_type": "MOVEMENT",
             "owner_role": "MASTERMIND",
             "effect": {
-                "move_character_effect": {}
+                "sub_effects": [
+                    {
+                        "move_character": {}
+                    }
+                ]
             },
             "once_per_loop": false
         },
@@ -39,10 +51,14 @@
             "card_type": "PARANOIA_PLUS",
             "owner_role": "MASTERMIND",
             "effect": {
-                "adjust_stat": {
-                    "stat_type": "PARANOIA",
-                    "amount": 1
-                }
+                "sub_effects": [
+                    {
+                        "adjust_stat": {
+                            "stat_type": "PARANOIA",
+                            "amount": 1
+                        }
+                    }
+                ]
             },
             "once_per_loop": false
         },
@@ -52,9 +68,14 @@
             "card_type": "GOODWILL_PLUS",
             "owner_role": "PROTAGONIST",
             "effect": {
-                "adjust_goodwill_effect": {
-                    "amount": 1
-                }
+                "sub_effects": [
+                    {
+                        "adjust_stat": {
+                            "stat_type": "GOODWILL",
+                            "amount": 1
+                        }
+                    }
+                ]
             },
             "once_per_loop": false
         },
@@ -64,9 +85,14 @@
             "card_type": "INTRIGUE_PLUS",
             "owner_role": "PROTAGONIST",
             "effect": {
-                "adjust_intrigue_effect": {
-                    "amount": 1
-                }
+                "sub_effects": [
+                    {
+                        "adjust_stat": {
+                            "stat_type": "INTRIGUE",
+                            "amount": 1
+                        }
+                    }
+                ]
             },
             "once_per_loop": false
         },
@@ -76,9 +102,14 @@
             "card_type": "GOODWILL_PLUS",
             "owner_role": "MASTERMIND",
             "effect": {
-                "adjust_goodwill_effect": {
-                    "amount": 1
-                }
+                "sub_effects": [
+                    {
+                        "adjust_stat": {
+                            "stat_type": "GOODWILL",
+                            "amount": 1
+                        }
+                    }
+                ]
             },
             "once_per_loop": false
         },
@@ -88,9 +119,14 @@
             "card_type": "INTRIGUE_PLUS",
             "owner_role": "MASTERMIND",
             "effect": {
-                "adjust_intrigue_effect": {
-                    "amount": 1
-                }
+                "sub_effects": [
+                    {
+                        "adjust_stat": {
+                            "stat_type": "INTRIGUE",
+                            "amount": 1
+                        }
+                    }
+                ]
             },
             "once_per_loop": false
         },
@@ -100,9 +136,13 @@
             "card_type": "FORBID_MOVEMENT",
             "owner_role": "PROTAGONIST",
             "effect": {
-                "forbid": {
-                "forbid_type": "MOVEMENT"
-            }
+                "sub_effects": [
+                    {
+                        "forbid": {
+                            "forbid_type": "MOVEMENT"
+                        }
+                    }
+                ]
             },
             "once_per_loop": false
         },
@@ -112,7 +152,13 @@
             "card_type": "FORBID_PARANOIA",
             "owner_role": "PROTAGONIST",
             "effect": {
-                "forbid_paranoia_effect": {}
+                "sub_effects": [
+                    {
+                        "forbid": {
+                            "forbid_type": "PARANOIA_CHANGE"
+                        }
+                    }
+                ]
             },
             "once_per_loop": false
         },
@@ -122,9 +168,13 @@
             "card_type": "FORBID_GOODWILL",
             "owner_role": "MASTERMIND",
             "effect": {
-                "forbid": {
-                "forbid_type": "GOODWILL_CHANGE"
-            }
+                "sub_effects": [
+                    {
+                        "forbid": {
+                            "forbid_type": "GOODWILL_CHANGE"
+                        }
+                    }
+                ]
             },
             "once_per_loop": false
         },
@@ -134,9 +184,13 @@
             "card_type": "FORBID_INTRIGUE",
             "owner_role": "PROTAGONIST",
             "effect": {
-                "forbid": {
-                "forbid_type": "INTRIGUE_CHANGE"
-            }
+                "sub_effects": [
+                    {
+                        "forbid": {
+                            "forbid_type": "INTRIGUE_CHANGE"
+                        }
+                    }
+                ]
             },
             "once_per_loop": false
         },
@@ -146,7 +200,13 @@
             "card_type": "FORBID_PARANOIA",
             "owner_role": "MASTERMIND",
             "effect": {
-                "forbid_paranoia_effect": {}
+                "sub_effects": [
+                    {
+                        "forbid": {
+                            "forbid_type": "PARANOIA_CHANGE"
+                        }
+                    }
+                ]
             },
             "once_per_loop": false
         },
@@ -156,10 +216,14 @@
             "card_type": "GOODWILL_PLUS",
             "owner_role": "PROTAGONIST",
             "effect": {
-                "adjust_stat": {
-                    "stat_type": "GOODWILL",
-                    "amount": 2
-                }
+                "sub_effects": [
+                    {
+                        "adjust_stat": {
+                            "stat_type": "GOODWILL",
+                            "amount": 2
+                        }
+                    }
+                ]
             },
             "once_per_loop": true
         },
@@ -169,10 +233,14 @@
             "card_type": "INTRIGUE_PLUS",
             "owner_role": "MASTERMIND",
             "effect": {
-                "adjust_stat": {
-                    "stat_type": "INTRIGUE",
-                    "amount": 2
-                }
+                "sub_effects": [
+                    {
+                        "adjust_stat": {
+                            "stat_type": "INTRIGUE",
+                            "amount": 2
+                        }
+                    }
+                ]
             },
             "once_per_loop": true
         }

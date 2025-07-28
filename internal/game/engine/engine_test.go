@@ -66,13 +66,12 @@ func TestNewGameEngine(t *testing.T) {
 	assert.Equal(t, "test-game", ge.GameState.GameId)
 	assert.Equal(t, int32(1), ge.mastermindPlayerID)
 	assert.ElementsMatch(t, []int32{2, 3}, ge.protagonistPlayerIDs)
-	assert.Len(t, ge.GameState.Characters, 2)
-	assert.Contains(t, ge.characterNameToID, "Character A")
-	assert.Equal(t, int32(101), ge.characterNameToID["Character A"])
+	assert.Len(t, ge.GameState.Characters, 35)
+	
 }
 
 func TestGameLoopLifecycle(t *testing.T) {
-	ge := newTestGameEngine(t, testLogger, testEmptyPlayers, &MockGameDataAccessor{})
+	ge := newTestGameEngine(t, testLogger, testEmptyPlayers, testGameData)
 
 	ge.StartGameLoop()
 	// Give the loop a moment to start
@@ -91,11 +90,11 @@ func TestGameLoopLifecycle(t *testing.T) {
 }
 
 func TestSubmitPlayerAction(t *testing.T) {
-	ge := newTestGameEngine(t, testLogger, testMastermindOnly, &MockGameDataAccessor{})
+	ge := newTestGameEngine(t, testLogger, testMastermindOnly, testGameData)
 	ge.StartGameLoop()
 	defer ge.StopGameLoop()
 
-	action := &model.PlayerActionPayload{Payload: &model.PlayerActionPayload_PlayCard{PlayCard: &model.PlayCardPayload{CardId: 1, Target: &model.PlayCardPayload_TargetCharacterId{TargetCharacterId: 101}}}}
+	action := &model.PlayerActionPayload{Payload: &model.PlayerActionPayload_PlayCard{PlayCard: &model.PlayCardPayload{CardId: 1, Target: &model.PlayCardPayload_TargetCharacterId{TargetCharacterId: 1}}}}
 	ge.SubmitPlayerAction(1, action)
 
 	// Check if the action was received by the loop
@@ -128,61 +127,61 @@ func TestCharacterStateChanges(t *testing.T) {
 	defer ge.StopGameLoop()
 
 	// Test Paranoia Adjustment
-	ge.applyAndPublishEvent(model.GameEventType_PARANOIA_ADJUSTED, &model.ParanoiaAdjustedEvent{CharacterId: 101, NewParanoia: 5, Amount: 5})
+	ge.applyAndPublishEvent(model.GameEventType_PARANOIA_ADJUSTED, &model.ParanoiaAdjustedEvent{CharacterId: 1, NewParanoia: 5, Amount: 5})
 	select {
 	case event := <-ge.gameEventChan:
 		assert.Equal(t, model.GameEventType_PARANOIA_ADJUSTED, event.Type)
 		payload := &model.ParanoiaAdjustedEvent{}
 		err := event.Payload.UnmarshalTo(payload)
 		assert.NoError(t, err)
-		assert.Equal(t, int32(101), payload.CharacterId)
+		assert.Equal(t, int32(1), payload.CharacterId)
 		assert.Equal(t, int32(5), payload.NewParanoia)
-		assert.Equal(t, int32(5), ge.GameState.Characters[101].Paranoia)
+		assert.Equal(t, int32(5), ge.GameState.Characters[1].Paranoia)
 	case <-time.After(100 * time.Millisecond):
 		t.Fatal("Did not receive ParanoiaAdjusted event")
 	}
 
 	// Test Goodwill Adjustment
-	ge.applyAndPublishEvent(model.GameEventType_GOODWILL_ADJUSTED, &model.GoodwillAdjustedEvent{CharacterId: 101, NewGoodwill: 3, Amount: 3})
+	ge.applyAndPublishEvent(model.GameEventType_GOODWILL_ADJUSTED, &model.GoodwillAdjustedEvent{CharacterId: 1, NewGoodwill: 3, Amount: 3})
 	select {
 	case event := <-ge.gameEventChan:
 		assert.Equal(t, model.GameEventType_GOODWILL_ADJUSTED, event.Type)
 		payload := &model.GoodwillAdjustedEvent{}
 		err := event.Payload.UnmarshalTo(payload)
 		assert.NoError(t, err)
-		assert.Equal(t, int32(101), payload.CharacterId)
+		assert.Equal(t, int32(1), payload.CharacterId)
 		assert.Equal(t, int32(3), payload.NewGoodwill)
-		assert.Equal(t, int32(3), ge.GameState.Characters[101].Goodwill)
+		assert.Equal(t, int32(3), ge.GameState.Characters[1].Goodwill)
 	case <-time.After(100 * time.Millisecond):
 		t.Fatal("Did not receive GoodwillAdjusted event")
 	}
 
 	// Test Intrigue Adjustment
-	ge.applyAndPublishEvent(model.GameEventType_INTRIGUE_ADJUSTED, &model.IntrigueAdjustedEvent{CharacterId: 101, NewIntrigue: 7, Amount: 7})
+	ge.applyAndPublishEvent(model.GameEventType_INTRIGUE_ADJUSTED, &model.IntrigueAdjustedEvent{CharacterId: 1, NewIntrigue: 7, Amount: 7})
 	select {
 	case event := <-ge.gameEventChan:
 		assert.Equal(t, model.GameEventType_INTRIGUE_ADJUSTED, event.Type)
 		payload := &model.IntrigueAdjustedEvent{}
 		err := event.Payload.UnmarshalTo(payload)
 		assert.NoError(t, err)
-		assert.Equal(t, int32(101), payload.CharacterId)
+		assert.Equal(t, int32(1), payload.CharacterId)
 		assert.Equal(t, int32(7), payload.NewIntrigue)
-		assert.Equal(t, int32(7), ge.GameState.Characters[101].Intrigue)
+		assert.Equal(t, int32(7), ge.GameState.Characters[1].Intrigue)
 	case <-time.After(100 * time.Millisecond):
 		t.Fatal("Did not receive IntrigueAdjusted event")
 	}
 
 	// Test Location Change
-	ge.applyAndPublishEvent(model.GameEventType_CHARACTER_MOVED, &model.CharacterMovedEvent{CharacterId: 101, NewLocation: model.LocationType_SCHOOL})
+	ge.applyAndPublishEvent(model.GameEventType_CHARACTER_MOVED, &model.CharacterMovedEvent{CharacterId: 1, NewLocation: model.LocationType_SCHOOL})
 	select {
 	case event := <-ge.gameEventChan:
 		assert.Equal(t, model.GameEventType_CHARACTER_MOVED, event.Type)
 		payload := &model.CharacterMovedEvent{}
 		err := event.Payload.UnmarshalTo(payload)
 		assert.NoError(t, err)
-		assert.Equal(t, int32(101), payload.CharacterId)
+		assert.Equal(t, int32(1), payload.CharacterId)
 		assert.Equal(t, model.LocationType_SCHOOL, payload.NewLocation)
-		assert.Equal(t, model.LocationType_SCHOOL, ge.GameState.Characters[101].CurrentLocation)
+		assert.Equal(t, model.LocationType_SCHOOL, ge.GameState.Characters[1].CurrentLocation)
 	case <-time.After(100 * time.Millisecond):
 		t.Fatal("Did not receive CharacterMoved event")
 	}

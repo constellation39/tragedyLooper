@@ -15,91 +15,63 @@
   "mastermind_card_ids": [3, 4, 7, 8, 11, 13, 15],
   "protagonist_card_ids": [1, 2, 5, 6, 9, 10, 12, 14],
   "main_plot": {
-    "type": "MURDER_MYSTERY",
-    "plot": "The Killer, who is the Doctor, will murder the Target, who is the High School Girl, if they are in the same location and the Killer's paranoia is high enough.",
-    "conditions": [
-      {
-        "stat_condition": {
-          "character_id": "Doctor",
-          "stat": "STAT_PARANOIA",
-          "operator": "OPERATOR_GREATER_THAN_OR_EQUAL_TO",
-          "value": 4
-        }
-      },
-      {
-        "location_condition": {
-          "character_id": "Doctor",
-          "location": "HOSPITAL"
-        }
-      },
-      {
-        "location_condition": {
-          "character_id": "High School Girl",
-          "location": "HOSPITAL"
-        }
-      }
-    ]
+    "plot_type": "MAIN_PLOT",
+    "name": "MURDER_MYSTERY",
+    "description": "The Killer, who is the Doctor, will murder the Target, who is the High School Girl, if they are in the same location and the Killer's paranoia is high enough.",
+    "incident_ids": []
   },
   "sub_plots": [
     {
-      "type": "HOSPITAL_CONSPIRACY",
-      "plot": "The Hospital Director, who is the Politician, is covering up a medical error. If their intrigue reaches a certain level, they will cause a scandal.",
-      "conditions": [
-        {
-          "stat_condition": {
-            "character_id": "Politician",
-            "stat": "STAT_INTRIGUE",
-            "operator": "OPERATOR_GREATER_THAN_OR_EQUAL_TO",
-            "value": 5
-          }
-        }
-      ]
+      "plot_type": "SUB_PLOT",
+      "name": "HOSPITAL_CONSPIRACY",
+      "description": "The Hospital Director, who is the Politician, is covering up a medical error. If their intrigue reaches a certain level, they will cause a scandal.",
+      "incident_ids": []
     }
   ],
   "characters": [
     {
-      "name": "High School Girl",
-      "role": "PROTAGONIST",
-      "location": "School"
+      "character_id": 1,
+      "hidden_role": "PERSON",
+      "initial_location": "SCHOOL"
     },
     {
-      "name": "Doctor",
-      "role": "KILLER",
-      "location": "Hospital"
+      "character_id": 2,
+      "hidden_role": "KILLER",
+      "initial_location": "HOSPITAL"
     },
     {
-      "name": "Politician",
-      "role": "HOSPITAL_DIRECTOR",
-      "location": "City"
+      "character_id": 3,
+      "hidden_role": "PERSON",
+      "initial_location": "CITY"
     },
     {
-      "name": "Office Worker",
-      "role": "CONSPIRACY_THEORIST",
-      "location": "City"
+      "character_id": 35,
+      "hidden_role": "CONSPIRACY_THEORIST",
+      "initial_location": "CITY"
     },
     {
-      "name": "Journalist",
-      "role": "FRIEND",
-      "location": "City"
+      "character_id": 4,
+      "hidden_role": "FRIEND",
+      "initial_location": "CITY"
     },
     {
-      "name": "Hacker",
-      "role": "PERSON",
-      "location": "City"
+      "character_id": 5,
+      "hidden_role": "PERSON",
+      "initial_location": "CITY"
     }
   ],
   "incidents": [
     {
       "day": 2,
       "name": "Murder",
-      "culprit": "Doctor",
-      "victim": "High School Girl",
+      "culprit_character_id": 2,
+      "victim_character_id": 1,
       "description": "A murder occurs at the hospital."
     },
     {
       "day": 3,
       "name": "Suicide",
-      "culprit": "Office Worker",
+      "culprit_character_id": 35,
       "description": "A key witness commits suicide."
     }
   ]

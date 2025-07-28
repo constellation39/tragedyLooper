@@ -103,9 +103,7 @@
         {
           "trigger": "ON_GAME_SETUP",
           "description": "The Mastermind chooses a location to be the Boss's turf.",
-          "effect": {
-            "turf_selection_effect": {}
-          }
+          "turf_selection_effect": {}
         }
       ]
     },
@@ -182,9 +180,7 @@
         {
           "trigger": "ON_LOOP_START",
           "description": "The Godly Being does not appear in the game until a specific, scripted loop number.",
-          "effect": {
-            "delayed_entry_effect": {}
-          }
+          "delayed_entry_effect": {}
         }
       ]
     },
