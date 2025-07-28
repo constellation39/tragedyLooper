@@ -20,8 +20,8 @@ type getPlayerViewRequest struct {
 }
 
 type llmActionCompleteRequest struct {
-	playerID int32                                                                                                                                                        │
-	action   *model.PlayerActionPayload                                                                                                                                   │
+	playerID int32
+	action   *model.PlayerActionPayload
 }
 type GameEngine struct {
 	GameState *model.GameState
@@ -31,11 +31,9 @@ type GameEngine struct {
 
 	gameConfig loader.GameConfigAccessor
 
-	// Internal channels
-	requestChan chan engineRequest
-	stopChan    chan struct{}
+	engineChan chan engineRequest
+	stopChan   chan struct{}
 
-	// External channels
 	dispatchGameEvent chan *model.GameEvent
 
 	currentPhase Phase
@@ -72,7 +70,7 @@ func NewGameEngine(logger *zap.Logger, players map[int32]*model.Player, llmClien
 	ge := &GameEngine{
 		GameState:         gs,
 		gameConfig:        gameConfig,
-		requestChan:       make(chan engineRequest, 100),
+		engineChan:        make(chan engineRequest, 100),
 		dispatchGameEvent: make(chan *model.GameEvent, 100),
 		stopChan:          make(chan struct{}),
 		llmClient:         llmClient,
@@ -102,7 +100,7 @@ func (ge *GameEngine) SubmitPlayerAction(playerID int32, action *model.PlayerAct
 		return
 	}
 	select {
-	case ge.requestChan <- &llmActionCompleteRequest{playerID: playerID, action: action}:
+	case ge.engineChan <- &llmActionCompleteRequest{playerID: playerID, action: action}:
 	default:
 		ge.logger.Warn("Request channel full, dropping action", zap.Int32("playerID", playerID))
 	}
@@ -119,7 +117,7 @@ func (ge *GameEngine) GetPlayerView(playerID int32) *model.PlayerView {
 		responseChan: responseChan,
 	}
 
-	ge.requestChan <- req
+	ge.engineChan <- req
 	view := <-responseChan
 	return view
 }
@@ -137,12 +135,12 @@ func (ge *GameEngine) runGameLoop() {
 		case <-ge.stopChan:
 			return
 
-		case req := <-ge.requestChan:
-			switch r := req.(type) {
+		case req := <-ge.engineChan:
+			switch in := req.(type) {
 			case *llmActionCompleteRequest:
-				ge.handlePlayerAction(r.playerID, r.action)
+				ge.handlePlayerAction(in.playerID, in.action)
 			case *getPlayerViewRequest:
-				r.responseChan <- ge.GeneratePlayerView(r.playerID)
+				in.responseChan <- ge.GeneratePlayerView(in.playerID)
 			}
 
 		case <-ge.phaseTimer.C:
@@ -179,8 +177,6 @@ func (ge *GameEngine) transitionTo(nextPhase Phase) {
 		ge.phaseTimer.Reset(duration)
 	}
 
-	// Some phases transition automatically, so we send a nil event to trigger the next transition.
-	ge.internalEventChan <- &model.GameEvent{Type: model.GameEventType_GAME_EVENT_TYPE_UNSPECIFIED}
 }
 
 func (ge *GameEngine) endGame(winner model.PlayerRole) {

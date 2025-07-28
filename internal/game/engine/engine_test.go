@@ -99,7 +99,7 @@ func TestSubmitPlayerAction(t *testing.T) {
 
 	// Check if the action was received by the loop
 	select {
-	case req := <-ge.requestChan:
+	case req := <-ge.engineChan:
 		llmReq, ok := req.(*llmActionCompleteRequest)
 		assert.True(t, ok)
 		assert.Equal(t, int32(1), llmReq.playerID)

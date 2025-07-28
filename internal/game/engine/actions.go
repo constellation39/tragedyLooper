@@ -40,7 +40,7 @@ func (ge *GameEngine) handlePlayerAction(playerID int32, action *model.PlayerAct
 		ge.logger.Error("failed to marshal PlayerActionTakenEvent", zap.Error(err))
 		return
 	}
-	ge.internalEventChan <- &model.GameEvent{
+	ge.engineChan <- &model.GameEvent{
 		Type:    model.GameEventType_PLAYER_ACTION,
 		Payload: payload,
 	}
