@@ -1,8 +1,6 @@
 package engine
 
 import (
-	"fmt"
-
 	"google.golang.org/protobuf/proto"
 
 	model "tragedylooper/internal/game/proto/v1"

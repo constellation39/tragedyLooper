@@ -147,7 +147,7 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	if _, exists := s.rooms[fmt.Sprintf("%d", gameID)]; exists {
+	if _, exists := s.rooms[gameID]; exists {
 		http.Error(w, "Game ID already exists, try again", http.StatusConflict)
 		return
 	}
@@ -232,7 +232,7 @@ func (s *Server) HandleListRooms(w http.ResponseWriter, _ *http.Request) {
 		if room.gameEngine.GameState.CurrentPhase == model.GamePhase_SETUP { // 示例条件
 			roomList = append(roomList, map[string]interface{}{
 				"id":            id,
-				"script_name":   room.gameEngine.GameState.Script.Name,
+				"script_name":   "", // Placeholder, as Script is no longer directly on GameState
 				"players_count": len(room.gameEngine.GameState.Players),
 				"current_phase": room.gameEngine.GameState.CurrentPhase,
 			})

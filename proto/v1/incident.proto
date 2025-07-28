@@ -29,8 +29,9 @@ message IncidentConfig {
   Effect effect = 7; // 事件触发时产生的效果
   bool is_mandatory = 8; // 是否为必发事件
   int32 culprit_character_id = 9; // 事件主谋角色ID（如适用）
-  int32 location_id = 10; // 事件发生地点ID（如适用）
-  bool is_main_plot_incident = 11; // 是否是主线剧情的事件
+  int32 victim_character_id = 10; // 事件受害者角色ID（如适用）
+  int32 location_id = 11; // 事件发生地点ID（如适用）
+  bool is_main_plot_incident = 12; // 是否是主线剧情的事件
 }
 
 // 事件配置库

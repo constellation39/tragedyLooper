@@ -16,7 +16,8 @@
             "card_type": "PARANOIA_MINUS",
             "owner_role": "PROTAGONIST",
             "effect": {
-                "adjust_paranoia_effect": {
+                "adjust_stat": {
+                    "stat_type": "PARANOIA",
                     "amount": -1
                 }
             },
@@ -38,7 +39,8 @@
             "card_type": "PARANOIA_PLUS",
             "owner_role": "MASTERMIND",
             "effect": {
-                "adjust_paranoia_effect": {
+                "adjust_stat": {
+                    "stat_type": "PARANOIA",
                     "amount": 1
                 }
             },
@@ -98,7 +100,9 @@
             "card_type": "FORBID_MOVEMENT",
             "owner_role": "PROTAGONIST",
             "effect": {
-                "forbid_movement_effect": {}
+                "forbid": {
+                "forbid_type": "MOVEMENT"
+            }
             },
             "once_per_loop": false
         },
@@ -118,7 +122,9 @@
             "card_type": "FORBID_GOODWILL",
             "owner_role": "MASTERMIND",
             "effect": {
-                "forbid_goodwill_effect": {}
+                "forbid": {
+                "forbid_type": "GOODWILL_CHANGE"
+            }
             },
             "once_per_loop": false
         },
@@ -128,7 +134,9 @@
             "card_type": "FORBID_INTRIGUE",
             "owner_role": "PROTAGONIST",
             "effect": {
-                "forbid_intrigue_effect": {}
+                "forbid": {
+                "forbid_type": "INTRIGUE_CHANGE"
+            }
             },
             "once_per_loop": false
         },
@@ -148,7 +156,8 @@
             "card_type": "GOODWILL_PLUS",
             "owner_role": "PROTAGONIST",
             "effect": {
-                "adjust_goodwill_effect": {
+                "adjust_stat": {
+                    "stat_type": "GOODWILL",
                     "amount": 2
                 }
             },
@@ -160,7 +169,8 @@
             "card_type": "INTRIGUE_PLUS",
             "owner_role": "MASTERMIND",
             "effect": {
-                "adjust_intrigue_effect": {
+                "adjust_stat": {
+                    "stat_type": "INTRIGUE",
                     "amount": 2
                 }
             },

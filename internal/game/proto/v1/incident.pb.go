@@ -118,8 +118,9 @@ type IncidentConfig struct {
 	Effect             *Effect                `protobuf:"bytes,7,opt,name=effect,proto3" json:"effect,omitempty"`                                                         // 事件触发时产生的效果
 	IsMandatory        bool                   `protobuf:"varint,8,opt,name=is_mandatory,json=isMandatory,proto3" json:"is_mandatory,omitempty"`                           // 是否为必发事件
 	CulpritCharacterId int32                  `protobuf:"varint,9,opt,name=culprit_character_id,json=culpritCharacterId,proto3" json:"culprit_character_id,omitempty"`    // 事件主谋角色ID（如适用）
-	LocationId         int32                  `protobuf:"varint,10,opt,name=location_id,json=locationId,proto3" json:"location_id,omitempty"`                             // 事件发生地点ID（如适用）
-	IsMainPlotIncident bool                   `protobuf:"varint,11,opt,name=is_main_plot_incident,json=isMainPlotIncident,proto3" json:"is_main_plot_incident,omitempty"` // 是否是主线剧情的事件
+	VictimCharacterId  int32                  `protobuf:"varint,10,opt,name=victim_character_id,json=victimCharacterId,proto3" json:"victim_character_id,omitempty"`      // 事件受害者角色ID（如适用）
+	LocationId         int32                  `protobuf:"varint,11,opt,name=location_id,json=locationId,proto3" json:"location_id,omitempty"`                             // 事件发生地点ID（如适用）
+	IsMainPlotIncident bool                   `protobuf:"varint,12,opt,name=is_main_plot_incident,json=isMainPlotIncident,proto3" json:"is_main_plot_incident,omitempty"` // 是否是主线剧情的事件
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -217,6 +218,13 @@ func (x *IncidentConfig) GetCulpritCharacterId() int32 {
 	return 0
 }
 
+func (x *IncidentConfig) GetVictimCharacterId() int32 {
+	if x != nil {
+		return x.VictimCharacterId
+	}
+	return 0
+}
+
 func (x *IncidentConfig) GetLocationId() int32 {
 	if x != nil {
 		return x.LocationId
@@ -287,7 +295,7 @@ const file_v1_incident_proto_rawDesc = "" +
 	"\x03day\x18\x03 \x01(\x05R\x03day\x12\x18\n" +
 	"\aculprit\x18\x04 \x01(\tR\aculprit\x12\x16\n" +
 	"\x06victim\x18\x05 \x01(\tR\x06victim\x12 \n" +
-	"\vdescription\x18\x06 \x01(\tR\vdescription\"\xaa\x03\n" +
+	"\vdescription\x18\x06 \x01(\tR\vdescription\"\xda\x03\n" +
 	"\x0eIncidentConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -298,11 +306,12 @@ const file_v1_incident_proto_rawDesc = "" +
 	"\x06effect\x18\a \x01(\v2\n" +
 	".v1.EffectR\x06effect\x12!\n" +
 	"\fis_mandatory\x18\b \x01(\bR\visMandatory\x120\n" +
-	"\x14culprit_character_id\x18\t \x01(\x05R\x12culpritCharacterId\x12\x1f\n" +
-	"\vlocation_id\x18\n" +
-	" \x01(\x05R\n" +
+	"\x14culprit_character_id\x18\t \x01(\x05R\x12culpritCharacterId\x12.\n" +
+	"\x13victim_character_id\x18\n" +
+	" \x01(\x05R\x11victimCharacterId\x12\x1f\n" +
+	"\vlocation_id\x18\v \x01(\x05R\n" +
 	"locationId\x121\n" +
-	"\x15is_main_plot_incident\x18\v \x01(\bR\x12isMainPlotIncident\"\xa9\x01\n" +
+	"\x15is_main_plot_incident\x18\f \x01(\bR\x12isMainPlotIncident\"\xa9\x01\n" +
 	"\x11IncidentConfigLib\x12B\n" +
 	"\tincidents\x18\x01 \x03(\v2$.v1.IncidentConfigLib.IncidentsEntryR\tincidents\x1aP\n" +
 	"\x0eIncidentsEntry\x12\x10\n" +

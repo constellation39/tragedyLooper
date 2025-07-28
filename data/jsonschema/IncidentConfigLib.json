@@ -492,6 +492,10 @@
                     "type": "integer",
                     "description": "事件主谋角色ID（如适用）"
                 },
+                "victim_character_id": {
+                    "type": "integer",
+                    "description": "事件受害者角色ID（如适用）"
+                },
                 "location_id": {
                     "type": "integer",
                     "description": "事件发生地点ID（如适用）"

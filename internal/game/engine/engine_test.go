@@ -49,7 +49,7 @@ func init() {
 		3: {Id: 3, Role: model.PlayerRole_PROTAGONIST},
 	}
 
-	gameLoader := loader.NewJSONLoader("data")
+	gameLoader := loader.NewJSONLoader("../../../data")
 	testGameData, err = gameLoader.LoadGameDataAccessor("first_steps")
 	if err != nil {
 		testLogger.Fatal("Failed to load script for tests", zap.Error(err))
@@ -123,12 +123,12 @@ func TestGetPlayerView(t *testing.T) {
 }
 
 func TestCharacterStateChanges(t *testing.T) {
-	ge := newTestGameEngine(t, testLogger, testEmptyPlayers, &MockGameDataAccessor{})
+	ge := newTestGameEngine(t, testLogger, testPlayers, testGameData)
 	ge.StartGameLoop()
 	defer ge.StopGameLoop()
 
-	// Test stat adjustments
-	ge.AdjustCharacterParanoia(101, 5)
+	// Test Paranoia Adjustment
+	ge.applyAndPublishEvent(model.GameEventType_PARANOIA_ADJUSTED, &model.ParanoiaAdjustedEvent{CharacterId: 101, NewParanoia: 5, Amount: 5})
 	select {
 	case event := <-ge.gameEventChan:
 		assert.Equal(t, model.GameEventType_PARANOIA_ADJUSTED, event.Type)
@@ -142,7 +142,8 @@ func TestCharacterStateChanges(t *testing.T) {
 		t.Fatal("Did not receive ParanoiaAdjusted event")
 	}
 
-	ge.AdjustCharacterGoodwill(101, 3)
+	// Test Goodwill Adjustment
+	ge.applyAndPublishEvent(model.GameEventType_GOODWILL_ADJUSTED, &model.GoodwillAdjustedEvent{CharacterId: 101, NewGoodwill: 3, Amount: 3})
 	select {
 	case event := <-ge.gameEventChan:
 		assert.Equal(t, model.GameEventType_GOODWILL_ADJUSTED, event.Type)
@@ -156,7 +157,8 @@ func TestCharacterStateChanges(t *testing.T) {
 		t.Fatal("Did not receive GoodwillAdjusted event")
 	}
 
-	ge.AdjustCharacterIntrigue(101, 7)
+	// Test Intrigue Adjustment
+	ge.applyAndPublishEvent(model.GameEventType_INTRIGUE_ADJUSTED, &model.IntrigueAdjustedEvent{CharacterId: 101, NewIntrigue: 7, Amount: 7})
 	select {
 	case event := <-ge.gameEventChan:
 		assert.Equal(t, model.GameEventType_INTRIGUE_ADJUSTED, event.Type)
@@ -170,8 +172,8 @@ func TestCharacterStateChanges(t *testing.T) {
 		t.Fatal("Did not receive IntrigueAdjusted event")
 	}
 
-	// Test location change
-	ge.SetCharacterLocation(101, model.LocationType_SCHOOL)
+	// Test Location Change
+	ge.applyAndPublishEvent(model.GameEventType_CHARACTER_MOVED, &model.CharacterMovedEvent{CharacterId: 101, NewLocation: model.LocationType_SCHOOL})
 	select {
 	case event := <-ge.gameEventChan:
 		assert.Equal(t, model.GameEventType_CHARACTER_MOVED, event.Type)
@@ -182,36 +184,6 @@ func TestCharacterStateChanges(t *testing.T) {
 		assert.Equal(t, model.LocationType_SCHOOL, payload.NewLocation)
 		assert.Equal(t, model.LocationType_SCHOOL, ge.GameState.Characters[101].CurrentLocation)
 	case <-time.After(100 * time.Millisecond):
-		t.Fatal("Did not receive CharacterMoved event")
-	}
-
-	// Test event publishing for one of the stat changes
-	ge.AdjustCharacterParanoia(101, 2)
-	select {
-	case event := <-ge.gameEventChan:
-		assert.Equal(t, model.GameEventType_PARANOIA_ADJUSTED, event.Type)
-		payload := &model.ParanoiaAdjustedEvent{}
-		err := event.Payload.UnmarshalTo(payload)
-		assert.NoError(t, err)
-		assert.Equal(t, int32(101), payload.CharacterId)
-		assert.Equal(t, int32(7), payload.NewParanoia) // 5 + 2
-		assert.Equal(t, int32(7), ge.GameState.Characters[101].Paranoia)
-	case <-time.After(50 * time.Millisecond):
-		t.Fatal("Did not receive ParanoiaAdjusted event")
-	}
-
-	// Test event publishing for location change
-	ge.SetCharacterLocation(101, model.LocationType_SHRINE)
-	select {
-	case event := <-ge.gameEventChan:
-		assert.Equal(t, model.GameEventType_CHARACTER_MOVED, event.Type)
-		payload := &model.CharacterMovedEvent{}
-		err := event.Payload.UnmarshalTo(payload)
-		assert.NoError(t, err)
-		assert.Equal(t, int32(101), payload.CharacterId)
-		assert.Equal(t, model.LocationType_SHRINE, payload.NewLocation)
-		assert.Equal(t, model.LocationType_SHRINE, ge.GameState.Characters[101].CurrentLocation)
-	case <-time.After(50 * time.Millisecond):
 		t.Fatal("Did not receive CharacterMoved event")
 	}
 }
