@@ -31,8 +31,6 @@ func (ge *GameEngine) checkStatCondition(sc *model.StatCondition, payload *model
 		return false
 	}
 
-	// For stat conditions, we usually expect a single target.
-	// If the selector resolves to multiple, the condition is false unless all of them meet it.
 	if len(targetIDs) == 0 {
 		return false // Or true, depending on desired logic for empty sets
 	}
@@ -43,40 +41,46 @@ func (ge *GameEngine) checkStatCondition(sc *model.StatCondition, payload *model
 			continue // Or return false
 		}
 
-		var statValue int32
-		switch sc.StatType {
-		case model.StatCondition_PARANOIA:
-			statValue = char.Paranoia
-		case model.StatCondition_GOODWILL:
-			statValue = char.Goodwill
-		case model.StatCondition_INTRIGUE:
-			statValue = char.Intrigue
-		default:
+		statValue, ok := getStatValue(char, sc.StatType)
+		if !ok {
 			return false // Unknown stat type
 		}
 
-		conditionMet := false
-		switch sc.Comparator {
-		case model.StatCondition_GREATER_THAN:
-			conditionMet = statValue > sc.Value
-		case model.StatCondition_LESS_THAN:
-			conditionMet = statValue < sc.Value
-		case model.StatCondition_EQUAL_TO:
-			conditionMet = statValue == sc.Value
-		case model.StatCondition_GREATER_THAN_OR_EQUAL:
-			conditionMet = statValue >= sc.Value
-		case model.StatCondition_LESS_THAN_OR_EQUAL:
-			conditionMet = statValue <= sc.Value
-		}
-
-		// If any character does not meet the condition, the overall condition is false.
-		if !conditionMet {
+		if !compareStat(statValue, sc.Value, sc.Comparator) {
 			return false
 		}
 	}
 
-	// If we get here, all targeted characters met the condition.
 	return true
+}
+
+func getStatValue(char *model.Character, statType model.StatCondition_StatType) (int32, bool) {
+	switch statType {
+	case model.StatCondition_PARANOIA:
+		return char.Paranoia, true
+	case model.StatCondition_GOODWILL:
+		return char.Goodwill, true
+	case model.StatCondition_INTRIGUE:
+		return char.Intrigue, true
+	default:
+		return 0, false
+	}
+}
+
+func compareStat(statValue, conditionValue int32, comparator model.StatCondition_Comparator) bool {
+	switch comparator {
+	case model.StatCondition_GREATER_THAN:
+		return statValue > conditionValue
+	case model.StatCondition_LESS_THAN:
+		return statValue < conditionValue
+	case model.StatCondition_EQUAL_TO:
+		return statValue == conditionValue
+	case model.StatCondition_GREATER_THAN_OR_EQUAL:
+		return statValue >= conditionValue
+	case model.StatCondition_LESS_THAN_OR_EQUAL:
+		return statValue <= conditionValue
+	}
+	return false
 }
 
 func (ge *GameEngine) checkLocationCondition(lc *model.LocationCondition, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) bool {
@@ -96,27 +100,36 @@ func (ge *GameEngine) checkLocationCondition(lc *model.LocationCondition, payloa
 		}
 
 		atLocation := char.CurrentLocation == lc.Location
-		if lc.IsAtLocation && !atLocation {
-			return false
-		}
-		if !lc.IsAtLocation && atLocation { // For checking if NOT at a location
+		if lc.IsAtLocation != atLocation {
 			return false
 		}
 
-		if lc.IsAlone || lc.NotAlone {
-			numOthersAtLocation := 0
-			for otherID, otherChar := range ge.GameState.Characters {
-				if otherID != charID && otherChar.CurrentLocation == lc.Location {
-					numOthersAtLocation++
-				}
-			}
-			if lc.IsAlone && numOthersAtLocation > 0 {
-				return false
-			}
-			if lc.NotAlone && numOthersAtLocation == 0 {
-				return false
-			}
+		if !ge.checkCharacterIsolation(lc, char) {
+			return false
 		}
+	}
+
+	return true
+}
+
+func (ge *GameEngine) checkCharacterIsolation(lc *model.LocationCondition, char *model.Character) bool {
+	if !lc.IsAlone && !lc.NotAlone {
+		return true // No isolation condition to check
+	}
+
+	numOthersAtLocation := 0
+	for otherID, otherChar := range ge.GameState.Characters {
+		if otherID != char.Config.Id && otherChar.CurrentLocation == lc.Location {
+			numOthersAtLocation++
+		}
+	}
+
+	if lc.IsAlone && numOthersAtLocation > 0 {
+		return false
+	}
+
+	if lc.NotAlone && numOthersAtLocation == 0 {
+		return false
 	}
 
 	return true

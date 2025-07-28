@@ -28,8 +28,6 @@ func main() {
 // 注意：schemaDir 自身及其子目录会被完全跳过。
 func discoverAndValidate(dataDir, schemaDir string) error {
 	var validatedCount int
-
-	// 将 schemaDir 归一化，方便后面比较
 	schemaDirAbs, _ := filepath.Abs(schemaDir)
 
 	walkFn := func(path string, d fs.DirEntry, err error) error {
@@ -37,41 +35,15 @@ func discoverAndValidate(dataDir, schemaDir string) error {
 			return err
 		}
 
-		// 忽略 schemaDir 里的任何东西
 		if insideSchemaDir(path, schemaDirAbs) {
-			if d.IsDir() {
-				return filepath.SkipDir
-			}
-			return nil
+			return handleSchemaDir(d)
 		}
 
-		// 目录 —— 用目录名+".json" 找 schema
 		if d.IsDir() {
-			schemaPath := filepath.Join(schemaDirAbs, d.Name()+".json")
-			if !fileExists(schemaPath) {
-				return nil // 没有 schema 就不校验
-			}
-			entries, _ := os.ReadDir(path)
-			for _, e := range entries {
-				if e.IsDir() || !strings.HasSuffix(e.Name(), ".json") {
-					continue
-				}
-				dataPath := filepath.Join(path, e.Name())
-				validateFile(schemaPath, dataPath)
-				validatedCount++
-			}
-			return nil
+			return processDirectory(path, schemaDirAbs, &validatedCount)
 		}
 
-		// 单个文件
-		if strings.HasSuffix(d.Name(), ".json") {
-			schemaPath := filepath.Join(schemaDirAbs, d.Name())
-			if fileExists(schemaPath) {
-				validateFile(schemaPath, path)
-				validatedCount++
-			}
-		}
-		return nil
+		return processFile(path, d.Name(), schemaDirAbs, &validatedCount)
 	}
 
 	if err := filepath.WalkDir(dataDir, walkFn); err != nil {
@@ -80,6 +52,43 @@ func discoverAndValidate(dataDir, schemaDir string) error {
 
 	if validatedCount == 0 {
 		fmt.Println("No data files were found to validate.")
+	}
+	return nil
+}
+
+func handleSchemaDir(d fs.DirEntry) error {
+	if d.IsDir() {
+		return filepath.SkipDir
+	}
+	return nil
+}
+
+func processDirectory(path, schemaDirAbs string, validatedCount *int) error {
+	dirName := filepath.Base(path)
+	schemaPath := filepath.Join(schemaDirAbs, dirName+".json")
+	if !fileExists(schemaPath) {
+		return nil // No schema, no validation
+	}
+
+	entries, _ := os.ReadDir(path)
+	for _, e := range entries {
+		if e.IsDir() || !strings.HasSuffix(e.Name(), ".json") {
+			continue
+		}
+		dataPath := filepath.Join(path, e.Name())
+		validateFile(schemaPath, dataPath)
+		*validatedCount++
+	}
+	return nil
+}
+
+func processFile(path, name, schemaDirAbs string, validatedCount *int) error {
+	if strings.HasSuffix(name, ".json") {
+		schemaPath := filepath.Join(schemaDirAbs, name)
+		if fileExists(schemaPath) {
+			validateFile(schemaPath, path)
+			*validatedCount++
+		}
 	}
 	return nil
 }

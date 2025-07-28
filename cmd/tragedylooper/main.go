@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"tragedylooper/internal/game/loader"
 
@@ -48,8 +49,9 @@ func main() {
 
 	// In a goroutine, start the HTTP server
 	server := &http.Server{
-		Addr:    port,
-		Handler: loggedMux,
+		Addr:              port,
+		Handler:           loggedMux,
+		ReadHeaderTimeout: 20 * time.Second, // Mitigate Slowloris attacks
 	}
 	go func() {
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {

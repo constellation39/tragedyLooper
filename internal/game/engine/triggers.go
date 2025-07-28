@@ -8,7 +8,7 @@ import (
 
 // checkAndTriggerAbilities 遍历所有角色的能力，并触发与给定触发器匹配的能力。
 // event 参数是可选的，仅在 triggerType 为 ON_GAME_EVENT 时使用。
-func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType, event *model.GameEvent) {
+func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType) {
 	ge.logger.Debug("Checking for abilities to trigger", zap.String("triggerType", triggerType.String()))
 
 	for _, char := range ge.GameState.Characters {
@@ -18,11 +18,6 @@ func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType, ev
 			}
 
 			// 如果是事件驱动的，请检查事件过滤器
-			if triggerType == model.TriggerType_ON_GAME_EVENT {
-				if event == nil || !ge.eventMatchesFilter(event, ability.Config.EventFilters) {
-					continue
-				}
-			}
 
 			// 检查是否已经使用过（如果适用）
 			if ability.Config.OncePerLoop && ability.UsedThisLoop {
@@ -50,14 +45,3 @@ func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType, ev
 }
 
 // eventMatchesFilter 检查给定事件的类型是否在过滤列表中。
-func (ge *GameEngine) eventMatchesFilter(event *model.GameEvent, filters []model.GameEventType) bool {
-	if len(filters) == 0 {
-		return true // 空过滤器匹配任何事件
-	}
-	for _, filter := range filters {
-		if event.Type == filter {
-			return true
-		}
-	}
-	return false
-}

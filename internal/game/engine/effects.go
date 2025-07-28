@@ -2,13 +2,14 @@ package engine
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 	model "tragedylooper/internal/game/proto/v1"
 )
 
 func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
-	choices, err := ge.resolveEffectChoices(ge.GameState, effect, ability, payload)
+	choices, err := ge.resolveEffectChoices(ge.GameState, effect, payload)
 	if err != nil {
 		return fmt.Errorf("error resolving choices: %w", err)
 	}
@@ -27,34 +28,10 @@ func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, 
 	return nil
 }
 
-func (ge *GameEngine) resolveEffectChoices(state *model.GameState, effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
+func (ge *GameEngine) resolveEffectChoices(state *model.GameState, effect *model.Effect, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
 	switch t := effect.EffectType.(type) {
 	case *model.Effect_CompoundEffect:
-		switch t.CompoundEffect.Operator {
-		case model.CompoundEffect_CHOOSE_ONE:
-			var choices []*model.Choice
-			for i, subEffect := range t.CompoundEffect.SubEffects {
-				choiceID := fmt.Sprintf("effect_choice_%d", i)
-				choices = append(choices, &model.Choice{
-					Id:          choiceID,
-					Description: getEffectDescription(subEffect), // Use a helper to get a meaningful description
-					ChoiceType:  &model.Choice_EffectOptionIndex{EffectOptionIndex: int32(i)},
-				})
-			}
-			return choices, nil
-		case model.CompoundEffect_SEQUENCE:
-			// For a sequence, we check for choices in the first sub-effect that requires one.
-			for _, subEffect := range t.CompoundEffect.SubEffects {
-				choices, err := ge.resolveEffectChoices(state, subEffect, ability, payload)
-				if err != nil {
-					return nil, err
-				}
-				if len(choices) > 0 {
-					return choices, nil // Return the first set of choices found
-				}
-			}
-			return nil, nil
-		}
+		return ge.resolveCompoundEffectChoices(state, t.CompoundEffect, payload)
 	case *model.Effect_AdjustStat:
 		return ge.createChoicesFromSelector(state, t.AdjustStat.Target, payload, "Select character to adjust stat")
 	case *model.Effect_MoveCharacter:
@@ -63,6 +40,36 @@ func (ge *GameEngine) resolveEffectChoices(state *model.GameState, effect *model
 		return ge.createChoicesFromSelector(state, t.AddTrait.Target, payload, "Select character to add trait to")
 	case *model.Effect_RemoveTrait:
 		return ge.createChoicesFromSelector(state, t.RemoveTrait.Target, payload, "Select character to remove trait from")
+	}
+	return nil, nil
+}
+
+func (ge *GameEngine) resolveCompoundEffectChoices(state *model.GameState, effect *model.CompoundEffect, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
+	switch effect.Operator {
+	case model.CompoundEffect_CHOOSE_ONE:
+		var choices []*model.Choice
+		for i, subEffect := range effect.SubEffects {
+			if i >= 2147483647 { // MaxInt32
+				return nil, fmt.Errorf("too many sub-effects to create a choice")
+			}
+			choiceID := fmt.Sprintf("effect_choice_%d", i)
+			choices = append(choices, &model.Choice{
+				Id:          choiceID,
+				Description: getEffectDescription(subEffect),
+				ChoiceType:  &model.Choice_EffectOptionIndex{EffectOptionIndex: int32(i)},
+			})
+		}
+		return choices, nil
+	case model.CompoundEffect_SEQUENCE:
+		for _, subEffect := range effect.SubEffects {
+			choices, err := ge.resolveEffectChoices(state, subEffect, payload)
+			if err != nil {
+				return nil, err
+			}
+			if len(choices) > 0 {
+				return choices, nil
+			}
+		}
 	}
 	return nil, nil
 }
@@ -114,39 +121,56 @@ func (ge *GameEngine) resolveSelectorToCharacters(state *model.GameState, select
 	}
 
 	// 3. Resolve the selector based on its type.
-	switch selector.SelectorType {
-	case model.TargetSelector_SPECIFIC_CHARACTER:
-		return []int32{selector.CharacterId}, nil
-	case model.TargetSelector_TRIGGERING_CHARACTER:
-		// The triggering character should be the one using the ability.
-		if payload != nil {
-			return []int32{payload.CharacterId}, nil
-		}
-		return nil, fmt.Errorf("could not resolve triggering character: payload is nil")
-	case model.TargetSelector_ALL_CHARACTERS_AT_LOCATION:
-		var charIDs []int32
-		for id, char := range state.Characters {
-			if char.CurrentLocation == selector.LocationFilter {
-				charIDs = append(charIDs, id)
-			}
-		}
-		return charIDs, nil
-	case model.TargetSelector_ANY_CHARACTER_WITH_ROLE:
-		var charIDs []int32
-		for id, char := range state.Characters {
-			if char.HiddenRole == selector.RoleFilter {
-				charIDs = append(charIDs, id)
-			}
-		}
-		return charIDs, nil
-	default:
-		// Fallback to all characters if selector is not specific and no target is provided
-		var allCharIDs []int32
-		for id := range state.Characters {
-			allCharIDs = append(allCharIDs, id)
-		}
-		return allCharIDs, nil
+	if handler, ok := selectorHandlers[selector.SelectorType]; ok {
+		return handler(ge, state, selector, payload)
 	}
+
+	// Fallback to all characters if selector is not specific and no target is provided
+	var allCharIDs []int32
+	for id := range state.Characters {
+		allCharIDs = append(allCharIDs, id)
+	}
+	return allCharIDs, nil
+}
+
+type selectorHandler func(ge *GameEngine, state *model.GameState, selector *model.TargetSelector, payload *model.UseAbilityPayload) ([]int32, error)
+
+var selectorHandlers = map[model.TargetSelector_SelectorType]selectorHandler{
+	model.TargetSelector_SPECIFIC_CHARACTER:         resolveSpecificCharacter,
+	model.TargetSelector_TRIGGERING_CHARACTER:       resolveTriggeringCharacter,
+	model.TargetSelector_ALL_CHARACTERS_AT_LOCATION: resolveAllCharactersAtLocation,
+	model.TargetSelector_ANY_CHARACTER_WITH_ROLE:    resolveAnyCharacterWithRole,
+}
+
+func resolveSpecificCharacter(ge *GameEngine, state *model.GameState, selector *model.TargetSelector, payload *model.UseAbilityPayload) ([]int32, error) {
+	return []int32{selector.CharacterId}, nil
+}
+
+func resolveTriggeringCharacter(ge *GameEngine, state *model.GameState, selector *model.TargetSelector, payload *model.UseAbilityPayload) ([]int32, error) {
+	if payload != nil {
+		return []int32{payload.CharacterId}, nil
+	}
+	return nil, fmt.Errorf("could not resolve triggering character: payload is nil")
+}
+
+func resolveAllCharactersAtLocation(ge *GameEngine, state *model.GameState, selector *model.TargetSelector, payload *model.UseAbilityPayload) ([]int32, error) {
+	var charIDs []int32
+	for id, char := range state.Characters {
+		if char.CurrentLocation == selector.LocationFilter {
+			charIDs = append(charIDs, id)
+		}
+	}
+	return charIDs, nil
+}
+
+func resolveAnyCharacterWithRole(ge *GameEngine, state *model.GameState, selector *model.TargetSelector, payload *model.UseAbilityPayload) ([]int32, error) {
+	var charIDs []int32
+	for id, char := range state.Characters {
+		if char.HiddenRole == selector.RoleFilter {
+			charIDs = append(charIDs, id)
+		}
+	}
+	return charIDs, nil
 }
 
 func (ge *GameEngine) publishEffect(state *model.GameState, effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {

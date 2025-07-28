@@ -22,7 +22,6 @@ linters:
     - staticcheck
     - typecheck
     - unparam    # 添加未使用参数检查
-    - unused
     - govet
 
 linters-settings:

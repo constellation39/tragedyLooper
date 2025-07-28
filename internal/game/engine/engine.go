@@ -151,28 +151,8 @@ func (ge *GameEngine) runGameLoop() {
 			}
 
 		case <-timer.C:
-			switch ge.GameState.CurrentPhase {
-			case model.GamePhase_SETUP:
-				ge.handleMorningPhase()
-			case model.GamePhase_MASTERMIND_SETUP:
-			case model.GamePhase_CARD_PLAY:
-				ge.handleCardPlayPhase()
-			case model.GamePhase_CARD_REVEAL:
-				ge.handleCardRevealPhase()
-			case model.GamePhase_CARD_RESOLVE:
-				ge.handleCardResolvePhase()
-			case model.GamePhase_ABILITIES:
-				ge.handleAbilitiesPhase()
-			case model.GamePhase_INCIDENTS:
-				ge.handleIncidentsPhase()
-			case model.GamePhase_DAY_END:
-				ge.handleDayEndPhase()
-			case model.GamePhase_LOOP_END:
-				ge.handleLoopEndPhase()
-			case model.GamePhase_GAME_OVER:
-				ge.handleProtagonistGuessPhase()
-			case model.GamePhase_PROTAGONIST_GUESS:
-			case model.GamePhase_GAME_PHASE_UNSPECIFIED:
+			if handler, ok := phaseHandlers[ge.GameState.CurrentPhase]; ok {
+				handler(ge)
 			}
 		}
 	}
@@ -251,18 +231,6 @@ func (ge *GameEngine) createPlayerView(playerID int32) *model.PlayerView {
 	}
 
 	// If the player is not the mastermind, hide secret information
-	if player.Role != model.PlayerRole_MASTERMIND {
-		for _, charView := range view.Characters {
-			// Hide paranoia and intrigue from protagonists
-			charView.Paranoia = -1 // Or some other indicator of hidden info
-			charView.Intrigue = -1
-		}
-		for id, p := range view.Players {
-			if id != playerID {
-				p.Role = model.PlayerRole_PLAYER_ROLE_UNSPECIFIED
-			}
-		}
-	}
 
 	return view
 }

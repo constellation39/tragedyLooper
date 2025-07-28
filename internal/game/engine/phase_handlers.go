@@ -7,21 +7,81 @@ import (
 	"go.uber.org/zap"
 )
 
-// --- Game Phase Handlers ---
+// phaseHandler is a function that handles the logic for a specific game phase.
+type phaseHandler func(ge *GameEngine)
+
+// phaseHandlers maps game phases to their respective handler functions.
+var phaseHandlers = map[model.GamePhase]phaseHandler{
+	model.GamePhase_SETUP:             handleSetupPhase,
+	model.GamePhase_MASTERMIND_SETUP:  handleMastermindSetupPhase,
+	model.GamePhase_CARD_PLAY:         handleCardPlayPhase,
+	model.GamePhase_CARD_REVEAL:       handleCardRevealPhase,
+	model.GamePhase_CARD_RESOLVE:      handleCardResolvePhase,
+	model.GamePhase_ABILITIES:         handleAbilitiesPhase,
+	model.GamePhase_INCIDENTS:         handleIncidentsPhase,
+	model.GamePhase_DAY_END:           handleDayEndPhase,
+	model.GamePhase_LOOP_END:          handleLoopEndPhase,
+	model.GamePhase_GAME_OVER:         handleGameOverPhase,
+	model.GamePhase_PROTAGONIST_GUESS: handleProtagonistGuessPhase,
+}
+
+func handleSetupPhase(ge *GameEngine) {
+	ge.handleMorningPhase()
+}
+
+func handleMastermindSetupPhase(ge *GameEngine) {
+	// Implementation for Mastermind Setup phase
+}
+
+func handleCardPlayPhase(ge *GameEngine) {
+	ge.handleCardPlayPhase()
+}
+
+func handleCardRevealPhase(ge *GameEngine) {
+	ge.handleCardRevealPhase()
+}
+
+func handleCardResolvePhase(ge *GameEngine) {
+	ge.handleCardResolvePhase()
+}
+
+func handleAbilitiesPhase(ge *GameEngine) {
+	ge.handleAbilitiesPhase()
+}
+
+func handleIncidentsPhase(ge *GameEngine) {
+	ge.handleIncidentsPhase()
+}
+
+func handleDayEndPhase(ge *GameEngine) {
+	ge.handleDayEndPhase()
+}
+
+func handleLoopEndPhase(ge *GameEngine) {
+	ge.handleLoopEndPhase()
+}
+
+func handleGameOverPhase(ge *GameEngine) {
+	ge.handleProtagonistGuessPhase()
+}
+
+func handleProtagonistGuessPhase(ge *GameEngine) {
+	// Implementation for Protagonist Guess phase
+}
 
 func (ge *GameEngine) handleMorningPhase() {
 	ge.logger.Info("Morning Phase", zap.Int("loop", int(ge.GameState.CurrentLoop)), zap.Int("day", int(ge.GameState.CurrentDay)))
 	ge.resetPlayerReadiness()
 	ge.GameState.PlayedCardsThisDay = make(map[int32]*model.Card) // Clear cards for the new day
 
-	ge.checkAndTriggerAbilities(model.TriggerType_ON_DAY_START, nil)
+	ge.checkAndTriggerAbilities(model.TriggerType_ON_DAY_START)
 
 	ge.GameState.CurrentPhase = model.GamePhase_CARD_PLAY
 	ge.applyAndPublishEvent(model.GameEventType_DAY_ADVANCED, &model.DayAdvancedEvent{Day: ge.GameState.CurrentDay, Loop: ge.GameState.CurrentLoop})
 }
 
 func (ge *GameEngine) handleCardPlayPhase() {
-	ge.checkAndTriggerAbilities(model.TriggerType_ON_PHASE_START, nil)
+	ge.checkAndTriggerAbilities(model.TriggerType_ON_PHASE_START)
 
 	allPlayersReady := true
 	for playerID, player := range ge.GameState.Players {
@@ -42,14 +102,14 @@ func (ge *GameEngine) handleCardPlayPhase() {
 
 func (ge *GameEngine) handleCardRevealPhase() {
 	ge.logger.Info("Card Reveal Phase")
-	ge.checkAndTriggerAbilities(model.TriggerType_ON_PHASE_START, nil)
+	ge.checkAndTriggerAbilities(model.TriggerType_ON_PHASE_START)
 	// ge.publishGameEvent(model.GameEventType_CARD_PLAYED, &model.CardPlayedEvent{PlayedCards: ge.GameState.PlayedCardsThisDay})
 	ge.GameState.CurrentPhase = model.GamePhase_CARD_RESOLVE
 }
 
 func (ge *GameEngine) handleCardResolvePhase() {
 	ge.logger.Info("Card Resolve Phase")
-	ge.checkAndTriggerAbilities(model.TriggerType_ON_PHASE_START, nil)
+	ge.checkAndTriggerAbilities(model.TriggerType_ON_PHASE_START)
 
 	// Resolve cards in a specific order if necessary (e.g., by priority). For now, iterate over players.
 	for playerID, card := range ge.GameState.PlayedCardsThisDay {
@@ -79,7 +139,7 @@ func (ge *GameEngine) handleCardResolvePhase() {
 
 func (ge *GameEngine) handleAbilitiesPhase() {
 	ge.logger.Info("Abilities Phase")
-	ge.checkAndTriggerAbilities(model.TriggerType_ON_PHASE_START, nil)
+	ge.checkAndTriggerAbilities(model.TriggerType_ON_PHASE_START)
 
 	allPlayersReady := true
 	for playerID, player := range ge.GameState.Players {
@@ -101,7 +161,7 @@ func (ge *GameEngine) handleAbilitiesPhase() {
 
 func (ge *GameEngine) handleIncidentsPhase() {
 	ge.logger.Info("Incidents Phase")
-	ge.checkAndTriggerAbilities(model.TriggerType_ON_PHASE_START, nil)
+	ge.checkAndTriggerAbilities(model.TriggerType_ON_PHASE_START)
 
 	// Check for incidents on the current day
 	for _, incident := range ge.gameData.GetIncidents() {
@@ -160,7 +220,7 @@ func (ge *GameEngine) handleDayEndPhase() {
 
 func (ge *GameEngine) handleLoopEndPhase() {
 	ge.logger.Info("Loop End Phase", zap.Int("loop", int(ge.GameState.CurrentLoop)))
-	ge.checkAndTriggerAbilities(model.TriggerType_ON_LOOP_START, nil)
+	ge.checkAndTriggerAbilities(model.TriggerType_ON_LOOP_START)
 
 	if gameOver, winner := ge.checkGameEndConditions(); gameOver {
 		ge.endGame(winner)
