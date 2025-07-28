@@ -126,15 +126,24 @@ enum TriggerType {
 // 游戏事件类型（用于能力触发器过滤）
 enum GameEventType {
   GAME_EVENT_TYPE_UNSPECIFIED = 0; // 未指定
-  CHARACTER_MOVED = 1; // 角色移动
-  STAT_ADJUSTED = 2; // 属性调整（妄想/好感/阴谋）
-  INCIDENT_TRIGGERED = 3; // 事件触发
-  ROLE_REVEALED = 4; // 身份揭示
-  CHARACTER_DIED = 5; // 角色死亡
-  ABILITY_USED = 6; // 能力使用
-  CARD_PLAYED = 7; // 卡牌打出
-  DAY_ADVANCED = 8; // 天数推进
-  LOOP_RESET = 9; // 循环重置
+  CHARACTER_MOVED = 1; // 角色移动事件
+  PARANOIA_ADJUSTED = 2; // 妄想值调整事件
+  GOODWILL_ADJUSTED = 3; // 好感值调整事件
+  INTRIGUE_ADJUSTED = 4; // 阴谋值调整事件
+  INCIDENT_TRIGGERED = 5; // 悲剧触发事件
+  INCIDENT_PREVENTED = 6; // 悲剧阻止事件
+  ROLE_REVEALED = 7; // 角色身份揭示事件
+  ABILITY_GRANTED = 8; // 授予能力事件
+  CHOICE_REQUIRED = 9; // 需要玩家选择事件
+  LOOP_WIN = 10; // 循环胜利事件
+  LOOP_LOSS = 11; // 循环失败事件
+  FIRST_GUESS_MADE = 12; // 首次猜测事件
+  FINAL_GUESS_MADE = 13; // 最终猜测事件
+  GOODWILL_REFUSAL_TEST = 14; // 好感度拒绝测试事件
+  LOOP_OVER = 15; // 好感度拒绝测试事件
+  DAY_ADVANCED = 16; // 天数推进事件
+  TRAGEDY_TRIGGERED = 17; // 悲剧触发事件
+  LOOP_RESET = 18; // 循环重置事件
 }
 
 // 游戏结束条件类型

@@ -241,3 +241,27 @@ func (ge *GameEngine) AdjustCharacterIntrigue(characterID int32, amount int32) {
 		ge.publishGameEvent(model.GameEventType_INTRIGUE_ADJUSTED, &model.IntrigueAdjustedEvent{CharacterId: characterID, NewIntrigue: char.Intrigue, Amount: amount})
 	}
 }
+
+func (ge *GameEngine) AddCharacterTrait(characterID int32, trait string) {
+	if char, ok := ge.GameState.Characters[characterID]; ok {
+		for _, t := range char.Traits {
+			if t == trait {
+				return // Trait already exists
+			}
+		}
+		char.Traits = append(char.Traits, trait)
+		// TODO: Add a TRAIT_ADDED event
+	}
+}
+
+func (ge *GameEngine) RemoveCharacterTrait(characterID int32, trait string) {
+	if char, ok := ge.GameState.Characters[characterID]; ok {
+		for i, t := range char.Traits {
+			if t == trait {
+				char.Traits = append(char.Traits[:i], char.Traits[i+1:]...)
+				// TODO: Add a TRAIT_REMOVED event
+				return
+			}
+		}
+	}
+}

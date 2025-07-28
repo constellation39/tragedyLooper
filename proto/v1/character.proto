@@ -31,6 +31,7 @@ message Character {
   repeated Ability abilities = 7; // 拥有的能力实例列表
   bool is_alive = 8; // 是否存活
   bool in_panic_mode = 9; // 是否处于恐慌模式
+  repeated string traits = 10; // 动态特征
 }
 
 // 角色配置库

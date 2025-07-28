@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -667,43 +666,70 @@ func (TriggerType) EnumDescriptor() ([]byte, []int) {
 type GameEventType int32
 
 const (
-	GameEventType_GAME_EVENT_TYPE_UNSPECIFIED GameEventType = 0 // 未指定
-	GameEventType_CHARACTER_MOVED             GameEventType = 1 // 角色移动
-	GameEventType_STAT_ADJUSTED               GameEventType = 2 // 属性调整（妄想/好感/阴谋）
-	GameEventType_INCIDENT_TRIGGERED          GameEventType = 3 // 事件触发
-	GameEventType_ROLE_REVEALED               GameEventType = 4 // 身份揭示
-	GameEventType_CHARACTER_DIED              GameEventType = 5 // 角色死亡
-	GameEventType_ABILITY_USED                GameEventType = 6 // 能力使用
-	GameEventType_CARD_PLAYED                 GameEventType = 7 // 卡牌打出
-	GameEventType_DAY_ADVANCED                GameEventType = 8 // 天数推进
-	GameEventType_LOOP_RESET                  GameEventType = 9 // 循环重置
+	GameEventType_GAME_EVENT_TYPE_UNSPECIFIED GameEventType = 0  // 未指定
+	GameEventType_CHARACTER_MOVED             GameEventType = 1  // 角色移动事件
+	GameEventType_PARANOIA_ADJUSTED           GameEventType = 2  // 妄想值调整事件
+	GameEventType_GOODWILL_ADJUSTED           GameEventType = 3  // 好感值调整事件
+	GameEventType_INTRIGUE_ADJUSTED           GameEventType = 4  // 阴谋值调整事件
+	GameEventType_INCIDENT_TRIGGERED          GameEventType = 5  // 悲剧触发事件
+	GameEventType_INCIDENT_PREVENTED          GameEventType = 6  // 悲剧阻止事件
+	GameEventType_ROLE_REVEALED               GameEventType = 7  // 角色身份揭示事件
+	GameEventType_ABILITY_GRANTED             GameEventType = 8  // 授予能力事件
+	GameEventType_CHOICE_REQUIRED             GameEventType = 9  // 需要玩家选择事件
+	GameEventType_LOOP_WIN                    GameEventType = 10 // 循环胜利事件
+	GameEventType_LOOP_LOSS                   GameEventType = 11 // 循环失败事件
+	GameEventType_FIRST_GUESS_MADE            GameEventType = 12 // 首次猜测事件
+	GameEventType_FINAL_GUESS_MADE            GameEventType = 13 // 最终猜测事件
+	GameEventType_GOODWILL_REFUSAL_TEST       GameEventType = 14 // 好感度拒绝测试事件
+	GameEventType_LOOP_OVER                   GameEventType = 15 // 好感度拒绝测试事件
+	GameEventType_DAY_ADVANCED                GameEventType = 16 // 天数推进事件
+	GameEventType_TRAGEDY_TRIGGERED           GameEventType = 17 // 悲剧触发事件
+	GameEventType_LOOP_RESET                  GameEventType = 18 // 循环重置事件
 )
 
 // Enum value maps for GameEventType.
 var (
 	GameEventType_name = map[int32]string{
-		0: "GAME_EVENT_TYPE_UNSPECIFIED",
-		1: "CHARACTER_MOVED",
-		2: "STAT_ADJUSTED",
-		3: "INCIDENT_TRIGGERED",
-		4: "ROLE_REVEALED",
-		5: "CHARACTER_DIED",
-		6: "ABILITY_USED",
-		7: "CARD_PLAYED",
-		8: "DAY_ADVANCED",
-		9: "LOOP_RESET",
+		0:  "GAME_EVENT_TYPE_UNSPECIFIED",
+		1:  "CHARACTER_MOVED",
+		2:  "PARANOIA_ADJUSTED",
+		3:  "GOODWILL_ADJUSTED",
+		4:  "INTRIGUE_ADJUSTED",
+		5:  "INCIDENT_TRIGGERED",
+		6:  "INCIDENT_PREVENTED",
+		7:  "ROLE_REVEALED",
+		8:  "ABILITY_GRANTED",
+		9:  "CHOICE_REQUIRED",
+		10: "LOOP_WIN",
+		11: "LOOP_LOSS",
+		12: "FIRST_GUESS_MADE",
+		13: "FINAL_GUESS_MADE",
+		14: "GOODWILL_REFUSAL_TEST",
+		15: "LOOP_OVER",
+		16: "DAY_ADVANCED",
+		17: "TRAGEDY_TRIGGERED",
+		18: "LOOP_RESET",
 	}
 	GameEventType_value = map[string]int32{
 		"GAME_EVENT_TYPE_UNSPECIFIED": 0,
 		"CHARACTER_MOVED":             1,
-		"STAT_ADJUSTED":               2,
-		"INCIDENT_TRIGGERED":          3,
-		"ROLE_REVEALED":               4,
-		"CHARACTER_DIED":              5,
-		"ABILITY_USED":                6,
-		"CARD_PLAYED":                 7,
-		"DAY_ADVANCED":                8,
-		"LOOP_RESET":                  9,
+		"PARANOIA_ADJUSTED":           2,
+		"GOODWILL_ADJUSTED":           3,
+		"INTRIGUE_ADJUSTED":           4,
+		"INCIDENT_TRIGGERED":          5,
+		"INCIDENT_PREVENTED":          6,
+		"ROLE_REVEALED":               7,
+		"ABILITY_GRANTED":             8,
+		"CHOICE_REQUIRED":             9,
+		"LOOP_WIN":                    10,
+		"LOOP_LOSS":                   11,
+		"FIRST_GUESS_MADE":            12,
+		"FINAL_GUESS_MADE":            13,
+		"GOODWILL_REFUSAL_TEST":       14,
+		"LOOP_OVER":                   15,
+		"DAY_ADVANCED":                16,
+		"TRAGEDY_TRIGGERED":           17,
+		"LOOP_RESET":                  18,
 	}
 )
 
@@ -904,19 +930,29 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\rON_GAME_EVENT\x10\x06\x12\v\n" +
 	"\aPASSIVE\x10\a\x12\x11\n" +
 	"\rON_GUESS_MADE\x10\b\x12\x0f\n" +
-	"\vON_GAME_END\x10\t*\xdc\x01\n" +
+	"\vON_GAME_END\x10\t*\xa3\x03\n" +
 	"\rGameEventType\x12\x1f\n" +
 	"\x1bGAME_EVENT_TYPE_UNSPECIFIED\x10\x00\x12\x13\n" +
-	"\x0fCHARACTER_MOVED\x10\x01\x12\x11\n" +
-	"\rSTAT_ADJUSTED\x10\x02\x12\x16\n" +
-	"\x12INCIDENT_TRIGGERED\x10\x03\x12\x11\n" +
-	"\rROLE_REVEALED\x10\x04\x12\x12\n" +
-	"\x0eCHARACTER_DIED\x10\x05\x12\x10\n" +
-	"\fABILITY_USED\x10\x06\x12\x0f\n" +
-	"\vCARD_PLAYED\x10\a\x12\x10\n" +
-	"\fDAY_ADVANCED\x10\b\x12\x0e\n" +
+	"\x0fCHARACTER_MOVED\x10\x01\x12\x15\n" +
+	"\x11PARANOIA_ADJUSTED\x10\x02\x12\x15\n" +
+	"\x11GOODWILL_ADJUSTED\x10\x03\x12\x15\n" +
+	"\x11INTRIGUE_ADJUSTED\x10\x04\x12\x16\n" +
+	"\x12INCIDENT_TRIGGERED\x10\x05\x12\x16\n" +
+	"\x12INCIDENT_PREVENTED\x10\x06\x12\x11\n" +
+	"\rROLE_REVEALED\x10\a\x12\x13\n" +
+	"\x0fABILITY_GRANTED\x10\b\x12\x13\n" +
+	"\x0fCHOICE_REQUIRED\x10\t\x12\f\n" +
+	"\bLOOP_WIN\x10\n" +
+	"\x12\r\n" +
+	"\tLOOP_LOSS\x10\v\x12\x14\n" +
+	"\x10FIRST_GUESS_MADE\x10\f\x12\x14\n" +
+	"\x10FINAL_GUESS_MADE\x10\r\x12\x19\n" +
+	"\x15GOODWILL_REFUSAL_TEST\x10\x0e\x12\r\n" +
+	"\tLOOP_OVER\x10\x0f\x12\x10\n" +
+	"\fDAY_ADVANCED\x10\x10\x12\x15\n" +
+	"\x11TRAGEDY_TRIGGERED\x10\x11\x12\x0e\n" +
 	"\n" +
-	"LOOP_RESET\x10\t*\xdc\x01\n" +
+	"LOOP_RESET\x10\x12*\xdc\x01\n" +
 	"\x10EndConditionType\x12\"\n" +
 	"\x1eEND_CONDITION_TYPE_UNSPECIFIED\x10\x00\x12\x1d\n" +
 	"\x19PROTAGONIST_GUESS_SUCCESS\x10\x01\x12\x1a\n" +

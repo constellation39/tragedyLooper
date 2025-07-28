@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -542,7 +541,7 @@ var File_v1_script_proto protoreflect.FileDescriptor
 
 const file_v1_script_proto_rawDesc = "" +
 	"\n" +
-	"\x0fv1/script.proto\x12\x02v1\x1a\x12v1/condition.proto\x1a\x0ev1/enums.proto\x1a\x11v1/incident.proto\x1a\x0fv1/effect.proto\"\xd1\x05\n" +
+	"\x0fv1/script.proto\x12\x02v1\x1a\x12v1/condition.proto\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\x1a\x11v1/incident.proto\"\xd1\x05\n" +
 	"\fScriptConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -663,9 +662,9 @@ func file_v1_script_proto_init() {
 		return
 	}
 	file_v1_condition_proto_init()
+	file_v1_effect_proto_init()
 	file_v1_enums_proto_init()
 	file_v1_incident_proto_init()
-	file_v1_effect_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

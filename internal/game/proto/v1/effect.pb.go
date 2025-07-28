@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -940,7 +939,7 @@ var File_v1_effect_proto protoreflect.FileDescriptor
 
 const file_v1_effect_proto_rawDesc = "" +
 	"\n" +
-	"\x0fv1/effect.proto\x12\x02v1\x1a\x0ev1/enums.proto\x1a\x12v1/condition.proto\"\x95\x05\n" +
+	"\x0fv1/effect.proto\x12\x02v1\x1a\x12v1/condition.proto\x1a\x0ev1/enums.proto\"\x95\x05\n" +
 	"\x06Effect\x127\n" +
 	"\vadjust_stat\x18\x01 \x01(\v2\x14.v1.AdjustStatEffectH\x00R\n" +
 	"adjustStat\x12@\n" +
@@ -1083,8 +1082,8 @@ func file_v1_effect_proto_init() {
 	if File_v1_effect_proto != nil {
 		return
 	}
-	file_v1_enums_proto_init()
 	file_v1_condition_proto_init()
+	file_v1_enums_proto_init()
 	file_v1_effect_proto_msgTypes[0].OneofWrappers = []any{
 		(*Effect_AdjustStat)(nil),
 		(*Effect_MoveCharacter)(nil),

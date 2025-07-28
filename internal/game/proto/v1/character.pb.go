@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -143,6 +142,7 @@ type Character struct {
 	Abilities       []*Ability             `protobuf:"bytes,7,rep,name=abilities,proto3" json:"abilities,omitempty"`                                                          // 拥有的能力实例列表
 	IsAlive         bool                   `protobuf:"varint,8,opt,name=is_alive,json=isAlive,proto3" json:"is_alive,omitempty"`                                              // 是否存活
 	InPanicMode     bool                   `protobuf:"varint,9,opt,name=in_panic_mode,json=inPanicMode,proto3" json:"in_panic_mode,omitempty"`                                // 是否处于恐慌模式
+	Traits          []string               `protobuf:"bytes,10,rep,name=traits,proto3" json:"traits,omitempty"`                                                               // 动态特征
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -238,6 +238,13 @@ func (x *Character) GetInPanicMode() bool {
 		return x.InPanicMode
 	}
 	return false
+}
+
+func (x *Character) GetTraits() []string {
+	if x != nil {
+		return x.Traits
+	}
+	return nil
 }
 
 // 角色配置库
@@ -571,7 +578,7 @@ var File_v1_character_proto protoreflect.FileDescriptor
 
 const file_v1_character_proto_rawDesc = "" +
 	"\n" +
-	"\x12v1/character.proto\x12\x02v1\x1a\x0ev1/enums.proto\x1a\x10v1/ability.proto\"\xae\x02\n" +
+	"\x12v1/character.proto\x12\x02v1\x1a\x10v1/ability.proto\x1a\x0ev1/enums.proto\"\xae\x02\n" +
 	"\x0fCharacterConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
@@ -582,7 +589,7 @@ const file_v1_character_proto_rawDesc = "" +
 	"\vability_ids\x18\a \x03(\x05R\n" +
 	"abilityIds\x12'\n" +
 	"\x05rules\x18\b \x03(\v2\x11.v1.CharacterRuleR\x05rules\x12 \n" +
-	"\vdescription\x18\t \x01(\tR\vdescription\"\xe2\x02\n" +
+	"\vdescription\x18\t \x01(\tR\vdescription\"\xfa\x02\n" +
 	"\tCharacter\x12+\n" +
 	"\x06config\x18\x01 \x01(\v2\x13.v1.CharacterConfigR\x06config\x12;\n" +
 	"\x10current_location\x18\x02 \x01(\x0e2\x10.v1.LocationTypeR\x0fcurrentLocation\x12\x1a\n" +
@@ -593,7 +600,9 @@ const file_v1_character_proto_rawDesc = "" +
 	"hiddenRole\x12)\n" +
 	"\tabilities\x18\a \x03(\v2\v.v1.AbilityR\tabilities\x12\x19\n" +
 	"\bis_alive\x18\b \x01(\bR\aisAlive\x12\"\n" +
-	"\rin_panic_mode\x18\t \x01(\bR\vinPanicMode\"\xb0\x01\n" +
+	"\rin_panic_mode\x18\t \x01(\bR\vinPanicMode\x12\x16\n" +
+	"\x06traits\x18\n" +
+	" \x03(\tR\x06traits\"\xb0\x01\n" +
 	"\x12CharacterConfigLib\x12F\n" +
 	"\n" +
 	"characters\x18\x01 \x03(\v2&.v1.CharacterConfigLib.CharactersEntryR\n" +
@@ -674,8 +683,8 @@ func file_v1_character_proto_init() {
 	if File_v1_character_proto != nil {
 		return
 	}
-	file_v1_enums_proto_init()
 	file_v1_ability_proto_init()
+	file_v1_enums_proto_init()
 	file_v1_character_proto_msgTypes[3].OneofWrappers = []any{
 		(*CharacterRule_TurfSelectionEffect)(nil),
 		(*CharacterRule_DelayedEntryEffect)(nil),

@@ -7,14 +7,13 @@
 package v1
 
 import (
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
-
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
 )
 
 const (
@@ -691,9 +690,14 @@ func (x *GameOverEvent) GetWinner() PlayerRole {
 
 // Choice 表示玩家可以做出的选择。
 type Choice struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Description   string                 `protobuf:"bytes,1,opt,name=description,proto3" json:"description,omitempty"`                     // 选项的描述
-	CharacterId   int32                  `protobuf:"varint,2,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"` // 与该选项相关的角色ID
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	Id          string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                   // 唯一ID，例如 "target_char_5" 或 "effect_choice_0"
+	Description string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"` // 选项的描述
+	// Types that are valid to be assigned to ChoiceType:
+	//
+	//	*Choice_TargetCharacterId
+	//	*Choice_EffectOptionIndex
+	ChoiceType    isChoice_ChoiceType `protobuf_oneof:"choice_type"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -728,6 +732,13 @@ func (*Choice) Descriptor() ([]byte, []int) {
 	return file_v1_event_proto_rawDescGZIP(), []int{13}
 }
 
+func (x *Choice) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
 func (x *Choice) GetDescription() string {
 	if x != nil {
 		return x.Description
@@ -735,12 +746,46 @@ func (x *Choice) GetDescription() string {
 	return ""
 }
 
-func (x *Choice) GetCharacterId() int32 {
+func (x *Choice) GetChoiceType() isChoice_ChoiceType {
 	if x != nil {
-		return x.CharacterId
+		return x.ChoiceType
+	}
+	return nil
+}
+
+func (x *Choice) GetTargetCharacterId() int32 {
+	if x != nil {
+		if x, ok := x.ChoiceType.(*Choice_TargetCharacterId); ok {
+			return x.TargetCharacterId
+		}
 	}
 	return 0
 }
+
+func (x *Choice) GetEffectOptionIndex() int32 {
+	if x != nil {
+		if x, ok := x.ChoiceType.(*Choice_EffectOptionIndex); ok {
+			return x.EffectOptionIndex
+		}
+	}
+	return 0
+}
+
+type isChoice_ChoiceType interface {
+	isChoice_ChoiceType()
+}
+
+type Choice_TargetCharacterId struct {
+	TargetCharacterId int32 `protobuf:"varint,3,opt,name=target_character_id,json=targetCharacterId,proto3,oneof"` // 用于目标选择
+}
+
+type Choice_EffectOptionIndex struct {
+	EffectOptionIndex int32 `protobuf:"varint,4,opt,name=effect_option_index,json=effectOptionIndex,proto3,oneof"` // 用于复合效果中的效果选择
+}
+
+func (*Choice_TargetCharacterId) isChoice_ChoiceType() {}
+
+func (*Choice_EffectOptionIndex) isChoice_ChoiceType() {}
 
 // 需要玩家做出选择的事件
 type ChoiceRequiredEvent struct {
@@ -924,10 +969,13 @@ const file_v1_event_proto_rawDesc = "" +
 	"\x0eLoopResetEvent\x12\x12\n" +
 	"\x04loop\x18\x01 \x01(\x05R\x04loop\"7\n" +
 	"\rGameOverEvent\x12&\n" +
-	"\x06winner\x18\x01 \x01(\x0e2\x0e.v1.PlayerRoleR\x06winner\"M\n" +
-	"\x06Choice\x12 \n" +
-	"\vdescription\x18\x01 \x01(\tR\vdescription\x12!\n" +
-	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\";\n" +
+	"\x06winner\x18\x01 \x01(\x0e2\x0e.v1.PlayerRoleR\x06winner\"\xad\x01\n" +
+	"\x06Choice\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12 \n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\x120\n" +
+	"\x13target_character_id\x18\x03 \x01(\x05H\x00R\x11targetCharacterId\x120\n" +
+	"\x13effect_option_index\x18\x04 \x01(\x05H\x00R\x11effectOptionIndexB\r\n" +
+	"\vchoice_type\";\n" +
 	"\x13ChoiceRequiredEvent\x12$\n" +
 	"\achoices\x18\x01 \x03(\v2\n" +
 	".v1.ChoiceR\achoices\"B\n" +
@@ -1007,6 +1055,10 @@ func file_v1_event_proto_init() {
 	file_v1_card_proto_init()
 	file_v1_enums_proto_init()
 	file_v1_incident_proto_init()
+	file_v1_event_proto_msgTypes[13].OneofWrappers = []any{
+		(*Choice_TargetCharacterId)(nil),
+		(*Choice_EffectOptionIndex)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
