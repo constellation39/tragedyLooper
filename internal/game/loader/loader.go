@@ -12,7 +12,7 @@ type Loader interface {
 }
 
 type GameConfigAccessor interface {
-	GetScript() (*v1.ScriptConfig, error)
+	GetScript() *v1.ScriptConfig
 
 	GetAbilities() map[int32]*v1.AbilityConfig
 	GetCards() map[int32]*v1.CardConfig
@@ -22,9 +22,9 @@ type GameConfigAccessor interface {
 
 type cfgPtr interface {
 	*v1.AbilityConfig |
-		*v1.CardConfig |
-		*v1.CharacterConfig |
-		*v1.IncidentConfig
+	*v1.CardConfig |
+	*v1.CharacterConfig |
+	*v1.IncidentConfig
 }
 
 func Get[T cfgPtr](acc GameConfigAccessor, id int32) (T, error) {
@@ -99,13 +99,6 @@ type gameConfigAccessor struct {
 	script     *v1.ScriptConfig
 }
 
-func (g *gameConfigAccessor) GetScript() (*v1.ScriptConfig, error) {
-	if g.script == nil {
-		return nil, fmt.Errorf("script not loaded")
-	}
-	return g.script, nil
-}
-
 func (g *gameConfigAccessor) GetAbilities() map[int32]*v1.AbilityConfig { return g.abilities.Abilities }
 func (g *gameConfigAccessor) GetCards() map[int32]*v1.CardConfig        { return g.cards.Cards }
 func (g *gameConfigAccessor) GetCharacters() map[int32]*v1.CharacterConfig {
@@ -114,6 +107,7 @@ func (g *gameConfigAccessor) GetCharacters() map[int32]*v1.CharacterConfig {
 func (g *gameConfigAccessor) GetIncidents() map[int32]*v1.IncidentConfig {
 	return g.incidents.Incidents
 }
+func (g *gameConfigAccessor) GetScript() *v1.ScriptConfig { return g.script }
 
 type loadTask interface {
 	run(chan<- error, *sync.WaitGroup)

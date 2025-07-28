@@ -163,7 +163,11 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		LlmSessionId:       "",
 	}
 
-	gameEngine := engine.NewGameEngine(gameID, ctxLogger, players, s.llmClient, gameDataAccessor)
+	gameEngine, err := engine.NewGameEngine(ctxLogger.With(zap.String("gameID", gameID)), players, s.llmClient, gameDataAccessor)
+	if err != nil {
+		ctxLogger.Error("Failed to create game engine", zap.Error(err))
+		return
+	}
 	room := NewRoom(gameID, gameEngine, ctxLogger)
 	s.rooms[gameID] = room
 

@@ -2,6 +2,8 @@ package engine
 
 import (
 	model "tragedylooper/internal/game/proto/v1"
+
+	"go.uber.org/zap"
 )
 
 func (ge *GameEngine) checkConditions(conditions []*model.Condition, player *model.Player, payload *model.UseAbilityPayload, ability *model.Ability) bool {
@@ -157,4 +159,20 @@ func (ge *GameEngine) getMastermindPlayer() *model.Player {
 		}
 	}
 	return nil
+}
+
+func (ge *GameEngine) getProtagonistPlayers() []*model.Player {
+	var protagonists []*model.Player
+	for _, p := range ge.GameState.Players {
+		if p.Role == model.PlayerRole_PROTAGONIST {
+			protagonists = append(protagonists, p)
+		}
+	}
+	return protagonists
+}
+
+func (ge *GameEngine) logError(err error, message string, fields ...zap.Field) {
+	if err != nil {
+		ge.logger.Error(message, append(fields, zap.Error(err))...)
+	}
 }

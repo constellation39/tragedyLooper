@@ -38,19 +38,24 @@ type llmActionCompleteRequest struct {
 }
 
 // NewGameEngine creates a new game engine instance.
-func NewGameEngine(gameID string, logger *zap.Logger, players map[int32]*model.Player, llmClient llm.Client, gameConfig loader.GameConfigAccessor) (*GameEngine, error) {
+func NewGameEngine(logger *zap.Logger, players map[int32]*model.Player, llmClient llm.Client, gameConfig loader.GameConfigAccessor) (*GameEngine, error) {
 	gs := &model.GameState{
-		GameId:              gameID,
-		Characters:          make(map[int32]*model.Character),
-		Players:             players,
-		CurrentDay:          1,
-		CurrentLoop:         1,
-		CurrentPhase:        model.GamePhase_MASTERMIND_SETUP, // Start with Mastermind Setup
-		PlayedCardsThisDay:  make(map[int32]*model.Card),
-		PlayedCardsThisLoop: make(map[int32]bool),
-		LastUpdateTime:      time.Now().Unix(),
-		DayEvents:           []*model.GameEvent{},
-		LoopEvents:          []*model.GameEvent{},
+		GameId:                  "",
+		Characters:              make(map[int32]*model.Character),
+		Players:                 players,
+		CurrentDay:              1,
+		CurrentLoop:             1,
+		CurrentPhase:            model.GamePhase_MASTERMIND_SETUP, // Start with Mastermind Setup
+		ActiveTragedies:         nil,
+		PreventedTragedies:      nil,
+		PlayedCardsThisDay:      make(map[int32]*model.Card),
+		PlayedCardsThisLoop:     make(map[int32]bool),
+		LastUpdateTime:          time.Now().Unix(),
+		DayEvents:               []*model.GameEvent{},
+		LoopEvents:              []*model.GameEvent{},
+		CharacterParanoiaLimits: nil,
+		CharacterGoodwillLimits: nil,
+		CharacterIntrigueLimits: nil,
 	}
 
 	ge := &GameEngine{
@@ -61,12 +66,10 @@ func NewGameEngine(gameID string, logger *zap.Logger, players map[int32]*model.P
 		stopChan:          make(chan struct{}),
 		llmClient:         llmClient,
 		playerReady:       make(map[int32]bool),
-		logger:            logger.With(zap.String("gameID", gameID)),
+		logger:            logger,
 	}
 
-	if err := ge.initializeGameStateFromScript(); err != nil {
-		return nil, err
-	}
+	ge.dealInitialCards()
 
 	return ge, nil
 }
@@ -97,7 +100,7 @@ func (ge *GameEngine) GetGameEvents() <-chan *model.GameEvent {
 
 func (ge *GameEngine) GetPlayerView(playerID int32) *model.PlayerView {
 	responseChan := make(chan *model.PlayerView)
-	req := getPlayerViewRequest{
+	req := &getPlayerViewRequest{
 		playerID:     playerID,
 		responseChan: responseChan,
 	}
@@ -123,8 +126,8 @@ func (ge *GameEngine) runGameLoop() {
 			switch r := req.(type) {
 			case *llmActionCompleteRequest:
 				ge.handlePlayerAction(r.playerID, r.action)
-			case getPlayerViewRequest:
-				r.responseChan <- ge.createPlayerView(r.playerID)
+			case *getPlayerViewRequest:
+				r.responseChan <- ge.GeneratePlayerView(r.playerID)
 			}
 
 		case <-timer.C:
@@ -169,57 +172,6 @@ func (ge *GameEngine) resetLoop() {
 
 	// Re-deal cards to players
 	ge.dealInitialCards()
-}
-
-func (ge *GameEngine) createPlayerView(playerID int32) *model.PlayerView {
-	player, ok := ge.GameState.Players[playerID]
-	if !ok {
-		return nil // Or return an empty view
-	}
-
-	view := &model.PlayerView{
-		GameId:       ge.GameState.GameId,
-		YourId:       playerID,
-		CurrentDay:   ge.GameState.CurrentDay,
-		CurrentLoop:  ge.GameState.CurrentLoop,
-		CurrentPhase: ge.GameState.CurrentPhase,
-		YourHand:     player.Hand,
-		YourRole:     player.Role,
-		PublicEvents: ge.GameState.LoopEvents, // Show all events from the current loop
-		Characters:   make(map[int32]*model.PlayerViewCharacter),
-		Players:      make(map[int32]*model.PlayerViewPlayer),
-	}
-
-	// Populate character views
-	for id, char := range ge.GameState.Characters {
-		pcv := &model.PlayerViewCharacter{
-			Id:              id,
-			Name:            char.Config.Name,
-			Traits:          char.Traits,
-			CurrentLocation: char.CurrentLocation,
-			Paranoia:        char.Paranoia,
-			Goodwill:        char.Goodwill,
-			Intrigue:        char.Intrigue,
-			Abilities:       char.Abilities,
-			IsAlive:         char.IsAlive,
-		}
-		// Hide secret roles unless the viewer is the mastermind
-		if player.Role == model.PlayerRole_MASTERMIND || char.RoleIsPublic {
-			pcv.Role = char.HiddenRole
-		}
-		view.Characters[id] = pcv
-	}
-
-	// Populate player views
-	for id, p := range ge.GameState.Players {
-		view.Players[id] = &model.PlayerViewPlayer{
-			Id:   id,
-			Name: p.Name,
-			Role: p.Role, // Player roles are public knowledge
-		}
-	}
-
-	return view
 }
 
 func (ge *GameEngine) findPlayer(playerID int32) *model.Player {

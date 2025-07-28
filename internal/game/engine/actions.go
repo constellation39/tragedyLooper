@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"tragedylooper/internal/game/loader"
 	model "tragedylooper/internal/game/proto/v1"
 
 	"go.uber.org/zap"
@@ -143,7 +144,7 @@ func (ge *GameEngine) handleMakeGuessAction(player *model.Player, payload *model
 	}
 
 	if correctGuesses == len(script.Roles) {
-		ge.endGame(model.PlayerRole_PROTAGONİST)
+		ge.endGame(model.PlayerRole_PROTAGONIST)
 	} else {
 		ge.endGame(model.PlayerRole_MASTERMIND)
 	}
@@ -152,4 +153,36 @@ func (ge *GameEngine) handleMakeGuessAction(player *model.Player, payload *model
 func (ge *GameEngine) handlePassTurnAction(player *model.Player) {
 	ge.logger.Info("Player passed turn", zap.String("player", player.Name))
 	ge.playerReady[player.Id] = true
+}
+
+func (ge *GameEngine) dealInitialCards() {
+	script := ge.gameConfig.GetScript()
+	if script == nil {
+		ge.logger.Error("cannot deal cards, script not loaded")
+		return
+	}
+
+	mastermind := ge.getMastermindPlayer()
+	if mastermind != nil {
+		for _, cardID := range script.MastermindCardIds {
+			cardConfig, err := loader.Get[*model.CardConfig](ge.gameConfig, cardID)
+			if err != nil {
+				ge.logger.Warn("mastermind card config not found", zap.Int32("cardID", cardID))
+				continue
+			}
+			mastermind.Hand = append(mastermind.Hand, &model.Card{Config: cardConfig})
+		}
+	}
+
+	protagonists := ge.getProtagonistPlayers()
+	for _, protagonist := range protagonists {
+		for _, cardID := range script.ProtagonistCardIds {
+			cardConfig, err := loader.Get[*model.CardConfig](ge.gameConfig, cardID)
+			if err != nil {
+				ge.logger.Warn("protagonist card config not found", zap.Int32("cardID", cardID))
+				continue
+			}
+			protagonist.Hand = append(protagonist.Hand, &model.Card{Config: cardConfig})
+		}
+	}
 }
