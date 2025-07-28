@@ -164,7 +164,7 @@ func (ge *GameEngine) handleIncidentsPhase() {
 	ge.checkAndTriggerAbilities(model.TriggerType_ON_PHASE_START)
 
 	// Check for incidents on the current day
-	for _, incident := range ge.gameData.GetIncidents() {
+	for _, incident := range ge.gameConfig.GetIncidents() {
 		if incident.Day == ge.GameState.CurrentDay {
 			if ge.checkConditions(incident.TriggerConditions, nil, nil) {
 				ge.logger.Info("Incident triggered!", zap.String("incident_name", incident.Name))
@@ -205,7 +205,7 @@ func (ge *GameEngine) handleIncidentsPhase() {
 func (ge *GameEngine) handleDayEndPhase() {
 	ge.logger.Info("Day End Phase", zap.Int("day", int(ge.GameState.CurrentDay)))
 	ge.GameState.CurrentDay++
-	script, err := ge.gameData.GetScript()
+	script, err := ge.gameConfig.GetScript()
 	if err != nil {
 		ge.logger.Error("Failed to get script for day end phase", zap.Error(err))
 		ge.endGame(model.PlayerRole_PLAYER_ROLE_UNSPECIFIED) // End game on error
@@ -227,7 +227,7 @@ func (ge *GameEngine) handleLoopEndPhase() {
 		return
 	}
 
-	script, err := ge.gameData.GetScript()
+	script, err := ge.gameConfig.GetScript()
 	if err != nil {
 		ge.logger.Error("Failed to get script for loop end phase", zap.Error(err))
 		ge.endGame(model.PlayerRole_PLAYER_ROLE_UNSPECIFIED) // End game on error

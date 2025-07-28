@@ -81,8 +81,8 @@ func TestGameLoopLifecycle(t *testing.T) {
 	// Check if the control channel is closed. Reading from a closed channel returns immediately.
 	// This confirms the loop has received the stop signal.
 	select {
-	case _, ok := <-ge.gameControlChan:
-		assert.False(t, ok, "gameControlChan should be closed")
+	case _, ok := <-ge.stopChan:
+		assert.False(t, ok, "stopChan should be closed")
 	case <-time.After(100 * time.Millisecond):
 		t.Fatal("StopGameLoop did not close the channel within the timeout")
 	}
@@ -216,5 +216,9 @@ func TestCharacterStateChanges(t *testing.T) {
 		assert.Equal(t, model.LocationType_SCHOOL, ge.GameState.Characters[1].CurrentLocation)
 	case <-time.After(100 * time.Millisecond):
 		t.Fatal("Did not receive CharacterMoved event")
+	}
+
+	select {
+	
 	}
 }

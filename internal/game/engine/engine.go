@@ -13,10 +13,10 @@ import (
 // GameEngine manages the state and logic of a single game instance.
 type GameEngine struct {
 	GameState            *model.GameState
-	gameData             loader.GameConfigAccessor
+	gameConfig           loader.GameConfigAccessor
 	requestChan          chan engineRequest
 	dispatchGameEvent    chan *model.GameEvent
-	gameControlChan      chan struct{}
+	stopChan             chan struct{}
 	llmClient            llm.Client
 	playerReady          map[int32]bool
 	mastermindPlayerID   int32
@@ -41,7 +41,7 @@ type llmActionCompleteRequest struct {
 }
 
 // NewGameEngine creates a new game engine instance.
-func NewGameEngine(gameID string, logger *zap.Logger, players map[int32]*model.Player, llmClient llm.Client, gameData loader.GameConfigAccessor) *GameEngine {
+func NewGameEngine(gameID string, logger *zap.Logger, players map[int32]*model.Player, llmClient llm.Client, gameConfig loader.GameConfigAccessor) *GameEngine {
 	gs := &model.GameState{
 		GameId:                  gameID,
 		Characters:              make(map[int32]*model.Character),
@@ -61,17 +61,17 @@ func NewGameEngine(gameID string, logger *zap.Logger, players map[int32]*model.P
 		CharacterIntrigueLimits: make(map[int32]int32),
 	}
 
-	for _, charConfig := range gameData.GetCharacters() {
+	for _, charConfig := range gameConfig.GetCharacters() {
 		character := &model.Character{Config: charConfig}
 		gs.Characters[charConfig.Id] = character
 	}
 
 	ge := &GameEngine{
 		GameState:         gs,
-		gameData:          gameData,
+		gameConfig:        gameConfig,
 		requestChan:       make(chan engineRequest, 100),
 		dispatchGameEvent: make(chan *model.GameEvent, 100),
-		gameControlChan:   make(chan struct{}),
+		stopChan:          make(chan struct{}),
 		llmClient:         llmClient,
 		playerReady:       make(map[int32]bool),
 		characterNameToID: make(map[string]int32),
@@ -83,10 +83,13 @@ func NewGameEngine(gameID string, logger *zap.Logger, players map[int32]*model.P
 	}
 
 	for playerID, p := range players {
-		if p.Role == model.PlayerRole_MASTERMIND {
+		switch p.Role {
+		case model.PlayerRole_MASTERMIND:
 			ge.mastermindPlayerID = playerID
-		} else {
+		case model.PlayerRole_PROTAGONIST:
 			ge.protagonistPlayerIDs = append(ge.protagonistPlayerIDs, playerID)
+		default:
+			ge.logger.Warn("Unknown player role", zap.Int32("playerID", playerID))
 		}
 	}
 
@@ -98,7 +101,7 @@ func (ge *GameEngine) StartGameLoop() {
 }
 
 func (ge *GameEngine) StopGameLoop() {
-	close(ge.gameControlChan)
+	close(ge.stopChan)
 }
 
 func (ge *GameEngine) SubmitPlayerAction(playerID int32, action *model.PlayerActionPayload) {
@@ -138,7 +141,7 @@ func (ge *GameEngine) runGameLoop() {
 
 	for {
 		select {
-		case <-ge.gameControlChan:
+		case <-ge.stopChan:
 			return
 
 		case req := <-ge.requestChan:
