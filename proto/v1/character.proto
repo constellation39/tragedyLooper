@@ -2,68 +2,68 @@ syntax = "proto3";
 
 package v1;
 
-import "v1/enums.proto";
 import "v1/ability.proto";
+import "v1/enums.proto";
 
 option go_package = "tragedylooper/internal/game/proto/v1";
 
 // 角色静态配置（全局角色库）
 message CharacterConfig {
-  int32 id = 1;                        // 角色唯一ID
-  string name = 2;                     // 角色名称
-  repeated string traits = 3;          // 角色特征标签（如"学生"、"记者"）
-  int32 paranoia_limit = 4;            // 妄想值上限
-  int32 goodwill_limit = 5;            // 好感值上限
-  int32 intrigue_limit = 6;            // 阴谋值上限
-  repeated int32 ability_ids = 7;      // 角色固有能力ID列表
-  repeated CharacterRule rules = 8;    // 角色特殊规则列表
-  string description = 9;              // 角色描述
+  int32 id = 1; // 角色唯一ID
+  string name = 2; // 角色名称
+  repeated string traits = 3; // 角色特征标签（如"学生"、"记者"）
+  int32 paranoia_limit = 4; // 妄想值上限
+  int32 goodwill_limit = 5; // 好感值上限
+  int32 intrigue_limit = 6; // 阴谋值上限
+  repeated int32 ability_ids = 7; // 角色固有能力ID列表
+  repeated CharacterRule rules = 8; // 角色特殊规则列表
+  string description = 9; // 角色描述
 }
 
 // 角色运行时实例
 message Character {
-  CharacterConfig config = 1;                           // 角色ID，关联到CharacterConfig
-  LocationType current_location = 2;      // 当前所在地点
-  int32 paranoia = 3;                     // 当前妄想值
-  int32 goodwill = 4;                     // 当前好感值
-  int32 intrigue = 5;                     // 当前阴谋值
-  RoleType hidden_role = 6;               // 隐藏身份（剧本分配）
-  repeated Ability abilities = 7;         // 拥有的能力实例列表
-  bool is_alive = 8;                      // 是否存活
-  bool in_panic_mode = 9;                 // 是否处于恐慌模式
+  CharacterConfig config = 1; // 角色ID，关联到CharacterConfig
+  LocationType current_location = 2; // 当前所在地点
+  int32 paranoia = 3; // 当前妄想值
+  int32 goodwill = 4; // 当前好感值
+  int32 intrigue = 5; // 当前阴谋值
+  RoleType hidden_role = 6; // 隐藏身份（剧本分配）
+  repeated Ability abilities = 7; // 拥有的能力实例列表
+  bool is_alive = 8; // 是否存活
+  bool in_panic_mode = 9; // 是否处于恐慌模式
 }
 
 // 角色配置库
 message CharacterConfigLib {
-  map<int32, CharacterConfig> characters = 1;  // 角色ID到配置的映射
+  map<int32, CharacterConfig> characters = 1; // 角色ID到配置的映射
 }
 
 // 角色特殊规则
 message CharacterRule {
-  string name = 1;                    // 规则名称
-  string description = 2;             // 规则描述
-  TriggerType trigger = 3;            // 规则触发时机
+  string name = 1; // 规则名称
+  string description = 2; // 规则描述
+  TriggerType trigger = 3; // 规则触发时机
   oneof effect {// 规则效果
-    TurfSelectionEffect turf_selection_effect = 4;    // 地盘选择效果
-    DelayedEntryEffect delayed_entry_effect = 5;      // 延迟登场效果
-    SpecialMovementRule special_movement_rule = 6;    // 特殊移动规则
+    TurfSelectionEffect turf_selection_effect = 4; // 地盘选择效果
+    DelayedEntryEffect delayed_entry_effect = 5; // 延迟登场效果
+    SpecialMovementRule special_movement_rule = 6; // 特殊移动规则
   }
 }
 
 // 地盘选择效果
 message TurfSelectionEffect {
-  repeated LocationType possible_locations = 1;  // 可选择的地点列表
-  string prompt = 2;                             // 给玩家的提示信息
+  repeated LocationType possible_locations = 1; // 可选择的地点列表
+  string prompt = 2; // 给玩家的提示信息
 }
 
 // 延迟登场效果
 message DelayedEntryEffect {
-  int32 day_of_entry = 1;           // 登场日期
-  LocationType entry_location = 2;  // 登场地点
+  int32 day_of_entry = 1; // 登场日期
+  LocationType entry_location = 2; // 登场地点
 }
 
 // 特殊移动规则
 message SpecialMovementRule {
-  repeated LocationType restricted_locations = 1;  // 限制进入的地点
-  string description = 2;                          // 规则描述
+  repeated LocationType restricted_locations = 1; // 限制进入的地点
+  string description = 2; // 规则描述
 }

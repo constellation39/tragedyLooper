@@ -9,23 +9,17 @@ import "v1/enums.proto";
 option go_package = "tragedylooper/internal/game/proto/v1";
 
 message AbilityConfig {
-  oneof ability_type {
-    BasicAbility basic = 1;
-    CompoundAbility compound = 2;
-  }
-}
-
-message BasicAbility {
-  int32 id = 1;                              // 能力唯一ID
-  string name = 2;                           // 能力名称
-  string description = 3;                    // 能力描述
-  repeated CompoundCondition trigger_conditions = 4; // 能力触发条件
-  repeated CompoundEffect effects = 6;               // 能力效果
-  bool once_per_loop = 7;                    // 是否每循环只能使用一次
-  PlayerRole refusal_role = 8;               // 可以拒绝此能力的玩家角色
-  bool is_passive = 9;                       // 是否为被动能力
-  bool is_mandatory = 10;                    // 是否为强制能力（不可拒绝）
-  int32 priority = 11;                       // 能力结算优先级
+  int32 id = 1; // 能力唯一ID
+  string name = 2; // 能力名称
+  string description = 3; // 能力描述
+  TriggerType trigger_type = 4; // 能力触发时机
+  repeated GameEventType event_filters = 5; // 可选：游戏事件触发时的过滤器
+  Effect effect = 6; // 能力效果
+  bool once_per_loop = 7; // 是否每循环只能使用一次
+  PlayerRole refusal_role = 8; // 可以拒绝此能力的玩家角色
+  bool is_passive = 9; // 是否为被动能力
+  bool is_mandatory = 10; // 是否为强制能力（不可拒绝）
+  int32 priority = 11; // 能力结算优先级
 }
 
 message CompoundAbility {
@@ -39,10 +33,10 @@ message CompoundAbility {
 }
 
 message Ability {
-  AbilityConfig config = 1;               // 能力ID，关联到AbilityConfig
-  bool used_this_loop = 2;    // 运行时状态：本循环是否已使用
+  AbilityConfig config = 1; // 能力ID，关联到AbilityConfig
+  bool used_this_loop = 2; // 运行时状态：本循环是否已使用
 }
 
 message AbilityConfigLib {
-  map<int32, AbilityConfig> abilities = 1;  // 能力ID到配置的映射
+  map<int32, AbilityConfig> abilities = 1; // 能力ID到配置的映射
 }

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"tragedylooper/internal/game/proto/v1"
+	v1 "tragedylooper/internal/game/proto/v1"
 )
 
 func loadDataFromJSON[T any](filePath string) (T, error) {

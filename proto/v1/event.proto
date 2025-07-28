@@ -12,9 +12,9 @@ option go_package = "tragedylooper/internal/game/proto/v1";
 
 // GameEvent 表示游戏中发生的事件。
 message GameEvent {
-  GameEventType type = 1;                   // 事件类型
-  google.protobuf.Any payload = 2;          // 事件的具体负载
-  google.protobuf.Timestamp timestamp = 3;  // 事件发生的时间戳
+  GameEventType type = 1; // 事件类型
+  google.protobuf.Any payload = 2; // 事件的具体负载
+  google.protobuf.Timestamp timestamp = 3; // 事件发生的时间戳
 }
 
 // 事件库，用于存储和管理游戏中的所有事件
@@ -24,29 +24,29 @@ message GameEventLib {
 
 // 角色移动事件
 message CharacterMovedEvent {
-  int32 character_id = 1;       // 移动的角色ID
-  LocationType new_location = 2;  // 移动到的新地点
+  int32 character_id = 1; // 移动的角色ID
+  LocationType new_location = 2; // 移动到的新地点
 }
 
 // 妄想值调整事件
 message ParanoiaAdjustedEvent {
-  int32 character_id = 1;   // 角色ID
-  int32 amount = 2;         // 调整量
-  int32 new_paranoia = 3;   // 调整后的新妄想值
+  int32 character_id = 1; // 角色ID
+  int32 amount = 2; // 调整量
+  int32 new_paranoia = 3; // 调整后的新妄想值
 }
 
 // 好感值调整事件
 message GoodwillAdjustedEvent {
-  int32 character_id = 1;   // 角色ID
-  int32 amount = 2;         // 调整量
-  int32 new_goodwill = 3;   // 调整后的新好感值
+  int32 character_id = 1; // 角色ID
+  int32 amount = 2; // 调整量
+  int32 new_goodwill = 3; // 调整后的新好感值
 }
 
 // 阴谋值调整事件
 message IntrigueAdjustedEvent {
-  int32 character_id = 1;   // 角色ID
-  int32 amount = 2;         // 调整量
-  int32 new_intrigue = 3;   // 调整后的新阴谋值
+  int32 character_id = 1; // 角色ID
+  int32 amount = 2; // 调整量
+  int32 new_intrigue = 3; // 调整后的新阴谋值
 }
 
 // 循环失败事件
@@ -59,14 +59,14 @@ message LoopWinEvent {}
 
 // 能力使用事件
 message AbilityUsedEvent {
-  int32 character_id = 1;   // 使用能力的角色ID
-  string ability_name = 2;  // 使用的能力名称
+  int32 character_id = 1; // 使用能力的角色ID
+  string ability_name = 2; // 使用的能力名称
 }
 
 // 天数推进事件
 message DayAdvancedEvent {
-  int32 day = 1;    // 新的天数
-  int32 loop = 2;   // 当前的循环数
+  int32 day = 1; // 新的天数
+  int32 loop = 2; // 当前的循环数
 }
 
 // 卡牌打出事件
@@ -86,8 +86,8 @@ message GameOverEvent {
 
 // Choice 表示玩家可以做出的选择。
 message Choice {
-  string description = 1;   // 选项的描述
-  int32 character_id = 2;   // 与该选项相关的角色ID
+  string description = 1; // 选项的描述
+  int32 character_id = 2; // 与该选项相关的角色ID
 }
 
 // 需要玩家做出选择的事件

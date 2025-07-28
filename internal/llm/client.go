@@ -7,8 +7,6 @@ import (
 	model "tragedylooper/internal/game/proto/v1"
 
 	"google.golang.org/protobuf/encoding/protojson"
-	
-	
 )
 
 // LLMClient 定义与 LLM 交互的接口。
@@ -46,10 +44,6 @@ func (m *MockLLMClient) GenerateResponse(prompt string, sessionID string) (strin
 		if err := json.Unmarshal(jsonBytes, &data); err != nil {
 			return "", err
 		}
-
-		
-
-		
 
 		mockAction := model.PlayerActionPayload{
 			Payload: &model.PlayerActionPayload_PlayCard{

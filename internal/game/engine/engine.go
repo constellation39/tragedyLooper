@@ -4,9 +4,10 @@ import (
 	"time"
 	"tragedylooper/internal/game/loader"
 
-	"go.uber.org/zap"
 	model "tragedylooper/internal/game/proto/v1"
 	"tragedylooper/internal/llm"
+
+	"go.uber.org/zap"
 )
 
 // GameEngine manages the state and logic of a single game instance.

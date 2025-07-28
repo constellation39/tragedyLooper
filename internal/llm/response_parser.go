@@ -5,8 +5,6 @@ import (
 	"fmt"
 
 	model "tragedylooper/internal/game/proto/v1"
-
-	
 )
 
 // ResponseParser 将 LLM 响应解析为结构化游戏动作。
@@ -44,5 +42,3 @@ func (rp *ResponseParser) ParseLLMAction(llmResponse string) (*model.PlayerActio
 
 	return &action, nil
 }
-
-

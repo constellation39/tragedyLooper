@@ -8,14 +8,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/gorilla/websocket"
-	"go.uber.org/zap"
 	"tragedylooper/internal/game/engine"
 	"tragedylooper/internal/game/loader"
 	model "tragedylooper/internal/game/proto/v1"
 	"tragedylooper/internal/llm"
 	"tragedylooper/internal/logger"
+
+	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
+	"go.uber.org/zap"
 )
 
 // Server 管理多个游戏房间和 WebSocket 连接。

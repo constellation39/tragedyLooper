@@ -13,19 +13,19 @@ option go_package = "tragedylooper/internal/game/proto/v1";
 
 // 游戏当前状态
 message GameState {
-  string game_id = 1;                               // 游戏唯一ID
-  map<int32, Character> characters = 3;             // 所有角色当前状态的映射，键为 character_id
-  map<int32, Player> players = 4;                   // 所有玩家的映射，键为 player_id
-  int32 current_day = 5;                            // 当前天数
-  int32 current_loop = 6;                           // 当前循环数
-  GamePhase current_phase = 7;                      // 当前游戏阶段
-  map<int32, bool> active_tragedies = 8;            // 当前循环中已激活（满足条件）的悲剧，键为 TragedyType
-  map<int32, bool> prevented_tragedies = 9;         // 当前循环中已被阻止的悲剧，键为 TragedyType
-  map<int32, Card> played_cards_this_day = 10;      // 今天打出的牌，键为 player_id
-  map<int32, bool> played_cards_this_loop = 11;     // 本循环中已打出的牌的ID
-  int64 last_update_time = 12;                      // 最后更新时间戳 (Unix timestamp)
-  repeated GameEvent day_events = 13;               // 本日发生的事件日志
-  repeated GameEvent loop_events = 14;              // 本循环发生的事件日志
+  string game_id = 1; // 游戏唯一ID
+  map<int32, Character> characters = 3; // 所有角色当前状态的映射，键为 character_id
+  map<int32, Player> players = 4; // 所有玩家的映射，键为 player_id
+  int32 current_day = 5; // 当前天数
+  int32 current_loop = 6; // 当前循环数
+  GamePhase current_phase = 7; // 当前游戏阶段
+  map<int32, bool> active_tragedies = 8; // 当前循环中已激活（满足条件）的悲剧，键为 TragedyType
+  map<int32, bool> prevented_tragedies = 9; // 当前循环中已被阻止的悲剧，键为 TragedyType
+  map<int32, Card> played_cards_this_day = 10; // 今天打出的牌，键为 player_id
+  map<int32, bool> played_cards_this_loop = 11; // 本循环中已打出的牌的ID
+  int64 last_update_time = 12; // 最后更新时间戳 (Unix timestamp)
+  repeated GameEvent day_events = 13; // 本日发生的事件日志
+  repeated GameEvent loop_events = 14; // 本循环发生的事件日志
   map<int32, int32> character_paranoia_limits = 15; // 每个角色的妄想上限映射
   map<int32, int32> character_goodwill_limits = 16; // 每个角色的好感度上限映射
   map<int32, int32> character_intrigue_limits = 17; // 每个角色的阴谋上限映射
@@ -33,12 +33,12 @@ message GameState {
 
 // 玩家信息
 message Player {
-  int32 id = 1;                                     // 玩家唯一ID
-  string name = 2;                                  // 玩家名称
-  PlayerRole role = 3;                              // 玩家角色 (主谋或主角)
-  bool is_llm = 4;                                  // 是否由LLM（大语言模型）控制
-  repeated Card hand = 5;                           // 玩家手牌列表
-  string llm_session_id = 6;                        // 如果是LLM，对应的会话ID
+  int32 id = 1; // 玩家唯一ID
+  string name = 2; // 玩家名称
+  PlayerRole role = 3; // 玩家角色 (主谋或主角)
+  bool is_llm = 4; // 是否由LLM（大语言模型）控制
+  repeated Card hand = 5; // 玩家手牌列表
+  string llm_session_id = 6; // 如果是LLM，对应的会话ID
   PlayerDeductionKnowledge deduction_knowledge = 7; // 主角的推理知识（仅主角玩家拥有）
   repeated int32 protagonist_characters_controlled = 8; // 如果一个主角玩家控制多个角色牌组，这里列出他们的ID
 }
@@ -50,47 +50,47 @@ message PlayerLib {
 // 主角的推理知识
 message PlayerDeductionKnowledge {
   map<int32, RoleType> guessed_roles = 1; // 对角色身份的猜测，键为 character_id
-  repeated string clues = 2;              // 收集到的线索列表
-  repeated string theories = 3;           // 推理出的理论列表
+  repeated string clues = 2; // 收集到的线索列表
+  repeated string theories = 3; // 推理出的理论列表
 }
 
 // 玩家视角下的游戏状态（用于向特定玩家展示信息，隐藏其他玩家的秘密信息）
 message PlayerView {
-  string game_id = 1;                               // 游戏唯一ID
-  int32 script_id = 2;                              // 剧本ID
-  map<int32, PlayerViewCharacter> characters = 3;   // 玩家视角下的角色状态映射 (隐藏身份已移除)
-  map<int32, PlayerViewPlayer> players = 4;         // 玩家视角下的其他玩家信息 (手牌等可能隐藏)
-  int32 current_day = 5;                            // 当前天数
-  int32 current_loop = 6;                           // 当前循环数
-  GamePhase current_phase = 7;                      // 当前游戏阶段
-  map<int32, bool> active_tragedies = 8;            // 已触发的悲剧
-  map<int32, bool> prevented_tragedies = 9;         // 已阻止的悲剧
-  repeated Card your_hand = 10;                     // 当前玩家的手牌列表
-  PlayerDeductionKnowledge your_deductions = 11;    // 当前玩家的推理知识
-  repeated GameEvent public_events = 12;            // 对所有玩家公开的事件日志
+  string game_id = 1; // 游戏唯一ID
+  int32 script_id = 2; // 剧本ID
+  map<int32, PlayerViewCharacter> characters = 3; // 玩家视角下的角色状态映射 (隐藏身份已移除)
+  map<int32, PlayerViewPlayer> players = 4; // 玩家视角下的其他玩家信息 (手牌等可能隐藏)
+  int32 current_day = 5; // 当前天数
+  int32 current_loop = 6; // 当前循环数
+  GamePhase current_phase = 7; // 当前游戏阶段
+  map<int32, bool> active_tragedies = 8; // 已触发的悲剧
+  map<int32, bool> prevented_tragedies = 9; // 已阻止的悲剧
+  repeated Card your_hand = 10; // 当前玩家的手牌列表
+  PlayerDeductionKnowledge your_deductions = 11; // 当前玩家的推理知识
+  repeated GameEvent public_events = 12; // 对所有玩家公开的事件日志
   // 可以在此添加其他公开信息
 }
 
 // 玩家视角下的角色信息（不包含隐藏身份）
 message PlayerViewCharacter {
-  int32 id = 1;                         // 角色唯一ID
-  string name = 2;                      // 角色名称
-  repeated string traits = 3;           // 角色特征
-  LocationType current_location = 4;    // 角色当前所在地点
-  int32 paranoia = 5;                   // 妄想值
-  int32 goodwill = 6;                   // 好感值
-  int32 intrigue = 7;                   // 阴谋值
-  repeated Ability abilities = 8;       // 角色拥有的能力列表
-  bool is_alive = 9;                    // 角色是否存活
-  bool in_panic_mode = 10;              // 是否处于恐慌模式
-  repeated CharacterRule rules = 11;    // 角色特有规则
+  int32 id = 1; // 角色唯一ID
+  string name = 2; // 角色名称
+  repeated string traits = 3; // 角色特征
+  LocationType current_location = 4; // 角色当前所在地点
+  int32 paranoia = 5; // 妄想值
+  int32 goodwill = 6; // 好感值
+  int32 intrigue = 7; // 阴谋值
+  repeated Ability abilities = 8; // 角色拥有的能力列表
+  bool is_alive = 9; // 角色是否存活
+  bool in_panic_mode = 10; // 是否处于恐慌模式
+  repeated CharacterRule rules = 11; // 角色特有规则
   // 隐藏身份 (hidden_role) 不会在这里显示
 }
 
 // 玩家视角下的其他玩家信息（不包含私密数据）
 message PlayerViewPlayer {
-  int32 id = 1;       // 玩家唯一ID
-  string name = 2;    // 玩家名称
-  PlayerRole role = 3;  // 玩家角色
+  int32 id = 1; // 玩家唯一ID
+  string name = 2; // 玩家名称
+  PlayerRole role = 3; // 玩家角色
   // 手牌 (hand) 和推理知识 (deduction_knowledge) 不会在这里显示给其他玩家
 }

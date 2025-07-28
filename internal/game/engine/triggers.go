@@ -44,7 +44,7 @@ func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType, ev
 				ge.GameState.Characters[char.Id].Abilities[i].UsedThisLoop = true
 			}
 
-						// ge.publishGameEvent(model.GameEventType_ABILITY_USED, &model.AbilityUsedEvent{CharacterId: char.Id, AbilityName: ability.Name})
+			// ge.publishGameEvent(model.GameEventType_ABILITY_USED, &model.AbilityUsedEvent{CharacterId: char.Id, AbilityName: ability.Name})
 		}
 	}
 }

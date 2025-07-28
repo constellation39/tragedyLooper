@@ -2,6 +2,7 @@ package engine
 
 import (
 	"fmt"
+
 	"google.golang.org/protobuf/proto"
 
 	model "tragedylooper/internal/game/proto/v1"
@@ -32,17 +33,17 @@ func (ge *GameEngine) generatePlayerView(playerID int32) *model.PlayerView {
 		// Create a copy to avoid races and unintended modification of the core state.
 		charCopy := proto.Clone(char).(*model.Character)
 		playerViewChar := &model.PlayerViewCharacter{
-			Id:               charCopy.Id,
-			Name:             charCopy.Name,
-			Traits:           charCopy.Traits,
-			CurrentLocation:  charCopy.CurrentLocation,
-			Paranoia:         charCopy.Paranoia,
-			Goodwill:         charCopy.Goodwill,
-			Intrigue:         charCopy.Intrigue,
-			Abilities:        charCopy.Abilities,
-			IsAlive:          charCopy.IsAlive,
-			InPanicMode:      charCopy.InPanicMode,
-			Rules:            charCopy.Rules,
+			Id:              charCopy.Id,
+			Name:            charCopy.Name,
+			Traits:          charCopy.Traits,
+			CurrentLocation: charCopy.CurrentLocation,
+			Paranoia:        charCopy.Paranoia,
+			Goodwill:        charCopy.Goodwill,
+			Intrigue:        charCopy.Intrigue,
+			Abilities:       charCopy.Abilities,
+			IsAlive:         charCopy.IsAlive,
+			InPanicMode:     charCopy.InPanicMode,
+			Rules:           charCopy.Rules,
 		}
 		if player.Role == model.PlayerRole_PROTAGONIST {
 			// Hide the true role from Protagonists, showing it as unspecified.

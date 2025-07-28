@@ -1,8 +1,9 @@
 package engine
 
 import (
-	"go.uber.org/zap"
 	model "tragedylooper/internal/game/proto/v1"
+
+	"go.uber.org/zap"
 )
 
 // --- Player Action Handlers ---

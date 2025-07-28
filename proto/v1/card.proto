@@ -9,32 +9,32 @@ option go_package = "tragedylooper/internal/game/proto/v1";
 
 // 卡牌静态配置
 message CardConfig {
-  int32 id = 1;                    // 卡牌唯一ID
-  string name = 2;                 // 卡牌名称
-  string description = 3;          // 卡牌描述
-  CardType card_type = 4;          // 卡牌类型
-  PlayerRole owner_role = 5;       // 卡牌所属玩家角色（主谋或主角）
-  CompoundEffect effect = 6;               // 卡牌效果
-  bool once_per_loop = 7;          // 是否每循环只能使用一次
-  int32 priority = 8;              // 卡牌结算优先级（同类型卡牌的结算顺序）
+  int32 id = 1; // 卡牌唯一ID
+  string name = 2; // 卡牌名称
+  string description = 3; // 卡牌描述
+  CardType card_type = 4; // 卡牌类型
+  PlayerRole owner_role = 5; // 卡牌所属玩家角色（主谋或主角）
+  CompoundEffect effect = 6; // 卡牌效果
+  bool once_per_loop = 7; // 是否每循环只能使用一次
+  int32 priority = 8; // 卡牌结算优先级（同类型卡牌的结算顺序）
 }
 
 // 卡牌运行时实例
 message Card {
-  CardConfig config = 1;               // 卡牌ID，关联到CardConfig
-  bool used_this_loop = 2;    // 运行时状态：本循环是否已使用
+  CardConfig config = 1; // 卡牌ID，关联到CardConfig
+  bool used_this_loop = 2; // 运行时状态：本循环是否已使用
   oneof target {
-    int32 target_character_id = 3;  // 如果能力有目标角色，指定其ID
+    int32 target_character_id = 3; // 如果能力有目标角色，指定其ID
     LocationType target_location = 4; // 如果能力有目标地点，指定其地点
   }
 }
 
 // 卡牌配置库
 message CardConfigLib {
-  map<int32, CardConfig> cards = 1;  // 卡牌ID到配置的映射
+  map<int32, CardConfig> cards = 1; // 卡牌ID到配置的映射
 }
 
 // 卡牌列表
 message CardList {
-  repeated Card cards = 1;  // 卡牌实例列表
+  repeated Card cards = 1; // 卡牌实例列表
 }

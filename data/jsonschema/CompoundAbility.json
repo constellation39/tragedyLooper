@@ -36,13 +36,121 @@
         },
         "v1.AbilityConfig": {
             "properties": {
-                "basic": {
-                    "$ref": "#/definitions/v1.BasicAbility",
-                    "additionalProperties": true
+                "id": {
+                    "type": "integer",
+                    "description": "能力唯一ID"
                 },
-                "compound": {
-                    "$ref": "#/definitions/CompoundAbility",
-                    "additionalProperties": true
+                "name": {
+                    "type": "string",
+                    "description": "能力名称"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "能力描述"
+                },
+                "trigger_type": {
+                    "enum": [
+                        "TRIGGER_TYPE_UNSPECIFIED",
+                        0,
+                        "ON_GAME_SETUP",
+                        1,
+                        "ON_LOOP_START",
+                        2,
+                        "ON_DAY_START",
+                        3,
+                        "ON_PHASE_START",
+                        4,
+                        "ON_PHASE_END",
+                        5,
+                        "ON_GAME_EVENT",
+                        6,
+                        "PASSIVE",
+                        7,
+                        "ON_GUESS_MADE",
+                        8,
+                        "ON_GAME_END",
+                        9
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Trigger Type",
+                    "description": "触发器类型（能力或规则何时触发）"
+                },
+                "event_filters": {
+                    "items": {
+                        "enum": [
+                            "GAME_EVENT_TYPE_UNSPECIFIED",
+                            0,
+                            "CHARACTER_MOVED",
+                            1,
+                            "STAT_ADJUSTED",
+                            2,
+                            "INCIDENT_TRIGGERED",
+                            3,
+                            "ROLE_REVEALED",
+                            4,
+                            "CHARACTER_DIED",
+                            5,
+                            "ABILITY_USED",
+                            6,
+                            "CARD_PLAYED",
+                            7,
+                            "DAY_ADVANCED",
+                            8,
+                            "LOOP_RESET",
+                            9
+                        ]
+                    },
+                    "type": "array",
+                    "title": "Game Event Type",
+                    "description": "游戏事件类型（用于能力触发器过滤）"
+                },
+                "effect": {
+                    "$ref": "#/definitions/v1.Effect",
+                    "additionalProperties": true,
+                    "description": "能力效果"
+                },
+                "once_per_loop": {
+                    "type": "boolean",
+                    "description": "是否每循环只能使用一次"
+                },
+                "refusal_role": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "MASTERMIND",
+                        1,
+                        "PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色"
+                },
+                "is_passive": {
+                    "type": "boolean",
+                    "description": "是否为被动能力"
+                },
+                "is_mandatory": {
+                    "type": "boolean",
+                    "description": "是否为强制能力（不可拒绝）"
+                },
+                "priority": {
+                    "type": "integer",
+                    "description": "能力结算优先级"
                 }
             },
             "additionalProperties": true,
@@ -104,75 +212,6 @@
             "title": "Adjust Stat Effect",
             "description": "调整属性效果"
         },
-        "v1.BasicAbility": {
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "能力唯一ID"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "能力名称"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "能力描述"
-                },
-                "trigger_conditions": {
-                    "items": {
-                        "$ref": "#/definitions/v1.CompoundCondition"
-                    },
-                    "type": "array",
-                    "description": "能力触发条件"
-                },
-                "effects": {
-                    "items": {
-                        "$ref": "#/definitions/v1.CompoundEffect"
-                    },
-                    "type": "array",
-                    "description": "能力效果"
-                },
-                "once_per_loop": {
-                    "type": "boolean",
-                    "description": "是否每循环只能使用一次"
-                },
-                "refusal_role": {
-                    "enum": [
-                        "PLAYER_ROLE_UNSPECIFIED",
-                        0,
-                        "MASTERMIND",
-                        1,
-                        "PROTAGONIST",
-                        2
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Player Role",
-                    "description": "玩家角色"
-                },
-                "is_passive": {
-                    "type": "boolean",
-                    "description": "是否为被动能力"
-                },
-                "is_mandatory": {
-                    "type": "boolean",
-                    "description": "是否为强制能力（不可拒绝）"
-                },
-                "priority": {
-                    "type": "integer",
-                    "description": "能力结算优先级"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Basic Ability"
-        },
         "v1.ChangeRoleEffect": {
             "properties": {
                 "target": {
@@ -226,42 +265,6 @@
             "title": "Change Role Effect",
             "description": "改变身份效果"
         },
-        "v1.CompoundCondition": {
-            "properties": {
-                "operator": {
-                    "enum": [
-                        "OPERATOR_UNSPECIFIED",
-                        0,
-                        "AND",
-                        1,
-                        "OR",
-                        2,
-                        "NOT",
-                        3
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Operator"
-                },
-                "sub_conditions": {
-                    "items": {
-                        "$ref": "#/definitions/v1.Condition"
-                    },
-                    "type": "array",
-                    "description": "子条件列表"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Compound Condition",
-            "description": "复合条件，用于组合多个条件"
-        },
         "v1.CompoundEffect": {
             "properties": {
                 "operator": {
@@ -295,82 +298,6 @@
             "type": "object",
             "title": "Compound Effect",
             "description": "复合效果，用于组合多个效果"
-        },
-        "v1.Condition": {
-            "properties": {
-                "stat_condition": {
-                    "$ref": "#/definitions/v1.StatCondition",
-                    "additionalProperties": true,
-                    "description": "属性条件"
-                },
-                "location_condition": {
-                    "$ref": "#/definitions/v1.LocationCondition",
-                    "additionalProperties": true,
-                    "description": "地点条件"
-                },
-                "role_condition": {
-                    "$ref": "#/definitions/v1.RoleCondition",
-                    "additionalProperties": true,
-                    "description": "身份条件"
-                },
-                "trait_condition": {
-                    "$ref": "#/definitions/v1.TraitCondition",
-                    "additionalProperties": true,
-                    "description": "特征条件"
-                },
-                "day_condition": {
-                    "$ref": "#/definitions/v1.DayCondition",
-                    "additionalProperties": true,
-                    "description": "日期条件"
-                },
-                "player_condition": {
-                    "$ref": "#/definitions/v1.PlayerCondition",
-                    "additionalProperties": true,
-                    "description": "玩家条件"
-                },
-                "compound_condition": {
-                    "$ref": "#/definitions/v1.CompoundCondition",
-                    "additionalProperties": true,
-                    "description": "复合条件 (AND/OR/NOT)"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Condition",
-            "description": "条件，用于规则、事件和效果的触发判断"
-        },
-        "v1.DayCondition": {
-            "properties": {
-                "comparator": {
-                    "enum": [
-                        "COMPARATOR_UNSPECIFIED",
-                        0,
-                        "BEFORE",
-                        1,
-                        "ON",
-                        2,
-                        "AFTER",
-                        3
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Comparator"
-                },
-                "day": {
-                    "type": "integer",
-                    "description": "目标天数"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Day Condition",
-            "description": "日期条件"
         },
         "v1.Effect": {
             "properties": {
@@ -524,55 +451,6 @@
             "title": "Grant Ability Effect",
             "description": "授予能力效果"
         },
-        "v1.LocationCondition": {
-            "properties": {
-                "target": {
-                    "$ref": "#/definitions/v1.TargetSelector",
-                    "additionalProperties": true,
-                    "description": "目标角色选择器"
-                },
-                "location": {
-                    "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
-                        0,
-                        "HOSPITAL",
-                        1,
-                        "SHRINE",
-                        2,
-                        "CITY",
-                        3,
-                        "SCHOOL",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Location Type",
-                    "description": "地点类型（也可通过LocationConfig扩展）"
-                },
-                "is_at_location": {
-                    "type": "boolean",
-                    "description": "是否在该地点 (默认为true)"
-                },
-                "is_alone": {
-                    "type": "boolean",
-                    "description": "是否在该地点独处"
-                },
-                "not_alone": {
-                    "type": "boolean",
-                    "description": "是否在该地点不独处"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Location Condition",
-            "description": "地点条件"
-        },
         "v1.MoveCharacterEffect": {
             "properties": {
                 "target": {
@@ -610,34 +488,6 @@
             "title": "Move Character Effect",
             "description": "移动角色效果"
         },
-        "v1.PlayerCondition": {
-            "properties": {
-                "player_role": {
-                    "enum": [
-                        "PLAYER_ROLE_UNSPECIFIED",
-                        0,
-                        "MASTERMIND",
-                        1,
-                        "PROTAGONIST",
-                        2
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Player Role",
-                    "description": "玩家角色"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Player Condition",
-            "description": "玩家条件"
-        },
         "v1.RemoveTraitEffect": {
             "properties": {
                 "target": {
@@ -667,126 +517,6 @@
             "type": "object",
             "title": "Reveal Role Effect",
             "description": "揭示身份效果"
-        },
-        "v1.RoleCondition": {
-            "properties": {
-                "target": {
-                    "$ref": "#/definitions/v1.TargetSelector",
-                    "additionalProperties": true,
-                    "description": "目标角色选择器"
-                },
-                "role": {
-                    "enum": [
-                        "ROLE_TYPE_UNSPECIFIED",
-                        0,
-                        "PERSON",
-                        1,
-                        "KILLER",
-                        2,
-                        "BRAIN",
-                        3,
-                        "KEY_PERSON",
-                        4,
-                        "CULTIST",
-                        5,
-                        "FRIEND",
-                        6,
-                        "LOVED_ONE",
-                        7,
-                        "CONSPIRACY_THEORIST",
-                        8,
-                        "SERIAL_KILLER",
-                        9,
-                        "FACTOR",
-                        10,
-                        "WITCH",
-                        11,
-                        "TIME_TRAVELER",
-                        12
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Role Type",
-                    "description": "角色身份类型"
-                },
-                "has_role": {
-                    "type": "boolean",
-                    "description": "是否拥有该身份 (默认为true)"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Role Condition",
-            "description": "身份条件"
-        },
-        "v1.StatCondition": {
-            "properties": {
-                "target": {
-                    "$ref": "#/definitions/v1.TargetSelector",
-                    "additionalProperties": true,
-                    "description": "目标角色选择器"
-                },
-                "stat_type": {
-                    "enum": [
-                        "STAT_TYPE_UNSPECIFIED",
-                        0,
-                        "PARANOIA",
-                        1,
-                        "GOODWILL",
-                        2,
-                        "INTRIGUE",
-                        3
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Stat Type"
-                },
-                "comparator": {
-                    "enum": [
-                        "COMPARATOR_UNSPECIFIED",
-                        0,
-                        "GREATER_THAN",
-                        1,
-                        "LESS_THAN",
-                        2,
-                        "EQUAL_TO",
-                        3,
-                        "GREATER_THAN_OR_EQUAL",
-                        4,
-                        "LESS_THAN_OR_EQUAL",
-                        5
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Comparator"
-                },
-                "value": {
-                    "type": "integer",
-                    "description": "比较的值"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Stat Condition",
-            "description": "属性条件"
         },
         "v1.TargetSelector": {
             "properties": {
@@ -890,27 +620,6 @@
             "type": "object",
             "title": "Target Selector",
             "description": "目标选择器，用于动态指定条件或效果的目标"
-        },
-        "v1.TraitCondition": {
-            "properties": {
-                "target": {
-                    "$ref": "#/definitions/v1.TargetSelector",
-                    "additionalProperties": true,
-                    "description": "目标角色选择器"
-                },
-                "trait": {
-                    "type": "string",
-                    "description": "目标特征"
-                },
-                "has_trait": {
-                    "type": "boolean",
-                    "description": "是否拥有该特征 (默认为true)"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Trait Condition",
-            "description": "特征条件"
         },
         "v1.TriggerIncidentEffect": {
             "properties": {
