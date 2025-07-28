@@ -9,7 +9,7 @@ import (
 	model "tragedylooper/internal/game/proto/v1"
 )
 
-func (ge *GameEngine) publishGameEvent(eventType model.GameEventType, payload proto.Message) {
+func (ge *GameEngine) applyAndPublishEvent(eventType model.GameEventType, payload proto.Message) {
 	anyPayload, err := anypb.New(payload)
 	if err != nil {
 		ge.logger.Error("Failed to create anypb.Any for event payload", zap.Error(err))
@@ -20,13 +20,22 @@ func (ge *GameEngine) publishGameEvent(eventType model.GameEventType, payload pr
 		Payload:   anyPayload,
 		Timestamp: timestamppb.Now(),
 	}
+
+	// First, process the event to apply state changes synchronously
+	ge.processEvent(event)
+
+	// Then, publish the event for external listeners
+	ge.publishGameEvent(event)
+}
+
+func (ge *GameEngine) publishGameEvent(event *model.GameEvent) {
 	select {
 	case ge.gameEventChan <- event:
 		// Also record the event in the game state for player views
 		ge.GameState.DayEvents = append(ge.GameState.DayEvents, event)
 		ge.GameState.LoopEvents = append(ge.GameState.LoopEvents, event)
 	default:
-		ge.logger.Warn("Game event channel full, dropping event", zap.String("eventType", string(eventType)))
+		ge.logger.Warn("Game event channel full, dropping event", zap.String("eventType", event.Type.String()))
 	}
 }
 

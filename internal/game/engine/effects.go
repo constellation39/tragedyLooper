@@ -15,7 +15,7 @@ func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, 
 
 	if len(choices) > 0 && choice == nil {
 		choiceEvent := &model.ChoiceRequiredEvent{Choices: choices}
-		ge.publishGameEvent(model.GameEventType_CHOICE_REQUIRED, choiceEvent)
+		ge.applyAndPublishEvent(model.GameEventType_CHOICE_REQUIRED, choiceEvent)
 		return nil
 	}
 
@@ -182,15 +182,15 @@ func (ge *GameEngine) publishAdjustStatEffect(state *model.GameState, effect *mo
 		case model.StatCondition_PARANOIA:
 			newParanoia := char.Paranoia + effect.Amount
 			event := &model.ParanoiaAdjustedEvent{CharacterId: targetID, NewParanoia: newParanoia, Amount: effect.Amount}
-			ge.publishGameEvent(model.GameEventType_PARANOIA_ADJUSTED, event)
+			ge.applyAndPublishEvent(model.GameEventType_PARANOIA_ADJUSTED, event)
 		case model.StatCondition_INTRIGUE:
 			newIntrigue := char.Intrigue + effect.Amount
 			event := &model.IntrigueAdjustedEvent{CharacterId: targetID, NewIntrigue: newIntrigue, Amount: effect.Amount}
-			ge.publishGameEvent(model.GameEventType_INTRIGUE_ADJUSTED, event)
+			ge.applyAndPublishEvent(model.GameEventType_INTRIGUE_ADJUSTED, event)
 		case model.StatCondition_GOODWILL:
 			newGoodwill := char.Goodwill + effect.Amount
 			event := &model.GoodwillAdjustedEvent{CharacterId: targetID, NewGoodwill: newGoodwill, Amount: effect.Amount}
-			ge.publishGameEvent(model.GameEventType_GOODWILL_ADJUSTED, event)
+			ge.applyAndPublishEvent(model.GameEventType_GOODWILL_ADJUSTED, event)
 		}
 	}
 	return nil
@@ -203,7 +203,7 @@ func (ge *GameEngine) publishMoveCharacterEffect(state *model.GameState, effect 
 	}
 	for _, targetID := range targetIDs {
 		event := &model.CharacterMovedEvent{CharacterId: targetID, NewLocation: effect.Destination}
-		ge.publishGameEvent(model.GameEventType_CHARACTER_MOVED, event)
+		ge.applyAndPublishEvent(model.GameEventType_CHARACTER_MOVED, event)
 	}
 	return nil
 }
@@ -215,7 +215,7 @@ func (ge *GameEngine) publishAddTraitEffect(state *model.GameState, effect *mode
 	}
 	for _, targetID := range targetIDs {
 		event := &model.TraitAddedEvent{CharacterId: targetID, Trait: effect.Trait}
-		ge.publishGameEvent(model.GameEventType_TRAIT_ADDED, event)
+		ge.applyAndPublishEvent(model.GameEventType_TRAIT_ADDED, event)
 	}
 	return nil
 }
@@ -227,7 +227,7 @@ func (ge *GameEngine) publishRemoveTraitEffect(state *model.GameState, effect *m
 	}
 	for _, targetID := range targetIDs {
 		event := &model.TraitRemovedEvent{CharacterId: targetID, Trait: effect.Trait}
-		ge.publishGameEvent(model.GameEventType_TRAIT_REMOVED, event)
+		ge.applyAndPublishEvent(model.GameEventType_TRAIT_REMOVED, event)
 	}
 	return nil
 }

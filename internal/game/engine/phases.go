@@ -17,7 +17,7 @@ func (ge *GameEngine) handleMorningPhase() {
 	ge.checkAndTriggerAbilities(model.TriggerType_ON_DAY_START, nil)
 
 	ge.GameState.CurrentPhase = model.GamePhase_CARD_PLAY
-	ge.publishGameEvent(model.GameEventType_DAY_ADVANCED, &model.DayAdvancedEvent{Day: ge.GameState.CurrentDay, Loop: ge.GameState.CurrentLoop})
+	ge.applyAndPublishEvent(model.GameEventType_DAY_ADVANCED, &model.DayAdvancedEvent{Day: ge.GameState.CurrentDay, Loop: ge.GameState.CurrentLoop})
 }
 
 func (ge *GameEngine) handleCardPlayPhase() {
@@ -109,7 +109,7 @@ func (ge *GameEngine) handleIncidentsPhase() {
 			if ge.checkConditions(incident.TriggerConditions, nil, nil) {
 				ge.logger.Info("Incident triggered!", zap.String("incident_name", incident.Name))
 				incident := &model.Incident{Config: incident, Name: incident.Name, Day: incident.Day}
-				ge.publishGameEvent(model.GameEventType_INCIDENT_TRIGGERED, &model.IncidentTriggeredEvent{Incident: incident})
+				ge.applyAndPublishEvent(model.GameEventType_INCIDENT_TRIGGERED, &model.IncidentTriggeredEvent{Incident: incident})
 				// TODO: Apply incident effect
 			}
 		}
@@ -186,7 +186,7 @@ func (ge *GameEngine) handleLoopEndPhase() {
 	ge.GameState.CurrentLoop++
 	ge.GameState.CurrentDay = 1
 	ge.GameState.CurrentPhase = model.GamePhase_SETUP
-	ge.publishGameEvent(model.GameEventType_LOOP_RESET, &model.LoopResetEvent{Loop: ge.GameState.CurrentLoop})
+	ge.applyAndPublishEvent(model.GameEventType_LOOP_RESET, &model.LoopResetEvent{Loop: ge.GameState.CurrentLoop})
 }
 
 func (ge *GameEngine) handleProtagonistGuessPhase() {

@@ -180,7 +180,7 @@ func (ge *GameEngine) runGameLoop() {
 
 func (ge *GameEngine) endGame(winner model.PlayerRole) {
 	ge.GameState.CurrentPhase = model.GamePhase_GAME_OVER
-	ge.publishGameEvent(model.GameEventType_LOOP_OVER, &model.GameOverEvent{Winner: winner})
+	ge.applyAndPublishEvent(model.GameEventType_LOOP_OVER, &model.GameOverEvent{Winner: winner})
 	ge.logger.Info("Game over", zap.String("winner", winner.String()))
 }
 

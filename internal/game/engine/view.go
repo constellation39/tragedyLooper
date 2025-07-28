@@ -18,7 +18,6 @@ func (ge *GameEngine) generatePlayerView(playerID int32) *model.PlayerView {
 
 	view := &model.PlayerView{
 		GameId:             ge.GameState.GameId,
-		ScriptId:           ge.GameState.Script.Id,
 		CurrentDay:         ge.GameState.CurrentDay,
 		CurrentLoop:        ge.GameState.CurrentLoop,
 		CurrentPhase:       ge.GameState.CurrentPhase,
@@ -33,8 +32,8 @@ func (ge *GameEngine) generatePlayerView(playerID int32) *model.PlayerView {
 		// Create a copy to avoid races and unintended modification of the core state.
 		charCopy := proto.Clone(char).(*model.Character)
 		playerViewChar := &model.PlayerViewCharacter{
-			Id:              charCopy.Id,
-			Name:            charCopy.Name,
+			Id:              id,
+			Name:            charCopy.Config.Name,
 			Traits:          charCopy.Traits,
 			CurrentLocation: charCopy.CurrentLocation,
 			Paranoia:        charCopy.Paranoia,
@@ -43,7 +42,7 @@ func (ge *GameEngine) generatePlayerView(playerID int32) *model.PlayerView {
 			Abilities:       charCopy.Abilities,
 			IsAlive:         charCopy.IsAlive,
 			InPanicMode:     charCopy.InPanicMode,
-			Rules:           charCopy.Rules,
+			Rules:           charCopy.Config.Rules,
 		}
 		if player.Role == model.PlayerRole_PROTAGONIST {
 			// Hide the true role from Protagonists, showing it as unspecified.
@@ -54,18 +53,18 @@ func (ge *GameEngine) generatePlayerView(playerID int32) *model.PlayerView {
 	}
 
 	// Filter player info
-	view.Players = make(map[string]*model.PlayerViewPlayer)
+	view.Players = make(map[int32]*model.PlayerViewPlayer)
 	for id, p := range ge.GameState.Players {
 		playerCopy := proto.Clone(p).(*model.Player)
 		playerViewPlayer := &model.PlayerViewPlayer{
-			Id:   fmt.Sprintf("%d", playerCopy.Id),
+			Id:   id,
 			Name: playerCopy.Name,
 			Role: playerCopy.Role,
 		}
 		if id != playerID {
 			// playerCopy.Hand = nil // Hide other players' hands - not applicable to PlayerViewPlayer
 		}
-		view.Players[fmt.Sprintf("%d", id)] = playerViewPlayer
+		view.Players[id] = playerViewPlayer
 	}
 
 	// Add player-specific info
