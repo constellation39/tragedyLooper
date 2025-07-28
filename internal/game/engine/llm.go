@@ -28,9 +28,9 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID int32) {
 		for id, char := range ge.GameState.Characters {
 			charactersWithStringKeys[fmt.Sprint(id)] = char
 		}
-		script, err := ge.gameConfig.GetScript()
-		if err != nil {
-			ge.logger.Error("Failed to get script for LLM prompt", zap.Error(err))
+		script := ge.gameConfig.GetScript()
+		if script == nil {
+			ge.logger.Error("failed to get script to build prompt")
 			return
 		}
 		prompt = pBuilder.BuildMastermindPrompt(playerView, script, charactersWithStringKeys)

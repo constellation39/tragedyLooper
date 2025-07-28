@@ -32,7 +32,13 @@
                         "ANY_CHARACTER_WITH_ROLE",
                         5,
                         "ALL_CHARACTERS_AT_LOCATION",
-                        6
+                        6,
+                        "ABILITY_USER",
+                        7,
+                        "ABILITY_TARGET",
+                        8,
+                        "ALL_CHARACTERS",
+                        9
                     ],
                     "oneOf": [
                         {

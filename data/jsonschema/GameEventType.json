@@ -42,7 +42,15 @@
         "TRAIT_ADDED",
         19,
         "TRAIT_REMOVED",
-        20
+        20,
+        "CARD_PLAYED",
+        21,
+        "CARD_REVEALED",
+        22,
+        "GAME_ENDED",
+        23,
+        "PLAYER_ACTION",
+        24
     ],
     "oneOf": [
         {

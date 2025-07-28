@@ -7,6 +7,7 @@ import "google/protobuf/timestamp.proto";
 import "v1/card.proto";
 import "v1/enums.proto";
 import "v1/incident.proto";
+import "v1/payload.proto";
 
 option go_package = "tragedylooper/internal/game/proto/v1";
 
@@ -14,6 +15,9 @@ option go_package = "tragedylooper/internal/game/proto/v1";
 message GameEvent {
   GameEventType type = 1; // 事件类型
   google.protobuf.Any payload = 2; // 事件的具体负载
+  oneof event_payload {
+    PlayerActionTakenEvent player_action = 4;
+  }
   google.protobuf.Timestamp timestamp = 3; // 事件发生的时间戳
 }
 
@@ -127,4 +131,9 @@ message TraitAddedEvent {
 message TraitRemovedEvent {
   int32 character_id = 1;
   string trait = 2;
+}
+
+message PlayerActionTakenEvent {
+  int32 player_id = 1;
+  PlayerActionPayload action = 2;
 }

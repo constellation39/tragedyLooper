@@ -158,6 +158,9 @@
                 "used_this_loop": {
                     "type": "boolean",
                     "description": "运行时状态：本循环是否已使用"
+                },
+                "owner_character_id": {
+                    "type": "integer"
                 }
             },
             "additionalProperties": true,
@@ -199,7 +202,11 @@
                         "ON_GUESS_MADE",
                         8,
                         "ON_GAME_END",
-                        9
+                        9,
+                        "ON_DAY_END",
+                        10,
+                        "ON_LOOP_END",
+                        11
                     ],
                     "oneOf": [
                         {
@@ -256,7 +263,15 @@
                             "TRAIT_ADDED",
                             19,
                             "TRAIT_REMOVED",
-                            20
+                            20,
+                            "CARD_PLAYED",
+                            21,
+                            "CARD_REVEALED",
+                            22,
+                            "GAME_ENDED",
+                            23,
+                            "PLAYER_ACTION",
+                            24
                         ]
                     },
                     "type": "array",
@@ -303,6 +318,15 @@
                 "priority": {
                     "type": "integer",
                     "description": "能力结算优先级"
+                },
+                "conditions": {
+                    "items": {
+                        "$ref": "#/definitions/v1.Condition"
+                    },
+                    "type": "array"
+                },
+                "requires_choice": {
+                    "type": "boolean"
                 }
             },
             "additionalProperties": true,
@@ -746,7 +770,11 @@
                         "ON_GUESS_MADE",
                         8,
                         "ON_GAME_END",
-                        9
+                        9,
+                        "ON_DAY_END",
+                        10,
+                        "ON_LOOP_END",
+                        11
                     ],
                     "oneOf": [
                         {
@@ -779,6 +807,62 @@
             "type": "object",
             "title": "Character Rule",
             "description": "角色特殊规则"
+        },
+        "v1.ChooseOptionPayload": {
+            "properties": {
+                "player_id": {
+                    "type": "integer",
+                    "description": "执行操作的玩家ID"
+                },
+                "character_id": {
+                    "type": "integer",
+                    "description": "做出选择的角色（如果选择与角色相关）"
+                },
+                "chosen_option_id": {
+                    "type": "string",
+                    "description": "选择项的ID"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Choose Option Payload",
+            "description": "玩家进行选择的操作负载（例如，在需要选择地盘或目标时）"
+        },
+        "v1.CompoundCondition": {
+            "properties": {
+                "operator": {
+                    "enum": [
+                        "OPERATOR_UNSPECIFIED",
+                        0,
+                        "AND",
+                        1,
+                        "OR",
+                        2,
+                        "NOT",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Operator"
+                },
+                "sub_conditions": {
+                    "items": {
+                        "$ref": "#/definitions/v1.Condition"
+                    },
+                    "type": "array",
+                    "description": "子条件列表"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Compound Condition",
+            "description": "复合条件，用于组合多个条件"
         },
         "v1.CompoundEffect": {
             "properties": {
@@ -813,6 +897,82 @@
             "type": "object",
             "title": "Compound Effect",
             "description": "复合效果，用于组合多个效果"
+        },
+        "v1.Condition": {
+            "properties": {
+                "stat_condition": {
+                    "$ref": "#/definitions/v1.StatCondition",
+                    "additionalProperties": true,
+                    "description": "属性条件"
+                },
+                "location_condition": {
+                    "$ref": "#/definitions/v1.LocationCondition",
+                    "additionalProperties": true,
+                    "description": "地点条件"
+                },
+                "role_condition": {
+                    "$ref": "#/definitions/v1.RoleCondition",
+                    "additionalProperties": true,
+                    "description": "身份条件"
+                },
+                "trait_condition": {
+                    "$ref": "#/definitions/v1.TraitCondition",
+                    "additionalProperties": true,
+                    "description": "特征条件"
+                },
+                "day_condition": {
+                    "$ref": "#/definitions/v1.DayCondition",
+                    "additionalProperties": true,
+                    "description": "日期条件"
+                },
+                "player_condition": {
+                    "$ref": "#/definitions/v1.PlayerCondition",
+                    "additionalProperties": true,
+                    "description": "玩家条件"
+                },
+                "compound_condition": {
+                    "$ref": "#/definitions/v1.CompoundCondition",
+                    "additionalProperties": true,
+                    "description": "复合条件 (AND/OR/NOT)"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Condition",
+            "description": "条件，用于规则、事件和效果的触发判断"
+        },
+        "v1.DayCondition": {
+            "properties": {
+                "comparator": {
+                    "enum": [
+                        "COMPARATOR_UNSPECIFIED",
+                        0,
+                        "BEFORE",
+                        1,
+                        "ON",
+                        2,
+                        "AFTER",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Comparator"
+                },
+                "day": {
+                    "type": "integer",
+                    "description": "目标天数"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Day Condition",
+            "description": "日期条件"
         },
         "v1.DelayedEntryEffect": {
             "properties": {
@@ -1026,7 +1186,15 @@
                         "TRAIT_ADDED",
                         19,
                         "TRAIT_REMOVED",
-                        20
+                        20,
+                        "CARD_PLAYED",
+                        21,
+                        "CARD_REVEALED",
+                        22,
+                        "GAME_ENDED",
+                        23,
+                        "PLAYER_ACTION",
+                        24
                     ],
                     "oneOf": [
                         {
@@ -1055,6 +1223,10 @@
                     "additionalProperties": true,
                     "type": "object",
                     "description": "事件的具体负载"
+                },
+                "player_action": {
+                    "$ref": "#/definitions/v1.PlayerActionTakenEvent",
+                    "additionalProperties": true
                 },
                 "timestamp": {
                     "type": "string",
@@ -1087,6 +1259,111 @@
             "type": "object",
             "title": "Grant Ability Effect",
             "description": "授予能力效果"
+        },
+        "v1.LocationCondition": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色选择器"
+                },
+                "location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                },
+                "is_at_location": {
+                    "type": "boolean",
+                    "description": "是否在该地点 (默认为true)"
+                },
+                "is_alone": {
+                    "type": "boolean",
+                    "description": "是否在该地点独处"
+                },
+                "not_alone": {
+                    "type": "boolean",
+                    "description": "是否在该地点不独处"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Location Condition",
+            "description": "地点条件"
+        },
+        "v1.MakeGuessPayload": {
+            "properties": {
+                "player_id": {
+                    "type": "integer",
+                    "description": "执行操作的玩家ID"
+                },
+                "guessed_roles": {
+                    "additionalProperties": {
+                        "enum": [
+                            "ROLE_TYPE_UNSPECIFIED",
+                            0,
+                            "PERSON",
+                            1,
+                            "KILLER",
+                            2,
+                            "BRAIN",
+                            3,
+                            "KEY_PERSON",
+                            4,
+                            "CULTIST",
+                            5,
+                            "FRIEND",
+                            6,
+                            "LOVED_ONE",
+                            7,
+                            "CONSPIRACY_THEORIST",
+                            8,
+                            "SERIAL_KILLER",
+                            9,
+                            "FACTOR",
+                            10,
+                            "WITCH",
+                            11,
+                            "TIME_TRAVELER",
+                            12
+                        ],
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "integer"
+                            }
+                        ],
+                        "title": "Role Type",
+                        "description": "角色身份类型"
+                    },
+                    "type": "object",
+                    "description": "猜测的角色身份映射，键为 character_id"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Make Guess Payload",
+            "description": "主角玩家进行猜测的操作负载"
         },
         "v1.MoveCharacterEffect": {
             "properties": {
@@ -1124,6 +1401,61 @@
             "type": "object",
             "title": "Move Character Effect",
             "description": "移动角色效果"
+        },
+        "v1.PassTurnAction": {
+            "properties": {
+                "player_id": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Pass Turn Action",
+            "description": "玩家跳过回合的操作负载"
+        },
+        "v1.PlayCardPayload": {
+            "properties": {
+                "player_id": {
+                    "type": "integer",
+                    "description": "执行操作的玩家ID"
+                },
+                "card_id": {
+                    "type": "integer",
+                    "description": "打出的卡牌ID"
+                },
+                "target_character_id": {
+                    "type": "integer",
+                    "description": "卡牌的目标角色ID"
+                },
+                "target_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Play Card Payload",
+            "description": "玩家打出卡牌的操作负载"
         },
         "v1.Player": {
             "properties": {
@@ -1187,6 +1519,81 @@
             "type": "object",
             "title": "Player",
             "description": "玩家信息"
+        },
+        "v1.PlayerActionPayload": {
+            "properties": {
+                "play_card": {
+                    "$ref": "#/definitions/v1.PlayCardPayload",
+                    "additionalProperties": true,
+                    "description": "打出卡牌的负载"
+                },
+                "use_ability": {
+                    "$ref": "#/definitions/v1.UseAbilityPayload",
+                    "additionalProperties": true,
+                    "description": "使用能力的负载"
+                },
+                "make_guess": {
+                    "$ref": "#/definitions/v1.MakeGuessPayload",
+                    "additionalProperties": true,
+                    "description": "进行猜测的负载"
+                },
+                "choose_option": {
+                    "$ref": "#/definitions/v1.ChooseOptionPayload",
+                    "additionalProperties": true,
+                    "description": "进行选择的负载"
+                },
+                "pass_turn": {
+                    "$ref": "#/definitions/v1.PassTurnAction",
+                    "additionalProperties": true,
+                    "description": "玩家跳过"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Player Action Payload",
+            "description": "通用的玩家操作负载"
+        },
+        "v1.PlayerActionTakenEvent": {
+            "properties": {
+                "player_id": {
+                    "type": "integer"
+                },
+                "action": {
+                    "$ref": "#/definitions/v1.PlayerActionPayload",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Player Action Taken Event"
+        },
+        "v1.PlayerCondition": {
+            "properties": {
+                "player_role": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "MASTERMIND",
+                        1,
+                        "PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Player Condition",
+            "description": "玩家条件"
         },
         "v1.PlayerDeductionKnowledge": {
             "properties": {
@@ -1284,6 +1691,63 @@
             "title": "Reveal Role Effect",
             "description": "揭示身份效果"
         },
+        "v1.RoleCondition": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色选择器"
+                },
+                "role": {
+                    "enum": [
+                        "ROLE_TYPE_UNSPECIFIED",
+                        0,
+                        "PERSON",
+                        1,
+                        "KILLER",
+                        2,
+                        "BRAIN",
+                        3,
+                        "KEY_PERSON",
+                        4,
+                        "CULTIST",
+                        5,
+                        "FRIEND",
+                        6,
+                        "LOVED_ONE",
+                        7,
+                        "CONSPIRACY_THEORIST",
+                        8,
+                        "SERIAL_KILLER",
+                        9,
+                        "FACTOR",
+                        10,
+                        "WITCH",
+                        11,
+                        "TIME_TRAVELER",
+                        12
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Role Type",
+                    "description": "角色身份类型"
+                },
+                "has_role": {
+                    "type": "boolean",
+                    "description": "是否拥有该身份 (默认为true)"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Role Condition",
+            "description": "身份条件"
+        },
         "v1.SpecialMovementRule": {
             "properties": {
                 "restricted_locations": {
@@ -1315,6 +1779,69 @@
             "title": "Special Movement Rule",
             "description": "特殊移动规则"
         },
+        "v1.StatCondition": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色选择器"
+                },
+                "stat_type": {
+                    "enum": [
+                        "STAT_TYPE_UNSPECIFIED",
+                        0,
+                        "PARANOIA",
+                        1,
+                        "GOODWILL",
+                        2,
+                        "INTRIGUE",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Stat Type"
+                },
+                "comparator": {
+                    "enum": [
+                        "COMPARATOR_UNSPECIFIED",
+                        0,
+                        "GREATER_THAN",
+                        1,
+                        "LESS_THAN",
+                        2,
+                        "EQUAL_TO",
+                        3,
+                        "GREATER_THAN_OR_EQUAL",
+                        4,
+                        "LESS_THAN_OR_EQUAL",
+                        5
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Comparator"
+                },
+                "value": {
+                    "type": "integer",
+                    "description": "比较的值"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Stat Condition",
+            "description": "属性条件"
+        },
         "v1.TargetSelector": {
             "properties": {
                 "selector_type": {
@@ -1332,7 +1859,13 @@
                         "ANY_CHARACTER_WITH_ROLE",
                         5,
                         "ALL_CHARACTERS_AT_LOCATION",
-                        6
+                        6,
+                        "ABILITY_USER",
+                        7,
+                        "ABILITY_TARGET",
+                        8,
+                        "ALL_CHARACTERS",
+                        9
                     ],
                     "oneOf": [
                         {
@@ -1418,6 +1951,27 @@
             "title": "Target Selector",
             "description": "目标选择器，用于动态指定条件或效果的目标"
         },
+        "v1.TraitCondition": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "目标角色选择器"
+                },
+                "trait": {
+                    "type": "string",
+                    "description": "目标特征"
+                },
+                "has_trait": {
+                    "type": "boolean",
+                    "description": "是否拥有该特征 (默认为true)"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Trait Condition",
+            "description": "特征条件"
+        },
         "v1.TriggerIncidentEffect": {
             "properties": {
                 "incident_id": {
@@ -1460,6 +2014,84 @@
             "type": "object",
             "title": "Turf Selection Effect",
             "description": "地盘选择效果"
+        },
+        "v1.UseAbilityPayload": {
+            "properties": {
+                "player_id": {
+                    "type": "integer",
+                    "description": "执行操作的玩家ID"
+                },
+                "character_id": {
+                    "type": "integer",
+                    "description": "哪个角色的能力被使用"
+                },
+                "ability_id": {
+                    "type": "integer",
+                    "description": "哪个能力被使用"
+                },
+                "target_character_id": {
+                    "type": "integer",
+                    "description": "如果能力有目标角色，指定其ID"
+                },
+                "target_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                },
+                "target_incident_type": {
+                    "enum": [
+                        "INCIDENT_TYPE_UNSPECIFIED",
+                        0,
+                        "MURDER",
+                        1,
+                        "SUICIDE",
+                        2,
+                        "ACCIDENT",
+                        3,
+                        "DISAPPEARANCE",
+                        4,
+                        "HOSPITAL_CONSPIRACY",
+                        5,
+                        "MURDER_MYSTERY",
+                        6,
+                        "PANIC",
+                        7
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Incident Type",
+                    "description": "事件类型"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Use Ability Payload",
+            "description": "玩家使用能力的操作负载"
         }
     }
 }

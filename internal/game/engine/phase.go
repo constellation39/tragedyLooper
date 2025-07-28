@@ -207,7 +207,7 @@ func (p *CardResolvePhase) Enter(ge *GameEngine) {
 		}
 
 		effect := &model.Effect{EffectType: &model.Effect_CompoundEffect{CompoundEffect: card.Config.Effect}}
-		if err := ge.applyEffect(effect, ge.findPlayer(playerID), payload, nil); err != nil {
+		if err := ge.applyEffect(effect, nil, payload, nil); err != nil {
 			ge.logger.Error("Error applying card effect",
 				zap.Error(err),
 				zap.Int32("playerID", playerID),
@@ -282,9 +282,9 @@ func (p *IncidentsPhase) Enter(ge *GameEngine) {
 	ge.logger.Info("Entering Incidents Phase")
 	ge.checkAndTriggerAbilities(model.TriggerType_ON_PHASE_START)
 
-	script, err := ge.gameConfig.GetScript()
-	if err != nil {
-		ge.logger.Error("Failed to get script for incidents phase", zap.Error(err))
+	script := ge.gameConfig.GetScript()
+	if script == nil {
+		ge.logger.Error("Failed to get script for incidents phase")
 		ge.endGame(model.PlayerRole_PLAYER_ROLE_UNSPECIFIED) // End game on error
 		return
 	}
@@ -294,7 +294,7 @@ func (p *IncidentsPhase) Enter(ge *GameEngine) {
 		if incident.Day == ge.GameState.CurrentDay {
 			if ge.checkConditions(incident.TriggerConditions, nil, nil, nil) {
 				ge.logger.Info("Incident triggered!", zap.String("incident_name", incident.Name))
-				effect := &model.Effect{EffectType: &model.Effect_CompoundEffect{CompoundEffect: incident.Effect}}
+				effect := incident.Effect
 				if err := ge.applyEffect(effect, nil, nil, nil); err != nil {
 					ge.logger.Error("failed to apply incident effect", zap.Error(err), zap.String("incident", incident.Name))
 				}
@@ -338,9 +338,9 @@ func (p *DayEndPhase) Enter(ge *GameEngine) {
 }
 
 func (p *DayEndPhase) HandleEvent(ge *GameEngine, event *model.GameEvent) Phase {
-	script, err := ge.gameConfig.GetScript()
-	if err != nil {
-		ge.logger.Error("Failed to get script for day end phase", zap.Error(err))
+	script := ge.gameConfig.GetScript()
+	if script == nil {
+		ge.logger.Error("Failed to get script for day end phase")
 		ge.endGame(model.PlayerRole_PLAYER_ROLE_UNSPECIFIED) // End game on error
 		return phaseImplementations[model.GamePhase_GAME_OVER]
 	}
@@ -381,21 +381,21 @@ func (p *LoopEndPhase) HandleEvent(ge *GameEngine, event *model.GameEvent) Phase
 		return phaseImplementations[model.GamePhase_GAME_OVER]
 	}
 
-	script, err := ge.gameConfig.GetScript()
-	if err != nil {
-		ge.logger.Error("Failed to get script for loop end phase", zap.Error(err))
+	script := ge.gameConfig.GetScript()
+	if script == nil {
+		ge.logger.Error("Failed to get script for loop end phase")
 		ge.endGame(model.PlayerRole_PLAYER_ROLE_UNSPECIFIED) // End game on error
 		return phaseImplementations[model.GamePhase_GAME_OVER]
 	}
 
 	if ge.GameState.CurrentLoop >= script.LoopCount {
 		ge.logger.Info("Final loop has ended.")
-		ge.applyAndPublishEvent(model.GameEventType_LOOP_WIN, &model.LoopWinEvent{Loop: ge.GameState.CurrentLoop})
+		ge.applyAndPublishEvent(model.GameEventType_LOOP_WIN, &model.LoopWinEvent{})
 		ge.endGame(model.PlayerRole_PROTAGONIST)
 		return phaseImplementations[model.GamePhase_GAME_OVER]
 	}
 
-	ge.applyAndPublishEvent(model.GameEventType_LOOP_LOSS, &model.LoopLossEvent{Loop: ge.GameState.CurrentLoop})
+	ge.applyAndPublishEvent(model.GameEventType_LOOP_LOSS, &model.LoopLossEvent{})
 	ge.resetLoop()
 	ge.GameState.CurrentLoop++
 	ge.GameState.CurrentDay = 1

@@ -20,6 +20,8 @@ message AbilityConfig {
   bool is_passive = 9; // 是否为被动能力
   bool is_mandatory = 10; // 是否为强制能力（不可拒绝）
   int32 priority = 11; // 能力结算优先级
+  repeated Condition conditions = 12;
+  bool requires_choice = 13;
 }
 
 message CompoundAbility {
@@ -35,6 +37,7 @@ message CompoundAbility {
 message Ability {
   AbilityConfig config = 1; // 能力ID，关联到AbilityConfig
   bool used_this_loop = 2; // 运行时状态：本循环是否已使用
+  int32 owner_character_id = 3;
 }
 
 message AbilityConfigLib {

@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -72,7 +73,7 @@ func (ge *GameEngine) resolveCompoundEffectChoices(state *model.GameState, effec
 
 func (ge *GameEngine) createChoicesFromSelector(state *model.GameState, selector *model.TargetSelector, payload *model.UseAbilityPayload, description string) ([]*model.Choice, error) {
 	// We pass a nil choice here because we are just trying to find out *if* a choice is needed.
-	charIDs, err := ge.resolveSelectorToCharacters(state, selector, payload, nil)
+	charIDs, err := ge.resolveSelectorToCharacters(state, selector, nil, payload, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -98,35 +99,37 @@ func (ge *GameEngine) createChoicesFromSelector(state *model.GameState, selector
 	return nil, nil
 }
 
-func (ge *GameEngine) resolveSelectorToCharacters(state *model.GameState, selector *model.TargetSelector, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) ([]int32, error) {
-	// 1. Check if a choice was already made and provided.
-	if choice != nil {
-		choiceID := choice.GetChosenOptionId()
-		if strings.HasPrefix(choiceID, "target_char_") {
-			idStr := strings.TrimPrefix(choiceID, "target_char_")
-			id, err := strconv.ParseInt(idStr, 10, 32)
-			if err == nil {
-				return []int32{int32(id)}, nil
-			}
+func (ge *GameEngine) resolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, player *model.Player, payload *model.UseAbilityPayload, ability *model.Ability) ([]int32, error) {
+	if sel == nil {
+		return nil, errors.New("target selector is nil")
+	}
+
+	switch sel.SelectorType {
+	case model.TargetSelector_ABILITY_USER:
+		if ability == nil {
+			return nil, errors.New("ability is nil for ABILITY_USER selector")
 		}
+		return []int32{ability.OwnerCharacterId}, nil
+	case model.TargetSelector_ABILITY_TARGET:
+		if payload == nil {
+			return nil, errors.New("payload is nil for ABILITY_TARGET selector")
+		}
+		if targetChar, ok := payload.Target.(*model.UseAbilityPayload_TargetCharacterId); ok {
+			return []int32{targetChar.TargetCharacterId}, nil
+		}
+		return nil, errors.New("payload does not contain a target character for ABILITY_TARGET selector")
+	case model.TargetSelector_ALL_CHARACTERS:
+		ids := make([]int32, 0, len(gs.Characters))
+		for id := range gs.Characters {
+			ids = append(ids, id)
+		}
+		return ids, nil
+	case model.TargetSelector_SPECIFIC_CHARACTER:
+		return []int32{sel.CharacterId}, nil
+	// TODO: Implement other selector types
+	default:
+		return nil, errors.New("unsupported target selector type")
 	}
-
-	// 2. Check for a target in the initial payload (for abilities that directly target).
-	if payload != nil && payload.GetTargetCharacterId() != 0 {
-		return []int32{payload.GetTargetCharacterId()}, nil
-	}
-
-	// 3. Resolve the selector based on its type.
-	if handler, ok := selectorHandlers[selector.SelectorType]; ok {
-		return handler(ge, state, selector, payload)
-	}
-
-	// Fallback to all characters if selector is not specific and no target is provided
-	var allCharIDs []int32
-	for id := range state.Characters {
-		allCharIDs = append(allCharIDs, id)
-	}
-	return allCharIDs, nil
 }
 
 type selectorHandler func(ge *GameEngine, state *model.GameState, selector *model.TargetSelector, payload *model.UseAbilityPayload) ([]int32, error)
@@ -187,7 +190,7 @@ func (ge *GameEngine) publishEffect(state *model.GameState, effect *model.Effect
 }
 
 func (ge *GameEngine) publishAdjustStatEffect(state *model.GameState, effect *model.AdjustStatEffect, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
-	targetIDs, err := ge.resolveSelectorToCharacters(state, effect.Target, payload, choice)
+	targetIDs, err := ge.resolveSelectorToCharacters(state, effect.Target, nil, payload, nil)
 	if err != nil {
 		return err
 	}
@@ -217,7 +220,7 @@ func (ge *GameEngine) publishAdjustStatEffect(state *model.GameState, effect *mo
 }
 
 func (ge *GameEngine) publishMoveCharacterEffect(state *model.GameState, effect *model.MoveCharacterEffect, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
-	targetIDs, err := ge.resolveSelectorToCharacters(state, effect.Target, payload, choice)
+	targetIDs, err := ge.resolveSelectorToCharacters(state, effect.Target, nil, payload, nil)
 	if err != nil {
 		return err
 	}
@@ -229,7 +232,7 @@ func (ge *GameEngine) publishMoveCharacterEffect(state *model.GameState, effect 
 }
 
 func (ge *GameEngine) publishAddTraitEffect(state *model.GameState, effect *model.AddTraitEffect, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
-	targetIDs, err := ge.resolveSelectorToCharacters(state, effect.Target, payload, choice)
+	targetIDs, err := ge.resolveSelectorToCharacters(state, effect.Target, nil, payload, nil)
 	if err != nil {
 		return err
 	}
@@ -241,7 +244,7 @@ func (ge *GameEngine) publishAddTraitEffect(state *model.GameState, effect *mode
 }
 
 func (ge *GameEngine) publishRemoveTraitEffect(state *model.GameState, effect *model.RemoveTraitEffect, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
-	targetIDs, err := ge.resolveSelectorToCharacters(state, effect.Target, payload, choice)
+	targetIDs, err := ge.resolveSelectorToCharacters(state, effect.Target, nil, payload, nil)
 	if err != nil {
 		return err
 	}

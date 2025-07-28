@@ -1,7 +1,6 @@
 package engine
 
 import (
-	"errors"
 	model "tragedylooper/internal/game/proto/v1"
 
 	"go.uber.org/zap"
@@ -36,7 +35,7 @@ func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType) {
 			ge.logger.Info("Auto-triggering ability", zap.String("character", char.Config.Name), zap.String("ability", ability.Config.Name))
 
 			// Since this is an automatic trigger, we assume no specific player action payload.
-			if err := ge.applyEffect(ability.Config.Effect, nil, nil, ability); err != nil {
+			if err := ge.applyEffect(ability.Config.Effect, ability, nil, nil); err != nil {
 				ge.logger.Error("Error applying triggered ability effect", zap.Error(err))
 			}
 
@@ -44,40 +43,6 @@ func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType) {
 				ability.UsedThisLoop = true // Mark the instance of the ability on the character as used
 			}
 		}
-	}
-}
-
-// resolveSelectorToCharacters determines the character IDs targeted by a selector.
-func (ge *GameEngine) resolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, player *model.Player, payload *model.UseAbilityPayload, ability *model.Ability) ([]int32, error) {
-	if sel == nil {
-		return nil, errors.New("target selector is nil")
-	}
-
-	switch sel.Type {
-	case model.TargetSelector_ABILITY_USER:
-		if ability == nil {
-			return nil, errors.New("ability is nil for ABILITY_USER selector")
-		}
-		return []int32{ability.OwnerCharacterId}, nil
-	case model.TargetSelector_ABILITY_TARGET:
-		if payload == nil {
-			return nil, errors.New("payload is nil for ABILITY_TARGET selector")
-		}
-		if targetChar, ok := payload.Target.(*model.UseAbilityPayload_TargetCharacterId); ok {
-			return []int32{targetChar.TargetCharacterId}, nil
-		}
-		return nil, errors.New("payload does not contain a target character for ABILITY_TARGET selector")
-	case model.TargetSelector_ALL_CHARACTERS:
-		ids := make([]int32, 0, len(gs.Characters))
-		for id := range gs.Characters {
-			ids = append(ids, id)
-		}
-		return ids, nil
-	case model.TargetSelector_SPECIFIC_CHARACTER:
-		return []int32{sel.GetSpecificCharacterId()}, nil
-	// TODO: Implement other selector types
-	default:
-		return nil, errors.New("unsupported target selector type")
 	}
 }
 

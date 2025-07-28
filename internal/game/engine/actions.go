@@ -5,6 +5,7 @@ import (
 	model "tragedylooper/internal/game/proto/v1"
 
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/anypb"
 )
 
 // --- Player Action Handlers ---
@@ -34,11 +35,14 @@ func (ge *GameEngine) handlePlayerAction(playerID int32, action *model.PlayerAct
 	}
 
 	// Notify the game loop that a player action occurred.
+	payload, err := anypb.New(&model.PlayerActionTakenEvent{PlayerId: playerID, Action: action})
+	if err != nil {
+		ge.logger.Error("failed to marshal PlayerActionTakenEvent", zap.Error(err))
+		return
+	}
 	ge.internalEventChan <- &model.GameEvent{
-		Type: model.GameEventType_PLAYER_ACTION,
-		Payload: &model.GameEvent_PlayerAction{
-			PlayerAction: &model.PlayerActionTakenEvent{PlayerId: playerID, Action: action},
-		},
+		Type:    model.GameEventType_PLAYER_ACTION,
+		Payload: payload,
 	}
 }
 
@@ -111,7 +115,7 @@ func (ge *GameEngine) handleUseAbilityAction(player *model.Player, payload *mode
 		return
 	}
 
-	if err := ge.applyEffect(ability.Config.Effect, player, payload, ability); err != nil {
+	if err := ge.applyEffect(ability.Config.Effect, ability, payload, nil); err != nil {
 		ge.logger.Error("Failed to apply effect for ability", zap.String("abilityName", ability.Config.Name), zap.Error(err))
 		return
 	}
@@ -135,23 +139,23 @@ func (ge *GameEngine) handleMakeGuessAction(player *model.Player, payload *model
 		return
 	}
 
-	script, err := ge.gameConfig.GetScript()
-	if err != nil {
-		ge.logger.Error("failed to get script to verify guess", zap.Error(err))
+	script := ge.gameConfig.GetScript()
+	if script == nil {
+		ge.logger.Error("failed to get script to verify guess")
 		ge.endGame(model.PlayerRole_MASTERMIND) // End game, mastermind wins by default on error
 		return
 	}
 
 	correctGuesses := 0
-	for _, roleInfo := range script.Roles {
+	for _, roleInfo := range script.Characters {
 		if guessedRole, ok := payload.GuessedRoles[roleInfo.CharacterId]; ok {
-			if guessedRole == roleInfo.Role {
+			if guessedRole == roleInfo.HiddenRole {
 				correctGuesses++
 			}
 		}
 	}
 
-	if correctGuesses == len(script.Roles) {
+	if correctGuesses == len(script.Characters) {
 		ge.endGame(model.PlayerRole_PROTAGONIST)
 	} else {
 		ge.endGame(model.PlayerRole_MASTERMIND)

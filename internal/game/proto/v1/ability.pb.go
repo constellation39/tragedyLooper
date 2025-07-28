@@ -7,11 +7,12 @@
 package v1
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -71,20 +72,22 @@ func (CompoundAbility_Operator) EnumDescriptor() ([]byte, []int) {
 }
 
 type AbilityConfig struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                      // 能力唯一ID
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                   // 能力名称
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                     // 能力描述
-	TriggerType   TriggerType            `protobuf:"varint,4,opt,name=trigger_type,json=triggerType,proto3,enum=v1.TriggerType" json:"trigger_type,omitempty"`             // 能力触发时机
-	EventFilters  []GameEventType        `protobuf:"varint,5,rep,packed,name=event_filters,json=eventFilters,proto3,enum=v1.GameEventType" json:"event_filters,omitempty"` // 可选：游戏事件触发时的过滤器
-	Effect        *Effect                `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`                                                               // 能力效果
-	OncePerLoop   bool                   `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`                               // 是否每循环只能使用一次
-	RefusalRole   PlayerRole             `protobuf:"varint,8,opt,name=refusal_role,json=refusalRole,proto3,enum=v1.PlayerRole" json:"refusal_role,omitempty"`              // 可以拒绝此能力的玩家角色
-	IsPassive     bool                   `protobuf:"varint,9,opt,name=is_passive,json=isPassive,proto3" json:"is_passive,omitempty"`                                       // 是否为被动能力
-	IsMandatory   bool                   `protobuf:"varint,10,opt,name=is_mandatory,json=isMandatory,proto3" json:"is_mandatory,omitempty"`                                // 是否为强制能力（不可拒绝）
-	Priority      int32                  `protobuf:"varint,11,opt,name=priority,proto3" json:"priority,omitempty"`                                                         // 能力结算优先级
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Id             int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                      // 能力唯一ID
+	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                   // 能力名称
+	Description    string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                     // 能力描述
+	TriggerType    TriggerType            `protobuf:"varint,4,opt,name=trigger_type,json=triggerType,proto3,enum=v1.TriggerType" json:"trigger_type,omitempty"`             // 能力触发时机
+	EventFilters   []GameEventType        `protobuf:"varint,5,rep,packed,name=event_filters,json=eventFilters,proto3,enum=v1.GameEventType" json:"event_filters,omitempty"` // 可选：游戏事件触发时的过滤器
+	Effect         *Effect                `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`                                                               // 能力效果
+	OncePerLoop    bool                   `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`                               // 是否每循环只能使用一次
+	RefusalRole    PlayerRole             `protobuf:"varint,8,opt,name=refusal_role,json=refusalRole,proto3,enum=v1.PlayerRole" json:"refusal_role,omitempty"`              // 可以拒绝此能力的玩家角色
+	IsPassive      bool                   `protobuf:"varint,9,opt,name=is_passive,json=isPassive,proto3" json:"is_passive,omitempty"`                                       // 是否为被动能力
+	IsMandatory    bool                   `protobuf:"varint,10,opt,name=is_mandatory,json=isMandatory,proto3" json:"is_mandatory,omitempty"`                                // 是否为强制能力（不可拒绝）
+	Priority       int32                  `protobuf:"varint,11,opt,name=priority,proto3" json:"priority,omitempty"`                                                         // 能力结算优先级
+	Conditions     []*Condition           `protobuf:"bytes,12,rep,name=conditions,proto3" json:"conditions,omitempty"`
+	RequiresChoice bool                   `protobuf:"varint,13,opt,name=requires_choice,json=requiresChoice,proto3" json:"requires_choice,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *AbilityConfig) Reset() {
@@ -194,6 +197,20 @@ func (x *AbilityConfig) GetPriority() int32 {
 	return 0
 }
 
+func (x *AbilityConfig) GetConditions() []*Condition {
+	if x != nil {
+		return x.Conditions
+	}
+	return nil
+}
+
+func (x *AbilityConfig) GetRequiresChoice() bool {
+	if x != nil {
+		return x.RequiresChoice
+	}
+	return false
+}
+
 type CompoundAbility struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
 	Operator      CompoundAbility_Operator `protobuf:"varint,1,opt,name=operator,proto3,enum=v1.CompoundAbility_Operator" json:"operator,omitempty"`
@@ -247,11 +264,12 @@ func (x *CompoundAbility) GetSubAbilities() []*AbilityConfig {
 }
 
 type Ability struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Config        *AbilityConfig         `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`                                    // 能力ID，关联到AbilityConfig
-	UsedThisLoop  bool                   `protobuf:"varint,2,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"` // 运行时状态：本循环是否已使用
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	Config           *AbilityConfig         `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`                                    // 能力ID，关联到AbilityConfig
+	UsedThisLoop     bool                   `protobuf:"varint,2,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"` // 运行时状态：本循环是否已使用
+	OwnerCharacterId int32                  `protobuf:"varint,3,opt,name=owner_character_id,json=ownerCharacterId,proto3" json:"owner_character_id,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *Ability) Reset() {
@@ -296,6 +314,13 @@ func (x *Ability) GetUsedThisLoop() bool {
 		return x.UsedThisLoop
 	}
 	return false
+}
+
+func (x *Ability) GetOwnerCharacterId() int32 {
+	if x != nil {
+		return x.OwnerCharacterId
+	}
+	return 0
 }
 
 type AbilityConfigLib struct {
@@ -346,7 +371,7 @@ var File_v1_ability_proto protoreflect.FileDescriptor
 
 const file_v1_ability_proto_rawDesc = "" +
 	"\n" +
-	"\x10v1/ability.proto\x12\x02v1\x1a\x12v1/condition.proto\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\x9a\x03\n" +
+	"\x10v1/ability.proto\x12\x02v1\x1a\x12v1/condition.proto\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\xf2\x03\n" +
 	"\rAbilityConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -361,17 +386,22 @@ const file_v1_ability_proto_rawDesc = "" +
 	"is_passive\x18\t \x01(\bR\tisPassive\x12!\n" +
 	"\fis_mandatory\x18\n" +
 	" \x01(\bR\visMandatory\x12\x1a\n" +
-	"\bpriority\x18\v \x01(\x05R\bpriority\"\xba\x01\n" +
+	"\bpriority\x18\v \x01(\x05R\bpriority\x12-\n" +
+	"\n" +
+	"conditions\x18\f \x03(\v2\r.v1.ConditionR\n" +
+	"conditions\x12'\n" +
+	"\x0frequires_choice\x18\r \x01(\bR\x0erequiresChoice\"\xba\x01\n" +
 	"\x0fCompoundAbility\x128\n" +
 	"\boperator\x18\x01 \x01(\x0e2\x1c.v1.CompoundAbility.OperatorR\boperator\x126\n" +
 	"\rsub_abilities\x18\x02 \x03(\v2\x11.v1.AbilityConfigR\fsubAbilities\"5\n" +
 	"\bOperator\x12\x18\n" +
 	"\x14OPERATOR_UNSPECIFIED\x10\x00\x12\a\n" +
 	"\x03AND\x10\x01\x12\x06\n" +
-	"\x02OR\x10\x02\"Z\n" +
+	"\x02OR\x10\x02\"\x88\x01\n" +
 	"\aAbility\x12)\n" +
 	"\x06config\x18\x01 \x01(\v2\x11.v1.AbilityConfigR\x06config\x12$\n" +
-	"\x0eused_this_loop\x18\x02 \x01(\bR\fusedThisLoop\"\xa6\x01\n" +
+	"\x0eused_this_loop\x18\x02 \x01(\bR\fusedThisLoop\x12,\n" +
+	"\x12owner_character_id\x18\x03 \x01(\x05R\x10ownerCharacterId\"\xa6\x01\n" +
 	"\x10AbilityConfigLib\x12A\n" +
 	"\tabilities\x18\x01 \x03(\v2#.v1.AbilityConfigLib.AbilitiesEntryR\tabilities\x1aO\n" +
 	"\x0eAbilitiesEntry\x12\x10\n" +
@@ -403,22 +433,24 @@ var file_v1_ability_proto_goTypes = []any{
 	(GameEventType)(0),            // 7: v1.GameEventType
 	(*Effect)(nil),                // 8: v1.Effect
 	(PlayerRole)(0),               // 9: v1.PlayerRole
+	(*Condition)(nil),             // 10: v1.Condition
 }
 var file_v1_ability_proto_depIdxs = []int32{
-	6, // 0: v1.AbilityConfig.trigger_type:type_name -> v1.TriggerType
-	7, // 1: v1.AbilityConfig.event_filters:type_name -> v1.GameEventType
-	8, // 2: v1.AbilityConfig.effect:type_name -> v1.Effect
-	9, // 3: v1.AbilityConfig.refusal_role:type_name -> v1.PlayerRole
-	0, // 4: v1.CompoundAbility.operator:type_name -> v1.CompoundAbility.Operator
-	1, // 5: v1.CompoundAbility.sub_abilities:type_name -> v1.AbilityConfig
-	1, // 6: v1.Ability.config:type_name -> v1.AbilityConfig
-	5, // 7: v1.AbilityConfigLib.abilities:type_name -> v1.AbilityConfigLib.AbilitiesEntry
-	1, // 8: v1.AbilityConfigLib.AbilitiesEntry.value:type_name -> v1.AbilityConfig
-	9, // [9:9] is the sub-list for method output_type
-	9, // [9:9] is the sub-list for method input_type
-	9, // [9:9] is the sub-list for extension type_name
-	9, // [9:9] is the sub-list for extension extendee
-	0, // [0:9] is the sub-list for field type_name
+	6,  // 0: v1.AbilityConfig.trigger_type:type_name -> v1.TriggerType
+	7,  // 1: v1.AbilityConfig.event_filters:type_name -> v1.GameEventType
+	8,  // 2: v1.AbilityConfig.effect:type_name -> v1.Effect
+	9,  // 3: v1.AbilityConfig.refusal_role:type_name -> v1.PlayerRole
+	10, // 4: v1.AbilityConfig.conditions:type_name -> v1.Condition
+	0,  // 5: v1.CompoundAbility.operator:type_name -> v1.CompoundAbility.Operator
+	1,  // 6: v1.CompoundAbility.sub_abilities:type_name -> v1.AbilityConfig
+	1,  // 7: v1.Ability.config:type_name -> v1.AbilityConfig
+	5,  // 8: v1.AbilityConfigLib.abilities:type_name -> v1.AbilityConfigLib.AbilitiesEntry
+	1,  // 9: v1.AbilityConfigLib.AbilitiesEntry.value:type_name -> v1.AbilityConfig
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_v1_ability_proto_init() }

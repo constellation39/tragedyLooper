@@ -21,7 +21,7 @@ var eventHandlers = map[model.GameEventType]eventHandler{
 	model.GameEventType_CARD_REVEALED:      handleCardRevealed,
 	model.GameEventType_DAY_ADVANCED:       handleDayAdvanced,
 	model.GameEventType_LOOP_RESET:         handleLoopReset,
-	model.GameEventType_GAME_OVER:          handleGameOver,
+	model.GameEventType_GAME_ENDED:         handleGameOver,
 	model.GameEventType_INCIDENT_TRIGGERED: handleIncidentTriggered,
 	model.GameEventType_LOOP_WIN:           handleLoopWin,
 	model.GameEventType_LOOP_LOSS:          handleLoopLoss,

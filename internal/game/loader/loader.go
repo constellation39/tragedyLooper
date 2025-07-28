@@ -22,9 +22,9 @@ type GameConfigAccessor interface {
 
 type cfgPtr interface {
 	*v1.AbilityConfig |
-	*v1.CardConfig |
-	*v1.CharacterConfig |
-	*v1.IncidentConfig
+		*v1.CardConfig |
+		*v1.CharacterConfig |
+		*v1.IncidentConfig
 }
 
 func Get[T cfgPtr](acc GameConfigAccessor, id int32) (T, error) {

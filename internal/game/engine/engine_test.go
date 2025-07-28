@@ -25,7 +25,8 @@ func (m *MockLLMClient) GenerateResponse(prompt string, sessionID string) (strin
 }
 
 func newTestGameEngine(_ *testing.T, logger *zap.Logger, players map[int32]*model.Player, data loader.GameConfigAccessor) *GameEngine {
-	return NewGameEngine("test-game", logger, players, &MockLLMClient{}, data)
+	ge, _ := NewGameEngine(logger, players, &MockLLMClient{}, data)
+	return ge
 }
 
 var (

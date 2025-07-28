@@ -7,11 +7,12 @@
 package v1
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -605,21 +606,25 @@ const (
 	TriggerType_PASSIVE                  TriggerType = 7 // 被动（条件满足时持续生效）
 	TriggerType_ON_GUESS_MADE            TriggerType = 8 // 推理发生时
 	TriggerType_ON_GAME_END              TriggerType = 9 // 游戏结束时
+	TriggerType_ON_DAY_END               TriggerType = 10
+	TriggerType_ON_LOOP_END              TriggerType = 11
 )
 
 // Enum value maps for TriggerType.
 var (
 	TriggerType_name = map[int32]string{
-		0: "TRIGGER_TYPE_UNSPECIFIED",
-		1: "ON_GAME_SETUP",
-		2: "ON_LOOP_START",
-		3: "ON_DAY_START",
-		4: "ON_PHASE_START",
-		5: "ON_PHASE_END",
-		6: "ON_GAME_EVENT",
-		7: "PASSIVE",
-		8: "ON_GUESS_MADE",
-		9: "ON_GAME_END",
+		0:  "TRIGGER_TYPE_UNSPECIFIED",
+		1:  "ON_GAME_SETUP",
+		2:  "ON_LOOP_START",
+		3:  "ON_DAY_START",
+		4:  "ON_PHASE_START",
+		5:  "ON_PHASE_END",
+		6:  "ON_GAME_EVENT",
+		7:  "PASSIVE",
+		8:  "ON_GUESS_MADE",
+		9:  "ON_GAME_END",
+		10: "ON_DAY_END",
+		11: "ON_LOOP_END",
 	}
 	TriggerType_value = map[string]int32{
 		"TRIGGER_TYPE_UNSPECIFIED": 0,
@@ -632,6 +637,8 @@ var (
 		"PASSIVE":                  7,
 		"ON_GUESS_MADE":            8,
 		"ON_GAME_END":              9,
+		"ON_DAY_END":               10,
+		"ON_LOOP_END":              11,
 	}
 )
 
@@ -687,6 +694,10 @@ const (
 	GameEventType_LOOP_RESET                  GameEventType = 18 // 循环重置事件
 	GameEventType_TRAIT_ADDED                 GameEventType = 19
 	GameEventType_TRAIT_REMOVED               GameEventType = 20
+	GameEventType_CARD_PLAYED                 GameEventType = 21
+	GameEventType_CARD_REVEALED               GameEventType = 22
+	GameEventType_GAME_ENDED                  GameEventType = 23
+	GameEventType_PLAYER_ACTION               GameEventType = 24
 )
 
 // Enum value maps for GameEventType.
@@ -713,6 +724,10 @@ var (
 		18: "LOOP_RESET",
 		19: "TRAIT_ADDED",
 		20: "TRAIT_REMOVED",
+		21: "CARD_PLAYED",
+		22: "CARD_REVEALED",
+		23: "GAME_ENDED",
+		24: "PLAYER_ACTION",
 	}
 	GameEventType_value = map[string]int32{
 		"GAME_EVENT_TYPE_UNSPECIFIED": 0,
@@ -736,6 +751,10 @@ var (
 		"LOOP_RESET":                  18,
 		"TRAIT_ADDED":                 19,
 		"TRAIT_REMOVED":               20,
+		"CARD_PLAYED":                 21,
+		"CARD_REVEALED":               22,
+		"GAME_ENDED":                  23,
+		"PLAYER_ACTION":               24,
 	}
 )
 
@@ -925,7 +944,7 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\x06SHRINE\x10\x02\x12\b\n" +
 	"\x04CITY\x10\x03\x12\n" +
 	"\n" +
-	"\x06SCHOOL\x10\x04*\xcd\x01\n" +
+	"\x06SCHOOL\x10\x04*\xee\x01\n" +
 	"\vTriggerType\x12\x1c\n" +
 	"\x18TRIGGER_TYPE_UNSPECIFIED\x10\x00\x12\x11\n" +
 	"\rON_GAME_SETUP\x10\x01\x12\x11\n" +
@@ -936,7 +955,11 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\rON_GAME_EVENT\x10\x06\x12\v\n" +
 	"\aPASSIVE\x10\a\x12\x11\n" +
 	"\rON_GUESS_MADE\x10\b\x12\x0f\n" +
-	"\vON_GAME_END\x10\t*\xc7\x03\n" +
+	"\vON_GAME_END\x10\t\x12\x0e\n" +
+	"\n" +
+	"ON_DAY_END\x10\n" +
+	"\x12\x0f\n" +
+	"\vON_LOOP_END\x10\v*\x8e\x04\n" +
 	"\rGameEventType\x12\x1f\n" +
 	"\x1bGAME_EVENT_TYPE_UNSPECIFIED\x10\x00\x12\x13\n" +
 	"\x0fCHARACTER_MOVED\x10\x01\x12\x15\n" +
@@ -960,7 +983,12 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\n" +
 	"LOOP_RESET\x10\x12\x12\x0f\n" +
 	"\vTRAIT_ADDED\x10\x13\x12\x11\n" +
-	"\rTRAIT_REMOVED\x10\x14*\xdc\x01\n" +
+	"\rTRAIT_REMOVED\x10\x14\x12\x0f\n" +
+	"\vCARD_PLAYED\x10\x15\x12\x11\n" +
+	"\rCARD_REVEALED\x10\x16\x12\x0e\n" +
+	"\n" +
+	"GAME_ENDED\x10\x17\x12\x11\n" +
+	"\rPLAYER_ACTION\x10\x18*\xdc\x01\n" +
 	"\x10EndConditionType\x12\"\n" +
 	"\x1eEND_CONDITION_TYPE_UNSPECIFIED\x10\x00\x12\x1d\n" +
 	"\x19PROTAGONIST_GUESS_SUCCESS\x10\x01\x12\x1a\n" +

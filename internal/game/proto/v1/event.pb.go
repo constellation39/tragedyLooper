@@ -7,13 +7,14 @@
 package v1
 
 import (
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
+
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
 )
 
 const (
@@ -25,10 +26,14 @@ const (
 
 // GameEvent 表示游戏中发生的事件。
 type GameEvent struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          GameEventType          `protobuf:"varint,1,opt,name=type,proto3,enum=v1.GameEventType" json:"type,omitempty"` // 事件类型
-	Payload       *anypb.Any             `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`                  // 事件的具体负载
-	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"`              // 事件发生的时间戳
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Type    GameEventType          `protobuf:"varint,1,opt,name=type,proto3,enum=v1.GameEventType" json:"type,omitempty"` // 事件类型
+	Payload *anypb.Any             `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`                  // 事件的具体负载
+	// Types that are valid to be assigned to EventPayload:
+	//
+	//	*GameEvent_PlayerAction
+	EventPayload  isGameEvent_EventPayload `protobuf_oneof:"event_payload"`
+	Timestamp     *timestamppb.Timestamp   `protobuf:"bytes,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"` // 事件发生的时间戳
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -77,12 +82,38 @@ func (x *GameEvent) GetPayload() *anypb.Any {
 	return nil
 }
 
+func (x *GameEvent) GetEventPayload() isGameEvent_EventPayload {
+	if x != nil {
+		return x.EventPayload
+	}
+	return nil
+}
+
+func (x *GameEvent) GetPlayerAction() *PlayerActionTakenEvent {
+	if x != nil {
+		if x, ok := x.EventPayload.(*GameEvent_PlayerAction); ok {
+			return x.PlayerAction
+		}
+	}
+	return nil
+}
+
 func (x *GameEvent) GetTimestamp() *timestamppb.Timestamp {
 	if x != nil {
 		return x.Timestamp
 	}
 	return nil
 }
+
+type isGameEvent_EventPayload interface {
+	isGameEvent_EventPayload()
+}
+
+type GameEvent_PlayerAction struct {
+	PlayerAction *PlayerActionTakenEvent `protobuf:"bytes,4,opt,name=player_action,json=playerAction,proto3,oneof"`
+}
+
+func (*GameEvent_PlayerAction) isGameEvent_EventPayload() {}
 
 // 事件库，用于存储和管理游戏中的所有事件
 type GameEventLib struct {
@@ -1082,15 +1113,69 @@ func (x *TraitRemovedEvent) GetTrait() string {
 	return ""
 }
 
+type PlayerActionTakenEvent struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PlayerId      int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`
+	Action        *PlayerActionPayload   `protobuf:"bytes,2,opt,name=action,proto3" json:"action,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PlayerActionTakenEvent) Reset() {
+	*x = PlayerActionTakenEvent{}
+	mi := &file_v1_event_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PlayerActionTakenEvent) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PlayerActionTakenEvent) ProtoMessage() {}
+
+func (x *PlayerActionTakenEvent) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_event_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PlayerActionTakenEvent.ProtoReflect.Descriptor instead.
+func (*PlayerActionTakenEvent) Descriptor() ([]byte, []int) {
+	return file_v1_event_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *PlayerActionTakenEvent) GetPlayerId() int32 {
+	if x != nil {
+		return x.PlayerId
+	}
+	return 0
+}
+
+func (x *PlayerActionTakenEvent) GetAction() *PlayerActionPayload {
+	if x != nil {
+		return x.Action
+	}
+	return nil
+}
+
 var File_v1_event_proto protoreflect.FileDescriptor
 
 const file_v1_event_proto_rawDesc = "" +
 	"\n" +
-	"\x0ev1/event.proto\x12\x02v1\x1a\x19google/protobuf/any.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\rv1/card.proto\x1a\x0ev1/enums.proto\x1a\x11v1/incident.proto\"\x9c\x01\n" +
+	"\x0ev1/event.proto\x12\x02v1\x1a\x19google/protobuf/any.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\rv1/card.proto\x1a\x0ev1/enums.proto\x1a\x11v1/incident.proto\x1a\x10v1/payload.proto\"\xf0\x01\n" +
 	"\tGameEvent\x12%\n" +
 	"\x04type\x18\x01 \x01(\x0e2\x11.v1.GameEventTypeR\x04type\x12.\n" +
-	"\apayload\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\apayload\x128\n" +
-	"\ttimestamp\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\"\x95\x01\n" +
+	"\apayload\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\apayload\x12A\n" +
+	"\rplayer_action\x18\x04 \x01(\v2\x1a.v1.PlayerActionTakenEventH\x00R\fplayerAction\x128\n" +
+	"\ttimestamp\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestampB\x0f\n" +
+	"\revent_payload\"\x95\x01\n" +
 	"\fGameEventLib\x124\n" +
 	"\x06events\x18\x01 \x03(\v2\x1c.v1.GameEventLib.EventsEntryR\x06events\x1aO\n" +
 	"\vEventsEntry\x12\x10\n" +
@@ -1147,7 +1232,10 @@ const file_v1_event_proto_rawDesc = "" +
 	"\x05trait\x18\x02 \x01(\tR\x05trait\"L\n" +
 	"\x11TraitRemovedEvent\x12!\n" +
 	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x12\x14\n" +
-	"\x05trait\x18\x02 \x01(\tR\x05traitB&Z$tragedylooper/internal/game/proto/v1b\x06proto3"
+	"\x05trait\x18\x02 \x01(\tR\x05trait\"f\n" +
+	"\x16PlayerActionTakenEvent\x12\x1b\n" +
+	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12/\n" +
+	"\x06action\x18\x02 \x01(\v2\x17.v1.PlayerActionPayloadR\x06actionB&Z$tragedylooper/internal/game/proto/v1b\x06proto3"
 
 var (
 	file_v1_event_proto_rawDescOnce sync.Once
@@ -1161,7 +1249,7 @@ func file_v1_event_proto_rawDescGZIP() []byte {
 	return file_v1_event_proto_rawDescData
 }
 
-var file_v1_event_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_v1_event_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_v1_event_proto_goTypes = []any{
 	(*GameEvent)(nil),              // 0: v1.GameEvent
 	(*GameEventLib)(nil),           // 1: v1.GameEventLib
@@ -1183,35 +1271,39 @@ var file_v1_event_proto_goTypes = []any{
 	(*TragedyTriggeredEvent)(nil),  // 17: v1.TragedyTriggeredEvent
 	(*TraitAddedEvent)(nil),        // 18: v1.TraitAddedEvent
 	(*TraitRemovedEvent)(nil),      // 19: v1.TraitRemovedEvent
-	nil,                            // 20: v1.GameEventLib.EventsEntry
-	(GameEventType)(0),             // 21: v1.GameEventType
-	(*anypb.Any)(nil),              // 22: google.protobuf.Any
-	(*timestamppb.Timestamp)(nil),  // 23: google.protobuf.Timestamp
-	(LocationType)(0),              // 24: v1.LocationType
-	(IncidentType)(0),              // 25: v1.IncidentType
-	(*Card)(nil),                   // 26: v1.Card
-	(PlayerRole)(0),                // 27: v1.PlayerRole
-	(*Incident)(nil),               // 28: v1.Incident
+	(*PlayerActionTakenEvent)(nil), // 20: v1.PlayerActionTakenEvent
+	nil,                            // 21: v1.GameEventLib.EventsEntry
+	(GameEventType)(0),             // 22: v1.GameEventType
+	(*anypb.Any)(nil),              // 23: google.protobuf.Any
+	(*timestamppb.Timestamp)(nil),  // 24: google.protobuf.Timestamp
+	(LocationType)(0),              // 25: v1.LocationType
+	(IncidentType)(0),              // 26: v1.IncidentType
+	(*Card)(nil),                   // 27: v1.Card
+	(PlayerRole)(0),                // 28: v1.PlayerRole
+	(*Incident)(nil),               // 29: v1.Incident
+	(*PlayerActionPayload)(nil),    // 30: v1.PlayerActionPayload
 }
 var file_v1_event_proto_depIdxs = []int32{
-	21, // 0: v1.GameEvent.type:type_name -> v1.GameEventType
-	22, // 1: v1.GameEvent.payload:type_name -> google.protobuf.Any
-	23, // 2: v1.GameEvent.timestamp:type_name -> google.protobuf.Timestamp
-	20, // 3: v1.GameEventLib.events:type_name -> v1.GameEventLib.EventsEntry
-	24, // 4: v1.CharacterMovedEvent.new_location:type_name -> v1.LocationType
-	25, // 5: v1.LoopLossEvent.incident_type:type_name -> v1.IncidentType
-	26, // 6: v1.CardPlayedEvent.card:type_name -> v1.Card
-	26, // 7: v1.CardRevealedEvent.cards:type_name -> v1.Card
-	27, // 8: v1.GameOverEvent.winner:type_name -> v1.PlayerRole
-	14, // 9: v1.ChoiceRequiredEvent.choices:type_name -> v1.Choice
-	28, // 10: v1.IncidentTriggeredEvent.incident:type_name -> v1.Incident
-	25, // 11: v1.TragedyTriggeredEvent.tragedy_type:type_name -> v1.IncidentType
-	22, // 12: v1.GameEventLib.EventsEntry.value:type_name -> google.protobuf.Any
-	13, // [13:13] is the sub-list for method output_type
-	13, // [13:13] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	22, // 0: v1.GameEvent.type:type_name -> v1.GameEventType
+	23, // 1: v1.GameEvent.payload:type_name -> google.protobuf.Any
+	20, // 2: v1.GameEvent.player_action:type_name -> v1.PlayerActionTakenEvent
+	24, // 3: v1.GameEvent.timestamp:type_name -> google.protobuf.Timestamp
+	21, // 4: v1.GameEventLib.events:type_name -> v1.GameEventLib.EventsEntry
+	25, // 5: v1.CharacterMovedEvent.new_location:type_name -> v1.LocationType
+	26, // 6: v1.LoopLossEvent.incident_type:type_name -> v1.IncidentType
+	27, // 7: v1.CardPlayedEvent.card:type_name -> v1.Card
+	27, // 8: v1.CardRevealedEvent.cards:type_name -> v1.Card
+	28, // 9: v1.GameOverEvent.winner:type_name -> v1.PlayerRole
+	14, // 10: v1.ChoiceRequiredEvent.choices:type_name -> v1.Choice
+	29, // 11: v1.IncidentTriggeredEvent.incident:type_name -> v1.Incident
+	26, // 12: v1.TragedyTriggeredEvent.tragedy_type:type_name -> v1.IncidentType
+	30, // 13: v1.PlayerActionTakenEvent.action:type_name -> v1.PlayerActionPayload
+	23, // 14: v1.GameEventLib.EventsEntry.value:type_name -> google.protobuf.Any
+	15, // [15:15] is the sub-list for method output_type
+	15, // [15:15] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_v1_event_proto_init() }
@@ -1222,6 +1314,10 @@ func file_v1_event_proto_init() {
 	file_v1_card_proto_init()
 	file_v1_enums_proto_init()
 	file_v1_incident_proto_init()
+	file_v1_payload_proto_init()
+	file_v1_event_proto_msgTypes[0].OneofWrappers = []any{
+		(*GameEvent_PlayerAction)(nil),
+	}
 	file_v1_event_proto_msgTypes[14].OneofWrappers = []any{
 		(*Choice_TargetCharacterId)(nil),
 		(*Choice_EffectOptionIndex)(nil),
@@ -1232,7 +1328,7 @@ func file_v1_event_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_event_proto_rawDesc), len(file_v1_event_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   21,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -11,21 +11,6 @@ import (
 )
 
 // GameEngine manages the state and logic of a single game instance.
-type GameEngine struct {
-	GameState         *model.GameState
-	gameConfig        loader.GameConfigAccessor
-	requestChan       chan engineRequest
-	dispatchGameEvent chan *model.GameEvent
-	internalEventChan chan *model.GameEvent // New channel for internal events
-	stopChan          chan struct{}
-	llmClient         llm.Client
-	playerReady       map[int32]bool
-	logger            *zap.Logger
-	currentPhase      Phase
-	phaseTimer        *time.Timer
-}
-
-// engineRequest is an interface for all requests handled by the game engine loop.
 type engineRequest interface{}
 
 // getPlayerViewRequest is a request to get a filtered view of the game state for a player.
@@ -34,10 +19,32 @@ type getPlayerViewRequest struct {
 	responseChan chan *model.PlayerView
 }
 
-// llmActionCompleteRequest is sent when an LLM player has decided on an action.
 type llmActionCompleteRequest struct {
-	playerID int32
-	action   *model.PlayerActionPayload
+	playerID int32                                                                                                                                                        │
+	action   *model.PlayerActionPayload                                                                                                                                   │
+}
+type GameEngine struct {
+	GameState *model.GameState
+	logger    *zap.Logger
+
+	llmClient llm.Client
+
+	gameConfig loader.GameConfigAccessor
+
+	// Internal channels
+	requestChan chan engineRequest
+	stopChan    chan struct{}
+
+	// External channels
+	dispatchGameEvent chan *model.GameEvent
+
+	currentPhase Phase
+	phaseTimer   *time.Timer
+
+	playerReady map[int32]bool
+
+	mastermindPlayerID   int32
+	protagonistPlayerIDs []int32
 }
 
 // NewGameEngine creates a new game engine instance.
@@ -67,7 +74,6 @@ func NewGameEngine(logger *zap.Logger, players map[int32]*model.Player, llmClien
 		gameConfig:        gameConfig,
 		requestChan:       make(chan engineRequest, 100),
 		dispatchGameEvent: make(chan *model.GameEvent, 100),
-		internalEventChan: make(chan *model.GameEvent, 100),
 		stopChan:          make(chan struct{}),
 		llmClient:         llmClient,
 		playerReady:       make(map[int32]bool),
@@ -139,9 +145,6 @@ func (ge *GameEngine) runGameLoop() {
 				r.responseChan <- ge.GeneratePlayerView(r.playerID)
 			}
 
-		case event := <-ge.internalEventChan:
-			ge.handleEvent(event)
-
 		case <-ge.phaseTimer.C:
 			ge.handleTimeout()
 		}
@@ -181,7 +184,7 @@ func (ge *GameEngine) transitionTo(nextPhase Phase) {
 }
 
 func (ge *GameEngine) endGame(winner model.PlayerRole) {
-	ge.applyAndPublishEvent(model.GameEventType_GAME_OVER, &model.GameOverEvent{Winner: winner})
+	ge.applyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: winner})
 	ge.logger.Info("Game over", zap.String("winner", winner.String()))
 	ge.transitionTo(phaseImplementations[model.GamePhase_GAME_OVER])
 }

@@ -102,7 +102,11 @@
                         "ON_GUESS_MADE",
                         8,
                         "ON_GAME_END",
-                        9
+                        9,
+                        "ON_DAY_END",
+                        10,
+                        "ON_LOOP_END",
+                        11
                     ],
                     "oneOf": [
                         {

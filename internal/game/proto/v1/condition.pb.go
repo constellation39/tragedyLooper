@@ -7,11 +7,12 @@
 package v1
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -245,6 +246,9 @@ const (
 	TargetSelector_VICTIM                     TargetSelector_SelectorType = 4 // 事件的受害者
 	TargetSelector_ANY_CHARACTER_WITH_ROLE    TargetSelector_SelectorType = 5 // 任意一个有指定身份的角色
 	TargetSelector_ALL_CHARACTERS_AT_LOCATION TargetSelector_SelectorType = 6 // 在某地的所有角色
+	TargetSelector_ABILITY_USER               TargetSelector_SelectorType = 7
+	TargetSelector_ABILITY_TARGET             TargetSelector_SelectorType = 8
+	TargetSelector_ALL_CHARACTERS             TargetSelector_SelectorType = 9
 )
 
 // Enum value maps for TargetSelector_SelectorType.
@@ -257,6 +261,9 @@ var (
 		4: "VICTIM",
 		5: "ANY_CHARACTER_WITH_ROLE",
 		6: "ALL_CHARACTERS_AT_LOCATION",
+		7: "ABILITY_USER",
+		8: "ABILITY_TARGET",
+		9: "ALL_CHARACTERS",
 	}
 	TargetSelector_SelectorType_value = map[string]int32{
 		"SELECTOR_TYPE_UNSPECIFIED":  0,
@@ -266,6 +273,9 @@ var (
 		"VICTIM":                     4,
 		"ANY_CHARACTER_WITH_ROLE":    5,
 		"ALL_CHARACTERS_AT_LOCATION": 6,
+		"ABILITY_USER":               7,
+		"ABILITY_TARGET":             8,
+		"ALL_CHARACTERS":             9,
 	}
 )
 
@@ -1017,13 +1027,13 @@ const file_v1_condition_proto_rawDesc = "" +
 	"\x05AFTER\x10\x03\"B\n" +
 	"\x0fPlayerCondition\x12/\n" +
 	"\vplayer_role\x18\x01 \x01(\x0e2\x0e.v1.PlayerRoleR\n" +
-	"playerRole\"\x9b\x03\n" +
+	"playerRole\"\xd5\x03\n" +
 	"\x0eTargetSelector\x12D\n" +
 	"\rselector_type\x18\x01 \x01(\x0e2\x1f.v1.TargetSelector.SelectorTypeR\fselectorType\x12!\n" +
 	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\x12-\n" +
 	"\vrole_filter\x18\x03 \x01(\x0e2\f.v1.RoleTypeR\n" +
 	"roleFilter\x129\n" +
-	"\x0flocation_filter\x18\x04 \x01(\x0e2\x10.v1.LocationTypeR\x0elocationFilter\"\xb5\x01\n" +
+	"\x0flocation_filter\x18\x04 \x01(\x0e2\x10.v1.LocationTypeR\x0elocationFilter\"\xef\x01\n" +
 	"\fSelectorType\x12\x1d\n" +
 	"\x19SELECTOR_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
 	"\x12SPECIFIC_CHARACTER\x10\x01\x12\x18\n" +
@@ -1032,7 +1042,10 @@ const file_v1_condition_proto_rawDesc = "" +
 	"\n" +
 	"\x06VICTIM\x10\x04\x12\x1b\n" +
 	"\x17ANY_CHARACTER_WITH_ROLE\x10\x05\x12\x1e\n" +
-	"\x1aALL_CHARACTERS_AT_LOCATION\x10\x06B&Z$tragedylooper/internal/game/proto/v1b\x06proto3"
+	"\x1aALL_CHARACTERS_AT_LOCATION\x10\x06\x12\x10\n" +
+	"\fABILITY_USER\x10\a\x12\x12\n" +
+	"\x0eABILITY_TARGET\x10\b\x12\x12\n" +
+	"\x0eALL_CHARACTERS\x10\tB&Z$tragedylooper/internal/game/proto/v1b\x06proto3"
 
 var (
 	file_v1_condition_proto_rawDescOnce sync.Once

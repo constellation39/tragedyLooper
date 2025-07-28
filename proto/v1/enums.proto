@@ -121,6 +121,8 @@ enum TriggerType {
   PASSIVE = 7; // 被动（条件满足时持续生效）
   ON_GUESS_MADE = 8; // 推理发生时
   ON_GAME_END = 9; // 游戏结束时
+  ON_DAY_END = 10;
+  ON_LOOP_END = 11;
 }
 
 // 游戏事件类型（用于能力触发器过滤）
@@ -146,6 +148,10 @@ enum GameEventType {
   LOOP_RESET = 18; // 循环重置事件
   TRAIT_ADDED = 19;
   TRAIT_REMOVED = 20;
+  CARD_PLAYED = 21;
+  CARD_REVEALED = 22;
+  GAME_ENDED = 23;
+  PLAYER_ACTION = 24;
 }
 
 // 游戏结束条件类型
