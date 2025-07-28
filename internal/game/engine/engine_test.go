@@ -24,17 +24,17 @@ func (m *MockLLMClient) GenerateResponse(prompt string, sessionID string) (strin
 	panic("implement me")
 }
 
-func newTestGameEngine(_ *testing.T, logger *zap.Logger, players map[int32]*model.Player, data loader.GameConfigAccessor) *GameEngine {
+func newTestGameEngine(_ *testing.T, logger *zap.Logger, players []*model.Player, data loader.GameConfigAccessor) *GameEngine {
 	ge, _ := NewGameEngine(logger, players, &MockLLMClient{}, data)
 	return ge
 }
 
 var (
 	testLogger         *zap.Logger
-	testPlayers        map[int32]*model.Player
+	testPlayers        []*model.Player
 	testGameData       loader.GameConfigAccessor
-	testMastermindOnly map[int32]*model.Player
-	testEmptyPlayers   map[int32]*model.Player
+	testMastermindOnly []*model.Player
+	testEmptyPlayers   []*model.Player
 )
 
 func init() {
@@ -44,10 +44,10 @@ func init() {
 		panic("Failed to create logger for tests: " + err.Error())
 	}
 
-	testPlayers = map[int32]*model.Player{
-		1: {Id: 1, Role: model.PlayerRole_MASTERMIND},
-		2: {Id: 2, Role: model.PlayerRole_PROTAGONIST},
-		3: {Id: 3, Role: model.PlayerRole_PROTAGONIST},
+	testPlayers = []*model.Player{
+		{Id: 1, Role: model.PlayerRole_MASTERMIND},
+		{Id: 2, Role: model.PlayerRole_PROTAGONIST},
+		{Id: 3, Role: model.PlayerRole_PROTAGONIST},
 	}
 
 	gameLoader := loader.NewJSONLoader("../../../data")
@@ -56,8 +56,8 @@ func init() {
 		testLogger.Fatal("Failed to load script for tests", zap.Error(err))
 	}
 
-	testMastermindOnly = map[int32]*model.Player{1: {Id: 1}}
-	testEmptyPlayers = map[int32]*model.Player{}
+	testMastermindOnly = []*model.Player{{Id: 1}}
+	testEmptyPlayers = []*model.Player{}
 }
 
 func TestNewGameEngine(t *testing.T) {
@@ -67,7 +67,7 @@ func TestNewGameEngine(t *testing.T) {
 	// assert.Equal(t, "test-game", ge.GameState.GameId)
 	assert.Equal(t, int32(1), ge.mastermindPlayerID)
 	assert.ElementsMatch(t, []int32{2, 3}, ge.protagonistPlayerIDs)
-	assert.Len(t, ge.GameState.Characters, 35)
+	assert.Len(t, ge.GameState.Characters, 6)
 }
 
 func TestGameLoopLifecycle(t *testing.T) {
