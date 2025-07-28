@@ -31,6 +31,10 @@ linters-settings:
     rules:
       - name: empty-block
         disabled: true
+  staticcheck:
+    checks:
+      - "all"
+      - "-U1000"
 
 issues:
   exclude-dirs-use-default: true  # 添加默认排除
