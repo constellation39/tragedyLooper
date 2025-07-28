@@ -27,6 +27,10 @@ type cfgPtr interface {
 		*v1.IncidentConfig
 }
 
+func Script(acc GameConfigAccessor) *v1.ScriptConfig {
+	return acc.GetScript()
+}
+
 func Get[T cfgPtr](acc GameConfigAccessor, id int32) (T, error) {
 	m, err := pickMap[T](acc)
 	if err != nil {

@@ -38,6 +38,7 @@ type GameEngine struct {
 
 	currentPhase Phase
 	phaseTimer   *time.Timer
+	gameStarted  bool
 
 	playerReady map[int32]bool
 
@@ -46,39 +47,36 @@ type GameEngine struct {
 }
 
 // NewGameEngine creates a new game engine instance.
-func NewGameEngine(logger *zap.Logger, players map[int32]*model.Player, llmClient llm.Client, gameConfig loader.GameConfigAccessor) (*GameEngine, error) {
-	initialPhase := phaseImplementations[model.GamePhase_SETUP]
-	gs := &model.GameState{
-		GameId:                  "",
-		Characters:              make(map[int32]*model.Character),
-		Players:                 players,
-		CurrentDay:              1,
-		CurrentLoop:             1,
-		CurrentPhase:            initialPhase.Type(),
-		ActiveTragedies:         nil,
-		PreventedTragedies:      nil,
-		PlayedCardsThisDay:      make(map[int32]*model.Card),
-		PlayedCardsThisLoop:     make(map[int32]bool),
-		LastUpdateTime:          time.Now().Unix(),
-		DayEvents:               []*model.GameEvent{},
-		LoopEvents:              []*model.GameEvent{},
-		CharacterParanoiaLimits: nil,
-		CharacterGoodwillLimits: nil,
-		CharacterIntrigueLimits: nil,
-	}
-
+func NewGameEngine(logger *zap.Logger, players []*model.Player, llmClient llm.Client, gameConfig loader.GameConfigAccessor) (*GameEngine, error) {
 	ge := &GameEngine{
-		GameState:         gs,
-		gameConfig:        gameConfig,
-		engineChan:        make(chan engineRequest, 100),
-		dispatchGameEvent: make(chan *model.GameEvent, 100),
-		stopChan:          make(chan struct{}),
-		llmClient:         llmClient,
-		playerReady:       make(map[int32]bool),
-		logger:            logger,
-		currentPhase:      initialPhase,
+		logger:               logger,
+		llmClient:            llmClient,
+		gameConfig:           gameConfig,
+		engineChan:           make(chan engineRequest, 100),
+		stopChan:             make(chan struct{}),
+		dispatchGameEvent:    make(chan *model.GameEvent, 100),
+		currentPhase:         phaseImplementations[model.GamePhase_SETUP],
+		phaseTimer:           time.NewTimer(time.Hour),
+		playerReady:          make(map[int32]bool),
+		mastermindPlayerID:   0,
+		protagonistPlayerIDs: nil,
 	}
 
+	playerMap := make(map[int32]*model.Player)
+	for _, player := range players {
+		switch player.Role {
+		case model.PlayerRole_MASTERMIND:
+			ge.mastermindPlayerID = player.Id
+		case model.PlayerRole_PROTAGONIST:
+			ge.protagonistPlayerIDs = append(ge.protagonistPlayerIDs, player.Id)
+		default:
+			ge.logger.Warn("Unknown player role", zap.Int32("playerID", player.Id))
+		}
+
+		playerMap[player.Id] = player
+	}
+
+	ge.initializeGameStateFromScript(gameConfig, playerMap)
 	ge.dealInitialCards()
 
 	return ge, nil
@@ -163,10 +161,21 @@ func (ge *GameEngine) handleTimeout() {
 }
 
 func (ge *GameEngine) transitionTo(nextPhase Phase) {
+	if nextPhase == nil {
+		ge.logger.Debug("transitionTo called with nil nextPhase, staying in current phase", zap.String("current", ge.currentPhase.Type().String()))
+		return
+	}
+
 	ge.phaseTimer.Stop()
 
-	ge.logger.Info("Transitioning phase", zap.String("from", ge.currentPhase.Type().String()), zap.String("to", nextPhase.Type().String()))
-	ge.currentPhase.Exit(ge)
+	if ge.gameStarted {
+		ge.logger.Info("Transitioning phase", zap.String("from", ge.currentPhase.Type().String()), zap.String("to", nextPhase.Type().String()))
+		ge.currentPhase.Exit(ge)
+	} else {
+		ge.logger.Info("Entering initial phase", zap.String("to", nextPhase.Type().String()))
+		ge.gameStarted = true
+	}
+
 	ge.currentPhase = nextPhase
 	ge.GameState.CurrentPhase = nextPhase.Type()
 	ge.currentPhase.Enter(ge)
@@ -175,7 +184,6 @@ func (ge *GameEngine) transitionTo(nextPhase Phase) {
 	if duration > 0 {
 		ge.phaseTimer.Reset(duration)
 	}
-
 }
 
 func (ge *GameEngine) endGame(winner model.PlayerRole) {
@@ -212,11 +220,4 @@ func (ge *GameEngine) resetLoop() {
 
 	// Re-deal cards to players
 	ge.dealInitialCards()
-}
-
-func (ge *GameEngine) findPlayer(playerID int32) *model.Player {
-	if p, ok := ge.GameState.Players[playerID]; ok {
-		return p
-	}
-	return nil
 }

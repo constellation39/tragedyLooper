@@ -152,8 +152,8 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	players := make(map[int32]*model.Player)
-	players[req.PlayerID] = &model.Player{
+	players := make([]*model.Player, 0)
+	players = append(players, &model.Player{
 		Id:                 req.PlayerID,
 		Name:               req.PlayerName,
 		Role:               req.PlayerRole,
@@ -161,7 +161,7 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		Hand:               make([]*model.Card, 0), // 卡牌将由游戏引擎处理
 		DeductionKnowledge: &model.PlayerDeductionKnowledge{},
 		LlmSessionId:       "",
-	}
+	})
 
 	gameEngine, err := engine.NewGameEngine(ctxLogger.With(zap.String("gameID", gameID)), players, s.llmClient, gameDataAccessor)
 	if err != nil {
