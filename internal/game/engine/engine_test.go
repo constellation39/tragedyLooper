@@ -219,6 +219,6 @@ func TestCharacterStateChanges(t *testing.T) {
 	}
 
 	select {
-	
+	case <-time.After(time.Hour):
 	}
 }

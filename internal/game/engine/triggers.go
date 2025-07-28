@@ -1,47 +1,97 @@
 package engine
 
 import (
+	"errors"
 	model "tragedylooper/internal/game/proto/v1"
 
 	"go.uber.org/zap"
 )
 
-// checkAndTriggerAbilities 遍历所有角色的能力，并触发与给定触发器匹配的能力。
-// event 参数是可选的，仅在 triggerType 为 ON_GAME_EVENT 时使用。
+// checkAndTriggerAbilities iterates through all character abilities and triggers those that match the given trigger type.
 func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType) {
 	ge.logger.Debug("Checking for abilities to trigger", zap.String("triggerType", triggerType.String()))
 
 	for _, char := range ge.GameState.Characters {
-		for i, ability := range char.Abilities {
+		for _, ability := range char.Abilities {
 			if ability.Config.TriggerType != triggerType {
 				continue
 			}
 
-			// 如果是事件驱动的，请检查事件过滤器
-
-			// 检查是否已经使用过（如果适用）
 			if ability.Config.OncePerLoop && ability.UsedThisLoop {
 				continue
 			}
 
-			// TODO: 检查其他条件（例如，目标有效性）
+			// For abilities that trigger automatically, we pass nil for player and payload initially.
+			if !ge.checkConditions(ability.Config.Conditions, nil, nil, ability) {
+				continue
+			}
 
-			ge.logger.Info("Triggering ability", zap.String("character", char.Config.Name), zap.String("ability", ability.Config.Name))
+			// If the ability requires a choice, we need to ask the player.
+			if ability.Config.RequiresChoice {
+				// TODO: Implement logic to send a ChoiceRequiredEvent to the player who controls the character.
+				ge.logger.Info("Ability requires choice, skipping automatic trigger for now.", zap.String("ability", ability.Config.Name))
+				continue
+			}
 
-			// 简单的自动效果应用
-			// 对于需要玩家选择的目标，这将需要一个更复杂的流程
-			payload := &model.UseAbilityPayload{CharacterId: char.Config.Id, AbilityId: ability.Config.Id} // 假设自我目标
-			if err := ge.applyEffect(ability.Config.Effect, ability, payload, nil); err != nil {
+			ge.logger.Info("Auto-triggering ability", zap.String("character", char.Config.Name), zap.String("ability", ability.Config.Name))
+
+			// Since this is an automatic trigger, we assume no specific player action payload.
+			if err := ge.applyEffect(ability.Config.Effect, nil, nil, ability); err != nil {
 				ge.logger.Error("Error applying triggered ability effect", zap.Error(err))
 			}
 
 			if ability.Config.OncePerLoop {
-				ge.GameState.Characters[char.Config.Id].Abilities[i].UsedThisLoop = true
+				ability.UsedThisLoop = true // Mark the instance of the ability on the character as used
 			}
-
-			// ge.publishGameEvent(model.GameEventType_ABILITY_USED, &model.AbilityUsedEvent{CharacterId: char.Id, AbilityName: ability.Name})
 		}
 	}
 }
 
-// eventMatchesFilter 检查给定事件的类型是否在过滤列表中。
+// resolveSelectorToCharacters determines the character IDs targeted by a selector.
+func (ge *GameEngine) resolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, player *model.Player, payload *model.UseAbilityPayload, ability *model.Ability) ([]int32, error) {
+	if sel == nil {
+		return nil, errors.New("target selector is nil")
+	}
+
+	switch sel.Type {
+	case model.TargetSelector_ABILITY_USER:
+		if ability == nil {
+			return nil, errors.New("ability is nil for ABILITY_USER selector")
+		}
+		return []int32{ability.OwnerCharacterId}, nil
+	case model.TargetSelector_ABILITY_TARGET:
+		if payload == nil {
+			return nil, errors.New("payload is nil for ABILITY_TARGET selector")
+		}
+		if targetChar, ok := payload.Target.(*model.UseAbilityPayload_TargetCharacterId); ok {
+			return []int32{targetChar.TargetCharacterId}, nil
+		}
+		return nil, errors.New("payload does not contain a target character for ABILITY_TARGET selector")
+	case model.TargetSelector_ALL_CHARACTERS:
+		ids := make([]int32, 0, len(gs.Characters))
+		for id := range gs.Characters {
+			ids = append(ids, id)
+		}
+		return ids, nil
+	case model.TargetSelector_SPECIFIC_CHARACTER:
+		return []int32{sel.GetSpecificCharacterId()}, nil
+	// TODO: Implement other selector types
+	default:
+		return nil, errors.New("unsupported target selector type")
+	}
+}
+
+// cloneAbility creates a deep copy of an ability to avoid modifying the original config.
+func cloneAbility(original *model.Ability) *model.Ability {
+	if original == nil {
+		return nil
+	}
+	// A proper deep copy would be needed here. Using proto.Clone for simplicity.
+	// return proto.Clone(original).(*model.Ability)
+	// Manual clone for now:
+	return &model.Ability{
+		Config:           original.Config, // This should be a deep copy if mutable
+		OwnerCharacterId: original.OwnerCharacterId,
+		UsedThisLoop:     original.UsedThisLoop,
+	}
+}

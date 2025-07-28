@@ -41,6 +41,11 @@ message ChooseOptionPayload {
   string chosen_option_id = 3; // 选择项的ID
 }
 
+// 玩家跳过回合的操作负载
+message PassTurnAction {
+  int32 player_id = 1;
+}
+
 // 通用的玩家操作负载
 message PlayerActionPayload {
   oneof payload {
@@ -48,5 +53,6 @@ message PlayerActionPayload {
     UseAbilityPayload use_ability = 2; // 使用能力的负载
     MakeGuessPayload make_guess = 3; // 进行猜测的负载
     ChooseOptionPayload choose_option = 4; // 进行选择的负载
+    PassTurnAction pass_turn = 5; // 玩家跳过
   }
 }

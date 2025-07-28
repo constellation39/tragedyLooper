@@ -23,6 +23,11 @@
                     "$ref": "#/definitions/v1.ChooseOptionPayload",
                     "additionalProperties": true,
                     "description": "进行选择的负载"
+                },
+                "pass_turn": {
+                    "$ref": "#/definitions/v1.PassTurnAction",
+                    "additionalProperties": true,
+                    "description": "玩家跳过"
                 }
             },
             "additionalProperties": true,
@@ -105,6 +110,17 @@
             "type": "object",
             "title": "Make Guess Payload",
             "description": "主角玩家进行猜测的操作负载"
+        },
+        "v1.PassTurnAction": {
+            "properties": {
+                "player_id": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Pass Turn Action",
+            "description": "玩家跳过回合的操作负载"
         },
         "v1.PlayCardPayload": {
             "properties": {

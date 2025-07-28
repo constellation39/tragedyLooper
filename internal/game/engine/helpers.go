@@ -4,28 +4,28 @@ import (
 	model "tragedylooper/internal/game/proto/v1"
 )
 
-func (ge *GameEngine) checkConditions(conditions []*model.Condition, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) bool {
+func (ge *GameEngine) checkConditions(conditions []*model.Condition, player *model.Player, payload *model.UseAbilityPayload, ability *model.Ability) bool {
 	for _, condition := range conditions {
-		if !ge.checkSingleCondition(condition, payload, choice) {
+		if !ge.checkSingleCondition(condition, player, payload, ability) {
 			return false
 		}
 	}
 	return true
 }
 
-func (ge *GameEngine) checkSingleCondition(condition *model.Condition, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) bool {
+func (ge *GameEngine) checkSingleCondition(condition *model.Condition, player *model.Player, payload *model.UseAbilityPayload, ability *model.Ability) bool {
 	switch c := condition.ConditionType.(type) {
 	case *model.Condition_StatCondition:
-		return ge.checkStatCondition(c.StatCondition, payload, choice)
+		return ge.checkStatCondition(c.StatCondition, player, payload, ability)
 	case *model.Condition_LocationCondition:
-		return ge.checkLocationCondition(c.LocationCondition, payload, choice)
+		return ge.checkLocationCondition(c.LocationCondition, player, payload, ability)
 		// Add other condition checks here
 	}
 	return false
 }
 
-func (ge *GameEngine) checkStatCondition(sc *model.StatCondition, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) bool {
-	targetIDs, err := ge.resolveSelectorToCharacters(ge.GameState, sc.Target, payload, choice)
+func (ge *GameEngine) checkStatCondition(sc *model.StatCondition, player *model.Player, payload *model.UseAbilityPayload, ability *model.Ability) bool {
+	targetIDs, err := ge.resolveSelectorToCharacters(ge.GameState, sc.Target, player, payload, ability)
 	if err != nil {
 		// Log the error, maybe?
 		return false
@@ -83,8 +83,8 @@ func compareStat(statValue, conditionValue int32, comparator model.StatCondition
 	return false
 }
 
-func (ge *GameEngine) checkLocationCondition(lc *model.LocationCondition, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) bool {
-	targetIDs, err := ge.resolveSelectorToCharacters(ge.GameState, lc.Target, payload, choice)
+func (ge *GameEngine) checkLocationCondition(lc *model.LocationCondition, player *model.Player, payload *model.UseAbilityPayload, ability *model.Ability) bool {
+	targetIDs, err := ge.resolveSelectorToCharacters(ge.GameState, lc.Target, player, payload, ability)
 	if err != nil {
 		return false
 	}
@@ -136,13 +136,25 @@ func (ge *GameEngine) checkCharacterIsolation(lc *model.LocationCondition, char 
 }
 
 func (ge *GameEngine) checkGameEndConditions() (bool, model.PlayerRole) {
-	// This logic needs to be updated based on the script's end conditions.
-	// The following is placeholder logic.
+	script, err := ge.gameConfig.GetScript()
+	if err != nil {
+		return true, model.PlayerRole_PLAYER_ROLE_UNSPECIFIED // End on error
+	}
 
-	// Example: Check if max loops are reached.
-	// if ge.GameState.CurrentLoop > ge.GameState.Script.LoopCount {
-	// 	return true, model.PlayerRole_MASTERMIND // Or based on who has more points, etc.
-	// }
+	for _, endCondition := range script.EndConditions {
+		if ge.checkConditions(endCondition.Conditions, nil, nil, nil) {
+			return true, endCondition.Winner
+		}
+	}
 
 	return false, model.PlayerRole_PLAYER_ROLE_UNSPECIFIED
+}
+
+func (ge *GameEngine) getMastermindPlayer() *model.Player {
+	for _, p := range ge.GameState.Players {
+		if p.Role == model.PlayerRole_MASTERMIND {
+			return p
+		}
+	}
+	return nil
 }

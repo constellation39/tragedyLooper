@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -358,6 +357,51 @@ func (x *ChooseOptionPayload) GetChosenOptionId() string {
 	return ""
 }
 
+// 玩家跳过回合的操作负载
+type PassTurnAction struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PlayerId      int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PassTurnAction) Reset() {
+	*x = PassTurnAction{}
+	mi := &file_v1_payload_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PassTurnAction) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PassTurnAction) ProtoMessage() {}
+
+func (x *PassTurnAction) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_payload_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PassTurnAction.ProtoReflect.Descriptor instead.
+func (*PassTurnAction) Descriptor() ([]byte, []int) {
+	return file_v1_payload_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *PassTurnAction) GetPlayerId() int32 {
+	if x != nil {
+		return x.PlayerId
+	}
+	return 0
+}
+
 // 通用的玩家操作负载
 type PlayerActionPayload struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -367,6 +411,7 @@ type PlayerActionPayload struct {
 	//	*PlayerActionPayload_UseAbility
 	//	*PlayerActionPayload_MakeGuess
 	//	*PlayerActionPayload_ChooseOption
+	//	*PlayerActionPayload_PassTurn
 	Payload       isPlayerActionPayload_Payload `protobuf_oneof:"payload"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -374,7 +419,7 @@ type PlayerActionPayload struct {
 
 func (x *PlayerActionPayload) Reset() {
 	*x = PlayerActionPayload{}
-	mi := &file_v1_payload_proto_msgTypes[4]
+	mi := &file_v1_payload_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -386,7 +431,7 @@ func (x *PlayerActionPayload) String() string {
 func (*PlayerActionPayload) ProtoMessage() {}
 
 func (x *PlayerActionPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_payload_proto_msgTypes[4]
+	mi := &file_v1_payload_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -399,7 +444,7 @@ func (x *PlayerActionPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlayerActionPayload.ProtoReflect.Descriptor instead.
 func (*PlayerActionPayload) Descriptor() ([]byte, []int) {
-	return file_v1_payload_proto_rawDescGZIP(), []int{4}
+	return file_v1_payload_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *PlayerActionPayload) GetPayload() isPlayerActionPayload_Payload {
@@ -445,6 +490,15 @@ func (x *PlayerActionPayload) GetChooseOption() *ChooseOptionPayload {
 	return nil
 }
 
+func (x *PlayerActionPayload) GetPassTurn() *PassTurnAction {
+	if x != nil {
+		if x, ok := x.Payload.(*PlayerActionPayload_PassTurn); ok {
+			return x.PassTurn
+		}
+	}
+	return nil
+}
+
 type isPlayerActionPayload_Payload interface {
 	isPlayerActionPayload_Payload()
 }
@@ -465,6 +519,10 @@ type PlayerActionPayload_ChooseOption struct {
 	ChooseOption *ChooseOptionPayload `protobuf:"bytes,4,opt,name=choose_option,json=chooseOption,proto3,oneof"` // 进行选择的负载
 }
 
+type PlayerActionPayload_PassTurn struct {
+	PassTurn *PassTurnAction `protobuf:"bytes,5,opt,name=pass_turn,json=passTurn,proto3,oneof"` // 玩家跳过
+}
+
 func (*PlayerActionPayload_PlayCard) isPlayerActionPayload_Payload() {}
 
 func (*PlayerActionPayload_UseAbility) isPlayerActionPayload_Payload() {}
@@ -472,6 +530,8 @@ func (*PlayerActionPayload_UseAbility) isPlayerActionPayload_Payload() {}
 func (*PlayerActionPayload_MakeGuess) isPlayerActionPayload_Payload() {}
 
 func (*PlayerActionPayload_ChooseOption) isPlayerActionPayload_Payload() {}
+
+func (*PlayerActionPayload_PassTurn) isPlayerActionPayload_Payload() {}
 
 var File_v1_payload_proto protoreflect.FileDescriptor
 
@@ -502,14 +562,17 @@ const file_v1_payload_proto_rawDesc = "" +
 	"\x13ChooseOptionPayload\x12\x1b\n" +
 	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12!\n" +
 	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\x12(\n" +
-	"\x10chosen_option_id\x18\x03 \x01(\tR\x0echosenOptionId\"\x85\x02\n" +
+	"\x10chosen_option_id\x18\x03 \x01(\tR\x0echosenOptionId\"-\n" +
+	"\x0ePassTurnAction\x12\x1b\n" +
+	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\"\xb8\x02\n" +
 	"\x13PlayerActionPayload\x122\n" +
 	"\tplay_card\x18\x01 \x01(\v2\x13.v1.PlayCardPayloadH\x00R\bplayCard\x128\n" +
 	"\vuse_ability\x18\x02 \x01(\v2\x15.v1.UseAbilityPayloadH\x00R\n" +
 	"useAbility\x125\n" +
 	"\n" +
 	"make_guess\x18\x03 \x01(\v2\x14.v1.MakeGuessPayloadH\x00R\tmakeGuess\x12>\n" +
-	"\rchoose_option\x18\x04 \x01(\v2\x17.v1.ChooseOptionPayloadH\x00R\fchooseOptionB\t\n" +
+	"\rchoose_option\x18\x04 \x01(\v2\x17.v1.ChooseOptionPayloadH\x00R\fchooseOption\x121\n" +
+	"\tpass_turn\x18\x05 \x01(\v2\x12.v1.PassTurnActionH\x00R\bpassTurnB\t\n" +
 	"\apayloadB&Z$tragedylooper/internal/game/proto/v1b\x06proto3"
 
 var (
@@ -524,33 +587,35 @@ func file_v1_payload_proto_rawDescGZIP() []byte {
 	return file_v1_payload_proto_rawDescData
 }
 
-var file_v1_payload_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_v1_payload_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_v1_payload_proto_goTypes = []any{
 	(*PlayCardPayload)(nil),     // 0: v1.PlayCardPayload
 	(*UseAbilityPayload)(nil),   // 1: v1.UseAbilityPayload
 	(*MakeGuessPayload)(nil),    // 2: v1.MakeGuessPayload
 	(*ChooseOptionPayload)(nil), // 3: v1.ChooseOptionPayload
-	(*PlayerActionPayload)(nil), // 4: v1.PlayerActionPayload
-	nil,                         // 5: v1.MakeGuessPayload.GuessedRolesEntry
-	(LocationType)(0),           // 6: v1.LocationType
-	(IncidentType)(0),           // 7: v1.IncidentType
-	(RoleType)(0),               // 8: v1.RoleType
+	(*PassTurnAction)(nil),      // 4: v1.PassTurnAction
+	(*PlayerActionPayload)(nil), // 5: v1.PlayerActionPayload
+	nil,                         // 6: v1.MakeGuessPayload.GuessedRolesEntry
+	(LocationType)(0),           // 7: v1.LocationType
+	(IncidentType)(0),           // 8: v1.IncidentType
+	(RoleType)(0),               // 9: v1.RoleType
 }
 var file_v1_payload_proto_depIdxs = []int32{
-	6, // 0: v1.PlayCardPayload.target_location:type_name -> v1.LocationType
-	6, // 1: v1.UseAbilityPayload.target_location:type_name -> v1.LocationType
-	7, // 2: v1.UseAbilityPayload.target_incident_type:type_name -> v1.IncidentType
-	5, // 3: v1.MakeGuessPayload.guessed_roles:type_name -> v1.MakeGuessPayload.GuessedRolesEntry
-	0, // 4: v1.PlayerActionPayload.play_card:type_name -> v1.PlayCardPayload
-	1, // 5: v1.PlayerActionPayload.use_ability:type_name -> v1.UseAbilityPayload
-	2, // 6: v1.PlayerActionPayload.make_guess:type_name -> v1.MakeGuessPayload
-	3, // 7: v1.PlayerActionPayload.choose_option:type_name -> v1.ChooseOptionPayload
-	8, // 8: v1.MakeGuessPayload.GuessedRolesEntry.value:type_name -> v1.RoleType
-	9, // [9:9] is the sub-list for method output_type
-	9, // [9:9] is the sub-list for method input_type
-	9, // [9:9] is the sub-list for extension type_name
-	9, // [9:9] is the sub-list for extension extendee
-	0, // [0:9] is the sub-list for field type_name
+	7,  // 0: v1.PlayCardPayload.target_location:type_name -> v1.LocationType
+	7,  // 1: v1.UseAbilityPayload.target_location:type_name -> v1.LocationType
+	8,  // 2: v1.UseAbilityPayload.target_incident_type:type_name -> v1.IncidentType
+	6,  // 3: v1.MakeGuessPayload.guessed_roles:type_name -> v1.MakeGuessPayload.GuessedRolesEntry
+	0,  // 4: v1.PlayerActionPayload.play_card:type_name -> v1.PlayCardPayload
+	1,  // 5: v1.PlayerActionPayload.use_ability:type_name -> v1.UseAbilityPayload
+	2,  // 6: v1.PlayerActionPayload.make_guess:type_name -> v1.MakeGuessPayload
+	3,  // 7: v1.PlayerActionPayload.choose_option:type_name -> v1.ChooseOptionPayload
+	4,  // 8: v1.PlayerActionPayload.pass_turn:type_name -> v1.PassTurnAction
+	9,  // 9: v1.MakeGuessPayload.GuessedRolesEntry.value:type_name -> v1.RoleType
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_v1_payload_proto_init() }
@@ -568,11 +633,12 @@ func file_v1_payload_proto_init() {
 		(*UseAbilityPayload_TargetLocation)(nil),
 		(*UseAbilityPayload_TargetIncidentType)(nil),
 	}
-	file_v1_payload_proto_msgTypes[4].OneofWrappers = []any{
+	file_v1_payload_proto_msgTypes[5].OneofWrappers = []any{
 		(*PlayerActionPayload_PlayCard)(nil),
 		(*PlayerActionPayload_UseAbility)(nil),
 		(*PlayerActionPayload_MakeGuess)(nil),
 		(*PlayerActionPayload_ChooseOption)(nil),
+		(*PlayerActionPayload_PassTurn)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -580,7 +646,7 @@ func file_v1_payload_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_payload_proto_rawDesc), len(file_v1_payload_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

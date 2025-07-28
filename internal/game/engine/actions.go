@@ -23,7 +23,9 @@ func (ge *GameEngine) handlePlayerAction(playerID int32, action *model.PlayerAct
 	case *model.PlayerActionPayload_UseAbility:
 		ge.handleUseAbilityAction(player, p.UseAbility)
 	case *model.PlayerActionPayload_MakeGuess:
-		ge.handleMakeGuessAction(p.MakeGuess)
+		ge.handleMakeGuessAction(player, p.MakeGuess)
+	case *model.PlayerActionPayload_PassTurn:
+		ge.handlePassTurnAction(player)
 	case *model.PlayerActionPayload_ChooseOption:
 		// TODO: Handle ChooseOption
 	default:
@@ -32,6 +34,10 @@ func (ge *GameEngine) handlePlayerAction(playerID int32, action *model.PlayerAct
 }
 
 func (ge *GameEngine) handlePlayCardAction(player *model.Player, payload *model.PlayCardPayload) {
+	if ge.GameState.CurrentPhase != model.GamePhase_CARD_PLAY {
+		ge.logger.Warn("player tried to play card outside of the card play phase", zap.Int32("player_id", player.Id), zap.String("phase", ge.GameState.CurrentPhase.String()))
+		return
+	}
 
 	var playedCard *model.Card
 	cardFound := false
@@ -62,18 +68,19 @@ func (ge *GameEngine) handlePlayCardAction(player *model.Player, payload *model.
 	}
 	playedCard.UsedThisLoop = true // Mark as used
 
-	if _, ok := ge.GameState.PlayedCardsThisDay[player.Id]; !ok {
-		ge.GameState.PlayedCardsThisDay[player.Id] = playedCard
+	if _, ok := ge.GameState.PlayedCardsThisDay[player.Id]; ok {
+		ge.logger.Warn("player tried to play a second card in one day", zap.Int32("player_id", player.Id))
+		// Potentially return the card to the hand or handle it as a misplay.
 	}
-	if _, ok := ge.GameState.PlayedCardsThisLoop[playedCard.Config.Id]; !ok {
-		ge.GameState.PlayedCardsThisLoop[playedCard.Config.Id] = true
-	}
+	ge.GameState.PlayedCardsThisDay[player.Id] = playedCard
+
+	// Mark card as used for the loop
+	ge.GameState.PlayedCardsThisLoop[playedCard.Config.Id] = true
 
 	ge.playerReady[player.Id] = true
 }
 
-func (ge *GameEngine) handleUseAbilityAction(_ *model.Player, payload *model.UseAbilityPayload) {
-
+func (ge *GameEngine) handleUseAbilityAction(player *model.Player, payload *model.UseAbilityPayload) {
 	var ability *model.Ability
 	abilityFound := false
 	char, ok := ge.GameState.Characters[payload.CharacterId]
@@ -95,7 +102,7 @@ func (ge *GameEngine) handleUseAbilityAction(_ *model.Player, payload *model.Use
 		return
 	}
 
-	if err := ge.applyEffect(ability.Config.Effect, ability, payload, nil); err != nil {
+	if err := ge.applyEffect(ability.Config.Effect, player, payload, ability); err != nil {
 		ge.logger.Error("Failed to apply effect for ability", zap.String("abilityName", ability.Config.Name), zap.Error(err))
 		return
 	}
@@ -103,29 +110,46 @@ func (ge *GameEngine) handleUseAbilityAction(_ *model.Player, payload *model.Use
 	if ability.Config.OncePerLoop {
 		ability.UsedThisLoop = true
 	}
+	// Note: Using an ability does not automatically make a player "ready".
+	// They must explicitly pass their turn with PassTurnAction.
 }
 
-func (ge *GameEngine) handleMakeGuessAction(payload *model.MakeGuessPayload) {
+func (ge *GameEngine) handleMakeGuessAction(player *model.Player, payload *model.MakeGuessPayload) {
+	if ge.GameState.CurrentPhase != model.GamePhase_PROTAGONIST_GUESS {
+		ge.logger.Warn("player tried to make a guess outside of the guess phase", zap.Int32("player_id", player.Id), zap.String("phase", ge.GameState.CurrentPhase.String()))
+		return
+	}
+
+	// For now, we assume the first protagonist to guess ends the game.
+	if player.Role != model.PlayerRole_PROTAGONIST {
+		ge.logger.Warn("non-protagonist player tried to make a guess", zap.Int32("player_id", player.Id))
+		return
+	}
+
+	script, err := ge.gameConfig.GetScript()
+	if err != nil {
+		ge.logger.Error("failed to get script to verify guess", zap.Error(err))
+		ge.endGame(model.PlayerRole_MASTERMIND) // End game, mastermind wins by default on error
+		return
+	}
 
 	correctGuesses := 0
-	totalCharactersToGuess := 0
-	for charID, guessedRole := range payload.GuessedRoles {
-		char, exists := ge.GameState.Characters[charID]
-		if !exists {
-			continue // Ignore guesses for non-existent characters
-		}
-		// Only count characters that have a hidden role to be guessed
-		if char.HiddenRole != model.RoleType_ROLE_TYPE_UNSPECIFIED {
-			totalCharactersToGuess++
-			if char.HiddenRole == guessedRole {
+	for _, roleInfo := range script.Roles {
+		if guessedRole, ok := payload.GuessedRoles[roleInfo.CharacterId]; ok {
+			if guessedRole == roleInfo.Role {
 				correctGuesses++
 			}
 		}
 	}
 
-	if totalCharactersToGuess > 0 && correctGuesses == totalCharactersToGuess {
-		ge.endGame(model.PlayerRole_PROTAGONIST)
+	if correctGuesses == len(script.Roles) {
+		ge.endGame(model.PlayerRole_PROTAGONİST)
 	} else {
 		ge.endGame(model.PlayerRole_MASTERMIND)
 	}
+}
+
+func (ge *GameEngine) handlePassTurnAction(player *model.Player) {
+	ge.logger.Info("Player passed turn", zap.String("player", player.Name))
+	ge.playerReady[player.Id] = true
 }

@@ -1,21 +1,20 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/CardPlayedEvent",
+    "$ref": "#/definitions/CardRevealedEvent",
     "definitions": {
-        "CardPlayedEvent": {
+        "CardRevealedEvent": {
             "properties": {
-                "player_id": {
-                    "type": "integer"
-                },
-                "card": {
-                    "$ref": "#/definitions/v1.Card",
-                    "additionalProperties": true
+                "cards": {
+                    "items": {
+                        "$ref": "#/definitions/v1.Card"
+                    },
+                    "type": "array"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Card Played Event",
-            "description": "卡牌打出事件"
+            "title": "Card Revealed Event",
+            "description": "卡牌揭示事件"
         },
         "v1.AddTraitEffect": {
             "properties": {

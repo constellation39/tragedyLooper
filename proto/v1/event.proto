@@ -71,7 +71,13 @@ message DayAdvancedEvent {
 
 // 卡牌打出事件
 message CardPlayedEvent {
-  map<int32, CardList> played_cards = 1; // key为玩家ID，value为该玩家打出的卡牌列表
+  int32 player_id = 1;
+  Card card = 2;
+}
+
+// 卡牌揭示事件
+message CardRevealedEvent {
+  repeated Card cards = 1;
 }
 
 // 循环重置事件

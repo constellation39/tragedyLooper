@@ -12,17 +12,14 @@ import (
 
 // GameEngine manages the state and logic of a single game instance.
 type GameEngine struct {
-	GameState            *model.GameState
-	gameConfig           loader.GameConfigAccessor
-	requestChan          chan engineRequest
-	dispatchGameEvent    chan *model.GameEvent
-	stopChan             chan struct{}
-	llmClient            llm.Client
-	playerReady          map[int32]bool
-	mastermindPlayerID   int32
-	protagonistPlayerIDs []int32
-	characterNameToID    map[string]int32
-	logger               *zap.Logger
+	GameState         *model.GameState
+	gameConfig        loader.GameConfigAccessor
+	requestChan       chan engineRequest
+	dispatchGameEvent chan *model.GameEvent
+	stopChan          chan struct{}
+	llmClient         llm.Client
+	playerReady       map[int32]bool
+	logger            *zap.Logger
 }
 
 // engineRequest is an interface for all requests handled by the game engine loop.
@@ -41,29 +38,19 @@ type llmActionCompleteRequest struct {
 }
 
 // NewGameEngine creates a new game engine instance.
-func NewGameEngine(gameID string, logger *zap.Logger, players map[int32]*model.Player, llmClient llm.Client, gameConfig loader.GameConfigAccessor) *GameEngine {
+func NewGameEngine(gameID string, logger *zap.Logger, players map[int32]*model.Player, llmClient llm.Client, gameConfig loader.GameConfigAccessor) (*GameEngine, error) {
 	gs := &model.GameState{
-		GameId:                  gameID,
-		Characters:              make(map[int32]*model.Character),
-		Players:                 players,
-		CurrentDay:              1,
-		CurrentLoop:             1,
-		CurrentPhase:            model.GamePhase_SETUP,
-		ActiveTragedies:         make(map[int32]bool),
-		PreventedTragedies:      make(map[int32]bool),
-		PlayedCardsThisDay:      make(map[int32]*model.Card),
-		PlayedCardsThisLoop:     make(map[int32]bool),
-		LastUpdateTime:          time.Now().Unix(),
-		DayEvents:               make([]*model.GameEvent, 0),
-		LoopEvents:              make([]*model.GameEvent, 0),
-		CharacterParanoiaLimits: make(map[int32]int32),
-		CharacterGoodwillLimits: make(map[int32]int32),
-		CharacterIntrigueLimits: make(map[int32]int32),
-	}
-
-	for _, charConfig := range gameConfig.GetCharacters() {
-		character := &model.Character{Config: charConfig}
-		gs.Characters[charConfig.Id] = character
+		GameId:              gameID,
+		Characters:          make(map[int32]*model.Character),
+		Players:             players,
+		CurrentDay:          1,
+		CurrentLoop:         1,
+		CurrentPhase:        model.GamePhase_MASTERMIND_SETUP, // Start with Mastermind Setup
+		PlayedCardsThisDay:  make(map[int32]*model.Card),
+		PlayedCardsThisLoop: make(map[int32]bool),
+		LastUpdateTime:      time.Now().Unix(),
+		DayEvents:           []*model.GameEvent{},
+		LoopEvents:          []*model.GameEvent{},
 	}
 
 	ge := &GameEngine{
@@ -74,26 +61,14 @@ func NewGameEngine(gameID string, logger *zap.Logger, players map[int32]*model.P
 		stopChan:          make(chan struct{}),
 		llmClient:         llmClient,
 		playerReady:       make(map[int32]bool),
-		characterNameToID: make(map[string]int32),
 		logger:            logger.With(zap.String("gameID", gameID)),
 	}
 
-	for id, char := range gs.Characters {
-		ge.characterNameToID[char.Config.Name] = id
+	if err := ge.initializeGameStateFromScript(); err != nil {
+		return nil, err
 	}
 
-	for playerID, p := range players {
-		switch p.Role {
-		case model.PlayerRole_MASTERMIND:
-			ge.mastermindPlayerID = playerID
-		case model.PlayerRole_PROTAGONIST:
-			ge.protagonistPlayerIDs = append(ge.protagonistPlayerIDs, playerID)
-		default:
-			ge.logger.Warn("Unknown player role", zap.Int32("playerID", playerID))
-		}
-	}
-
-	return ge
+	return ge, nil
 }
 
 func (ge *GameEngine) StartGameLoop() {
@@ -148,7 +123,6 @@ func (ge *GameEngine) runGameLoop() {
 			switch r := req.(type) {
 			case *llmActionCompleteRequest:
 				ge.handlePlayerAction(r.playerID, r.action)
-				ge.playerReady[r.playerID] = true
 			case getPlayerViewRequest:
 				r.responseChan <- ge.createPlayerView(r.playerID)
 			}
@@ -163,7 +137,7 @@ func (ge *GameEngine) runGameLoop() {
 
 func (ge *GameEngine) endGame(winner model.PlayerRole) {
 	ge.GameState.CurrentPhase = model.GamePhase_GAME_OVER
-	ge.applyAndPublishEvent(model.GameEventType_LOOP_OVER, &model.GameOverEvent{Winner: winner})
+	ge.applyAndPublishEvent(model.GameEventType_GAME_OVER, &model.GameOverEvent{Winner: winner})
 	ge.logger.Info("Game over", zap.String("winner", winner.String()))
 }
 
@@ -174,17 +148,27 @@ func (ge *GameEngine) resetPlayerReadiness() {
 }
 
 func (ge *GameEngine) resetLoop() {
+	// Reset character stats
 	for _, char := range ge.GameState.Characters {
 		char.Paranoia = 0
 		char.Goodwill = 0
 		char.Intrigue = 0
+		// Note: Traits and abilities might persist or reset based on game rules.
+		// Current implementation assumes they persist unless explicitly removed.
 	}
+
+	// Reset player hands
 	for _, p := range ge.GameState.Players {
 		p.Hand = nil
 	}
+
+	// Reset loop-specific state
 	ge.GameState.PlayedCardsThisLoop = make(map[int32]bool)
-	ge.GameState.PreventedTragedies = make(map[int32]bool)
-	ge.GameState.DayEvents = make([]*model.GameEvent, 0)
+	ge.GameState.DayEvents = []*model.GameEvent{}
+	ge.GameState.LoopEvents = []*model.GameEvent{}
+
+	// Re-deal cards to players
+	ge.dealInitialCards()
 }
 
 func (ge *GameEngine) createPlayerView(playerID int32) *model.PlayerView {
@@ -194,22 +178,21 @@ func (ge *GameEngine) createPlayerView(playerID int32) *model.PlayerView {
 	}
 
 	view := &model.PlayerView{
-		GameId:             ge.GameState.GameId,
-		CurrentDay:         ge.GameState.CurrentDay,
-		CurrentLoop:        ge.GameState.CurrentLoop,
-		CurrentPhase:       ge.GameState.CurrentPhase,
-		ActiveTragedies:    ge.GameState.ActiveTragedies,
-		PreventedTragedies: ge.GameState.PreventedTragedies,
-		YourHand:           player.Hand,
-		YourDeductions:     player.DeductionKnowledge,
-		PublicEvents:       ge.GameState.DayEvents, // A simplified version, might need filtering
-		Characters:         make(map[int32]*model.PlayerViewCharacter),
-		Players:            make(map[int32]*model.PlayerViewPlayer),
+		GameId:       ge.GameState.GameId,
+		YourId:       playerID,
+		CurrentDay:   ge.GameState.CurrentDay,
+		CurrentLoop:  ge.GameState.CurrentLoop,
+		CurrentPhase: ge.GameState.CurrentPhase,
+		YourHand:     player.Hand,
+		YourRole:     player.Role,
+		PublicEvents: ge.GameState.LoopEvents, // Show all events from the current loop
+		Characters:   make(map[int32]*model.PlayerViewCharacter),
+		Players:      make(map[int32]*model.PlayerViewPlayer),
 	}
 
 	// Populate character views
 	for id, char := range ge.GameState.Characters {
-		view.Characters[id] = &model.PlayerViewCharacter{
+		pcv := &model.PlayerViewCharacter{
 			Id:              id,
 			Name:            char.Config.Name,
 			Traits:          char.Traits,
@@ -219,9 +202,12 @@ func (ge *GameEngine) createPlayerView(playerID int32) *model.PlayerView {
 			Intrigue:        char.Intrigue,
 			Abilities:       char.Abilities,
 			IsAlive:         char.IsAlive,
-			InPanicMode:     char.InPanicMode,
-			Rules:           char.Config.Rules,
 		}
+		// Hide secret roles unless the viewer is the mastermind
+		if player.Role == model.PlayerRole_MASTERMIND || char.RoleIsPublic {
+			pcv.Role = char.HiddenRole
+		}
+		view.Characters[id] = pcv
 	}
 
 	// Populate player views
@@ -229,11 +215,16 @@ func (ge *GameEngine) createPlayerView(playerID int32) *model.PlayerView {
 		view.Players[id] = &model.PlayerViewPlayer{
 			Id:   id,
 			Name: p.Name,
-			Role: p.Role, // Mastermind will see all roles, Protagonists might see their own
+			Role: p.Role, // Player roles are public knowledge
 		}
 	}
 
-	// If the player is not the mastermind, hide secret information
-
 	return view
+}
+
+func (ge *GameEngine) findPlayer(playerID int32) *model.Player {
+	if p, ok := ge.GameState.Players[playerID]; ok {
+		return p
+	}
+	return nil
 }
