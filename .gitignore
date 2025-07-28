@@ -19,3 +19,4 @@ go.work
 .aider*
 shrimp-rules.md
 *.xlsx
+.shrimp

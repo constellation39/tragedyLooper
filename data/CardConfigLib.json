@@ -13,7 +13,7 @@
         "2": {
             "id": 2,
             "name": "Add Paranoia",
-            "card_type": "PARANOIA",
+            "card_type": "PARANOIA_MINUS",
             "owner_role": "PROTAGONIST",
             "effect": {
                 "adjust_paranoia_effect": {
@@ -35,7 +35,7 @@
         "4": {
             "id": 4,
             "name": "Add Paranoia",
-            "card_type": "PARANOIA",
+            "card_type": "PARANOIA_PLUS",
             "owner_role": "MASTERMIND",
             "effect": {
                 "adjust_paranoia_effect": {
@@ -47,7 +47,7 @@
         "5": {
             "id": 5,
             "name": "Add Goodwill",
-            "card_type": "GOODWILL",
+            "card_type": "GOODWILL_PLUS",
             "owner_role": "PROTAGONIST",
             "effect": {
                 "adjust_goodwill_effect": {
@@ -59,7 +59,7 @@
         "6": {
             "id": 6,
             "name": "Add Intrigue",
-            "card_type": "INTRIGUE",
+            "card_type": "INTRIGUE_PLUS",
             "owner_role": "PROTAGONIST",
             "effect": {
                 "adjust_intrigue_effect": {
@@ -71,7 +71,7 @@
         "7": {
             "id": 7,
             "name": "Add Goodwill",
-            "card_type": "GOODWILL",
+            "card_type": "GOODWILL_PLUS",
             "owner_role": "MASTERMIND",
             "effect": {
                 "adjust_goodwill_effect": {
@@ -83,7 +83,7 @@
         "8": {
             "id": 8,
             "name": "Add Intrigue",
-            "card_type": "INTRIGUE",
+            "card_type": "INTRIGUE_PLUS",
             "owner_role": "MASTERMIND",
             "effect": {
                 "adjust_intrigue_effect": {
@@ -95,7 +95,7 @@
         "9": {
             "id": 9,
             "name": "Forbid Movement",
-            "card_type": "MOVEMENT",
+            "card_type": "FORBID_MOVEMENT",
             "owner_role": "PROTAGONIST",
             "effect": {
                 "forbid_movement_effect": {}
@@ -105,7 +105,7 @@
         "10": {
             "id": 10,
             "name": "Forbid Paranoia",
-            "card_type": "PARANOIA",
+            "card_type": "FORBID_PARANOIA",
             "owner_role": "PROTAGONIST",
             "effect": {
                 "forbid_paranoia_effect": {}
@@ -115,7 +115,7 @@
         "11": {
             "id": 11,
             "name": "Forbid Goodwill",
-            "card_type": "GOODWILL",
+            "card_type": "FORBID_GOODWILL",
             "owner_role": "MASTERMIND",
             "effect": {
                 "forbid_goodwill_effect": {}
@@ -125,7 +125,7 @@
         "12": {
             "id": 12,
             "name": "Forbid Intrigue",
-            "card_type": "INTRIGUE",
+            "card_type": "FORBID_INTRIGUE",
             "owner_role": "PROTAGONIST",
             "effect": {
                 "forbid_intrigue_effect": {}
@@ -135,7 +135,7 @@
         "13": {
             "id": 13,
             "name": "Forbid Paranoia",
-            "card_type": "PARANOIA",
+            "card_type": "FORBID_PARANOIA",
             "owner_role": "MASTERMIND",
             "effect": {
                 "forbid_paranoia_effect": {}
@@ -145,7 +145,7 @@
         "14": {
             "id": 14,
             "name": "Add Goodwill +2",
-            "card_type": "GOODWILL",
+            "card_type": "GOODWILL_PLUS",
             "owner_role": "PROTAGONIST",
             "effect": {
                 "adjust_goodwill_effect": {
@@ -157,7 +157,7 @@
         "15": {
             "id": 15,
             "name": "Add Intrigue +2",
-            "card_type": "INTRIGUE",
+            "card_type": "INTRIGUE_PLUS",
             "owner_role": "MASTERMIND",
             "effect": {
                 "adjust_intrigue_effect": {
