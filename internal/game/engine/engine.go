@@ -204,8 +204,6 @@ func (ge *GameEngine) resetLoop() {
 	ge.GameState.DayEvents = make([]*model.GameEvent, 0)
 }
 
-
-
 func (ge *GameEngine) createPlayerView(playerID int32) *model.PlayerView {
 	player, ok := ge.GameState.Players[playerID]
 	if !ok {
@@ -213,33 +211,33 @@ func (ge *GameEngine) createPlayerView(playerID int32) *model.PlayerView {
 	}
 
 	view := &model.PlayerView{
-		GameId:            ge.GameState.GameId,
-		CurrentDay:        ge.GameState.CurrentDay,
-		CurrentLoop:       ge.GameState.CurrentLoop,
-		CurrentPhase:      ge.GameState.CurrentPhase,
-		ActiveTragedies:   ge.GameState.ActiveTragedies,
+		GameId:             ge.GameState.GameId,
+		CurrentDay:         ge.GameState.CurrentDay,
+		CurrentLoop:        ge.GameState.CurrentLoop,
+		CurrentPhase:       ge.GameState.CurrentPhase,
+		ActiveTragedies:    ge.GameState.ActiveTragedies,
 		PreventedTragedies: ge.GameState.PreventedTragedies,
-		YourHand:          player.Hand,
-		YourDeductions:    player.DeductionKnowledge,
-		PublicEvents:      ge.GameState.DayEvents, // A simplified version, might need filtering
-		Characters:        make(map[int32]*model.PlayerViewCharacter),
-		Players:           make(map[int32]*model.PlayerViewPlayer),
+		YourHand:           player.Hand,
+		YourDeductions:     player.DeductionKnowledge,
+		PublicEvents:       ge.GameState.DayEvents, // A simplified version, might need filtering
+		Characters:         make(map[int32]*model.PlayerViewCharacter),
+		Players:            make(map[int32]*model.PlayerViewPlayer),
 	}
 
 	// Populate character views
 	for id, char := range ge.GameState.Characters {
 		view.Characters[id] = &model.PlayerViewCharacter{
-			Id:               id,
-			Name:             char.Config.Name,
-			Traits:           char.Traits,
-			CurrentLocation:  char.CurrentLocation,
-			Paranoia:         char.Paranoia,
-			Goodwill:         char.Goodwill,
-			Intrigue:         char.Intrigue,
-			Abilities:        char.Abilities,
-			IsAlive:          char.IsAlive,
-			InPanicMode:      char.InPanicMode,
-			Rules:            char.Config.Rules,
+			Id:              id,
+			Name:            char.Config.Name,
+			Traits:          char.Traits,
+			CurrentLocation: char.CurrentLocation,
+			Paranoia:        char.Paranoia,
+			Goodwill:        char.Goodwill,
+			Intrigue:        char.Intrigue,
+			Abilities:       char.Abilities,
+			IsAlive:         char.IsAlive,
+			InPanicMode:     char.InPanicMode,
+			Rules:           char.Config.Rules,
 		}
 	}
 

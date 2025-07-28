@@ -113,12 +113,12 @@ message TragedyTriggeredEvent {
 
 // 特性添加事件
 message TraitAddedEvent {
-    int32 character_id = 1;
-    string trait = 2;
+  int32 character_id = 1;
+  string trait = 2;
 }
 
 // 特性移除事件
 message TraitRemovedEvent {
-    int32 character_id = 1;
-    string trait = 2;
+  int32 character_id = 1;
+  string trait = 2;
 }

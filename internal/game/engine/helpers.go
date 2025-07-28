@@ -19,7 +19,7 @@ func (ge *GameEngine) checkSingleCondition(condition *model.Condition, payload *
 		return ge.checkStatCondition(c.StatCondition, payload, choice)
 	case *model.Condition_LocationCondition:
 		return ge.checkLocationCondition(c.LocationCondition, payload, choice)
-	// Add other condition checks here
+		// Add other condition checks here
 	}
 	return false
 }
@@ -100,7 +100,7 @@ func (ge *GameEngine) checkLocationCondition(lc *model.LocationCondition, payloa
 			return false
 		}
 		if !lc.IsAtLocation && atLocation { // For checking if NOT at a location
-		    return false
+			return false
 		}
 
 		if lc.IsAlone || lc.NotAlone {
