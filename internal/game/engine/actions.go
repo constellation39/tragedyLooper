@@ -72,7 +72,7 @@ func (ge *GameEngine) handlePlayCardAction(player *model.Player, payload *model.
 	ge.playerReady[player.Id] = true
 }
 
-func (ge *GameEngine) handleUseAbilityAction(player *model.Player, payload *model.UseAbilityPayload) {
+func (ge *GameEngine) handleUseAbilityAction(_ *model.Player, payload *model.UseAbilityPayload) {
 
 	var ability *model.Ability
 	abilityFound := false

@@ -47,8 +47,12 @@ func main() {
 	logger.Info("Server starting on port " + port)
 
 	// In a goroutine, start the HTTP server
+	server := &http.Server{
+		Addr:    port,
+		Handler: loggedMux,
+	}
 	go func() {
-		if err := http.ListenAndServe(port, loggedMux); err != nil {
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatal("HTTP server failed", zap.Error(err))
 		}
 	}()

@@ -8,7 +8,7 @@ import (
 
 // checkAndTriggerAbilities 遍历所有角色的能力，并触发与给定触发器匹配的能力。
 // event 参数是可选的，仅在 triggerType 为 ON_GAME_EVENT 时使用。
-func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType, event *model.GameEvent) {
+func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType, _ *model.GameEvent) {
 	ge.logger.Debug("Checking for abilities to trigger", zap.String("triggerType", triggerType.String()))
 
 	for _, char := range ge.GameState.Characters {

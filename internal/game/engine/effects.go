@@ -27,7 +27,7 @@ func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, 
 	return nil
 }
 
-func (ge *GameEngine) resolveEffectChoices(state *model.GameState, effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
+func (ge *GameEngine) resolveEffectChoices(state *model.GameState, effect *model.Effect, _ *model.Ability, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
 	switch t := effect.EffectType.(type) {
 	case *model.Effect_CompoundEffect:
 		switch t.CompoundEffect.Operator {
@@ -101,7 +101,7 @@ func (ge *GameEngine) resolveSelectorToCharacters(state *model.GameState, select
 		choiceID := choice.GetChosenOptionId()
 		if strings.HasPrefix(choiceID, "target_char_") {
 			idStr := strings.TrimPrefix(choiceID, "target_char_")
-			id, err := strconv.Atoi(idStr)
+			id, err := strconv.ParseInt(idStr, 10, 32)
 			if err == nil {
 				return []int32{int32(id)}, nil
 			}

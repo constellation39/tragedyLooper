@@ -8,7 +8,7 @@ import (
 
 // generatePlayerView creates a filtered view of the game state for a specific player.
 // This method is NOT thread-safe and must only be called from within the runGameLoop goroutine.
-func (ge *GameEngine) generatePlayerView(playerID int32) *model.PlayerView {
+func (ge *GameEngine) _generatePlayerView(playerID int32) *model.PlayerView {
 	player := ge.GameState.Players[playerID]
 	if player == nil {
 		return &model.PlayerView{} // Or handle error
@@ -59,9 +59,7 @@ func (ge *GameEngine) generatePlayerView(playerID int32) *model.PlayerView {
 			Name: playerCopy.Name,
 			Role: playerCopy.Role,
 		}
-		if id != playerID {
-			// playerCopy.Hand = nil // Hide other players' hands - not applicable to PlayerViewPlayer
-		}
+		// playerCopy.Hand = nil // Hide other players' hands - not applicable to PlayerViewPlayer
 		view.Players[id] = playerViewPlayer
 	}
 

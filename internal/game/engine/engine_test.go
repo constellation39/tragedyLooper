@@ -24,7 +24,7 @@ func (m *MockLLMClient) GenerateResponse(prompt string, sessionID string) (strin
 	panic("implement me")
 }
 
-func newTestGameEngine(t *testing.T, logger *zap.Logger, players map[int32]*model.Player, data loader.GameConfigAccessor) *GameEngine {
+func newTestGameEngine(_ *testing.T, logger *zap.Logger, players map[int32]*model.Player, data loader.GameConfigAccessor) *GameEngine {
 	return NewGameEngine("test-game", logger, players, &MockLLMClient{}, data)
 }
 
