@@ -144,6 +144,8 @@ enum GameEventType {
   DAY_ADVANCED = 16; // 天数推进事件
   TRAGEDY_TRIGGERED = 17; // 悲剧触发事件
   LOOP_RESET = 18; // 循环重置事件
+  TRAIT_ADDED = 19;
+  TRAIT_REMOVED = 20;
 }
 
 // 游戏结束条件类型

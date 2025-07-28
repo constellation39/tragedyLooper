@@ -39,7 +39,7 @@ func (pb *PromptBuilder) BuildMastermindPrompt(
 	//}
 	sb.WriteString("Tragedies to trigger:\n")
 	for _, t := range script.Incidents {
-		sb.WriteString(fmt.Sprintf("- %s (Day %d, Culprit: %d, Conditions: %+v)\n", t.IncidentType, t.Day, t.CulpritCharacterId, t.Conditions))
+		sb.WriteString(fmt.Sprintf("- %s (Day %d, Culprit: %d, Conditions: %+v)\n", t.IncidentType, t.Day, t.CulpritCharacterId, t.TriggerConditions))
 	}
 
 	sb.WriteString("\n--- Characters (including hidden roles) ---\n")
@@ -93,9 +93,9 @@ func (pb *PromptBuilder) BuildProtagonistPrompt(
 	sb.WriteString("\n--- Characters (visible information) ---\n")
 	for _, char := range playerView.Characters { // 主角视图中隐藏了隐藏身份
 		sb.WriteString(fmt.Sprintf("- %s (Location: %s, Paranoia: %d, Goodwill: %d, Alive: %t)\n",
-			char.Config.Name, char.CurrentLocation, char.Paranoia, char.Goodwill, char.IsAlive))
-		if len(char.Config.Traits) > 0 {
-			sb.WriteString(fmt.Sprintf("  Traits: %s\n", strings.Join(char.Config.Traits, ", ")))
+			char.Name, char.CurrentLocation, char.Paranoia, char.Goodwill, char.IsAlive))
+		if len(char.Traits) > 0 {
+			sb.WriteString(fmt.Sprintf("  Traits: %s\n", strings.Join(char.Traits, ", ")))
 		}
 	}
 

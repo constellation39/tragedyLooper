@@ -122,7 +122,11 @@
                             "TRAGEDY_TRIGGERED",
                             17,
                             "LOOP_RESET",
-                            18
+                            18,
+                            "TRAIT_ADDED",
+                            19,
+                            "TRAIT_REMOVED",
+                            20
                         ]
                     },
                     "type": "array",

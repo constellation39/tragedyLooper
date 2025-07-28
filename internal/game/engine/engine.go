@@ -62,8 +62,7 @@ func NewGameEngine(gameID string, logger *zap.Logger, players map[int32]*model.P
 	}
 
 	for _, charConfig := range gameData.GetCharacters() {
-		character := &model.Character{}
-
+		character := &model.Character{Config: charConfig}
 		gs.Characters[charConfig.Id] = character
 	}
 
@@ -79,17 +78,15 @@ func NewGameEngine(gameID string, logger *zap.Logger, players map[int32]*model.P
 		logger:            logger.With(zap.String("gameID", gameID)),
 	}
 
-	for _, char := range gs.Characters {
-		ge.characterNameToID[char.Name] = char.Id
+	for id, char := range gs.Characters {
+		ge.characterNameToID[char.Config.Name] = id
 	}
 
 	for playerID, p := range players {
 		if p.Role == model.PlayerRole_MASTERMIND {
 			ge.mastermindPlayerID = playerID
-			//p.Hand = slices.Clone(data.MastermindCards)
 		} else {
 			ge.protagonistPlayerIDs = append(ge.protagonistPlayerIDs, playerID)
-			//p.Hand = slices.Clone(data.ProtagonistCards)
 		}
 	}
 
@@ -120,8 +117,6 @@ func (ge *GameEngine) GetGameEvents() <-chan *model.GameEvent {
 	return ge.gameEventChan
 }
 
-// GetPlayerView generates a filtered view of the game state for a specific player.
-// It is thread-safe as it communicates with the main game loop via a channel.
 func (ge *GameEngine) GetPlayerView(playerID int32) *model.PlayerView {
 	responseChan := make(chan *model.PlayerView)
 	req := getPlayerViewRequest{
@@ -129,7 +124,6 @@ func (ge *GameEngine) GetPlayerView(playerID int32) *model.PlayerView {
 		responseChan: responseChan,
 	}
 
-	// Send the request to the game loop and wait for the response.
 	ge.requestChan <- req
 	view := <-responseChan
 	return view
@@ -139,7 +133,6 @@ func (ge *GameEngine) runGameLoop() {
 	ge.logger.Info("Game loop started.")
 	defer ge.logger.Info("Game loop stopped.")
 
-	// This timer drives the phase transitions.
 	timer := time.NewTicker(100 * time.Millisecond)
 	defer timer.Stop()
 
@@ -151,13 +144,13 @@ func (ge *GameEngine) runGameLoop() {
 		case req := <-ge.requestChan:
 			switch r := req.(type) {
 			case *llmActionCompleteRequest:
-				// The LLM has finished. Process its action and mark it as ready.
 				ge.handlePlayerAction(r.playerID, r.action)
 				ge.playerReady[r.playerID] = true
+			case getPlayerViewRequest:
+				r.responseChan <- ge.createPlayerView(r.playerID)
 			}
 
 		case <-timer.C:
-			// Advance the game state based on the current phase.
 			switch ge.GameState.CurrentPhase {
 			case model.GamePhase_SETUP:
 				ge.handleMorningPhase()
@@ -178,7 +171,6 @@ func (ge *GameEngine) runGameLoop() {
 				ge.handleLoopEndPhase()
 			case model.GamePhase_GAME_OVER:
 				ge.handleProtagonistGuessPhase()
-			case model.GamePhase_FIRST_GUESS:
 			case model.GamePhase_PROTAGONIST_GUESS:
 			case model.GamePhase_GAME_PHASE_UNSPECIFIED:
 			}
@@ -199,69 +191,80 @@ func (ge *GameEngine) resetPlayerReadiness() {
 }
 
 func (ge *GameEngine) resetLoop() {
-	// Reset character states, used cards, etc.
 	for _, char := range ge.GameState.Characters {
-		// Reset paranoia, goodwill, intrigue, location based on script
 		char.Paranoia = 0
 		char.Goodwill = 0
 		char.Intrigue = 0
 	}
 	for _, p := range ge.GameState.Players {
-		p.Hand = nil // Or reset to initial cards
+		p.Hand = nil
 	}
 	ge.GameState.PlayedCardsThisLoop = make(map[int32]bool)
 	ge.GameState.PreventedTragedies = make(map[int32]bool)
 	ge.GameState.DayEvents = make([]*model.GameEvent, 0)
 }
 
-func (ge *GameEngine) SetCharacterLocation(characterID int32, location model.LocationType) {
-	if char, ok := ge.GameState.Characters[characterID]; ok {
-		char.CurrentLocation = location
-		ge.publishGameEvent(model.GameEventType_CHARACTER_MOVED, &model.CharacterMovedEvent{CharacterId: characterID, NewLocation: location})
-	}
-}
 
-func (ge *GameEngine) AdjustCharacterParanoia(characterID int32, amount int32) {
-	if char, ok := ge.GameState.Characters[characterID]; ok {
-		char.Paranoia += amount
-		ge.publishGameEvent(model.GameEventType_PARANOIA_ADJUSTED, &model.ParanoiaAdjustedEvent{CharacterId: characterID, NewParanoia: char.Paranoia, Amount: amount})
-	}
-}
 
-func (ge *GameEngine) AdjustCharacterGoodwill(characterID int32, amount int32) {
-	if char, ok := ge.GameState.Characters[characterID]; ok {
-		char.Goodwill += amount
-		ge.publishGameEvent(model.GameEventType_GOODWILL_ADJUSTED, &model.GoodwillAdjustedEvent{CharacterId: characterID, NewGoodwill: char.Goodwill, Amount: amount})
+func (ge *GameEngine) createPlayerView(playerID int32) *model.PlayerView {
+	player, ok := ge.GameState.Players[playerID]
+	if !ok {
+		return nil // Or return an empty view
 	}
-}
 
-func (ge *GameEngine) AdjustCharacterIntrigue(characterID int32, amount int32) {
-	if char, ok := ge.GameState.Characters[characterID]; ok {
-		char.Intrigue += amount
-		ge.publishGameEvent(model.GameEventType_INTRIGUE_ADJUSTED, &model.IntrigueAdjustedEvent{CharacterId: characterID, NewIntrigue: char.Intrigue, Amount: amount})
+	view := &model.PlayerView{
+		GameId:            ge.GameState.GameId,
+		CurrentDay:        ge.GameState.CurrentDay,
+		CurrentLoop:       ge.GameState.CurrentLoop,
+		CurrentPhase:      ge.GameState.CurrentPhase,
+		ActiveTragedies:   ge.GameState.ActiveTragedies,
+		PreventedTragedies: ge.GameState.PreventedTragedies,
+		YourHand:          player.Hand,
+		YourDeductions:    player.DeductionKnowledge,
+		PublicEvents:      ge.GameState.DayEvents, // A simplified version, might need filtering
+		Characters:        make(map[int32]*model.PlayerViewCharacter),
+		Players:           make(map[int32]*model.PlayerViewPlayer),
 	}
-}
 
-func (ge *GameEngine) AddCharacterTrait(characterID int32, trait string) {
-	if char, ok := ge.GameState.Characters[characterID]; ok {
-		for _, t := range char.Traits {
-			if t == trait {
-				return // Trait already exists
-			}
-		}
-		char.Traits = append(char.Traits, trait)
-		// TODO: Add a TRAIT_ADDED event
-	}
-}
-
-func (ge *GameEngine) RemoveCharacterTrait(characterID int32, trait string) {
-	if char, ok := ge.GameState.Characters[characterID]; ok {
-		for i, t := range char.Traits {
-			if t == trait {
-				char.Traits = append(char.Traits[:i], char.Traits[i+1:]...)
-				// TODO: Add a TRAIT_REMOVED event
-				return
-			}
+	// Populate character views
+	for id, char := range ge.GameState.Characters {
+		view.Characters[id] = &model.PlayerViewCharacter{
+			Id:               id,
+			Name:             char.Config.Name,
+			Traits:           char.Traits,
+			CurrentLocation:  char.CurrentLocation,
+			Paranoia:         char.Paranoia,
+			Goodwill:         char.Goodwill,
+			Intrigue:         char.Intrigue,
+			Abilities:        char.Abilities,
+			IsAlive:          char.IsAlive,
+			InPanicMode:      char.InPanicMode,
+			Rules:            char.Config.Rules,
 		}
 	}
+
+	// Populate player views
+	for id, p := range ge.GameState.Players {
+		view.Players[id] = &model.PlayerViewPlayer{
+			Id:   id,
+			Name: p.Name,
+			Role: p.Role, // Mastermind will see all roles, Protagonists might see their own
+		}
+	}
+
+	// If the player is not the mastermind, hide secret information
+	if player.Role != model.PlayerRole_MASTERMIND {
+		for _, charView := range view.Characters {
+			// Hide paranoia and intrigue from protagonists
+			charView.Paranoia = -1 // Or some other indicator of hidden info
+			charView.Intrigue = -1
+		}
+		for id, p := range view.Players {
+			if id != playerID {
+				p.Role = model.PlayerRole_PLAYER_ROLE_UNSPECIFIED
+			}
+		}
+	}
+
+	return view
 }

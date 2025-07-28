@@ -7,25 +7,21 @@ import (
 	model "tragedylooper/internal/game/proto/v1"
 )
 
-func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload) error {
+func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
 	choices, err := ge.resolveEffectChoices(ge.GameState, effect, ability, payload)
 	if err != nil {
 		return fmt.Errorf("error resolving choices: %w", err)
 	}
 
-	if len(choices) > 0 && (payload == nil || payload.GetChooseOption() == nil || payload.GetChooseOption().GetChoiceId() == "") {
+	if len(choices) > 0 && choice == nil {
 		choiceEvent := &model.ChoiceRequiredEvent{Choices: choices}
 		ge.publishGameEvent(model.GameEventType_CHOICE_REQUIRED, choiceEvent)
 		return nil
 	}
 
-	events, err := ge.executeEffect(ge.GameState, effect, ability, payload)
+	err = ge.publishEffect(ge.GameState, effect, ability, payload, choice)
 	if err != nil {
-		return fmt.Errorf("error executing effect: %w", err)
-	}
-
-	for _, event := range events {
-		ge.processEvent(event)
+		return fmt.Errorf("error publishing effect: %w", err)
 	}
 
 	return nil
@@ -41,19 +37,20 @@ func (ge *GameEngine) resolveEffectChoices(state *model.GameState, effect *model
 				choiceID := fmt.Sprintf("effect_choice_%d", i)
 				choices = append(choices, &model.Choice{
 					Id:          choiceID,
-					Description: fmt.Sprintf("Choose effect option %d", i), // Placeholder
+					Description: getEffectDescription(subEffect), // Use a helper to get a meaningful description
 					ChoiceType:  &model.Choice_EffectOptionIndex{EffectOptionIndex: int32(i)},
 				})
 			}
 			return choices, nil
 		case model.CompoundEffect_SEQUENCE:
+			// For a sequence, we check for choices in the first sub-effect that requires one.
 			for _, subEffect := range t.CompoundEffect.SubEffects {
 				choices, err := ge.resolveEffectChoices(state, subEffect, ability, payload)
 				if err != nil {
 					return nil, err
 				}
 				if len(choices) > 0 {
-					return choices, nil
+					return choices, nil // Return the first set of choices found
 				}
 			}
 			return nil, nil
@@ -62,17 +59,22 @@ func (ge *GameEngine) resolveEffectChoices(state *model.GameState, effect *model
 		return ge.createChoicesFromSelector(state, t.AdjustStat.Target, payload, "Select character to adjust stat")
 	case *model.Effect_MoveCharacter:
 		return ge.createChoicesFromSelector(state, t.MoveCharacter.Target, payload, "Select character to move")
-	// ... other cases from previous implementation
+	case *model.Effect_AddTrait:
+		return ge.createChoicesFromSelector(state, t.AddTrait.Target, payload, "Select character to add trait to")
+	case *model.Effect_RemoveTrait:
+		return ge.createChoicesFromSelector(state, t.RemoveTrait.Target, payload, "Select character to remove trait from")
 	}
 	return nil, nil
 }
 
 func (ge *GameEngine) createChoicesFromSelector(state *model.GameState, selector *model.TargetSelector, payload *model.UseAbilityPayload, description string) ([]*model.Choice, error) {
-	charIDs, err := ge.resolveSelectorToCharacters(state, selector, nil) // Pass nil payload initially
+	// We pass a nil choice here because we are just trying to find out *if* a choice is needed.
+	charIDs, err := ge.resolveSelectorToCharacters(state, selector, payload, nil)
 	if err != nil {
 		return nil, err
 	}
 
+	// If the selector resolves to more than one character, a choice is required.
 	if len(charIDs) > 1 {
 		var choices []*model.Choice
 		for _, charID := range charIDs {
@@ -83,7 +85,7 @@ func (ge *GameEngine) createChoicesFromSelector(state *model.GameState, selector
 			choiceID := fmt.Sprintf("target_char_%d", charID)
 			choices = append(choices, &model.Choice{
 				Id:          choiceID,
-				Description: fmt.Sprintf("%s: %s", description, char.Name),
+				Description: fmt.Sprintf("%s: %s", description, char.Config.Name),
 				ChoiceType:  &model.Choice_TargetCharacterId{TargetCharacterId: charID},
 			})
 		}
@@ -93,9 +95,10 @@ func (ge *GameEngine) createChoicesFromSelector(state *model.GameState, selector
 	return nil, nil
 }
 
-func (ge *GameEngine) resolveSelectorToCharacters(state *model.GameState, selector *model.TargetSelector, payload *model.UseAbilityPayload) ([]int32, error) {
-	if payload != nil && payload.GetChooseOption() != nil {
-		choiceID := payload.GetChooseOption().GetChoiceId()
+func (ge *GameEngine) resolveSelectorToCharacters(state *model.GameState, selector *model.TargetSelector, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) ([]int32, error) {
+	// 1. Check if a choice was already made and provided.
+	if choice != nil {
+		choiceID := choice.GetChosenOptionId()
 		if strings.HasPrefix(choiceID, "target_char_") {
 			idStr := strings.TrimPrefix(choiceID, "target_char_")
 			id, err := strconv.Atoi(idStr)
@@ -104,19 +107,22 @@ func (ge *GameEngine) resolveSelectorToCharacters(state *model.GameState, select
 			}
 		}
 	}
-	
+
+	// 2. Check for a target in the initial payload (for abilities that directly target).
 	if payload != nil && payload.GetTargetCharacterId() != 0 {
 		return []int32{payload.GetTargetCharacterId()}, nil
 	}
 
+	// 3. Resolve the selector based on its type.
 	switch selector.SelectorType {
 	case model.TargetSelector_SPECIFIC_CHARACTER:
 		return []int32{selector.CharacterId}, nil
 	case model.TargetSelector_TRIGGERING_CHARACTER:
-		if payload != nil && payload.GetTriggeringCharacterId() != 0 {
-			return []int32{payload.GetTriggeringCharacterId()}, nil
+		// The triggering character should be the one using the ability.
+		if payload != nil {
+			return []int32{payload.CharacterId}, nil
 		}
-		return nil, fmt.Errorf("could not resolve triggering character")
+		return nil, fmt.Errorf("could not resolve triggering character: payload is nil")
 	case model.TargetSelector_ALL_CHARACTERS_AT_LOCATION:
 		var charIDs []int32
 		for id, char := range state.Characters {
@@ -134,110 +140,151 @@ func (ge *GameEngine) resolveSelectorToCharacters(state *model.GameState, select
 		}
 		return charIDs, nil
 	default:
-		return nil, fmt.Errorf("unsupported selector type: %s", selector.SelectorType)
+		// Fallback to all characters if selector is not specific and no target is provided
+		var allCharIDs []int32
+		for id := range state.Characters {
+			allCharIDs = append(allCharIDs, id)
+		}
+		return allCharIDs, nil
 	}
 }
 
-func (ge *GameEngine) executeEffect(state *model.GameState, effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload) ([]*model.GameEvent, error) {
+func (ge *GameEngine) publishEffect(state *model.GameState, effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
 	switch t := effect.EffectType.(type) {
 	case *model.Effect_AdjustStat:
-		return ge.executeAdjustStatEffect(state, t.AdjustStat, payload)
+		return ge.publishAdjustStatEffect(state, t.AdjustStat, payload, choice)
 	case *model.Effect_MoveCharacter:
-		return ge.executeMoveCharacterEffect(state, t.MoveCharacter, payload)
+		return ge.publishMoveCharacterEffect(state, t.MoveCharacter, payload, choice)
 	case *model.Effect_AddTrait:
-		return ge.executeAddTraitEffect(state, t.AddTrait, payload)
+		return ge.publishAddTraitEffect(state, t.AddTrait, payload, choice)
 	case *model.Effect_RemoveTrait:
-		return ge.executeRemoveTraitEffect(state, t.RemoveTrait, payload)
+		return ge.publishRemoveTraitEffect(state, t.RemoveTrait, payload, choice)
 	case *model.Effect_CompoundEffect:
-		return ge.executeCompoundEffect(state, t.CompoundEffect, ability, payload)
+		return ge.publishCompoundEffect(state, t.CompoundEffect, ability, payload, choice)
 	default:
-		return nil, fmt.Errorf("unknown effect type: %T", t)
+		return fmt.Errorf("unknown effect type: %T", t)
 	}
 }
 
-func (ge *GameEngine) executeAdjustStatEffect(state *model.GameState, effect *model.AdjustStatEffect, payload *model.UseAbilityPayload) ([]*model.GameEvent, error) {
-	targetIDs, err := ge.resolveSelectorToCharacters(state, effect.Target, payload)
+func (ge *GameEngine) publishAdjustStatEffect(state *model.GameState, effect *model.AdjustStatEffect, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
+	targetIDs, err := ge.resolveSelectorToCharacters(state, effect.Target, payload, choice)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	var events []*model.GameEvent
 	for _, targetID := range targetIDs {
+		char, ok := state.Characters[targetID]
+		if !ok {
+			continue // Or return an error
+		}
+
 		switch effect.StatType {
 		case model.StatCondition_PARANOIA:
-			ge.AdjustCharacterParanoia(targetID, effect.Amount)
+			newParanoia := char.Paranoia + effect.Amount
+			event := &model.ParanoiaAdjustedEvent{CharacterId: targetID, NewParanoia: newParanoia, Amount: effect.Amount}
+			ge.publishGameEvent(model.GameEventType_PARANOIA_ADJUSTED, event)
 		case model.StatCondition_INTRIGUE:
-			ge.AdjustCharacterIntrigue(targetID, effect.Amount)
+			newIntrigue := char.Intrigue + effect.Amount
+			event := &model.IntrigueAdjustedEvent{CharacterId: targetID, NewIntrigue: newIntrigue, Amount: effect.Amount}
+			ge.publishGameEvent(model.GameEventType_INTRIGUE_ADJUSTED, event)
 		case model.StatCondition_GOODWILL:
-			ge.AdjustCharacterGoodwill(targetID, effect.Amount)
+			newGoodwill := char.Goodwill + effect.Amount
+			event := &model.GoodwillAdjustedEvent{CharacterId: targetID, NewGoodwill: newGoodwill, Amount: effect.Amount}
+			ge.publishGameEvent(model.GameEventType_GOODWILL_ADJUSTED, event)
 		}
 	}
-	return events, nil
+	return nil
 }
 
-func (ge *GameEngine) executeMoveCharacterEffect(state *model.GameState, effect *model.MoveCharacterEffect, payload *model.UseAbilityPayload) ([]*model.GameEvent, error) {
-	targetIDs, err := ge.resolveSelectorToCharacters(state, effect.Target, payload)
+func (ge *GameEngine) publishMoveCharacterEffect(state *model.GameState, effect *model.MoveCharacterEffect, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
+	targetIDs, err := ge.resolveSelectorToCharacters(state, effect.Target, payload, choice)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	for _, targetID := range targetIDs {
-		ge.SetCharacterLocation(targetID, effect.Destination)
+		event := &model.CharacterMovedEvent{CharacterId: targetID, NewLocation: effect.Destination}
+		ge.publishGameEvent(model.GameEventType_CHARACTER_MOVED, event)
 	}
-	return nil, nil
+	return nil
 }
 
-func (ge *GameEngine) executeAddTraitEffect(state *model.GameState, effect *model.AddTraitEffect, payload *model.UseAbilityPayload) ([]*model.GameEvent, error) {
-	targetIDs, err := ge.resolveSelectorToCharacters(state, effect.Target, payload)
+func (ge *GameEngine) publishAddTraitEffect(state *model.GameState, effect *model.AddTraitEffect, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
+	targetIDs, err := ge.resolveSelectorToCharacters(state, effect.Target, payload, choice)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	for _, targetID := range targetIDs {
-		ge.AddCharacterTrait(targetID, effect.Trait)
+		event := &model.TraitAddedEvent{CharacterId: targetID, Trait: effect.Trait}
+		ge.publishGameEvent(model.GameEventType_TRAIT_ADDED, event)
 	}
-	return nil, nil
+	return nil
 }
 
-func (ge *GameEngine) executeRemoveTraitEffect(state *model.GameState, effect *model.RemoveTraitEffect, payload *model.UseAbilityPayload) ([]*model.GameEvent, error) {
-	targetIDs, err := ge.resolveSelectorToCharacters(state, effect.Target, payload)
+func (ge *GameEngine) publishRemoveTraitEffect(state *model.GameState, effect *model.RemoveTraitEffect, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
+	targetIDs, err := ge.resolveSelectorToCharacters(state, effect.Target, payload, choice)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	for _, targetID := range targetIDs {
-		ge.RemoveCharacterTrait(targetID, effect.Trait)
+		event := &model.TraitRemovedEvent{CharacterId: targetID, Trait: effect.Trait}
+		ge.publishGameEvent(model.GameEventType_TRAIT_REMOVED, event)
 	}
-	return nil, nil
+	return nil
 }
 
-func (ge *GameEngine) executeCompoundEffect(state *model.GameState, effect *model.CompoundEffect, ability *model.Ability, payload *model.UseAbilityPayload) ([]*model.GameEvent, error) {
-	var allEvents []*model.GameEvent
+func (ge *GameEngine) publishCompoundEffect(state *model.GameState, effect *model.CompoundEffect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
 	switch effect.Operator {
 	case model.CompoundEffect_SEQUENCE:
 		for _, subEffect := range effect.SubEffects {
-			events, err := ge.executeEffect(state, subEffect, ability, payload)
+			// Pass the choice down; it might be needed by a later effect in the sequence
+			err := ge.publishEffect(state, subEffect, ability, payload, choice)
 			if err != nil {
-				return nil, err
+				// If a sub-effect requires a choice and didn't get one, it will return an error.
+				// We might need to check for a ChoiceRequiredEvent here.
+				return err
 			}
-			allEvents = append(allEvents, events...)
 		}
 	case model.CompoundEffect_CHOOSE_ONE:
-		choiceID := payload.GetChooseOption().GetChoiceId()
+		if choice == nil {
+			// This should have been caught earlier, but as a safeguard:
+			return fmt.Errorf("a choice is required to publish a CHOOSE_ONE compound effect")
+		}
+		choiceID := choice.GetChosenOptionId()
 		if !strings.HasPrefix(choiceID, "effect_choice_") {
-			return nil, fmt.Errorf("invalid choice id for compound effect: %s", choiceID)
+			return fmt.Errorf("invalid choice id for compound effect: %s", choiceID)
 		}
 		indexStr := strings.TrimPrefix(choiceID, "effect_choice_")
 		choiceIndex, err := strconv.Atoi(indexStr)
 		if err != nil {
-			return nil, fmt.Errorf("invalid choice index: %s", indexStr)
+			return fmt.Errorf("invalid choice index: %s", indexStr)
 		}
 
 		if choiceIndex < 0 || choiceIndex >= len(effect.SubEffects) {
-			return nil, fmt.Errorf("choice index out of bounds: %d", choiceIndex)
+			return fmt.Errorf("choice index out of bounds: %d", choiceIndex)
 		}
-		events, err := ge.executeEffect(state, effect.SubEffects[choiceIndex], ability, payload)
+		// Execute the chosen sub-effect
+		err = ge.publishEffect(state, effect.SubEffects[choiceIndex], ability, payload, choice)
 		if err != nil {
-			return nil, err
+			return err
 		}
-		allEvents = append(allEvents, events...)
 	}
-	return allEvents, nil
+	return nil
+}
+
+// getEffectDescription provides a human-readable summary of an effect.
+func getEffectDescription(effect *model.Effect) string {
+	switch t := effect.EffectType.(type) {
+	case *model.Effect_AdjustStat:
+		return fmt.Sprintf("Adjust %s by %d", t.AdjustStat.StatType, t.AdjustStat.Amount)
+	case *model.Effect_MoveCharacter:
+		return fmt.Sprintf("Move character to %s", t.MoveCharacter.Destination)
+	case *model.Effect_AddTrait:
+		return fmt.Sprintf("Add trait '%s'", t.AddTrait.Trait)
+	case *model.Effect_RemoveTrait:
+		return fmt.Sprintf("Remove trait '%s'", t.RemoveTrait.Trait)
+	case *model.Effect_CompoundEffect:
+		return "Choose one of the following effects"
+	default:
+		return "(Unknown effect)"
+	}
 }

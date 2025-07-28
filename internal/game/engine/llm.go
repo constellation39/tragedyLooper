@@ -28,7 +28,12 @@ func (ge *GameEngine) triggerLLMPlayerAction(playerID int32) {
 		for id, char := range ge.GameState.Characters {
 			charactersWithStringKeys[fmt.Sprint(id)] = char
 		}
-		prompt = pBuilder.BuildMastermindPrompt(playerView, ge.GameState.Script, charactersWithStringKeys)
+		script, err := ge.gameData.GetScript()
+		if err != nil {
+			ge.logger.Error("Failed to get script for LLM prompt", zap.Error(err))
+			return
+		}
+		prompt = pBuilder.BuildMastermindPrompt(playerView, script, charactersWithStringKeys)
 	} else {
 		deductionKnowledgeWithStringKeys := make(map[string]string)
 		for id, value := range player.DeductionKnowledge.GuessedRoles {

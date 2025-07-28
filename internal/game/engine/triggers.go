@@ -13,35 +13,35 @@ func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType, ev
 
 	for _, char := range ge.GameState.Characters {
 		for i, ability := range char.Abilities {
-			if ability.TriggerType != triggerType {
+			if ability.Config.TriggerType != triggerType {
 				continue
 			}
 
 			// 如果是事件驱动的，请检查事件过滤器
 			if triggerType == model.TriggerType_ON_GAME_EVENT {
-				if event == nil || !ge.eventMatchesFilter(event, ability.EventFilters) {
+				if event == nil || !ge.eventMatchesFilter(event, ability.Config.EventFilters) {
 					continue
 				}
 			}
 
 			// 检查是否已经使用过（如果适用）
-			if ability.OncePerLoop && ability.UsedThisLoop {
+			if ability.Config.OncePerLoop && ability.UsedThisLoop {
 				continue
 			}
 
 			// TODO: 检查其他条件（例如，目标有效性）
 
-			ge.logger.Info("Triggering ability", zap.String("character", char.Name), zap.String("ability", ability.Name))
+			ge.logger.Info("Triggering ability", zap.String("character", char.Config.Name), zap.String("ability", ability.Config.Name))
 
 			// 简单的自动效果应用
 			// 对于需要玩家选择的目标，这将需要一个更复杂的流程
-			payload := &model.UseAbilityPayload{CharacterId: char.Id, AbilityId: ability.Id} // 假设自我目标
-			if err := ge.applyEffect(ability.Effect, ability, payload); err != nil {
+			payload := &model.UseAbilityPayload{CharacterId: char.Config.Id, AbilityId: ability.Config.Id} // 假设自我目标
+			if err := ge.applyEffect(ability.Config.Effect, ability, payload, nil); err != nil {
 				ge.logger.Error("Error applying triggered ability effect", zap.Error(err))
 			}
 
-			if ability.OncePerLoop {
-				ge.GameState.Characters[char.Id].Abilities[i].UsedThisLoop = true
+			if ability.Config.OncePerLoop {
+				ge.GameState.Characters[char.Config.Id].Abilities[i].UsedThisLoop = true
 			}
 
 			// ge.publishGameEvent(model.GameEventType_ABILITY_USED, &model.AbilityUsedEvent{CharacterId: char.Id, AbilityName: ability.Name})

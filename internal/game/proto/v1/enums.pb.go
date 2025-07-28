@@ -685,6 +685,8 @@ const (
 	GameEventType_DAY_ADVANCED                GameEventType = 16 // 天数推进事件
 	GameEventType_TRAGEDY_TRIGGERED           GameEventType = 17 // 悲剧触发事件
 	GameEventType_LOOP_RESET                  GameEventType = 18 // 循环重置事件
+	GameEventType_TRAIT_ADDED                 GameEventType = 19
+	GameEventType_TRAIT_REMOVED               GameEventType = 20
 )
 
 // Enum value maps for GameEventType.
@@ -709,6 +711,8 @@ var (
 		16: "DAY_ADVANCED",
 		17: "TRAGEDY_TRIGGERED",
 		18: "LOOP_RESET",
+		19: "TRAIT_ADDED",
+		20: "TRAIT_REMOVED",
 	}
 	GameEventType_value = map[string]int32{
 		"GAME_EVENT_TYPE_UNSPECIFIED": 0,
@@ -730,6 +734,8 @@ var (
 		"DAY_ADVANCED":                16,
 		"TRAGEDY_TRIGGERED":           17,
 		"LOOP_RESET":                  18,
+		"TRAIT_ADDED":                 19,
+		"TRAIT_REMOVED":               20,
 	}
 )
 
@@ -930,7 +936,7 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\rON_GAME_EVENT\x10\x06\x12\v\n" +
 	"\aPASSIVE\x10\a\x12\x11\n" +
 	"\rON_GUESS_MADE\x10\b\x12\x0f\n" +
-	"\vON_GAME_END\x10\t*\xa3\x03\n" +
+	"\vON_GAME_END\x10\t*\xc7\x03\n" +
 	"\rGameEventType\x12\x1f\n" +
 	"\x1bGAME_EVENT_TYPE_UNSPECIFIED\x10\x00\x12\x13\n" +
 	"\x0fCHARACTER_MOVED\x10\x01\x12\x15\n" +
@@ -952,7 +958,9 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\fDAY_ADVANCED\x10\x10\x12\x15\n" +
 	"\x11TRAGEDY_TRIGGERED\x10\x11\x12\x0e\n" +
 	"\n" +
-	"LOOP_RESET\x10\x12*\xdc\x01\n" +
+	"LOOP_RESET\x10\x12\x12\x0f\n" +
+	"\vTRAIT_ADDED\x10\x13\x12\x11\n" +
+	"\rTRAIT_REMOVED\x10\x14*\xdc\x01\n" +
 	"\x10EndConditionType\x12\"\n" +
 	"\x1eEND_CONDITION_TYPE_UNSPECIFIED\x10\x00\x12\x1d\n" +
 	"\x19PROTAGONIST_GUESS_SUCCESS\x10\x01\x12\x1a\n" +

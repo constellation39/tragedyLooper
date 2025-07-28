@@ -49,7 +49,7 @@ func (ge *GameEngine) processEvent(event *model.GameEvent) {
 			return
 		}
 		if char, ok := ge.GameState.Characters[e.CharacterId]; ok {
-			char.Paranoia += e.Amount
+			char.Paranoia = e.NewParanoia
 		}
 	case model.GameEventType_GOODWILL_ADJUSTED:
 		var e model.GoodwillAdjustedEvent
@@ -58,7 +58,7 @@ func (ge *GameEngine) processEvent(event *model.GameEvent) {
 			return
 		}
 		if char, ok := ge.GameState.Characters[e.CharacterId]; ok {
-			char.Goodwill += e.Amount
+			char.Goodwill = e.NewGoodwill
 		}
 	case model.GameEventType_INTRIGUE_ADJUSTED:
 		var e model.IntrigueAdjustedEvent
@@ -67,7 +67,36 @@ func (ge *GameEngine) processEvent(event *model.GameEvent) {
 			return
 		}
 		if char, ok := ge.GameState.Characters[e.CharacterId]; ok {
-			char.Intrigue += e.Amount
+			char.Intrigue = e.NewIntrigue
+		}
+	case model.GameEventType_TRAIT_ADDED:
+		var e model.TraitAddedEvent
+		if err := event.Payload.UnmarshalTo(&e); err != nil {
+			ge.logger.Error("Failed to unmarshal TraitAddedEvent", zap.Error(err))
+			return
+		}
+		if char, ok := ge.GameState.Characters[e.CharacterId]; ok {
+			// Avoid duplicates
+			for _, t := range char.Traits {
+				if t == e.Trait {
+					return
+				}
+			}
+			char.Traits = append(char.Traits, e.Trait)
+		}
+	case model.GameEventType_TRAIT_REMOVED:
+		var e model.TraitRemovedEvent
+		if err := event.Payload.UnmarshalTo(&e); err != nil {
+			ge.logger.Error("Failed to unmarshal TraitRemovedEvent", zap.Error(err))
+			return
+		}
+		if char, ok := ge.GameState.Characters[e.CharacterId]; ok {
+			for i, t := range char.Traits {
+				if t == e.Trait {
+					char.Traits = append(char.Traits[:i], char.Traits[i+1:]...)
+					return
+				}
+			}
 		}
 	default:
 		ge.logger.Warn("Unknown event type for processing", zap.String("eventType", event.Type.String()))

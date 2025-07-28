@@ -95,7 +95,7 @@ func (ge *GameEngine) handleUseAbilityAction(player *model.Player, payload *mode
 		return
 	}
 
-	if err := ge.applyEffect(ability.Config.Effect, ability, payload); err != nil {
+	if err := ge.applyEffect(ability.Config.Effect, ability, payload, nil); err != nil {
 		ge.logger.Error("Failed to apply effect for ability", zap.String("abilityName", ability.Config.Name), zap.Error(err))
 		return
 	}

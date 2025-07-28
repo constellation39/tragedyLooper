@@ -4,104 +4,132 @@ import (
 	model "tragedylooper/internal/game/proto/v1"
 )
 
-func (ge *GameEngine) checkConditions(conditions []*model.Condition) bool {
+func (ge *GameEngine) checkConditions(conditions []*model.Condition, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) bool {
 	for _, condition := range conditions {
-		if !ge.checkSingleCondition(condition) {
+		if !ge.checkSingleCondition(condition, payload, choice) {
 			return false
 		}
 	}
 	return true
 }
 
-func (ge *GameEngine) checkSingleCondition(condition *model.Condition) bool {
+func (ge *GameEngine) checkSingleCondition(condition *model.Condition, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) bool {
 	switch c := condition.ConditionType.(type) {
 	case *model.Condition_StatCondition:
-		return ge.checkStatCondition(c.StatCondition)
+		return ge.checkStatCondition(c.StatCondition, payload, choice)
 	case *model.Condition_LocationCondition:
-		return ge.checkLocationCondition(c.LocationCondition)
+		return ge.checkLocationCondition(c.LocationCondition, payload, choice)
+	// Add other condition checks here
 	}
 	return false
 }
 
-func (ge *GameEngine) checkStatCondition(sc *model.StatCondition) bool {
-	char, ok := ge.GameState.Characters[sc.CharacterId]
-	if !ok {
+func (ge *GameEngine) checkStatCondition(sc *model.StatCondition, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) bool {
+	targetIDs, err := ge.resolveSelectorToCharacters(ge.GameState, sc.Target, payload, choice)
+	if err != nil {
+		// Log the error, maybe?
 		return false
 	}
 
-	var statValue int32
-	switch sc.StatType {
-	case model.StatCondition_PARANOIA_STAT:
-		statValue = char.Paranoia
-	case model.StatCondition_GOODWILL_STAT:
-		statValue = char.Goodwill
-	case model.StatCondition_INTRIGUE_STAT:
-		statValue = char.Intrigue
+	// For stat conditions, we usually expect a single target.
+	// If the selector resolves to multiple, the condition is false unless all of them meet it.
+	if len(targetIDs) == 0 {
+		return false // Or true, depending on desired logic for empty sets
 	}
 
-	switch sc.Comparator {
-	case model.StatCondition_GREATER_THAN:
-		return statValue > sc.Value
-	case model.StatCondition_LESS_THAN:
-		return statValue < sc.Value
-	case model.StatCondition_EQUAL_TO:
-		return statValue == sc.Value
-	case model.StatCondition_GREATER_THAN_OR_EQUAL:
-		return statValue >= sc.Value
-	case model.StatCondition_LESS_THAN_OR_EQUAL:
-		return statValue <= sc.Value
+	for _, charID := range targetIDs {
+		char, ok := ge.GameState.Characters[charID]
+		if !ok {
+			continue // Or return false
+		}
+
+		var statValue int32
+		switch sc.StatType {
+		case model.StatCondition_PARANOIA:
+			statValue = char.Paranoia
+		case model.StatCondition_GOODWILL:
+			statValue = char.Goodwill
+		case model.StatCondition_INTRIGUE:
+			statValue = char.Intrigue
+		default:
+			return false // Unknown stat type
+		}
+
+		conditionMet := false
+		switch sc.Comparator {
+		case model.StatCondition_GREATER_THAN:
+			conditionMet = statValue > sc.Value
+		case model.StatCondition_LESS_THAN:
+			conditionMet = statValue < sc.Value
+		case model.StatCondition_EQUAL_TO:
+			conditionMet = statValue == sc.Value
+		case model.StatCondition_GREATER_THAN_OR_EQUAL:
+			conditionMet = statValue >= sc.Value
+		case model.StatCondition_LESS_THAN_OR_EQUAL:
+			conditionMet = statValue <= sc.Value
+		}
+
+		// If any character does not meet the condition, the overall condition is false.
+		if !conditionMet {
+			return false
+		}
 	}
-	return false
+
+	// If we get here, all targeted characters met the condition.
+	return true
 }
 
-func (ge *GameEngine) checkLocationCondition(lc *model.LocationCondition) bool {
-	char, ok := ge.GameState.Characters[lc.CharacterId]
-	if !ok {
+func (ge *GameEngine) checkLocationCondition(lc *model.LocationCondition, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) bool {
+	targetIDs, err := ge.resolveSelectorToCharacters(ge.GameState, lc.Target, payload, choice)
+	if err != nil {
 		return false
 	}
 
-	if char.CurrentLocation != lc.Location {
+	if len(targetIDs) == 0 {
 		return false
 	}
 
-	if lc.IsAlone {
-		for _, otherChar := range ge.GameState.Characters {
-			if otherChar.Id != char.Id && otherChar.CurrentLocation == char.CurrentLocation {
+	for _, charID := range targetIDs {
+		char, ok := ge.GameState.Characters[charID]
+		if !ok {
+			continue
+		}
+
+		atLocation := char.CurrentLocation == lc.Location
+		if lc.IsAtLocation && !atLocation {
+			return false
+		}
+		if !lc.IsAtLocation && atLocation { // For checking if NOT at a location
+		    return false
+		}
+
+		if lc.IsAlone || lc.NotAlone {
+			numOthersAtLocation := 0
+			for otherID, otherChar := range ge.GameState.Characters {
+				if otherID != charID && otherChar.CurrentLocation == lc.Location {
+					numOthersAtLocation++
+				}
+			}
+			if lc.IsAlone && numOthersAtLocation > 0 {
+				return false
+			}
+			if lc.NotAlone && numOthersAtLocation == 0 {
 				return false
 			}
 		}
 	}
+
 	return true
 }
 
 func (ge *GameEngine) checkGameEndConditions() (bool, model.PlayerRole) {
-	// Check for protagonist win conditions
-	for _, wc := range ge.GameState.Script.WinConditions {
-		if wc.Type == model.GameEndCondition_ALL_TRAGEDIES_PREVENTED {
-			allPrevented := true
-			for _, prevented := range ge.GameState.PreventedTragedies {
-				if !prevented {
-					allPrevented = false
-					break
-				}
-			}
-			if allPrevented {
-				return true, model.PlayerRole_PROTAGONIST
-			}
-		}
-	}
+	// This logic needs to be updated based on the script's end conditions.
+	// The following is placeholder logic.
 
-	// Check for mastermind win conditions
-	for _, lc := range ge.GameState.Script.LoseConditions {
-		if lc.Type == model.GameEndCondition_SPECIFIC_TRAGEDY_TRIGGERED {
-			// This is checked within the incident phase, so we just need to see if a tragedy has occurred.
-			for _, active := range ge.GameState.ActiveTragedies {
-				if !active {
-					return true, model.PlayerRole_MASTERMIND
-				}
-			}
-		}
-	}
+	// Example: Check if max loops are reached.
+	// if ge.GameState.CurrentLoop > ge.GameState.Script.LoopCount {
+	// 	return true, model.PlayerRole_MASTERMIND // Or based on who has more points, etc.
+	// }
 
 	return false, model.PlayerRole_PLAYER_ROLE_UNSPECIFIED
 }
