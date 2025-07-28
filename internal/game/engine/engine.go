@@ -47,7 +47,7 @@ type GameEngine struct {
 
 // NewGameEngine creates a new game engine instance.
 func NewGameEngine(logger *zap.Logger, players map[int32]*model.Player, llmClient llm.Client, gameConfig loader.GameConfigAccessor) (*GameEngine, error) {
-	initialPhase := phaseImplementations[model.GamePhase_MASTERMIND_SETUP]
+	initialPhase := phaseImplementations[model.GamePhase_SETUP]
 	gs := &model.GameState{
 		GameId:                  "",
 		Characters:              make(map[int32]*model.Character),
@@ -86,7 +86,6 @@ func NewGameEngine(logger *zap.Logger, players map[int32]*model.Player, llmClien
 
 func (ge *GameEngine) StartGameLoop() {
 	go ge.runGameLoop()
-	// Start the first phase
 	ge.transitionTo(ge.currentPhase)
 }
 

@@ -5,7 +5,6 @@ import (
 	model "tragedylooper/internal/game/proto/v1"
 
 	"go.uber.org/zap"
-	"google.golang.org/protobuf/types/known/anypb"
 )
 
 // --- Player Action Handlers ---
@@ -32,17 +31,6 @@ func (ge *GameEngine) handlePlayerAction(playerID int32, action *model.PlayerAct
 		// TODO: Handle ChooseOption
 	default:
 		ge.logger.Warn("Unknown action type", zap.Any("action", action.Payload))
-	}
-
-	// Notify the game loop that a player action occurred.
-	payload, err := anypb.New(&model.PlayerActionTakenEvent{PlayerId: playerID, Action: action})
-	if err != nil {
-		ge.logger.Error("failed to marshal PlayerActionTakenEvent", zap.Error(err))
-		return
-	}
-	ge.engineChan <- &model.GameEvent{
-		Type:    model.GameEventType_PLAYER_ACTION,
-		Payload: payload,
 	}
 }
 
