@@ -32,11 +32,19 @@ func (ge *GameEngine) handlePlayerAction(playerID int32, action *model.PlayerAct
 	default:
 		ge.logger.Warn("Unknown action type", zap.Any("action", action.Payload))
 	}
+
+	// Notify the game loop that a player action occurred.
+	ge.internalEventChan <- &model.GameEvent{
+		Type: model.GameEventType_PLAYER_ACTION,
+		Payload: &model.GameEvent_PlayerAction{
+			PlayerAction: &model.PlayerActionTakenEvent{PlayerId: playerID, Action: action},
+		},
+	}
 }
 
 func (ge *GameEngine) handlePlayCardAction(player *model.Player, payload *model.PlayCardPayload) {
-	if ge.GameState.CurrentPhase != model.GamePhase_CARD_PLAY {
-		ge.logger.Warn("player tried to play card outside of the card play phase", zap.Int32("player_id", player.Id), zap.String("phase", ge.GameState.CurrentPhase.String()))
+	if ge.currentPhase.Type() != model.GamePhase_CARD_PLAY {
+		ge.logger.Warn("player tried to play card outside of the card play phase", zap.Int32("player_id", player.Id), zap.String("phase", ge.currentPhase.Type().String()))
 		return
 	}
 
@@ -116,8 +124,8 @@ func (ge *GameEngine) handleUseAbilityAction(player *model.Player, payload *mode
 }
 
 func (ge *GameEngine) handleMakeGuessAction(player *model.Player, payload *model.MakeGuessPayload) {
-	if ge.GameState.CurrentPhase != model.GamePhase_PROTAGONIST_GUESS {
-		ge.logger.Warn("player tried to make a guess outside of the guess phase", zap.Int32("player_id", player.Id), zap.String("phase", ge.GameState.CurrentPhase.String()))
+	if ge.currentPhase.Type() != model.GamePhase_PROTAGONIST_GUESS {
+		ge.logger.Warn("player tried to make a guess outside of the guess phase", zap.Int32("player_id", player.Id), zap.String("phase", ge.currentPhase.Type().String()))
 		return
 	}
 
