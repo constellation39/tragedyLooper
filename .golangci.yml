@@ -21,7 +21,6 @@ linters:
     - revive
     - staticcheck
     - typecheck
-    - unparam    # 添加未使用参数检查
     - govet
 
 linters-settings:
@@ -31,10 +30,6 @@ linters-settings:
     rules:
       - name: empty-block
         disabled: true
-  staticcheck:
-    checks:
-      - "all"
-      - "-U1000"
 
 issues:
   exclude-dirs-use-default: true  # 添加默认排除

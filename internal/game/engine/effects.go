@@ -2,7 +2,6 @@ package engine
 
 import (
 	"fmt"
-	"math"
 	"strconv"
 	"strings"
 	model "tragedylooper/internal/game/proto/v1"
@@ -49,9 +48,6 @@ func (ge *GameEngine) resolveCompoundEffectChoices(state *model.GameState, effec
 	case model.CompoundEffect_CHOOSE_ONE:
 		var choices []*model.Choice
 		for i, subEffect := range effect.SubEffects {
-			if i >= 2147483647 { // MaxInt32
-				return nil, fmt.Errorf("too many sub-effects to create a choice")
-			}
 			choiceID := fmt.Sprintf("effect_choice_%d", i)
 			choices = append(choices, &model.Choice{
 				Id:          choiceID,
