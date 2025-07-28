@@ -157,8 +157,8 @@ type BasicAbility struct {
 	Id                int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                         // 能力唯一ID
 	Name              string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                      // 能力名称
 	Description       string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                        // 能力描述
-	TriggerConditions *CompoundCondition     `protobuf:"bytes,4,opt,name=trigger_conditions,json=triggerConditions,proto3" json:"trigger_conditions,omitempty"`   // 能力触发条件
-	Effects           *CompoundEffect        `protobuf:"bytes,6,opt,name=effects,proto3" json:"effects,omitempty"`                                                // 能力效果
+	TriggerConditions []*CompoundCondition   `protobuf:"bytes,4,rep,name=trigger_conditions,json=triggerConditions,proto3" json:"trigger_conditions,omitempty"`   // 能力触发条件
+	Effects           []*CompoundEffect      `protobuf:"bytes,6,rep,name=effects,proto3" json:"effects,omitempty"`                                                // 能力效果
 	OncePerLoop       bool                   `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`                  // 是否每循环只能使用一次
 	RefusalRole       PlayerRole             `protobuf:"varint,8,opt,name=refusal_role,json=refusalRole,proto3,enum=v1.PlayerRole" json:"refusal_role,omitempty"` // 可以拒绝此能力的玩家角色
 	IsPassive         bool                   `protobuf:"varint,9,opt,name=is_passive,json=isPassive,proto3" json:"is_passive,omitempty"`                          // 是否为被动能力
@@ -219,14 +219,14 @@ func (x *BasicAbility) GetDescription() string {
 	return ""
 }
 
-func (x *BasicAbility) GetTriggerConditions() *CompoundCondition {
+func (x *BasicAbility) GetTriggerConditions() []*CompoundCondition {
 	if x != nil {
 		return x.TriggerConditions
 	}
 	return nil
 }
 
-func (x *BasicAbility) GetEffects() *CompoundEffect {
+func (x *BasicAbility) GetEffects() []*CompoundEffect {
 	if x != nil {
 		return x.Effects
 	}
@@ -429,8 +429,8 @@ const file_v1_ability_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12D\n" +
-	"\x12trigger_conditions\x18\x04 \x01(\v2\x15.v1.CompoundConditionR\x11triggerConditions\x12,\n" +
-	"\aeffects\x18\x06 \x01(\v2\x12.v1.CompoundEffectR\aeffects\x12\"\n" +
+	"\x12trigger_conditions\x18\x04 \x03(\v2\x15.v1.CompoundConditionR\x11triggerConditions\x12,\n" +
+	"\aeffects\x18\x06 \x03(\v2\x12.v1.CompoundEffectR\aeffects\x12\"\n" +
 	"\ronce_per_loop\x18\a \x01(\bR\voncePerLoop\x121\n" +
 	"\frefusal_role\x18\b \x01(\x0e2\x0e.v1.PlayerRoleR\vrefusalRole\x12\x1d\n" +
 	"\n" +

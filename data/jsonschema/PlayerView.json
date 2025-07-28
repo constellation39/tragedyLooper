@@ -218,13 +218,17 @@
                     "description": "能力描述"
                 },
                 "trigger_conditions": {
-                    "$ref": "#/definitions/v1.CompoundCondition",
-                    "additionalProperties": true,
+                    "items": {
+                        "$ref": "#/definitions/v1.CompoundCondition"
+                    },
+                    "type": "array",
                     "description": "能力触发条件"
                 },
                 "effects": {
-                    "$ref": "#/definitions/v1.CompoundEffect",
-                    "additionalProperties": true,
+                    "items": {
+                        "$ref": "#/definitions/v1.CompoundEffect"
+                    },
+                    "type": "array",
                     "description": "能力效果"
                 },
                 "once_per_loop": {
