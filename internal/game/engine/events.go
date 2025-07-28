@@ -58,7 +58,8 @@ func (ge *GameEngine) processEvent(event *model.GameEvent) {
 			return
 		}
 		if char, ok := ge.GameState.Characters[e.CharacterId]; ok {
-			char.Paranoia = e.NewParanoia
+			char.Paranoia += e.Amount
+			e.NewParanoia = char.Paranoia
 		}
 	case model.GameEventType_GOODWILL_ADJUSTED:
 		var e model.GoodwillAdjustedEvent
@@ -67,7 +68,8 @@ func (ge *GameEngine) processEvent(event *model.GameEvent) {
 			return
 		}
 		if char, ok := ge.GameState.Characters[e.CharacterId]; ok {
-			char.Goodwill = e.NewGoodwill
+			char.Goodwill += e.Amount
+			e.NewGoodwill = char.Goodwill
 		}
 	case model.GameEventType_INTRIGUE_ADJUSTED:
 		var e model.IntrigueAdjustedEvent
@@ -76,7 +78,8 @@ func (ge *GameEngine) processEvent(event *model.GameEvent) {
 			return
 		}
 		if char, ok := ge.GameState.Characters[e.CharacterId]; ok {
-			char.Intrigue = e.NewIntrigue
+			char.Intrigue += e.Amount
+			e.NewIntrigue = char.Intrigue
 		}
 	case model.GameEventType_TRAIT_ADDED:
 		var e model.TraitAddedEvent

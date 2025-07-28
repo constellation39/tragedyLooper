@@ -20,7 +20,7 @@ type MockGameDataAccessor struct {
 type MockLLMClient struct{}
 
 func (m *MockLLMClient) GenerateResponse(prompt string, sessionID string) (string, error) {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 
@@ -67,7 +67,6 @@ func TestNewGameEngine(t *testing.T) {
 	assert.Equal(t, int32(1), ge.mastermindPlayerID)
 	assert.ElementsMatch(t, []int32{2, 3}, ge.protagonistPlayerIDs)
 	assert.Len(t, ge.GameState.Characters, 35)
-	
 }
 
 func TestGameLoopLifecycle(t *testing.T) {
