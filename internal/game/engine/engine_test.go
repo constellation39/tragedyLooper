@@ -110,15 +110,48 @@ func TestSubmitPlayerAction(t *testing.T) {
 }
 
 func TestGetPlayerView(t *testing.T) {
-	t.Skip(`Skipping because the current implementation of runGameLoop in engine.go is missing a handler for getPlayerViewRequest, which causes this test to hang.`)
-
-	ge := newTestGameEngine(t, testLogger, testMastermindOnly, &MockGameDataAccessor{})
+	ge := newTestGameEngine(t, testLogger, testPlayers, testGameData)
 	ge.StartGameLoop()
 	defer ge.StopGameLoop()
 
-	// This call will block forever because the game loop doesn't handle the request.
+	// Allow the game loop to process the request
+	time.Sleep(50 * time.Millisecond)
+
 	view := ge.GetPlayerView(1)
-	assert.NotNil(t, view)
+	assert.NotNil(t, view, "GetPlayerView should return a non-nil view")
+	assert.Equal(t, "test-game", view.GameId)
+
+	// Test that a non-existent player gets a nil view
+	view = ge.GetPlayerView(999)
+	assert.Nil(t, view, "GetPlayerView for a non-existent player should be nil")
+}
+
+func TestPhaseTransitions(t *testing.T) {
+	ge := newTestGameEngine(t, testLogger, testPlayers, testGameData)
+	ge.StartGameLoop()
+	defer ge.StopGameLoop()
+
+	// Initial state should be SETUP
+	assert.Equal(t, model.GamePhase_SETUP, ge.GameState.CurrentPhase)
+
+	// Trigger morning phase logic by waiting for the loop to process it
+	time.Sleep(150 * time.Millisecond)
+
+	// Should transition to CARD_PLAY
+	assert.Equal(t, model.GamePhase_CARD_PLAY, ge.GameState.CurrentPhase)
+
+	// Check if a DAY_ADVANCED event was sent
+	select {
+	case event := <-ge.gameEventChan:
+		assert.Equal(t, model.GameEventType_DAY_ADVANCED, event.Type)
+		payload := &model.DayAdvancedEvent{}
+		err := event.Payload.UnmarshalTo(payload)
+		assert.NoError(t, err)
+		assert.Equal(t, int32(1), payload.Day)
+		assert.Equal(t, int32(1), payload.Loop)
+	case <-time.After(100 * time.Millisecond):
+		t.Fatal("Did not receive DAY_ADVANCED event")
+	}
 }
 
 func TestCharacterStateChanges(t *testing.T) {
