@@ -30,7 +30,7 @@ func (ge *GameEngine) applyAndPublishEvent(eventType model.GameEventType, payloa
 
 func (ge *GameEngine) publishGameEvent(event *model.GameEvent) {
 	select {
-	case ge.gameEventChan <- event:
+	case ge.dispatchGameEvent <- event:
 		// Also record the event in the game state for player views
 		ge.GameState.DayEvents = append(ge.GameState.DayEvents, event)
 		ge.GameState.LoopEvents = append(ge.GameState.LoopEvents, event)

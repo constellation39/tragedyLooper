@@ -28,6 +28,16 @@ run:
 	@echo "Running $(BINARY_NAME)..."
 	@$(SHELL_PREFIX) go run ./cmd/tragedylooper
 
+# Build the test client
+build-test-client:
+	@echo "Building test client..."
+	@$(SHELL_PREFIX) go build -o bin/testclient ./cmd/testclient
+
+# Run the test client
+run-test-client:
+	@echo "Running test client..."
+	@$(SHELL_PREFIX) go run ./cmd/testclient
+
 # Test the application
 test:
 	@echo "Running tests..."

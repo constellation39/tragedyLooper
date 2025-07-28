@@ -141,7 +141,7 @@ func TestPhaseTransitions(t *testing.T) {
 
 	// Check if a DAY_ADVANCED event was sent
 	select {
-	case event := <-ge.gameEventChan:
+	case event := <-ge.dispatchGameEvent:
 		assert.Equal(t, model.GameEventType_DAY_ADVANCED, event.Type)
 		payload := &model.DayAdvancedEvent{}
 		err := event.Payload.UnmarshalTo(payload)
@@ -161,7 +161,7 @@ func TestCharacterStateChanges(t *testing.T) {
 	// Test Paranoia Adjustment
 	ge.applyAndPublishEvent(model.GameEventType_PARANOIA_ADJUSTED, &model.ParanoiaAdjustedEvent{CharacterId: 1, NewParanoia: 5, Amount: 5})
 	select {
-	case event := <-ge.gameEventChan:
+	case event := <-ge.dispatchGameEvent:
 		assert.Equal(t, model.GameEventType_PARANOIA_ADJUSTED, event.Type)
 		payload := &model.ParanoiaAdjustedEvent{}
 		err := event.Payload.UnmarshalTo(payload)
@@ -176,7 +176,7 @@ func TestCharacterStateChanges(t *testing.T) {
 	// Test Goodwill Adjustment
 	ge.applyAndPublishEvent(model.GameEventType_GOODWILL_ADJUSTED, &model.GoodwillAdjustedEvent{CharacterId: 1, NewGoodwill: 3, Amount: 3})
 	select {
-	case event := <-ge.gameEventChan:
+	case event := <-ge.dispatchGameEvent:
 		assert.Equal(t, model.GameEventType_GOODWILL_ADJUSTED, event.Type)
 		payload := &model.GoodwillAdjustedEvent{}
 		err := event.Payload.UnmarshalTo(payload)
@@ -191,7 +191,7 @@ func TestCharacterStateChanges(t *testing.T) {
 	// Test Intrigue Adjustment
 	ge.applyAndPublishEvent(model.GameEventType_INTRIGUE_ADJUSTED, &model.IntrigueAdjustedEvent{CharacterId: 1, NewIntrigue: 7, Amount: 7})
 	select {
-	case event := <-ge.gameEventChan:
+	case event := <-ge.dispatchGameEvent:
 		assert.Equal(t, model.GameEventType_INTRIGUE_ADJUSTED, event.Type)
 		payload := &model.IntrigueAdjustedEvent{}
 		err := event.Payload.UnmarshalTo(payload)
@@ -206,7 +206,7 @@ func TestCharacterStateChanges(t *testing.T) {
 	// Test Location Change
 	ge.applyAndPublishEvent(model.GameEventType_CHARACTER_MOVED, &model.CharacterMovedEvent{CharacterId: 1, NewLocation: model.LocationType_SCHOOL})
 	select {
-	case event := <-ge.gameEventChan:
+	case event := <-ge.dispatchGameEvent:
 		assert.Equal(t, model.GameEventType_CHARACTER_MOVED, event.Type)
 		payload := &model.CharacterMovedEvent{}
 		err := event.Payload.UnmarshalTo(payload)

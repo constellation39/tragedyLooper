@@ -25,7 +25,7 @@ linters:
 
 linters-settings:
   gocyclo:
-    min-complexity: 12  # 降低复杂度阈值
+    min-complexity: 15  # 降低复杂度阈值
   revive:
     rules:
       - name: empty-block

@@ -15,7 +15,7 @@ type GameEngine struct {
 	GameState            *model.GameState
 	gameData             loader.GameConfigAccessor
 	requestChan          chan engineRequest
-	gameEventChan        chan *model.GameEvent
+	dispatchGameEvent    chan *model.GameEvent
 	gameControlChan      chan struct{}
 	llmClient            llm.Client
 	playerReady          map[int32]bool
@@ -70,7 +70,7 @@ func NewGameEngine(gameID string, logger *zap.Logger, players map[int32]*model.P
 		GameState:         gs,
 		gameData:          gameData,
 		requestChan:       make(chan engineRequest, 100),
-		gameEventChan:     make(chan *model.GameEvent, 100),
+		dispatchGameEvent: make(chan *model.GameEvent, 100),
 		gameControlChan:   make(chan struct{}),
 		llmClient:         llmClient,
 		playerReady:       make(map[int32]bool),
@@ -114,7 +114,7 @@ func (ge *GameEngine) SubmitPlayerAction(playerID int32, action *model.PlayerAct
 }
 
 func (ge *GameEngine) GetGameEvents() <-chan *model.GameEvent {
-	return ge.gameEventChan
+	return ge.dispatchGameEvent
 }
 
 func (ge *GameEngine) GetPlayerView(playerID int32) *model.PlayerView {
