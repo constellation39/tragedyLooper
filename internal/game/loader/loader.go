@@ -10,10 +10,10 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-// GameDataAccessor defines the interface for accessing game configuration data.
+// GameConfig defines the interface for accessing game configuration data.
 // This allows the game engine to be decoupled from the concrete data loader implementation,
 // facilitating easier testing with mock data.
-type GameDataAccessor interface {
+type GameConfig interface {
 	GetScript() *v1.ScriptConfig
 
 	GetAbilities() map[int32]*v1.AbilityConfig
@@ -23,8 +23,8 @@ type GameDataAccessor interface {
 }
 
 // LoadConfig loads all game data from the specified directory.
-func LoadConfig(dataDir, scriptID string) (GameDataAccessor, error) {
-	repo := NewRepository()
+func LoadConfig(dataDir, scriptID string) (GameConfig, error) {
+	repo := newRepository()
 
 	if err := loadAbilities(repo, dataDir); err != nil {
 		return nil, err

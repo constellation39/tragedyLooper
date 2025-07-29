@@ -14,7 +14,7 @@ type repository struct {
 	script     *v1.ScriptConfig
 }
 
-func NewRepository() *repository {
+func newRepository() *repository {
 	return &repository{
 		abilities:  make(map[int32]*v1.AbilityConfig),
 		cards:      make(map[int32]*v1.CardConfig),
@@ -50,7 +50,11 @@ type cfgPtr interface {
 	*v1.IncidentConfig
 }
 
-func Get[T cfgPtr](r GameDataAccessor, id int32) (T, error) {
+func Script(r GameConfig) *v1.ScriptConfig {
+	return r.GetScript()
+}
+
+func Get[T cfgPtr](r GameConfig, id int32) (T, error) {
 	m, err := pickMap[T](r)
 	if err != nil {
 		var zero T
@@ -64,11 +68,11 @@ func Get[T cfgPtr](r GameDataAccessor, id int32) (T, error) {
 	return v, nil
 }
 
-func All[T cfgPtr](r GameDataAccessor) (map[int32]T, error) {
+func All[T cfgPtr](r GameConfig) (map[int32]T, error) {
 	return pickMap[T](r)
 }
 
-func pickMap[T cfgPtr](r GameDataAccessor) (map[int32]T, error) {
+func pickMap[T cfgPtr](r GameConfig) (map[int32]T, error) {
 	var zero T
 	switch any(zero).(type) {
 	case *v1.AbilityConfig:

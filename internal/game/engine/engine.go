@@ -36,10 +36,10 @@ type GameEngine struct {
 	GameState *model.GameState // The current state of the game.
 	logger    *zap.Logger      // Logger for logging.
 
-	actionGenerator ActionGenerator         // Interface for generating actions for AI players.
-	gameConfig      loader.GameDataAccessor // The data repository for the game.
-	pm              *phaseManager           // Phase manager.
-	em              *eventManager           // Event manager.
+	actionGenerator ActionGenerator   // Interface for generating actions for AI players.
+	gameConfig      loader.GameConfig // The data repository for the game.
+	pm              *phaseManager     // Phase manager.
+	em              *eventManager     // Event manager.
 
 	// engineChan is the central channel for all incoming requests (player actions, AI actions, etc.).
 	// It ensures that all modifications to the game state are processed sequentially in the main game loop,
@@ -59,7 +59,7 @@ type GameEngine struct {
 // actionGenerator: The AI action generator.
 // gameConfig: The game configuration.
 // Returns: A new GameEngine instance and a possible error.
-func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator ActionGenerator, gameConfig loader.GameDataAccessor) (*GameEngine, error) {
+func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator ActionGenerator, gameConfig loader.GameConfig) (*GameEngine, error) {
 	ge := &GameEngine{
 		logger:               logger,
 		actionGenerator:      actionGenerator,
@@ -285,7 +285,7 @@ func (ge *GameEngine) GetGameState() *model.GameState {
 	return ge.GameState
 }
 
-func (ge *GameEngine) GetGameRepo() loader.GameDataAccessor {
+func (ge *GameEngine) GetGameRepo() loader.GameConfig {
 	return ge.gameConfig
 }
 
