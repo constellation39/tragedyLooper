@@ -120,7 +120,7 @@ enum TriggerType {
   ON_PHASE_START = 4; // 特定阶段开始时（需配合GamePhase）
   ON_PHASE_END = 5; // 特定阶段结束时（需配合GamePhase）
   ON_GAME_EVENT = 6; // 发生特定游戏事件时
-  PASSIVE = 7; // 被动（条件满足时持续生效）
+  ON_PASSIVE = 7; // 被动（条件满足时持续生效）
   ON_GUESS_MADE = 8; // 推理发生时
   ON_GAME_END = 9; // 游戏结束时
   ON_DAY_END = 10; // 每日结束时

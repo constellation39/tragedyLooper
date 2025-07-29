@@ -9,7 +9,5 @@ type CardResolvePhase struct{ basePhase }
 
 func (p *CardResolvePhase) Type() model.GamePhase { return model.GamePhase_CARD_RESOLVE }
 func (p *CardResolvePhase) Enter(ge GameEngine) Phase {
-	ge.ResolveMovement()
-	ge.ResolveOtherCards()
-	return &AbilitiesPhase{}
+	return &MovementPhase{}
 }

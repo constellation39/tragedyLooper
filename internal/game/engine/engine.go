@@ -14,8 +14,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-
-
 // GameEngine manages the state and logic of a single game instance.
 type engineRequest interface{}
 
@@ -146,7 +144,8 @@ func (ge *GameEngine) runGameLoop() {
 		case req := <-ge.engineChan:
 			switch in := req.(type) {
 			case *aiActionCompleteRequest:
-				ge.handlePlayerAction(in.playerID, in.action)
+				nextPhase := ge.currentPhase.HandleAction(ge, in.playerID, in.action)
+				ge.transitionTo(nextPhase)
 			case *getPlayerViewRequest:
 				in.responseChan <- ge.GeneratePlayerView(in.playerID)
 			}
@@ -284,12 +283,12 @@ func (ge *GameEngine) AreAllPlayersReady() bool {
 	return false
 }
 
-func (ge *GameEngine) ResolveMovement() {
-	// TODO: implement me
+func (ge *GameEngine) Logger() *zap.Logger {
+	return ge.logger
 }
 
-func (ge *GameEngine) ResolveOtherCards() {
-	// TODO: implement me
+func (ge *GameEngine) SetPlayerReady(playerID int32) {
+	ge.playerReady[playerID] = true
 }
 
 // --- AI Integration ---
@@ -329,4 +328,14 @@ func (ge *GameEngine) TriggerAIPlayerAction(playerID int32) {
 			action:   action,
 		}
 	}()
+}
+
+func (ge *GameEngine) ResolveMovement() {
+	// TODO implement me
+	panic("implement me")
+}
+
+func (ge *GameEngine) ResolveOtherCards() {
+	// TODO implement me
+	panic("implement me")
 }
