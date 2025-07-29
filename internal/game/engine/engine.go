@@ -25,8 +25,8 @@ type getPlayerViewRequest struct {
 	responseChan chan *model.PlayerView // 用于发送响应的通道
 }
 
-// aiActionCompleteRequest 表示 AI 或玩家操作已完成并准备好由游戏引擎处理。
-type aiActionCompleteRequest struct {
+// actionCompleteRequest 表示 AI 或玩家操作已完成并准备好由游戏引擎处理。
+type actionCompleteRequest struct {
 	playerID int32                      // 执行操作的玩家ID
 	action   *model.PlayerActionPayload // 玩家操作的负载
 }
@@ -112,7 +112,7 @@ func (ge *GameEngine) SubmitPlayerAction(playerID int32, action *model.PlayerAct
 		return
 	}
 	select {
-	case ge.engineChan <- &aiActionCompleteRequest{playerID: playerID, action: action}:
+	case ge.engineChan <- &actionCompleteRequest{playerID: playerID, action: action}:
 	default:
 		ge.logger.Warn("Request channel full, dropping action", zap.Int32("playerID", playerID))
 	}
@@ -165,7 +165,7 @@ func (ge *GameEngine) runGameLoop() {
 // req: 传入的引擎动作请求。
 func (ge *GameEngine) handleEngineRequest(req engineAction) {
 	switch r := req.(type) {
-	case *aiActionCompleteRequest:
+	case *actionCompleteRequest:
 		// AI 或玩家已提交操作。
 		ge.pm.handleAction(r.playerID, r.action)
 	case *getPlayerViewRequest:
@@ -343,7 +343,7 @@ func (ge *GameEngine) TriggerAIPlayerAction(playerID int32) {
 		if err != nil {
 			ge.logger.Error("AI action generation failed", zap.String("player", player.Name), zap.Error(err))
 			// 提交默认操作以解锁游戏
-			ge.engineChan <- &aiActionCompleteRequest{
+			ge.engineChan <- &actionCompleteRequest{
 				playerID: playerID,
 				action:   &model.PlayerActionPayload{},
 			}
@@ -351,7 +351,7 @@ func (ge *GameEngine) TriggerAIPlayerAction(playerID int32) {
 		}
 
 		// 将经过验证的操作发送回主循环进行处理。
-		ge.engineChan <- &aiActionCompleteRequest{
+		ge.engineChan <- &actionCompleteRequest{
 			playerID: playerID,
 			action:   action,
 		}
