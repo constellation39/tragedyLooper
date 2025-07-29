@@ -12,7 +12,7 @@ func init() {
 type CardPlayedHandler struct{}
 
 // Handle currently does nothing, as this event is informational.
-func (h *CardPlayedHandler) Handle(state *model.GameState, event *model.GameEvent) error {
+func (h *CardPlayedHandler) Handle(state *model.GameState, event *model.EventPayload) error {
 	// No state change, this is for logging/notification purposes.
 	// The actual card effect is resolved in a later phase.
 	return nil

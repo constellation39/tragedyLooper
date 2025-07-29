@@ -12,7 +12,7 @@ func init() {
 type ParanoiaAdjustedHandler struct{}
 
 // Handle updates the character's paranoia in the game state.
-func (h *ParanoiaAdjustedHandler) Handle(state *model.GameState, event *model.GameEvent) error {
+func (h *ParanoiaAdjustedHandler) Handle(state *model.GameState, event *model.EventPayload) error {
 	e := event.Payload.GetParanoiaAdjusted()
 	if e == nil {
 		return nil // Or handle error appropriately

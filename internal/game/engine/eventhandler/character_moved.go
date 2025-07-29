@@ -12,7 +12,7 @@ func init() {
 type CharacterMovedHandler struct{}
 
 // Handle updates the character's location in the game state.
-func (h *CharacterMovedHandler) Handle(state *model.GameState, event *model.GameEvent) error {
+func (h *CharacterMovedHandler) Handle(state *model.GameState, event *model.EventPayload) error {
 	e := event.Payload.GetCharacterMoved()
 	if e == nil {
 		return nil // Or handle error appropriately

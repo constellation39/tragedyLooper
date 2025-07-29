@@ -12,7 +12,7 @@ func init() {
 type TraitAddedHandler struct{}
 
 // Handle adds a trait to a character if it doesn't exist yet.
-func (h *TraitAddedHandler) Handle(state *model.GameState, event *model.GameEvent) error {
+func (h *TraitAddedHandler) Handle(state *model.GameState, event *model.EventPayload) error {
 	e := event.Payload.GetTraitAdded()
 	if e == nil {
 		return nil // Or handle error appropriately

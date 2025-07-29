@@ -12,7 +12,7 @@ func init() {
 type IntrigueAdjustedHandler struct{}
 
 // Handle updates the character's intrigue in the game state.
-func (h *IntrigueAdjustedHandler) Handle(state *model.GameState, event *model.GameEvent) error {
+func (h *IntrigueAdjustedHandler) Handle(state *model.GameState, event *model.EventPayload) error {
 	e := event.Payload.GetIntrigueAdjusted()
 	if e == nil {
 		return nil // Or handle error appropriately

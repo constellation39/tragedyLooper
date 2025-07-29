@@ -11,7 +11,7 @@ import (
 // GameEngine 定义了阶段可以与之交互的游戏引擎的接口。
 type GameEngine interface {
 	// ApplyAndPublishEvent 应用事件并发布。
-	ApplyAndPublishEvent(eventType model.GameEventType, eventData model.EventPayload)
+	ApplyAndPublishEvent(eventType model.GameEventType, eventData *model.EventPayload)
 	// AreAllPlayersReady 检查所有玩家是否都已准备好。
 	AreAllPlayersReady() bool
 	// Logger 返回游戏引擎的日志记录器。

@@ -12,7 +12,7 @@ func init() {
 type TraitRemovedHandler struct{}
 
 // Handle removes a trait from a character.
-func (h *TraitRemovedHandler) Handle(state *model.GameState, event *model.GameEvent) error {
+func (h *TraitRemovedHandler) Handle(state *model.GameState, event *model.EventPayload) error {
 	e := event.Payload.GetTraitRemoved()
 	if e == nil {
 		return nil // Or handle error appropriately
