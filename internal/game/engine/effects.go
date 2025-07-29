@@ -225,8 +225,11 @@ func (ge *GameEngine) publishMoveCharacterEffect(state *model.GameState, effect 
 		return err
 	}
 	for _, targetID := range targetIDs {
-		event := &model.CharacterMovedEvent{CharacterId: targetID, NewLocation: effect.Destination}
-		ge.applyAndPublishEvent(model.GameEventType_CHARACTER_MOVED, event)
+		char := ge.getCharacterByID(targetID)
+		if char == nil {
+			continue
+		}
+		ge.moveCharacter(char, 0, 0) // A generic move, let the moveCharacter logic handle the details
 	}
 	return nil
 }

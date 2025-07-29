@@ -198,26 +198,22 @@ func (ge *GameEngine) resetPlayerReadiness() {
 	}
 }
 
-func (ge *GameEngine) resetLoop() {
-	// Reset character stats
-	for _, char := range ge.GameState.Characters {
-		char.Paranoia = 0
-		char.Goodwill = 0
-		char.Intrigue = 0
-		// Note: Traits and abilities might persist or reset based on game rules.
-		// Current implementation assumes they persist unless explicitly removed.
+func (ge *GameEngine) getCharacterByID(charID int32) *model.Character {
+	char, ok := ge.GameState.Characters[charID]
+	if !ok {
+		return nil
 	}
+	return char
+}
 
-	// Reset player hands
-	for _, p := range ge.GameState.Players {
-		p.Hand = nil
+func (ge *GameEngine) triggerIncidents() {
+	// TODO: Implement incident triggering logic
+}
+
+func (ge *GameEngine) getPlayerByID(playerID int32) *model.Player {
+	player, ok := ge.GameState.Players[playerID]
+	if !ok {
+		return nil
 	}
-
-	// Reset loop-specific state
-	ge.GameState.PlayedCardsThisLoop = make(map[int32]bool)
-	ge.GameState.DayEvents = []*model.GameEvent{}
-	ge.GameState.LoopEvents = []*model.GameEvent{}
-
-	// Re-deal cards to players
-	ge.dealInitialCards()
+	return player
 }

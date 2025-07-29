@@ -4,7 +4,7 @@
     "definitions": {
         "LoopResetEvent": {
             "properties": {
-                "loop": {
+                "loop_number": {
                     "type": "integer",
                     "description": "新的循环数"
                 }

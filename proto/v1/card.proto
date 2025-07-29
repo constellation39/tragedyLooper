@@ -12,7 +12,7 @@ message CardConfig {
   int32 id = 1; // 卡牌唯一ID
   string name = 2; // 卡牌名称
   string description = 3; // 卡牌描述
-  CardType card_type = 4; // 卡牌类型
+  CardType type = 4; // 卡牌类型
   PlayerRole owner_role = 5; // 卡牌所属玩家角色（主谋或主角）
   CompoundEffect effect = 6; // 卡牌效果
   bool once_per_loop = 7; // 是否每循环只能使用一次

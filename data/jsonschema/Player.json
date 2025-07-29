@@ -179,11 +179,11 @@
                     "type": "string",
                     "description": "卡牌描述"
                 },
-                "card_type": {
+                "type": {
                     "enum": [
                         "CARD_TYPE_UNSPECIFIED",
                         0,
-                        "MOVEMENT",
+                        "MOVE_HORIZONTALLY",
                         1,
                         "PARANOIA_PLUS",
                         2,
@@ -202,7 +202,11 @@
                         "FORBID_GOODWILL",
                         9,
                         "FORBID_INTRIGUE",
-                        10
+                        10,
+                        "MOVE_VERTICALLY",
+                        11,
+                        "MOVE_DIAGONALLY",
+                        12
                     ],
                     "oneOf": [
                         {

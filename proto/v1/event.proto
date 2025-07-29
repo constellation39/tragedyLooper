@@ -81,12 +81,12 @@ message CardPlayedEvent {
 
 // 卡牌揭示事件
 message CardRevealedEvent {
-  repeated Card cards = 1;
+  map<int32, Card> cards = 1; // player_id -> card
 }
 
 // 循环重置事件
 message LoopResetEvent {
-  int32 loop = 1; // 新的循环数
+  int32 loop_number = 1; // 新的循环数
 }
 
 // 游戏结束事件

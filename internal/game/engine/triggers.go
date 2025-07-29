@@ -9,7 +9,9 @@ import (
 // checkAndTriggerAbilities iterates through all character abilities and triggers those that match the given trigger type.
 func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType) {
 	ge.logger.Debug("Checking for abilities to trigger", zap.String("triggerType", triggerType.String()))
-
+	if true {
+		return
+	}
 	for _, char := range ge.GameState.Characters {
 		for _, ability := range char.Abilities {
 			if ability.Config.TriggerType != triggerType {

@@ -53,7 +53,7 @@ func (pb *PromptBuilder) BuildMastermindPrompt(
 
 	sb.WriteString("\n--- Your Hand ---\n")
 	for _, card := range fullGameState.YourHand {
-		sb.WriteString(fmt.Sprintf("- Card: %s (Type: %s, Effect: %+v)\n", card.Config.Name, card.Config.CardType, card.Config.Effect))
+		sb.WriteString(fmt.Sprintf("- Card: %s (Type: %s, Effect: %+v)\n", card.Config.Name, card.Config.Type, card.Config.Effect))
 	}
 
 	sb.WriteString("\n--- Public Events (This Day) ---\n")
@@ -101,7 +101,7 @@ func (pb *PromptBuilder) BuildProtagonistPrompt(
 
 	sb.WriteString("\n--- Your Hand ---\n")
 	for _, card := range playerView.YourHand {
-		sb.WriteString(fmt.Sprintf("- Card: %s (Type: %s, Effect: %+v)\n", card.Config.Name, card.Config.CardType, card.Config.Effect))
+		sb.WriteString(fmt.Sprintf("- Card: %s (Type: %s, Effect: %+v)\n", card.Config.Name, card.Config.Type, card.Config.Effect))
 	}
 
 	sb.WriteString("\n--- Your Deductions (from previous loops) ---\n")

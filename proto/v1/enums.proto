@@ -32,7 +32,7 @@ enum GamePhase {
 // 卡牌类型
 enum CardType {
   CARD_TYPE_UNSPECIFIED = 0; // 未指定
-  MOVEMENT = 1; // 移动
+  MOVE_HORIZONTALLY = 1; // 水平移动
   PARANOIA_PLUS = 2; // 增加妄想
   PARANOIA_MINUS = 3; // 减少妄想
   GOODWILL_PLUS = 4; // 增加好感
@@ -42,6 +42,8 @@ enum CardType {
   FORBID_PARANOIA = 8; // 禁止妄想变化
   FORBID_GOODWILL = 9; // 禁止好感变化
   FORBID_INTRIGUE = 10; // 禁止阴谋变化
+  MOVE_VERTICALLY = 11; // 垂直移动
+  MOVE_DIAGONALLY = 12; // 对角移动
 }
 
 // 角色身份类型

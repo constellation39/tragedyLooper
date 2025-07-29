@@ -7,14 +7,13 @@
 package v1
 
 import (
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
-
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
 )
 
 const (
@@ -640,7 +639,7 @@ func (x *CardPlayedEvent) GetCard() *Card {
 // 卡牌揭示事件
 type CardRevealedEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Cards         []*Card                `protobuf:"bytes,1,rep,name=cards,proto3" json:"cards,omitempty"`
+	Cards         map[int32]*Card        `protobuf:"bytes,1,rep,name=cards,proto3" json:"cards,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // player_id -> card
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -675,7 +674,7 @@ func (*CardRevealedEvent) Descriptor() ([]byte, []int) {
 	return file_v1_event_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *CardRevealedEvent) GetCards() []*Card {
+func (x *CardRevealedEvent) GetCards() map[int32]*Card {
 	if x != nil {
 		return x.Cards
 	}
@@ -685,7 +684,7 @@ func (x *CardRevealedEvent) GetCards() []*Card {
 // 循环重置事件
 type LoopResetEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Loop          int32                  `protobuf:"varint,1,opt,name=loop,proto3" json:"loop,omitempty"` // 新的循环数
+	LoopNumber    int32                  `protobuf:"varint,1,opt,name=loop_number,json=loopNumber,proto3" json:"loop_number,omitempty"` // 新的循环数
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -720,9 +719,9 @@ func (*LoopResetEvent) Descriptor() ([]byte, []int) {
 	return file_v1_event_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *LoopResetEvent) GetLoop() int32 {
+func (x *LoopResetEvent) GetLoopNumber() int32 {
 	if x != nil {
-		return x.Loop
+		return x.LoopNumber
 	}
 	return 0
 }
@@ -1207,11 +1206,16 @@ const file_v1_event_proto_rawDesc = "" +
 	"\x04loop\x18\x02 \x01(\x05R\x04loop\"L\n" +
 	"\x0fCardPlayedEvent\x12\x1b\n" +
 	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12\x1c\n" +
-	"\x04card\x18\x02 \x01(\v2\b.v1.CardR\x04card\"3\n" +
-	"\x11CardRevealedEvent\x12\x1e\n" +
-	"\x05cards\x18\x01 \x03(\v2\b.v1.CardR\x05cards\"$\n" +
-	"\x0eLoopResetEvent\x12\x12\n" +
-	"\x04loop\x18\x01 \x01(\x05R\x04loop\"7\n" +
+	"\x04card\x18\x02 \x01(\v2\b.v1.CardR\x04card\"\x8f\x01\n" +
+	"\x11CardRevealedEvent\x126\n" +
+	"\x05cards\x18\x01 \x03(\v2 .v1.CardRevealedEvent.CardsEntryR\x05cards\x1aB\n" +
+	"\n" +
+	"CardsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x1e\n" +
+	"\x05value\x18\x02 \x01(\v2\b.v1.CardR\x05value:\x028\x01\"1\n" +
+	"\x0eLoopResetEvent\x12\x1f\n" +
+	"\vloop_number\x18\x01 \x01(\x05R\n" +
+	"loopNumber\"7\n" +
 	"\rGameOverEvent\x12&\n" +
 	"\x06winner\x18\x01 \x01(\x0e2\x0e.v1.PlayerRoleR\x06winner\"\xad\x01\n" +
 	"\x06Choice\x12\x0e\n" +
@@ -1249,7 +1253,7 @@ func file_v1_event_proto_rawDescGZIP() []byte {
 	return file_v1_event_proto_rawDescData
 }
 
-var file_v1_event_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
+var file_v1_event_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
 var file_v1_event_proto_goTypes = []any{
 	(*GameEvent)(nil),              // 0: v1.GameEvent
 	(*GameEventLib)(nil),           // 1: v1.GameEventLib
@@ -1273,37 +1277,39 @@ var file_v1_event_proto_goTypes = []any{
 	(*TraitRemovedEvent)(nil),      // 19: v1.TraitRemovedEvent
 	(*PlayerActionTakenEvent)(nil), // 20: v1.PlayerActionTakenEvent
 	nil,                            // 21: v1.GameEventLib.EventsEntry
-	(GameEventType)(0),             // 22: v1.GameEventType
-	(*anypb.Any)(nil),              // 23: google.protobuf.Any
-	(*timestamppb.Timestamp)(nil),  // 24: google.protobuf.Timestamp
-	(LocationType)(0),              // 25: v1.LocationType
-	(IncidentType)(0),              // 26: v1.IncidentType
-	(*Card)(nil),                   // 27: v1.Card
-	(PlayerRole)(0),                // 28: v1.PlayerRole
-	(*Incident)(nil),               // 29: v1.Incident
-	(*PlayerActionPayload)(nil),    // 30: v1.PlayerActionPayload
+	nil,                            // 22: v1.CardRevealedEvent.CardsEntry
+	(GameEventType)(0),             // 23: v1.GameEventType
+	(*anypb.Any)(nil),              // 24: google.protobuf.Any
+	(*timestamppb.Timestamp)(nil),  // 25: google.protobuf.Timestamp
+	(LocationType)(0),              // 26: v1.LocationType
+	(IncidentType)(0),              // 27: v1.IncidentType
+	(*Card)(nil),                   // 28: v1.Card
+	(PlayerRole)(0),                // 29: v1.PlayerRole
+	(*Incident)(nil),               // 30: v1.Incident
+	(*PlayerActionPayload)(nil),    // 31: v1.PlayerActionPayload
 }
 var file_v1_event_proto_depIdxs = []int32{
-	22, // 0: v1.GameEvent.type:type_name -> v1.GameEventType
-	23, // 1: v1.GameEvent.payload:type_name -> google.protobuf.Any
+	23, // 0: v1.GameEvent.type:type_name -> v1.GameEventType
+	24, // 1: v1.GameEvent.payload:type_name -> google.protobuf.Any
 	20, // 2: v1.GameEvent.player_action:type_name -> v1.PlayerActionTakenEvent
-	24, // 3: v1.GameEvent.timestamp:type_name -> google.protobuf.Timestamp
+	25, // 3: v1.GameEvent.timestamp:type_name -> google.protobuf.Timestamp
 	21, // 4: v1.GameEventLib.events:type_name -> v1.GameEventLib.EventsEntry
-	25, // 5: v1.CharacterMovedEvent.new_location:type_name -> v1.LocationType
-	26, // 6: v1.LoopLossEvent.incident_type:type_name -> v1.IncidentType
-	27, // 7: v1.CardPlayedEvent.card:type_name -> v1.Card
-	27, // 8: v1.CardRevealedEvent.cards:type_name -> v1.Card
-	28, // 9: v1.GameOverEvent.winner:type_name -> v1.PlayerRole
+	26, // 5: v1.CharacterMovedEvent.new_location:type_name -> v1.LocationType
+	27, // 6: v1.LoopLossEvent.incident_type:type_name -> v1.IncidentType
+	28, // 7: v1.CardPlayedEvent.card:type_name -> v1.Card
+	22, // 8: v1.CardRevealedEvent.cards:type_name -> v1.CardRevealedEvent.CardsEntry
+	29, // 9: v1.GameOverEvent.winner:type_name -> v1.PlayerRole
 	14, // 10: v1.ChoiceRequiredEvent.choices:type_name -> v1.Choice
-	29, // 11: v1.IncidentTriggeredEvent.incident:type_name -> v1.Incident
-	26, // 12: v1.TragedyTriggeredEvent.tragedy_type:type_name -> v1.IncidentType
-	30, // 13: v1.PlayerActionTakenEvent.action:type_name -> v1.PlayerActionPayload
-	23, // 14: v1.GameEventLib.EventsEntry.value:type_name -> google.protobuf.Any
-	15, // [15:15] is the sub-list for method output_type
-	15, // [15:15] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	30, // 11: v1.IncidentTriggeredEvent.incident:type_name -> v1.Incident
+	27, // 12: v1.TragedyTriggeredEvent.tragedy_type:type_name -> v1.IncidentType
+	31, // 13: v1.PlayerActionTakenEvent.action:type_name -> v1.PlayerActionPayload
+	24, // 14: v1.GameEventLib.EventsEntry.value:type_name -> google.protobuf.Any
+	28, // 15: v1.CardRevealedEvent.CardsEntry.value:type_name -> v1.Card
+	16, // [16:16] is the sub-list for method output_type
+	16, // [16:16] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_v1_event_proto_init() }
@@ -1328,7 +1334,7 @@ func file_v1_event_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_event_proto_rawDesc), len(file_v1_event_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   22,
+			NumMessages:   23,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

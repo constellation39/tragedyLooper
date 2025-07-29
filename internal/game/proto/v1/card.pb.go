@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -28,7 +27,7 @@ type CardConfig struct {
 	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                   // 卡牌唯一ID
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                // 卡牌名称
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                  // 卡牌描述
-	CardType      CardType               `protobuf:"varint,4,opt,name=card_type,json=cardType,proto3,enum=v1.CardType" json:"card_type,omitempty"`      // 卡牌类型
+	Type          CardType               `protobuf:"varint,4,opt,name=type,proto3,enum=v1.CardType" json:"type,omitempty"`                              // 卡牌类型
 	OwnerRole     PlayerRole             `protobuf:"varint,5,opt,name=owner_role,json=ownerRole,proto3,enum=v1.PlayerRole" json:"owner_role,omitempty"` // 卡牌所属玩家角色（主谋或主角）
 	Effect        *CompoundEffect        `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`                                            // 卡牌效果
 	OncePerLoop   bool                   `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`            // 是否每循环只能使用一次
@@ -88,9 +87,9 @@ func (x *CardConfig) GetDescription() string {
 	return ""
 }
 
-func (x *CardConfig) GetCardType() CardType {
+func (x *CardConfig) GetType() CardType {
 	if x != nil {
-		return x.CardType
+		return x.Type
 	}
 	return CardType_CARD_TYPE_UNSPECIFIED
 }
@@ -316,13 +315,13 @@ var File_v1_card_proto protoreflect.FileDescriptor
 
 const file_v1_card_proto_rawDesc = "" +
 	"\n" +
-	"\rv1/card.proto\x12\x02v1\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\x98\x02\n" +
+	"\rv1/card.proto\x12\x02v1\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\x8f\x02\n" +
 	"\n" +
 	"CardConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12)\n" +
-	"\tcard_type\x18\x04 \x01(\x0e2\f.v1.CardTypeR\bcardType\x12-\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12 \n" +
+	"\x04type\x18\x04 \x01(\x0e2\f.v1.CardTypeR\x04type\x12-\n" +
 	"\n" +
 	"owner_role\x18\x05 \x01(\x0e2\x0e.v1.PlayerRoleR\townerRole\x12*\n" +
 	"\x06effect\x18\x06 \x01(\v2\x12.v1.CompoundEffectR\x06effect\x12\"\n" +
@@ -368,7 +367,7 @@ var file_v1_card_proto_goTypes = []any{
 	(LocationType)(0),      // 8: v1.LocationType
 }
 var file_v1_card_proto_depIdxs = []int32{
-	5, // 0: v1.CardConfig.card_type:type_name -> v1.CardType
+	5, // 0: v1.CardConfig.type:type_name -> v1.CardType
 	6, // 1: v1.CardConfig.owner_role:type_name -> v1.PlayerRole
 	7, // 2: v1.CardConfig.effect:type_name -> v1.CompoundEffect
 	0, // 3: v1.Card.config:type_name -> v1.CardConfig

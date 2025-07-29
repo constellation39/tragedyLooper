@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -30,6 +29,7 @@ type GameState struct {
 	Players                 map[int32]*Player      `protobuf:"bytes,4,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                                    // 所有玩家的映射，键为 player_id
 	CurrentDay              int32                  `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                                                                                      // 当前天数
 	CurrentLoop             int32                  `protobuf:"varint,6,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                                                                                   // 当前循环数
+	DaysPerLoop             int32                  `protobuf:"varint,18,opt,name=days_per_loop,json=daysPerLoop,proto3" json:"days_per_loop,omitempty"`                                                                                                                // 每循环天数
 	CurrentPhase            GamePhase              `protobuf:"varint,7,opt,name=current_phase,json=currentPhase,proto3,enum=v1.GamePhase" json:"current_phase,omitempty"`                                                                                              // 当前游戏阶段
 	ActiveTragedies         map[int32]bool         `protobuf:"bytes,8,rep,name=active_tragedies,json=activeTragedies,proto3" json:"active_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                            // 当前循环中已激活（满足条件）的悲剧，键为 TragedyType
 	PreventedTragedies      map[int32]bool         `protobuf:"bytes,9,rep,name=prevented_tragedies,json=preventedTragedies,proto3" json:"prevented_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                   // 当前循环中已被阻止的悲剧，键为 TragedyType
@@ -106,6 +106,13 @@ func (x *GameState) GetCurrentDay() int32 {
 func (x *GameState) GetCurrentLoop() int32 {
 	if x != nil {
 		return x.CurrentLoop
+	}
+	return 0
+}
+
+func (x *GameState) GetDaysPerLoop() int32 {
+	if x != nil {
+		return x.DaysPerLoop
 	}
 	return 0
 }
@@ -716,7 +723,7 @@ var File_v1_game_proto protoreflect.FileDescriptor
 
 const file_v1_game_proto_rawDesc = "" +
 	"\n" +
-	"\rv1/game.proto\x12\x02v1\x1a\x10v1/ability.proto\x1a\rv1/card.proto\x1a\x12v1/character.proto\x1a\x0ev1/enums.proto\x1a\x0ev1/event.proto\x1a\x0fv1/script.proto\"\xcd\r\n" +
+	"\rv1/game.proto\x12\x02v1\x1a\x10v1/ability.proto\x1a\rv1/card.proto\x1a\x12v1/character.proto\x1a\x0ev1/enums.proto\x1a\x0ev1/event.proto\x1a\x0fv1/script.proto\"\xf1\r\n" +
 	"\tGameState\x12\x17\n" +
 	"\agame_id\x18\x01 \x01(\tR\x06gameId\x12=\n" +
 	"\n" +
@@ -725,7 +732,8 @@ const file_v1_game_proto_rawDesc = "" +
 	"\aplayers\x18\x04 \x03(\v2\x1a.v1.GameState.PlayersEntryR\aplayers\x12\x1f\n" +
 	"\vcurrent_day\x18\x05 \x01(\x05R\n" +
 	"currentDay\x12!\n" +
-	"\fcurrent_loop\x18\x06 \x01(\x05R\vcurrentLoop\x122\n" +
+	"\fcurrent_loop\x18\x06 \x01(\x05R\vcurrentLoop\x12\"\n" +
+	"\rdays_per_loop\x18\x12 \x01(\x05R\vdaysPerLoop\x122\n" +
 	"\rcurrent_phase\x18\a \x01(\x0e2\r.v1.GamePhaseR\fcurrentPhase\x12M\n" +
 	"\x10active_tragedies\x18\b \x03(\v2\".v1.GameState.ActiveTragediesEntryR\x0factiveTragedies\x12V\n" +
 	"\x13prevented_tragedies\x18\t \x03(\v2%.v1.GameState.PreventedTragediesEntryR\x12preventedTragedies\x12X\n" +

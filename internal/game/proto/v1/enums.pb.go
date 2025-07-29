@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -160,7 +159,7 @@ type CardType int32
 
 const (
 	CardType_CARD_TYPE_UNSPECIFIED CardType = 0  // 未指定
-	CardType_MOVEMENT              CardType = 1  // 移动
+	CardType_MOVE_HORIZONTALLY     CardType = 1  // 水平移动
 	CardType_PARANOIA_PLUS         CardType = 2  // 增加妄想
 	CardType_PARANOIA_MINUS        CardType = 3  // 减少妄想
 	CardType_GOODWILL_PLUS         CardType = 4  // 增加好感
@@ -170,13 +169,15 @@ const (
 	CardType_FORBID_PARANOIA       CardType = 8  // 禁止妄想变化
 	CardType_FORBID_GOODWILL       CardType = 9  // 禁止好感变化
 	CardType_FORBID_INTRIGUE       CardType = 10 // 禁止阴谋变化
+	CardType_MOVE_VERTICALLY       CardType = 11 // 垂直移动
+	CardType_MOVE_DIAGONALLY       CardType = 12 // 对角移动
 )
 
 // Enum value maps for CardType.
 var (
 	CardType_name = map[int32]string{
 		0:  "CARD_TYPE_UNSPECIFIED",
-		1:  "MOVEMENT",
+		1:  "MOVE_HORIZONTALLY",
 		2:  "PARANOIA_PLUS",
 		3:  "PARANOIA_MINUS",
 		4:  "GOODWILL_PLUS",
@@ -186,10 +187,12 @@ var (
 		8:  "FORBID_PARANOIA",
 		9:  "FORBID_GOODWILL",
 		10: "FORBID_INTRIGUE",
+		11: "MOVE_VERTICALLY",
+		12: "MOVE_DIAGONALLY",
 	}
 	CardType_value = map[string]int32{
 		"CARD_TYPE_UNSPECIFIED": 0,
-		"MOVEMENT":              1,
+		"MOVE_HORIZONTALLY":     1,
 		"PARANOIA_PLUS":         2,
 		"PARANOIA_MINUS":        3,
 		"GOODWILL_PLUS":         4,
@@ -199,6 +202,8 @@ var (
 		"FORBID_PARANOIA":       8,
 		"FORBID_GOODWILL":       9,
 		"FORBID_INTRIGUE":       10,
+		"MOVE_VERTICALLY":       11,
+		"MOVE_DIAGONALLY":       12,
 	}
 )
 
@@ -596,18 +601,18 @@ func (LocationType) EnumDescriptor() ([]byte, []int) {
 type TriggerType int32
 
 const (
-	TriggerType_TRIGGER_TYPE_UNSPECIFIED TriggerType = 0 // 未指定
-	TriggerType_ON_GAME_SETUP            TriggerType = 1 // 游戏设置时
-	TriggerType_ON_LOOP_START            TriggerType = 2 // 循环开始时
-	TriggerType_ON_DAY_START             TriggerType = 3 // 每天开始时
-	TriggerType_ON_PHASE_START           TriggerType = 4 // 特定阶段开始时（需配合GamePhase）
-	TriggerType_ON_PHASE_END             TriggerType = 5 // 特定阶段结束时（需配合GamePhase）
-	TriggerType_ON_GAME_EVENT            TriggerType = 6 // 发生特定游戏事件时
-	TriggerType_PASSIVE                  TriggerType = 7 // 被动（条件满足时持续生效）
-	TriggerType_ON_GUESS_MADE            TriggerType = 8 // 推理发生时
-	TriggerType_ON_GAME_END              TriggerType = 9 // 游戏结束时
-	TriggerType_ON_DAY_END               TriggerType = 10
-	TriggerType_ON_LOOP_END              TriggerType = 11
+	TriggerType_TRIGGER_TYPE_UNSPECIFIED TriggerType = 0  // 未指定
+	TriggerType_ON_GAME_SETUP            TriggerType = 1  // 游戏设置时
+	TriggerType_ON_LOOP_START            TriggerType = 2  // 循环开始时
+	TriggerType_ON_DAY_START             TriggerType = 3  // 每天开始时
+	TriggerType_ON_PHASE_START           TriggerType = 4  // 特定阶段开始时（需配合GamePhase）
+	TriggerType_ON_PHASE_END             TriggerType = 5  // 特定阶段结束时（需配合GamePhase）
+	TriggerType_ON_GAME_EVENT            TriggerType = 6  // 发生特定游戏事件时
+	TriggerType_PASSIVE                  TriggerType = 7  // 被动（条件满足时持续生效）
+	TriggerType_ON_GUESS_MADE            TriggerType = 8  // 推理发生时
+	TriggerType_ON_GAME_END              TriggerType = 9  // 游戏结束时
+	TriggerType_ON_DAY_END               TriggerType = 10 // 每日结束时
+	TriggerType_ON_LOOP_END              TriggerType = 11 // 循环结束时
 )
 
 // Enum value maps for TriggerType.
@@ -688,16 +693,16 @@ const (
 	GameEventType_FIRST_GUESS_MADE            GameEventType = 12 // 首次猜测事件
 	GameEventType_FINAL_GUESS_MADE            GameEventType = 13 // 最终猜测事件
 	GameEventType_GOODWILL_REFUSAL_TEST       GameEventType = 14 // 好感度拒绝测试事件
-	GameEventType_LOOP_OVER                   GameEventType = 15 // 好感度拒绝测试事件
+	GameEventType_LOOP_OVER                   GameEventType = 15 // 循环结束事件
 	GameEventType_DAY_ADVANCED                GameEventType = 16 // 天数推进事件
 	GameEventType_TRAGEDY_TRIGGERED           GameEventType = 17 // 悲剧触发事件
 	GameEventType_LOOP_RESET                  GameEventType = 18 // 循环重置事件
-	GameEventType_TRAIT_ADDED                 GameEventType = 19
-	GameEventType_TRAIT_REMOVED               GameEventType = 20
-	GameEventType_CARD_PLAYED                 GameEventType = 21
-	GameEventType_CARD_REVEALED               GameEventType = 22
-	GameEventType_GAME_ENDED                  GameEventType = 23
-	GameEventType_PLAYER_ACTION               GameEventType = 24
+	GameEventType_TRAIT_ADDED                 GameEventType = 19 // 特性添加事件
+	GameEventType_TRAIT_REMOVED               GameEventType = 20 // 特性移除事件
+	GameEventType_CARD_PLAYED                 GameEventType = 21 // 卡牌打出事件
+	GameEventType_CARD_REVEALED               GameEventType = 22 // 卡牌揭示事件
+	GameEventType_GAME_ENDED                  GameEventType = 23 // 游戏结束事件
+	GameEventType_PLAYER_ACTION               GameEventType = 24 // 玩家行动事件
 )
 
 // Enum value maps for GameEventType.
@@ -874,10 +879,10 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\x12\f\n" +
 	"\bLOOP_END\x10\v\x12\x15\n" +
 	"\x11PROTAGONIST_GUESS\x10\f\x12\r\n" +
-	"\tGAME_OVER\x10\r*\xe8\x01\n" +
+	"\tGAME_OVER\x10\r*\x9b\x02\n" +
 	"\bCardType\x12\x19\n" +
-	"\x15CARD_TYPE_UNSPECIFIED\x10\x00\x12\f\n" +
-	"\bMOVEMENT\x10\x01\x12\x11\n" +
+	"\x15CARD_TYPE_UNSPECIFIED\x10\x00\x12\x15\n" +
+	"\x11MOVE_HORIZONTALLY\x10\x01\x12\x11\n" +
 	"\rPARANOIA_PLUS\x10\x02\x12\x12\n" +
 	"\x0ePARANOIA_MINUS\x10\x03\x12\x11\n" +
 	"\rGOODWILL_PLUS\x10\x04\x12\x12\n" +
@@ -887,7 +892,9 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\x0fFORBID_PARANOIA\x10\b\x12\x13\n" +
 	"\x0fFORBID_GOODWILL\x10\t\x12\x13\n" +
 	"\x0fFORBID_INTRIGUE\x10\n" +
-	"*\xd6\x01\n" +
+	"\x12\x13\n" +
+	"\x0fMOVE_VERTICALLY\x10\v\x12\x13\n" +
+	"\x0fMOVE_DIAGONALLY\x10\f*\xd6\x01\n" +
 	"\bRoleType\x12\x19\n" +
 	"\x15ROLE_TYPE_UNSPECIFIED\x10\x00\x12\n" +
 	"\n" +
