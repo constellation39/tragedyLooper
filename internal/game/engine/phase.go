@@ -30,6 +30,8 @@ type Phase interface {
 var phaseImplementations = map[model.GamePhase]Phase{
 	model.GamePhase_SETUP:             &SetupPhase{},
 	model.GamePhase_MASTERMIND_SETUP:  &MastermindSetupPhase{},
+	model.GamePhase_LOOP_START:        &LoopStartPhase{},
+	model.GamePhase_DAY_START:         &DayStartPhase{},
 	model.GamePhase_CARD_PLAY:         &CardPlayPhase{},
 	model.GamePhase_CARD_REVEAL:       &CardRevealPhase{},
 	model.GamePhase_CARD_RESOLVE:      &CardResolvePhase{},
@@ -47,18 +49,15 @@ type SetupPhase struct{}
 
 func (p *SetupPhase) Enter(ge *GameEngine) {
 	ge.logger.Info("Entering Setup Phase")
-	ge.resetPlayerReadiness()
-	ge.GameState.PlayedCardsThisDay = make(map[int32]*model.Card) // Clear cards for the new day
-	ge.checkAndTriggerAbilities(model.TriggerType_ON_DAY_START)
-	ge.applyAndPublishEvent(model.GameEventType_DAY_ADVANCED, &model.DayAdvancedEvent{Day: ge.GameState.CurrentDay, Loop: ge.GameState.CurrentLoop})
+	// One-time setup for the game can go here.
 }
 
 func (p *SetupPhase) HandleEvent(ge *GameEngine, event *model.GameEvent) Phase {
-	return phaseImplementations[model.GamePhase_CARD_PLAY]
+	return phaseImplementations[model.GamePhase_MASTERMIND_SETUP]
 }
 
 func (p *SetupPhase) HandleTimeout(ge *GameEngine) Phase {
-	return nil // No timeout for this phase
+	return phaseImplementations[model.GamePhase_MASTERMIND_SETUP]
 }
 
 func (p *SetupPhase) Exit(ge *GameEngine) {
@@ -88,14 +87,14 @@ func (p *MastermindSetupPhase) Enter(ge *GameEngine) {
 
 func (p *MastermindSetupPhase) HandleEvent(ge *GameEngine, event *model.GameEvent) Phase {
 	if event.Type == model.GameEventType_PLAYER_ACTION && ge.isMastermindReady() {
-		return phaseImplementations[model.GamePhase_SETUP]
+		return phaseImplementations[model.GamePhase_DAY_START]
 	}
 	return nil // Remain in this phase
 }
 
 func (p *MastermindSetupPhase) HandleTimeout(ge *GameEngine) Phase {
 	ge.logger.Warn("Mastermind setup phase timed out. Proceeding automatically.")
-	return phaseImplementations[model.GamePhase_SETUP]
+	return phaseImplementations[model.GamePhase_DAY_START]
 }
 
 func (p *MastermindSetupPhase) Exit(ge *GameEngine) {
@@ -108,6 +107,71 @@ func (p *MastermindSetupPhase) Type() model.GamePhase {
 
 func (p *MastermindSetupPhase) TimeoutDuration() time.Duration {
 	return defaultPhaseTimeout
+}
+
+// --- Loop Start Phase ---
+
+type LoopStartPhase struct{}
+
+func (p *LoopStartPhase) Enter(ge *GameEngine) {
+	ge.logger.Info("Entering Loop Start Phase", zap.Int("loop", int(ge.GameState.CurrentLoop)+1))
+	ge.resetLoop()
+	ge.GameState.CurrentLoop++
+	ge.GameState.CurrentDay = 1
+	ge.applyAndPublishEvent(model.GameEventType_LOOP_RESET, &model.LoopResetEvent{Loop: ge.GameState.CurrentLoop})
+	ge.checkAndTriggerAbilities(model.TriggerType_ON_LOOP_START)
+}
+
+func (p *LoopStartPhase) HandleEvent(ge *GameEngine, event *model.GameEvent) Phase {
+	return phaseImplementations[model.GamePhase_MASTERMIND_SETUP]
+}
+
+func (p *LoopStartPhase) HandleTimeout(ge *GameEngine) Phase {
+	return phaseImplementations[model.GamePhase_MASTERMIND_SETUP]
+}
+
+func (p *LoopStartPhase) Exit(ge *GameEngine) {
+	ge.logger.Info("Exiting Loop Start Phase")
+}
+
+func (p *LoopStartPhase) Type() model.GamePhase {
+	return model.GamePhase_LOOP_START
+}
+
+func (p *LoopStartPhase) TimeoutDuration() time.Duration {
+	return 0 // No timeout
+}
+
+// --- Day Start Phase ---
+
+type DayStartPhase struct{}
+
+func (p *DayStartPhase) Enter(ge *GameEngine) {
+	ge.logger.Info("Entering Day Start Phase")
+	ge.resetPlayerReadiness()
+	ge.GameState.PlayedCardsThisDay = make(map[int32]*model.Card) // Clear cards for the new day
+	ge.checkAndTriggerAbilities(model.TriggerType_ON_DAY_START)
+	ge.applyAndPublishEvent(model.GameEventType_DAY_ADVANCED, &model.DayAdvancedEvent{Day: ge.GameState.CurrentDay, Loop: ge.GameState.CurrentLoop})
+}
+
+func (p *DayStartPhase) HandleEvent(ge *GameEngine, event *model.GameEvent) Phase {
+	return phaseImplementations[model.GamePhase_CARD_PLAY]
+}
+
+func (p *DayStartPhase) HandleTimeout(ge *GameEngine) Phase {
+	return phaseImplementations[model.GamePhase_CARD_PLAY]
+}
+
+func (p *DayStartPhase) Exit(ge *GameEngine) {
+	ge.logger.Info("Exiting Day Start Phase")
+}
+
+func (p *DayStartPhase) Type() model.GamePhase {
+	return model.GamePhase_DAY_START
+}
+
+func (p *DayStartPhase) TimeoutDuration() time.Duration {
+	return 0 // No timeout
 }
 
 // --- Card Play Phase ---
@@ -348,7 +412,7 @@ func (p *DayEndPhase) HandleEvent(ge *GameEngine, event *model.GameEvent) Phase 
 	if ge.GameState.CurrentDay > script.DaysPerLoop {
 		return phaseImplementations[model.GamePhase_LOOP_END]
 	}
-	return phaseImplementations[model.GamePhase_SETUP]
+	return phaseImplementations[model.GamePhase_DAY_START]
 }
 
 func (p *DayEndPhase) HandleTimeout(ge *GameEngine) Phase {
@@ -396,12 +460,7 @@ func (p *LoopEndPhase) HandleEvent(ge *GameEngine, event *model.GameEvent) Phase
 	}
 
 	ge.applyAndPublishEvent(model.GameEventType_LOOP_LOSS, &model.LoopLossEvent{})
-	ge.resetLoop()
-	ge.GameState.CurrentLoop++
-	ge.GameState.CurrentDay = 1
-	ge.applyAndPublishEvent(model.GameEventType_LOOP_RESET, &model.LoopResetEvent{Loop: ge.GameState.CurrentLoop})
-	ge.checkAndTriggerAbilities(model.TriggerType_ON_LOOP_START)
-	return phaseImplementations[model.GamePhase_MASTERMIND_SETUP]
+	return phaseImplementations[model.GamePhase_LOOP_START]
 }
 
 func (p *LoopEndPhase) HandleTimeout(ge *GameEngine) Phase {
