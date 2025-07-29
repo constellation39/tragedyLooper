@@ -1,4 +1,4 @@
-package handlers
+package eventhandler
 
 import (
 	model "tragedylooper/pkg/proto/v1"

@@ -16,9 +16,9 @@ import (
 
 // eventHandlers maps event types to their respective handler instances.
 var eventHandlers = map[model.GameEventType]eventhandler.EventHandler{
-	model.GameEventType_CHARACTER_MOVED:    &handlers.CharacterMovedHandler{},
-	model.GameEventType_PARANOIA_ADJUSTED:  &handlers.ParanoiaAdjustedHandler{},
-	model.GameEventType_GOODWILL_ADJUSTED:  &handlers.GoodwillAdjustedHandler{},
+	model.GameEventType_CHARACTER_MOVED:    &eventhandler.CharacterMovedHandler{},
+	model.GameEventType_PARANOIA_ADJUSTED:  &eventhandler.ParanoiaAdjustedHandler{},
+	model.GameEventType_GOODWILL_ADJUSTED:  &eventhandler.GoodwillAdjustedHandler{},
 	model.GameEventType_INTRIGUE_ADJUSTED:  &eventhandler.IntrigueAdjustedHandler{},
 	model.GameEventType_TRAIT_ADDED:        &eventhandler.TraitAddedHandler{},
 	model.GameEventType_TRAIT_REMOVED:      &eventhandler.TraitRemovedHandler{},
@@ -210,7 +210,7 @@ func (ge *GameEngine) transitionTo(nextPhase phase.Phase) {
 
 	ge.currentPhase = nextPhase
 	ge.GameState.CurrentPhase = nextPhase.Type()
-	
+
 	// Call Enter on the new phase, which may return another phase to transition to immediately.
 	followingPhase := ge.currentPhase.Enter(ge)
 
@@ -296,16 +296,16 @@ func (ge *GameEngine) publishGameEvent(event *model.GameEvent) {
 }
 
 func (ge *GameEngine) AreAllPlayersReady() bool {
-	//TODO: implement me
+	// TODO: implement me
 	return false
 }
 
 func (ge *GameEngine) ResolveMovement() {
-	//TODO: implement me
+	// TODO: implement me
 }
 
 func (ge *GameEngine) ResolveOtherCards() {
-	//TODO: implement me
+	// TODO: implement me
 }
 
 // --- AI Integration ---
