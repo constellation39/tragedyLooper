@@ -2,9 +2,7 @@ package engine
 
 import (
 	"context"
-	"time"
 	"tragedylooper/internal/game/engine/eventhandler"
-	"tragedylooper/internal/game/engine/phase"
 	"tragedylooper/internal/game/loader"
 	model "tragedylooper/pkg/proto/v1"
 
@@ -32,17 +30,17 @@ type GameEngine struct {
 	logger    *zap.Logger
 
 	actionGenerator ActionGenerator
+	gameConfig      loader.GameConfig
+	pm              *phaseManager
 
-	gameConfig loader.GameConfig
-
+	// engineChan is the central channel for all incoming requests (player actions, AI actions, etc.).
+	// It ensures that all modifications to the game state are processed sequentially in the main game loop,
+	// preventing race conditions.
 	engineChan chan engineRequest
 	stopChan   chan struct{}
 
+	// dispatchGameEvent is an outbound channel that broadcasts processed game events to external listeners.
 	dispatchGameEvent chan *model.GameEvent
-
-	currentPhase phase.Phase
-	phaseTimer   *time.Timer
-	gameStarted  bool
 
 	playerReady map[int32]bool
 
@@ -59,12 +57,11 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator 
 		engineChan:           make(chan engineRequest, 100),
 		stopChan:             make(chan struct{}),
 		dispatchGameEvent:    make(chan *model.GameEvent, 100),
-		currentPhase:         &phase.SetupPhase{}, // Start with the new SetupPhase
-		phaseTimer:           time.NewTimer(time.Hour),
 		playerReady:          make(map[int32]bool),
 		mastermindPlayerID:   0,
 		protagonistPlayerIDs: nil,
 	}
+	ge.pm = newPhaseManager(ge)
 
 	playerMap := make(map[int32]*model.Player)
 	for _, player := range players {
@@ -88,8 +85,6 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator 
 
 func (ge *GameEngine) StartGameLoop() {
 	go ge.runGameLoop()
-	// Initial transition
-	ge.transitionTo(ge.currentPhase)
 }
 
 func (ge *GameEngine) StopGameLoop() {
@@ -119,94 +114,102 @@ func (ge *GameEngine) GetPlayerView(playerID int32) *model.PlayerView {
 		responseChan: responseChan,
 	}
 
+	// This blocks until the main game loop processes the request and sends a response.
 	ge.engineChan <- req
 	view := <-responseChan
 	return view
 }
 
+// runGameLoop is the heart of the game engine. It's a single-threaded loop that processes all game events
+// and state changes sequentially, ensuring thread safety without complex locking.
 func (ge *GameEngine) runGameLoop() {
 	ge.logger.Info("Game loop started.")
 	defer ge.logger.Info("Game loop stopped.")
 
-	// Initial timer setup
-	ge.phaseTimer = time.NewTimer(time.Hour) // Start with a long duration, will be reset
-	ge.phaseTimer.Stop()
-
-	// Initial phase enter
-	nextPhase := ge.currentPhase.Enter(ge)
-	ge.transitionTo(nextPhase)
+	// The phase manager is started, which initiates the first phase transition.
+	ge.pm.start()
+	defer ge.pm.stop()
 
 	for {
 		select {
 		case <-ge.stopChan:
 			return
-
 		case req := <-ge.engineChan:
-			switch in := req.(type) {
-			case *aiActionCompleteRequest:
-				nextPhase := ge.currentPhase.HandleAction(ge, in.playerID, in.action)
-				ge.transitionTo(nextPhase)
-			case *getPlayerViewRequest:
-				in.responseChan <- ge.GeneratePlayerView(in.playerID)
-			}
-
-		case <-ge.phaseTimer.C:
-			nextPhase := ge.currentPhase.HandleTimeout(ge)
-			ge.transitionTo(nextPhase)
+			ge.handleEngineRequest(req)
+		case <-ge.pm.timer():
+			ge.handleTimeout()
 		}
 	}
 }
 
-func (ge *GameEngine) processEvent(event *model.GameEvent) {
-	// 1. Apply the state change using the appropriate handler
-	if err := eventhandler.ProcessEvent(ge.GameState, event); err != nil {
-		ge.logger.Error("Failed to handle event", zap.Error(err), zap.String("type", event.Type.String()))
+// handleEngineRequest processes incoming requests from the engine's channel.
+func (ge *GameEngine) handleEngineRequest(req engineRequest) {
+	switch r := req.(type) {
+	case *aiActionCompleteRequest:
+		// An AI or player has submitted an action.
+		ge.pm.handleAction(r.playerID, r.action)
+	case *getPlayerViewRequest:
+		// A request for a player-specific view of the game state.
+		r.responseChan <- ge.GeneratePlayerView(r.playerID)
+	default:
+		ge.logger.Warn("Unhandled request type in engine channel")
 	}
-
-	// 2. Let the current phase react to the event
-	nextPhase := ge.currentPhase.HandleEvent(ge, event)
-	ge.transitionTo(nextPhase)
-
-	// 3. Check for any new triggers that might have been activated
-	// ge.checkForTriggers(event) // TODO: Re-implement trigger logic
 }
 
-func (ge *GameEngine) transitionTo(nextPhase phase.Phase) {
-	if nextPhase == nil {
-		// No transition, stay in the current phase
+// handleTimeout is called when the current phase's timer expires.
+func (ge *GameEngine) handleTimeout() {
+	ge.pm.handleTimeout()
+}
+
+// CreateAndProcessEvent is the central method for creating, applying, and broadcasting game events.
+// It ensures a consistent order of operations:
+// 1. The event is created from a payload.
+// 2. The game state is mutated synchronously by the event handler.
+// 3. The current phase is allowed to react to the event, potentially triggering a phase transition.
+// 4. The event is broadcast to external listeners and recorded in the game's history.
+func (ge *GameEngine) CreateAndProcessEvent(eventType model.GameEventType, payload proto.Message) {
+	anyPayload, err := anypb.New(payload)
+	if err != nil {
+		ge.logger.Error("Failed to create anypb.Any for event payload", zap.Error(err))
 		return
 	}
-
-	ge.phaseTimer.Stop()
-
-	if ge.gameStarted {
-		ge.logger.Info("Transitioning phase", zap.String("from", ge.currentPhase.Type().String()), zap.String("to", nextPhase.Type().String()))
-		ge.currentPhase.Exit(ge)
-	} else {
-		ge.logger.Info("Entering initial phase", zap.String("to", nextPhase.Type().String()))
-		ge.gameStarted = true
+	event := &model.GameEvent{
+		Type:      eventType,
+		Payload:   anyPayload,
+		Timestamp: timestamppb.Now(),
 	}
 
-	ge.currentPhase = nextPhase
-	ge.GameState.CurrentPhase = nextPhase.Type()
-
-	// Call Enter on the new phase, which may return another phase to transition to immediately.
-	followingPhase := ge.currentPhase.Enter(ge)
-
-	duration := ge.currentPhase.TimeoutDuration()
-	if duration > 0 {
-		ge.phaseTimer.Reset(duration)
+	// Step 1: Apply the state change synchronously.
+	// This is critical to ensure the game state is consistent before any other logic runs.
+	if err := eventhandler.ProcessEvent(ge.GameState, event); err != nil {
+		ge.logger.Error("Failed to apply event to game state", zap.Error(err), zap.String("type", event.Type.String()))
+		// We continue even if the handler fails, to allow the phase and listeners to react.
 	}
 
-	if followingPhase != nil {
-		ge.transitionTo(followingPhase)
+	// Step 2: Let the current phase react to the event.
+	// This is now handled by the phase manager.
+	ge.pm.handleEvent(event)
+
+	// Step 3: Publish the event to external listeners and record it.
+	// This happens after the state has been updated.
+	select {
+	case ge.dispatchGameEvent <- event:
+		// Also record the event in the game state for player views
+		ge.GameState.DayEvents = append(ge.GameState.DayEvents, event)
+		ge.GameState.LoopEvents = append(ge.GameState.LoopEvents, event)
+	default:
+		ge.logger.Warn("Game event channel full, dropping event", zap.String("eventType", event.Type.String()))
 	}
+
+	// TODO: Re-implement trigger logic here, after state has fully updated.
+	// ge.checkForTriggers(event)
 }
 
 func (ge *GameEngine) endGame(winner model.PlayerRole) {
-	ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: winner})
 	ge.logger.Info("Game over", zap.String("winner", winner.String()))
-	ge.transitionTo(&phase.GameOverPhase{})
+	// This event will be processed, leading to a state update and a phase transition
+	// handled by the current phase's HandleEvent method.
+	ge.CreateAndProcessEvent(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: winner})
 }
 
 func (ge *GameEngine) ResetPlayerReadiness() {
@@ -246,36 +249,6 @@ func (ge *GameEngine) GetGameState() *model.GameState {
 
 func (ge *GameEngine) GetGameConfig() loader.GameConfig {
 	return ge.gameConfig
-}
-
-func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, payload proto.Message) {
-	anyPayload, err := anypb.New(payload)
-	if err != nil {
-		ge.logger.Error("Failed to create anypb.Any for event payload", zap.Error(err))
-		return
-	}
-	event := &model.GameEvent{
-		Type:      eventType,
-		Payload:   anyPayload,
-		Timestamp: timestamppb.Now(),
-	}
-
-	// First, process the event to apply state changes synchronously
-	ge.processEvent(event)
-
-	// Then, publish the event for external listeners
-	ge.publishGameEvent(event)
-}
-
-func (ge *GameEngine) publishGameEvent(event *model.GameEvent) {
-	select {
-	case ge.dispatchGameEvent <- event:
-		// Also record the event in the game state for player views
-		ge.GameState.DayEvents = append(ge.GameState.DayEvents, event)
-		ge.GameState.LoopEvents = append(ge.GameState.LoopEvents, event)
-	default:
-		ge.logger.Warn("Game event channel full, dropping event", zap.String("eventType", event.Type.String()))
-	}
 }
 
 func (ge *GameEngine) AreAllPlayersReady() bool {
@@ -328,14 +301,4 @@ func (ge *GameEngine) TriggerAIPlayerAction(playerID int32) {
 			action:   action,
 		}
 	}()
-}
-
-func (ge *GameEngine) ResolveMovement() {
-	// TODO implement me
-	panic("implement me")
-}
-
-func (ge *GameEngine) ResolveOtherCards() {
-	// TODO implement me
-	panic("implement me")
 }

@@ -15,8 +15,6 @@ type GameEngine interface {
 	AreAllPlayersReady() bool
 	Logger() *zap.Logger
 	ResetPlayerReadiness()
-	ResolveMovement()
-	ResolveOtherCards()
 	SetPlayerReady(playerID int32)
 	StopGameLoop()
 	TriggerIncidents()
@@ -40,11 +38,13 @@ type Phase interface {
 // basePhase is a helper struct that provides default implementations for the Phase interface.
 type basePhase struct{}
 
-func (p *basePhase) Enter(ge GameEngine) Phase                                     { return nil }
-func (p *basePhase) HandleAction(ge GameEngine, playerID int32, action *model.PlayerActionPayload) Phase { return nil }
-func (p *basePhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase       { return nil }
-func (p *basePhase) HandleTimeout(ge GameEngine) Phase                             { return nil }
-func (p *basePhase) ResolveMovement(ge GameEngine) Phase                           { return nil }
-func (p *basePhase) ResolveOtherCards(ge GameEngine) Phase                         { return nil }
-func (p *basePhase) Exit(ge GameEngine)                                            {}
-func (p *basePhase) TimeoutDuration() time.Duration                                { return 0 }
+func (p *basePhase) Enter(ge GameEngine) Phase { return nil }
+func (p *basePhase) HandleAction(ge GameEngine, playerID int32, action *model.PlayerActionPayload) Phase {
+	return nil
+}
+func (p *basePhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+func (p *basePhase) HandleTimeout(ge GameEngine) Phase                       { return nil }
+func (p *basePhase) ResolveMovement(ge GameEngine) Phase                     { return nil }
+func (p *basePhase) ResolveOtherCards(ge GameEngine) Phase                   { return nil }
+func (p *basePhase) Exit(ge GameEngine)                                      {}
+func (p *basePhase) TimeoutDuration() time.Duration                          { return 0 }
