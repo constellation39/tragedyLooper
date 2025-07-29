@@ -2,7 +2,7 @@ package engine
 
 import (
 	"time"
-	"tragedylooper/internal/game/engine/handlers"
+	"tragedylooper/internal/game/engine/event_handlers"
 	"tragedylooper/internal/game/engine/phases"
 	"tragedylooper/internal/game/loader"
 	model "tragedylooper/internal/game/proto/v1"
