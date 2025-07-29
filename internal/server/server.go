@@ -163,7 +163,8 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		LlmSessionId:       "",
 	})
 
-	gameEngine, err := engine.NewGameEngine(ctxLogger.With(zap.String("gameID", gameID)), players, s.llmClient, gameDataAccessor)
+		llmActionGenerator := llm.NewLLMActionGenerator(s.llmClient, ctxLogger)
+	gameEngine, err := engine.NewGameEngine(ctxLogger.With(zap.String("gameID", gameID)), players, llmActionGenerator, gameDataAccessor)
 	if err != nil {
 		ctxLogger.Error("Failed to create game engine", zap.Error(err))
 		return

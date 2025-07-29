@@ -1,12 +1,12 @@
 package engine
 
 import (
+	"context"
 	"time"
 	"tragedylooper/internal/game/engine/event_handlers"
 	"tragedylooper/internal/game/engine/phases"
 	"tragedylooper/internal/game/loader"
 	model "tragedylooper/pkg/proto/v1"
-	"tragedylooper/internal/llm"
 
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
@@ -32,7 +32,6 @@ var eventHandlers = map[model.GameEventType]handlers.EventHandler{
 	model.GameEventType_LOOP_LOSS:          &handlers.LoopLossHandler{},
 }
 
-
 // GameEngine manages the state and logic of a single game instance.
 type engineRequest interface{}
 
@@ -42,7 +41,7 @@ type getPlayerViewRequest struct {
 	responseChan chan *model.PlayerView
 }
 
-type llmActionCompleteRequest struct {
+type aiActionCompleteRequest struct {
 	playerID int32
 	action   *model.PlayerActionPayload
 }
@@ -50,7 +49,7 @@ type GameEngine struct {
 	GameState *model.GameState
 	logger    *zap.Logger
 
-	llmClient llm.Client
+	actionGenerator ActionGenerator
 
 	gameConfig loader.GameConfig
 
@@ -70,10 +69,10 @@ type GameEngine struct {
 }
 
 // NewGameEngine creates a new game engine instance.
-func NewGameEngine(logger *zap.Logger, players []*model.Player, llmClient llm.Client, gameConfig loader.GameConfig) (*GameEngine, error) {
+func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator ActionGenerator, gameConfig loader.GameConfig) (*GameEngine, error) {
 	ge := &GameEngine{
 		logger:               logger,
-		llmClient:            llmClient,
+		actionGenerator:      actionGenerator,
 		gameConfig:           gameConfig,
 		engineChan:           make(chan engineRequest, 100),
 		stopChan:             make(chan struct{}),
@@ -121,7 +120,7 @@ func (ge *GameEngine) SubmitPlayerAction(playerID int32, action *model.PlayerAct
 		return
 	}
 	select {
-	case ge.engineChan <- &llmActionCompleteRequest{playerID: playerID, action: action}:
+	case ge.engineChan <- &aiActionCompleteRequest{playerID: playerID, action: action}:
 	default:
 		ge.logger.Warn("Request channel full, dropping action", zap.Int32("playerID", playerID))
 	}
@@ -162,7 +161,7 @@ func (ge *GameEngine) runGameLoop() {
 
 		case req := <-ge.engineChan:
 			switch in := req.(type) {
-			case *llmActionCompleteRequest:
+			case *aiActionCompleteRequest:
 				ge.handlePlayerAction(in.playerID, in.action)
 			case *getPlayerViewRequest:
 				in.responseChan <- ge.GeneratePlayerView(in.playerID)
@@ -308,4 +307,43 @@ func (ge *GameEngine) ResolveMovement() {
 
 func (ge *GameEngine) ResolveOtherCards() {
 	//TODO: implement me
+}
+
+// --- AI Integration ---
+
+// TriggerAIPlayerAction prompts an AI player to make a decision.
+func (ge *GameEngine) TriggerAIPlayerAction(playerID int32) {
+	player := ge.getPlayerByID(playerID)
+	if player == nil || !player.IsLlm { // TODO: Make this check more generic (e.g., IsAI)
+		return
+	}
+
+	ge.logger.Info("Triggering AI for player", zap.String("player", player.Name))
+
+	// Create the context for the action generator
+	ctx := &ActionGeneratorContext{
+		Player:        player,
+		PlayerView:    ge.GetPlayerView(playerID),
+		Script:        ge.gameConfig.GetScript(),
+		AllCharacters: ge.GameState.Characters,
+	}
+
+	go func() {
+		action, err := ge.actionGenerator.GenerateAction(context.Background(), ctx)
+		if err != nil {
+			ge.logger.Error("AI action generation failed", zap.String("player", player.Name), zap.Error(err))
+			// Submit a default action to unblock the game
+			ge.engineChan <- &aiActionCompleteRequest{
+				playerID: playerID,
+				action:   &model.PlayerActionPayload{},
+			}
+			return
+		}
+
+		// Send the validated action back to the main loop for processing.
+		ge.engineChan <- &aiActionCompleteRequest{
+			playerID: playerID,
+			action:   action,
+		}
+	}()
 }
