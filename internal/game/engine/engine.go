@@ -2,6 +2,7 @@ package engine // 定义游戏引擎包
 
 import (
 	"context"                            // 导入 context 包，用于管理请求的生命周期
+	"tragedylooper/internal/game/engine/effecthandler"
 	"tragedylooper/internal/game/loader" // 导入游戏数据加载器
 	model "tragedylooper/pkg/proto/v1"   // 导入协议缓冲区模型
 
@@ -318,7 +319,7 @@ func (ge *GameEngine) SetPlayerReady(playerID int32) {
 // payload: 相关的操作负载（如果适用）。
 // ability: 相关的能力（如果适用）。
 // 返回值: 角色ID列表和可能发生的错误。
-func (ge *GameEngine) ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, player *model.Player, payload *model.UseAbilityPayload, ability *model.Ability) ([]int32, error) {
+func (ge *GameEngine) ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, ctx *effecthandler.EffectContext) ([]int32, error) {
 	return []int32{}, nil
 }
 

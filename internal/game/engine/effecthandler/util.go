@@ -7,10 +7,10 @@ import (
 
 // CreateChoicesFromSelector is a helper function to generate player choices if a target selector
 // resolves to more than one character.
-func CreateChoicesFromSelector(ge GameEngine, selector *model.TargetSelector, payload *model.UseAbilityPayload, description string) ([]*model.Choice, error) {
+func CreateChoicesFromSelector(ge GameEngine, selector *model.TargetSelector, ctx *EffectContext, description string) ([]*model.Choice, error) {
 	state := ge.GetGameState()
 	// We pass nils here because we are just trying to find out *if* a choice is needed.
-	charIDs, err := ge.ResolveSelectorToCharacters(state, selector, nil, payload, nil)
+	charIDs, err := ge.ResolveSelectorToCharacters(state, selector, ctx)
 	if err != nil {
 		return nil, err
 	}

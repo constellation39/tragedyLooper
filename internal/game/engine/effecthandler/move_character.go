@@ -14,16 +14,16 @@ func init() {
 // MoveCharacter 效果用于移动指定角色到特定位置。
 type MoveCharacterHandler struct{}
 
-func (h *MoveCharacterHandler) ResolveChoices(ge GameEngine, effect *model.Effect, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
+func (h *MoveCharacterHandler) ResolveChoices(ge GameEngine, effect *model.Effect, ctx *EffectContext) ([]*model.Choice, error) {
 	moveCharEffect := effect.GetMoveCharacter()
 	if moveCharEffect == nil {
 		return nil, fmt.Errorf("effect is not of type MoveCharacter")
 	}
 	// 根据效果的目标选择器创建选项，让玩家选择要移动的角色。
-	return CreateChoicesFromSelector(ge, moveCharEffect.Target, payload, "Select character to move")
+	return CreateChoicesFromSelector(ge, moveCharEffect.Target, ctx, "Select character to move")
 }
 
-func (h *MoveCharacterHandler) Apply(ge GameEngine, effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
+func (h *MoveCharacterHandler) Apply(ge GameEngine, effect *model.Effect, ctx *EffectContext) error {
 	moveCharEffect := effect.GetMoveCharacter()
 	if moveCharEffect == nil {
 		return fmt.Errorf("effect is not of type MoveCharacter")
@@ -31,7 +31,7 @@ func (h *MoveCharacterHandler) Apply(ge GameEngine, effect *model.Effect, abilit
 
 	state := ge.GetGameState()
 	// 解析目标选择器，获取所有受影响的角色ID。
-	targetIDs, err := ge.ResolveSelectorToCharacters(state, moveCharEffect.Target, nil, payload, ability)
+	targetIDs, err := ge.ResolveSelectorToCharacters(state, moveCharEffect.Target, ctx)
 	if err != nil {
 		return err
 	}

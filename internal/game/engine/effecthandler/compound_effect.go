@@ -16,7 +16,7 @@ func init() {
 // A compound effect can contain multiple sub-effects and executes them based on an operator (e.g., sequence or choose one).
 type CompoundEffectHandler struct{}
 
-func (h *CompoundEffectHandler) ResolveChoices(ge GameEngine, effect *model.Effect, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
+func (h *CompoundEffectHandler) ResolveChoices(ge GameEngine, effect *model.Effect, ctx *EffectContext) ([]*model.Choice, error) {
 	compoundEffect := effect.GetCompoundEffect()
 	if compoundEffect == nil {
 		return nil, fmt.Errorf("effect is not of type CompoundEffect")
@@ -43,7 +43,7 @@ func (h *CompoundEffectHandler) ResolveChoices(ge GameEngine, effect *model.Effe
 			if err != nil {
 				return nil, err
 			}
-			choices, err := handler.ResolveChoices(ge, subEffect, payload)
+			choices, err := handler.ResolveChoices(ge, subEffect, ctx)
 			if err != nil {
 				return nil, err
 			}
@@ -55,7 +55,7 @@ func (h *CompoundEffectHandler) ResolveChoices(ge GameEngine, effect *model.Effe
 	return nil, nil
 }
 
-func (h *CompoundEffectHandler) Apply(ge GameEngine, effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
+func (h *CompoundEffectHandler) Apply(ge GameEngine, effect *model.Effect, ctx *EffectContext) error {
 	compoundEffect := effect.GetCompoundEffect()
 	if compoundEffect == nil {
 		return fmt.Errorf("effect is not of type CompoundEffect")
@@ -69,17 +69,17 @@ func (h *CompoundEffectHandler) Apply(ge GameEngine, effect *model.Effect, abili
 			if err != nil {
 				return err
 			}
-			err = handler.Apply(ge, subEffect, ability, payload, choice)
+			err = handler.Apply(ge, subEffect, ctx)
 			if err != nil {
 				return err
 			}
 		}
 	case model.CompoundEffect_CHOOSE_ONE:
 		// If it's a CHOOSE_ONE type, apply the corresponding sub-effect based on the player's choice.
-		if choice == nil {
+		if ctx == nil || ctx.Choice == nil {
 			return fmt.Errorf("a choice is required to apply a CHOOSE_ONE compound effect")
 		}
-		choiceID := choice.GetChosenOptionId()
+		choiceID := ctx.Choice.GetChosenOptionId()
 		if !strings.HasPrefix(choiceID, "effect_choice_") {
 			return fmt.Errorf("invalid choice id for compound effect: %s", choiceID)
 		}
@@ -98,7 +98,7 @@ func (h *CompoundEffectHandler) Apply(ge GameEngine, effect *model.Effect, abili
 		if err != nil {
 			return err
 		}
-		return handler.Apply(ge, chosenEffect, ability, payload, choice)
+		return handler.Apply(ge, chosenEffect, ctx)
 	}
 	return nil
 }

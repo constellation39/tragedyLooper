@@ -14,16 +14,16 @@ func init() {
 // The AddTrait effect is used to add a trait to a specified character.
 type AddTraitHandler struct{}
 
-func (h *AddTraitHandler) ResolveChoices(ge GameEngine, effect *model.Effect, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
+func (h *AddTraitHandler) ResolveChoices(ge GameEngine, effect *model.Effect, ctx *EffectContext) ([]*model.Choice, error) {
 	addTraitEffect := effect.GetAddTrait()
 	if addTraitEffect == nil {
 		return nil, fmt.Errorf("effect is not of type AddTrait")
 	}
 	// Create choices from the effect's target selector, allowing the player to choose which character to add the trait to.
-	return CreateChoicesFromSelector(ge, addTraitEffect.Target, payload, "Select character to add trait to")
+	return CreateChoicesFromSelector(ge, addTraitEffect.Target, ctx, "Select character to add trait to")
 }
 
-func (h *AddTraitHandler) Apply(ge GameEngine, effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
+func (h *AddTraitHandler) Apply(ge GameEngine, effect *model.Effect, ctx *EffectContext) error {
 	addTraitEffect := effect.GetAddTrait()
 	if addTraitEffect == nil {
 		return fmt.Errorf("effect is not of type AddTrait")
@@ -31,7 +31,7 @@ func (h *AddTraitHandler) Apply(ge GameEngine, effect *model.Effect, ability *mo
 
 	state := ge.GetGameState()
 	// Resolve the target selector to get all affected character IDs.
-	targetIDs, err := ge.ResolveSelectorToCharacters(state, addTraitEffect.Target, nil, payload, ability)
+	targetIDs, err := ge.ResolveSelectorToCharacters(state, addTraitEffect.Target, ctx)
 	if err != nil {
 		return err
 	}

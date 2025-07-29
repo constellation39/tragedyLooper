@@ -14,16 +14,16 @@ func init() {
 // RemoveTrait 效果用于从指定角色移除一个特性（Trait）。
 type RemoveTraitHandler struct{}
 
-func (h *RemoveTraitHandler) ResolveChoices(ge GameEngine, effect *model.Effect, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
+func (h *RemoveTraitHandler) ResolveChoices(ge GameEngine, effect *model.Effect, ctx *EffectContext) ([]*model.Choice, error) {
 	removeTraitEffect := effect.GetRemoveTrait()
 	if removeTraitEffect == nil {
 		return nil, fmt.Errorf("effect is not of type RemoveTrait")
 	}
 	// 根据效果的目标选择器创建选项，让玩家选择要移除特性的角色。
-	return CreateChoicesFromSelector(ge, removeTraitEffect.Target, payload, "Select character to remove trait from")
+	return CreateChoicesFromSelector(ge, removeTraitEffect.Target, ctx, "Select character to remove trait from")
 }
 
-func (h *RemoveTraitHandler) Apply(ge GameEngine, effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
+func (h *RemoveTraitHandler) Apply(ge GameEngine, effect *model.Effect, ctx *EffectContext) error {
 	removeTraitEffect := effect.GetRemoveTrait()
 	if removeTraitEffect == nil {
 		return fmt.Errorf("effect is not of type RemoveTrait")
@@ -31,7 +31,7 @@ func (h *RemoveTraitHandler) Apply(ge GameEngine, effect *model.Effect, ability 
 
 	state := ge.GetGameState()
 	// 解析目标选择器，获取所有受影响的角色ID。
-	targetIDs, err := ge.ResolveSelectorToCharacters(state, removeTraitEffect.Target, nil, payload, ability)
+	targetIDs, err := ge.ResolveSelectorToCharacters(state, removeTraitEffect.Target, ctx)
 	if err != nil {
 		return err
 	}

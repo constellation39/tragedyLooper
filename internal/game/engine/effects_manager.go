@@ -17,10 +17,16 @@ func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, 
 		return err
 	}
 
+	ctx := &effecthandler.EffectContext{
+		Ability: ability,
+		Payload: payload,
+		Choice:  choice,
+	}
+
 	// 1. 解决选择
 	// 如果需要选择，则发布一个事件并等待玩家输入。
 	// 效果的实际应用将在做出选择后发生。
-	choices, err := handler.ResolveChoices(ge, effect, payload)
+	choices, err := handler.ResolveChoices(ge, effect, ctx)
 	if err != nil {
 		return fmt.Errorf("error resolving choices: %w", err)
 	}
@@ -35,7 +41,7 @@ func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, 
 
 	// 2. 应用效果
 	// 如果不需要选择，或者已经提供了选择，则应用效果。
-	err = handler.Apply(ge, effect, ability, payload, choice)
+	err = handler.Apply(ge, effect, ctx)
 	if err != nil {
 		return fmt.Errorf("error applying effect: %w", err)
 	}

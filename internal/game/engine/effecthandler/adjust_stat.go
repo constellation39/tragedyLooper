@@ -14,16 +14,16 @@ func init() {
 // The AdjustStat effect is used to adjust a specified character's stat (e.g., paranoia, intrigue, goodwill).
 type AdjustStatHandler struct{}
 
-func (h *AdjustStatHandler) ResolveChoices(ge GameEngine, effect *model.Effect, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
+func (h *AdjustStatHandler) ResolveChoices(ge GameEngine, effect *model.Effect, ctx *EffectContext) ([]*model.Choice, error) {
 	adjustStatEffect := effect.GetAdjustStat()
 	if adjustStatEffect == nil {
 		return nil, fmt.Errorf("effect is not of type AdjustStat")
 	}
 	// Create choices from the effect's target selector, allowing the player to choose which character's stat to adjust.
-	return CreateChoicesFromSelector(ge, adjustStatEffect.Target, payload, "Select character to adjust stat")
+	return CreateChoicesFromSelector(ge, adjustStatEffect.Target, ctx, "Select character to adjust stat")
 }
 
-func (h *AdjustStatHandler) Apply(ge GameEngine, effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
+func (h *AdjustStatHandler) Apply(ge GameEngine, effect *model.Effect, ctx *EffectContext) error {
 	adjustStatEffect := effect.GetAdjustStat()
 	if adjustStatEffect == nil {
 		return fmt.Errorf("effect is not of type AdjustStat")
@@ -31,7 +31,7 @@ func (h *AdjustStatHandler) Apply(ge GameEngine, effect *model.Effect, ability *
 
 	state := ge.GetGameState()
 	// Resolve the target selector to get all affected character IDs.
-	targetIDs, err := ge.ResolveSelectorToCharacters(state, adjustStatEffect.Target, nil, payload, ability)
+	targetIDs, err := ge.ResolveSelectorToCharacters(state, adjustStatEffect.Target, ctx)
 	if err != nil {
 		return err
 	}
