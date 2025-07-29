@@ -8,39 +8,39 @@ import (
 	"go.uber.org/zap"
 )
 
-// phaseManager is responsible for managing the game's phase lifecycle, including transitions and timeouts.
-// It encapsulates the logic that was previously in the GameEngine, leading to a cleaner separation of concerns.
+// phaseManager 负责管理游戏的阶段生命周期，包括转换和超时。
+// 它封装了以前在 GameEngine 中的逻辑，从而实现了更清晰的关注点分离。
 type phaseManager struct {
-	engine       *GameEngine // A reference to the parent engine to access game state and other components.
+	engine       *GameEngine // 对父引擎的引用，以访问游戏状态和其他组件。
 	logger       *zap.Logger
 	currentPhase phase.Phase
 	phaseTimer   *time.Timer
 	gameStarted  bool
 }
 
-// newPhaseManager creates a new phase manager.
+// newPhaseManager 创建一个新的阶段管理器。
 func newPhaseManager(engine *GameEngine) *phaseManager {
 	pm := &phaseManager{
 		engine:       engine,
 		logger:       engine.logger.Named("PhaseManager"),
 		currentPhase: &phase.SetupPhase{},
-		phaseTimer:   time.NewTimer(time.Hour), // Initialized with a long duration.
+		phaseTimer:   time.NewTimer(time.Hour), // 用一个很长的时间初始化。
 	}
-	pm.phaseTimer.Stop() // Stop it immediately; it will be reset on the first transition.
+	pm.phaseTimer.Stop() // 立即停止它；它将在第一次转换时重置。
 	return pm
 }
 
-// start begins the phase lifecycle, transitioning to the initial phase.
+// start 开始阶段生命周期，转换到初始阶段。
 func (pm *phaseManager) start() {
 	pm.transitionTo(pm.currentPhase)
 }
 
-// stop cleanly stops the phase manager's timer.
+// stop 清理并停止阶段管理器的计时器。
 func (pm *phaseManager) stop() {
 	pm.phaseTimer.Stop()
 }
 
-// timer returns the channel for the phase timer.
+// timer 返回阶段计时器的通道。
 func (pm *phaseManager) timer() <-chan time.Time {
 	return pm.phaseTimer.C
 }
@@ -49,34 +49,34 @@ func (pm *phaseManager) CurrentPhase() phase.Phase {
 	return pm.currentPhase
 }
 
-// handleAction delegates an action to the current phase and transitions to the next.
+// handleAction 将操作委托给当前阶段并转换到下一个阶段。
 func (pm *phaseManager) handleAction(playerID int32, action *model.PlayerActionPayload) {
 	nextPhase := pm.currentPhase.HandleAction(pm.engine, playerID, action)
 	pm.transitionTo(nextPhase)
 }
 
-// handleEvent delegates an event to the current phase and transitions to the next.
+// handleEvent 将事件委托给当前阶段并转换到下一个阶段。
 func (pm *phaseManager) handleEvent(event *model.GameEvent) {
 	nextPhase := pm.currentPhase.HandleEvent(pm.engine, event)
 	pm.transitionTo(nextPhase)
 }
 
-// handleTimeout handles a phase timeout and transitions to the next phase.
+// handleTimeout 处理阶段超时并转换到下一个阶段。
 func (pm *phaseManager) handleTimeout() {
 	nextPhase := pm.currentPhase.HandleTimeout(pm.engine)
 	pm.transitionTo(nextPhase)
 }
 
-// transitionTo handles the logic of moving from one game phase to another.
-// It uses a loop to process immediate, consecutive phase transitions without recursion.
+// transitionTo 处理从一个游戏阶段移动到另一个游戏阶段的逻辑。
+// 它使用一个循环来处理连续的即时阶段转换，而无需递归。
 func (pm *phaseManager) transitionTo(nextPhase phase.Phase) {
-	// A nil nextPhase indicates no state change is needed.
+	// nil 的 nextPhase 表示不需要状态更改。
 	if nextPhase == nil {
 		return
 	}
 
-	// Loop to handle a chain of immediate phase transitions (e.g., Setup -> Main -> Action).
-	// This avoids deep recursion if a phase's Enter() method immediately returns a new phase.
+	// 循环处理一连串的即时阶段转换（例如，设置 -> 主要 -> 行动）。
+	// 这避免了如果一个阶段的 Enter() 方法立即返回一个新阶段而导致的深度递归。
 	for nextPhase != nil {
 		pm.phaseTimer.Stop()
 
@@ -89,18 +89,18 @@ func (pm *phaseManager) transitionTo(nextPhase phase.Phase) {
 		}
 
 		pm.currentPhase = nextPhase
-		pm.engine.GameState.CurrentPhase = nextPhase.Type() // The engine still owns the state.
+		pm.engine.GameState.CurrentPhase = nextPhase.Type() // 引擎仍然拥有状态。
 
-		// Enter the new phase. It might return another phase to transition to immediately.
+		// 进入新阶段。它可能会返回另一个要立即转换到的阶段。
 		followingPhase := pm.currentPhase.Enter(pm.engine)
 
-		// Set the timer for the new phase. If the duration is 0, the timer remains stopped.
+		// 为新阶段设置计时器。如果持续时间为 0，则计时器保持停止状态。
 		duration := pm.currentPhase.TimeoutDuration()
 		if duration > 0 {
 			pm.phaseTimer.Reset(duration)
 		}
 
-		// The loop continues with the next phase, if any.
+		// 循环继续到下一个阶段（如果有）。
 		nextPhase = followingPhase
 	}
 }

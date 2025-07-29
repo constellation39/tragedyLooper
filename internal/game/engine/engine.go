@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-// LocationGrid defines the 2x2 map layout.
+// LocationGrid 定义了 2x2 的地图布局。
 var LocationGrid = map[model.LocationType]struct{ X, Y int }{
 	model.LocationType_SHRINE:   {0, 0},
 	model.LocationType_SCHOOL:   {1, 0},
@@ -17,10 +17,10 @@ var LocationGrid = map[model.LocationType]struct{ X, Y int }{
 	model.LocationType_CITY:     {1, 1},
 }
 
-// GameEngine manages the state and logic of a single game instance.
+// GameEngine 管理单个游戏实例的状态和逻辑。
 type engineAction interface{}
 
-// getPlayerViewRequest is a request to get a filtered view of the game state for a player.
+// getPlayerViewRequest 是获取玩家过滤后的游戏状态视图的请求。
 type getPlayerViewRequest struct {
 	playerID     int32
 	responseChan chan *model.PlayerView
@@ -39,9 +39,9 @@ type GameEngine struct {
 	pm              *phaseManager
 	em              *eventManager
 
-	// engineChan is the central channel for all incoming requests (player actions, AI actions, etc.).
-	// It ensures that all modifications to the game state are processed sequentially in the main game loop,
-	// preventing race conditions.
+	// engineChan 是所有传入请求（玩家操作、AI 操作等）的中央通道。
+	// 它确保对游戏状态的所有修改都在主游戏循环中按顺序处理，
+	// 防止竞争条件。
 	engineChan chan engineAction
 	stopChan   chan struct{}
 
@@ -51,7 +51,7 @@ type GameEngine struct {
 	protagonistPlayerIDs []int32
 }
 
-// NewGameEngine creates a new game engine instance.
+// NewGameEngine 创建一个新的游戏引擎实例。
 func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator ActionGenerator, gameConfig loader.GameConfig) (*GameEngine, error) {
 	ge := &GameEngine{
 		logger:               logger,
@@ -117,19 +117,19 @@ func (ge *GameEngine) GetPlayerView(playerID int32) *model.PlayerView {
 		responseChan: responseChan,
 	}
 
-	// This blocks until the main game loop processes the request and sends a response.
+	// 这将阻塞，直到主游戏循环处理请求并发送响应。
 	ge.engineChan <- req
 	view := <-responseChan
 	return view
 }
 
-// runGameLoop is the heart of the game engine. It's a single-threaded loop that processes all game events
-// and state changes sequentially, ensuring thread safety without complex locking.
+// runGameLoop 是游戏引擎的核心。它是一个单线程循环，按顺序处理所有游戏事件
+// 和状态更改，从而在没有复杂锁定的情况下确保线程安全。
 func (ge *GameEngine) runGameLoop() {
 	ge.logger.Info("Game loop started.")
 	defer ge.logger.Info("Game loop stopped.")
 
-	// The phase manager is started, which initiates the first phase transition.
+	// 阶段管理器已启动，它将启动第一个阶段转换。
 	ge.pm.start()
 	defer ge.em.close()
 
@@ -145,21 +145,21 @@ func (ge *GameEngine) runGameLoop() {
 	}
 }
 
-// handleEngineRequest processes incoming requests from the engine's channel.
+// handleEngineRequest 处理来自引擎通道的传入请求。
 func (ge *GameEngine) handleEngineRequest(req engineAction) {
 	switch r := req.(type) {
 	case *aiActionCompleteRequest:
-		// An AI or player has submitted an action.
+		// AI 或玩家已提交操作。
 		ge.pm.handleAction(r.playerID, r.action)
 	case *getPlayerViewRequest:
-		// A request for a player-specific view of the game state.
+		// 对特定于玩家的游戏状态视图的请求。
 		r.responseChan <- ge.GeneratePlayerView(r.playerID)
 	default:
 		ge.logger.Warn("Unhandled request type in engine channel")
 	}
 }
 
-// handleTimeout is called when the current phase's timer expires.
+// handleTimeout 在当前阶段的计时器到期时调用。
 func (ge *GameEngine) handleTimeout() {
 	ge.pm.handleTimeout()
 }
@@ -170,7 +170,7 @@ func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, payloa
 
 func (ge *GameEngine) endGame(winner model.PlayerRole) {
 	ge.logger.Info("Game over", zap.String("winner", winner.String()))
-	// This event will be processed by the event manager, leading to a state update and a phase transition.
+	// 此事件将由事件管理器处理，从而导致状态更新和阶段转换。
 	ge.em.createAndProcess(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: winner})
 }
 
@@ -189,7 +189,7 @@ func (ge *GameEngine) GetCharacterByID(charID int32) *model.Character {
 }
 
 func (ge *GameEngine) TriggerIncidents() {
-	// TODO: Implement incident triggering logic
+	// TODO: 实现事件触发逻辑
 }
 
 func (ge *GameEngine) MoveCharacter(char *model.Character, dx, dy int) {
@@ -211,7 +211,7 @@ func (ge *GameEngine) moveCharacter(char *model.Character, dx, dy int) {
 		return
 	}
 
-	// Calculate the new position, wrapping around the 2x2 grid.
+	// 计算新位置，在 2x2 网格上环绕。
 	newX := (startPos.X + dx) % 2
 	newY := (startPos.Y + dy) % 2
 
@@ -224,13 +224,13 @@ func (ge *GameEngine) moveCharacter(char *model.Character, dx, dy int) {
 	}
 
 	if newLoc != model.LocationType_LOCATION_TYPE_UNSPECIFIED && newLoc != char.CurrentLocation {
-		// Check for movement restrictions
+		// 检查移动限制
 		for _, rule := range char.Config.Rules {
 			if smr, ok := rule.Effect.(*model.CharacterRule_SpecialMovementRule); ok {
 				for _, restricted := range smr.SpecialMovementRule.RestrictedLocations {
 					if restricted == newLoc {
 						ge.logger.Info("character movement restricted", zap.String("char", char.Config.Name), zap.String("location", newLoc.String()))
-						return // Movement forbidden
+						return // 禁止移动
 					}
 				}
 			}
@@ -245,7 +245,7 @@ func (ge *GameEngine) moveCharacter(char *model.Character, dx, dy int) {
 	}
 }
 
-// GetGameState implements the phases.GameEngine interface.
+// GetGameState 实现 phases.GameEngine 接口。
 func (ge *GameEngine) GetGameState() *model.GameState {
 	return ge.GameState
 }
@@ -255,7 +255,7 @@ func (ge *GameEngine) GetGameConfig() loader.GameConfig {
 }
 
 func (ge *GameEngine) AreAllPlayersReady() bool {
-	// TODO: implement me
+	// TODO: 实现我
 	return false
 }
 
@@ -271,18 +271,18 @@ func (ge *GameEngine) ResolveSelectorToCharacters(gs *model.GameState, sel *mode
 	return []int32{}, nil
 }
 
-// --- AI Integration ---
+// --- AI 集成 ---
 
-// TriggerAIPlayerAction prompts an AI player to make a decision.
+// TriggerAIPlayerAction 提示 AI 玩家做出决定。
 func (ge *GameEngine) TriggerAIPlayerAction(playerID int32) {
 	player := ge.getPlayerByID(playerID)
-	if player == nil || !player.IsLlm { // TODO: Make this check more generic (e.g., IsAI)
+	if player == nil || !player.IsLlm { // TODO: 使此检查更通用（例如，IsAI）
 		return
 	}
 
 	ge.logger.Info("Triggering AI for player", zap.String("player", player.Name))
 
-	// Create the context for the action generator
+	// 为动作生成器创建上下文
 	ctx := &ActionGeneratorContext{
 		Player:        player,
 		PlayerView:    ge.GetPlayerView(playerID),
@@ -294,7 +294,7 @@ func (ge *GameEngine) TriggerAIPlayerAction(playerID int32) {
 		action, err := ge.actionGenerator.GenerateAction(context.Background(), ctx)
 		if err != nil {
 			ge.logger.Error("AI action generation failed", zap.String("player", player.Name), zap.Error(err))
-			// Submit a default action to unblock the game
+			// 提交默认操作以解锁游戏
 			ge.engineChan <- &aiActionCompleteRequest{
 				playerID: playerID,
 				action:   &model.PlayerActionPayload{},
@@ -302,7 +302,7 @@ func (ge *GameEngine) TriggerAIPlayerAction(playerID int32) {
 			return
 		}
 
-		// Send the validated action back to the main loop for processing.
+		// 将经过验证的操作发送回主循环进行处理。
 		ge.engineChan <- &aiActionCompleteRequest{
 			playerID: playerID,
 			action:   action,

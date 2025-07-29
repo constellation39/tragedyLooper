@@ -6,16 +6,20 @@ import (
 	"go.uber.org/zap"
 )
 
-// --- AbilitiesPhase ---
+// AbilitiesPhase 能力阶段
 type AbilitiesPhase struct{ basePhase }
 
+// Type 返回阶段类型
 func (p *AbilitiesPhase) Type() model.GamePhase { return model.GamePhase_ABILITIES }
+
+// Enter 进入阶段
 func (p *AbilitiesPhase) Enter(ge GameEngine) Phase {
-	// Players can use abilities.
-	// This phase might require player input and have a timeout.
+	// 玩家可以使用能力。
+	// 这个阶段可能需要玩家输入并有超时。
 	return &IncidentsPhase{}
 }
 
+// HandleAction 处理玩家操作
 func (p *AbilitiesPhase) HandleAction(ge GameEngine, playerID int32, action *model.PlayerActionPayload) Phase {
 	state := ge.GetGameState()
 	player, ok := state.Players[playerID]
@@ -53,7 +57,7 @@ func handleUseAbilityAction(ge GameEngine, player *model.Player, payload *model.
 		return
 	}
 
-	// TODO: We need to re-implement applyEffect, as it was not part of the GameEngine interface.
+	// TODO: 我们需要重新实现 applyEffect，因为它不是 GameEngine 接口的一部分。
 	// if err := ge.applyEffect(ability.Config.Effect, ability, payload, nil); err != nil {
 	// 	ge.Logger().Error("Failed to apply effect for ability", zap.String("abilityName", ability.Config.Name), zap.Error(err))
 	// 	return
@@ -62,6 +66,6 @@ func handleUseAbilityAction(ge GameEngine, player *model.Player, payload *model.
 	if ability.Config.OncePerLoop {
 		ability.UsedThisLoop = true
 	}
-	// Note: Using an ability does not automatically make a player "ready".
-	// They must explicitly pass their turn with PassTurnAction.
+	// 注意：使用能力不会自动使玩家“准备好”。
+	// 他们必须使用 PassTurnAction 明确地跳过他们的回合。
 }

@@ -6,11 +6,13 @@ import (
 	"go.uber.org/zap"
 )
 
-// --- ProtagonistGuessPhase ---
+// ProtagonistGuessPhase 主角猜测阶段
 type ProtagonistGuessPhase struct{ basePhase }
 
+// Type 返回阶段类型
 func (p *ProtagonistGuessPhase) Type() model.GamePhase { return model.GamePhase_PROTAGONIST_GUESS }
 
+// HandleAction 处理玩家操作
 func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, playerID int32, action *model.PlayerActionPayload) Phase {
 	state := ge.GetGameState()
 	player, ok := state.Players[playerID]
@@ -27,7 +29,7 @@ func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, playerID int32, acti
 }
 
 func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.MakeGuessPayload) Phase {
-	// For now, we assume the first protagonist to guess ends the game.
+	// 目前，我们假设第一个猜测的主角结束游戏。
 	if player.Role != model.PlayerRole_PROTAGONIST {
 		ge.Logger().Warn("non-protagonist player tried to make a guess", zap.Int32("player_id", player.Id))
 		return nil
@@ -36,7 +38,7 @@ func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.M
 	script := ge.GetGameConfig().GetScript()
 	if script == nil {
 		ge.Logger().Error("failed to get script to verify guess")
-		ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: model.PlayerRole_MASTERMIND}) // End game, mastermind wins by default on error
+		ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: model.PlayerRole_MASTERMIND}) // 游戏结束，出现错误时主谋默认获胜
 		return &GameOverPhase{}
 	}
 

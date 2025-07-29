@@ -30,7 +30,7 @@ func (ge *GameEngine) getMastermindPlayer() *model.Player {
 func (ge *GameEngine) isMastermindReady() bool {
 	mm := ge.getMastermindPlayer()
 	if mm == nil {
-		return true // No mastermind, so they are vacuously ready
+		return true // 没有主谋，所以他们自然就准备好了
 	}
 	return ge.playerReady[mm.Id]
 }
@@ -92,7 +92,7 @@ func (ge *GameEngine) initializeGameStateFromScript(gameConfig loader.GameConfig
 	}
 
 	ge.GameState = &model.GameState{
-		GameId:                  "new_game", // Should be generated
+		GameId:                  "new_game", // 应该生成
 		Characters:              characters,
 		Players:                 playerMap,
 		CurrentDay:              1,

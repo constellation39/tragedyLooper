@@ -9,7 +9,7 @@ func init() {
 	Register[*model.Effect_AddTrait](&AddTraitHandler{})
 }
 
-// AddTraitHandler processes AddTrait effects.
+// AddTraitHandler 处理 AddTrait 效果。
 type AddTraitHandler struct{}
 
 func (h *AddTraitHandler) ResolveChoices(ge GameEngine, effect *model.Effect, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
@@ -42,7 +42,7 @@ func (h *AddTraitHandler) Apply(ge GameEngine, effect *model.Effect, ability *mo
 func (h *AddTraitHandler) GetDescription(effect *model.Effect) string {
 	addTrait := effect.GetAddTrait()
 	if addTrait == nil {
-		return "(Invalid AddTrait effect)"
+		return "(无效的 AddTrait 效果)"
 	}
-	return fmt.Sprintf("Add trait '%s'", addTrait.Trait)
+	return fmt.Sprintf("添加特征 '%s'", addTrait.Trait)
 }

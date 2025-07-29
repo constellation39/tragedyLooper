@@ -8,14 +8,19 @@ import (
 	"go.uber.org/zap"
 )
 
-// --- CardPlayPhase ---
+// CardPlayPhase 卡牌打出阶段
 type CardPlayPhase struct{ basePhase }
 
+// Type 返回阶段类型
 func (p *CardPlayPhase) Type() model.GamePhase { return model.GamePhase_CARD_PLAY }
+
+// Enter 进入阶段
 func (p *CardPlayPhase) Enter(ge GameEngine) Phase {
-	// Players have a certain amount of time to play their cards.
+	// 玩家有一定的时间打出他们的牌。
 	return nil
 }
+
+// HandleAction 处理玩家操作
 func (p *CardPlayPhase) HandleAction(ge GameEngine, playerID int32, action *model.PlayerActionPayload) Phase {
 	state := ge.GetGameState()
 	player, ok := state.Players[playerID]
@@ -40,17 +45,22 @@ func (p *CardPlayPhase) HandleAction(ge GameEngine, playerID int32, action *mode
 	return nil
 }
 
+// HandleTimeout 处理超时
 func (p *CardPlayPhase) HandleTimeout(ge GameEngine) Phase {
-	// If players don't act in time, we might auto-pass for them.
+	// 如果玩家没有及时行动，我们可能会为他们自动跳过回合。
 	return &CardRevealPhase{}
 }
+
+// HandleEvent 处理事件
 func (p *CardPlayPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase {
 	if ge.AreAllPlayersReady() {
 		return &CardRevealPhase{}
 	}
 	return nil
 }
-func (p *CardPlayPhase) TimeoutDuration() time.Duration { return 30 * time.Second } // Example timeout
+
+// TimeoutDuration 返回超时持续时间
+func (p *CardPlayPhase) TimeoutDuration() time.Duration { return 30 * time.Second } // 示例超时
 
 func handlePlayCardAction(ge GameEngine, player *model.Player, payload *model.PlayCardPayload) {
 	playedCard, err := takeCardFromPlayer(player, payload.CardId)
@@ -59,35 +69,35 @@ func handlePlayCardAction(ge GameEngine, player *model.Player, payload *model.Pl
 		return
 	}
 
-	// Add target info to the card instance before storing it
+	// 在存储之前将目标信息添加到卡牌实例中
 	switch t := payload.Target.(type) {
 	case *model.PlayCardPayload_TargetCharacterId:
 		playedCard.Target = &model.Card_TargetCharacterId{TargetCharacterId: t.TargetCharacterId}
 	case *model.PlayCardPayload_TargetLocation:
 		playedCard.Target = &model.Card_TargetLocation{TargetLocation: t.TargetLocation}
 	}
-	playedCard.UsedThisLoop = true // Mark as used
+	playedCard.UsedThisLoop = true // 标记为已使用
 
 	if _, ok := ge.GetGameState().PlayedCardsThisDay[player.Id]; ok {
 		ge.Logger().Warn("player tried to play a second card in one day", zap.Int32("player_id", player.Id))
-		// Potentially return the card to the hand or handle it as a misplay.
+		// 可能会将卡牌退回到手牌或将其作为误操作处理。
 	}
 	ge.GetGameState().PlayedCardsThisDay[player.Id] = playedCard
 
-	// Mark card as used for the loop
+	// 将卡牌标记为本循环已使用
 	ge.GetGameState().PlayedCardsThisLoop[playedCard.Config.Id] = true
 
 	ge.SetPlayerReady(player.Id)
 }
 
-// takeCardFromPlayer finds a card in a player's hand, removes it, and returns it.
+// takeCardFromPlayer 在玩家手牌中找到一张牌，将其移除并返回。
 func takeCardFromPlayer(player *model.Player, cardID int32) (*model.Card, error) {
 	for i, card := range player.Hand {
 		if card.Config.Id == cardID {
 			if card.Config.OncePerLoop && card.UsedThisLoop {
 				return nil, fmt.Errorf("card %d was already used this loop", cardID)
 			}
-			// Remove card from hand and return it
+			// 从手牌中移除卡牌并返回
 			player.Hand = append(player.Hand[:i], player.Hand[i+1:]...)
 			return card, nil
 		}

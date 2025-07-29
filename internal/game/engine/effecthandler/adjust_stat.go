@@ -9,7 +9,7 @@ func init() {
 	Register[*model.Effect_AdjustStat](&AdjustStatHandler{})
 }
 
-// AdjustStatHandler processes AdjustStat effects.
+// AdjustStatHandler 处理 AdjustStat 效果。
 type AdjustStatHandler struct{}
 
 func (h *AdjustStatHandler) ResolveChoices(ge GameEngine, effect *model.Effect, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
@@ -35,7 +35,7 @@ func (h *AdjustStatHandler) Apply(ge GameEngine, effect *model.Effect, ability *
 	for _, targetID := range targetIDs {
 		char, ok := state.Characters[targetID]
 		if !ok {
-			continue // Or return an error
+			continue // 或返回错误
 		}
 
 		switch adjustStatEffect.StatType {
@@ -59,7 +59,7 @@ func (h *AdjustStatHandler) Apply(ge GameEngine, effect *model.Effect, ability *
 func (h *AdjustStatHandler) GetDescription(effect *model.Effect) string {
 	adjustStat := effect.GetAdjustStat()
 	if adjustStat == nil {
-		return "(Invalid AdjustStat effect)"
+		return "(无效的 AdjustStat 效果)"
 	}
-	return fmt.Sprintf("Adjust %s by %d", adjustStat.StatType, adjustStat.Amount)
+	return fmt.Sprintf("调整 %s %d", adjustStat.StatType, adjustStat.Amount)
 }

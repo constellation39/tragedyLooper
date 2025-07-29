@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-// GameEngine defines the interface for the game engine that phases can interact with.
+// GameEngine 定义了阶段可以与之交互的游戏引擎的接口。
 type GameEngine interface {
 	ApplyAndPublishEvent(eventType model.GameEventType, eventData proto.Message)
 	AreAllPlayersReady() bool
@@ -24,7 +24,7 @@ type GameEngine interface {
 	MoveCharacter(char *model.Character, dx, dy int)
 }
 
-// Phase is an interface for a game phase.
+// Phase 是游戏阶段的接口。
 type Phase interface {
 	Type() model.GamePhase
 	Enter(ge GameEngine) Phase
@@ -35,7 +35,7 @@ type Phase interface {
 	TimeoutDuration() time.Duration
 }
 
-// basePhase is a helper struct that provides default implementations for the Phase interface.
+// basePhase 是一个辅助结构体，为 Phase 接口提供默认实现。
 type basePhase struct{}
 
 func (p *basePhase) Enter(ge GameEngine) Phase { return nil }

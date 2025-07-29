@@ -63,7 +63,7 @@ func (s *Server) Shutdown() {
 
 }
 
-// LoggingMiddleware creates a new logger with a request_id and adds it to the context.
+// LoggingMiddleware 创建一个带有 request_id 的新记录器并将其添加到上下文中。
 func (s *Server) LoggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requestID := uuid.New().String()
@@ -109,7 +109,7 @@ func (s *Server) HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 		conn:     conn,
 		send:     make(chan []byte, 256),
 		playerID: int32(playerID),
-		room:     nil, // Set when joining a room
+		room:     nil, // 加入房间时设置
 		logger:   clientLogger,
 	}
 
@@ -237,7 +237,7 @@ func (s *Server) HandleListRooms(w http.ResponseWriter, _ *http.Request) {
 		if room.gameEngine.GameState.CurrentPhase == model.GamePhase_SETUP { // 示例条件
 			roomList = append(roomList, map[string]interface{}{
 				"id":            id,
-				"script_name":   "", // Placeholder, as Script is no longer directly on GameState
+				"script_name":   "", // 占位符，因为 Script 不再直接在 GameState 上
 				"players_count": len(room.gameEngine.GameState.Players),
 				"current_phase": room.gameEngine.GameState.CurrentPhase,
 			})
@@ -320,7 +320,7 @@ func NewRoom(gameID string, ge *engine.GameEngine, logger *zap.Logger) *Room {
 		gameEngine: ge,
 		clients:    make(map[int32]*Client),
 		stopChan:   make(chan struct{}),
-		logger:     logger.With(zap.String("gameID", gameID)), // Add gameID to all room logs
+		logger:     logger.With(zap.String("gameID", gameID)), // 将 gameID 添加到所有房间日志中
 	}
 }
 

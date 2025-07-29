@@ -6,16 +6,18 @@ import (
 	"go.uber.org/zap"
 )
 
-// --- CardEffectsPhase ---
+// CardEffectsPhase 卡牌效果阶段
 type CardEffectsPhase struct{ basePhase }
 
+// Type 返回阶段类型
 func (p *CardEffectsPhase) Type() model.GamePhase { return model.GamePhase_CARD_RESOLVE }
 
+// Enter 进入阶段
 func (p *CardEffectsPhase) Enter(ge GameEngine) Phase {
 	resolver := NewMovementResolver()
 	charMovements := resolver.CalculateMovements(ge.GetGameState().PlayedCardsThisDay)
 
-	// Apply the calculated movements
+	// 应用计算出的移动
 	for charID, movement := range charMovements {
 		if movement.Forbidden {
 			continue
@@ -29,35 +31,35 @@ func (p *CardEffectsPhase) Enter(ge GameEngine) Phase {
 		finalH := movement.H
 		finalV := movement.V
 
-		// Diagonal movement counts as one horizontal and one vertical move.
+		// 对角线移动算作一次水平移动和一次垂直移动
 		if movement.D > 0 {
 			finalH += movement.D
 			finalV += movement.D
 		}
 
-		// A combined H and V move becomes a diagonal move.
+		// 水平和垂直移动的组合成为对角线移动
 		if finalH > 0 && finalV > 0 {
 			finalH--
 			finalV--
-			// Effectively, we are doing one diagonal move, and then any remaining H/V moves.
-			ge.MoveCharacter(char, 1, 1) // Diagonal
+			// 实际上，我们正在进行一次对角线移动，然后是任何剩余的水平/垂直移动
+			ge.MoveCharacter(char, 1, 1) // 对角线
 		}
 
 		if finalH > 0 {
-			ge.MoveCharacter(char, finalH, 0) // Horizontal
+			ge.MoveCharacter(char, finalH, 0) // 水平
 		}
 		if finalV > 0 {
-			ge.MoveCharacter(char, 0, finalV) // Vertical
+			ge.MoveCharacter(char, 0, finalV) // 垂直
 		}
 	}
 
 	resolveOtherCards(ge)
 
-	// After card effects are resolved, we might move to the abilities phase.
+	// 卡牌效果结算后，我们可能会进入能力阶段
 	return &AbilitiesPhase{}
 }
 
-// CharacterMovement holds the calculated movement vectors for a character.
+// CharacterMovement 保存角色的计算移动向量
 type CharacterMovement struct {
 	H         int
 	V         int
@@ -65,15 +67,15 @@ type CharacterMovement struct {
 	Forbidden bool
 }
 
-// MovementResolver calculates character movements based on played cards.
+// MovementResolver 根据打出的牌计算角色移动
 type MovementResolver struct{}
 
-// NewMovementResolver creates a new MovementResolver.
+// NewMovementResolver 创建一个新的 MovementResolver
 func NewMovementResolver() *MovementResolver {
 	return &MovementResolver{}
 }
 
-// CalculateMovements aggregates movement effects for each character from the played cards.
+// CalculateMovements 汇总每个角色从打出的牌中获得的移动效果
 func (mr *MovementResolver) CalculateMovements(playedCards map[int32]*model.Card) map[int32]CharacterMovement {
 	charMovements := make(map[int32]CharacterMovement)
 
@@ -85,7 +87,7 @@ func (mr *MovementResolver) CalculateMovements(playedCards map[int32]*model.Card
 
 		movement := charMovements[targetCharID.TargetCharacterId]
 		if movement.Forbidden {
-			continue // Movement is already forbidden, no further calculations needed.
+			continue // 移动已被禁止，无需进一步计算
 		}
 
 		switch card.Config.Type {
@@ -96,19 +98,19 @@ func (mr *MovementResolver) CalculateMovements(playedCards map[int32]*model.Card
 		case model.CardType_MOVE_DIAGONALLY:
 			movement.D++
 		case model.CardType_FORBID_MOVEMENT:
-			movement = CharacterMovement{Forbidden: true} // Cancel all movement.
+			movement = CharacterMovement{Forbidden: true} // 取消所有移动
 		}
 		charMovements[targetCharID.TargetCharacterId] = movement
 	}
 	return charMovements
 }
 
-// resolveMovement processes all movement cards played in a turn.
+// resolveMovement 处理回合中打出的所有移动牌
 func resolveMovement(ge GameEngine) {
 	resolver := NewMovementResolver()
 	charMovements := resolver.CalculateMovements(ge.GetGameState().PlayedCardsThisDay)
 
-	// Apply the calculated movements
+	// 应用计算出的移动
 	for charID, movement := range charMovements {
 		if movement.Forbidden {
 			continue
@@ -122,38 +124,38 @@ func resolveMovement(ge GameEngine) {
 		finalH := movement.H
 		finalV := movement.V
 
-		// Diagonal movement counts as one horizontal and one vertical move.
+		// 对角线移动算作一次水平移动和一次垂直移动
 		if movement.D > 0 {
 			finalH += movement.D
 			finalV += movement.D
 		}
 
-		// A combined H and V move becomes a diagonal move.
+		// 水平和垂直移动的组合成为对角线移动
 		if finalH > 0 && finalV > 0 {
 			finalH--
 			finalV--
-			// Effectively, we are doing one diagonal move, and then any remaining H/V moves.
-			ge.MoveCharacter(char, 1, 1) // Diagonal
+			// 实际上，我们正在进行一次对角线移动，然后是任何剩余的水平/垂直移动
+			ge.MoveCharacter(char, 1, 1) // 对角线
 			}
 
 			if finalH > 0 {
-				ge.MoveCharacter(char, finalH, 0) // Horizontal
+				ge.MoveCharacter(char, finalH, 0) // 水平
 			}
 			if finalV > 0 {
-				ge.MoveCharacter(char, 0, finalV) // Vertical
+				ge.MoveCharacter(char, 0, finalV) // 垂直
 		}
 	}
 }
 
 
-// resolveOtherCards handles non-movement cards.
+// resolveOtherCards 处理非移动牌
 func resolveOtherCards(ge GameEngine) {
 	for _, card := range ge.GetGameState().PlayedCardsThisDay {
 		switch card.Config.Type {
 		case model.CardType_MOVE_HORIZONTALLY, model.CardType_MOVE_VERTICALLY, model.CardType_MOVE_DIAGONALLY, model.CardType_FORBID_MOVEMENT:
-			continue // Already handled
+			continue // 已经处理过
 		default:
-			// TODO: Implement logic for other card types (Paranoia, Goodwill, etc.)
+			// TODO: 为其他卡牌类型（妄想、好感等）实现逻辑
 			ge.Logger().Info("resolving other card", zap.String("card", card.Config.Name))
 		}
 	}

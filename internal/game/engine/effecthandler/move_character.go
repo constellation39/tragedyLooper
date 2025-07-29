@@ -9,7 +9,7 @@ func init() {
 	Register[*model.Effect_MoveCharacter](&MoveCharacterHandler{})
 }
 
-// MoveCharacterHandler processes MoveCharacter effects.
+// MoveCharacterHandler 处理 MoveCharacter 效果。
 type MoveCharacterHandler struct{}
 
 func (h *MoveCharacterHandler) ResolveChoices(ge GameEngine, effect *model.Effect, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
@@ -37,9 +37,9 @@ func (h *MoveCharacterHandler) Apply(ge GameEngine, effect *model.Effect, abilit
 		if char == nil {
 			continue
 		}
-		// A generic move, let the moveCharacter logic handle the details.
-		// The destination is specified in the effect, but the current moveCharacter implementation
-		// in the engine doesn't use it. This could be improved.
+		// 通用移动，让 moveCharacter 逻辑处理细节。
+		// 目的地在效果中指定，但引擎中当前的 moveCharacter 实现
+		// 并未使用它。这可以改进。
 		ge.MoveCharacter(char, 0, 0)
 	}
 	return nil
@@ -48,7 +48,7 @@ func (h *MoveCharacterHandler) Apply(ge GameEngine, effect *model.Effect, abilit
 func (h *MoveCharacterHandler) GetDescription(effect *model.Effect) string {
 	moveChar := effect.GetMoveCharacter()
 	if moveChar == nil {
-		return "(Invalid MoveCharacter effect)"
+		return "(无效的 MoveCharacter 效果)"
 	}
-	return fmt.Sprintf("Move character to %s", moveChar.Destination)
+	return fmt.Sprintf("将角色移动到 %s", moveChar.Destination)
 }

@@ -11,7 +11,7 @@ func init() {
 	Register[*model.Effect_CompoundEffect](&CompoundEffectHandler{})
 }
 
-// CompoundEffectHandler processes Compound effects.
+// CompoundEffectHandler 处理复合效果。
 type CompoundEffectHandler struct{}
 
 func (h *CompoundEffectHandler) ResolveChoices(ge GameEngine, effect *model.Effect, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
@@ -27,14 +27,14 @@ func (h *CompoundEffectHandler) ResolveChoices(ge GameEngine, effect *model.Effe
 			choiceID := fmt.Sprintf("effect_choice_%d", i)
 			choices = append(choices, &model.Choice{
 				Id:          choiceID,
-				Description: GetEffectDescription(ge, subEffect), // We need a way to get descriptions
+				Description: GetEffectDescription(ge, subEffect), // 我们需要一种方法来获取描述
 				ChoiceType:  &model.Choice_EffectOptionIndex{EffectOptionIndex: int32(i)},
 			})
 		}
 		return choices, nil
 	case model.CompoundEffect_SEQUENCE:
 		for _, subEffect := range compoundEffect.SubEffects {
-			// In a sequence, the first effect that requires a choice is the one we present.
+			// 在序列中，我们呈现的第一个需要选择的效果。
 			handler, err := GetEffectHandler(subEffect)
 			if err != nil {
 				return nil, err

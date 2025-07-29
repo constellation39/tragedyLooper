@@ -9,7 +9,7 @@ func init() {
 	Register[*model.Effect_RemoveTrait](&RemoveTraitHandler{})
 }
 
-// RemoveTraitHandler processes RemoveTrait effects.
+// RemoveTraitHandler 处理 RemoveTrait 效果。
 type RemoveTraitHandler struct{}
 
 func (h *RemoveTraitHandler) ResolveChoices(ge GameEngine, effect *model.Effect, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
@@ -42,7 +42,7 @@ func (h *RemoveTraitHandler) Apply(ge GameEngine, effect *model.Effect, ability 
 func (h *RemoveTraitHandler) GetDescription(effect *model.Effect) string {
 	removeTrait := effect.GetRemoveTrait()
 	if removeTrait == nil {
-		return "(Invalid RemoveTrait effect)"
+		return "(无效的 RemoveTrait 效果)"
 	}
-	return fmt.Sprintf("Remove trait '%s'", removeTrait.Trait)
+	return fmt.Sprintf("移除特征 '%s'", removeTrait.Trait)
 }
