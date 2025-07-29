@@ -5,7 +5,7 @@ import (
 
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/known/anypb"
+	
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -37,15 +37,51 @@ func newEventManager(engine *GameEngine) *eventManager {
 // eventType: The type of the game event.
 // payload: The payload for the event, which must be a protobuf message.
 func (em *eventManager) createAndProcess(eventType model.GameEventType, payload proto.Message) {
-	anyPayload, err := anypb.New(payload)
-	if err != nil {
-		em.logger.Error("Failed to create anypb.Any for event payload", zap.Error(err))
-		return
-	}
 	event := &model.GameEvent{
 		Type:      eventType,
-		Payload:   anyPayload,
 		Timestamp: timestamppb.Now(),
+	}
+
+	switch p := payload.(type) {
+	case *model.CharacterMovedEvent:
+		event.Payload = &model.GameEvent_CharacterMoved{CharacterMoved: p}
+	case *model.ParanoiaAdjustedEvent:
+		event.Payload = &model.GameEvent_ParanoiaAdjusted{ParanoiaAdjusted: p}
+	case *model.GoodwillAdjustedEvent:
+		event.Payload = &model.GameEvent_GoodwillAdjusted{GoodwillAdjusted: p}
+	case *model.IntrigueAdjustedEvent:
+		event.Payload = &model.GameEvent_IntrigueAdjusted{IntrigueAdjusted: p}
+	case *model.LoopLossEvent:
+		event.Payload = &model.GameEvent_LoopLoss{LoopLoss: p}
+	case *model.LoopWinEvent:
+		event.Payload = &model.GameEvent_LoopWin{LoopWin: p}
+	case *model.AbilityUsedEvent:
+		event.Payload = &model.GameEvent_AbilityUsed{AbilityUsed: p}
+	case *model.DayAdvancedEvent:
+		event.Payload = &model.GameEvent_DayAdvanced{DayAdvanced: p}
+	case *model.CardPlayedEvent:
+		event.Payload = &model.GameEvent_CardPlayed{CardPlayed: p}
+	case *model.CardRevealedEvent:
+		event.Payload = &model.GameEvent_CardRevealed{CardRevealed: p}
+	case *model.LoopResetEvent:
+		event.Payload = &model.GameEvent_LoopReset{LoopReset: p}
+	case *model.GameOverEvent:
+		event.Payload = &model.GameEvent_GameOver{GameOver: p}
+	case *model.ChoiceRequiredEvent:
+		event.Payload = &model.GameEvent_ChoiceRequired{ChoiceRequired: p}
+	case *model.IncidentTriggeredEvent:
+		event.Payload = &model.GameEvent_IncidentTriggered{IncidentTriggered: p}
+	case *model.TragedyTriggeredEvent:
+		event.Payload = &model.GameEvent_TragedyTriggered{TragedyTriggered: p}
+	case *model.TraitAddedEvent:
+		event.Payload = &model.GameEvent_TraitAdded{TraitAdded: p}
+	case *model.TraitRemovedEvent:
+		event.Payload = &model.GameEvent_TraitRemoved{TraitRemoved: p}
+	case *model.PlayerActionTakenEvent:
+		event.Payload = &model.GameEvent_PlayerActionTaken{PlayerActionTaken: p}
+	default:
+		em.logger.Error("Unknown event payload type", zap.String("type", string(p.ProtoReflect().Descriptor().FullName())))
+		return
 	}
 
 	// Step 1: Let the current phase react to the event.

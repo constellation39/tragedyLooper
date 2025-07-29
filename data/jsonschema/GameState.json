@@ -201,7 +201,7 @@
                         5,
                         "ON_GAME_EVENT",
                         6,
-                        "PASSIVE",
+                        "ON_PASSIVE",
                         7,
                         "ON_GUESS_MADE",
                         8,
@@ -336,6 +336,22 @@
             "additionalProperties": true,
             "type": "object",
             "title": "Ability Config"
+        },
+        "v1.AbilityUsedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "使用能力的角色ID"
+                },
+                "ability_name": {
+                    "type": "string",
+                    "description": "使用的能力名称"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Ability Used Event",
+            "description": "能力使用事件"
         },
         "v1.AddTraitEffect": {
             "properties": {
@@ -529,6 +545,37 @@
             "type": "object",
             "title": "Card Config",
             "description": "卡牌静态配置"
+        },
+        "v1.CardPlayedEvent": {
+            "properties": {
+                "player_id": {
+                    "type": "integer"
+                },
+                "card": {
+                    "$ref": "#/definitions/v1.Card",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Card Played Event",
+            "description": "卡牌打出事件"
+        },
+        "v1.CardRevealedEvent": {
+            "properties": {
+                "cards": {
+                    "additionalProperties": {
+                        "$ref": "#/definitions/v1.Card",
+                        "additionalProperties": true
+                    },
+                    "type": "object",
+                    "description": "player_id -\u003e card"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Card Revealed Event",
+            "description": "卡牌揭示事件"
         },
         "v1.ChangeRoleEffect": {
             "properties": {
@@ -747,6 +794,42 @@
             "title": "Character Config",
             "description": "角色静态配置（全局角色库）"
         },
+        "v1.CharacterMovedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "移动的角色ID"
+                },
+                "new_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "HOSPITAL",
+                        1,
+                        "SHRINE",
+                        2,
+                        "CITY",
+                        3,
+                        "SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Character Moved Event",
+            "description": "角色移动事件"
+        },
         "v1.CharacterRule": {
             "properties": {
                 "name": {
@@ -773,7 +856,7 @@
                         5,
                         "ON_GAME_EVENT",
                         6,
-                        "PASSIVE",
+                        "ON_PASSIVE",
                         7,
                         "ON_GUESS_MADE",
                         8,
@@ -815,6 +898,45 @@
             "type": "object",
             "title": "Character Rule",
             "description": "角色特殊规则"
+        },
+        "v1.Choice": {
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "唯一ID，例如 \"target_char_5\" 或 \"effect_choice_0\""
+                },
+                "description": {
+                    "type": "string",
+                    "description": "选项的描述"
+                },
+                "target_character_id": {
+                    "type": "integer",
+                    "description": "用于目标选择"
+                },
+                "effect_option_index": {
+                    "type": "integer",
+                    "description": "用于复合效果中的效果选择"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Choice",
+            "description": "Choice 表示玩家可以做出的选择。"
+        },
+        "v1.ChoiceRequiredEvent": {
+            "properties": {
+                "choices": {
+                    "items": {
+                        "$ref": "#/definitions/v1.Choice"
+                    },
+                    "type": "array",
+                    "description": "这可能需要更复杂的结构，具体取决于选择  提供给玩家的选项列表"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Choice Required Event",
+            "description": "需要玩家做出选择的事件"
         },
         "v1.ChooseOptionPayload": {
             "properties": {
@@ -948,6 +1070,22 @@
             "type": "object",
             "title": "Condition",
             "description": "条件，用于规则、事件和效果的触发判断"
+        },
+        "v1.DayAdvancedEvent": {
+            "properties": {
+                "day": {
+                    "type": "integer",
+                    "description": "新的天数"
+                },
+                "loop": {
+                    "type": "integer",
+                    "description": "当前的循环数"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Day Advanced Event",
+            "description": "天数推进事件"
         },
         "v1.DayCondition": {
             "properties": {
@@ -1215,37 +1353,136 @@
                     "title": "Game Event Type",
                     "description": "游戏事件类型（用于能力触发器过滤）"
                 },
-                "payload": {
-                    "properties": {
-                        "type_url": {
-                            "type": "string",
-                            "description": "A URL/resource name that uniquely identifies the type of the serialized protocol buffer message. This string must contain at least one \"/\" character. The last segment of the URL's path must represent the fully qualified name of the type (as in `path/google.protobuf.Duration`). The name should be in a canonical form (e.g., leading \".\" is not accepted). In practice, teams usually precompile into the binary all types that they expect it to use in the context of Any. However, for URLs which use the scheme `http`, `https`, or no scheme, one can optionally set up a type server that maps type URLs to message definitions as follows: * If no scheme is provided, `https` is assumed. * An HTTP GET on the URL must yield a [google.protobuf.Type][]   value in binary format, or produce an error. * Applications are allowed to cache lookup results based on the   URL, or have them precompiled into a binary to avoid any   lookup. Therefore, binary compatibility needs to be preserved   on changes to types. (Use versioned type names to manage   breaking changes.) Note: this functionality is not currently available in the official protobuf release, and it is not used for type URLs beginning with type.googleapis.com. As of May 2023, there are no widely used type server implementations and no plans to implement one. Schemes other than `http`, `https` (or the empty scheme) might be used with implementation specific semantics."
-                        },
-                        "value": {
-                            "type": "string",
-                            "description": "Must be a valid serialized protocol buffer of the above specified type.",
-                            "format": "binary",
-                            "binaryEncoding": "base64"
-                        }
-                    },
-                    "additionalProperties": true,
-                    "type": "object",
-                    "description": "事件的具体负载"
-                },
-                "player_action": {
-                    "$ref": "#/definitions/v1.PlayerActionTakenEvent",
-                    "additionalProperties": true
-                },
                 "timestamp": {
                     "type": "string",
                     "description": "事件发生的时间戳",
                     "format": "date-time"
+                },
+                "character_moved": {
+                    "$ref": "#/definitions/v1.CharacterMovedEvent",
+                    "additionalProperties": true
+                },
+                "paranoia_adjusted": {
+                    "$ref": "#/definitions/v1.ParanoiaAdjustedEvent",
+                    "additionalProperties": true
+                },
+                "goodwill_adjusted": {
+                    "$ref": "#/definitions/v1.GoodwillAdjustedEvent",
+                    "additionalProperties": true
+                },
+                "intrigue_adjusted": {
+                    "$ref": "#/definitions/v1.IntrigueAdjustedEvent",
+                    "additionalProperties": true
+                },
+                "loop_loss": {
+                    "$ref": "#/definitions/v1.LoopLossEvent",
+                    "additionalProperties": true
+                },
+                "loop_win": {
+                    "$ref": "#/definitions/v1.LoopWinEvent",
+                    "additionalProperties": true
+                },
+                "ability_used": {
+                    "$ref": "#/definitions/v1.AbilityUsedEvent",
+                    "additionalProperties": true
+                },
+                "day_advanced": {
+                    "$ref": "#/definitions/v1.DayAdvancedEvent",
+                    "additionalProperties": true
+                },
+                "card_played": {
+                    "$ref": "#/definitions/v1.CardPlayedEvent",
+                    "additionalProperties": true
+                },
+                "card_revealed": {
+                    "$ref": "#/definitions/v1.CardRevealedEvent",
+                    "additionalProperties": true
+                },
+                "loop_reset": {
+                    "$ref": "#/definitions/v1.LoopResetEvent",
+                    "additionalProperties": true
+                },
+                "game_over": {
+                    "$ref": "#/definitions/v1.GameOverEvent",
+                    "additionalProperties": true
+                },
+                "choice_required": {
+                    "$ref": "#/definitions/v1.ChoiceRequiredEvent",
+                    "additionalProperties": true
+                },
+                "incident_triggered": {
+                    "$ref": "#/definitions/v1.IncidentTriggeredEvent",
+                    "additionalProperties": true
+                },
+                "tragedy_triggered": {
+                    "$ref": "#/definitions/v1.TragedyTriggeredEvent",
+                    "additionalProperties": true
+                },
+                "trait_added": {
+                    "$ref": "#/definitions/v1.TraitAddedEvent",
+                    "additionalProperties": true
+                },
+                "trait_removed": {
+                    "$ref": "#/definitions/v1.TraitRemovedEvent",
+                    "additionalProperties": true
+                },
+                "player_action_taken": {
+                    "$ref": "#/definitions/v1.PlayerActionTakenEvent",
+                    "additionalProperties": true
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Game Event",
             "description": "GameEvent 表示游戏中发生的事件。"
+        },
+        "v1.GameOverEvent": {
+            "properties": {
+                "winner": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "MASTERMIND",
+                        1,
+                        "PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Game Over Event",
+            "description": "游戏结束事件"
+        },
+        "v1.GoodwillAdjustedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "角色ID"
+                },
+                "amount": {
+                    "type": "integer",
+                    "description": "调整量"
+                },
+                "new_goodwill": {
+                    "type": "integer",
+                    "description": "调整后的新好感值"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Goodwill Adjusted Event",
+            "description": "好感值调整事件"
         },
         "v1.GrantAbilityEffect": {
             "properties": {
@@ -1267,6 +1504,158 @@
             "type": "object",
             "title": "Grant Ability Effect",
             "description": "授予能力效果"
+        },
+        "v1.Incident": {
+            "properties": {
+                "config": {
+                    "$ref": "#/definitions/v1.IncidentConfig",
+                    "additionalProperties": true,
+                    "description": "事件唯一ID"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "事件名称"
+                },
+                "day": {
+                    "type": "integer",
+                    "description": "事件发生的日期"
+                },
+                "culprit": {
+                    "type": "string",
+                    "description": "犯人（角色名称或描述）"
+                },
+                "victim": {
+                    "type": "string",
+                    "description": "受害者（角色名称或描述）"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "事件描述"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Incident",
+            "description": "事件实例，在游戏运行时创建"
+        },
+        "v1.IncidentConfig": {
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "事件唯一ID（剧本内）"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "事件名称"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "事件描述"
+                },
+                "incident_type": {
+                    "enum": [
+                        "INCIDENT_TYPE_UNSPECIFIED",
+                        0,
+                        "MURDER",
+                        1,
+                        "SUICIDE",
+                        2,
+                        "ACCIDENT",
+                        3,
+                        "DISAPPEARANCE",
+                        4,
+                        "HOSPITAL_CONSPIRACY",
+                        5,
+                        "MURDER_MYSTERY",
+                        6,
+                        "PANIC",
+                        7
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Incident Type",
+                    "description": "事件类型"
+                },
+                "day": {
+                    "type": "integer",
+                    "description": "预定发生日期"
+                },
+                "trigger_conditions": {
+                    "items": {
+                        "$ref": "#/definitions/v1.Condition"
+                    },
+                    "type": "array",
+                    "description": "触发条件列表"
+                },
+                "effect": {
+                    "$ref": "#/definitions/v1.Effect",
+                    "additionalProperties": true,
+                    "description": "事件触发时产生的效果"
+                },
+                "is_mandatory": {
+                    "type": "boolean",
+                    "description": "是否为必发事件"
+                },
+                "culprit_character_id": {
+                    "type": "integer",
+                    "description": "事件主谋角色ID（如适用）"
+                },
+                "victim_character_id": {
+                    "type": "integer",
+                    "description": "事件受害者角色ID（如适用）"
+                },
+                "location_id": {
+                    "type": "integer",
+                    "description": "事件发生地点ID（如适用）"
+                },
+                "is_main_plot_incident": {
+                    "type": "boolean",
+                    "description": "是否是主线剧情的事件"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Incident Config",
+            "description": "事件/悲剧在剧本中的配置"
+        },
+        "v1.IncidentTriggeredEvent": {
+            "properties": {
+                "incident": {
+                    "$ref": "#/definitions/v1.Incident",
+                    "additionalProperties": true,
+                    "description": "被触发的事件详情"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Incident Triggered Event",
+            "description": "事件触发事件"
+        },
+        "v1.IntrigueAdjustedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "角色ID"
+                },
+                "amount": {
+                    "type": "integer",
+                    "description": "调整量"
+                },
+                "new_intrigue": {
+                    "type": "integer",
+                    "description": "调整后的新阴谋值"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Intrigue Adjusted Event",
+            "description": "阴谋值调整事件"
         },
         "v1.LocationCondition": {
             "properties": {
@@ -1316,6 +1705,62 @@
             "type": "object",
             "title": "Location Condition",
             "description": "地点条件"
+        },
+        "v1.LoopLossEvent": {
+            "properties": {
+                "incident_type": {
+                    "enum": [
+                        "INCIDENT_TYPE_UNSPECIFIED",
+                        0,
+                        "MURDER",
+                        1,
+                        "SUICIDE",
+                        2,
+                        "ACCIDENT",
+                        3,
+                        "DISAPPEARANCE",
+                        4,
+                        "HOSPITAL_CONSPIRACY",
+                        5,
+                        "MURDER_MYSTERY",
+                        6,
+                        "PANIC",
+                        7
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Incident Type",
+                    "description": "事件类型"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Loop Loss Event",
+            "description": "循环失败事件"
+        },
+        "v1.LoopResetEvent": {
+            "properties": {
+                "loop_number": {
+                    "type": "integer",
+                    "description": "新的循环数"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Loop Reset Event",
+            "description": "循环重置事件"
+        },
+        "v1.LoopWinEvent": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Loop Win Event",
+            "description": "循环胜利事件"
         },
         "v1.MakeGuessPayload": {
             "properties": {
@@ -1409,6 +1854,26 @@
             "type": "object",
             "title": "Move Character Effect",
             "description": "移动角色效果"
+        },
+        "v1.ParanoiaAdjustedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "角色ID"
+                },
+                "amount": {
+                    "type": "integer",
+                    "description": "调整量"
+                },
+                "new_paranoia": {
+                    "type": "integer",
+                    "description": "调整后的新妄想值"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Paranoia Adjusted Event",
+            "description": "妄想值调整事件"
         },
         "v1.PassTurnAction": {
             "properties": {
@@ -1959,6 +2424,58 @@
             "title": "Target Selector",
             "description": "目标选择器，用于动态指定条件或效果的目标"
         },
+        "v1.TragedyTriggeredEvent": {
+            "properties": {
+                "tragedy_type": {
+                    "enum": [
+                        "INCIDENT_TYPE_UNSPECIFIED",
+                        0,
+                        "MURDER",
+                        1,
+                        "SUICIDE",
+                        2,
+                        "ACCIDENT",
+                        3,
+                        "DISAPPEARANCE",
+                        4,
+                        "HOSPITAL_CONSPIRACY",
+                        5,
+                        "MURDER_MYSTERY",
+                        6,
+                        "PANIC",
+                        7
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Incident Type",
+                    "description": "事件类型"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Tragedy Triggered Event",
+            "description": "悲剧触发事件"
+        },
+        "v1.TraitAddedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer"
+                },
+                "trait": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Trait Added Event",
+            "description": "特性添加事件"
+        },
         "v1.TraitCondition": {
             "properties": {
                 "target": {
@@ -1979,6 +2496,20 @@
             "type": "object",
             "title": "Trait Condition",
             "description": "特征条件"
+        },
+        "v1.TraitRemovedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer"
+                },
+                "trait": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Trait Removed Event",
+            "description": "特性移除事件"
         },
         "v1.TriggerIncidentEffect": {
             "properties": {

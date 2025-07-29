@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -609,7 +608,7 @@ const (
 	TriggerType_ON_PHASE_START           TriggerType = 4  // 特定阶段开始时（需配合GamePhase）
 	TriggerType_ON_PHASE_END             TriggerType = 5  // 特定阶段结束时（需配合GamePhase）
 	TriggerType_ON_GAME_EVENT            TriggerType = 6  // 发生特定游戏事件时
-	TriggerType_PASSIVE                  TriggerType = 7  // 被动（条件满足时持续生效）
+	TriggerType_ON_PASSIVE               TriggerType = 7  // 被动（条件满足时持续生效）
 	TriggerType_ON_GUESS_MADE            TriggerType = 8  // 推理发生时
 	TriggerType_ON_GAME_END              TriggerType = 9  // 游戏结束时
 	TriggerType_ON_DAY_END               TriggerType = 10 // 每日结束时
@@ -626,7 +625,7 @@ var (
 		4:  "ON_PHASE_START",
 		5:  "ON_PHASE_END",
 		6:  "ON_GAME_EVENT",
-		7:  "PASSIVE",
+		7:  "ON_PASSIVE",
 		8:  "ON_GUESS_MADE",
 		9:  "ON_GAME_END",
 		10: "ON_DAY_END",
@@ -640,7 +639,7 @@ var (
 		"ON_PHASE_START":           4,
 		"ON_PHASE_END":             5,
 		"ON_GAME_EVENT":            6,
-		"PASSIVE":                  7,
+		"ON_PASSIVE":               7,
 		"ON_GUESS_MADE":            8,
 		"ON_GAME_END":              9,
 		"ON_DAY_END":               10,
@@ -952,7 +951,7 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\x06SHRINE\x10\x02\x12\b\n" +
 	"\x04CITY\x10\x03\x12\n" +
 	"\n" +
-	"\x06SCHOOL\x10\x04*\xee\x01\n" +
+	"\x06SCHOOL\x10\x04*\xf1\x01\n" +
 	"\vTriggerType\x12\x1c\n" +
 	"\x18TRIGGER_TYPE_UNSPECIFIED\x10\x00\x12\x11\n" +
 	"\rON_GAME_SETUP\x10\x01\x12\x11\n" +
@@ -960,8 +959,9 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\fON_DAY_START\x10\x03\x12\x12\n" +
 	"\x0eON_PHASE_START\x10\x04\x12\x10\n" +
 	"\fON_PHASE_END\x10\x05\x12\x11\n" +
-	"\rON_GAME_EVENT\x10\x06\x12\v\n" +
-	"\aPASSIVE\x10\a\x12\x11\n" +
+	"\rON_GAME_EVENT\x10\x06\x12\x0e\n" +
+	"\n" +
+	"ON_PASSIVE\x10\a\x12\x11\n" +
 	"\rON_GUESS_MADE\x10\b\x12\x0f\n" +
 	"\vON_GAME_END\x10\t\x12\x0e\n" +
 	"\n" +

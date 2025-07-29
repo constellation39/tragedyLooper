@@ -7,14 +7,13 @@
 package v1
 
 import (
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
-
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
 )
 
 const (
@@ -26,14 +25,30 @@ const (
 
 // GameEvent 表示游戏中发生的事件。
 type GameEvent struct {
-	state   protoimpl.MessageState `protogen:"open.v1"`
-	Type    GameEventType          `protobuf:"varint,1,opt,name=type,proto3,enum=v1.GameEventType" json:"type,omitempty"` // 事件类型
-	Payload *anypb.Any             `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`                  // 事件的具体负载
-	// Types that are valid to be assigned to EventPayload:
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	Type      GameEventType          `protobuf:"varint,1,opt,name=type,proto3,enum=v1.GameEventType" json:"type,omitempty"` // 事件类型
+	Timestamp *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`              // 事件发生的时间戳
+	// Types that are valid to be assigned to Payload:
 	//
-	//	*GameEvent_PlayerAction
-	EventPayload  isGameEvent_EventPayload `protobuf_oneof:"event_payload"`
-	Timestamp     *timestamppb.Timestamp   `protobuf:"bytes,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"` // 事件发生的时间戳
+	//	*GameEvent_CharacterMoved
+	//	*GameEvent_ParanoiaAdjusted
+	//	*GameEvent_GoodwillAdjusted
+	//	*GameEvent_IntrigueAdjusted
+	//	*GameEvent_LoopLoss
+	//	*GameEvent_LoopWin
+	//	*GameEvent_AbilityUsed
+	//	*GameEvent_DayAdvanced
+	//	*GameEvent_CardPlayed
+	//	*GameEvent_CardRevealed
+	//	*GameEvent_LoopReset
+	//	*GameEvent_GameOver
+	//	*GameEvent_ChoiceRequired
+	//	*GameEvent_IncidentTriggered
+	//	*GameEvent_TragedyTriggered
+	//	*GameEvent_TraitAdded
+	//	*GameEvent_TraitRemoved
+	//	*GameEvent_PlayerActionTaken
+	Payload       isGameEvent_Payload `protobuf_oneof:"payload"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -75,29 +90,6 @@ func (x *GameEvent) GetType() GameEventType {
 	return GameEventType_GAME_EVENT_TYPE_UNSPECIFIED
 }
 
-func (x *GameEvent) GetPayload() *anypb.Any {
-	if x != nil {
-		return x.Payload
-	}
-	return nil
-}
-
-func (x *GameEvent) GetEventPayload() isGameEvent_EventPayload {
-	if x != nil {
-		return x.EventPayload
-	}
-	return nil
-}
-
-func (x *GameEvent) GetPlayerAction() *PlayerActionTakenEvent {
-	if x != nil {
-		if x, ok := x.EventPayload.(*GameEvent_PlayerAction); ok {
-			return x.PlayerAction
-		}
-	}
-	return nil
-}
-
 func (x *GameEvent) GetTimestamp() *timestamppb.Timestamp {
 	if x != nil {
 		return x.Timestamp
@@ -105,15 +97,286 @@ func (x *GameEvent) GetTimestamp() *timestamppb.Timestamp {
 	return nil
 }
 
-type isGameEvent_EventPayload interface {
-	isGameEvent_EventPayload()
+func (x *GameEvent) GetPayload() isGameEvent_Payload {
+	if x != nil {
+		return x.Payload
+	}
+	return nil
 }
 
-type GameEvent_PlayerAction struct {
-	PlayerAction *PlayerActionTakenEvent `protobuf:"bytes,4,opt,name=player_action,json=playerAction,proto3,oneof"`
+func (x *GameEvent) GetCharacterMoved() *CharacterMovedEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_CharacterMoved); ok {
+			return x.CharacterMoved
+		}
+	}
+	return nil
 }
 
-func (*GameEvent_PlayerAction) isGameEvent_EventPayload() {}
+func (x *GameEvent) GetParanoiaAdjusted() *ParanoiaAdjustedEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_ParanoiaAdjusted); ok {
+			return x.ParanoiaAdjusted
+		}
+	}
+	return nil
+}
+
+func (x *GameEvent) GetGoodwillAdjusted() *GoodwillAdjustedEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_GoodwillAdjusted); ok {
+			return x.GoodwillAdjusted
+		}
+	}
+	return nil
+}
+
+func (x *GameEvent) GetIntrigueAdjusted() *IntrigueAdjustedEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_IntrigueAdjusted); ok {
+			return x.IntrigueAdjusted
+		}
+	}
+	return nil
+}
+
+func (x *GameEvent) GetLoopLoss() *LoopLossEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_LoopLoss); ok {
+			return x.LoopLoss
+		}
+	}
+	return nil
+}
+
+func (x *GameEvent) GetLoopWin() *LoopWinEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_LoopWin); ok {
+			return x.LoopWin
+		}
+	}
+	return nil
+}
+
+func (x *GameEvent) GetAbilityUsed() *AbilityUsedEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_AbilityUsed); ok {
+			return x.AbilityUsed
+		}
+	}
+	return nil
+}
+
+func (x *GameEvent) GetDayAdvanced() *DayAdvancedEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_DayAdvanced); ok {
+			return x.DayAdvanced
+		}
+	}
+	return nil
+}
+
+func (x *GameEvent) GetCardPlayed() *CardPlayedEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_CardPlayed); ok {
+			return x.CardPlayed
+		}
+	}
+	return nil
+}
+
+func (x *GameEvent) GetCardRevealed() *CardRevealedEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_CardRevealed); ok {
+			return x.CardRevealed
+		}
+	}
+	return nil
+}
+
+func (x *GameEvent) GetLoopReset() *LoopResetEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_LoopReset); ok {
+			return x.LoopReset
+		}
+	}
+	return nil
+}
+
+func (x *GameEvent) GetGameOver() *GameOverEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_GameOver); ok {
+			return x.GameOver
+		}
+	}
+	return nil
+}
+
+func (x *GameEvent) GetChoiceRequired() *ChoiceRequiredEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_ChoiceRequired); ok {
+			return x.ChoiceRequired
+		}
+	}
+	return nil
+}
+
+func (x *GameEvent) GetIncidentTriggered() *IncidentTriggeredEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_IncidentTriggered); ok {
+			return x.IncidentTriggered
+		}
+	}
+	return nil
+}
+
+func (x *GameEvent) GetTragedyTriggered() *TragedyTriggeredEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_TragedyTriggered); ok {
+			return x.TragedyTriggered
+		}
+	}
+	return nil
+}
+
+func (x *GameEvent) GetTraitAdded() *TraitAddedEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_TraitAdded); ok {
+			return x.TraitAdded
+		}
+	}
+	return nil
+}
+
+func (x *GameEvent) GetTraitRemoved() *TraitRemovedEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_TraitRemoved); ok {
+			return x.TraitRemoved
+		}
+	}
+	return nil
+}
+
+func (x *GameEvent) GetPlayerActionTaken() *PlayerActionTakenEvent {
+	if x != nil {
+		if x, ok := x.Payload.(*GameEvent_PlayerActionTaken); ok {
+			return x.PlayerActionTaken
+		}
+	}
+	return nil
+}
+
+type isGameEvent_Payload interface {
+	isGameEvent_Payload()
+}
+
+type GameEvent_CharacterMoved struct {
+	CharacterMoved *CharacterMovedEvent `protobuf:"bytes,3,opt,name=character_moved,json=characterMoved,proto3,oneof"`
+}
+
+type GameEvent_ParanoiaAdjusted struct {
+	ParanoiaAdjusted *ParanoiaAdjustedEvent `protobuf:"bytes,4,opt,name=paranoia_adjusted,json=paranoiaAdjusted,proto3,oneof"`
+}
+
+type GameEvent_GoodwillAdjusted struct {
+	GoodwillAdjusted *GoodwillAdjustedEvent `protobuf:"bytes,5,opt,name=goodwill_adjusted,json=goodwillAdjusted,proto3,oneof"`
+}
+
+type GameEvent_IntrigueAdjusted struct {
+	IntrigueAdjusted *IntrigueAdjustedEvent `protobuf:"bytes,6,opt,name=intrigue_adjusted,json=intrigueAdjusted,proto3,oneof"`
+}
+
+type GameEvent_LoopLoss struct {
+	LoopLoss *LoopLossEvent `protobuf:"bytes,7,opt,name=loop_loss,json=loopLoss,proto3,oneof"`
+}
+
+type GameEvent_LoopWin struct {
+	LoopWin *LoopWinEvent `protobuf:"bytes,8,opt,name=loop_win,json=loopWin,proto3,oneof"`
+}
+
+type GameEvent_AbilityUsed struct {
+	AbilityUsed *AbilityUsedEvent `protobuf:"bytes,9,opt,name=ability_used,json=abilityUsed,proto3,oneof"`
+}
+
+type GameEvent_DayAdvanced struct {
+	DayAdvanced *DayAdvancedEvent `protobuf:"bytes,10,opt,name=day_advanced,json=dayAdvanced,proto3,oneof"`
+}
+
+type GameEvent_CardPlayed struct {
+	CardPlayed *CardPlayedEvent `protobuf:"bytes,11,opt,name=card_played,json=cardPlayed,proto3,oneof"`
+}
+
+type GameEvent_CardRevealed struct {
+	CardRevealed *CardRevealedEvent `protobuf:"bytes,12,opt,name=card_revealed,json=cardRevealed,proto3,oneof"`
+}
+
+type GameEvent_LoopReset struct {
+	LoopReset *LoopResetEvent `protobuf:"bytes,13,opt,name=loop_reset,json=loopReset,proto3,oneof"`
+}
+
+type GameEvent_GameOver struct {
+	GameOver *GameOverEvent `protobuf:"bytes,14,opt,name=game_over,json=gameOver,proto3,oneof"`
+}
+
+type GameEvent_ChoiceRequired struct {
+	ChoiceRequired *ChoiceRequiredEvent `protobuf:"bytes,15,opt,name=choice_required,json=choiceRequired,proto3,oneof"`
+}
+
+type GameEvent_IncidentTriggered struct {
+	IncidentTriggered *IncidentTriggeredEvent `protobuf:"bytes,16,opt,name=incident_triggered,json=incidentTriggered,proto3,oneof"`
+}
+
+type GameEvent_TragedyTriggered struct {
+	TragedyTriggered *TragedyTriggeredEvent `protobuf:"bytes,17,opt,name=tragedy_triggered,json=tragedyTriggered,proto3,oneof"`
+}
+
+type GameEvent_TraitAdded struct {
+	TraitAdded *TraitAddedEvent `protobuf:"bytes,18,opt,name=trait_added,json=traitAdded,proto3,oneof"`
+}
+
+type GameEvent_TraitRemoved struct {
+	TraitRemoved *TraitRemovedEvent `protobuf:"bytes,19,opt,name=trait_removed,json=traitRemoved,proto3,oneof"`
+}
+
+type GameEvent_PlayerActionTaken struct {
+	PlayerActionTaken *PlayerActionTakenEvent `protobuf:"bytes,20,opt,name=player_action_taken,json=playerActionTaken,proto3,oneof"`
+}
+
+func (*GameEvent_CharacterMoved) isGameEvent_Payload() {}
+
+func (*GameEvent_ParanoiaAdjusted) isGameEvent_Payload() {}
+
+func (*GameEvent_GoodwillAdjusted) isGameEvent_Payload() {}
+
+func (*GameEvent_IntrigueAdjusted) isGameEvent_Payload() {}
+
+func (*GameEvent_LoopLoss) isGameEvent_Payload() {}
+
+func (*GameEvent_LoopWin) isGameEvent_Payload() {}
+
+func (*GameEvent_AbilityUsed) isGameEvent_Payload() {}
+
+func (*GameEvent_DayAdvanced) isGameEvent_Payload() {}
+
+func (*GameEvent_CardPlayed) isGameEvent_Payload() {}
+
+func (*GameEvent_CardRevealed) isGameEvent_Payload() {}
+
+func (*GameEvent_LoopReset) isGameEvent_Payload() {}
+
+func (*GameEvent_GameOver) isGameEvent_Payload() {}
+
+func (*GameEvent_ChoiceRequired) isGameEvent_Payload() {}
+
+func (*GameEvent_IncidentTriggered) isGameEvent_Payload() {}
+
+func (*GameEvent_TragedyTriggered) isGameEvent_Payload() {}
+
+func (*GameEvent_TraitAdded) isGameEvent_Payload() {}
+
+func (*GameEvent_TraitRemoved) isGameEvent_Payload() {}
+
+func (*GameEvent_PlayerActionTaken) isGameEvent_Payload() {}
 
 // 事件库，用于存储和管理游戏中的所有事件
 type GameEventLib struct {
@@ -1169,13 +1432,33 @@ var File_v1_event_proto protoreflect.FileDescriptor
 
 const file_v1_event_proto_rawDesc = "" +
 	"\n" +
-	"\x0ev1/event.proto\x12\x02v1\x1a\x19google/protobuf/any.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\rv1/card.proto\x1a\x0ev1/enums.proto\x1a\x11v1/incident.proto\x1a\x10v1/payload.proto\"\xf0\x01\n" +
+	"\x0ev1/event.proto\x12\x02v1\x1a\x19google/protobuf/any.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\rv1/card.proto\x1a\x0ev1/enums.proto\x1a\x11v1/incident.proto\x1a\x10v1/payload.proto\"\xec\t\n" +
 	"\tGameEvent\x12%\n" +
-	"\x04type\x18\x01 \x01(\x0e2\x11.v1.GameEventTypeR\x04type\x12.\n" +
-	"\apayload\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\apayload\x12A\n" +
-	"\rplayer_action\x18\x04 \x01(\v2\x1a.v1.PlayerActionTakenEventH\x00R\fplayerAction\x128\n" +
-	"\ttimestamp\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestampB\x0f\n" +
-	"\revent_payload\"\x95\x01\n" +
+	"\x04type\x18\x01 \x01(\x0e2\x11.v1.GameEventTypeR\x04type\x128\n" +
+	"\ttimestamp\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12B\n" +
+	"\x0fcharacter_moved\x18\x03 \x01(\v2\x17.v1.CharacterMovedEventH\x00R\x0echaracterMoved\x12H\n" +
+	"\x11paranoia_adjusted\x18\x04 \x01(\v2\x19.v1.ParanoiaAdjustedEventH\x00R\x10paranoiaAdjusted\x12H\n" +
+	"\x11goodwill_adjusted\x18\x05 \x01(\v2\x19.v1.GoodwillAdjustedEventH\x00R\x10goodwillAdjusted\x12H\n" +
+	"\x11intrigue_adjusted\x18\x06 \x01(\v2\x19.v1.IntrigueAdjustedEventH\x00R\x10intrigueAdjusted\x120\n" +
+	"\tloop_loss\x18\a \x01(\v2\x11.v1.LoopLossEventH\x00R\bloopLoss\x12-\n" +
+	"\bloop_win\x18\b \x01(\v2\x10.v1.LoopWinEventH\x00R\aloopWin\x129\n" +
+	"\fability_used\x18\t \x01(\v2\x14.v1.AbilityUsedEventH\x00R\vabilityUsed\x129\n" +
+	"\fday_advanced\x18\n" +
+	" \x01(\v2\x14.v1.DayAdvancedEventH\x00R\vdayAdvanced\x126\n" +
+	"\vcard_played\x18\v \x01(\v2\x13.v1.CardPlayedEventH\x00R\n" +
+	"cardPlayed\x12<\n" +
+	"\rcard_revealed\x18\f \x01(\v2\x15.v1.CardRevealedEventH\x00R\fcardRevealed\x123\n" +
+	"\n" +
+	"loop_reset\x18\r \x01(\v2\x12.v1.LoopResetEventH\x00R\tloopReset\x120\n" +
+	"\tgame_over\x18\x0e \x01(\v2\x11.v1.GameOverEventH\x00R\bgameOver\x12B\n" +
+	"\x0fchoice_required\x18\x0f \x01(\v2\x17.v1.ChoiceRequiredEventH\x00R\x0echoiceRequired\x12K\n" +
+	"\x12incident_triggered\x18\x10 \x01(\v2\x1a.v1.IncidentTriggeredEventH\x00R\x11incidentTriggered\x12H\n" +
+	"\x11tragedy_triggered\x18\x11 \x01(\v2\x19.v1.TragedyTriggeredEventH\x00R\x10tragedyTriggered\x126\n" +
+	"\vtrait_added\x18\x12 \x01(\v2\x13.v1.TraitAddedEventH\x00R\n" +
+	"traitAdded\x12<\n" +
+	"\rtrait_removed\x18\x13 \x01(\v2\x15.v1.TraitRemovedEventH\x00R\ftraitRemoved\x12L\n" +
+	"\x13player_action_taken\x18\x14 \x01(\v2\x1a.v1.PlayerActionTakenEventH\x00R\x11playerActionTakenB\t\n" +
+	"\apayload\"\x95\x01\n" +
 	"\fGameEventLib\x124\n" +
 	"\x06events\x18\x01 \x03(\v2\x1c.v1.GameEventLib.EventsEntryR\x06events\x1aO\n" +
 	"\vEventsEntry\x12\x10\n" +
@@ -1280,37 +1563,53 @@ var file_v1_event_proto_goTypes = []any{
 	nil,                            // 21: v1.GameEventLib.EventsEntry
 	nil,                            // 22: v1.CardRevealedEvent.CardsEntry
 	(GameEventType)(0),             // 23: v1.GameEventType
-	(*anypb.Any)(nil),              // 24: google.protobuf.Any
-	(*timestamppb.Timestamp)(nil),  // 25: google.protobuf.Timestamp
-	(LocationType)(0),              // 26: v1.LocationType
-	(IncidentType)(0),              // 27: v1.IncidentType
-	(*Card)(nil),                   // 28: v1.Card
-	(PlayerRole)(0),                // 29: v1.PlayerRole
-	(*Incident)(nil),               // 30: v1.Incident
-	(*PlayerActionPayload)(nil),    // 31: v1.PlayerActionPayload
+	(*timestamppb.Timestamp)(nil),  // 24: google.protobuf.Timestamp
+	(LocationType)(0),              // 25: v1.LocationType
+	(IncidentType)(0),              // 26: v1.IncidentType
+	(*Card)(nil),                   // 27: v1.Card
+	(PlayerRole)(0),                // 28: v1.PlayerRole
+	(*Incident)(nil),               // 29: v1.Incident
+	(*PlayerActionPayload)(nil),    // 30: v1.PlayerActionPayload
+	(*anypb.Any)(nil),              // 31: google.protobuf.Any
 }
 var file_v1_event_proto_depIdxs = []int32{
 	23, // 0: v1.GameEvent.type:type_name -> v1.GameEventType
-	24, // 1: v1.GameEvent.payload:type_name -> google.protobuf.Any
-	20, // 2: v1.GameEvent.player_action:type_name -> v1.PlayerActionTakenEvent
-	25, // 3: v1.GameEvent.timestamp:type_name -> google.protobuf.Timestamp
-	21, // 4: v1.GameEventLib.events:type_name -> v1.GameEventLib.EventsEntry
-	26, // 5: v1.CharacterMovedEvent.new_location:type_name -> v1.LocationType
-	27, // 6: v1.LoopLossEvent.incident_type:type_name -> v1.IncidentType
-	28, // 7: v1.CardPlayedEvent.card:type_name -> v1.Card
-	22, // 8: v1.CardRevealedEvent.cards:type_name -> v1.CardRevealedEvent.CardsEntry
-	29, // 9: v1.GameOverEvent.winner:type_name -> v1.PlayerRole
-	14, // 10: v1.ChoiceRequiredEvent.choices:type_name -> v1.Choice
-	30, // 11: v1.IncidentTriggeredEvent.incident:type_name -> v1.Incident
-	27, // 12: v1.TragedyTriggeredEvent.tragedy_type:type_name -> v1.IncidentType
-	31, // 13: v1.PlayerActionTakenEvent.action:type_name -> v1.PlayerActionPayload
-	24, // 14: v1.GameEventLib.EventsEntry.value:type_name -> google.protobuf.Any
-	28, // 15: v1.CardRevealedEvent.CardsEntry.value:type_name -> v1.Card
-	16, // [16:16] is the sub-list for method output_type
-	16, // [16:16] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	24, // 1: v1.GameEvent.timestamp:type_name -> google.protobuf.Timestamp
+	2,  // 2: v1.GameEvent.character_moved:type_name -> v1.CharacterMovedEvent
+	3,  // 3: v1.GameEvent.paranoia_adjusted:type_name -> v1.ParanoiaAdjustedEvent
+	4,  // 4: v1.GameEvent.goodwill_adjusted:type_name -> v1.GoodwillAdjustedEvent
+	5,  // 5: v1.GameEvent.intrigue_adjusted:type_name -> v1.IntrigueAdjustedEvent
+	6,  // 6: v1.GameEvent.loop_loss:type_name -> v1.LoopLossEvent
+	7,  // 7: v1.GameEvent.loop_win:type_name -> v1.LoopWinEvent
+	8,  // 8: v1.GameEvent.ability_used:type_name -> v1.AbilityUsedEvent
+	9,  // 9: v1.GameEvent.day_advanced:type_name -> v1.DayAdvancedEvent
+	10, // 10: v1.GameEvent.card_played:type_name -> v1.CardPlayedEvent
+	11, // 11: v1.GameEvent.card_revealed:type_name -> v1.CardRevealedEvent
+	12, // 12: v1.GameEvent.loop_reset:type_name -> v1.LoopResetEvent
+	13, // 13: v1.GameEvent.game_over:type_name -> v1.GameOverEvent
+	15, // 14: v1.GameEvent.choice_required:type_name -> v1.ChoiceRequiredEvent
+	16, // 15: v1.GameEvent.incident_triggered:type_name -> v1.IncidentTriggeredEvent
+	17, // 16: v1.GameEvent.tragedy_triggered:type_name -> v1.TragedyTriggeredEvent
+	18, // 17: v1.GameEvent.trait_added:type_name -> v1.TraitAddedEvent
+	19, // 18: v1.GameEvent.trait_removed:type_name -> v1.TraitRemovedEvent
+	20, // 19: v1.GameEvent.player_action_taken:type_name -> v1.PlayerActionTakenEvent
+	21, // 20: v1.GameEventLib.events:type_name -> v1.GameEventLib.EventsEntry
+	25, // 21: v1.CharacterMovedEvent.new_location:type_name -> v1.LocationType
+	26, // 22: v1.LoopLossEvent.incident_type:type_name -> v1.IncidentType
+	27, // 23: v1.CardPlayedEvent.card:type_name -> v1.Card
+	22, // 24: v1.CardRevealedEvent.cards:type_name -> v1.CardRevealedEvent.CardsEntry
+	28, // 25: v1.GameOverEvent.winner:type_name -> v1.PlayerRole
+	14, // 26: v1.ChoiceRequiredEvent.choices:type_name -> v1.Choice
+	29, // 27: v1.IncidentTriggeredEvent.incident:type_name -> v1.Incident
+	26, // 28: v1.TragedyTriggeredEvent.tragedy_type:type_name -> v1.IncidentType
+	30, // 29: v1.PlayerActionTakenEvent.action:type_name -> v1.PlayerActionPayload
+	31, // 30: v1.GameEventLib.EventsEntry.value:type_name -> google.protobuf.Any
+	27, // 31: v1.CardRevealedEvent.CardsEntry.value:type_name -> v1.Card
+	32, // [32:32] is the sub-list for method output_type
+	32, // [32:32] is the sub-list for method input_type
+	32, // [32:32] is the sub-list for extension type_name
+	32, // [32:32] is the sub-list for extension extendee
+	0,  // [0:32] is the sub-list for field type_name
 }
 
 func init() { file_v1_event_proto_init() }
@@ -1323,7 +1622,24 @@ func file_v1_event_proto_init() {
 	file_v1_incident_proto_init()
 	file_v1_payload_proto_init()
 	file_v1_event_proto_msgTypes[0].OneofWrappers = []any{
-		(*GameEvent_PlayerAction)(nil),
+		(*GameEvent_CharacterMoved)(nil),
+		(*GameEvent_ParanoiaAdjusted)(nil),
+		(*GameEvent_GoodwillAdjusted)(nil),
+		(*GameEvent_IntrigueAdjusted)(nil),
+		(*GameEvent_LoopLoss)(nil),
+		(*GameEvent_LoopWin)(nil),
+		(*GameEvent_AbilityUsed)(nil),
+		(*GameEvent_DayAdvanced)(nil),
+		(*GameEvent_CardPlayed)(nil),
+		(*GameEvent_CardRevealed)(nil),
+		(*GameEvent_LoopReset)(nil),
+		(*GameEvent_GameOver)(nil),
+		(*GameEvent_ChoiceRequired)(nil),
+		(*GameEvent_IncidentTriggered)(nil),
+		(*GameEvent_TragedyTriggered)(nil),
+		(*GameEvent_TraitAdded)(nil),
+		(*GameEvent_TraitRemoved)(nil),
+		(*GameEvent_PlayerActionTaken)(nil),
 	}
 	file_v1_event_proto_msgTypes[14].OneofWrappers = []any{
 		(*Choice_TargetCharacterId)(nil),

@@ -13,16 +13,16 @@ type ParanoiaAdjustedHandler struct{}
 
 // Handle updates the character's paranoia in the game state.
 func (h *ParanoiaAdjustedHandler) Handle(state *model.GameState, event *model.GameEvent) error {
-	var e model.ParanoiaAdjustedEvent
-	if err := event.Payload.UnmarshalTo(&e); err != nil {
-		return err
+	e, ok := event.Payload.(*model.GameEvent_ParanoiaAdjusted)
+	if !ok {
+		return nil // Or handle error appropriately
 	}
 
-	if char, ok := state.Characters[e.CharacterId]; ok {
-		char.Paranoia += e.Amount
+	if char, ok := state.Characters[e.ParanoiaAdjusted.CharacterId]; ok {
+		char.Paranoia += e.ParanoiaAdjusted.Amount
 		// The event payload is updated to reflect the new value, though this is a side effect.
 		// Consider if this is the desired behavior.
-		e.NewParanoia = char.Paranoia
+		e.ParanoiaAdjusted.NewParanoia = char.Paranoia
 	}
 	return nil
 }

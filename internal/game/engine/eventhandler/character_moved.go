@@ -13,13 +13,13 @@ type CharacterMovedHandler struct{}
 
 // Handle updates the character's location in the game state.
 func (h *CharacterMovedHandler) Handle(state *model.GameState, event *model.GameEvent) error {
-	var e model.CharacterMovedEvent
-	if err := event.Payload.UnmarshalTo(&e); err != nil {
-		return err
+	e, ok := event.Payload.(*model.GameEvent_CharacterMoved)
+	if !ok {
+		return nil // Or handle error appropriately
 	}
 
-	if char, ok := state.Characters[e.CharacterId]; ok {
-		char.CurrentLocation = e.NewLocation
+	if char, ok := state.Characters[e.CharacterMoved.CharacterId]; ok {
+		char.CurrentLocation = e.CharacterMoved.NewLocation
 	}
 	return nil
 }

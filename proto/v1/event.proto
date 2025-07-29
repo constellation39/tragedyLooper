@@ -14,11 +14,28 @@ option go_package = "tragedylooper/internal/game/proto/v1";
 // GameEvent 表示游戏中发生的事件。
 message GameEvent {
   GameEventType type = 1; // 事件类型
-  google.protobuf.Any payload = 2; // 事件的具体负载
-  oneof event_payload {
-    PlayerActionTakenEvent player_action = 4;
+  google.protobuf.Timestamp timestamp = 2; // 事件发生的时间戳
+
+  oneof payload {
+    CharacterMovedEvent character_moved = 3;
+    ParanoiaAdjustedEvent paranoia_adjusted = 4;
+    GoodwillAdjustedEvent goodwill_adjusted = 5;
+    IntrigueAdjustedEvent intrigue_adjusted = 6;
+    LoopLossEvent loop_loss = 7;
+    LoopWinEvent loop_win = 8;
+    AbilityUsedEvent ability_used = 9;
+    DayAdvancedEvent day_advanced = 10;
+    CardPlayedEvent card_played = 11;
+    CardRevealedEvent card_revealed = 12;
+    LoopResetEvent loop_reset = 13;
+    GameOverEvent game_over = 14;
+    ChoiceRequiredEvent choice_required = 15;
+    IncidentTriggeredEvent incident_triggered = 16;
+    TragedyTriggeredEvent tragedy_triggered = 17;
+    TraitAddedEvent trait_added = 18;
+    TraitRemovedEvent trait_removed = 19;
+    PlayerActionTakenEvent player_action_taken = 20;
   }
-  google.protobuf.Timestamp timestamp = 3; // 事件发生的时间戳
 }
 
 // 事件库，用于存储和管理游戏中的所有事件

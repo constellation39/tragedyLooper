@@ -15,7 +15,7 @@
         5,
         "ON_GAME_EVENT",
         6,
-        "PASSIVE",
+        "ON_PASSIVE",
         7,
         "ON_GUESS_MADE",
         8,

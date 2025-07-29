@@ -13,14 +13,14 @@ type GoodwillAdjustedHandler struct{}
 
 // Handle updates the character's goodwill in the game state.
 func (h *GoodwillAdjustedHandler) Handle(state *model.GameState, event *model.GameEvent) error {
-	var e model.GoodwillAdjustedEvent
-	if err := event.Payload.UnmarshalTo(&e); err != nil {
-		return err
+	e, ok := event.Payload.(*model.GameEvent_GoodwillAdjusted)
+	if !ok {
+		return nil // Or handle error appropriately
 	}
 
-	if char, ok := state.Characters[e.CharacterId]; ok {
-		char.Goodwill += e.Amount
-		e.NewGoodwill = char.Goodwill
+	if char, ok := state.Characters[e.GoodwillAdjusted.CharacterId]; ok {
+		char.Goodwill += e.GoodwillAdjusted.Amount
+		e.GoodwillAdjusted.NewGoodwill = char.Goodwill
 	}
 	return nil
 }
