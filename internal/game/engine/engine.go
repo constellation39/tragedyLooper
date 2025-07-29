@@ -244,6 +244,10 @@ func (ge *GameEngine) getCharacterByID(charID int32) *model.Character {
 	return char
 }
 
+func (ge *GameEngine) MoveCharacter(char *model.Character, dx, dy int) {
+	ge.moveCharacter(char, dx, dy)
+}
+
 func (ge *GameEngine) TriggerIncidents() {
 	// TODO: Implement incident triggering logic
 }
