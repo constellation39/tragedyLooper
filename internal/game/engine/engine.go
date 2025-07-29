@@ -3,8 +3,8 @@ package engine
 import (
 	"context"
 	"time"
-	"tragedylooper/internal/game/engine/event_handlers"
-	"tragedylooper/internal/game/engine/phases"
+	"tragedylooper/internal/game/engine/eventhandler"
+	"tragedylooper/internal/game/engine/phase"
 	"tragedylooper/internal/game/loader"
 	model "tragedylooper/pkg/proto/v1"
 
@@ -15,21 +15,21 @@ import (
 )
 
 // eventHandlers maps event types to their respective handler instances.
-var eventHandlers = map[model.GameEventType]handlers.EventHandler{
+var eventHandlers = map[model.GameEventType]eventhandler.EventHandler{
 	model.GameEventType_CHARACTER_MOVED:    &handlers.CharacterMovedHandler{},
 	model.GameEventType_PARANOIA_ADJUSTED:  &handlers.ParanoiaAdjustedHandler{},
 	model.GameEventType_GOODWILL_ADJUSTED:  &handlers.GoodwillAdjustedHandler{},
-	model.GameEventType_INTRIGUE_ADJUSTED:  &handlers.IntrigueAdjustedHandler{},
-	model.GameEventType_TRAIT_ADDED:        &handlers.TraitAddedHandler{},
-	model.GameEventType_TRAIT_REMOVED:      &handlers.TraitRemovedHandler{},
-	model.GameEventType_CARD_PLAYED:        &handlers.CardPlayedHandler{},
-	model.GameEventType_CARD_REVEALED:      &handlers.CardRevealedHandler{},
-	model.GameEventType_DAY_ADVANCED:       &handlers.DayAdvancedHandler{},
-	model.GameEventType_LOOP_RESET:         &handlers.LoopResetHandler{},
-	model.GameEventType_GAME_ENDED:         &handlers.GameOverHandler{},
-	model.GameEventType_INCIDENT_TRIGGERED: &handlers.IncidentTriggeredHandler{},
-	model.GameEventType_LOOP_WIN:           &handlers.LoopWinHandler{},
-	model.GameEventType_LOOP_LOSS:          &handlers.LoopLossHandler{},
+	model.GameEventType_INTRIGUE_ADJUSTED:  &eventhandler.IntrigueAdjustedHandler{},
+	model.GameEventType_TRAIT_ADDED:        &eventhandler.TraitAddedHandler{},
+	model.GameEventType_TRAIT_REMOVED:      &eventhandler.TraitRemovedHandler{},
+	model.GameEventType_CARD_PLAYED:        &eventhandler.CardPlayedHandler{},
+	model.GameEventType_CARD_REVEALED:      &eventhandler.CardRevealedHandler{},
+	model.GameEventType_DAY_ADVANCED:       &eventhandler.DayAdvancedHandler{},
+	model.GameEventType_LOOP_RESET:         &eventhandler.LoopResetHandler{},
+	model.GameEventType_GAME_ENDED:         &eventhandler.GameOverHandler{},
+	model.GameEventType_INCIDENT_TRIGGERED: &eventhandler.IncidentTriggeredHandler{},
+	model.GameEventType_LOOP_WIN:           &eventhandler.LoopWinHandler{},
+	model.GameEventType_LOOP_LOSS:          &eventhandler.LoopLossHandler{},
 }
 
 // GameEngine manages the state and logic of a single game instance.
@@ -58,7 +58,7 @@ type GameEngine struct {
 
 	dispatchGameEvent chan *model.GameEvent
 
-	currentPhase phases.Phase
+	currentPhase phase.Phase
 	phaseTimer   *time.Timer
 	gameStarted  bool
 
@@ -77,7 +77,7 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator 
 		engineChan:           make(chan engineRequest, 100),
 		stopChan:             make(chan struct{}),
 		dispatchGameEvent:    make(chan *model.GameEvent, 100),
-		currentPhase:         &phases.SetupPhase{}, // Start with the new SetupPhase
+		currentPhase:         &phase.SetupPhase{}, // Start with the new SetupPhase
 		phaseTimer:           time.NewTimer(time.Hour),
 		playerReady:          make(map[int32]bool),
 		mastermindPlayerID:   0,
@@ -192,7 +192,7 @@ func (ge *GameEngine) processEvent(event *model.GameEvent) {
 	// ge.checkForTriggers(event) // TODO: Re-implement trigger logic
 }
 
-func (ge *GameEngine) transitionTo(nextPhase phases.Phase) {
+func (ge *GameEngine) transitionTo(nextPhase phase.Phase) {
 	if nextPhase == nil {
 		// No transition, stay in the current phase
 		return
@@ -227,7 +227,7 @@ func (ge *GameEngine) transitionTo(nextPhase phases.Phase) {
 func (ge *GameEngine) endGame(winner model.PlayerRole) {
 	ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: winner})
 	ge.logger.Info("Game over", zap.String("winner", winner.String()))
-	ge.transitionTo(&phases.GameOverPhase{})
+	ge.transitionTo(&phase.GameOverPhase{})
 }
 
 func (ge *GameEngine) ResetPlayerReadiness() {
@@ -261,7 +261,6 @@ func (ge *GameEngine) GetGameState() *model.GameState {
 	return ge.GameState
 }
 
-// GetGameConfig implements the phases.GameEngine interface.
 func (ge *GameEngine) GetGameConfig() loader.GameConfig {
 	return ge.gameConfig
 }
