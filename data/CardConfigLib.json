@@ -139,7 +139,7 @@
                 "sub_effects": [
                     {
                         "forbid": {
-                            "forbid_type": "FORBID_MOVEMENT"
+                            "forbid_type": "MOVEMENT"
                         }
                     }
                 ]

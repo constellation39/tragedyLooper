@@ -167,7 +167,12 @@ func (ge *GameEngine) handleEngineRequest(req engineAction) {
 	switch r := req.(type) {
 	case *actionCompleteRequest:
 		// AI 或玩家已提交操作。
-		ge.pm.handleAction(r.playerID, r.action)
+		player, ok := ge.GameState.Players[r.playerID]
+		if !ok {
+			ge.logger.Warn("Action from unknown player", zap.Int32("playerID", r.playerID))
+			return
+		}
+		ge.pm.handleAction(player, r.action)
 	case *getPlayerViewRequest:
 		// 对特定于玩家的游戏状态视图的请求。
 		r.responseChan <- ge.GeneratePlayerView(r.playerID)

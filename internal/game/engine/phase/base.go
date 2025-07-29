@@ -41,7 +41,7 @@ type Phase interface {
 	// Enter 在进入此阶段时调用，返回下一个阶段（如果立即切换）。
 	Enter(ge GameEngine) Phase
 	// HandleAction 处理玩家在此阶段的操作，返回下一个阶段（如果发生变化）。
-	HandleAction(ge GameEngine, playerID int32, action *model.PlayerActionPayload) Phase
+	HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase
 	// HandleEvent 处理在此阶段接收到的游戏事件，返回下一个阶段（如果发生变化）。
 	HandleEvent(ge GameEngine, event *model.GameEvent) Phase
 	// HandleTimeout 处理此阶段的超时，返回下一个阶段。
@@ -59,7 +59,7 @@ type basePhase struct{}
 func (p *basePhase) Enter(ge GameEngine) Phase { return nil }
 
 // HandleAction 是 Phase 接口的默认实现，不执行任何操作并返回 nil。
-func (p *basePhase) HandleAction(ge GameEngine, playerID int32, action *model.PlayerActionPayload) Phase {
+func (p *basePhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
 	return nil
 }
 

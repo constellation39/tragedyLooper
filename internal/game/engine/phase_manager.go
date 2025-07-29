@@ -57,8 +57,8 @@ func (pm *phaseManager) CurrentPhase() phase.Phase {
 // handleAction 将操作委托给当前阶段并转换到下一个阶段。
 // playerID: 执行操作的玩家ID。
 // action: 玩家操作的负载。
-func (pm *phaseManager) handleAction(playerID int32, action *model.PlayerActionPayload) {
-	nextPhase := pm.currentPhase.HandleAction(pm.engine, playerID, action)
+func (pm *phaseManager) handleAction(player *model.Player, action *model.PlayerActionPayload) {
+	nextPhase := pm.currentPhase.HandleAction(pm.engine, player, action)
 	pm.transitionTo(nextPhase)
 }
 

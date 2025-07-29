@@ -26,14 +26,7 @@ func (p *AbilitiesPhase) Enter(ge GameEngine) Phase {
 // playerID: 执行操作的玩家ID。
 // action: 玩家操作的负载。
 // 返回值: 如果阶段发生变化，则返回新的阶段实例；否则返回 nil。
-func (p *AbilitiesPhase) HandleAction(ge GameEngine, playerID int32, action *model.PlayerActionPayload) Phase {
-	state := ge.GetGameState()
-	player, ok := state.Players[playerID]
-	if !ok {
-		ge.Logger().Warn("Action from unknown player", zap.Int32("playerID", playerID))
-		return nil
-	}
-
+func (p *AbilitiesPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
 	switch payload := action.Payload.(type) {
 	case *model.PlayerActionPayload_UseAbility:
 		handleUseAbilityAction(ge, player, payload.UseAbility)

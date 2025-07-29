@@ -166,3 +166,11 @@ enum EndConditionType {
   ALL_INCIDENTS_PREVENTED = 5; // 所有（指定）事件被阻止
   CUSTOM_CONDITION = 6; // 自定义条件（通过Condition组合）
 }
+
+enum ForbidType {
+  FORBID_TYPE_UNSPECIFIED = 0;
+  MOVEMENT = 1;
+  PARANOIA_CHANGE = 2;
+  GOODWILL_CHANGE = 3;
+  INTRIGUE_CHANGE = 4;
+}

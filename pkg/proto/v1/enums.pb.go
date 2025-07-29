@@ -852,6 +852,61 @@ func (EndConditionType) EnumDescriptor() ([]byte, []int) {
 	return file_v1_enums_proto_rawDescGZIP(), []int{11}
 }
 
+type ForbidType int32
+
+const (
+	ForbidType_FORBID_TYPE_UNSPECIFIED ForbidType = 0
+	ForbidType_MOVEMENT                ForbidType = 1
+	ForbidType_PARANOIA_CHANGE         ForbidType = 2
+	ForbidType_GOODWILL_CHANGE         ForbidType = 3
+	ForbidType_INTRIGUE_CHANGE         ForbidType = 4
+)
+
+// Enum value maps for ForbidType.
+var (
+	ForbidType_name = map[int32]string{
+		0: "FORBID_TYPE_UNSPECIFIED",
+		1: "MOVEMENT",
+		2: "PARANOIA_CHANGE",
+		3: "GOODWILL_CHANGE",
+		4: "INTRIGUE_CHANGE",
+	}
+	ForbidType_value = map[string]int32{
+		"FORBID_TYPE_UNSPECIFIED": 0,
+		"MOVEMENT":                1,
+		"PARANOIA_CHANGE":         2,
+		"GOODWILL_CHANGE":         3,
+		"INTRIGUE_CHANGE":         4,
+	}
+)
+
+func (x ForbidType) Enum() *ForbidType {
+	p := new(ForbidType)
+	*p = x
+	return p
+}
+
+func (x ForbidType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ForbidType) Descriptor() protoreflect.EnumDescriptor {
+	return file_v1_enums_proto_enumTypes[12].Descriptor()
+}
+
+func (ForbidType) Type() protoreflect.EnumType {
+	return &file_v1_enums_proto_enumTypes[12]
+}
+
+func (x ForbidType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ForbidType.Descriptor instead.
+func (ForbidType) EnumDescriptor() ([]byte, []int) {
+	return file_v1_enums_proto_rawDescGZIP(), []int{12}
+}
+
 var File_v1_enums_proto protoreflect.FileDescriptor
 
 const file_v1_enums_proto_rawDesc = "" +
@@ -1004,7 +1059,14 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\x11MAX_LOOPS_REACHED\x10\x03\x12\x1f\n" +
 	"\x1bSPECIFIC_INCIDENT_TRIGGERED\x10\x04\x12\x1b\n" +
 	"\x17ALL_INCIDENTS_PREVENTED\x10\x05\x12\x14\n" +
-	"\x10CUSTOM_CONDITION\x10\x06B&Z$tragedylooper/internal/game/proto/v1b\x06proto3"
+	"\x10CUSTOM_CONDITION\x10\x06*v\n" +
+	"\n" +
+	"ForbidType\x12\x1b\n" +
+	"\x17FORBID_TYPE_UNSPECIFIED\x10\x00\x12\f\n" +
+	"\bMOVEMENT\x10\x01\x12\x13\n" +
+	"\x0fPARANOIA_CHANGE\x10\x02\x12\x13\n" +
+	"\x0fGOODWILL_CHANGE\x10\x03\x12\x13\n" +
+	"\x0fINTRIGUE_CHANGE\x10\x04B&Z$tragedylooper/internal/game/proto/v1b\x06proto3"
 
 var (
 	file_v1_enums_proto_rawDescOnce sync.Once
@@ -1018,7 +1080,7 @@ func file_v1_enums_proto_rawDescGZIP() []byte {
 	return file_v1_enums_proto_rawDescData
 }
 
-var file_v1_enums_proto_enumTypes = make([]protoimpl.EnumInfo, 12)
+var file_v1_enums_proto_enumTypes = make([]protoimpl.EnumInfo, 13)
 var file_v1_enums_proto_goTypes = []any{
 	(PlayerRole)(0),       // 0: v1.PlayerRole
 	(GamePhase)(0),        // 1: v1.GamePhase
@@ -1032,6 +1094,7 @@ var file_v1_enums_proto_goTypes = []any{
 	(TriggerType)(0),      // 9: v1.TriggerType
 	(GameEventType)(0),    // 10: v1.GameEventType
 	(EndConditionType)(0), // 11: v1.EndConditionType
+	(ForbidType)(0),       // 12: v1.ForbidType
 }
 var file_v1_enums_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -1051,7 +1114,7 @@ func file_v1_enums_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_enums_proto_rawDesc), len(file_v1_enums_proto_rawDesc)),
-			NumEnums:      12,
+			NumEnums:      13,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,

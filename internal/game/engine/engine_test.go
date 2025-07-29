@@ -3,6 +3,7 @@ package engine
 import (
 	"context"
 	"testing"
+	"tragedylooper/internal/game/engine/phase"
 	"tragedylooper/internal/game/loader"
 	"tragedylooper/internal/logger"
 	"tragedylooper/pkg/proto/v1"
@@ -28,7 +29,7 @@ func helper_NewGameEngineForTest(t *testing.T) *GameEngine {
 
 	log := logger.New()
 
-	gameConfig, err := loader.LoadConfig("data", "first_steps")
+	gameConfig, err := loader.LoadConfig("../../../data", "first_steps")
 	if err != nil {
 		t.Fatalf("failed to load game data: %v", err)
 	}
@@ -81,7 +82,7 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 
 	// The engine expects the game to be in the Main phase for a card play.
 	// We manually set the phase for this test.
-	// engine.pm.transitionTo(&phase.SetupPhase{})
+	engine.pm.transitionTo(&phase.CardResolvePhase{})
 
 	// Submit the action
 	engine.SubmitPlayerAction(mastermind.Id, playCardAction)

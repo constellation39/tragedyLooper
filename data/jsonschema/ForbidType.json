@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [
+        "FORBID_TYPE_UNSPECIFIED",
+        0,
+        "MOVEMENT",
+        1,
+        "PARANOIA_CHANGE",
+        2,
+        "GOODWILL_CHANGE",
+        3,
+        "INTRIGUE_CHANGE",
+        4
+    ],
+    "oneOf": [
+        {
+            "type": "string"
+        },
+        {
+            "type": "integer"
+        }
+    ],
+    "title": "Forbid Type"
+}
