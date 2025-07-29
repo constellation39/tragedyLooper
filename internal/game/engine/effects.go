@@ -1,12 +1,16 @@
-package engine
+package engine // 定义游戏引擎包
 
 import (
 	"fmt"
-	"tragedylooper/internal/game/engine/effecthandler"
-	model "tragedylooper/pkg/proto/v1"
+	"tragedylooper/internal/game/engine/effecthandler" // 导入效果处理程序包
+	model "tragedylooper/pkg/proto/v1" // 导入协议缓冲区模型
 )
 
 // applyEffect 查找效果的适当处理程序，并使用它来解决选择，然后应用效果。
+// effect: 要应用的效果。
+// ability: 触发此效果的能力（如果适用）。
+// payload: 玩家操作的有效负载（如果适用）。
+// choice: 玩家做出的选择（如果适用）。
 func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
 	handler, err := effecthandler.GetEffectHandler(effect)
 	if err != nil {
@@ -38,6 +42,8 @@ func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, 
 }
 
 // GetEffectDescription 查找适当的处理程序并返回效果的描述。
+// effect: 要获取描述的效果。
+// 返回值: 效果的描述字符串。
 func (ge *GameEngine) GetEffectDescription(effect *model.Effect) string {
 	return effecthandler.GetEffectDescription(ge, effect)
 }

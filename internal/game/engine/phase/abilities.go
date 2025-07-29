@@ -1,25 +1,31 @@
-package phase
+package phase // 定义游戏阶段包
 
 import (
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/v1" // 导入协议缓冲区模型
 
-	"go.uber.org/zap"
+	"go.uber.org/zap" // 导入 Zap 日志库
 )
 
-// AbilitiesPhase 能力阶段
+// AbilitiesPhase 能力阶段，玩家可以在此阶段使用角色能力。
 type AbilitiesPhase struct{ basePhase }
 
-// Type 返回阶段类型
+// Type 返回阶段类型，表示当前是能力阶段。
 func (p *AbilitiesPhase) Type() model.GamePhase { return model.GamePhase_ABILITIES }
 
-// Enter 进入阶段
+// Enter 进入能力阶段。
+// ge: 游戏引擎接口。
+// 返回值: 下一个阶段的实例。
 func (p *AbilitiesPhase) Enter(ge GameEngine) Phase {
 	// 玩家可以使用能力。
 	// 这个阶段可能需要玩家输入并有超时。
 	return &IncidentsPhase{}
 }
 
-// HandleAction 处理玩家操作
+// HandleAction 处理玩家在能力阶段的操作。
+// ge: 游戏引擎接口。
+// playerID: 执行操作的玩家ID。
+// action: 玩家操作的负载。
+// 返回值: 如果阶段发生变化，则返回新的阶段实例；否则返回 nil。
 func (p *AbilitiesPhase) HandleAction(ge GameEngine, playerID int32, action *model.PlayerActionPayload) Phase {
 	state := ge.GetGameState()
 	player, ok := state.Players[playerID]
@@ -63,6 +69,7 @@ func handleUseAbilityAction(ge GameEngine, player *model.Player, payload *model.
 	// 	return
 	// }
 
+	// 如果能力配置为每回合只能使用一次，则标记为已使用。
 	if ability.Config.OncePerLoop {
 		ability.UsedThisLoop = true
 	}

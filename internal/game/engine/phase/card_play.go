@@ -1,26 +1,32 @@
-package phase
+package phase // 定义游戏阶段包
 
 import (
 	"fmt"
 	"time"
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/v1" // 导入协议缓冲区模型
 
-	"go.uber.org/zap"
+	"go.uber.org/zap" // 导入 Zap 日志库
 )
 
-// CardPlayPhase 卡牌打出阶段
+// CardPlayPhase 卡牌打出阶段，玩家在此阶段打出卡牌。
 type CardPlayPhase struct{ basePhase }
 
-// Type 返回阶段类型
+// Type 返回阶段类型，表示当前是卡牌打出阶段。
 func (p *CardPlayPhase) Type() model.GamePhase { return model.GamePhase_CARD_PLAY }
 
-// Enter 进入阶段
+// Enter 进入卡牌打出阶段。
+// ge: 游戏引擎接口。
+// 返回值: 下一个阶段的实例（如果立即切换）。
 func (p *CardPlayPhase) Enter(ge GameEngine) Phase {
 	// 玩家有一定的时间打出他们的牌。
 	return nil
 }
 
-// HandleAction 处理玩家操作
+// HandleAction 处理玩家在卡牌打出阶段的操作。
+// ge: 游戏引擎接口。
+// playerID: 执行操作的玩家ID。
+// action: 玩家操作的负载。
+// 返回值: 如果阶段发生变化，则返回新的阶段实例；否则返回 nil。
 func (p *CardPlayPhase) HandleAction(ge GameEngine, playerID int32, action *model.PlayerActionPayload) Phase {
 	state := ge.GetGameState()
 	player, ok := state.Players[playerID]
@@ -38,6 +44,7 @@ func (p *CardPlayPhase) HandleAction(ge GameEngine, playerID int32, action *mode
 		handlePassTurnAction(ge, player)
 	}
 
+	// 如果所有玩家都已准备好，则切换到卡牌揭示阶段。
 	if ge.AreAllPlayersReady() {
 		return &CardRevealPhase{}
 	}
@@ -45,13 +52,18 @@ func (p *CardPlayPhase) HandleAction(ge GameEngine, playerID int32, action *mode
 	return nil
 }
 
-// HandleTimeout 处理超时
+// HandleTimeout 处理卡牌打出阶段的超时。
+// ge: 游戏引擎接口。
+// 返回值: 下一个阶段的实例。
 func (p *CardPlayPhase) HandleTimeout(ge GameEngine) Phase {
 	// 如果玩家没有及时行动，我们可能会为他们自动跳过回合。
 	return &CardRevealPhase{}
 }
 
-// HandleEvent 处理事件
+// HandleEvent 处理卡牌打出阶段接收到的游戏事件。
+// ge: 游戏引擎接口。
+// event: 接收到的游戏事件。
+// 返回值: 如果阶段发生变化，则返回新的阶段实例；否则返回 nil。
 func (p *CardPlayPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase {
 	if ge.AreAllPlayersReady() {
 		return &CardRevealPhase{}
@@ -59,9 +71,13 @@ func (p *CardPlayPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase
 	return nil
 }
 
-// TimeoutDuration 返回超时持续时间
+// TimeoutDuration 返回卡牌打出阶段的超时持续时间。
 func (p *CardPlayPhase) TimeoutDuration() time.Duration { return 30 * time.Second } // 示例超时
 
+// handlePlayCardAction 处理玩家打出卡牌的操作。
+// ge: 游戏引擎接口。
+// player: 执行操作的玩家。
+// payload: 打出卡牌的负载信息。
 func handlePlayCardAction(ge GameEngine, player *model.Player, payload *model.PlayCardPayload) {
 	playedCard, err := takeCardFromPlayer(player, payload.CardId)
 	if err != nil {
@@ -91,6 +107,9 @@ func handlePlayCardAction(ge GameEngine, player *model.Player, payload *model.Pl
 }
 
 // takeCardFromPlayer 在玩家手牌中找到一张牌，将其移除并返回。
+// player: 玩家对象。
+// cardID: 要移除的卡牌ID。
+// 返回值: 移除的卡牌对象和可能发生的错误。
 func takeCardFromPlayer(player *model.Player, cardID int32) (*model.Card, error) {
 	for i, card := range player.Hand {
 		if card.Config.Id == cardID {
@@ -105,6 +124,9 @@ func takeCardFromPlayer(player *model.Player, cardID int32) (*model.Card, error)
 	return nil, fmt.Errorf("card %d not found in player's hand", cardID)
 }
 
+// handlePassTurnAction 处理玩家跳过回合的操作。
+// ge: 游戏引擎接口。
+// player: 执行操作的玩家。
 func handlePassTurnAction(ge GameEngine, player *model.Player) {
 	ge.Logger().Info("Player passed turn", zap.String("player", player.Name))
 	ge.SetPlayerReady(player.Id)

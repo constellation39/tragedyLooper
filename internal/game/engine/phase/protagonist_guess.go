@@ -1,18 +1,22 @@
-package phase
+package phase // 定义游戏阶段包
 
 import (
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/v1" // 导入协议缓冲区模型
 
-	"go.uber.org/zap"
+	"go.uber.org/zap" // 导入 Zap 日志库
 )
 
-// ProtagonistGuessPhase 主角猜测阶段
+// ProtagonistGuessPhase 主角猜测阶段，主角在此阶段尝试猜测其他角色的隐藏身份。
 type ProtagonistGuessPhase struct{ basePhase }
 
-// Type 返回阶段类型
+// Type 返回阶段类型，表示当前是主角猜测阶段。
 func (p *ProtagonistGuessPhase) Type() model.GamePhase { return model.GamePhase_PROTAGONIST_GUESS }
 
-// HandleAction 处理玩家操作
+// HandleAction 处理玩家在主角猜测阶段的操作。
+// ge: 游戏引擎接口。
+// playerID: 执行操作的玩家ID。
+// action: 玩家操作的负载。
+// 返回值: 如果阶段发生变化，则返回新的阶段实例；否则返回 nil。
 func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, playerID int32, action *model.PlayerActionPayload) Phase {
 	state := ge.GetGameState()
 	player, ok := state.Players[playerID]
@@ -28,6 +32,11 @@ func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, playerID int32, acti
 	return nil
 }
 
+// handleMakeGuessAction 处理玩家进行猜测的操作。
+// ge: 游戏引擎接口。
+// player: 执行操作的玩家。
+// payload: 猜测的负载信息。
+// 返回值: 如果阶段发生变化，则返回新的阶段实例；否则返回 nil。
 func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.MakeGuessPayload) Phase {
 	// 目前，我们假设第一个猜测的主角结束游戏。
 	if player.Role != model.PlayerRole_PROTAGONIST {
@@ -43,6 +52,7 @@ func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.M
 	}
 
 	correctGuesses := 0
+	// 遍历剧本中的所有角色，检查猜测是否正确。
 	for _, roleInfo := range script.Characters {
 		if guessedRole, ok := payload.GuessedRoles[roleInfo.CharacterId]; ok {
 			if guessedRole == roleInfo.HiddenRole {
@@ -51,6 +61,7 @@ func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.M
 		}
 	}
 
+	// 如果所有猜测都正确，则主角获胜；否则主谋获胜。
 	if correctGuesses == len(script.Characters) {
 		ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: model.PlayerRole_PROTAGONIST})
 	} else {

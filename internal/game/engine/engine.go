@@ -1,15 +1,15 @@
-package engine
+package engine // 定义游戏引擎包
 
 import (
-	"context"
-	"tragedylooper/internal/game/loader"
-	model "tragedylooper/pkg/proto/v1"
+	"context" // 导入 context 包，用于管理请求的生命周期
+	"tragedylooper/internal/game/loader" // 导入游戏数据加载器
+	model "tragedylooper/pkg/proto/v1" // 导入协议缓冲区模型
 
-	"go.uber.org/zap"
-	"google.golang.org/protobuf/proto"
+	"go.uber.org/zap" // 导入 Zap 日志库
+	"google.golang.org/protobuf/proto" // 导入 Protobuf 核心库
 )
 
-// LocationGrid 定义了 2x2 的地图布局。
+// LocationGrid 定义了 2x2 的地图布局，将地点类型映射到网格坐标。
 var LocationGrid = map[model.LocationType]struct{ X, Y int }{
 	model.LocationType_SHRINE:   {0, 0},
 	model.LocationType_SCHOOL:   {1, 0},
@@ -17,41 +17,49 @@ var LocationGrid = map[model.LocationType]struct{ X, Y int }{
 	model.LocationType_CITY:     {1, 1},
 }
 
-// GameEngine 管理单个游戏实例的状态和逻辑。
+// engineAction 是一个空接口，用于标记所有可以发送到游戏引擎主循环的请求类型。
 type engineAction interface{}
 
 // getPlayerViewRequest 是获取玩家过滤后的游戏状态视图的请求。
 type getPlayerViewRequest struct {
-	playerID     int32
-	responseChan chan *model.PlayerView
+	playerID     int32                 // 请求视图的玩家ID
+	responseChan chan *model.PlayerView // 用于发送响应的通道
 }
 
+// aiActionCompleteRequest 表示 AI 或玩家操作已完成并准备好由游戏引擎处理。
 type aiActionCompleteRequest struct {
-	playerID int32
-	action   *model.PlayerActionPayload
+	playerID int32                  // 执行操作的玩家ID
+	action   *model.PlayerActionPayload // 玩家操作的负载
 }
-type GameEngine struct {
-	GameState *model.GameState
-	logger    *zap.Logger
 
-	actionGenerator ActionGenerator
-	gameConfig      loader.GameConfig
-	pm              *phaseManager
-	em              *eventManager
+// GameEngine 管理单个游戏实例的状态和逻辑。
+type GameEngine struct {
+	GameState *model.GameState // 当前的游戏状态
+	logger    *zap.Logger      // 日志记录器
+
+	actionGenerator ActionGenerator // 用于生成 AI 玩家操作的接口
+	gameConfig      loader.GameConfig // 游戏的配置数据
+	pm              *phaseManager     // 阶段管理器
+	em              *eventManager     // 事件管理器
 
 	// engineChan 是所有传入请求（玩家操作、AI 操作等）的中央通道。
 	// 它确保对游戏状态的所有修改都在主游戏循环中按顺序处理，
 	// 防止竞争条件。
-	engineChan chan engineAction
-	stopChan   chan struct{}
+	engineChan chan engineAction // 引擎请求通道
+	stopChan   chan struct{}   // 用于停止游戏循环的通道
 
-	playerReady map[int32]bool
+	playerReady map[int32]bool // 记录每个玩家是否已准备好进入下一阶段
 
-	mastermindPlayerID   int32
-	protagonistPlayerIDs []int32
+	mastermindPlayerID   int32   // 主谋玩家的ID
+	protagonistPlayerIDs []int32 // 主角玩家的ID列表
 }
 
 // NewGameEngine 创建一个新的游戏引擎实例。
+// logger: 日志记录器。
+// players: 游戏中的玩家列表。
+// actionGenerator: AI 动作生成器。
+// gameConfig: 游戏配置。
+// 返回值: 新的 GameEngine 实例和可能发生的错误。
 func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator ActionGenerator, gameConfig loader.GameConfig) (*GameEngine, error) {
 	ge := &GameEngine{
 		logger:               logger,
@@ -86,14 +94,19 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator 
 	return ge, nil
 }
 
+// StartGameLoop 启动游戏主循环。
 func (ge *GameEngine) StartGameLoop() {
 	go ge.runGameLoop()
 }
 
+// StopGameLoop 停止游戏主循环。
 func (ge *GameEngine) StopGameLoop() {
 	close(ge.stopChan)
 }
 
+// SubmitPlayerAction 提交玩家操作到游戏引擎。
+// playerID: 玩家ID。
+// action: 玩家操作的负载。
 func (ge *GameEngine) SubmitPlayerAction(playerID int32, action *model.PlayerActionPayload) {
 	if action == nil {
 		ge.logger.Warn("Received nil action from player")
@@ -106,10 +119,14 @@ func (ge *GameEngine) SubmitPlayerAction(playerID int32, action *model.PlayerAct
 	}
 }
 
+// GetGameEvents 返回游戏事件的只读通道。
 func (ge *GameEngine) GetGameEvents() <-chan *model.GameEvent {
 	return ge.em.eventsChannel()
 }
 
+// GetPlayerView 获取指定玩家的游戏状态视图。
+// playerID: 玩家ID。
+// 返回值: 玩家的游戏视图。
 func (ge *GameEngine) GetPlayerView(playerID int32) *model.PlayerView {
 	responseChan := make(chan *model.PlayerView)
 	req := &getPlayerViewRequest{
@@ -146,6 +163,7 @@ func (ge *GameEngine) runGameLoop() {
 }
 
 // handleEngineRequest 处理来自引擎通道的传入请求。
+// req: 传入的引擎动作请求。
 func (ge *GameEngine) handleEngineRequest(req engineAction) {
 	switch r := req.(type) {
 	case *aiActionCompleteRequest:
@@ -168,18 +186,24 @@ func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, payloa
 	ge.em.createAndProcess(eventType, payload)
 }
 
+// endGame 结束游戏并宣布获胜方。
+// winner: 获胜方的角色类型。
 func (ge *GameEngine) endGame(winner model.PlayerRole) {
 	ge.logger.Info("Game over", zap.String("winner", winner.String()))
 	// 此事件将由事件管理器处理，从而导致状态更新和阶段转换。
 	ge.em.createAndProcess(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: winner})
 }
 
+// ResetPlayerReadiness 重置所有玩家的准备状态。
 func (ge *GameEngine) ResetPlayerReadiness() {
 	for playerID := range ge.GameState.Players {
 		ge.playerReady[playerID] = false
 	}
 }
 
+// GetCharacterByID 根据角色ID获取角色对象。
+// charID: 角色ID。
+// 返回值: 角色对象，如果未找到则返回 nil。
 func (ge *GameEngine) GetCharacterByID(charID int32) *model.Character {
 	char, ok := ge.GameState.Characters[charID]
 	if !ok {
@@ -188,14 +212,22 @@ func (ge *GameEngine) GetCharacterByID(charID int32) *model.Character {
 	return char
 }
 
+// TriggerIncidents 触发事件。
 func (ge *GameEngine) TriggerIncidents() {
 	// TODO: 实现事件触发逻辑
 }
 
+// MoveCharacter 移动角色。
+// char: 要移动的角色。
+// dx: X轴上的移动量。
+// dy: Y轴上的移动量。
 func (ge *GameEngine) MoveCharacter(char *model.Character, dx, dy int) {
 	ge.moveCharacter(char, dx, dy)
 }
 
+// getPlayerByID 根据玩家ID获取玩家对象。
+// playerID: 玩家ID。
+// 返回值: 玩家对象，如果未找到则返回 nil。
 func (ge *GameEngine) getPlayerByID(playerID int32) *model.Player {
 	player, ok := ge.GameState.Players[playerID]
 	if !ok {
@@ -204,6 +236,10 @@ func (ge *GameEngine) getPlayerByID(playerID int32) *model.Player {
 	return player
 }
 
+// moveCharacter 移动角色到新位置。
+// char: 要移动的角色。
+// dx: X轴上的移动量。
+// dy: Y轴上的移动量。
 func (ge *GameEngine) moveCharacter(char *model.Character, dx, dy int) {
 	startPos, ok := LocationGrid[char.CurrentLocation]
 	if !ok {
@@ -245,28 +281,40 @@ func (ge *GameEngine) moveCharacter(char *model.Character, dx, dy int) {
 	}
 }
 
-// GetGameState 实现 phases.GameEngine 接口。
+// GetGameState 实现 phases.GameEngine 接口，返回当前游戏状态。
 func (ge *GameEngine) GetGameState() *model.GameState {
 	return ge.GameState
 }
 
+// GetGameConfig 返回游戏配置。
 func (ge *GameEngine) GetGameConfig() loader.GameConfig {
 	return ge.gameConfig
 }
 
+// AreAllPlayersReady 检查所有玩家是否都已准备好。
+// TODO: 实现我
 func (ge *GameEngine) AreAllPlayersReady() bool {
-	// TODO: 实现我
 	return false
 }
 
+// Logger 返回游戏引擎的日志记录器。
 func (ge *GameEngine) Logger() *zap.Logger {
 	return ge.logger
 }
 
+// SetPlayerReady 设置指定玩家的准备状态为 true。
+// playerID: 玩家ID。
 func (ge *GameEngine) SetPlayerReady(playerID int32) {
 	ge.playerReady[playerID] = true
 }
 
+// ResolveSelectorToCharacters 根据目标选择器解析出对应的角色ID列表。
+// gs: 游戏状态。
+// sel: 目标选择器。
+// player: 相关的玩家（如果适用）。
+// payload: 相关的操作负载（如果适用）。
+// ability: 相关的能力（如果适用）。
+// 返回值: 角色ID列表和可能发生的错误。
 func (ge *GameEngine) ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, player *model.Player, payload *model.UseAbilityPayload, ability *model.Ability) ([]int32, error) {
 	return []int32{}, nil
 }
@@ -274,6 +322,7 @@ func (ge *GameEngine) ResolveSelectorToCharacters(gs *model.GameState, sel *mode
 // --- AI 集成 ---
 
 // TriggerAIPlayerAction 提示 AI 玩家做出决定。
+// playerID: AI 玩家的ID。
 func (ge *GameEngine) TriggerAIPlayerAction(playerID int32) {
 	player := ge.getPlayerByID(playerID)
 	if player == nil || !player.IsLlm { // TODO: 使此检查更通用（例如，IsAI）

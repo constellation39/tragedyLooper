@@ -1,12 +1,13 @@
-package engine
+package engine // 定义游戏引擎包
 
 import (
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/v1" // 导入协议缓冲区模型
 
-	"go.uber.org/zap"
+	"go.uber.org/zap" // 导入 Zap 日志库
 )
 
 // checkAndTriggerAbilities 遍历所有角色能力并触发与给定触发器类型匹配的能力。
+// triggerType: 触发器类型，例如回合开始、卡牌使用等。
 func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType) {
 	ge.logger.Debug("Checking for abilities to trigger", zap.String("triggerType", triggerType.String()))
 	if true {
@@ -14,15 +15,18 @@ func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType) {
 	}
 	for _, char := range ge.GameState.Characters {
 		for _, ability := range char.Abilities {
+			// 检查能力是否与当前触发器类型匹配。
 			if ability.Config.TriggerType != triggerType {
 				continue
 			}
 
+			// 如果能力配置为每回合只能使用一次，并且本回合已使用过，则跳过。
 			if ability.Config.OncePerLoop && ability.UsedThisLoop {
 				continue
 			}
 
 			// 对于自动触发的能力，我们最初为玩家和有效负载传递 nil。
+			// 检查能力的所有条件是否满足。
 			if !ge.checkConditions(ability.Config.Conditions, nil, nil, ability) {
 				continue
 			}
@@ -37,10 +41,12 @@ func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType) {
 			ge.logger.Info("Auto-triggering ability", zap.String("character", char.Config.Name), zap.String("ability", ability.Config.Name))
 
 			// 由于这是一个自动触发器，我们假设没有特定的玩家操作有效负载。
+			// 应用能力的效果。
 			if err := ge.applyEffect(ability.Config.Effect, ability, nil, nil); err != nil {
 				ge.logger.Error("Error applying triggered ability effect", zap.Error(err))
 			}
 
+			// 如果能力配置为每回合只能使用一次，则标记为已使用。
 			if ability.Config.OncePerLoop {
 				ability.UsedThisLoop = true // 将角色身上的能力实例标记为已使用
 			}
@@ -49,6 +55,8 @@ func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType) {
 }
 
 // cloneAbility 创建能力的深层副本，以避免修改原始配置。
+// original: 原始能力对象。
+// 返回值: 原始能力的深层副本。
 func cloneAbility(original *model.Ability) *model.Ability {
 	if original == nil {
 		return nil

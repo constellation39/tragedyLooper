@@ -1,4 +1,4 @@
-package effecthandler
+package effecthandler // 定义效果处理器的包
 
 import (
 	"fmt"
@@ -7,11 +7,13 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+// init 函数在包加载时自动执行，用于注册 CompoundEffect 效果处理器。
 func init() {
 	Register[*model.Effect_CompoundEffect](&CompoundEffectHandler{})
 }
 
-// CompoundEffectHandler 处理复合效果。
+// CompoundEffectHandler 结构体实现了处理复合效果的逻辑。
+// 复合效果可以包含多个子效果，并根据操作符（如序列或选择其一）来执行。
 type CompoundEffectHandler struct{}
 
 func (h *CompoundEffectHandler) ResolveChoices(ge GameEngine, effect *model.Effect, payload *model.UseAbilityPayload) ([]*model.Choice, error) {
@@ -22,6 +24,7 @@ func (h *CompoundEffectHandler) ResolveChoices(ge GameEngine, effect *model.Effe
 
 	switch compoundEffect.Operator {
 	case model.CompoundEffect_CHOOSE_ONE:
+		// 如果是 CHOOSE_ONE 类型，为每个子效果创建一个选择项。
 		var choices []*model.Choice
 		for i, subEffect := range compoundEffect.SubEffects {
 			choiceID := fmt.Sprintf("effect_choice_%d", i)
@@ -33,6 +36,7 @@ func (h *CompoundEffectHandler) ResolveChoices(ge GameEngine, effect *model.Effe
 		}
 		return choices, nil
 	case model.CompoundEffect_SEQUENCE:
+		// 如果是 SEQUENCE 类型，按顺序解析子效果的选择项，直到找到第一个需要选择的效果。
 		for _, subEffect := range compoundEffect.SubEffects {
 			// 在序列中，我们呈现的第一个需要选择的效果。
 			handler, err := GetEffectHandler(subEffect)
@@ -59,6 +63,7 @@ func (h *CompoundEffectHandler) Apply(ge GameEngine, effect *model.Effect, abili
 
 	switch compoundEffect.Operator {
 	case model.CompoundEffect_SEQUENCE:
+		// 如果是 SEQUENCE 类型，按顺序应用所有子效果。
 		for _, subEffect := range compoundEffect.SubEffects {
 			handler, err := GetEffectHandler(subEffect)
 			if err != nil {
@@ -70,6 +75,7 @@ func (h *CompoundEffectHandler) Apply(ge GameEngine, effect *model.Effect, abili
 			}
 		}
 	case model.CompoundEffect_CHOOSE_ONE:
+		// 如果是 CHOOSE_ONE 类型，根据玩家的选择应用对应的子效果。
 		if choice == nil {
 			return fmt.Errorf("a choice is required to apply a CHOOSE_ONE compound effect")
 		}
@@ -98,5 +104,6 @@ func (h *CompoundEffectHandler) Apply(ge GameEngine, effect *model.Effect, abili
 }
 
 func (h *CompoundEffectHandler) GetDescription(effect *model.Effect) string {
+	// 返回复合效果的描述字符串。
 	return "Choose one of the following effects"
 }
