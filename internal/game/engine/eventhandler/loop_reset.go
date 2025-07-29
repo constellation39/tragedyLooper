@@ -12,7 +12,8 @@ func init() {
 type LoopResetHandler struct{}
 
 // Handle clears the loop's events from the game state.
-func (h *LoopResetHandler) Handle(state *model.GameState, event *model.EventPayload) error {
+func (h *LoopResetHandler) Handle(ge GameEngine, event *model.GameEvent) error {
+	state := ge.GetGameState()
 	state.LoopEvents = []*model.GameEvent{}
 	return nil
 }

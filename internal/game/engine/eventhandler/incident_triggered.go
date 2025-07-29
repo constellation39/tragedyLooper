@@ -12,7 +12,7 @@ func init() {
 type IncidentTriggeredHandler struct{}
 
 // Handle currently does nothing, as this event is informational.
-func (h *IncidentTriggeredHandler) Handle(state *model.GameState, event *model.EventPayload) error {
+func (h *IncidentTriggeredHandler) Handle(ge GameEngine, event *model.GameEvent) error {
 	// No state change, this is for logging/notification purposes.
 	return nil
 }

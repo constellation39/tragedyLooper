@@ -12,12 +12,13 @@ func init() {
 type IntrigueAdjustedHandler struct{}
 
 // Handle updates the character's intrigue in the game state.
-func (h *IntrigueAdjustedHandler) Handle(state *model.GameState, event *model.EventPayload) error {
-	e, ok := event.Payload.(*model.EventPayload_IntrigueAdjusted)
+func (h *IntrigueAdjustedHandler) Handle(ge GameEngine, event *model.GameEvent) error {
+	e, ok := event.Payload.Payload.(*model.EventPayload_IntrigueAdjusted)
 	if !ok {
 		return nil // Or handle error appropriately
 	}
 
+	state := ge.GetGameState()
 	if char, ok := state.Characters[e.IntrigueAdjusted.CharacterId]; ok {
 		char.Intrigue += e.IntrigueAdjusted.Amount
 		e.IntrigueAdjusted.NewIntrigue = char.Intrigue

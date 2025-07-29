@@ -271,14 +271,12 @@ func (ge *GameEngine) moveCharacter(char *model.Character, dx, dy int) {
 			}
 		}
 
-		char.CurrentLocation = newLoc
 		ge.ApplyAndPublishEvent(model.GameEventType_CHARACTER_MOVED, &model.EventPayload{
 			Payload: &model.EventPayload_CharacterMoved{CharacterMoved: &model.CharacterMovedEvent{
 				CharacterId: char.Config.Id,
 				NewLocation: newLoc,
 			}},
 		})
-		ge.logger.Info("character moved", zap.String("char", char.Config.Name), zap.String("to", newLoc.String()))
 	}
 }
 

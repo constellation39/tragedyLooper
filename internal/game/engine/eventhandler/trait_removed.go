@@ -12,12 +12,13 @@ func init() {
 type TraitRemovedHandler struct{}
 
 // Handle removes a trait from a character.
-func (h *TraitRemovedHandler) Handle(state *model.GameState, event *model.EventPayload) error {
-	e, ok := event.Payload.(*model.EventPayload_TraitRemoved)
+func (h *TraitRemovedHandler) Handle(ge GameEngine, event *model.GameEvent) error {
+	e, ok := event.Payload.Payload.(*model.EventPayload_TraitRemoved)
 	if !ok {
 		return nil // Or handle error appropriately
 	}
 
+	state := ge.GetGameState()
 	if char, ok := state.Characters[e.TraitRemoved.CharacterId]; ok {
 		for i, t := range char.Traits {
 			if t == e.TraitRemoved.Trait {

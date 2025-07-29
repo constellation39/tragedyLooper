@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"tragedylooper/internal/game/engine/eventhandler"
 	model "tragedylooper/pkg/proto/v1"
 
 	"go.uber.org/zap"
@@ -46,57 +47,19 @@ func (em *eventManager) createAndProcess(eventType model.GameEventType, payload 
 	event := &model.GameEvent{
 		Type:      eventType,
 		Timestamp: timestamppb.Now(),
-		Payload:   &model.EventPayload{},
+		Payload:   payload,
 	}
 
-	switch p := payload.Payload.(type) {
-	case *model.EventPayload_CharacterMoved:
-		event.Payload.Payload = p
-	case *model.EventPayload_ParanoiaAdjusted:
-		event.Payload.Payload = p
-	case *model.EventPayload_GoodwillAdjusted:
-		event.Payload.Payload = p
-	case *model.EventPayload_IntrigueAdjusted:
-		event.Payload.Payload = p
-	case *model.EventPayload_LoopLoss:
-		event.Payload.Payload = p
-	case *model.EventPayload_LoopWin:
-		event.Payload.Payload = p
-	case *model.EventPayload_AbilityUsed:
-		event.Payload.Payload = p
-	case *model.EventPayload_DayAdvanced:
-		event.Payload.Payload = p
-	case *model.EventPayload_CardPlayed:
-		event.Payload.Payload = p
-	case *model.EventPayload_CardRevealed:
-		event.Payload.Payload = p
-	case *model.EventPayload_LoopReset:
-		event.Payload.Payload = p
-	case *model.EventPayload_GameOver:
-		event.Payload.Payload = p
-	case *model.EventPayload_ChoiceRequired:
-		event.Payload.Payload = p
-	case *model.EventPayload_IncidentTriggered:
-		event.Payload.Payload = p
-	case *model.EventPayload_TragedyTriggered:
-		event.Payload.Payload = p
-	case *model.EventPayload_TraitAdded:
-		event.Payload.Payload = p
-	case *model.EventPayload_TraitRemoved:
-		event.Payload.Payload = p
-	case *model.EventPayload_PlayerActionTaken:
-		event.Payload.Payload = p
-	default:
-		em.logger.Error("Unknown event payload type")
+	// Step 1: Apply the event to the game state through the appropriate handler.
+	if err := em.applyEvent(event); err != nil {
+		em.logger.Error("failed to apply event", zap.String("event", event.Type.String()), zap.Error(err))
 		return
 	}
 
-	// Step 1: Let the current phase react to the event.
-	// This is now handled by the phase manager.
+	// Step 2: Let the current phase react to the event.
 	em.engine.pm.handleEvent(event)
 
-	// Step 2: Publish the event to external listeners and for logging.
-	// This happens after the state has been updated.
+	// Step 3: Publish the event to external listeners and for logging.
 	select {
 	case em.dispatchGameEvent <- event:
 		// Also log the event in the game state for player review
@@ -108,6 +71,17 @@ func (em *eventManager) createAndProcess(eventType model.GameEventType, payload 
 
 	// TODO: Re-implement trigger logic here, after the state is fully updated.
 	// em.engine.checkForTriggers(event)
+}
+
+func (em *eventManager) applyEvent(event *model.GameEvent) error {
+	handler, ok := eventhandler.GetHandler(event.Type)
+	if !ok {
+		// Not all events have handlers, so this is not an error.
+		// It simply means no state change is associated with this event by default.
+		return nil
+	}
+
+	return handler.Handle(em.engine, event)
 }
 
 // eventsChannel returns the outbound channel for game events.

@@ -12,12 +12,13 @@ func init() {
 type ParanoiaAdjustedHandler struct{}
 
 // Handle updates the character's paranoia in the game state.
-func (h *ParanoiaAdjustedHandler) Handle(state *model.GameState, event *model.EventPayload) error {
-	e, ok := event.Payload.(*model.EventPayload_ParanoiaAdjusted)
+func (h *ParanoiaAdjustedHandler) Handle(ge GameEngine, event *model.GameEvent) error {
+	e, ok := event.Payload.Payload.(*model.EventPayload_ParanoiaAdjusted)
 	if !ok {
 		return nil // Or handle error appropriately
 	}
 
+	state := ge.GetGameState()
 	if char, ok := state.Characters[e.ParanoiaAdjusted.CharacterId]; ok {
 		char.Paranoia += e.ParanoiaAdjusted.Amount
 		// The event payload is updated to reflect the new value, though this is a side effect.

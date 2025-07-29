@@ -12,12 +12,13 @@ func init() {
 type GoodwillAdjustedHandler struct{}
 
 // Handle updates the character's goodwill in the game state.
-func (h *GoodwillAdjustedHandler) Handle(state *model.GameState, event *model.EventPayload) error {
-	e, ok := event.Payload.(*model.EventPayload_GoodwillAdjusted)
+func (h *GoodwillAdjustedHandler) Handle(ge GameEngine, event *model.GameEvent) error {
+	e, ok := event.Payload.Payload.(*model.EventPayload_GoodwillAdjusted)
 	if !ok {
 		return nil // Or handle error appropriately
 	}
 
+	state := ge.GetGameState()
 	if char, ok := state.Characters[e.GoodwillAdjusted.CharacterId]; ok {
 		char.Goodwill += e.GoodwillAdjusted.Amount
 		e.GoodwillAdjusted.NewGoodwill = char.Goodwill

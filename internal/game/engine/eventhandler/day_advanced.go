@@ -12,7 +12,8 @@ func init() {
 type DayAdvancedHandler struct{}
 
 // Handle clears the day's events from the game state.
-func (h *DayAdvancedHandler) Handle(state *model.GameState, event *model.EventPayload) error {
+func (h *DayAdvancedHandler) Handle(ge GameEngine, event *model.GameEvent) error {
+	state := ge.GetGameState()
 	state.DayEvents = []*model.GameEvent{}
 	return nil
 }
