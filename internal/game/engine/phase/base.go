@@ -3,16 +3,15 @@ package phase // 定义游戏阶段包
 import (
 	"time"
 	"tragedylooper/internal/game/loader" // 导入游戏数据加载器
-	model "tragedylooper/pkg/proto/v1" // 导入协议缓冲区模型
+	model "tragedylooper/pkg/proto/v1"   // 导入协议缓冲区模型
 
 	"go.uber.org/zap" // 导入 Zap 日志库
-	"google.golang.org/protobuf/proto" // 导入 Protobuf 核心库
 )
 
 // GameEngine 定义了阶段可以与之交互的游戏引擎的接口。
 type GameEngine interface {
 	// ApplyAndPublishEvent 应用事件并发布。
-	ApplyAndPublishEvent(eventType model.GameEventType, eventData proto.Message)
+	ApplyAndPublishEvent(eventType model.GameEventType, eventData model.EventPayload)
 	// AreAllPlayersReady 检查所有玩家是否都已准备好。
 	AreAllPlayersReady() bool
 	// Logger 返回游戏引擎的日志记录器。
@@ -58,15 +57,20 @@ type basePhase struct{}
 
 // Enter 是 Phase 接口的默认实现，不执行任何操作并返回 nil。
 func (p *basePhase) Enter(ge GameEngine) Phase { return nil }
+
 // HandleAction 是 Phase 接口的默认实现，不执行任何操作并返回 nil。
 func (p *basePhase) HandleAction(ge GameEngine, playerID int32, action *model.PlayerActionPayload) Phase {
 	return nil
 }
+
 // HandleEvent 是 Phase 接口的默认实现，不执行任何操作并返回 nil。
 func (p *basePhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+
 // HandleTimeout 是 Phase 接口的默认实现，不执行任何操作并返回 nil。
-func (p *basePhase) HandleTimeout(ge GameEngine) Phase                       { return nil }
+func (p *basePhase) HandleTimeout(ge GameEngine) Phase { return nil }
+
 // Exit 是 Phase 接口的默认实现，不执行任何操作。
-func (p *basePhase) Exit(ge GameEngine)                                      {}
+func (p *basePhase) Exit(ge GameEngine) {}
+
 // TimeoutDuration 是 Phase 接口的默认实现，返回 0，表示没有超时。
-func (p *basePhase) TimeoutDuration() time.Duration                          { return 0 }
+func (p *basePhase) TimeoutDuration() time.Duration { return 0 }

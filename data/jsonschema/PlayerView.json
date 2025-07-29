@@ -1052,6 +1052,85 @@
             "title": "End Game Effect",
             "description": "结束游戏效果"
         },
+        "v1.EventPayload": {
+            "properties": {
+                "character_moved": {
+                    "$ref": "#/definitions/v1.CharacterMovedEvent",
+                    "additionalProperties": true
+                },
+                "paranoia_adjusted": {
+                    "$ref": "#/definitions/v1.ParanoiaAdjustedEvent",
+                    "additionalProperties": true
+                },
+                "goodwill_adjusted": {
+                    "$ref": "#/definitions/v1.GoodwillAdjustedEvent",
+                    "additionalProperties": true
+                },
+                "intrigue_adjusted": {
+                    "$ref": "#/definitions/v1.IntrigueAdjustedEvent",
+                    "additionalProperties": true
+                },
+                "loop_loss": {
+                    "$ref": "#/definitions/v1.LoopLossEvent",
+                    "additionalProperties": true
+                },
+                "loop_win": {
+                    "$ref": "#/definitions/v1.LoopWinEvent",
+                    "additionalProperties": true
+                },
+                "ability_used": {
+                    "$ref": "#/definitions/v1.AbilityUsedEvent",
+                    "additionalProperties": true
+                },
+                "day_advanced": {
+                    "$ref": "#/definitions/v1.DayAdvancedEvent",
+                    "additionalProperties": true
+                },
+                "card_played": {
+                    "$ref": "#/definitions/v1.CardPlayedEvent",
+                    "additionalProperties": true
+                },
+                "card_revealed": {
+                    "$ref": "#/definitions/v1.CardRevealedEvent",
+                    "additionalProperties": true
+                },
+                "loop_reset": {
+                    "$ref": "#/definitions/v1.LoopResetEvent",
+                    "additionalProperties": true
+                },
+                "game_over": {
+                    "$ref": "#/definitions/v1.GameOverEvent",
+                    "additionalProperties": true
+                },
+                "choice_required": {
+                    "$ref": "#/definitions/v1.ChoiceRequiredEvent",
+                    "additionalProperties": true
+                },
+                "incident_triggered": {
+                    "$ref": "#/definitions/v1.IncidentTriggeredEvent",
+                    "additionalProperties": true
+                },
+                "tragedy_triggered": {
+                    "$ref": "#/definitions/v1.TragedyTriggeredEvent",
+                    "additionalProperties": true
+                },
+                "trait_added": {
+                    "$ref": "#/definitions/v1.TraitAddedEvent",
+                    "additionalProperties": true
+                },
+                "trait_removed": {
+                    "$ref": "#/definitions/v1.TraitRemovedEvent",
+                    "additionalProperties": true
+                },
+                "player_action_taken": {
+                    "$ref": "#/definitions/v1.PlayerActionTakenEvent",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Event Payload"
+        },
         "v1.ForbidEffect": {
             "properties": {
                 "target": {
@@ -1159,76 +1238,8 @@
                     "description": "事件发生的时间戳",
                     "format": "date-time"
                 },
-                "character_moved": {
-                    "$ref": "#/definitions/v1.CharacterMovedEvent",
-                    "additionalProperties": true
-                },
-                "paranoia_adjusted": {
-                    "$ref": "#/definitions/v1.ParanoiaAdjustedEvent",
-                    "additionalProperties": true
-                },
-                "goodwill_adjusted": {
-                    "$ref": "#/definitions/v1.GoodwillAdjustedEvent",
-                    "additionalProperties": true
-                },
-                "intrigue_adjusted": {
-                    "$ref": "#/definitions/v1.IntrigueAdjustedEvent",
-                    "additionalProperties": true
-                },
-                "loop_loss": {
-                    "$ref": "#/definitions/v1.LoopLossEvent",
-                    "additionalProperties": true
-                },
-                "loop_win": {
-                    "$ref": "#/definitions/v1.LoopWinEvent",
-                    "additionalProperties": true
-                },
-                "ability_used": {
-                    "$ref": "#/definitions/v1.AbilityUsedEvent",
-                    "additionalProperties": true
-                },
-                "day_advanced": {
-                    "$ref": "#/definitions/v1.DayAdvancedEvent",
-                    "additionalProperties": true
-                },
-                "card_played": {
-                    "$ref": "#/definitions/v1.CardPlayedEvent",
-                    "additionalProperties": true
-                },
-                "card_revealed": {
-                    "$ref": "#/definitions/v1.CardRevealedEvent",
-                    "additionalProperties": true
-                },
-                "loop_reset": {
-                    "$ref": "#/definitions/v1.LoopResetEvent",
-                    "additionalProperties": true
-                },
-                "game_over": {
-                    "$ref": "#/definitions/v1.GameOverEvent",
-                    "additionalProperties": true
-                },
-                "choice_required": {
-                    "$ref": "#/definitions/v1.ChoiceRequiredEvent",
-                    "additionalProperties": true
-                },
-                "incident_triggered": {
-                    "$ref": "#/definitions/v1.IncidentTriggeredEvent",
-                    "additionalProperties": true
-                },
-                "tragedy_triggered": {
-                    "$ref": "#/definitions/v1.TragedyTriggeredEvent",
-                    "additionalProperties": true
-                },
-                "trait_added": {
-                    "$ref": "#/definitions/v1.TraitAddedEvent",
-                    "additionalProperties": true
-                },
-                "trait_removed": {
-                    "$ref": "#/definitions/v1.TraitRemovedEvent",
-                    "additionalProperties": true
-                },
-                "player_action_taken": {
-                    "$ref": "#/definitions/v1.PlayerActionTakenEvent",
+                "payload": {
+                    "$ref": "#/definitions/v1.EventPayload",
                     "additionalProperties": true
                 }
             },

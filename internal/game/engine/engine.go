@@ -1,12 +1,11 @@
 package engine // 定义游戏引擎包
 
 import (
-	"context" // 导入 context 包，用于管理请求的生命周期
+	"context"                            // 导入 context 包，用于管理请求的生命周期
 	"tragedylooper/internal/game/loader" // 导入游戏数据加载器
-	model "tragedylooper/pkg/proto/v1" // 导入协议缓冲区模型
+	model "tragedylooper/pkg/proto/v1"   // 导入协议缓冲区模型
 
 	"go.uber.org/zap" // 导入 Zap 日志库
-	"google.golang.org/protobuf/proto" // 导入 Protobuf 核心库
 )
 
 // LocationGrid 定义了 2x2 的地图布局，将地点类型映射到网格坐标。
@@ -22,13 +21,13 @@ type engineAction interface{}
 
 // getPlayerViewRequest 是获取玩家过滤后的游戏状态视图的请求。
 type getPlayerViewRequest struct {
-	playerID     int32                 // 请求视图的玩家ID
+	playerID     int32                  // 请求视图的玩家ID
 	responseChan chan *model.PlayerView // 用于发送响应的通道
 }
 
 // aiActionCompleteRequest 表示 AI 或玩家操作已完成并准备好由游戏引擎处理。
 type aiActionCompleteRequest struct {
-	playerID int32                  // 执行操作的玩家ID
+	playerID int32                      // 执行操作的玩家ID
 	action   *model.PlayerActionPayload // 玩家操作的负载
 }
 
@@ -37,7 +36,7 @@ type GameEngine struct {
 	GameState *model.GameState // 当前的游戏状态
 	logger    *zap.Logger      // 日志记录器
 
-	actionGenerator ActionGenerator // 用于生成 AI 玩家操作的接口
+	actionGenerator ActionGenerator   // 用于生成 AI 玩家操作的接口
 	gameConfig      loader.GameConfig // 游戏的配置数据
 	pm              *phaseManager     // 阶段管理器
 	em              *eventManager     // 事件管理器
@@ -46,7 +45,7 @@ type GameEngine struct {
 	// 它确保对游戏状态的所有修改都在主游戏循环中按顺序处理，
 	// 防止竞争条件。
 	engineChan chan engineAction // 引擎请求通道
-	stopChan   chan struct{}   // 用于停止游戏循环的通道
+	stopChan   chan struct{}     // 用于停止游戏循环的通道
 
 	playerReady map[int32]bool // 记录每个玩家是否已准备好进入下一阶段
 
@@ -182,7 +181,7 @@ func (ge *GameEngine) handleTimeout() {
 	ge.pm.handleTimeout()
 }
 
-func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, payload proto.Message) {
+func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, payload *model.EventPayload) {
 	ge.em.createAndProcess(eventType, payload)
 }
 
@@ -190,8 +189,8 @@ func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, payloa
 // winner: 获胜方的角色类型。
 func (ge *GameEngine) endGame(winner model.PlayerRole) {
 	ge.logger.Info("Game over", zap.String("winner", winner.String()))
-	// 此事件将由事件管理器处理，从而导致状态更新和阶段转换。
-	ge.em.createAndProcess(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: winner})
+	// This event will be handled by the event manager, leading to state updates and phase transitions.
+	ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: winner})
 }
 
 // ResetPlayerReadiness 重置所有玩家的准备状态。

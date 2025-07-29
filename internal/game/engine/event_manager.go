@@ -4,10 +4,16 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 
 	"go.uber.org/zap"
-	"google.golang.org/protobuf/proto"
-	
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
+
+// createAndProcess is the central method for creating, applying, and broadcasting a game event.
+// It ensures a consistent order of operations:
+// 1. An event is created from a payload.
+// 2. The phaseManager is notified, allowing the current phase to react and potentially trigger a transition.
+// 3. The event is broadcast to external listeners and recorded in the game's history.
+// eventType: The type of the game event.
+// payload: The payload for the event, which must be a protobuf message.
 
 // eventManager is responsible for creating, processing, and dispatching all game events.
 // It decouples the event lifecycle from the main GameEngine, ensuring a clear and maintainable flow.
@@ -36,51 +42,52 @@ func newEventManager(engine *GameEngine) *eventManager {
 // 3. The event is broadcast to external listeners and recorded in the game's history.
 // eventType: The type of the game event.
 // payload: The payload for the event, which must be a protobuf message.
-func (em *eventManager) createAndProcess(eventType model.GameEventType, payload proto.Message) {
+func (em *eventManager) createAndProcess(eventType model.GameEventType, payload *model.EventPayload) {
 	event := &model.GameEvent{
 		Type:      eventType,
 		Timestamp: timestamppb.Now(),
+		Payload:   &model.EventPayload{},
 	}
 
-	switch p := payload.(type) {
-	case *model.CharacterMovedEvent:
-		event.Payload = &model.GameEvent_CharacterMoved{CharacterMoved: p}
-	case *model.ParanoiaAdjustedEvent:
-		event.Payload = &model.GameEvent_ParanoiaAdjusted{ParanoiaAdjusted: p}
-	case *model.GoodwillAdjustedEvent:
-		event.Payload = &model.GameEvent_GoodwillAdjusted{GoodwillAdjusted: p}
-	case *model.IntrigueAdjustedEvent:
-		event.Payload = &model.GameEvent_IntrigueAdjusted{IntrigueAdjusted: p}
-	case *model.LoopLossEvent:
-		event.Payload = &model.GameEvent_LoopLoss{LoopLoss: p}
-	case *model.LoopWinEvent:
-		event.Payload = &model.GameEvent_LoopWin{LoopWin: p}
-	case *model.AbilityUsedEvent:
-		event.Payload = &model.GameEvent_AbilityUsed{AbilityUsed: p}
-	case *model.DayAdvancedEvent:
-		event.Payload = &model.GameEvent_DayAdvanced{DayAdvanced: p}
-	case *model.CardPlayedEvent:
-		event.Payload = &model.GameEvent_CardPlayed{CardPlayed: p}
-	case *model.CardRevealedEvent:
-		event.Payload = &model.GameEvent_CardRevealed{CardRevealed: p}
-	case *model.LoopResetEvent:
-		event.Payload = &model.GameEvent_LoopReset{LoopReset: p}
-	case *model.GameOverEvent:
-		event.Payload = &model.GameEvent_GameOver{GameOver: p}
-	case *model.ChoiceRequiredEvent:
-		event.Payload = &model.GameEvent_ChoiceRequired{ChoiceRequired: p}
-	case *model.IncidentTriggeredEvent:
-		event.Payload = &model.GameEvent_IncidentTriggered{IncidentTriggered: p}
-	case *model.TragedyTriggeredEvent:
-		event.Payload = &model.GameEvent_TragedyTriggered{TragedyTriggered: p}
-	case *model.TraitAddedEvent:
-		event.Payload = &model.GameEvent_TraitAdded{TraitAdded: p}
-	case *model.TraitRemovedEvent:
-		event.Payload = &model.GameEvent_TraitRemoved{TraitRemoved: p}
-	case *model.PlayerActionTakenEvent:
-		event.Payload = &model.GameEvent_PlayerActionTaken{PlayerActionTaken: p}
+	switch p := payload.Payload.(type) {
+	case *model.EventPayload_CharacterMoved:
+		event.Payload.Payload = p
+	case *model.EventPayload_ParanoiaAdjusted:
+		event.Payload.Payload = p
+	case *model.EventPayload_GoodwillAdjusted:
+		event.Payload.Payload = p
+	case *model.EventPayload_IntrigueAdjusted:
+		event.Payload.Payload = p
+	case *model.EventPayload_LoopLoss:
+		event.Payload.Payload = p
+	case *model.EventPayload_LoopWin:
+		event.Payload.Payload = p
+	case *model.EventPayload_AbilityUsed:
+		event.Payload.Payload = p
+	case *model.EventPayload_DayAdvanced:
+		event.Payload.Payload = p
+	case *model.EventPayload_CardPlayed:
+		event.Payload.Payload = p
+	case *model.EventPayload_CardRevealed:
+		event.Payload.Payload = p
+	case *model.EventPayload_LoopReset:
+		event.Payload.Payload = p
+	case *model.EventPayload_GameOver:
+		event.Payload.Payload = p
+	case *model.EventPayload_ChoiceRequired:
+		event.Payload.Payload = p
+	case *model.EventPayload_IncidentTriggered:
+		event.Payload.Payload = p
+	case *model.EventPayload_TragedyTriggered:
+		event.Payload.Payload = p
+	case *model.EventPayload_TraitAdded:
+		event.Payload.Payload = p
+	case *model.EventPayload_TraitRemoved:
+		event.Payload.Payload = p
+	case *model.EventPayload_PlayerActionTaken:
+		event.Payload.Payload = p
 	default:
-		em.logger.Error("Unknown event payload type", zap.String("type", string(p.ProtoReflect().Descriptor().FullName())))
+		em.logger.Error("Unknown event payload type")
 		return
 	}
 

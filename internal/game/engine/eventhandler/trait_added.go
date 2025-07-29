@@ -13,19 +13,19 @@ type TraitAddedHandler struct{}
 
 // Handle adds a trait to a character if it doesn't exist yet.
 func (h *TraitAddedHandler) Handle(state *model.GameState, event *model.GameEvent) error {
-	e, ok := event.Payload.(*model.GameEvent_TraitAdded)
-	if !ok {
+	e := event.Payload.GetTraitAdded()
+	if e == nil {
 		return nil // Or handle error appropriately
 	}
 
-	if char, ok := state.Characters[e.TraitAdded.CharacterId]; ok {
+	if char, ok := state.Characters[e.CharacterId]; ok {
 		// Avoid duplicates
 		for _, t := range char.Traits {
-			if t == e.TraitAdded.Trait {
+			if t == e.Trait {
 				return nil // Already exists, not an error
 			}
 		}
-		char.Traits = append(char.Traits, e.TraitAdded.Trait)
+		char.Traits = append(char.Traits, e.Trait)
 	}
 	return nil
 }

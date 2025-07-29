@@ -3,7 +3,7 @@ package engine // 定义游戏引擎包
 import (
 	"fmt"
 	"tragedylooper/internal/game/engine/effecthandler" // 导入效果处理程序包
-	model "tragedylooper/pkg/proto/v1" // 导入协议缓冲区模型
+	model "tragedylooper/pkg/proto/v1"                 // 导入协议缓冲区模型
 )
 
 // applyEffect 查找效果的适当处理程序，并使用它来解决选择，然后应用效果。
@@ -26,7 +26,7 @@ func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, 
 	}
 
 	if len(choices) > 0 && choice == nil {
-		choiceEvent := &model.ChoiceRequiredEvent{Choices: choices}
+		choiceEvent := &model.EventPayload{Choices: choices}
 		ge.ApplyAndPublishEvent(model.GameEventType_CHOICE_REQUIRED, choiceEvent)
 		return nil // 停止处理，直到收到选择
 	}

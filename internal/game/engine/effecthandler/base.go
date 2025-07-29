@@ -2,15 +2,13 @@ package effecthandler
 
 import (
 	model "tragedylooper/pkg/proto/v1"
-
-	"google.golang.org/protobuf/proto"
 )
 
 // GameEngine provides the necessary methods for handlers to interact with the game state and engine logic.
 // This interface helps to decouple the handlers from the main engine package.
 type GameEngine interface {
 	GetGameState() *model.GameState
-	ApplyAndPublishEvent(eventType model.GameEventType, payload proto.Message)
+	ApplyAndPublishEvent(eventType model.GameEventType, payload model.EventPayload)
 	ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, player *model.Player, payload *model.UseAbilityPayload, ability *model.Ability) ([]int32, error)
 	GetCharacterByID(id int32) *model.Character
 	MoveCharacter(char *model.Character, dx, dy int)

@@ -1,87 +1,85 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/GameEvent",
+    "$ref": "#/definitions/EventPayload",
     "definitions": {
-        "GameEvent": {
+        "EventPayload": {
             "properties": {
-                "type": {
-                    "enum": [
-                        "GAME_EVENT_TYPE_UNSPECIFIED",
-                        0,
-                        "CHARACTER_MOVED",
-                        1,
-                        "PARANOIA_ADJUSTED",
-                        2,
-                        "GOODWILL_ADJUSTED",
-                        3,
-                        "INTRIGUE_ADJUSTED",
-                        4,
-                        "INCIDENT_TRIGGERED",
-                        5,
-                        "INCIDENT_PREVENTED",
-                        6,
-                        "ROLE_REVEALED",
-                        7,
-                        "ABILITY_GRANTED",
-                        8,
-                        "CHOICE_REQUIRED",
-                        9,
-                        "LOOP_WIN",
-                        10,
-                        "LOOP_LOSS",
-                        11,
-                        "FIRST_GUESS_MADE",
-                        12,
-                        "FINAL_GUESS_MADE",
-                        13,
-                        "GOODWILL_REFUSAL_TEST",
-                        14,
-                        "LOOP_OVER",
-                        15,
-                        "DAY_ADVANCED",
-                        16,
-                        "TRAGEDY_TRIGGERED",
-                        17,
-                        "LOOP_RESET",
-                        18,
-                        "TRAIT_ADDED",
-                        19,
-                        "TRAIT_REMOVED",
-                        20,
-                        "CARD_PLAYED",
-                        21,
-                        "CARD_REVEALED",
-                        22,
-                        "GAME_ENDED",
-                        23,
-                        "PLAYER_ACTION",
-                        24
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Game Event Type",
-                    "description": "游戏事件类型（用于能力触发器过滤）"
+                "character_moved": {
+                    "$ref": "#/definitions/v1.CharacterMovedEvent",
+                    "additionalProperties": true
                 },
-                "timestamp": {
-                    "type": "string",
-                    "description": "事件发生的时间戳",
-                    "format": "date-time"
+                "paranoia_adjusted": {
+                    "$ref": "#/definitions/v1.ParanoiaAdjustedEvent",
+                    "additionalProperties": true
                 },
-                "payload": {
-                    "$ref": "#/definitions/v1.EventPayload",
+                "goodwill_adjusted": {
+                    "$ref": "#/definitions/v1.GoodwillAdjustedEvent",
+                    "additionalProperties": true
+                },
+                "intrigue_adjusted": {
+                    "$ref": "#/definitions/v1.IntrigueAdjustedEvent",
+                    "additionalProperties": true
+                },
+                "loop_loss": {
+                    "$ref": "#/definitions/v1.LoopLossEvent",
+                    "additionalProperties": true
+                },
+                "loop_win": {
+                    "$ref": "#/definitions/v1.LoopWinEvent",
+                    "additionalProperties": true
+                },
+                "ability_used": {
+                    "$ref": "#/definitions/v1.AbilityUsedEvent",
+                    "additionalProperties": true
+                },
+                "day_advanced": {
+                    "$ref": "#/definitions/v1.DayAdvancedEvent",
+                    "additionalProperties": true
+                },
+                "card_played": {
+                    "$ref": "#/definitions/v1.CardPlayedEvent",
+                    "additionalProperties": true
+                },
+                "card_revealed": {
+                    "$ref": "#/definitions/v1.CardRevealedEvent",
+                    "additionalProperties": true
+                },
+                "loop_reset": {
+                    "$ref": "#/definitions/v1.LoopResetEvent",
+                    "additionalProperties": true
+                },
+                "game_over": {
+                    "$ref": "#/definitions/v1.GameOverEvent",
+                    "additionalProperties": true
+                },
+                "choice_required": {
+                    "$ref": "#/definitions/v1.ChoiceRequiredEvent",
+                    "additionalProperties": true
+                },
+                "incident_triggered": {
+                    "$ref": "#/definitions/v1.IncidentTriggeredEvent",
+                    "additionalProperties": true
+                },
+                "tragedy_triggered": {
+                    "$ref": "#/definitions/v1.TragedyTriggeredEvent",
+                    "additionalProperties": true
+                },
+                "trait_added": {
+                    "$ref": "#/definitions/v1.TraitAddedEvent",
+                    "additionalProperties": true
+                },
+                "trait_removed": {
+                    "$ref": "#/definitions/v1.TraitRemovedEvent",
+                    "additionalProperties": true
+                },
+                "player_action_taken": {
+                    "$ref": "#/definitions/v1.PlayerActionTakenEvent",
                     "additionalProperties": true
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Game Event",
-            "description": "GameEvent 表示游戏中发生的事件。"
+            "title": "Event Payload"
         },
         "v1.AbilityUsedEvent": {
             "properties": {
@@ -727,85 +725,6 @@
             "type": "object",
             "title": "End Game Effect",
             "description": "结束游戏效果"
-        },
-        "v1.EventPayload": {
-            "properties": {
-                "character_moved": {
-                    "$ref": "#/definitions/v1.CharacterMovedEvent",
-                    "additionalProperties": true
-                },
-                "paranoia_adjusted": {
-                    "$ref": "#/definitions/v1.ParanoiaAdjustedEvent",
-                    "additionalProperties": true
-                },
-                "goodwill_adjusted": {
-                    "$ref": "#/definitions/v1.GoodwillAdjustedEvent",
-                    "additionalProperties": true
-                },
-                "intrigue_adjusted": {
-                    "$ref": "#/definitions/v1.IntrigueAdjustedEvent",
-                    "additionalProperties": true
-                },
-                "loop_loss": {
-                    "$ref": "#/definitions/v1.LoopLossEvent",
-                    "additionalProperties": true
-                },
-                "loop_win": {
-                    "$ref": "#/definitions/v1.LoopWinEvent",
-                    "additionalProperties": true
-                },
-                "ability_used": {
-                    "$ref": "#/definitions/v1.AbilityUsedEvent",
-                    "additionalProperties": true
-                },
-                "day_advanced": {
-                    "$ref": "#/definitions/v1.DayAdvancedEvent",
-                    "additionalProperties": true
-                },
-                "card_played": {
-                    "$ref": "#/definitions/v1.CardPlayedEvent",
-                    "additionalProperties": true
-                },
-                "card_revealed": {
-                    "$ref": "#/definitions/v1.CardRevealedEvent",
-                    "additionalProperties": true
-                },
-                "loop_reset": {
-                    "$ref": "#/definitions/v1.LoopResetEvent",
-                    "additionalProperties": true
-                },
-                "game_over": {
-                    "$ref": "#/definitions/v1.GameOverEvent",
-                    "additionalProperties": true
-                },
-                "choice_required": {
-                    "$ref": "#/definitions/v1.ChoiceRequiredEvent",
-                    "additionalProperties": true
-                },
-                "incident_triggered": {
-                    "$ref": "#/definitions/v1.IncidentTriggeredEvent",
-                    "additionalProperties": true
-                },
-                "tragedy_triggered": {
-                    "$ref": "#/definitions/v1.TragedyTriggeredEvent",
-                    "additionalProperties": true
-                },
-                "trait_added": {
-                    "$ref": "#/definitions/v1.TraitAddedEvent",
-                    "additionalProperties": true
-                },
-                "trait_removed": {
-                    "$ref": "#/definitions/v1.TraitRemovedEvent",
-                    "additionalProperties": true
-                },
-                "player_action_taken": {
-                    "$ref": "#/definitions/v1.PlayerActionTakenEvent",
-                    "additionalProperties": true
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Event Payload"
         },
         "v1.ForbidEffect": {
             "properties": {
