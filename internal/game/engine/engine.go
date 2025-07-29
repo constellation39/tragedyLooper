@@ -36,10 +36,10 @@ type GameEngine struct {
 	GameState *model.GameState // 当前的游戏状态
 	logger    *zap.Logger      // 日志记录器
 
-	actionGenerator ActionGenerator   // 用于生成 AI 玩家操作的接口
-	gameConfig      loader.GameConfig // 游戏的配置数据
-	pm              *phaseManager     // 阶段管理器
-	em              *eventManager     // 事件管理器
+	actionGenerator ActionGenerator         // 用于生成 AI 玩家操作的接口
+	gameConfig      loader.GameDataAccessor // 游戏的数据仓库
+	pm              *phaseManager           // 阶段管理器
+	em              *eventManager           // 事件管理器
 
 	// engineChan 是所有传入请求（玩家操作、AI 操作等）的中央通道。
 	// 它确保对游戏状态的所有修改都在主游戏循环中按顺序处理，
@@ -59,7 +59,7 @@ type GameEngine struct {
 // actionGenerator: AI 动作生成器。
 // gameConfig: 游戏配置。
 // 返回值: 新的 GameEngine 实例和可能发生的错误。
-func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator ActionGenerator, gameConfig loader.GameConfig) (*GameEngine, error) {
+func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator ActionGenerator, gameConfig loader.GameDataAccessor) (*GameEngine, error) {
 	ge := &GameEngine{
 		logger:               logger,
 		actionGenerator:      actionGenerator,
@@ -87,7 +87,7 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator 
 		playerMap[player.Id] = player
 	}
 
-	ge.initializeGameStateFromScript(gameConfig, playerMap)
+	ge.initializeGameStateFromScript(playerMap)
 	ge.dealInitialCards()
 
 	return ge, nil
@@ -285,8 +285,7 @@ func (ge *GameEngine) GetGameState() *model.GameState {
 	return ge.GameState
 }
 
-// GetGameConfig 返回游戏配置。
-func (ge *GameEngine) GetGameConfig() loader.GameConfig {
+func (ge *GameEngine) GetGameRepo() loader.GameDataAccessor {
 	return ge.gameConfig
 }
 

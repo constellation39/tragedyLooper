@@ -71,11 +71,11 @@ func (ge *GameEngine) checkGameEndConditions() (bool, model.PlayerRole) {
 // initializeGameStateFromScript 根据剧本初始化游戏状态。
 // gameConfig: 游戏配置。
 // playerMap: 玩家ID到玩家对象的映射。
-func (ge *GameEngine) initializeGameStateFromScript(gameConfig loader.GameConfig, playerMap map[int32]*model.Player) {
+func (ge *GameEngine) initializeGameStateFromScript(playerMap map[int32]*model.Player) {
 	characters := make(map[int32]*model.Character)
-	for _, charInScript := range loader.Script(gameConfig).Characters {
+	for _, charInScript := range ge.gameConfig.GetScript().Characters {
 
-		charData, err := loader.Get[*model.CharacterConfig](gameConfig, charInScript.CharacterId)
+		charData, err := loader.Get[*model.CharacterConfig](ge.gameConfig, charInScript.CharacterId)
 		if err != nil {
 			ge.logger.Warn("character config not found", zap.Int32("characterID", charInScript.CharacterId))
 			continue
@@ -84,7 +84,7 @@ func (ge *GameEngine) initializeGameStateFromScript(gameConfig loader.GameConfig
 		abilities := make([]*model.Ability, 0)
 
 		for _, ab := range charData.AbilityIds {
-			ability, err := loader.Get[*model.AbilityConfig](gameConfig, ab)
+			ability, err := loader.Get[*model.AbilityConfig](ge.gameConfig, ab)
 			if err != nil {
 				ge.logger.Warn("ability config not found", zap.Int32("abilityID", ab))
 				continue

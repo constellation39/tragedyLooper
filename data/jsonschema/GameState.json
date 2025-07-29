@@ -107,6 +107,13 @@
                     "type": "object",
                     "description": "本循环中已打出的牌的ID"
                 },
+                "triggered_incidents": {
+                    "additionalProperties": {
+                        "type": "boolean"
+                    },
+                    "type": "object",
+                    "description": "Key is the incident name"
+                },
                 "last_update_time": {
                     "type": "string",
                     "description": "最后更新时间戳 (Unix timestamp)"

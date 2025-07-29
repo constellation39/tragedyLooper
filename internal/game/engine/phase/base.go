@@ -27,7 +27,7 @@ type GameEngine interface {
 	// GetGameState 返回当前游戏状态。
 	GetGameState() *model.GameState
 	// GetGameConfig 返回游戏配置。
-	GetGameConfig() loader.GameConfig
+	GetGameRepo() loader.GameDataAccessor
 	// GetCharacterByID 根据角色ID获取角色对象。
 	GetCharacterByID(id int32) *model.Character
 	// MoveCharacter 移动角色。

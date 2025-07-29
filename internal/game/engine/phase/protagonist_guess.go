@@ -44,7 +44,7 @@ func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.M
 		return nil
 	}
 
-	script := ge.GetGameConfig().GetScript()
+	script := ge.GetGameRepo().GetScript()
 	if script == nil {
 		ge.Logger().Error("failed to get script to verify guess")
 		ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.EventPayload{

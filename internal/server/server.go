@@ -27,14 +27,14 @@ type Server struct {
 	// 用于发出服务器关闭信号的通道
 	shutdownChan chan struct{}
 	// 可用游戏剧本的映射
-	gameDataLoader loader.Loader
+	gameDataDir string
 	// LLM 客户端用于 AI 玩家
 	llmClient llm.Client
 	logger    *zap.Logger
 }
 
 // NewServer 创建一个新的游戏服务器实例。
-func NewServer(gameData loader.Loader, llmClient llm.Client, logger *zap.Logger) *Server {
+func NewServer(dataDir string, llmClient llm.Client, logger *zap.Logger) *Server {
 	return &Server{
 		upgrader: websocket.Upgrader{
 			ReadBufferSize:  1024,
@@ -43,11 +43,11 @@ func NewServer(gameData loader.Loader, llmClient llm.Client, logger *zap.Logger)
 				return true // 允许所有来源进行开发，在生产环境中限制
 			},
 		},
-		rooms:          make(map[string]*Room),
-		shutdownChan:   make(chan struct{}),
-		gameDataLoader: gameData,
-		llmClient:      llmClient,
-		logger:         logger,
+		rooms:        make(map[string]*Room),
+		shutdownChan: make(chan struct{}),
+		gameDataDir:  dataDir,
+		llmClient:    llmClient,
+		logger:       logger,
 	}
 }
 
@@ -137,12 +137,6 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	gameDataAccessor, err := s.gameDataLoader.LoadGameDataAccessor(req.ScriptID)
-	if err != nil {
-		ctxLogger.Error("Failed to load script", zap.Error(err))
-		return
-	}
-
 	gameID := generateUniqueGameID()
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -163,8 +157,15 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		LlmSessionId:       "",
 	})
 
+	gameRepo := loader.NewRepository()
+	loader.RegisterLoaders(s.gameDataDir, req.ScriptID)
+	if err := loader.Load(gameRepo); err != nil {
+		ctxLogger.Error("Failed to load game data", zap.Error(err))
+		return
+	}
+
 	llmActionGenerator := llm.NewLLMActionGenerator(s.llmClient, ctxLogger)
-	gameEngine, err := engine.NewGameEngine(ctxLogger.With(zap.String("gameID", gameID)), players, llmActionGenerator, gameDataAccessor)
+	gameEngine, err := engine.NewGameEngine(ctxLogger.With(zap.String("gameID", gameID)), players, llmActionGenerator, gameRepo)
 	if err != nil {
 		ctxLogger.Error("Failed to create game engine", zap.Error(err))
 		return

@@ -8,8 +8,6 @@ import (
 	"syscall"
 	"time"
 
-	"tragedylooper/internal/game/loader"
-
 	"tragedylooper/internal/llm"
 	"tragedylooper/internal/logger"
 	"tragedylooper/internal/server"
@@ -23,16 +21,13 @@ func main() {
 		_ = logger.Sync() // Flushes buffer, important for production
 	}()
 
-	// 1. Load all game data.
-	gameLoader := loader.NewJSONLoader("data")
-
 	// Initialize LLM client (e.g., OpenAI, Google Gemini)
 	// This would typically involve getting API keys from environment variables.
 	llmClient := llm.NewMockLLMClient() // Using a mock client for demonstration
 	// llmClient := llm.NewOpenAIClient(os.Getenv("OPENAI_API_KEY")) // For actual OpenAI integration
 
 	// 2. Initialize the game server
-	gameServer := server.NewServer(gameLoader, llmClient, logger)
+	gameServer := server.NewServer("data", llmClient, logger)
 
 	// Create a new ServeMux to apply middleware
 	mux := http.NewServeMux()

@@ -18,18 +18,19 @@ message GameState {
   map<int32, Player> players = 4; // 所有玩家的映射，键为 player_id
   int32 current_day = 5; // 当前天数
   int32 current_loop = 6; // 当前循环数
-  int32 days_per_loop = 18; // 每循环天数
+  int32 days_per_loop = 19; // 每循环天数
   GamePhase current_phase = 7; // 当前游戏阶段
   map<int32, bool> active_tragedies = 8; // 当前循环中已激活（满足条件）的悲剧，键为 TragedyType
   map<int32, bool> prevented_tragedies = 9; // 当前循环中已被阻止的悲剧，键为 TragedyType
   map<int32, Card> played_cards_this_day = 10; // 今天打出的牌，键为 player_id
   map<int32, bool> played_cards_this_loop = 11; // 本循环中已打出的牌的ID
-  int64 last_update_time = 12; // 最后更新时间戳 (Unix timestamp)
-  repeated GameEvent day_events = 13; // 本日发生的事件日志
-  repeated GameEvent loop_events = 14; // 本循环发生的事件日志
-  map<int32, int32> character_paranoia_limits = 15; // 每个角色的妄想上限映射
-  map<int32, int32> character_goodwill_limits = 16; // 每个角色的好感度上限映射
-  map<int32, int32> character_intrigue_limits = 17; // 每个角色的阴谋上限映射
+  map<string, bool> triggered_incidents = 12; // Key is the incident name
+  int64 last_update_time = 13; // 最后更新时间戳 (Unix timestamp)
+  repeated GameEvent day_events = 14; // 本日发生的事件日志
+  repeated GameEvent loop_events = 15; // 本循环发生的事件日志
+  map<int32, int32> character_paranoia_limits = 16; // 每个角色的妄想上限映射
+  map<int32, int32> character_goodwill_limits = 17; // 每个角色的好感度上限映射
+  map<int32, int32> character_intrigue_limits = 18; // 每个角色的阴谋上限映射
 }
 
 // 玩家信息
