@@ -4,11 +4,13 @@ import (
 	"time"
 	"tragedylooper/internal/game/loader"
 	model "tragedylooper/internal/game/proto/v1"
+
+	"google.golang.org/protobuf/proto"
 )
 
 // GameEngine defines the interface for the game engine that phases can interact with.
 type GameEngine interface {
-	ApplyAndPublishEvent(eventType model.GameEventType, eventData interface{})
+	ApplyAndPublishEvent(eventType model.GameEventType, eventData proto.Message)
 	AreAllPlayersReady() bool
 	ResetPlayerReadiness()
 	ResolveMovement()

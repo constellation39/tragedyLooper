@@ -2,13 +2,36 @@ package engine
 
 import (
 	"time"
+	"tragedylooper/internal/game/engine/handlers"
 	"tragedylooper/internal/game/engine/phases"
 	"tragedylooper/internal/game/loader"
 	model "tragedylooper/internal/game/proto/v1"
 	"tragedylooper/internal/llm"
 
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/anypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
+
+// eventHandlers maps event types to their respective handler instances.
+var eventHandlers = map[model.GameEventType]handlers.EventHandler{
+	model.GameEventType_CHARACTER_MOVED:    &handlers.CharacterMovedHandler{},
+	model.GameEventType_PARANOIA_ADJUSTED:  &handlers.ParanoiaAdjustedHandler{},
+	model.GameEventType_GOODWILL_ADJUSTED:  &handlers.GoodwillAdjustedHandler{},
+	model.GameEventType_INTRIGUE_ADJUSTED:  &handlers.IntrigueAdjustedHandler{},
+	model.GameEventType_TRAIT_ADDED:        &handlers.TraitAddedHandler{},
+	model.GameEventType_TRAIT_REMOVED:      &handlers.TraitRemovedHandler{},
+	model.GameEventType_CARD_PLAYED:        &handlers.CardPlayedHandler{},
+	model.GameEventType_CARD_REVEALED:      &handlers.CardRevealedHandler{},
+	model.GameEventType_DAY_ADVANCED:       &handlers.DayAdvancedHandler{},
+	model.GameEventType_LOOP_RESET:         &handlers.LoopResetHandler{},
+	model.GameEventType_GAME_ENDED:         &handlers.GameOverHandler{},
+	model.GameEventType_INCIDENT_TRIGGERED: &handlers.IncidentTriggeredHandler{},
+	model.GameEventType_LOOP_WIN:           &handlers.LoopWinHandler{},
+	model.GameEventType_LOOP_LOSS:          &handlers.LoopLossHandler{},
+}
+
 
 // GameEngine manages the state and logic of a single game instance.
 type engineRequest interface{}
@@ -152,9 +175,22 @@ func (ge *GameEngine) runGameLoop() {
 	}
 }
 
-func (ge *GameEngine) handleEvent(event *model.GameEvent) {
+func (ge *GameEngine) processEvent(event *model.GameEvent) {
+	// 1. Apply the state change using the appropriate handler
+	if handler, ok := eventHandlers[event.Type]; ok {
+		if err := handler.Handle(ge.GameState, event); err != nil {
+			ge.logger.Error("Failed to handle event", zap.Error(err), zap.String("type", event.Type.String()))
+		}
+	} else {
+		ge.logger.Warn("No handler registered for event type", zap.String("type", event.Type.String()))
+	}
+
+	// 2. Let the current phase react to the event
 	nextPhase := ge.currentPhase.HandleEvent(ge, event)
 	ge.transitionTo(nextPhase)
+
+	// 3. Check for any new triggers that might have been activated
+	// ge.checkForTriggers(event) // TODO: Re-implement trigger logic
 }
 
 func (ge *GameEngine) transitionTo(nextPhase phases.Phase) {
@@ -175,7 +211,7 @@ func (ge *GameEngine) transitionTo(nextPhase phases.Phase) {
 
 	ge.currentPhase = nextPhase
 	ge.GameState.CurrentPhase = nextPhase.Type()
-
+	
 	// Call Enter on the new phase, which may return another phase to transition to immediately.
 	followingPhase := ge.currentPhase.Enter(ge)
 
@@ -190,7 +226,7 @@ func (ge *GameEngine) transitionTo(nextPhase phases.Phase) {
 }
 
 func (ge *GameEngine) endGame(winner model.PlayerRole) {
-	ge.applyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: winner})
+	ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: winner})
 	ge.logger.Info("Game over", zap.String("winner", winner.String()))
 	ge.transitionTo(&phases.GameOverPhase{})
 }
@@ -231,19 +267,45 @@ func (ge *GameEngine) GetGameConfig() loader.GameConfig {
 	return ge.gameConfig
 }
 
-func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, eventData interface{}) {
-	// TODO: implement me
+func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, payload proto.Message) {
+	anyPayload, err := anypb.New(payload)
+	if err != nil {
+		ge.logger.Error("Failed to create anypb.Any for event payload", zap.Error(err))
+		return
+	}
+	event := &model.GameEvent{
+		Type:      eventType,
+		Payload:   anyPayload,
+		Timestamp: timestamppb.Now(),
+	}
+
+	// First, process the event to apply state changes synchronously
+	ge.processEvent(event)
+
+	// Then, publish the event for external listeners
+	ge.publishGameEvent(event)
+}
+
+func (ge *GameEngine) publishGameEvent(event *model.GameEvent) {
+	select {
+	case ge.dispatchGameEvent <- event:
+		// Also record the event in the game state for player views
+		ge.GameState.DayEvents = append(ge.GameState.DayEvents, event)
+		ge.GameState.LoopEvents = append(ge.GameState.LoopEvents, event)
+	default:
+		ge.logger.Warn("Game event channel full, dropping event", zap.String("eventType", event.Type.String()))
+	}
 }
 
 func (ge *GameEngine) AreAllPlayersReady() bool {
-	// TODO: implement me
+	//TODO: implement me
 	return false
 }
 
 func (ge *GameEngine) ResolveMovement() {
-	// TODO: implement me
+	//TODO: implement me
 }
 
 func (ge *GameEngine) ResolveOtherCards() {
-	// TODO: implement me
+	//TODO: implement me
 }

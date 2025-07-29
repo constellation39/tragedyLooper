@@ -1,0 +1,27 @@
+package handlers
+
+import (
+	model "tragedylooper/internal/game/proto/v1"
+)
+
+// TraitAddedHandler handles the TraitAddedEvent.
+type TraitAddedHandler struct{}
+
+// Handle adds a trait to a character if it doesn't exist yet.
+func (h *TraitAddedHandler) Handle(state *model.GameState, event *model.GameEvent) error {
+	var e model.TraitAddedEvent
+	if err := event.Payload.UnmarshalTo(&e); err != nil {
+		return err
+	}
+
+	if char, ok := state.Characters[e.CharacterId]; ok {
+		// Avoid duplicates
+		for _, t := range char.Traits {
+			if t == e.Trait {
+				return nil // Already exists, not an error
+			}
+		}
+		char.Traits = append(char.Traits, e.Trait)
+	}
+	return nil
+}

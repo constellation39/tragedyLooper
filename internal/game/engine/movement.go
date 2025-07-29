@@ -114,7 +114,7 @@ func (ge *GameEngine) moveCharacter(char *model.Character, dx, dy int) {
 		}
 
 		char.CurrentLocation = newLoc
-		ge.applyAndPublishEvent(model.GameEventType_CHARACTER_MOVED, &model.CharacterMovedEvent{
+		ge.ApplyAndPublishEvent(model.GameEventType_CHARACTER_MOVED, &model.CharacterMovedEvent{
 			CharacterId: char.Config.Id,
 			NewLocation: newLoc,
 		})

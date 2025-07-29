@@ -1,0 +1,9 @@
+package handlers
+
+import model "tragedylooper/internal/game/proto/v1"
+
+// EventHandler defines the interface for handling a game event.
+// It modifies the game state directly based on the event.
+type EventHandler interface {
+	Handle(state *model.GameState, event *model.GameEvent) error
+}

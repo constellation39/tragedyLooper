@@ -1,0 +1,26 @@
+package handlers
+
+import (
+	model "tragedylooper/internal/game/proto/v1"
+)
+
+// TraitRemovedHandler handles the TraitRemovedEvent.
+type TraitRemovedHandler struct{}
+
+// Handle removes a trait from a character.
+func (h *TraitRemovedHandler) Handle(state *model.GameState, event *model.GameEvent) error {
+	var e model.TraitRemovedEvent
+	if err := event.Payload.UnmarshalTo(&e); err != nil {
+		return err
+	}
+
+	if char, ok := state.Characters[e.CharacterId]; ok {
+		for i, t := range char.Traits {
+			if t == e.Trait {
+				char.Traits = append(char.Traits[:i], char.Traits[i+1:]...)
+				return nil // Found and removed
+			}
+		}
+	}
+	return nil
+}
