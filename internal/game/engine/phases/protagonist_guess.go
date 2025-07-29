@@ -1,7 +1,7 @@
 package phases
 
 import (
-	model "tragedylooper/internal/game/proto/v1"
+	model "tragedylooper/pkg/proto/v1"
 )
 
 // --- ProtagonistGuessPhase ---

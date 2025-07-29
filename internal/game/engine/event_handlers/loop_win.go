@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	model "tragedylooper/internal/game/proto/v1"
+	model "tragedylooper/pkg/proto/v1"
 )
 
 // LoopWinHandler handles the LoopWinEvent.

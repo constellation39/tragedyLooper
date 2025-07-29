@@ -5,7 +5,7 @@ import (
 
 	"go.uber.org/zap"
 
-	model "tragedylooper/internal/game/proto/v1"
+	model "tragedylooper/pkg/proto/v1"
 	"tragedylooper/internal/llm"
 	promptbuilder "tragedylooper/internal/llm/prompt"
 )

@@ -2,7 +2,7 @@ package engine
 
 import (
 	"tragedylooper/internal/game/loader"
-	model "tragedylooper/internal/game/proto/v1"
+	model "tragedylooper/pkg/proto/v1"
 
 	"go.uber.org/zap"
 )

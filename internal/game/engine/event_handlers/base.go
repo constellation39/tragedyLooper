@@ -1,6 +1,6 @@
 package handlers
 
-import model "tragedylooper/internal/game/proto/v1"
+import model "tragedylooper/pkg/proto/v1"
 
 // EventHandler defines the interface for handling a game event.
 // It modifies the game state directly based on the event.

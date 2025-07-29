@@ -5,7 +5,7 @@ import (
 	"tragedylooper/internal/game/engine/event_handlers"
 	"tragedylooper/internal/game/engine/phases"
 	"tragedylooper/internal/game/loader"
-	model "tragedylooper/internal/game/proto/v1"
+	model "tragedylooper/pkg/proto/v1"
 	"tragedylooper/internal/llm"
 
 	"go.uber.org/zap"

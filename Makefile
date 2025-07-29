@@ -73,5 +73,5 @@ proto:
 # Clean generated protobuf files
 clean-proto:
 	@echo "Cleaning generated protobuf files..."
-	@$(SHELL_PREFIX) go run ./tools/rmrf internal/game/model
+	@$(SHELL_PREFIX) go run ./tools/rmrf pkg/proto
 	@$(SHELL_PREFIX) go run ./tools/rmrf data/jsonschema

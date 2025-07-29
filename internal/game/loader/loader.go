@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	v1 "tragedylooper/internal/game/proto/v1"
+	v1 "tragedylooper/pkg/proto/v1"
 )
 
 type Loader interface {

@@ -10,7 +10,7 @@ import (
 
 	"tragedylooper/internal/game/engine"
 	"tragedylooper/internal/game/loader"
-	model "tragedylooper/internal/game/proto/v1"
+	model "tragedylooper/pkg/proto/v1"
 	"tragedylooper/internal/llm"
 	"tragedylooper/internal/logger"
 

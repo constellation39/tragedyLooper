@@ -2,7 +2,7 @@ package phases
 
 import (
 	"time"
-	model "tragedylooper/internal/game/proto/v1"
+	model "tragedylooper/pkg/proto/v1"
 )
 
 // --- CardPlayPhase ---
