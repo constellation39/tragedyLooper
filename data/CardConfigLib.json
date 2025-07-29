@@ -3,7 +3,7 @@
         "1": {
             "id": 1,
             "name": "Move",
-            "card_type": "MOVEMENT",
+            "type": "FORBID_MOVEMENT",
             "owner_role": "PROTAGONIST",
             "effect": {
                 "sub_effects": [
@@ -17,7 +17,7 @@
         "2": {
             "id": 2,
             "name": "Add Paranoia",
-            "card_type": "PARANOIA_MINUS",
+            "type": "PARANOIA_MINUS",
             "owner_role": "PROTAGONIST",
             "effect": {
                 "sub_effects": [
@@ -34,7 +34,7 @@
         "3": {
             "id": 3,
             "name": "Move",
-            "card_type": "MOVEMENT",
+            "type": "FORBID_MOVEMENT",
             "owner_role": "MASTERMIND",
             "effect": {
                 "sub_effects": [
@@ -48,7 +48,7 @@
         "4": {
             "id": 4,
             "name": "Add Paranoia",
-            "card_type": "PARANOIA_PLUS",
+            "type": "PARANOIA_PLUS",
             "owner_role": "MASTERMIND",
             "effect": {
                 "sub_effects": [
@@ -65,7 +65,7 @@
         "5": {
             "id": 5,
             "name": "Add Goodwill",
-            "card_type": "GOODWILL_PLUS",
+            "type": "GOODWILL_PLUS",
             "owner_role": "PROTAGONIST",
             "effect": {
                 "sub_effects": [
@@ -82,7 +82,7 @@
         "6": {
             "id": 6,
             "name": "Add Intrigue",
-            "card_type": "INTRIGUE_PLUS",
+            "type": "INTRIGUE_PLUS",
             "owner_role": "PROTAGONIST",
             "effect": {
                 "sub_effects": [
@@ -99,7 +99,7 @@
         "7": {
             "id": 7,
             "name": "Add Goodwill",
-            "card_type": "GOODWILL_PLUS",
+            "type": "GOODWILL_PLUS",
             "owner_role": "MASTERMIND",
             "effect": {
                 "sub_effects": [
@@ -116,7 +116,7 @@
         "8": {
             "id": 8,
             "name": "Add Intrigue",
-            "card_type": "INTRIGUE_PLUS",
+            "type": "INTRIGUE_PLUS",
             "owner_role": "MASTERMIND",
             "effect": {
                 "sub_effects": [
@@ -132,14 +132,14 @@
         },
         "9": {
             "id": 9,
-            "name": "Forbid Movement",
-            "card_type": "FORBID_MOVEMENT",
+            "name": "Forbid MOVEMENT",
+            "type": "FORBID_MOVEMENT",
             "owner_role": "PROTAGONIST",
             "effect": {
                 "sub_effects": [
                     {
                         "forbid": {
-                            "forbid_type": "MOVEMENT"
+                            "forbid_type": "FORBID_MOVEMENT"
                         }
                     }
                 ]
@@ -149,7 +149,7 @@
         "10": {
             "id": 10,
             "name": "Forbid Paranoia",
-            "card_type": "FORBID_PARANOIA",
+            "type": "FORBID_PARANOIA",
             "owner_role": "PROTAGONIST",
             "effect": {
                 "sub_effects": [
@@ -165,7 +165,7 @@
         "11": {
             "id": 11,
             "name": "Forbid Goodwill",
-            "card_type": "FORBID_GOODWILL",
+            "type": "FORBID_GOODWILL",
             "owner_role": "MASTERMIND",
             "effect": {
                 "sub_effects": [
@@ -181,7 +181,7 @@
         "12": {
             "id": 12,
             "name": "Forbid Intrigue",
-            "card_type": "FORBID_INTRIGUE",
+            "type": "FORBID_INTRIGUE",
             "owner_role": "PROTAGONIST",
             "effect": {
                 "sub_effects": [
@@ -197,7 +197,7 @@
         "13": {
             "id": 13,
             "name": "Forbid Paranoia",
-            "card_type": "FORBID_PARANOIA",
+            "type": "FORBID_PARANOIA",
             "owner_role": "MASTERMIND",
             "effect": {
                 "sub_effects": [
@@ -213,7 +213,7 @@
         "14": {
             "id": 14,
             "name": "Add Goodwill +2",
-            "card_type": "GOODWILL_PLUS",
+            "type": "GOODWILL_PLUS",
             "owner_role": "PROTAGONIST",
             "effect": {
                 "sub_effects": [
@@ -230,7 +230,7 @@
         "15": {
             "id": 15,
             "name": "Add Intrigue +2",
-            "card_type": "INTRIGUE_PLUS",
+            "type": "INTRIGUE_PLUS",
             "owner_role": "MASTERMIND",
             "effect": {
                 "sub_effects": [

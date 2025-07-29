@@ -5,7 +5,7 @@
       "id": 1,
       "name": "Vigilant Protection",
       "description": "If an ally is targeted, you can increase your paranoia to protect them.",
-      "trigger_type": "PASSIVE",
+      "trigger_type": "ON_PASSIVE",
       "effect": {
         "adjust_stat": {
           "stat_type": "PARANOIA",

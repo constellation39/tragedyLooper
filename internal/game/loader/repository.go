@@ -45,9 +45,9 @@ func (r *repository) GetIncidents() map[int32]*v1.IncidentConfig {
 
 type cfgPtr interface {
 	*v1.AbilityConfig |
-	*v1.CardConfig |
-	*v1.CharacterConfig |
-	*v1.IncidentConfig
+		*v1.CardConfig |
+		*v1.CharacterConfig |
+		*v1.IncidentConfig
 }
 
 func Script(r GameConfig) *v1.ScriptConfig {
