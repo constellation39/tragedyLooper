@@ -97,7 +97,7 @@ func (ge *GameEngine) initializeGameStateFromScript(gameConfig loader.GameConfig
 		Players:                 playerMap,
 		CurrentDay:              1,
 		CurrentLoop:             1,
-		CurrentPhase:            ge.currentPhase.Type(),
+		CurrentPhase:            ge.pm.CurrentPhase().Type(),
 		ActiveTragedies:         make(map[int32]bool),
 		PreventedTragedies:      make(map[int32]bool),
 		PlayedCardsThisDay:      make(map[int32]*model.Card),

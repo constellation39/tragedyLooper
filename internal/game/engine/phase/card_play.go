@@ -28,7 +28,7 @@ func (p *CardPlayPhase) HandleAction(ge GameEngine, playerID int32, action *mode
 
 	switch payload := action.Payload.(type) {
 	case *model.PlayerActionPayload_PlayCard:
-		handlePlayCardAction(ge, player, payload)
+		handlePlayCardAction(ge, player, payload.PlayCard)
 	case *model.PlayerActionPayload_PassTurn:
 		handlePassTurnAction(ge, player)
 	}
@@ -99,4 +99,3 @@ func handlePassTurnAction(ge GameEngine, player *model.Player) {
 	ge.Logger().Info("Player passed turn", zap.String("player", player.Name))
 	ge.SetPlayerReady(player.Id)
 }
-

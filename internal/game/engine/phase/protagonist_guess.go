@@ -21,7 +21,7 @@ func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, playerID int32, acti
 
 	switch payload := action.Payload.(type) {
 	case *model.PlayerActionPayload_MakeGuess:
-		return handleMakeGuessAction(ge, player, payload)
+		return handleMakeGuessAction(ge, player, payload.MakeGuess)
 	}
 	return nil
 }

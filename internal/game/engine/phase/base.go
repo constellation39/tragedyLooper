@@ -20,6 +20,8 @@ type GameEngine interface {
 	TriggerIncidents()
 	GetGameState() *model.GameState
 	GetGameConfig() loader.GameConfig
+	GetCharacterByID(id int32) *model.Character
+	MoveCharacter(char *model.Character, dx, dy int)
 }
 
 // Phase is an interface for a game phase.
@@ -29,8 +31,6 @@ type Phase interface {
 	HandleAction(ge GameEngine, playerID int32, action *model.PlayerActionPayload) Phase
 	HandleEvent(ge GameEngine, event *model.GameEvent) Phase
 	HandleTimeout(ge GameEngine) Phase
-	ResolveMovement(ge GameEngine) Phase
-	ResolveOtherCards(ge GameEngine) Phase
 	Exit(ge GameEngine)
 	TimeoutDuration() time.Duration
 }
@@ -44,7 +44,5 @@ func (p *basePhase) HandleAction(ge GameEngine, playerID int32, action *model.Pl
 }
 func (p *basePhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
 func (p *basePhase) HandleTimeout(ge GameEngine) Phase                       { return nil }
-func (p *basePhase) ResolveMovement(ge GameEngine) Phase                     { return nil }
-func (p *basePhase) ResolveOtherCards(ge GameEngine) Phase                   { return nil }
 func (p *basePhase) Exit(ge GameEngine)                                      {}
 func (p *basePhase) TimeoutDuration() time.Duration                          { return 0 }

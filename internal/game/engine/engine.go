@@ -9,6 +9,14 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+// LocationGrid defines the 2x2 map layout.
+var LocationGrid = map[model.LocationType]struct{ X, Y int }{
+	model.LocationType_SHRINE:   {0, 0},
+	model.LocationType_SCHOOL:   {1, 0},
+	model.LocationType_HOSPITAL: {0, 1},
+	model.LocationType_CITY:     {1, 1},
+}
+
 // GameEngine manages the state and logic of a single game instance.
 type engineAction interface{}
 
@@ -156,7 +164,7 @@ func (ge *GameEngine) handleTimeout() {
 	ge.pm.handleTimeout()
 }
 
-func (ge *GameEngine) CreateAndProcessEvent(eventType model.GameEventType, payload proto.Message) {
+func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, payload proto.Message) {
 	ge.em.createAndProcess(eventType, payload)
 }
 
@@ -172,7 +180,7 @@ func (ge *GameEngine) ResetPlayerReadiness() {
 	}
 }
 
-func (ge *GameEngine) getCharacterByID(charID int32) *model.Character {
+func (ge *GameEngine) GetCharacterByID(charID int32) *model.Character {
 	char, ok := ge.GameState.Characters[charID]
 	if !ok {
 		return nil
@@ -180,12 +188,12 @@ func (ge *GameEngine) getCharacterByID(charID int32) *model.Character {
 	return char
 }
 
-func (ge *GameEngine) MoveCharacter(char *model.Character, dx, dy int) {
-	ge.moveCharacter(char, dx, dy)
-}
-
 func (ge *GameEngine) TriggerIncidents() {
 	// TODO: Implement incident triggering logic
+}
+
+func (ge *GameEngine) MoveCharacter(char *model.Character, dx, dy int) {
+	ge.moveCharacter(char, dx, dy)
 }
 
 func (ge *GameEngine) getPlayerByID(playerID int32) *model.Player {
@@ -194,6 +202,47 @@ func (ge *GameEngine) getPlayerByID(playerID int32) *model.Player {
 		return nil
 	}
 	return player
+}
+
+func (ge *GameEngine) moveCharacter(char *model.Character, dx, dy int) {
+	startPos, ok := LocationGrid[char.CurrentLocation]
+	if !ok {
+		ge.logger.Warn("character in unknown location", zap.String("char", char.Config.Name))
+		return
+	}
+
+	// Calculate the new position, wrapping around the 2x2 grid.
+	newX := (startPos.X + dx) % 2
+	newY := (startPos.Y + dy) % 2
+
+	var newLoc model.LocationType
+	for loc, pos := range LocationGrid {
+		if pos.X == newX && pos.Y == newY {
+			newLoc = loc
+			break
+		}
+	}
+
+	if newLoc != model.LocationType_LOCATION_TYPE_UNSPECIFIED && newLoc != char.CurrentLocation {
+		// Check for movement restrictions
+		for _, rule := range char.Config.Rules {
+			if smr, ok := rule.Effect.(*model.CharacterRule_SpecialMovementRule); ok {
+				for _, restricted := range smr.SpecialMovementRule.RestrictedLocations {
+					if restricted == newLoc {
+						ge.logger.Info("character movement restricted", zap.String("char", char.Config.Name), zap.String("location", newLoc.String()))
+						return // Movement forbidden
+					}
+				}
+			}
+		}
+
+		char.CurrentLocation = newLoc
+		ge.ApplyAndPublishEvent(model.GameEventType_CHARACTER_MOVED, &model.CharacterMovedEvent{
+			CharacterId: char.Config.Id,
+			NewLocation: newLoc,
+		})
+		ge.logger.Info("character moved", zap.String("char", char.Config.Name), zap.String("to", newLoc.String()))
+	}
 }
 
 // GetGameState implements the phases.GameEngine interface.
@@ -216,6 +265,10 @@ func (ge *GameEngine) Logger() *zap.Logger {
 
 func (ge *GameEngine) SetPlayerReady(playerID int32) {
 	ge.playerReady[playerID] = true
+}
+
+func (ge *GameEngine) ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, player *model.Player, payload *model.UseAbilityPayload, ability *model.Ability) ([]int32, error) {
+	return []int32{}, nil
 }
 
 // --- AI Integration ---

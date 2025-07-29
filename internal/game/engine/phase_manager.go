@@ -11,8 +11,8 @@ import (
 // phaseManager is responsible for managing the game's phase lifecycle, including transitions and timeouts.
 // It encapsulates the logic that was previously in the GameEngine, leading to a cleaner separation of concerns.
 type phaseManager struct {
-	engine      *GameEngine // A reference to the parent engine to access game state and other components.
-	logger      *zap.Logger
+	engine       *GameEngine // A reference to the parent engine to access game state and other components.
+	logger       *zap.Logger
 	currentPhase phase.Phase
 	phaseTimer   *time.Timer
 	gameStarted  bool
@@ -21,8 +21,8 @@ type phaseManager struct {
 // newPhaseManager creates a new phase manager.
 func newPhaseManager(engine *GameEngine) *phaseManager {
 	pm := &phaseManager{
-		engine:      engine,
-		logger:      engine.logger.Named("PhaseManager"),
+		engine:       engine,
+		logger:       engine.logger.Named("PhaseManager"),
 		currentPhase: &phase.SetupPhase{},
 		phaseTimer:   time.NewTimer(time.Hour), // Initialized with a long duration.
 	}
@@ -43,6 +43,10 @@ func (pm *phaseManager) stop() {
 // timer returns the channel for the phase timer.
 func (pm *phaseManager) timer() <-chan time.Time {
 	return pm.phaseTimer.C
+}
+
+func (pm *phaseManager) CurrentPhase() phase.Phase {
+	return pm.currentPhase
 }
 
 // handleAction delegates an action to the current phase and transitions to the next.

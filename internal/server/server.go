@@ -10,9 +10,9 @@ import (
 
 	"tragedylooper/internal/game/engine"
 	"tragedylooper/internal/game/loader"
-	model "tragedylooper/pkg/proto/v1"
 	"tragedylooper/internal/llm"
 	"tragedylooper/internal/logger"
+	model "tragedylooper/pkg/proto/v1"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
@@ -163,7 +163,7 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		LlmSessionId:       "",
 	})
 
-		llmActionGenerator := llm.NewLLMActionGenerator(s.llmClient, ctxLogger)
+	llmActionGenerator := llm.NewLLMActionGenerator(s.llmClient, ctxLogger)
 	gameEngine, err := engine.NewGameEngine(ctxLogger.With(zap.String("gameID", gameID)), players, llmActionGenerator, gameDataAccessor)
 	if err != nil {
 		ctxLogger.Error("Failed to create game engine", zap.Error(err))

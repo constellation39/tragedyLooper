@@ -26,7 +26,7 @@ func (p *AbilitiesPhase) HandleAction(ge GameEngine, playerID int32, action *mod
 
 	switch payload := action.Payload.(type) {
 	case *model.PlayerActionPayload_UseAbility:
-		handleUseAbilityAction(ge, player, payload)
+		handleUseAbilityAction(ge, player, payload.UseAbility)
 	}
 	return nil
 }

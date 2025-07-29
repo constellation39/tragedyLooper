@@ -91,7 +91,7 @@ func (h *CompoundEffectHandler) Apply(ge GameEngine, effect *model.Effect, abili
 		handler, err := GetEffectHandler(chosenEffect)
 		if err != nil {
 			return err
-			}
+		}
 		return handler.Apply(ge, chosenEffect, ability, payload, choice)
 	}
 	return nil
