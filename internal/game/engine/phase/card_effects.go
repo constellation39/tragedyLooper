@@ -140,17 +140,16 @@ func resolveMovement(ge GameEngine) {
 			finalV--
 			// 实际上，我们正在进行一次对角线移动，然后是任何剩余的水平/垂直移动
 			ge.MoveCharacter(char, 1, 1) // 对角线
-			}
+		}
 
-			if finalH > 0 {
-				ge.MoveCharacter(char, finalH, 0) // 水平
-			}
-			if finalV > 0 {
-				ge.MoveCharacter(char, 0, finalV) // 垂直
+		if finalH > 0 {
+			ge.MoveCharacter(char, finalH, 0) // 水平
+		}
+		if finalV > 0 {
+			ge.MoveCharacter(char, 0, finalV) // 垂直
 		}
 	}
 }
-
 
 // resolveOtherCards 处理非移动牌
 func resolveOtherCards(ge GameEngine) {

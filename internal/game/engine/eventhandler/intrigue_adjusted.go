@@ -13,14 +13,14 @@ type IntrigueAdjustedHandler struct{}
 
 // Handle updates the character's intrigue in the game state.
 func (h *IntrigueAdjustedHandler) Handle(state *model.GameState, event *model.EventPayload) error {
-	e := event.Payload.GetIntrigueAdjusted()
-	if e == nil {
+	e, ok := event.Payload.(*model.EventPayload_IntrigueAdjusted)
+	if !ok {
 		return nil // Or handle error appropriately
 	}
 
-	if char, ok := state.Characters[e.CharacterId]; ok {
-		char.Intrigue += e.Amount
-		e.NewIntrigue = char.Intrigue
+	if char, ok := state.Characters[e.IntrigueAdjusted.CharacterId]; ok {
+		char.Intrigue += e.IntrigueAdjusted.Amount
+		e.IntrigueAdjusted.NewIntrigue = char.Intrigue
 	}
 	return nil
 }

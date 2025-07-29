@@ -20,10 +20,10 @@ func Register(eventType model.GameEventType, handler EventHandler) {
 
 // ProcessEvent finds the appropriate handler in the registry and uses it to process the event.
 // It returns an error if no handler is found or if the handler itself returns an error.
-func ProcessEvent(state *model.GameState, event *model.EventPayload) error {
+func ProcessEvent(state *model.GameState, event *model.GameEvent) error {
 	handler, ok := registry[event.Type]
 	if !ok {
 		return fmt.Errorf("no handler registered for event type %s", event.Type)
 	}
-	return handler.Handle(state, event)
+	return handler.Handle(state, event.Payload)
 }

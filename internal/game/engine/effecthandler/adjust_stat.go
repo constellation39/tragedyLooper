@@ -48,17 +48,23 @@ func (h *AdjustStatHandler) Apply(ge GameEngine, effect *model.Effect, ability *
 			// Adjust paranoia and publish ParanoiaAdjustedEvent.
 			newParanoia := char.Paranoia + adjustStatEffect.Amount
 			event := &model.ParanoiaAdjustedEvent{CharacterId: targetID, NewParanoia: newParanoia, Amount: adjustStatEffect.Amount}
-			ge.ApplyAndPublishEvent(model.GameEventType_PARANOIA_ADJUSTED, event)
+			ge.ApplyAndPublishEvent(model.GameEventType_PARANOIA_ADJUSTED, &model.EventPayload{
+				Payload: &model.EventPayload_ParanoiaAdjusted{ParanoiaAdjusted: event},
+			})
 		case model.StatCondition_INTRIGUE:
 			// Adjust intrigue and publish IntrigueAdjustedEvent.
 			newIntrigue := char.Intrigue + adjustStatEffect.Amount
 			event := &model.IntrigueAdjustedEvent{CharacterId: targetID, NewIntrigue: newIntrigue, Amount: adjustStatEffect.Amount}
-			ge.ApplyAndPublishEvent(model.GameEventType_INTRIGUE_ADJUSTED, event)
+			ge.ApplyAndPublishEvent(model.GameEventType_INTRIGUE_ADJUSTED, &model.EventPayload{
+				Payload: &model.EventPayload_IntrigueAdjusted{IntrigueAdjusted: event},
+			})
 		case model.StatCondition_GOODWILL:
 			// Adjust goodwill and publish GoodwillAdjustedEvent.
 			newGoodwill := char.Goodwill + adjustStatEffect.Amount
 			event := &model.GoodwillAdjustedEvent{CharacterId: targetID, NewGoodwill: newGoodwill, Amount: adjustStatEffect.Amount}
-			ge.ApplyAndPublishEvent(model.GameEventType_GOODWILL_ADJUSTED, event)
+			ge.ApplyAndPublishEvent(model.GameEventType_GOODWILL_ADJUSTED, &model.EventPayload{
+				Payload: &model.EventPayload_GoodwillAdjusted{GoodwillAdjusted: event},
+			})
 		}
 	}
 	return nil

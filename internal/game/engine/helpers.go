@@ -3,7 +3,7 @@ package engine // 定义游戏引擎包
 import (
 	"time"
 	"tragedylooper/internal/game/loader" // 导入游戏数据加载器
-	model "tragedylooper/pkg/proto/v1" // 导入协议缓冲区模型
+	model "tragedylooper/pkg/proto/v1"   // 导入协议缓冲区模型
 
 	"go.uber.org/zap" // 导入 Zap 日志库
 )

@@ -39,7 +39,9 @@ func (h *AddTraitHandler) Apply(ge GameEngine, effect *model.Effect, ability *mo
 	// Iterate over all target characters, add the trait to each, and publish a TraitAdded event.
 	for _, targetID := range targetIDs {
 		event := &model.TraitAddedEvent{CharacterId: targetID, Trait: addTraitEffect.Trait}
-		ge.ApplyAndPublishEvent(model.GameEventType_TRAIT_ADDED, event)
+		ge.ApplyAndPublishEvent(model.GameEventType_TRAIT_ADDED, &model.EventPayload{
+			Payload: &model.EventPayload_TraitAdded{TraitAdded: event},
+		})
 	}
 	return nil
 }

@@ -26,8 +26,10 @@ func (ge *GameEngine) applyEffect(effect *model.Effect, ability *model.Ability, 
 	}
 
 	if len(choices) > 0 && choice == nil {
-		choiceEvent := &model.EventPayload{Choices: choices}
-		ge.ApplyAndPublishEvent(model.GameEventType_CHOICE_REQUIRED, choiceEvent)
+		choiceEvent := &model.ChoiceRequiredEvent{Choices: choices}
+		ge.ApplyAndPublishEvent(model.GameEventType_CHOICE_REQUIRED, &model.EventPayload{
+			Payload: &model.EventPayload_ChoiceRequired{ChoiceRequired: choiceEvent},
+		})
 		return nil // 停止处理，直到收到选择
 	}
 

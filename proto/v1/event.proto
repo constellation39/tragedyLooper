@@ -20,4 +20,3 @@ message GameEvent {
 message GameEventLib {
   map<int32, google.protobuf.Any> events = 1; // 事件ID到事件负载的映射
 }
-

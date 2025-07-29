@@ -47,7 +47,9 @@ func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.M
 	script := ge.GetGameConfig().GetScript()
 	if script == nil {
 		ge.Logger().Error("failed to get script to verify guess")
-		ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: model.PlayerRole_MASTERMIND}) // 游戏结束，出现错误时主谋默认获胜
+		ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.EventPayload{
+			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_MASTERMIND}},
+		}) // 游戏结束，出现错误时主谋默认获胜
 		return &GameOverPhase{}
 	}
 
@@ -63,9 +65,13 @@ func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.M
 
 	// 如果所有猜测都正确，则主角获胜；否则主谋获胜。
 	if correctGuesses == len(script.Characters) {
-		ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: model.PlayerRole_PROTAGONIST})
+		ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.EventPayload{
+			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_PROTAGONIST}},
+		})
 	} else {
-		ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: model.PlayerRole_MASTERMIND})
+		ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.EventPayload{
+			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_MASTERMIND}},
+		})
 	}
 	return &GameOverPhase{}
 }

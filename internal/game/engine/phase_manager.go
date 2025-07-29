@@ -4,7 +4,7 @@ import (
 	"time"
 	"tragedylooper/internal/game/engine/eventhandler"
 	"tragedylooper/internal/game/engine/phase" // 导入阶段包
-	model "tragedylooper/pkg/proto/v1" // 导入协议缓冲区模型
+	model "tragedylooper/pkg/proto/v1"         // 导入协议缓冲区模型
 
 	"go.uber.org/zap" // 导入 Zap 日志库
 )

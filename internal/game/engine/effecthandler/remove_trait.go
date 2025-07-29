@@ -39,7 +39,9 @@ func (h *RemoveTraitHandler) Apply(ge GameEngine, effect *model.Effect, ability 
 	// 遍历所有目标角色，为每个角色移除特性并发布 TraitRemovedEvent 事件。
 	for _, targetID := range targetIDs {
 		event := &model.TraitRemovedEvent{CharacterId: targetID, Trait: removeTraitEffect.Trait}
-		ge.ApplyAndPublishEvent(model.GameEventType_TRAIT_REMOVED, event)
+		ge.ApplyAndPublishEvent(model.GameEventType_TRAIT_REMOVED, &model.EventPayload{
+			Payload: &model.EventPayload_TraitRemoved{TraitRemoved: event},
+		})
 	}
 	return nil
 }
