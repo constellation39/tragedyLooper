@@ -14,20 +14,35 @@ var LocationGrid = map[model.LocationType]struct{ X, Y int }{
 	model.LocationType_CITY:     {1, 1},
 }
 
-// resolveMovement processes all movement cards played in a turn.
-func (ge *GameEngine) resolveMovement() {
-	// Aggregate movement effects for each character
-	charMovements := make(map[int32]struct{ H, V, D int })
+// CharacterMovement holds the calculated movement vectors for a character.
+type CharacterMovement struct {
+	H         int
+	V         int
+	D         int
+	Forbidden bool
+}
 
-	for _, card := range ge.GameState.PlayedCardsThisDay {
+// MovementResolver calculates character movements based on played cards.
+type MovementResolver struct{}
+
+// NewMovementResolver creates a new MovementResolver.
+func NewMovementResolver() *MovementResolver {
+	return &MovementResolver{}
+}
+
+// CalculateMovements aggregates movement effects for each character from the played cards.
+func (mr *MovementResolver) CalculateMovements(playedCards map[int32]*model.Card) map[int32]CharacterMovement {
+	charMovements := make(map[int32]CharacterMovement)
+
+	for _, card := range playedCards {
 		targetCharID, isCharTarget := card.Target.(*model.Card_TargetCharacterId)
 		if !isCharTarget {
 			continue
 		}
 
-		movement, ok := charMovements[targetCharID.TargetCharacterId]
-		if !ok {
-			movement = struct{ H, V, D int }{0, 0, 0}
+		movement := charMovements[targetCharID.TargetCharacterId]
+		if movement.Forbidden {
+			continue // Movement is already forbidden, no further calculations needed.
 		}
 
 		switch card.Config.Type {
@@ -38,15 +53,22 @@ func (ge *GameEngine) resolveMovement() {
 		case model.CardType_MOVE_DIAGONALLY:
 			movement.D++
 		case model.CardType_FORBID_MOVEMENT:
-			// If a forbid movement card is played, all other movement is cancelled.
-			movement.H = -999 // Use a sentinel value to indicate cancellation
+			movement = CharacterMovement{Forbidden: true} // Cancel all movement.
 		}
 		charMovements[targetCharID.TargetCharacterId] = movement
 	}
+	return charMovements
+}
+
+
+// resolveMovement processes all movement cards played in a turn.
+func (ge *GameEngine) resolveMovement() {
+	resolver := NewMovementResolver()
+	charMovements := resolver.CalculateMovements(ge.GameState.PlayedCardsThisDay)
 
 	// Apply the calculated movements
 	for charID, movement := range charMovements {
-		if movement.H < 0 { // Movement was forbidden
+		if movement.Forbidden {
 			continue
 		}
 
