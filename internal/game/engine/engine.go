@@ -14,23 +14,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// eventHandlers maps event types to their respective handler instances.
-var eventHandlers = map[model.GameEventType]eventhandler.EventHandler{
-	model.GameEventType_CHARACTER_MOVED:    &eventhandler.CharacterMovedHandler{},
-	model.GameEventType_PARANOIA_ADJUSTED:  &eventhandler.ParanoiaAdjustedHandler{},
-	model.GameEventType_GOODWILL_ADJUSTED:  &eventhandler.GoodwillAdjustedHandler{},
-	model.GameEventType_INTRIGUE_ADJUSTED:  &eventhandler.IntrigueAdjustedHandler{},
-	model.GameEventType_TRAIT_ADDED:        &eventhandler.TraitAddedHandler{},
-	model.GameEventType_TRAIT_REMOVED:      &eventhandler.TraitRemovedHandler{},
-	model.GameEventType_CARD_PLAYED:        &eventhandler.CardPlayedHandler{},
-	model.GameEventType_CARD_REVEALED:      &eventhandler.CardRevealedHandler{},
-	model.GameEventType_DAY_ADVANCED:       &eventhandler.DayAdvancedHandler{},
-	model.GameEventType_LOOP_RESET:         &eventhandler.LoopResetHandler{},
-	model.GameEventType_GAME_ENDED:         &eventhandler.GameOverHandler{},
-	model.GameEventType_INCIDENT_TRIGGERED: &eventhandler.IncidentTriggeredHandler{},
-	model.GameEventType_LOOP_WIN:           &eventhandler.LoopWinHandler{},
-	model.GameEventType_LOOP_LOSS:          &eventhandler.LoopLossHandler{},
-}
+
 
 // GameEngine manages the state and logic of a single game instance.
 type engineRequest interface{}
@@ -176,12 +160,8 @@ func (ge *GameEngine) runGameLoop() {
 
 func (ge *GameEngine) processEvent(event *model.GameEvent) {
 	// 1. Apply the state change using the appropriate handler
-	if handler, ok := eventHandlers[event.Type]; ok {
-		if err := handler.Handle(ge.GameState, event); err != nil {
-			ge.logger.Error("Failed to handle event", zap.Error(err), zap.String("type", event.Type.String()))
-		}
-	} else {
-		ge.logger.Warn("No handler registered for event type", zap.String("type", event.Type.String()))
+	if err := eventhandler.ProcessEvent(ge.GameState, event); err != nil {
+		ge.logger.Error("Failed to handle event", zap.Error(err), zap.String("type", event.Type.String()))
 	}
 
 	// 2. Let the current phase react to the event

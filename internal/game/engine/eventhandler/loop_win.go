@@ -4,6 +4,10 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+func init() {
+	Register(model.GameEventType_LOOP_WIN, &LoopWinHandler{})
+}
+
 // LoopWinHandler handles the LoopWinEvent.
 type LoopWinHandler struct{}
 

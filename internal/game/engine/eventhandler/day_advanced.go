@@ -4,6 +4,10 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+func init() {
+	Register(model.GameEventType_DAY_ADVANCED, &DayAdvancedHandler{})
+}
+
 // DayAdvancedHandler handles the DayAdvancedEvent.
 type DayAdvancedHandler struct{}
 

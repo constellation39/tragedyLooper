@@ -4,6 +4,10 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+func init() {
+	Register(model.GameEventType_PARANOIA_ADJUSTED, &ParanoiaAdjustedHandler{})
+}
+
 // ParanoiaAdjustedHandler handles the ParanoiaAdjustedEvent.
 type ParanoiaAdjustedHandler struct{}
 

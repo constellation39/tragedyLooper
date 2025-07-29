@@ -4,6 +4,10 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+func init() {
+	Register(model.GameEventType_INCIDENT_TRIGGERED, &IncidentTriggeredHandler{})
+}
+
 // IncidentTriggeredHandler handles the IncidentTriggeredEvent.
 type IncidentTriggeredHandler struct{}
 

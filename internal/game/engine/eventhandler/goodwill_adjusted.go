@@ -4,6 +4,10 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+func init() {
+	Register(model.GameEventType_GOODWILL_ADJUSTED, &GoodwillAdjustedHandler{})
+}
+
 // GoodwillAdjustedHandler handles the GoodwillAdjustedEvent.
 type GoodwillAdjustedHandler struct{}
 

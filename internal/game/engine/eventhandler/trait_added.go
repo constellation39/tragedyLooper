@@ -4,6 +4,10 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+func init() {
+	Register(model.GameEventType_TRAIT_ADDED, &TraitAddedHandler{})
+}
+
 // TraitAddedHandler handles the TraitAddedEvent.
 type TraitAddedHandler struct{}
 

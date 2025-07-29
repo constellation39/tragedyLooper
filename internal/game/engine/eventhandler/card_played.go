@@ -4,6 +4,10 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+func init() {
+	Register(model.GameEventType_CARD_PLAYED, &CardPlayedHandler{})
+}
+
 // CardPlayedHandler handles the CardPlayedEvent.
 type CardPlayedHandler struct{}
 

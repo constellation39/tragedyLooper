@@ -4,6 +4,10 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+func init() {
+	Register(model.GameEventType_CHARACTER_MOVED, &CharacterMovedHandler{})
+}
+
 // CharacterMovedHandler handles the CharacterMovedEvent.
 type CharacterMovedHandler struct{}
 

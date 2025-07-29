@@ -4,6 +4,10 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+func init() {
+	Register(model.GameEventType_INTRIGUE_ADJUSTED, &IntrigueAdjustedHandler{})
+}
+
 // IntrigueAdjustedHandler handles the IntrigueAdjustedEvent.
 type IntrigueAdjustedHandler struct{}
 

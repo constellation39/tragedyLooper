@@ -4,6 +4,10 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+func init() {
+	Register(model.GameEventType_GAME_ENDED, &GameOverHandler{})
+}
+
 // GameOverHandler handles the GameOverEvent.
 type GameOverHandler struct{}
 

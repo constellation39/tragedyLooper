@@ -4,6 +4,10 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+func init() {
+	Register(model.GameEventType_LOOP_LOSS, &LoopLossHandler{})
+}
+
 // LoopLossHandler handles the LoopLossEvent.
 type LoopLossHandler struct{}
 
