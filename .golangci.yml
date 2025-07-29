@@ -1,6 +1,6 @@
 run:
   timeout: 5m
-  # 建议添加
+  # Recommended to add
   tests: true
   build-tags:
     - integration
@@ -13,10 +13,10 @@ linters:
     - gocyclo
     - gofmt
     - goimports
-    - gosec      # 添加安全检查
-    - gosimple   # 添加简化检查
+    - gosec      # Add security checks
+    - gosimple   # Add simplification checks
     - ineffassign
-    - misspell   # 添加拼写检查
+    - misspell   # Add spell check
     - nolintlint
     - revive
     - staticcheck
@@ -25,17 +25,17 @@ linters:
 
 linters-settings:
   gocyclo:
-    min-complexity: 15  # 降低复杂度阈值
+    min-complexity: 15  # Lower the complexity threshold
   revive:
     rules:
       - name: empty-block
         disabled: true
 
 issues:
-  exclude-dirs-use-default: true  # 添加默认排除
+  exclude-dirs-use-default: true  # Add default exclusions
   exclude-dirs:
     - bin
-    # vendor 通常不需要显式排除
+    # vendor directory usually does not need to be explicitly excluded
   exclude-rules:
     - path: _test\.go
       linters:

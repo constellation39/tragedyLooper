@@ -112,29 +112,29 @@ The project is built around an event-driven game engine that processes player ac
 
 ```mermaid
 graph TD
-    subgraph "阶段一：编译前准备与启动时加载 (Setup & Data Loading)"
+    subgraph "Phase 1: Setup & Data Loading"
         direction LR
-        A1["proto/v1/*.proto<br><b>(数据结构契约)</b>"] -- "1. 使用 protoc 编译" --> A2["internal/game/proto/v1/*.pb.go<br><b>(生成的 Go 代码)</b>"]
-        B1["data/*.json<br><b>(游戏剧本、卡牌、角色配置)</b>"] -- "2. 应用启动时" --> B2["internal/game/loader/loader.go<br><b>(配置加载器)</b>"]
-        B2 -- "3. 将 JSON 解析为 Go 结构体" --> A2
+        A1["proto/v1/*.proto<br><b>(Data Structure Contract)</b>"] -- "1. Compile with protoc" --> A2["internal/game/proto/v1/*.pb.go<br><b>(Generated Go Code)</b>"]
+        B1["data/*.json<br><b>(Game Scripts, Cards, Characters)</b>"] -- "2. On App Startup" --> B2["internal/game/loader/loader.go<br><b>(Config Loader)</b>"]
+        B2 -- "3. Parse JSON to Go structs" --> A2
     end
 
-    subgraph "阶段二：应用运行时环境 (Application Runtime Environment)"
-        C1["cmd/tragedylooper/main.go<br><b>(程序入口)</b>"] -- "4. 初始化并启动" --> C2["internal/server/server.go<br><b>(gRPC/HTTP 服务器)</b>"]
-        C2 -- "5. 创建并持有" --> C3["<b>游戏引擎实例<br>(internal/game/engine)</b>"]
-        B2 -- "6. 将加载的配置数据注入" --> C3
+    subgraph "Phase 2: Application Runtime Environment"
+        C1["cmd/tragedylooper/main.go<br><b>(Entry Point)</b>"] -- "4. Initialize & Start" --> C2["internal/server/server.go<br><b>(gRPC/HTTP Server)</b>"]
+        C2 -- "5. Create & Hold" --> C3["<b>Game Engine Instance<br>(internal/game/engine)</b>"]
+        B2 -- "6. Inject Loaded Config Data" --> C3
     end
 
-    subgraph "阶段三：引擎核心循环 - 单个玩家动作的完整生命周期 (Engine Core Loop - Lifecycle of a Single Action)"
-        D1["Player Client<br><b>(外部玩家)</b>"] -- "7. 发送动作<br><i>(e.g., PlayCardPayload)</i>" --> C2
-        C2 -- "8. 验证并转发给引擎" --> E1{"<b>引擎协调器<br>(engine.go)</b>"}
+    subgraph "Phase 3: Engine Core Loop - Lifecycle of a Single Action"
+        D1["Player Client<br><b>(External Player)</b>"] -- "7. Send Action<br><i>(e.g., PlayCardPayload)</i>" --> C2
+        C2 -- "8. Validate & Forward to Engine" --> E1{"<b>Engine Coordinator<br>(engine.go)</b>"}
 
-        subgraph "引擎内部组件"
+        subgraph "Internal Engine Components"
             direction LR
-            F1["<b>GameState</b><br><i>(游戏状态<br>唯一数据源)</i>"]
-            F2["<b>Event Queue</b><br><i>(事件队列<br>FIFO)</i>"]
+            F1["<b>GameState</b><br><i>(The single source of truth)</i>"]
+            F2["<b>Event Queue</b><br><i>(FIFO)</i>"]
             
-            subgraph "逻辑处理器"
+            subgraph "Logic Processors"
                 direction TB
                 G1["actions.go"]
                 G2["effects.go"]
@@ -145,35 +145,35 @@ graph TD
             end
         end
 
-        E1 -- "9. 分发给<br><b>动作处理器</b>" --> G1
-        G1 -- "10. [只读] 验证动作合法性" --> F1
-        G1 -- "11. 创建初始事件<br><i>(e.g., CardPlayedEvent)</i>" --> F2
+        E1 -- "9. Dispatch to<br><b>Action Handler</b>" --> G1
+        G1 -- "10. [Read-Only] Validate action legality" --> F1
+        G1 -- "11. Create initial event<br><i>(e.g., CardPlayedEvent)</i>" --> F2
 
-        E1 -- "12. 从队列取出事件进行处理" --> F2
-        E1 -- "13. 查找效果并调用<br><b>效果处理器</b>" --> G2
-        G2 -- "14. <b>[写入] 修改状态</b><br><i>(e.g., Paranoia +1)</i>" --> F1
+        E1 -- "12. Dequeue event for processing" --> F2
+        E1 -- "13. Find & invoke<br><b>Effect Handler</b>" --> G2
+        G2 -- "14. <b>[Write] Modify state</b><br><i>(e.g., Paranoia +1)</i>" --> F1
 
-        F1 -- "15. 状态变更！<br><b>触发连锁反应检查</b>" --> H1{"<b>Post-Change<br>Chain Reaction</b>"}
+        F1 -- "15. State changed!<br><b>Trigger Chain Reaction Check</b>" --> H1{"<b>Post-Change<br>Chain Reaction</b>"}
 
-        H1 -- "16a. 检查所有<br><b>触发器</b>" --> G3
-        G3 -- "17. [只读] 评估触发条件" --> F1
-        G3 -- "18. 若满足，创建新事件" --> F2
+        H1 -- "16a. Check all<br><b>Triggers</b>" --> G3
+        G3 -- "17. [Read-Only] Evaluate trigger conditions" --> F1
+        G3 -- "18. If met, create new event" --> F2
 
-        H1 -- "16b. 通知所有<br><b>事件处理器</b>" --> G4
-        G4 -- "19. [只读] 响应特定事件" --> F1
-        G4 -- "20. 可能创建新事件" --> F2
+        H1 -- "16b. Notify all<br><b>Event Handlers</b>" --> G4
+        G4 -- "19. [Read-Only] Respond to specific event" --> F1
+        G4 -- "20. May create new event" --> F2
 
-        F2 -- "21. <b>循环！</b><br>若队列非空，返回步骤 12" --> E1
+        F2 -- "21. <b>Loop!</b><br>If queue is not empty, return to step 12" --> E1
 
-        E1 -- "22. 队列为空，调用<br><b>阶段处理器</b>" --> G5
-        G5 -- "23. [写入] 可能推进天数/阶段" --> F1
+        E1 -- "22. Queue empty, call<br><b>Phase Handler</b>" --> G5
+        G5 -- "23. [Write] May advance day/phase" --> F1
 
-        E1 -- "24. 为玩家生成新视图<br>调用<b>视图生成器</b>" --> G6
-        G6 -- "25. [只读] 提取玩家可见信息" --> F1
-        G6 -- "26. 创建 PlayerView 对象" --> I1["<b>PlayerView</b>"]
+        E1 -- "24. Generate new view for player<br>call <b>View Generator</b>" --> G6
+        G6 -- "25. [Read-Only] Extract player-visible info" --> F1
+        G6 -- "26. Create PlayerView object" --> I1["<b>PlayerView</b>"]
 
-        I1 -- "27. 返回给服务器" --> C2
-        C2 -- "28. 发送给客户端" --> D1
+        I1 -- "27. Return to server" --> C2
+        C2 -- "28. Send to client" --> D1
     end
 ```
 
