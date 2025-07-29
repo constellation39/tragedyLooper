@@ -7,6 +7,10 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+func init() {
+	Register[*model.Effect_CompoundEffect](&CompoundEffectHandler{})
+}
+
 // CompoundEffectHandler processes Compound effects.
 type CompoundEffectHandler struct{}
 

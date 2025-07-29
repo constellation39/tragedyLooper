@@ -5,6 +5,10 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+func init() {
+	Register[*model.Effect_AddTrait](&AddTraitHandler{})
+}
+
 // AddTraitHandler processes AddTrait effects.
 type AddTraitHandler struct{}
 

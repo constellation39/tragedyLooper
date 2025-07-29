@@ -110,3 +110,35 @@ func (ge *GameEngine) initializeGameStateFromScript(gameConfig loader.GameConfig
 		CharacterIntrigueLimits: make(map[int32]int32),
 	}
 }
+
+func (ge *GameEngine) dealInitialCards() {
+	script := ge.gameConfig.GetScript()
+	if script == nil {
+		ge.logger.Error("cannot deal cards, script not loaded")
+		return
+	}
+
+	mastermind := ge.getMastermindPlayer()
+	if mastermind != nil {
+		for _, cardID := range script.MastermindCardIds {
+			cardConfig, err := loader.Get[*model.CardConfig](ge.gameConfig, cardID)
+			if err != nil {
+				ge.logger.Warn("mastermind card config not found", zap.Int32("cardID", cardID))
+				continue
+			}
+			mastermind.Hand = append(mastermind.Hand, &model.Card{Config: cardConfig})
+		}
+	}
+
+	protagonists := ge.getProtagonistPlayers()
+	for _, protagonist := range protagonists {
+		for _, cardID := range script.ProtagonistCardIds {
+			cardConfig, err := loader.Get[*model.CardConfig](ge.gameConfig, cardID)
+			if err != nil {
+				ge.logger.Warn("protagonist card config not found", zap.Int32("cardID", cardID))
+				continue
+			}
+			protagonist.Hand = append(protagonist.Hand, &model.Card{Config: cardConfig})
+		}
+	}
+}

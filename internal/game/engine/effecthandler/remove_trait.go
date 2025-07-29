@@ -5,6 +5,10 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+func init() {
+	Register[*model.Effect_RemoveTrait](&RemoveTraitHandler{})
+}
+
 // RemoveTraitHandler processes RemoveTrait effects.
 type RemoveTraitHandler struct{}
 

@@ -5,6 +5,10 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+func init() {
+	Register[*model.Effect_AdjustStat](&AdjustStatHandler{})
+}
+
 // AdjustStatHandler processes AdjustStat effects.
 type AdjustStatHandler struct{}
 

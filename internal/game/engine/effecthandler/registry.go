@@ -7,13 +7,21 @@ import (
 )
 
 // effectHandlers maps the type of an effect's payload to its corresponding handler.
-var effectHandlers = map[reflect.Type]EffectHandler{
-	reflect.TypeOf(&model.Effect_AdjustStat{}):   &AdjustStatHandler{},
-	reflect.TypeOf(&model.Effect_MoveCharacter{}): &MoveCharacterHandler{},
-	reflect.TypeOf(&model.Effect_AddTrait{}):      &AddTraitHandler{},
-	reflect.TypeOf(&model.Effect_RemoveTrait{}):   &RemoveTraitHandler{},
-	reflect.TypeOf(&model.Effect_CompoundEffect{}): &CompoundEffectHandler{},
-	// Add other handlers here as they are created.
+var effectHandlers = make(map[reflect.Type]EffectHandler)
+
+// Register is a generic function called by handlers to register themselves.
+// It uses a type parameter T to infer the concrete effect payload type.
+func Register[T any](handler EffectHandler) {
+	var zero T
+	// We use reflect.TypeOf on a zero value of type T.
+	// For oneof fields like `Effect_AdjustStat`, T will be `*model.Effect_AdjustStat`.
+	// reflect.TypeOf will correctly return the pointer type, which is what we use as a key.
+	t := reflect.TypeOf(zero)
+	if _, exists := effectHandlers[t]; exists {
+		// Optional: panic or log if a handler for a type is registered more than once.
+		panic(fmt.Sprintf("handler for type %v already registered", t))
+	}
+	effectHandlers[t] = handler
 }
 
 // GetEffectHandler returns the appropriate handler for the given effect's type.

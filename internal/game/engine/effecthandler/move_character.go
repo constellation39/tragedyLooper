@@ -5,6 +5,10 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
+func init() {
+	Register[*model.Effect_MoveCharacter](&MoveCharacterHandler{})
+}
+
 // MoveCharacterHandler processes MoveCharacter effects.
 type MoveCharacterHandler struct{}
 
