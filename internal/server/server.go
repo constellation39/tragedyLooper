@@ -157,15 +157,15 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		LlmSessionId:       "",
 	})
 
-	gameRepo := loader.NewRepository()
-	loader.RegisterLoaders(s.gameDataDir, req.ScriptID)
-	if err := loader.Load(gameRepo); err != nil {
+	gameConfig, err := loader.LoadConfig(s.gameDataDir, req.ScriptID)
+	if err != nil {
 		ctxLogger.Error("Failed to load game data", zap.Error(err))
+		http.Error(w, "Error loading game data", http.StatusInternalServerError)
 		return
 	}
 
 	llmActionGenerator := llm.NewLLMActionGenerator(s.llmClient, ctxLogger)
-	gameEngine, err := engine.NewGameEngine(ctxLogger.With(zap.String("gameID", gameID)), players, llmActionGenerator, gameRepo)
+	gameEngine, err := engine.NewGameEngine(ctxLogger.With(zap.String("gameID", gameID)), players, llmActionGenerator, gameConfig)
 	if err != nil {
 		ctxLogger.Error("Failed to create game engine", zap.Error(err))
 		return

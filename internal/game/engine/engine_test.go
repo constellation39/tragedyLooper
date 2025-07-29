@@ -28,8 +28,7 @@ func helper_NewGameEngineForTest(t *testing.T) *GameEngine {
 
 	log := logger.New()
 
-	l := loader.NewJSONLoader("data")
-	config, err := l.LoadGameDataAccessor("first_steps")
+	gameConfig, err := loader.LoadConfig("data", "first_steps")
 	if err != nil {
 		t.Fatalf("failed to load game data: %v", err)
 	}
@@ -40,7 +39,7 @@ func helper_NewGameEngineForTest(t *testing.T) *GameEngine {
 		{Id: 3, Name: "Protagonist 2", Role: v1.PlayerRole_PROTAGONIST},
 	}
 
-	engine, err := NewGameEngine(log, players, &mockActionGenerator{}, config)
+	engine, err := NewGameEngine(log, players, &mockActionGenerator{}, gameConfig)
 	if err != nil {
 		t.Fatalf("failed to create game engine: %v", err)
 	}
@@ -49,7 +48,7 @@ func helper_NewGameEngineForTest(t *testing.T) *GameEngine {
 }
 
 // TestEngine_Integration_CardPlayAndIncidentTrigger validates the entire data flow:
-// 1. Load game data from JSON files.
+// 1. load game data from JSON files.
 // 2. Initialize the engine.
 // 3. A player plays a card to increase a character's paranoia.
 // 4. Verify the paranoia stat is updated.

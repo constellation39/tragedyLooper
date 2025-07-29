@@ -5,8 +5,8 @@ import (
 	v1 "tragedylooper/pkg/proto/v1"
 )
 
-// Repository holds all the game data.
-type Repository struct {
+// repository holds all the game data.
+type repository struct {
 	abilities  map[int32]*v1.AbilityConfig
 	cards      map[int32]*v1.CardConfig
 	characters map[int32]*v1.CharacterConfig
@@ -14,8 +14,8 @@ type Repository struct {
 	script     *v1.ScriptConfig
 }
 
-func NewRepository() *Repository {
-	return &Repository{
+func NewRepository() *repository {
+	return &repository{
 		abilities:  make(map[int32]*v1.AbilityConfig),
 		cards:      make(map[int32]*v1.CardConfig),
 		characters: make(map[int32]*v1.CharacterConfig),
@@ -23,31 +23,31 @@ func NewRepository() *Repository {
 	}
 }
 
-func (r *Repository) GetScript() *v1.ScriptConfig {
+func (r *repository) GetScript() *v1.ScriptConfig {
 	return r.script
 }
 
-func (r *Repository) GetAbilities() map[int32]*v1.AbilityConfig {
+func (r *repository) GetAbilities() map[int32]*v1.AbilityConfig {
 	return r.abilities
 }
 
-func (r *Repository) GetCards() map[int32]*v1.CardConfig {
+func (r *repository) GetCards() map[int32]*v1.CardConfig {
 	return r.cards
 }
 
-func (r *Repository) GetCharacters() map[int32]*v1.CharacterConfig {
+func (r *repository) GetCharacters() map[int32]*v1.CharacterConfig {
 	return r.characters
 }
 
-func (r *Repository) GetIncidents() map[int32]*v1.IncidentConfig {
+func (r *repository) GetIncidents() map[int32]*v1.IncidentConfig {
 	return r.incidents
 }
 
 type cfgPtr interface {
 	*v1.AbilityConfig |
-		*v1.CardConfig |
-		*v1.CharacterConfig |
-		*v1.IncidentConfig
+	*v1.CardConfig |
+	*v1.CharacterConfig |
+	*v1.IncidentConfig
 }
 
 func Get[T cfgPtr](r GameDataAccessor, id int32) (T, error) {

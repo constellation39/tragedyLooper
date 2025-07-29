@@ -31,34 +31,34 @@ type actionCompleteRequest struct {
 	action   *model.PlayerActionPayload // 玩家操作的负载
 }
 
-// GameEngine 管理单个游戏实例的状态和逻辑。
+// GameEngine manages the state and logic of a single game instance.
 type GameEngine struct {
-	GameState *model.GameState // 当前的游戏状态
-	logger    *zap.Logger      // 日志记录器
+	GameState *model.GameState // The current state of the game.
+	logger    *zap.Logger      // Logger for logging.
 
-	actionGenerator ActionGenerator         // 用于生成 AI 玩家操作的接口
-	gameConfig      loader.GameDataAccessor // 游戏的数据仓库
-	pm              *phaseManager           // 阶段管理器
-	em              *eventManager           // 事件管理器
+	actionGenerator ActionGenerator         // Interface for generating actions for AI players.
+	gameConfig      loader.GameDataAccessor // The data repository for the game.
+	pm              *phaseManager           // Phase manager.
+	em              *eventManager           // Event manager.
 
-	// engineChan 是所有传入请求（玩家操作、AI 操作等）的中央通道。
-	// 它确保对游戏状态的所有修改都在主游戏循环中按顺序处理，
-	// 防止竞争条件。
-	engineChan chan engineAction // 引擎请求通道
-	stopChan   chan struct{}     // 用于停止游戏循环的通道
+	// engineChan is the central channel for all incoming requests (player actions, AI actions, etc.).
+	// It ensures that all modifications to the game state are processed sequentially in the main game loop,
+	// preventing race conditions.
+	engineChan chan engineAction // Channel for engine requests.
+	stopChan   chan struct{}     // Channel to stop the game loop.
 
-	playerReady map[int32]bool // 记录每个玩家是否已准备好进入下一阶段
+	playerReady map[int32]bool // Records whether each player is ready for the next phase.
 
-	mastermindPlayerID   int32   // 主谋玩家的ID
-	protagonistPlayerIDs []int32 // 主角玩家的ID列表
+	mastermindPlayerID   int32   // ID of the mastermind player.
+	protagonistPlayerIDs []int32 // List of protagonist player IDs.
 }
 
-// NewGameEngine 创建一个新的游戏引擎实例。
-// logger: 日志记录器。
-// players: 游戏中的玩家列表。
-// actionGenerator: AI 动作生成器。
-// gameConfig: 游戏配置。
-// 返回值: 新的 GameEngine 实例和可能发生的错误。
+// NewGameEngine creates a new instance of the game engine.
+// logger: The logger.
+// players: The list of players in the game.
+// actionGenerator: The AI action generator.
+// gameConfig: The game configuration.
+// Returns: A new GameEngine instance and a possible error.
 func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator ActionGenerator, gameConfig loader.GameDataAccessor) (*GameEngine, error) {
 	ge := &GameEngine{
 		logger:               logger,
@@ -329,11 +329,10 @@ func (ge *GameEngine) TriggerAIPlayerAction(playerID int32) {
 
 	ge.logger.Info("Triggering AI for player", zap.String("player", player.Name))
 
-	// 为动作生成器创建上下文
+	// Create context for the action generator
 	ctx := &ActionGeneratorContext{
 		Player:        player,
 		PlayerView:    ge.GetPlayerView(playerID),
-		Script:        ge.gameConfig.GetScript(),
 		AllCharacters: ge.GameState.Characters,
 	}
 
