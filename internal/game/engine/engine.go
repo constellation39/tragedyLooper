@@ -55,7 +55,7 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, llmClient llm.Cl
 		engineChan:           make(chan engineRequest, 100),
 		stopChan:             make(chan struct{}),
 		dispatchGameEvent:    make(chan *model.GameEvent, 100),
-		currentPhase:         phaseImplementations[model.GamePhase_SETUP],
+		currentPhase:         phaseImplementations[model.GamePhase_SETUP], // Start with the new SetupPhase
 		phaseTimer:           time.NewTimer(time.Hour),
 		playerReady:          make(map[int32]bool),
 		mastermindPlayerID:   0,
