@@ -2,8 +2,8 @@ package engine
 
 import (
 	"time"
+	"tragedylooper/internal/game/engine/phases"
 	"tragedylooper/internal/game/loader"
-
 	model "tragedylooper/internal/game/proto/v1"
 	"tragedylooper/internal/llm"
 
@@ -29,14 +29,14 @@ type GameEngine struct {
 
 	llmClient llm.Client
 
-	gameConfig loader.GameConfigAccessor
+	gameConfig loader.GameConfig
 
 	engineChan chan engineRequest
 	stopChan   chan struct{}
 
 	dispatchGameEvent chan *model.GameEvent
 
-	currentPhase Phase
+	currentPhase phases.Phase
 	phaseTimer   *time.Timer
 	gameStarted  bool
 
@@ -47,7 +47,7 @@ type GameEngine struct {
 }
 
 // NewGameEngine creates a new game engine instance.
-func NewGameEngine(logger *zap.Logger, players []*model.Player, llmClient llm.Client, gameConfig loader.GameConfigAccessor) (*GameEngine, error) {
+func NewGameEngine(logger *zap.Logger, players []*model.Player, llmClient llm.Client, gameConfig loader.GameConfig) (*GameEngine, error) {
 	ge := &GameEngine{
 		logger:               logger,
 		llmClient:            llmClient,
@@ -55,7 +55,7 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, llmClient llm.Cl
 		engineChan:           make(chan engineRequest, 100),
 		stopChan:             make(chan struct{}),
 		dispatchGameEvent:    make(chan *model.GameEvent, 100),
-		currentPhase:         phaseImplementations[model.GamePhase_SETUP], // Start with the new SetupPhase
+		currentPhase:         &phases.SetupPhase{}, // Start with the new SetupPhase
 		phaseTimer:           time.NewTimer(time.Hour),
 		playerReady:          make(map[int32]bool),
 		mastermindPlayerID:   0,
@@ -84,6 +84,7 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, llmClient llm.Cl
 
 func (ge *GameEngine) StartGameLoop() {
 	go ge.runGameLoop()
+	// Initial transition
 	ge.transitionTo(ge.currentPhase)
 }
 
@@ -127,6 +128,10 @@ func (ge *GameEngine) runGameLoop() {
 	ge.phaseTimer = time.NewTimer(time.Hour) // Start with a long duration, will be reset
 	ge.phaseTimer.Stop()
 
+	// Initial phase enter
+	nextPhase := ge.currentPhase.Enter(ge)
+	ge.transitionTo(nextPhase)
+
 	for {
 		select {
 		case <-ge.stopChan:
@@ -141,28 +146,20 @@ func (ge *GameEngine) runGameLoop() {
 			}
 
 		case <-ge.phaseTimer.C:
-			ge.handleTimeout()
+			nextPhase := ge.currentPhase.HandleTimeout(ge)
+			ge.transitionTo(nextPhase)
 		}
 	}
 }
 
 func (ge *GameEngine) handleEvent(event *model.GameEvent) {
 	nextPhase := ge.currentPhase.HandleEvent(ge, event)
-	if nextPhase != nil {
-		ge.transitionTo(nextPhase)
-	}
+	ge.transitionTo(nextPhase)
 }
 
-func (ge *GameEngine) handleTimeout() {
-	nextPhase := ge.currentPhase.HandleTimeout(ge)
-	if nextPhase != nil {
-		ge.transitionTo(nextPhase)
-	}
-}
-
-func (ge *GameEngine) transitionTo(nextPhase Phase) {
+func (ge *GameEngine) transitionTo(nextPhase phases.Phase) {
 	if nextPhase == nil {
-		ge.logger.Debug("transitionTo called with nil nextPhase, staying in current phase", zap.String("current", ge.currentPhase.Type().String()))
+		// No transition, stay in the current phase
 		return
 	}
 
@@ -178,21 +175,27 @@ func (ge *GameEngine) transitionTo(nextPhase Phase) {
 
 	ge.currentPhase = nextPhase
 	ge.GameState.CurrentPhase = nextPhase.Type()
-	ge.currentPhase.Enter(ge)
+
+	// Call Enter on the new phase, which may return another phase to transition to immediately.
+	followingPhase := ge.currentPhase.Enter(ge)
 
 	duration := ge.currentPhase.TimeoutDuration()
 	if duration > 0 {
 		ge.phaseTimer.Reset(duration)
+	}
+
+	if followingPhase != nil {
+		ge.transitionTo(followingPhase)
 	}
 }
 
 func (ge *GameEngine) endGame(winner model.PlayerRole) {
 	ge.applyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.GameOverEvent{Winner: winner})
 	ge.logger.Info("Game over", zap.String("winner", winner.String()))
-	ge.transitionTo(phaseImplementations[model.GamePhase_GAME_OVER])
+	ge.transitionTo(&phases.GameOverPhase{})
 }
 
-func (ge *GameEngine) resetPlayerReadiness() {
+func (ge *GameEngine) ResetPlayerReadiness() {
 	for playerID := range ge.GameState.Players {
 		ge.playerReady[playerID] = false
 	}
@@ -206,7 +209,7 @@ func (ge *GameEngine) getCharacterByID(charID int32) *model.Character {
 	return char
 }
 
-func (ge *GameEngine) triggerIncidents() {
+func (ge *GameEngine) TriggerIncidents() {
 	// TODO: Implement incident triggering logic
 }
 
@@ -216,4 +219,31 @@ func (ge *GameEngine) getPlayerByID(playerID int32) *model.Player {
 		return nil
 	}
 	return player
+}
+
+// GetGameState implements the phases.GameEngine interface.
+func (ge *GameEngine) GetGameState() *model.GameState {
+	return ge.GameState
+}
+
+// GetGameConfig implements the phases.GameEngine interface.
+func (ge *GameEngine) GetGameConfig() loader.GameConfig {
+	return ge.gameConfig
+}
+
+func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, eventData interface{}) {
+	// TODO: implement me
+}
+
+func (ge *GameEngine) AreAllPlayersReady() bool {
+	// TODO: implement me
+	return false
+}
+
+func (ge *GameEngine) ResolveMovement() {
+	// TODO: implement me
+}
+
+func (ge *GameEngine) ResolveOtherCards() {
+	// TODO: implement me
 }

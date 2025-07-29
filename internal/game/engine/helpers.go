@@ -52,7 +52,7 @@ func (ge *GameEngine) checkGameEndConditions() (bool, model.PlayerRole) {
 	return false, model.PlayerRole_PLAYER_ROLE_UNSPECIFIED
 }
 
-func (ge *GameEngine) initializeGameStateFromScript(gameConfig loader.GameConfigAccessor, playerMap map[int32]*model.Player) {
+func (ge *GameEngine) initializeGameStateFromScript(gameConfig loader.GameConfig, playerMap map[int32]*model.Player) {
 	characters := make(map[int32]*model.Character)
 	for _, charInScript := range loader.Script(gameConfig).Characters {
 

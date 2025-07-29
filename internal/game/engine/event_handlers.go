@@ -145,7 +145,7 @@ func handleLoopReset(ge *GameEngine, event *model.GameEvent) {
 		ge.logger.Error("Failed to unmarshal LoopResetEvent", zap.Error(err))
 		return
 	}
-	ge.logger.Info("Loop reset", zap.Int32("loop", e.Loop))
+	ge.logger.Info("Loop reset", zap.Int32("loop", e.LoopNumber))
 	ge.GameState.LoopEvents = []*model.GameEvent{}
 }
 

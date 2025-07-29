@@ -10,10 +10,10 @@ import (
 	"go.uber.org/zap"
 )
 
-// MockGameDataAccessor provides a mock implementation of the GameConfigAccessor interface for testing.
+// MockGameDataAccessor provides a mock implementation of the GameConfig interface for testing.
 
 type MockGameDataAccessor struct {
-	loader.GameConfigAccessor
+	loader.GameConfig
 }
 
 // MockLLMClient provides a mock implementation of the LLM client.
@@ -24,7 +24,7 @@ func (m *MockLLMClient) GenerateResponse(prompt string, sessionID string) (strin
 	panic("implement me")
 }
 
-func newTestGameEngine(_ *testing.T, logger *zap.Logger, players []*model.Player, data loader.GameConfigAccessor) *GameEngine {
+func newTestGameEngine(_ *testing.T, logger *zap.Logger, players []*model.Player, data loader.GameConfig) *GameEngine {
 	ge, _ := NewGameEngine(logger, players, &MockLLMClient{}, data)
 	return ge
 }
@@ -32,7 +32,7 @@ func newTestGameEngine(_ *testing.T, logger *zap.Logger, players []*model.Player
 var (
 	testLogger         *zap.Logger
 	testPlayers        []*model.Player
-	testGameData       loader.GameConfigAccessor
+	testGameData       loader.GameConfig
 	testMastermindOnly []*model.Player
 	testEmptyPlayers   []*model.Player
 )

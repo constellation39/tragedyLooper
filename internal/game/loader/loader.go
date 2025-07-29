@@ -8,10 +8,10 @@ import (
 )
 
 type Loader interface {
-	LoadGameDataAccessor(name string) (GameConfigAccessor, error)
+	LoadGameDataAccessor(name string) (GameConfig, error)
 }
 
-type GameConfigAccessor interface {
+type GameConfig interface {
 	GetScript() *v1.ScriptConfig
 
 	GetAbilities() map[int32]*v1.AbilityConfig
@@ -27,11 +27,11 @@ type cfgPtr interface {
 		*v1.IncidentConfig
 }
 
-func Script(acc GameConfigAccessor) *v1.ScriptConfig {
+func Script(acc GameConfig) *v1.ScriptConfig {
 	return acc.GetScript()
 }
 
-func Get[T cfgPtr](acc GameConfigAccessor, id int32) (T, error) {
+func Get[T cfgPtr](acc GameConfig, id int32) (T, error) {
 	m, err := pickMap[T](acc)
 	if err != nil {
 		var zero T
@@ -45,12 +45,12 @@ func Get[T cfgPtr](acc GameConfigAccessor, id int32) (T, error) {
 	return v, nil
 }
 
-func All[T cfgPtr](acc GameConfigAccessor) (map[int32]T, error) {
+func All[T cfgPtr](acc GameConfig) (map[int32]T, error) {
 	return pickMap[T](acc)
 }
 
 // 根据目标类型选出正确的 map
-func pickMap[T cfgPtr](acc GameConfigAccessor) (map[int32]T, error) {
+func pickMap[T cfgPtr](acc GameConfig) (map[int32]T, error) {
 	var zero T
 	switch any(zero).(type) {
 	case *v1.AbilityConfig:
@@ -73,7 +73,7 @@ type jsonLoader struct {
 
 func NewJSONLoader(dir string) Loader { return &jsonLoader{dataDir: dir} }
 
-func (l *jsonLoader) LoadGameDataAccessor(name string) (GameConfigAccessor, error) {
+func (l *jsonLoader) LoadGameDataAccessor(name string) (GameConfig, error) {
 	// 已经加载过直接返回
 	if v, ok := l.Load(name); ok {
 		return v.(*gameConfigAccessor), nil
