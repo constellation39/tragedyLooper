@@ -2,6 +2,7 @@ package engine // 定义游戏引擎包
 
 import (
 	"time"
+	"tragedylooper/internal/game/engine/eventhandler"
 	"tragedylooper/internal/game/engine/phase" // 导入阶段包
 	model "tragedylooper/pkg/proto/v1" // 导入协议缓冲区模型
 
@@ -65,6 +66,13 @@ func (pm *phaseManager) handleAction(playerID int32, action *model.PlayerActionP
 // handleEvent 将事件委托给当前阶段并转换到下一个阶段。
 // event: 接收到的游戏事件。
 func (pm *phaseManager) handleEvent(event *model.GameEvent) {
+	// Step 1: Synchronously apply state changes.
+	// This is crucial for ensuring the game state is consistent before any other logic runs.
+	if err := eventhandler.ProcessEvent(pm.engine.GameState, event); err != nil {
+		pm.logger.Error("Failed to apply event to game state", zap.Error(err), zap.String("type", event.Type.String()))
+		// We continue even if the handler fails, to allow phases and listeners to react.
+	}
+
 	nextPhase := pm.currentPhase.HandleEvent(pm.engine, event)
 	pm.transitionTo(nextPhase)
 }

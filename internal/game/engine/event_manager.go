@@ -1,27 +1,26 @@
-package engine // 定义游戏引擎包
+package engine
 
 import (
-	"tragedylooper/internal/game/engine/eventhandler" // 导入事件处理程序包
-	model "tragedylooper/pkg/proto/v1" // 导入协议缓冲区模型
+	model "tragedylooper/pkg/proto/v1"
 
-	"go.uber.org/zap" // 导入 Zap 日志库
-	"google.golang.org/protobuf/proto" // 导入 Protobuf 核心库
-	"google.golang.org/protobuf/types/known/anypb" // 导入 Any 类型，用于封装任意 Protobuf 消息
-	"google.golang.org/protobuf/types/known/timestamppb" // 导入 Timestamp 类型
+	"go.uber.org/zap"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/anypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// eventManager 负责创建、处理和分派所有游戏事件。
-// 它将事件生命周期与主 GameEngine 分离，确保了清晰且可维护的流程。
+// eventManager is responsible for creating, processing, and dispatching all game events.
+// It decouples the event lifecycle from the main GameEngine, ensuring a clear and maintainable flow.
 type eventManager struct {
-	engine *GameEngine // 对父引擎的引用，以访问全局状态和管理器。
-	logger *zap.Logger // 日志记录器
+	engine *GameEngine // Reference to the parent engine to access global state and managers.
+	logger *zap.Logger
 
-	// dispatchGameEvent 是一个出站通道，用于向外部侦听器广播已处理的游戏事件。
+	// dispatchGameEvent is an outbound channel for broadcasting processed game events to external listeners.
 	dispatchGameEvent chan *model.GameEvent
 }
 
-// newEventManager 创建并返回一个新的 eventManager 实例。
-// engine: 游戏引擎的引用。
+// newEventManager creates and returns a new eventManager instance.
+// engine: A reference to the game engine.
 func newEventManager(engine *GameEngine) *eventManager {
 	return &eventManager{
 		engine:            engine,
@@ -30,14 +29,13 @@ func newEventManager(engine *GameEngine) *eventManager {
 	}
 }
 
-// createAndProcess 是创建、应用和广播游戏事件的中心方法。
-// 它确保了一致的操作顺序：
-// 1. 事件是根据有效负载创建的。
-// 2. 游戏状态由事件处理程序同步地改变。
-// 3. 通知 phaseManager，允许当前阶段做出反应并可能触发转换。
-// 4. 事件被广播到外部侦听器并记录在游戏的历史记录中。
-// eventType: 游戏事件的类型。
-// payload: 事件的有效负载，必须是 Protobuf 消息。
+// createAndProcess is the central method for creating, applying, and broadcasting a game event.
+// It ensures a consistent order of operations:
+// 1. An event is created from a payload.
+// 2. The phaseManager is notified, allowing the current phase to react and potentially trigger a transition.
+// 3. The event is broadcast to external listeners and recorded in the game's history.
+// eventType: The type of the game event.
+// payload: The payload for the event, which must be a protobuf message.
 func (em *eventManager) createAndProcess(eventType model.GameEventType, payload proto.Message) {
 	anyPayload, err := anypb.New(payload)
 	if err != nil {
@@ -50,39 +48,32 @@ func (em *eventManager) createAndProcess(eventType model.GameEventType, payload 
 		Timestamp: timestamppb.Now(),
 	}
 
-	// 步骤 1：同步应用状态更改。
-	// 这对于确保游戏状态在任何其他逻辑运行之前保持一致至关重要。
-	if err := eventhandler.ProcessEvent(em.engine.GameState, event); err != nil {
-		em.logger.Error("Failed to apply event to game state", zap.Error(err), zap.String("type", event.Type.String()))
-		// 即使处理程序失败，我们也会继续，以允许阶段和侦听器做出反应。
-	}
-
-	// 步骤 2：让当前阶段对事件做出反应。
-	// 这现在由阶段管理器处理。
+	// Step 1: Let the current phase react to the event.
+	// This is now handled by the phase manager.
 	em.engine.pm.handleEvent(event)
 
-	// 步骤 3：将事件发布到外部侦听器并进行记录。
-	// 这在状态更新后发生。
+	// Step 2: Publish the event to external listeners and for logging.
+	// This happens after the state has been updated.
 	select {
 	case em.dispatchGameEvent <- event:
-		// 同时在游戏状态中记录事件以供玩家查看
+		// Also log the event in the game state for player review
 		em.engine.GameState.DayEvents = append(em.engine.GameState.DayEvents, event)
 		em.engine.GameState.LoopEvents = append(em.engine.GameState.LoopEvents, event)
 	default:
 		em.logger.Warn("Game event channel full, dropping event", zap.String("eventType", event.Type.String()))
 	}
 
-	// TODO: 在状态完全更新后，在此处重新实现触发器逻辑。
+	// TODO: Re-implement trigger logic here, after the state is fully updated.
 	// em.engine.checkForTriggers(event)
 }
 
-// eventsChannel 返回游戏事件的出站通道。
-// 返回值: 游戏事件的只读通道。
+// eventsChannel returns the outbound channel for game events.
+// Returns: A read-only channel of game events.
 func (em *eventManager) eventsChannel() <-chan *model.GameEvent {
 	return em.dispatchGameEvent
 }
 
-// close 关闭事件分发通道。
+// close closes the event dispatch channel.
 func (em *eventManager) close() {
 	close(em.dispatchGameEvent)
 }
