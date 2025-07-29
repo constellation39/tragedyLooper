@@ -104,55 +104,63 @@ func (ge *GameEngine) resolveSelectorToCharacters(gs *model.GameState, sel *mode
 		return nil, errors.New("target selector is nil")
 	}
 
-	switch sel.SelectorType {
-	case model.TargetSelector_ABILITY_USER:
-		if ability == nil {
-			return nil, errors.New("ability is nil for ABILITY_USER selector")
-		}
-		return []int32{ability.OwnerCharacterId}, nil
-	case model.TargetSelector_ABILITY_TARGET:
-		if payload == nil {
-			return nil, errors.New("payload is nil for ABILITY_TARGET selector")
-		}
-		if targetChar, ok := payload.Target.(*model.UseAbilityPayload_TargetCharacterId); ok {
-			return []int32{targetChar.TargetCharacterId}, nil
-		}
-		return nil, errors.New("payload does not contain a target character for ABILITY_TARGET selector")
-	case model.TargetSelector_ALL_CHARACTERS:
-		ids := make([]int32, 0, len(gs.Characters))
-		for id := range gs.Characters {
-			ids = append(ids, id)
-		}
-		return ids, nil
-	case model.TargetSelector_SPECIFIC_CHARACTER:
-		return []int32{sel.CharacterId}, nil
-	// TODO: Implement other selector types
-	default:
-		return nil, errors.New("unsupported target selector type")
+	handler, ok := selectorHandlers[sel.SelectorType]
+	if !ok {
+		return nil, fmt.Errorf("unsupported target selector type: %s", sel.SelectorType)
 	}
+
+	return handler(ge, gs, sel, player, payload, ability)
 }
 
-type selectorHandler func(ge *GameEngine, state *model.GameState, selector *model.TargetSelector, payload *model.UseAbilityPayload) ([]int32, error)
+type selectorHandler func(ge *GameEngine, state *model.GameState, selector *model.TargetSelector, player *model.Player, payload *model.UseAbilityPayload, ability *model.Ability) ([]int32, error)
 
 var selectorHandlers = map[model.TargetSelector_SelectorType]selectorHandler{
+	model.TargetSelector_ABILITY_USER:               resolveAbilityUser,
+	model.TargetSelector_ABILITY_TARGET:             resolveAbilityTarget,
+	model.TargetSelector_ALL_CHARACTERS:             resolveAllCharacters,
 	model.TargetSelector_SPECIFIC_CHARACTER:         resolveSpecificCharacter,
 	model.TargetSelector_TRIGGERING_CHARACTER:       resolveTriggeringCharacter,
 	model.TargetSelector_ALL_CHARACTERS_AT_LOCATION: resolveAllCharactersAtLocation,
 	model.TargetSelector_ANY_CHARACTER_WITH_ROLE:    resolveAnyCharacterWithRole,
 }
 
-func resolveSpecificCharacter(ge *GameEngine, state *model.GameState, selector *model.TargetSelector, payload *model.UseAbilityPayload) ([]int32, error) {
+func resolveAbilityUser(_ *GameEngine, _ *model.GameState, _ *model.TargetSelector, _ *model.Player, _ *model.UseAbilityPayload, ability *model.Ability) ([]int32, error) {
+	if ability == nil {
+		return nil, errors.New("ability is nil for ABILITY_USER selector")
+	}
+	return []int32{ability.OwnerCharacterId}, nil
+}
+
+func resolveAbilityTarget(_ *GameEngine, _ *model.GameState, _ *model.TargetSelector, _ *model.Player, payload *model.UseAbilityPayload, _ *model.Ability) ([]int32, error) {
+	if payload == nil {
+		return nil, errors.New("payload is nil for ABILITY_TARGET selector")
+	}
+	if targetChar, ok := payload.Target.(*model.UseAbilityPayload_TargetCharacterId); ok {
+		return []int32{targetChar.TargetCharacterId}, nil
+	}
+	return nil, errors.New("payload does not contain a target character for ABILITY_TARGET selector")
+}
+
+func resolveAllCharacters(_ *GameEngine, state *model.GameState, _ *model.TargetSelector, _ *model.Player, _ *model.UseAbilityPayload, _ *model.Ability) ([]int32, error) {
+	ids := make([]int32, 0, len(state.Characters))
+	for id := range state.Characters {
+		ids = append(ids, id)
+	}
+	return ids, nil
+}
+
+func resolveSpecificCharacter(_ *GameEngine, _ *model.GameState, selector *model.TargetSelector, _ *model.Player, _ *model.UseAbilityPayload, _ *model.Ability) ([]int32, error) {
 	return []int32{selector.CharacterId}, nil
 }
 
-func resolveTriggeringCharacter(ge *GameEngine, state *model.GameState, selector *model.TargetSelector, payload *model.UseAbilityPayload) ([]int32, error) {
+func resolveTriggeringCharacter(_ *GameEngine, _ *model.GameState, _ *model.TargetSelector, _ *model.Player, payload *model.UseAbilityPayload, _ *model.Ability) ([]int32, error) {
 	if payload != nil {
 		return []int32{payload.CharacterId}, nil
 	}
 	return nil, fmt.Errorf("could not resolve triggering character: payload is nil")
 }
 
-func resolveAllCharactersAtLocation(ge *GameEngine, state *model.GameState, selector *model.TargetSelector, payload *model.UseAbilityPayload) ([]int32, error) {
+func resolveAllCharactersAtLocation(_ *GameEngine, state *model.GameState, selector *model.TargetSelector, _ *model.Player, _ *model.UseAbilityPayload, _ *model.Ability) ([]int32, error) {
 	var charIDs []int32
 	for id, char := range state.Characters {
 		if char.CurrentLocation == selector.LocationFilter {
@@ -162,7 +170,7 @@ func resolveAllCharactersAtLocation(ge *GameEngine, state *model.GameState, sele
 	return charIDs, nil
 }
 
-func resolveAnyCharacterWithRole(ge *GameEngine, state *model.GameState, selector *model.TargetSelector, payload *model.UseAbilityPayload) ([]int32, error) {
+func resolveAnyCharacterWithRole(_ *GameEngine, state *model.GameState, selector *model.TargetSelector, _ *model.Player, _ *model.UseAbilityPayload, _ *model.Ability) ([]int32, error) {
 	var charIDs []int32
 	for id, char := range state.Characters {
 		if char.HiddenRole == selector.RoleFilter {

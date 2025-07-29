@@ -40,23 +40,9 @@ func (ge *GameEngine) handlePlayCardAction(player *model.Player, payload *model.
 		return
 	}
 
-	var playedCard *model.Card
-	cardFound := false
-	for i, card := range player.Hand {
-		if card.Config.Id == payload.CardId {
-			if card.Config.OncePerLoop && card.UsedThisLoop {
-				ge.logger.Warn("Attempted to play a card that was already used this loop", zap.Int32("cardID", card.Config.Id))
-				return // Card already used
-			}
-			playedCard = card
-			player.Hand = append(player.Hand[:i], player.Hand[i+1:]...) // Remove card from hand
-			cardFound = true
-			break
-		}
-	}
-
-	if !cardFound {
-		ge.logger.Warn("Attempted to play a card not in hand", zap.Int32("cardID", payload.CardId), zap.Int32("playerID", player.Id))
+	playedCard, err := ge.takeCardFromPlayer(player, payload.CardId)
+	if err != nil {
+		ge.logger.Warn("Failed to play card", zap.Error(err), zap.Int32("cardID", payload.CardId), zap.Int32("playerID", player.Id))
 		return
 	}
 
@@ -79,6 +65,21 @@ func (ge *GameEngine) handlePlayCardAction(player *model.Player, payload *model.
 	ge.GameState.PlayedCardsThisLoop[playedCard.Config.Id] = true
 
 	ge.playerReady[player.Id] = true
+}
+
+// takeCardFromPlayer finds a card in a player's hand, removes it, and returns it.
+func (ge *GameEngine) takeCardFromPlayer(player *model.Player, cardID int32) (*model.Card, error) {
+	for i, card := range player.Hand {
+		if card.Config.Id == cardID {
+			if card.Config.OncePerLoop && card.UsedThisLoop {
+				return nil, fmt.Errorf("card %d was already used this loop", cardID)
+			}
+			// Remove card from hand and return it
+			player.Hand = append(player.Hand[:i], player.Hand[i+1:]...)
+			return card, nil
+		}
+	}
+	return nil, fmt.Errorf("card %d not found in player's hand", cardID)
 }
 
 func (ge *GameEngine) handleUseAbilityAction(player *model.Player, payload *model.UseAbilityPayload) {
