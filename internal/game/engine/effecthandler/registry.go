@@ -3,7 +3,7 @@ package effecthandler
 import (
 	"fmt"
 	"reflect"
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/tragedylooper/v1"
 )
 
 // effectHandlers maps the type of an effect's payload to its corresponding handler.

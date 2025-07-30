@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"tragedylooper/internal/game/engine/effecthandler"
 	"tragedylooper/internal/game/loader"
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
 )
@@ -142,7 +142,21 @@ func (ge *GameEngine) initializeGameStateFromScript(players []*model.Player) {
 }
 
 func (ge *GameEngine) dealInitialCards() {
-	// 为简洁起见，省略了实现
+	cardConfigs := ge.gameConfig.GetCards()
+
+	for _, player := range ge.GameState.Players {
+		player.Hand = &model.CardList{Cards: make([]*model.Card, 0)}
+		for _, cardConfig := range cardConfigs {
+			if cardConfig.Role == model.PlayerRole_PLAYER_ROLE_UNSPECIFIED || cardConfig.Role == player.Role {
+				card := &model.Card{
+					Id:     cardConfig.Id,
+					Config: cardConfig,
+					Owner:  player,
+				}
+				player.Cards.Cards = append(player.Cards.Cards, card)
+			}
+		}
+	}
 }
 
 // StartGameLoop 启动游戏主循环。

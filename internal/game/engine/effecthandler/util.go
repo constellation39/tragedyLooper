@@ -2,7 +2,7 @@ package effecthandler
 
 import (
 	"fmt"
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/tragedylooper/v1"
 )
 
 // CreateChoicesFromSelector 是一个辅助函数，用于在目标选择器

@@ -12,7 +12,7 @@ import (
 	"tragedylooper/internal/game/loader"
 	"tragedylooper/internal/llm"
 	"tragedylooper/internal/logger"
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/tragedylooper/v1"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"

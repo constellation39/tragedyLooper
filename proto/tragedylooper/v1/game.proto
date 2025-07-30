@@ -38,7 +38,7 @@ message Player {
   string name = 2; // 玩家名称
   PlayerRole role = 3; // 玩家角色 (主谋或主角)
   bool is_llm = 4; // 是否由LLM（大语言模型）控制
-  repeated Card hand = 5; // 玩家手牌列表
+  CardList hand = 5; // 玩家手牌列表
   string llm_session_id = 6; // 如果是LLM，对应的会话ID
   PlayerDeductionKnowledge deduction_knowledge = 7; // 主角的推理知识（仅主角玩家拥有）
   repeated int32 protagonist_characters_controlled = 8; // 如果一个主角玩家控制多个角色牌组，这里列出他们的ID

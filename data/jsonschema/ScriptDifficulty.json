@@ -3,13 +3,13 @@
     "enum": [
         "SCRIPT_DIFFICULTY_UNSPECIFIED",
         0,
-        "EASY",
+        "SCRIPT_DIFFICULTY_EASY",
         1,
-        "NORMAL",
+        "SCRIPT_DIFFICULTY_NORMAL",
         2,
-        "HARD",
+        "SCRIPT_DIFFICULTY_HARD",
         3,
-        "EXPERT",
+        "SCRIPT_DIFFICULTY_EXPERT",
         4
     ],
     "oneOf": [

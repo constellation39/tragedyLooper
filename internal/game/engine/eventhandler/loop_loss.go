@@ -1,7 +1,7 @@
 package eventhandler
 
 import (
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/tragedylooper/v1"
 )
 
 func init() {

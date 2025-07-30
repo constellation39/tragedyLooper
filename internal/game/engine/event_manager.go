@@ -2,7 +2,7 @@ package engine
 
 import (
 	"tragedylooper/internal/game/engine/eventhandler"
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"

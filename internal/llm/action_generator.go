@@ -8,7 +8,7 @@ import (
 
 	"tragedylooper/internal/game/engine"
 	promptbuilder "tragedylooper/internal/llm/prompt"
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/tragedylooper/v1"
 )
 
 // LLMActionGenerator is an implementation of engine.ActionGenerator that uses an LLM.

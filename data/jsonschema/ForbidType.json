@@ -3,13 +3,13 @@
     "enum": [
         "FORBID_TYPE_UNSPECIFIED",
         0,
-        "MOVEMENT",
+        "FORBID_TYPE_MOVEMENT",
         1,
-        "PARANOIA_CHANGE",
+        "FORBID_TYPE_PARANOIA_CHANGE",
         2,
-        "GOODWILL_CHANGE",
+        "FORBID_TYPE_GOODWILL_CHANGE",
         3,
-        "INTRIGUE_CHANGE",
+        "FORBID_TYPE_INTRIGUE_CHANGE",
         4
     ],
     "oneOf": [

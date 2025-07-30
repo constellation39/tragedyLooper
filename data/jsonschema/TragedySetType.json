@@ -3,13 +3,13 @@
     "enum": [
         "TRAGEDY_SET_TYPE_UNSPECIFIED",
         0,
-        "BASIC_TRAGEDY",
+        "TRAGEDY_SET_TYPE_BASIC_TRAGEDY",
         1,
-        "FIRST_STEP",
+        "TRAGEDY_SET_TYPE_FIRST_STEP",
         2,
-        "MIDNIGHT_ZONE",
+        "TRAGEDY_SET_TYPE_MIDNIGHT_ZONE",
         3,
-        "GHOSTLY_MIST",
+        "TRAGEDY_SET_TYPE_GHOSTLY_MIST",
         4
     ],
     "oneOf": [

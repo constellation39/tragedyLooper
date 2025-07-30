@@ -3,7 +3,7 @@ package engine
 import (
 	"google.golang.org/protobuf/proto"
 
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/tragedylooper/v1"
 )
 
 // GeneratePlayerView 为特定玩家创建游戏状态的过滤视图。

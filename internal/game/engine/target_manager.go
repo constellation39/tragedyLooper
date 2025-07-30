@@ -3,7 +3,7 @@ package engine
 import (
 	"fmt"
 	"tragedylooper/internal/game/engine/effecthandler"
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/tragedylooper/v1"
 )
 
 type targetManager struct {

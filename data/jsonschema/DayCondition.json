@@ -8,11 +8,11 @@
                     "enum": [
                         "COMPARATOR_UNSPECIFIED",
                         0,
-                        "BEFORE",
+                        "COMPARATOR_BEFORE",
                         1,
-                        "ON",
+                        "COMPARATOR_ON",
                         2,
-                        "AFTER",
+                        "COMPARATOR_AFTER",
                         3
                     ],
                     "oneOf": [

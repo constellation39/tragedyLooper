@@ -8,17 +8,17 @@
                     "enum": [
                         "END_CONDITION_TYPE_UNSPECIFIED",
                         0,
-                        "PROTAGONIST_GUESS_SUCCESS",
+                        "END_CONDITION_TYPE_PROTAGONIST_GUESS_SUCCESS",
                         1,
-                        "PROTAGONIST_GUESS_FAIL",
+                        "END_CONDITION_TYPE_PROTAGONIST_GUESS_FAIL",
                         2,
-                        "MAX_LOOPS_REACHED",
+                        "END_CONDITION_TYPE_MAX_LOOPS_REACHED",
                         3,
-                        "SPECIFIC_INCIDENT_TRIGGERED",
+                        "END_CONDITION_TYPE_SPECIFIC_INCIDENT_TRIGGERED",
                         4,
-                        "ALL_INCIDENTS_PREVENTED",
+                        "END_CONDITION_TYPE_ALL_INCIDENTS_PREVENTED",
                         5,
-                        "CUSTOM_CONDITION",
+                        "END_CONDITION_TYPE_CUSTOM_CONDITION",
                         6
                     ],
                     "oneOf": [
@@ -34,7 +34,7 @@
                 },
                 "requirements": {
                     "items": {
-                        "$ref": "#/definitions/v1.Condition"
+                        "$ref": "#/definitions/tragedylooper.v1.Condition"
                     },
                     "type": "array",
                     "description": "具体要求"
@@ -49,17 +49,17 @@
             "title": "End Condition",
             "description": "游戏结束条件"
         },
-        "v1.CompoundCondition": {
+        "tragedylooper.v1.CompoundCondition": {
             "properties": {
                 "operator": {
                     "enum": [
                         "OPERATOR_UNSPECIFIED",
                         0,
-                        "AND",
+                        "OPERATOR_AND",
                         1,
-                        "OR",
+                        "OPERATOR_OR",
                         2,
-                        "NOT",
+                        "OPERATOR_NOT",
                         3
                     ],
                     "oneOf": [
@@ -74,7 +74,7 @@
                 },
                 "sub_conditions": {
                     "items": {
-                        "$ref": "#/definitions/v1.Condition"
+                        "$ref": "#/definitions/tragedylooper.v1.Condition"
                     },
                     "type": "array",
                     "description": "子条件列表"
@@ -85,40 +85,40 @@
             "title": "Compound Condition",
             "description": "复合条件，用于组合多个条件"
         },
-        "v1.Condition": {
+        "tragedylooper.v1.Condition": {
             "properties": {
                 "stat_condition": {
-                    "$ref": "#/definitions/v1.StatCondition",
+                    "$ref": "#/definitions/tragedylooper.v1.StatCondition",
                     "additionalProperties": true,
                     "description": "属性条件"
                 },
                 "location_condition": {
-                    "$ref": "#/definitions/v1.LocationCondition",
+                    "$ref": "#/definitions/tragedylooper.v1.LocationCondition",
                     "additionalProperties": true,
                     "description": "地点条件"
                 },
                 "role_condition": {
-                    "$ref": "#/definitions/v1.RoleCondition",
+                    "$ref": "#/definitions/tragedylooper.v1.RoleCondition",
                     "additionalProperties": true,
                     "description": "身份条件"
                 },
                 "trait_condition": {
-                    "$ref": "#/definitions/v1.TraitCondition",
+                    "$ref": "#/definitions/tragedylooper.v1.TraitCondition",
                     "additionalProperties": true,
                     "description": "特征条件"
                 },
                 "day_condition": {
-                    "$ref": "#/definitions/v1.DayCondition",
+                    "$ref": "#/definitions/tragedylooper.v1.DayCondition",
                     "additionalProperties": true,
                     "description": "日期条件"
                 },
                 "player_condition": {
-                    "$ref": "#/definitions/v1.PlayerCondition",
+                    "$ref": "#/definitions/tragedylooper.v1.PlayerCondition",
                     "additionalProperties": true,
                     "description": "玩家条件"
                 },
                 "compound_condition": {
-                    "$ref": "#/definitions/v1.CompoundCondition",
+                    "$ref": "#/definitions/tragedylooper.v1.CompoundCondition",
                     "additionalProperties": true,
                     "description": "复合条件 (AND/OR/NOT)"
                 }
@@ -128,17 +128,17 @@
             "title": "Condition",
             "description": "条件，用于规则、事件和效果的触发判断"
         },
-        "v1.DayCondition": {
+        "tragedylooper.v1.DayCondition": {
             "properties": {
                 "comparator": {
                     "enum": [
                         "COMPARATOR_UNSPECIFIED",
                         0,
-                        "BEFORE",
+                        "COMPARATOR_BEFORE",
                         1,
-                        "ON",
+                        "COMPARATOR_ON",
                         2,
-                        "AFTER",
+                        "COMPARATOR_AFTER",
                         3
                     ],
                     "oneOf": [
@@ -161,10 +161,10 @@
             "title": "Day Condition",
             "description": "日期条件"
         },
-        "v1.LocationCondition": {
+        "tragedylooper.v1.LocationCondition": {
             "properties": {
                 "target": {
-                    "$ref": "#/definitions/v1.TargetSelector",
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
                     "additionalProperties": true,
                     "description": "目标角色选择器"
                 },
@@ -172,13 +172,13 @@
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
-                        "HOSPITAL",
+                        "LOCATION_TYPE_HOSPITAL",
                         1,
-                        "SHRINE",
+                        "LOCATION_TYPE_SHRINE",
                         2,
-                        "CITY",
+                        "LOCATION_TYPE_CITY",
                         3,
-                        "SCHOOL",
+                        "LOCATION_TYPE_SCHOOL",
                         4
                     ],
                     "oneOf": [
@@ -210,15 +210,15 @@
             "title": "Location Condition",
             "description": "地点条件"
         },
-        "v1.PlayerCondition": {
+        "tragedylooper.v1.PlayerCondition": {
             "properties": {
                 "player_role": {
                     "enum": [
                         "PLAYER_ROLE_UNSPECIFIED",
                         0,
-                        "MASTERMIND",
+                        "PLAYER_ROLE_MASTERMIND",
                         1,
-                        "PROTAGONIST",
+                        "PLAYER_ROLE_PROTAGONIST",
                         2
                     ],
                     "oneOf": [
@@ -238,10 +238,10 @@
             "title": "Player Condition",
             "description": "玩家条件"
         },
-        "v1.RoleCondition": {
+        "tragedylooper.v1.RoleCondition": {
             "properties": {
                 "target": {
-                    "$ref": "#/definitions/v1.TargetSelector",
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
                     "additionalProperties": true,
                     "description": "目标角色选择器"
                 },
@@ -249,31 +249,31 @@
                     "enum": [
                         "ROLE_TYPE_UNSPECIFIED",
                         0,
-                        "ROLE_UNKNOWN",
+                        "ROLE_TYPE_ROLE_UNKNOWN",
                         1,
-                        "PERSON",
+                        "ROLE_TYPE_PERSON",
                         2,
-                        "KILLER",
+                        "ROLE_TYPE_KILLER",
                         3,
-                        "BRAIN",
+                        "ROLE_TYPE_BRAIN",
                         4,
-                        "KEY_PERSON",
+                        "ROLE_TYPE_KEY_PERSON",
                         5,
-                        "CULTIST",
+                        "ROLE_TYPE_CULTIST",
                         6,
-                        "FRIEND",
+                        "ROLE_TYPE_FRIEND",
                         7,
-                        "LOVED_ONE",
+                        "ROLE_TYPE_LOVED_ONE",
                         8,
-                        "CONSPIRACY_THEORIST",
+                        "ROLE_TYPE_CONSPIRACY_THEORIST",
                         9,
-                        "SERIAL_KILLER",
+                        "ROLE_TYPE_SERIAL_KILLER",
                         10,
-                        "FACTOR",
+                        "ROLE_TYPE_FACTOR",
                         11,
-                        "WITCH",
+                        "ROLE_TYPE_WITCH",
                         12,
-                        "TIME_TRAVELER",
+                        "ROLE_TYPE_TIME_TRAVELER",
                         13
                     ],
                     "oneOf": [
@@ -297,10 +297,10 @@
             "title": "Role Condition",
             "description": "身份条件"
         },
-        "v1.StatCondition": {
+        "tragedylooper.v1.StatCondition": {
             "properties": {
                 "target": {
-                    "$ref": "#/definitions/v1.TargetSelector",
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
                     "additionalProperties": true,
                     "description": "目标角色选择器"
                 },
@@ -308,11 +308,11 @@
                     "enum": [
                         "STAT_TYPE_UNSPECIFIED",
                         0,
-                        "PARANOIA",
+                        "STAT_TYPE_PARANOIA",
                         1,
-                        "GOODWILL",
+                        "STAT_TYPE_GOODWILL",
                         2,
-                        "INTRIGUE",
+                        "STAT_TYPE_INTRIGUE",
                         3
                     ],
                     "oneOf": [
@@ -329,15 +329,15 @@
                     "enum": [
                         "COMPARATOR_UNSPECIFIED",
                         0,
-                        "GREATER_THAN",
+                        "COMPARATOR_GREATER_THAN",
                         1,
-                        "LESS_THAN",
+                        "COMPARATOR_LESS_THAN",
                         2,
-                        "EQUAL_TO",
+                        "COMPARATOR_EQUAL_TO",
                         3,
-                        "GREATER_THAN_OR_EQUAL",
+                        "COMPARATOR_GREATER_THAN_OR_EQUAL",
                         4,
-                        "LESS_THAN_OR_EQUAL",
+                        "COMPARATOR_LESS_THAN_OR_EQUAL",
                         5
                     ],
                     "oneOf": [
@@ -360,29 +360,29 @@
             "title": "Stat Condition",
             "description": "属性条件"
         },
-        "v1.TargetSelector": {
+        "tragedylooper.v1.TargetSelector": {
             "properties": {
                 "selector_type": {
                     "enum": [
                         "SELECTOR_TYPE_UNSPECIFIED",
                         0,
-                        "SPECIFIC_CHARACTER",
+                        "SELECTOR_TYPE_SPECIFIC_CHARACTER",
                         1,
-                        "TRIGGERING_CHARACTER",
+                        "SELECTOR_TYPE_TRIGGERING_CHARACTER",
                         2,
-                        "CULPRIT",
+                        "SELECTOR_TYPE_CULPRIT",
                         3,
-                        "VICTIM",
+                        "SELECTOR_TYPE_VICTIM",
                         4,
-                        "ANY_CHARACTER_WITH_ROLE",
+                        "SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE",
                         5,
-                        "ALL_CHARACTERS_AT_LOCATION",
+                        "SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION",
                         6,
-                        "ABILITY_USER",
+                        "SELECTOR_TYPE_ABILITY_USER",
                         7,
-                        "ABILITY_TARGET",
+                        "SELECTOR_TYPE_ABILITY_TARGET",
                         8,
-                        "ALL_CHARACTERS",
+                        "SELECTOR_TYPE_ALL_CHARACTERS",
                         9
                     ],
                     "oneOf": [
@@ -403,31 +403,31 @@
                     "enum": [
                         "ROLE_TYPE_UNSPECIFIED",
                         0,
-                        "ROLE_UNKNOWN",
+                        "ROLE_TYPE_ROLE_UNKNOWN",
                         1,
-                        "PERSON",
+                        "ROLE_TYPE_PERSON",
                         2,
-                        "KILLER",
+                        "ROLE_TYPE_KILLER",
                         3,
-                        "BRAIN",
+                        "ROLE_TYPE_BRAIN",
                         4,
-                        "KEY_PERSON",
+                        "ROLE_TYPE_KEY_PERSON",
                         5,
-                        "CULTIST",
+                        "ROLE_TYPE_CULTIST",
                         6,
-                        "FRIEND",
+                        "ROLE_TYPE_FRIEND",
                         7,
-                        "LOVED_ONE",
+                        "ROLE_TYPE_LOVED_ONE",
                         8,
-                        "CONSPIRACY_THEORIST",
+                        "ROLE_TYPE_CONSPIRACY_THEORIST",
                         9,
-                        "SERIAL_KILLER",
+                        "ROLE_TYPE_SERIAL_KILLER",
                         10,
-                        "FACTOR",
+                        "ROLE_TYPE_FACTOR",
                         11,
-                        "WITCH",
+                        "ROLE_TYPE_WITCH",
                         12,
-                        "TIME_TRAVELER",
+                        "ROLE_TYPE_TIME_TRAVELER",
                         13
                     ],
                     "oneOf": [
@@ -445,13 +445,13 @@
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
-                        "HOSPITAL",
+                        "LOCATION_TYPE_HOSPITAL",
                         1,
-                        "SHRINE",
+                        "LOCATION_TYPE_SHRINE",
                         2,
-                        "CITY",
+                        "LOCATION_TYPE_CITY",
                         3,
-                        "SCHOOL",
+                        "LOCATION_TYPE_SCHOOL",
                         4
                     ],
                     "oneOf": [
@@ -471,10 +471,10 @@
             "title": "Target Selector",
             "description": "目标选择器，用于动态指定条件或效果的目标"
         },
-        "v1.TraitCondition": {
+        "tragedylooper.v1.TraitCondition": {
             "properties": {
                 "target": {
-                    "$ref": "#/definitions/v1.TargetSelector",
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
                     "additionalProperties": true,
                     "description": "目标角色选择器"
                 },

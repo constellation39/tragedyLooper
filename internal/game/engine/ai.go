@@ -2,7 +2,7 @@ package engine
 
 import (
 	"context"
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/tragedylooper/v1"
 )
 
 // ActionGenerator defines the interface for an AI to generate a player action.

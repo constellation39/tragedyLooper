@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/tragedylooper/v1"
 )
 
 // PromptBuilder 帮助构建 LLM 玩家的提示词。
@@ -36,7 +36,7 @@ func (pb *PromptBuilder) BuildMastermindPrompt(
 	// TODO: add subplots to prompt
 	// if len(script.SubPlots) > 0 {
 	//	sb.WriteString(fmt.Sprintf("Sub Plots: %s\n", strings.Join(script.SubPlots, ", ")))
-	//}
+	// }
 	sb.WriteString("Tragedies to trigger:\n")
 	for _, t := range script.Incidents {
 		sb.WriteString(fmt.Sprintf("- %s (Day %d, Culprit: %d, Conditions: %+v)\n", t.IncidentType, t.Day, t.CulpritCharacterId, t.TriggerConditions))

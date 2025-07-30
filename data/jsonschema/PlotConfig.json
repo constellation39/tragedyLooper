@@ -8,9 +8,9 @@
                     "enum": [
                         "PLOT_TYPE_UNSPECIFIED",
                         0,
-                        "MAIN_PLOT",
+                        "PLOT_TYPE_MAIN_PLOT",
                         1,
-                        "SUB_PLOT",
+                        "PLOT_TYPE_SUB_PLOT",
                         2
                     ],
                     "oneOf": [

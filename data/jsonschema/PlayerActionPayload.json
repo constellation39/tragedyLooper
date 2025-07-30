@@ -5,27 +5,27 @@
         "PlayerActionPayload": {
             "properties": {
                 "play_card": {
-                    "$ref": "#/definitions/v1.PlayCardPayload",
+                    "$ref": "#/definitions/tragedylooper.v1.PlayCardPayload",
                     "additionalProperties": true,
                     "description": "打出卡牌的负载"
                 },
                 "use_ability": {
-                    "$ref": "#/definitions/v1.UseAbilityPayload",
+                    "$ref": "#/definitions/tragedylooper.v1.UseAbilityPayload",
                     "additionalProperties": true,
                     "description": "使用能力的负载"
                 },
                 "make_guess": {
-                    "$ref": "#/definitions/v1.MakeGuessPayload",
+                    "$ref": "#/definitions/tragedylooper.v1.MakeGuessPayload",
                     "additionalProperties": true,
                     "description": "进行猜测的负载"
                 },
                 "choose_option": {
-                    "$ref": "#/definitions/v1.ChooseOptionPayload",
+                    "$ref": "#/definitions/tragedylooper.v1.ChooseOptionPayload",
                     "additionalProperties": true,
                     "description": "进行选择的负载"
                 },
                 "pass_turn": {
-                    "$ref": "#/definitions/v1.PassTurnAction",
+                    "$ref": "#/definitions/tragedylooper.v1.PassTurnAction",
                     "additionalProperties": true,
                     "description": "玩家跳过"
                 }
@@ -35,7 +35,7 @@
             "title": "Player Action Payload",
             "description": "通用的玩家操作负载"
         },
-        "v1.ChooseOptionPayload": {
+        "tragedylooper.v1.ChooseOptionPayload": {
             "properties": {
                 "player_id": {
                     "type": "integer",
@@ -55,7 +55,7 @@
             "title": "Choose Option Payload",
             "description": "玩家进行选择的操作负载（例如，在需要选择地盘或目标时）"
         },
-        "v1.MakeGuessPayload": {
+        "tragedylooper.v1.MakeGuessPayload": {
             "properties": {
                 "player_id": {
                     "type": "integer",
@@ -66,31 +66,31 @@
                         "enum": [
                             "ROLE_TYPE_UNSPECIFIED",
                             0,
-                            "ROLE_UNKNOWN",
+                            "ROLE_TYPE_ROLE_UNKNOWN",
                             1,
-                            "PERSON",
+                            "ROLE_TYPE_PERSON",
                             2,
-                            "KILLER",
+                            "ROLE_TYPE_KILLER",
                             3,
-                            "BRAIN",
+                            "ROLE_TYPE_BRAIN",
                             4,
-                            "KEY_PERSON",
+                            "ROLE_TYPE_KEY_PERSON",
                             5,
-                            "CULTIST",
+                            "ROLE_TYPE_CULTIST",
                             6,
-                            "FRIEND",
+                            "ROLE_TYPE_FRIEND",
                             7,
-                            "LOVED_ONE",
+                            "ROLE_TYPE_LOVED_ONE",
                             8,
-                            "CONSPIRACY_THEORIST",
+                            "ROLE_TYPE_CONSPIRACY_THEORIST",
                             9,
-                            "SERIAL_KILLER",
+                            "ROLE_TYPE_SERIAL_KILLER",
                             10,
-                            "FACTOR",
+                            "ROLE_TYPE_FACTOR",
                             11,
-                            "WITCH",
+                            "ROLE_TYPE_WITCH",
                             12,
-                            "TIME_TRAVELER",
+                            "ROLE_TYPE_TIME_TRAVELER",
                             13
                         ],
                         "oneOf": [
@@ -113,7 +113,7 @@
             "title": "Make Guess Payload",
             "description": "主角玩家进行猜测的操作负载"
         },
-        "v1.PassTurnAction": {
+        "tragedylooper.v1.PassTurnAction": {
             "properties": {
                 "player_id": {
                     "type": "integer"
@@ -124,7 +124,7 @@
             "title": "Pass Turn Action",
             "description": "玩家跳过回合的操作负载"
         },
-        "v1.PlayCardPayload": {
+        "tragedylooper.v1.PlayCardPayload": {
             "properties": {
                 "player_id": {
                     "type": "integer",
@@ -142,13 +142,13 @@
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
-                        "HOSPITAL",
+                        "LOCATION_TYPE_HOSPITAL",
                         1,
-                        "SHRINE",
+                        "LOCATION_TYPE_SHRINE",
                         2,
-                        "CITY",
+                        "LOCATION_TYPE_CITY",
                         3,
-                        "SCHOOL",
+                        "LOCATION_TYPE_SCHOOL",
                         4
                     ],
                     "oneOf": [
@@ -168,7 +168,7 @@
             "title": "Play Card Payload",
             "description": "玩家打出卡牌的操作负载"
         },
-        "v1.UseAbilityPayload": {
+        "tragedylooper.v1.UseAbilityPayload": {
             "properties": {
                 "player_id": {
                     "type": "integer",
@@ -190,13 +190,13 @@
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
-                        "HOSPITAL",
+                        "LOCATION_TYPE_HOSPITAL",
                         1,
-                        "SHRINE",
+                        "LOCATION_TYPE_SHRINE",
                         2,
-                        "CITY",
+                        "LOCATION_TYPE_CITY",
                         3,
-                        "SCHOOL",
+                        "LOCATION_TYPE_SCHOOL",
                         4
                     ],
                     "oneOf": [
@@ -214,19 +214,19 @@
                     "enum": [
                         "INCIDENT_TYPE_UNSPECIFIED",
                         0,
-                        "MURDER",
+                        "INCIDENT_TYPE_MURDER",
                         1,
-                        "SUICIDE",
+                        "INCIDENT_TYPE_SUICIDE",
                         2,
-                        "ACCIDENT",
+                        "INCIDENT_TYPE_ACCIDENT",
                         3,
-                        "DISAPPEARANCE",
+                        "INCIDENT_TYPE_DISAPPEARANCE",
                         4,
-                        "HOSPITAL_CONSPIRACY",
+                        "INCIDENT_TYPE_HOSPITAL_CONSPIRACY",
                         5,
-                        "MURDER_MYSTERY",
+                        "INCIDENT_TYPE_MURDER_MYSTERY",
                         6,
-                        "PANIC",
+                        "INCIDENT_TYPE_PANIC",
                         7
                     ],
                     "oneOf": [

@@ -2,17 +2,16 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        (unknown)
-// source: v1/payload.proto
+// source: tragedylooper/v1/payload.proto
 
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -38,7 +37,7 @@ type PlayCardPayload struct {
 
 func (x *PlayCardPayload) Reset() {
 	*x = PlayCardPayload{}
-	mi := &file_v1_payload_proto_msgTypes[0]
+	mi := &file_tragedylooper_v1_payload_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -50,7 +49,7 @@ func (x *PlayCardPayload) String() string {
 func (*PlayCardPayload) ProtoMessage() {}
 
 func (x *PlayCardPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_payload_proto_msgTypes[0]
+	mi := &file_tragedylooper_v1_payload_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -63,7 +62,7 @@ func (x *PlayCardPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlayCardPayload.ProtoReflect.Descriptor instead.
 func (*PlayCardPayload) Descriptor() ([]byte, []int) {
-	return file_v1_payload_proto_rawDescGZIP(), []int{0}
+	return file_tragedylooper_v1_payload_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *PlayCardPayload) GetPlayerId() int32 {
@@ -114,7 +113,7 @@ type PlayCardPayload_TargetCharacterId struct {
 }
 
 type PlayCardPayload_TargetLocation struct {
-	TargetLocation LocationType `protobuf:"varint,4,opt,name=target_location,json=targetLocation,proto3,enum=v1.LocationType,oneof"` // 如果是移动卡，指定目标地点
+	TargetLocation LocationType `protobuf:"varint,4,opt,name=target_location,json=targetLocation,proto3,enum=tragedylooper.v1.LocationType,oneof"` // 如果是移动卡，指定目标地点
 }
 
 func (*PlayCardPayload_TargetCharacterId) isPlayCardPayload_Target() {}
@@ -139,7 +138,7 @@ type UseAbilityPayload struct {
 
 func (x *UseAbilityPayload) Reset() {
 	*x = UseAbilityPayload{}
-	mi := &file_v1_payload_proto_msgTypes[1]
+	mi := &file_tragedylooper_v1_payload_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -151,7 +150,7 @@ func (x *UseAbilityPayload) String() string {
 func (*UseAbilityPayload) ProtoMessage() {}
 
 func (x *UseAbilityPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_payload_proto_msgTypes[1]
+	mi := &file_tragedylooper_v1_payload_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -164,7 +163,7 @@ func (x *UseAbilityPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UseAbilityPayload.ProtoReflect.Descriptor instead.
 func (*UseAbilityPayload) Descriptor() ([]byte, []int) {
-	return file_v1_payload_proto_rawDescGZIP(), []int{1}
+	return file_tragedylooper_v1_payload_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *UseAbilityPayload) GetPlayerId() int32 {
@@ -231,11 +230,11 @@ type UseAbilityPayload_TargetCharacterId struct {
 }
 
 type UseAbilityPayload_TargetLocation struct {
-	TargetLocation LocationType `protobuf:"varint,5,opt,name=target_location,json=targetLocation,proto3,enum=v1.LocationType,oneof"` // 如果能力有目标地点，指定其地点
+	TargetLocation LocationType `protobuf:"varint,5,opt,name=target_location,json=targetLocation,proto3,enum=tragedylooper.v1.LocationType,oneof"` // 如果能力有目标地点，指定其地点
 }
 
 type UseAbilityPayload_TargetIncidentType struct {
-	TargetIncidentType IncidentType `protobuf:"varint,6,opt,name=target_incident_type,json=targetIncidentType,proto3,enum=v1.IncidentType,oneof"` // 如果能力目标是悲剧，指定其类型
+	TargetIncidentType IncidentType `protobuf:"varint,6,opt,name=target_incident_type,json=targetIncidentType,proto3,enum=tragedylooper.v1.IncidentType,oneof"` // 如果能力目标是悲剧，指定其类型
 }
 
 func (*UseAbilityPayload_TargetCharacterId) isUseAbilityPayload_Target() {}
@@ -247,15 +246,15 @@ func (*UseAbilityPayload_TargetIncidentType) isUseAbilityPayload_Target() {}
 // 主角玩家进行猜测的操作负载
 type MakeGuessPayload struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PlayerId      int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`                                                                                                         // 执行操作的玩家ID
-	GuessedRoles  map[int32]RoleType     `protobuf:"bytes,2,rep,name=guessed_roles,json=guessedRoles,proto3" json:"guessed_roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=v1.RoleType"` // 猜测的角色身份映射，键为 character_id
+	PlayerId      int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`                                                                                                                       // 执行操作的玩家ID
+	GuessedRoles  map[int32]RoleType     `protobuf:"bytes,2,rep,name=guessed_roles,json=guessedRoles,proto3" json:"guessed_roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value,enum=tragedylooper.v1.RoleType"` // 猜测的角色身份映射，键为 character_id
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *MakeGuessPayload) Reset() {
 	*x = MakeGuessPayload{}
-	mi := &file_v1_payload_proto_msgTypes[2]
+	mi := &file_tragedylooper_v1_payload_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -267,7 +266,7 @@ func (x *MakeGuessPayload) String() string {
 func (*MakeGuessPayload) ProtoMessage() {}
 
 func (x *MakeGuessPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_payload_proto_msgTypes[2]
+	mi := &file_tragedylooper_v1_payload_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -280,7 +279,7 @@ func (x *MakeGuessPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MakeGuessPayload.ProtoReflect.Descriptor instead.
 func (*MakeGuessPayload) Descriptor() ([]byte, []int) {
-	return file_v1_payload_proto_rawDescGZIP(), []int{2}
+	return file_tragedylooper_v1_payload_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *MakeGuessPayload) GetPlayerId() int32 {
@@ -309,7 +308,7 @@ type ChooseOptionPayload struct {
 
 func (x *ChooseOptionPayload) Reset() {
 	*x = ChooseOptionPayload{}
-	mi := &file_v1_payload_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_payload_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -321,7 +320,7 @@ func (x *ChooseOptionPayload) String() string {
 func (*ChooseOptionPayload) ProtoMessage() {}
 
 func (x *ChooseOptionPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_payload_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_payload_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -334,7 +333,7 @@ func (x *ChooseOptionPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChooseOptionPayload.ProtoReflect.Descriptor instead.
 func (*ChooseOptionPayload) Descriptor() ([]byte, []int) {
-	return file_v1_payload_proto_rawDescGZIP(), []int{3}
+	return file_tragedylooper_v1_payload_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *ChooseOptionPayload) GetPlayerId() int32 {
@@ -368,7 +367,7 @@ type PassTurnAction struct {
 
 func (x *PassTurnAction) Reset() {
 	*x = PassTurnAction{}
-	mi := &file_v1_payload_proto_msgTypes[4]
+	mi := &file_tragedylooper_v1_payload_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -380,7 +379,7 @@ func (x *PassTurnAction) String() string {
 func (*PassTurnAction) ProtoMessage() {}
 
 func (x *PassTurnAction) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_payload_proto_msgTypes[4]
+	mi := &file_tragedylooper_v1_payload_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -393,7 +392,7 @@ func (x *PassTurnAction) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PassTurnAction.ProtoReflect.Descriptor instead.
 func (*PassTurnAction) Descriptor() ([]byte, []int) {
-	return file_v1_payload_proto_rawDescGZIP(), []int{4}
+	return file_tragedylooper_v1_payload_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *PassTurnAction) GetPlayerId() int32 {
@@ -420,7 +419,7 @@ type PlayerActionPayload struct {
 
 func (x *PlayerActionPayload) Reset() {
 	*x = PlayerActionPayload{}
-	mi := &file_v1_payload_proto_msgTypes[5]
+	mi := &file_tragedylooper_v1_payload_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -432,7 +431,7 @@ func (x *PlayerActionPayload) String() string {
 func (*PlayerActionPayload) ProtoMessage() {}
 
 func (x *PlayerActionPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_payload_proto_msgTypes[5]
+	mi := &file_tragedylooper_v1_payload_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -445,7 +444,7 @@ func (x *PlayerActionPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlayerActionPayload.ProtoReflect.Descriptor instead.
 func (*PlayerActionPayload) Descriptor() ([]byte, []int) {
-	return file_v1_payload_proto_rawDescGZIP(), []int{5}
+	return file_tragedylooper_v1_payload_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *PlayerActionPayload) GetPayload() isPlayerActionPayload_Payload {
@@ -534,84 +533,84 @@ func (*PlayerActionPayload_ChooseOption) isPlayerActionPayload_Payload() {}
 
 func (*PlayerActionPayload_PassTurn) isPlayerActionPayload_Payload() {}
 
-var File_v1_payload_proto protoreflect.FileDescriptor
+var File_tragedylooper_v1_payload_proto protoreflect.FileDescriptor
 
-const file_v1_payload_proto_rawDesc = "" +
+const file_tragedylooper_v1_payload_proto_rawDesc = "" +
 	"\n" +
-	"\x10v1/payload.proto\x12\x02v1\x1a\x0ev1/enums.proto\"\xc0\x01\n" +
+	"\x1etragedylooper/v1/payload.proto\x12\x10tragedylooper.v1\x1a\x1ctragedylooper/v1/enums.proto\"\xce\x01\n" +
 	"\x0fPlayCardPayload\x12\x1b\n" +
 	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12\x17\n" +
 	"\acard_id\x18\x02 \x01(\x05R\x06cardId\x120\n" +
-	"\x13target_character_id\x18\x03 \x01(\x05H\x00R\x11targetCharacterId\x12;\n" +
-	"\x0ftarget_location\x18\x04 \x01(\x0e2\x10.v1.LocationTypeH\x00R\x0etargetLocationB\b\n" +
-	"\x06target\"\xb1\x02\n" +
+	"\x13target_character_id\x18\x03 \x01(\x05H\x00R\x11targetCharacterId\x12I\n" +
+	"\x0ftarget_location\x18\x04 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeH\x00R\x0etargetLocationB\b\n" +
+	"\x06target\"\xcd\x02\n" +
 	"\x11UseAbilityPayload\x12\x1b\n" +
 	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12!\n" +
 	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\x12\x1d\n" +
 	"\n" +
 	"ability_id\x18\x03 \x01(\x05R\tabilityId\x120\n" +
-	"\x13target_character_id\x18\x04 \x01(\x05H\x00R\x11targetCharacterId\x12;\n" +
-	"\x0ftarget_location\x18\x05 \x01(\x0e2\x10.v1.LocationTypeH\x00R\x0etargetLocation\x12D\n" +
-	"\x14target_incident_type\x18\x06 \x01(\x0e2\x10.v1.IncidentTypeH\x00R\x12targetIncidentTypeB\b\n" +
-	"\x06target\"\xcb\x01\n" +
+	"\x13target_character_id\x18\x04 \x01(\x05H\x00R\x11targetCharacterId\x12I\n" +
+	"\x0ftarget_location\x18\x05 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeH\x00R\x0etargetLocation\x12R\n" +
+	"\x14target_incident_type\x18\x06 \x01(\x0e2\x1e.tragedylooper.v1.IncidentTypeH\x00R\x12targetIncidentTypeB\b\n" +
+	"\x06target\"\xe7\x01\n" +
 	"\x10MakeGuessPayload\x12\x1b\n" +
-	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12K\n" +
-	"\rguessed_roles\x18\x02 \x03(\v2&.v1.MakeGuessPayload.GuessedRolesEntryR\fguessedRoles\x1aM\n" +
+	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12Y\n" +
+	"\rguessed_roles\x18\x02 \x03(\v24.tragedylooper.v1.MakeGuessPayload.GuessedRolesEntryR\fguessedRoles\x1a[\n" +
 	"\x11GuessedRolesEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\"\n" +
-	"\x05value\x18\x02 \x01(\x0e2\f.v1.RoleTypeR\x05value:\x028\x01\"\x7f\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x120\n" +
+	"\x05value\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.RoleTypeR\x05value:\x028\x01\"\x7f\n" +
 	"\x13ChooseOptionPayload\x12\x1b\n" +
 	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12!\n" +
 	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\x12(\n" +
 	"\x10chosen_option_id\x18\x03 \x01(\tR\x0echosenOptionId\"-\n" +
 	"\x0ePassTurnAction\x12\x1b\n" +
-	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\"\xb8\x02\n" +
-	"\x13PlayerActionPayload\x122\n" +
-	"\tplay_card\x18\x01 \x01(\v2\x13.v1.PlayCardPayloadH\x00R\bplayCard\x128\n" +
-	"\vuse_ability\x18\x02 \x01(\v2\x15.v1.UseAbilityPayloadH\x00R\n" +
-	"useAbility\x125\n" +
+	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\"\xfe\x02\n" +
+	"\x13PlayerActionPayload\x12@\n" +
+	"\tplay_card\x18\x01 \x01(\v2!.tragedylooper.v1.PlayCardPayloadH\x00R\bplayCard\x12F\n" +
+	"\vuse_ability\x18\x02 \x01(\v2#.tragedylooper.v1.UseAbilityPayloadH\x00R\n" +
+	"useAbility\x12C\n" +
 	"\n" +
-	"make_guess\x18\x03 \x01(\v2\x14.v1.MakeGuessPayloadH\x00R\tmakeGuess\x12>\n" +
-	"\rchoose_option\x18\x04 \x01(\v2\x17.v1.ChooseOptionPayloadH\x00R\fchooseOption\x121\n" +
-	"\tpass_turn\x18\x05 \x01(\v2\x12.v1.PassTurnActionH\x00R\bpassTurnB\t\n" +
-	"\apayloadB&Z$tragedylooper/internal/game/proto/v1b\x06proto3"
+	"make_guess\x18\x03 \x01(\v2\".tragedylooper.v1.MakeGuessPayloadH\x00R\tmakeGuess\x12L\n" +
+	"\rchoose_option\x18\x04 \x01(\v2%.tragedylooper.v1.ChooseOptionPayloadH\x00R\fchooseOption\x12?\n" +
+	"\tpass_turn\x18\x05 \x01(\v2 .tragedylooper.v1.PassTurnActionH\x00R\bpassTurnB\t\n" +
+	"\apayloadB\x1cZ\x1atragedylooper/pkg/proto/v1b\x06proto3"
 
 var (
-	file_v1_payload_proto_rawDescOnce sync.Once
-	file_v1_payload_proto_rawDescData []byte
+	file_tragedylooper_v1_payload_proto_rawDescOnce sync.Once
+	file_tragedylooper_v1_payload_proto_rawDescData []byte
 )
 
-func file_v1_payload_proto_rawDescGZIP() []byte {
-	file_v1_payload_proto_rawDescOnce.Do(func() {
-		file_v1_payload_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_v1_payload_proto_rawDesc), len(file_v1_payload_proto_rawDesc)))
+func file_tragedylooper_v1_payload_proto_rawDescGZIP() []byte {
+	file_tragedylooper_v1_payload_proto_rawDescOnce.Do(func() {
+		file_tragedylooper_v1_payload_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_payload_proto_rawDesc), len(file_tragedylooper_v1_payload_proto_rawDesc)))
 	})
-	return file_v1_payload_proto_rawDescData
+	return file_tragedylooper_v1_payload_proto_rawDescData
 }
 
-var file_v1_payload_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
-var file_v1_payload_proto_goTypes = []any{
-	(*PlayCardPayload)(nil),     // 0: v1.PlayCardPayload
-	(*UseAbilityPayload)(nil),   // 1: v1.UseAbilityPayload
-	(*MakeGuessPayload)(nil),    // 2: v1.MakeGuessPayload
-	(*ChooseOptionPayload)(nil), // 3: v1.ChooseOptionPayload
-	(*PassTurnAction)(nil),      // 4: v1.PassTurnAction
-	(*PlayerActionPayload)(nil), // 5: v1.PlayerActionPayload
-	nil,                         // 6: v1.MakeGuessPayload.GuessedRolesEntry
-	(LocationType)(0),           // 7: v1.LocationType
-	(IncidentType)(0),           // 8: v1.IncidentType
-	(RoleType)(0),               // 9: v1.RoleType
+var file_tragedylooper_v1_payload_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_tragedylooper_v1_payload_proto_goTypes = []any{
+	(*PlayCardPayload)(nil),     // 0: tragedylooper.v1.PlayCardPayload
+	(*UseAbilityPayload)(nil),   // 1: tragedylooper.v1.UseAbilityPayload
+	(*MakeGuessPayload)(nil),    // 2: tragedylooper.v1.MakeGuessPayload
+	(*ChooseOptionPayload)(nil), // 3: tragedylooper.v1.ChooseOptionPayload
+	(*PassTurnAction)(nil),      // 4: tragedylooper.v1.PassTurnAction
+	(*PlayerActionPayload)(nil), // 5: tragedylooper.v1.PlayerActionPayload
+	nil,                         // 6: tragedylooper.v1.MakeGuessPayload.GuessedRolesEntry
+	(LocationType)(0),           // 7: tragedylooper.v1.LocationType
+	(IncidentType)(0),           // 8: tragedylooper.v1.IncidentType
+	(RoleType)(0),               // 9: tragedylooper.v1.RoleType
 }
-var file_v1_payload_proto_depIdxs = []int32{
-	7,  // 0: v1.PlayCardPayload.target_location:type_name -> v1.LocationType
-	7,  // 1: v1.UseAbilityPayload.target_location:type_name -> v1.LocationType
-	8,  // 2: v1.UseAbilityPayload.target_incident_type:type_name -> v1.IncidentType
-	6,  // 3: v1.MakeGuessPayload.guessed_roles:type_name -> v1.MakeGuessPayload.GuessedRolesEntry
-	0,  // 4: v1.PlayerActionPayload.play_card:type_name -> v1.PlayCardPayload
-	1,  // 5: v1.PlayerActionPayload.use_ability:type_name -> v1.UseAbilityPayload
-	2,  // 6: v1.PlayerActionPayload.make_guess:type_name -> v1.MakeGuessPayload
-	3,  // 7: v1.PlayerActionPayload.choose_option:type_name -> v1.ChooseOptionPayload
-	4,  // 8: v1.PlayerActionPayload.pass_turn:type_name -> v1.PassTurnAction
-	9,  // 9: v1.MakeGuessPayload.GuessedRolesEntry.value:type_name -> v1.RoleType
+var file_tragedylooper_v1_payload_proto_depIdxs = []int32{
+	7,  // 0: tragedylooper.v1.PlayCardPayload.target_location:type_name -> tragedylooper.v1.LocationType
+	7,  // 1: tragedylooper.v1.UseAbilityPayload.target_location:type_name -> tragedylooper.v1.LocationType
+	8,  // 2: tragedylooper.v1.UseAbilityPayload.target_incident_type:type_name -> tragedylooper.v1.IncidentType
+	6,  // 3: tragedylooper.v1.MakeGuessPayload.guessed_roles:type_name -> tragedylooper.v1.MakeGuessPayload.GuessedRolesEntry
+	0,  // 4: tragedylooper.v1.PlayerActionPayload.play_card:type_name -> tragedylooper.v1.PlayCardPayload
+	1,  // 5: tragedylooper.v1.PlayerActionPayload.use_ability:type_name -> tragedylooper.v1.UseAbilityPayload
+	2,  // 6: tragedylooper.v1.PlayerActionPayload.make_guess:type_name -> tragedylooper.v1.MakeGuessPayload
+	3,  // 7: tragedylooper.v1.PlayerActionPayload.choose_option:type_name -> tragedylooper.v1.ChooseOptionPayload
+	4,  // 8: tragedylooper.v1.PlayerActionPayload.pass_turn:type_name -> tragedylooper.v1.PassTurnAction
+	9,  // 9: tragedylooper.v1.MakeGuessPayload.GuessedRolesEntry.value:type_name -> tragedylooper.v1.RoleType
 	10, // [10:10] is the sub-list for method output_type
 	10, // [10:10] is the sub-list for method input_type
 	10, // [10:10] is the sub-list for extension type_name
@@ -619,22 +618,22 @@ var file_v1_payload_proto_depIdxs = []int32{
 	0,  // [0:10] is the sub-list for field type_name
 }
 
-func init() { file_v1_payload_proto_init() }
-func file_v1_payload_proto_init() {
-	if File_v1_payload_proto != nil {
+func init() { file_tragedylooper_v1_payload_proto_init() }
+func file_tragedylooper_v1_payload_proto_init() {
+	if File_tragedylooper_v1_payload_proto != nil {
 		return
 	}
-	file_v1_enums_proto_init()
-	file_v1_payload_proto_msgTypes[0].OneofWrappers = []any{
+	file_tragedylooper_v1_enums_proto_init()
+	file_tragedylooper_v1_payload_proto_msgTypes[0].OneofWrappers = []any{
 		(*PlayCardPayload_TargetCharacterId)(nil),
 		(*PlayCardPayload_TargetLocation)(nil),
 	}
-	file_v1_payload_proto_msgTypes[1].OneofWrappers = []any{
+	file_tragedylooper_v1_payload_proto_msgTypes[1].OneofWrappers = []any{
 		(*UseAbilityPayload_TargetCharacterId)(nil),
 		(*UseAbilityPayload_TargetLocation)(nil),
 		(*UseAbilityPayload_TargetIncidentType)(nil),
 	}
-	file_v1_payload_proto_msgTypes[5].OneofWrappers = []any{
+	file_tragedylooper_v1_payload_proto_msgTypes[5].OneofWrappers = []any{
 		(*PlayerActionPayload_PlayCard)(nil),
 		(*PlayerActionPayload_UseAbility)(nil),
 		(*PlayerActionPayload_MakeGuess)(nil),
@@ -645,17 +644,17 @@ func file_v1_payload_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_payload_proto_rawDesc), len(file_v1_payload_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_payload_proto_rawDesc), len(file_tragedylooper_v1_payload_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_v1_payload_proto_goTypes,
-		DependencyIndexes: file_v1_payload_proto_depIdxs,
-		MessageInfos:      file_v1_payload_proto_msgTypes,
+		GoTypes:           file_tragedylooper_v1_payload_proto_goTypes,
+		DependencyIndexes: file_tragedylooper_v1_payload_proto_depIdxs,
+		MessageInfos:      file_tragedylooper_v1_payload_proto_msgTypes,
 	}.Build()
-	File_v1_payload_proto = out.File
-	file_v1_payload_proto_goTypes = nil
-	file_v1_payload_proto_depIdxs = nil
+	File_tragedylooper_v1_payload_proto = out.File
+	file_tragedylooper_v1_payload_proto_goTypes = nil
+	file_tragedylooper_v1_payload_proto_depIdxs = nil
 }

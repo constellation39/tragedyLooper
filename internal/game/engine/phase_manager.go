@@ -3,7 +3,7 @@ package engine
 import (
 	"time"
 	"tragedylooper/internal/game/engine/phase"
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
 )

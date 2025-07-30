@@ -2,7 +2,7 @@ package engine
 
 import (
 	"fmt"
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/tragedylooper/v1"
 )
 
 type conditionChecker struct {

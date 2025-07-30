@@ -2,17 +2,16 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        (unknown)
-// source: v1/card.proto
+// source: tragedylooper/v1/card.proto
 
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -25,21 +24,21 @@ const (
 // 卡牌静态配置
 type CardConfig struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                   // 卡牌唯一ID
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                // 卡牌名称
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                  // 卡牌描述
-	Type          CardType               `protobuf:"varint,4,opt,name=type,proto3,enum=v1.CardType" json:"type,omitempty"`                              // 卡牌类型
-	OwnerRole     PlayerRole             `protobuf:"varint,5,opt,name=owner_role,json=ownerRole,proto3,enum=v1.PlayerRole" json:"owner_role,omitempty"` // 卡牌所属玩家角色（主谋或主角）
-	Effect        *CompoundEffect        `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`                                            // 卡牌效果
-	OncePerLoop   bool                   `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`            // 是否每循环只能使用一次
-	Priority      int32                  `protobuf:"varint,8,opt,name=priority,proto3" json:"priority,omitempty"`                                       // 卡牌结算优先级（同类型卡牌的结算顺序）
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                 // 卡牌唯一ID
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                              // 卡牌名称
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                // 卡牌描述
+	Type          CardType               `protobuf:"varint,4,opt,name=type,proto3,enum=tragedylooper.v1.CardType" json:"type,omitempty"`                              // 卡牌类型
+	OwnerRole     PlayerRole             `protobuf:"varint,5,opt,name=owner_role,json=ownerRole,proto3,enum=tragedylooper.v1.PlayerRole" json:"owner_role,omitempty"` // 卡牌所属玩家角色（主谋或主角）
+	Effect        *CompoundEffect        `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`                                                          // 卡牌效果
+	OncePerLoop   bool                   `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`                          // 是否每循环只能使用一次
+	Priority      int32                  `protobuf:"varint,8,opt,name=priority,proto3" json:"priority,omitempty"`                                                     // 卡牌结算优先级（同类型卡牌的结算顺序）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CardConfig) Reset() {
 	*x = CardConfig{}
-	mi := &file_v1_card_proto_msgTypes[0]
+	mi := &file_tragedylooper_v1_card_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -51,7 +50,7 @@ func (x *CardConfig) String() string {
 func (*CardConfig) ProtoMessage() {}
 
 func (x *CardConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_card_proto_msgTypes[0]
+	mi := &file_tragedylooper_v1_card_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -64,7 +63,7 @@ func (x *CardConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CardConfig.ProtoReflect.Descriptor instead.
 func (*CardConfig) Descriptor() ([]byte, []int) {
-	return file_v1_card_proto_rawDescGZIP(), []int{0}
+	return file_tragedylooper_v1_card_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *CardConfig) GetId() int32 {
@@ -139,7 +138,7 @@ type Card struct {
 
 func (x *Card) Reset() {
 	*x = Card{}
-	mi := &file_v1_card_proto_msgTypes[1]
+	mi := &file_tragedylooper_v1_card_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -151,7 +150,7 @@ func (x *Card) String() string {
 func (*Card) ProtoMessage() {}
 
 func (x *Card) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_card_proto_msgTypes[1]
+	mi := &file_tragedylooper_v1_card_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -164,7 +163,7 @@ func (x *Card) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Card.ProtoReflect.Descriptor instead.
 func (*Card) Descriptor() ([]byte, []int) {
-	return file_v1_card_proto_rawDescGZIP(), []int{1}
+	return file_tragedylooper_v1_card_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Card) GetConfig() *CardConfig {
@@ -215,7 +214,7 @@ type Card_TargetCharacterId struct {
 }
 
 type Card_TargetLocation struct {
-	TargetLocation LocationType `protobuf:"varint,4,opt,name=target_location,json=targetLocation,proto3,enum=v1.LocationType,oneof"` // 如果能力有目标地点，指定其地点
+	TargetLocation LocationType `protobuf:"varint,4,opt,name=target_location,json=targetLocation,proto3,enum=tragedylooper.v1.LocationType,oneof"` // 如果能力有目标地点，指定其地点
 }
 
 func (*Card_TargetCharacterId) isCard_Target() {}
@@ -232,7 +231,7 @@ type CardConfigLib struct {
 
 func (x *CardConfigLib) Reset() {
 	*x = CardConfigLib{}
-	mi := &file_v1_card_proto_msgTypes[2]
+	mi := &file_tragedylooper_v1_card_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -244,7 +243,7 @@ func (x *CardConfigLib) String() string {
 func (*CardConfigLib) ProtoMessage() {}
 
 func (x *CardConfigLib) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_card_proto_msgTypes[2]
+	mi := &file_tragedylooper_v1_card_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -257,7 +256,7 @@ func (x *CardConfigLib) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CardConfigLib.ProtoReflect.Descriptor instead.
 func (*CardConfigLib) Descriptor() ([]byte, []int) {
-	return file_v1_card_proto_rawDescGZIP(), []int{2}
+	return file_tragedylooper_v1_card_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CardConfigLib) GetCards() map[int32]*CardConfig {
@@ -277,7 +276,7 @@ type CardList struct {
 
 func (x *CardList) Reset() {
 	*x = CardList{}
-	mi := &file_v1_card_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_card_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -289,7 +288,7 @@ func (x *CardList) String() string {
 func (*CardList) ProtoMessage() {}
 
 func (x *CardList) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_card_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_card_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -302,7 +301,7 @@ func (x *CardList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CardList.ProtoReflect.Descriptor instead.
 func (*CardList) Descriptor() ([]byte, []int) {
-	return file_v1_card_proto_rawDescGZIP(), []int{3}
+	return file_tragedylooper_v1_card_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *CardList) GetCards() []*Card {
@@ -312,70 +311,70 @@ func (x *CardList) GetCards() []*Card {
 	return nil
 }
 
-var File_v1_card_proto protoreflect.FileDescriptor
+var File_tragedylooper_v1_card_proto protoreflect.FileDescriptor
 
-const file_v1_card_proto_rawDesc = "" +
+const file_tragedylooper_v1_card_proto_rawDesc = "" +
 	"\n" +
-	"\rv1/card.proto\x12\x02v1\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\x8f\x02\n" +
+	"\x1btragedylooper/v1/card.proto\x12\x10tragedylooper.v1\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\"\xb9\x02\n" +
 	"\n" +
 	"CardConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12 \n" +
-	"\x04type\x18\x04 \x01(\x0e2\f.v1.CardTypeR\x04type\x12-\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12.\n" +
+	"\x04type\x18\x04 \x01(\x0e2\x1a.tragedylooper.v1.CardTypeR\x04type\x12;\n" +
 	"\n" +
-	"owner_role\x18\x05 \x01(\x0e2\x0e.v1.PlayerRoleR\townerRole\x12*\n" +
-	"\x06effect\x18\x06 \x01(\v2\x12.v1.CompoundEffectR\x06effect\x12\"\n" +
+	"owner_role\x18\x05 \x01(\x0e2\x1c.tragedylooper.v1.PlayerRoleR\townerRole\x128\n" +
+	"\x06effect\x18\x06 \x01(\v2 .tragedylooper.v1.CompoundEffectR\x06effect\x12\"\n" +
 	"\ronce_per_loop\x18\a \x01(\bR\voncePerLoop\x12\x1a\n" +
-	"\bpriority\x18\b \x01(\x05R\bpriority\"\xcd\x01\n" +
-	"\x04Card\x12&\n" +
-	"\x06config\x18\x01 \x01(\v2\x0e.v1.CardConfigR\x06config\x12$\n" +
+	"\bpriority\x18\b \x01(\x05R\bpriority\"\xe9\x01\n" +
+	"\x04Card\x124\n" +
+	"\x06config\x18\x01 \x01(\v2\x1c.tragedylooper.v1.CardConfigR\x06config\x12$\n" +
 	"\x0eused_this_loop\x18\x02 \x01(\bR\fusedThisLoop\x120\n" +
-	"\x13target_character_id\x18\x03 \x01(\x05H\x00R\x11targetCharacterId\x12;\n" +
-	"\x0ftarget_location\x18\x04 \x01(\x0e2\x10.v1.LocationTypeH\x00R\x0etargetLocationB\b\n" +
-	"\x06target\"\x8d\x01\n" +
-	"\rCardConfigLib\x122\n" +
-	"\x05cards\x18\x01 \x03(\v2\x1c.v1.CardConfigLib.CardsEntryR\x05cards\x1aH\n" +
+	"\x13target_character_id\x18\x03 \x01(\x05H\x00R\x11targetCharacterId\x12I\n" +
+	"\x0ftarget_location\x18\x04 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeH\x00R\x0etargetLocationB\b\n" +
+	"\x06target\"\xa9\x01\n" +
+	"\rCardConfigLib\x12@\n" +
+	"\x05cards\x18\x01 \x03(\v2*.tragedylooper.v1.CardConfigLib.CardsEntryR\x05cards\x1aV\n" +
 	"\n" +
 	"CardsEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12$\n" +
-	"\x05value\x18\x02 \x01(\v2\x0e.v1.CardConfigR\x05value:\x028\x01\"*\n" +
-	"\bCardList\x12\x1e\n" +
-	"\x05cards\x18\x01 \x03(\v2\b.v1.CardR\x05cardsB&Z$tragedylooper/internal/game/proto/v1b\x06proto3"
+	"\x03key\x18\x01 \x01(\x05R\x03key\x122\n" +
+	"\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.CardConfigR\x05value:\x028\x01\"8\n" +
+	"\bCardList\x12,\n" +
+	"\x05cards\x18\x01 \x03(\v2\x16.tragedylooper.v1.CardR\x05cardsB\x1cZ\x1atragedylooper/pkg/proto/v1b\x06proto3"
 
 var (
-	file_v1_card_proto_rawDescOnce sync.Once
-	file_v1_card_proto_rawDescData []byte
+	file_tragedylooper_v1_card_proto_rawDescOnce sync.Once
+	file_tragedylooper_v1_card_proto_rawDescData []byte
 )
 
-func file_v1_card_proto_rawDescGZIP() []byte {
-	file_v1_card_proto_rawDescOnce.Do(func() {
-		file_v1_card_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_v1_card_proto_rawDesc), len(file_v1_card_proto_rawDesc)))
+func file_tragedylooper_v1_card_proto_rawDescGZIP() []byte {
+	file_tragedylooper_v1_card_proto_rawDescOnce.Do(func() {
+		file_tragedylooper_v1_card_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_card_proto_rawDesc), len(file_tragedylooper_v1_card_proto_rawDesc)))
 	})
-	return file_v1_card_proto_rawDescData
+	return file_tragedylooper_v1_card_proto_rawDescData
 }
 
-var file_v1_card_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
-var file_v1_card_proto_goTypes = []any{
-	(*CardConfig)(nil),     // 0: v1.CardConfig
-	(*Card)(nil),           // 1: v1.Card
-	(*CardConfigLib)(nil),  // 2: v1.CardConfigLib
-	(*CardList)(nil),       // 3: v1.CardList
-	nil,                    // 4: v1.CardConfigLib.CardsEntry
-	(CardType)(0),          // 5: v1.CardType
-	(PlayerRole)(0),        // 6: v1.PlayerRole
-	(*CompoundEffect)(nil), // 7: v1.CompoundEffect
-	(LocationType)(0),      // 8: v1.LocationType
+var file_tragedylooper_v1_card_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_tragedylooper_v1_card_proto_goTypes = []any{
+	(*CardConfig)(nil),     // 0: tragedylooper.v1.CardConfig
+	(*Card)(nil),           // 1: tragedylooper.v1.Card
+	(*CardConfigLib)(nil),  // 2: tragedylooper.v1.CardConfigLib
+	(*CardList)(nil),       // 3: tragedylooper.v1.CardList
+	nil,                    // 4: tragedylooper.v1.CardConfigLib.CardsEntry
+	(CardType)(0),          // 5: tragedylooper.v1.CardType
+	(PlayerRole)(0),        // 6: tragedylooper.v1.PlayerRole
+	(*CompoundEffect)(nil), // 7: tragedylooper.v1.CompoundEffect
+	(LocationType)(0),      // 8: tragedylooper.v1.LocationType
 }
-var file_v1_card_proto_depIdxs = []int32{
-	5, // 0: v1.CardConfig.type:type_name -> v1.CardType
-	6, // 1: v1.CardConfig.owner_role:type_name -> v1.PlayerRole
-	7, // 2: v1.CardConfig.effect:type_name -> v1.CompoundEffect
-	0, // 3: v1.Card.config:type_name -> v1.CardConfig
-	8, // 4: v1.Card.target_location:type_name -> v1.LocationType
-	4, // 5: v1.CardConfigLib.cards:type_name -> v1.CardConfigLib.CardsEntry
-	1, // 6: v1.CardList.cards:type_name -> v1.Card
-	0, // 7: v1.CardConfigLib.CardsEntry.value:type_name -> v1.CardConfig
+var file_tragedylooper_v1_card_proto_depIdxs = []int32{
+	5, // 0: tragedylooper.v1.CardConfig.type:type_name -> tragedylooper.v1.CardType
+	6, // 1: tragedylooper.v1.CardConfig.owner_role:type_name -> tragedylooper.v1.PlayerRole
+	7, // 2: tragedylooper.v1.CardConfig.effect:type_name -> tragedylooper.v1.CompoundEffect
+	0, // 3: tragedylooper.v1.Card.config:type_name -> tragedylooper.v1.CardConfig
+	8, // 4: tragedylooper.v1.Card.target_location:type_name -> tragedylooper.v1.LocationType
+	4, // 5: tragedylooper.v1.CardConfigLib.cards:type_name -> tragedylooper.v1.CardConfigLib.CardsEntry
+	1, // 6: tragedylooper.v1.CardList.cards:type_name -> tragedylooper.v1.Card
+	0, // 7: tragedylooper.v1.CardConfigLib.CardsEntry.value:type_name -> tragedylooper.v1.CardConfig
 	8, // [8:8] is the sub-list for method output_type
 	8, // [8:8] is the sub-list for method input_type
 	8, // [8:8] is the sub-list for extension type_name
@@ -383,14 +382,14 @@ var file_v1_card_proto_depIdxs = []int32{
 	0, // [0:8] is the sub-list for field type_name
 }
 
-func init() { file_v1_card_proto_init() }
-func file_v1_card_proto_init() {
-	if File_v1_card_proto != nil {
+func init() { file_tragedylooper_v1_card_proto_init() }
+func file_tragedylooper_v1_card_proto_init() {
+	if File_tragedylooper_v1_card_proto != nil {
 		return
 	}
-	file_v1_effect_proto_init()
-	file_v1_enums_proto_init()
-	file_v1_card_proto_msgTypes[1].OneofWrappers = []any{
+	file_tragedylooper_v1_effect_proto_init()
+	file_tragedylooper_v1_enums_proto_init()
+	file_tragedylooper_v1_card_proto_msgTypes[1].OneofWrappers = []any{
 		(*Card_TargetCharacterId)(nil),
 		(*Card_TargetLocation)(nil),
 	}
@@ -398,17 +397,17 @@ func file_v1_card_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_card_proto_rawDesc), len(file_v1_card_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_card_proto_rawDesc), len(file_tragedylooper_v1_card_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_v1_card_proto_goTypes,
-		DependencyIndexes: file_v1_card_proto_depIdxs,
-		MessageInfos:      file_v1_card_proto_msgTypes,
+		GoTypes:           file_tragedylooper_v1_card_proto_goTypes,
+		DependencyIndexes: file_tragedylooper_v1_card_proto_depIdxs,
+		MessageInfos:      file_tragedylooper_v1_card_proto_msgTypes,
 	}.Build()
-	File_v1_card_proto = out.File
-	file_v1_card_proto_goTypes = nil
-	file_v1_card_proto_depIdxs = nil
+	File_tragedylooper_v1_card_proto = out.File
+	file_tragedylooper_v1_card_proto_goTypes = nil
+	file_tragedylooper_v1_card_proto_depIdxs = nil
 }

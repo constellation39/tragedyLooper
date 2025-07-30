@@ -2,17 +2,16 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        (unknown)
-// source: v1/incident.proto
+// source: tragedylooper/v1/incident.proto
 
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -38,7 +37,7 @@ type Incident struct {
 
 func (x *Incident) Reset() {
 	*x = Incident{}
-	mi := &file_v1_incident_proto_msgTypes[0]
+	mi := &file_tragedylooper_v1_incident_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -50,7 +49,7 @@ func (x *Incident) String() string {
 func (*Incident) ProtoMessage() {}
 
 func (x *Incident) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_incident_proto_msgTypes[0]
+	mi := &file_tragedylooper_v1_incident_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -63,7 +62,7 @@ func (x *Incident) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Incident.ProtoReflect.Descriptor instead.
 func (*Incident) Descriptor() ([]byte, []int) {
-	return file_v1_incident_proto_rawDescGZIP(), []int{0}
+	return file_tragedylooper_v1_incident_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Incident) GetConfig() *IncidentConfig {
@@ -118,25 +117,25 @@ func (x *Incident) GetHasTriggeredThisLoop() bool {
 // 事件/悲剧在剧本中的配置
 type IncidentConfig struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
-	Id                 int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                // 事件唯一ID（剧本内）
-	Name               string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                             // 事件名称
-	Description        string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                               // 事件描述
-	IncidentType       IncidentType           `protobuf:"varint,4,opt,name=incident_type,json=incidentType,proto3,enum=v1.IncidentType" json:"incident_type,omitempty"`   // 事件类型
-	Day                int32                  `protobuf:"varint,5,opt,name=day,proto3" json:"day,omitempty"`                                                              // 预定发生日期
-	TriggerConditions  []*Condition           `protobuf:"bytes,6,rep,name=trigger_conditions,json=triggerConditions,proto3" json:"trigger_conditions,omitempty"`          // 触发条件列表
-	Effect             *Effect                `protobuf:"bytes,7,opt,name=effect,proto3" json:"effect,omitempty"`                                                         // 事件触发时产生的效果
-	IsMandatory        bool                   `protobuf:"varint,8,opt,name=is_mandatory,json=isMandatory,proto3" json:"is_mandatory,omitempty"`                           // 是否为必发事件
-	CulpritCharacterId int32                  `protobuf:"varint,9,opt,name=culprit_character_id,json=culpritCharacterId,proto3" json:"culprit_character_id,omitempty"`    // 事件主谋角色ID（如适用）
-	VictimCharacterId  int32                  `protobuf:"varint,10,opt,name=victim_character_id,json=victimCharacterId,proto3" json:"victim_character_id,omitempty"`      // 事件受害者角色ID（如适用）
-	LocationId         int32                  `protobuf:"varint,11,opt,name=location_id,json=locationId,proto3" json:"location_id,omitempty"`                             // 事件发生地点ID（如适用）
-	IsMainPlotIncident bool                   `protobuf:"varint,12,opt,name=is_main_plot_incident,json=isMainPlotIncident,proto3" json:"is_main_plot_incident,omitempty"` // 是否是主线剧情的事件
+	Id                 int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                            // 事件唯一ID（剧本内）
+	Name               string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                         // 事件名称
+	Description        string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                           // 事件描述
+	IncidentType       IncidentType           `protobuf:"varint,4,opt,name=incident_type,json=incidentType,proto3,enum=tragedylooper.v1.IncidentType" json:"incident_type,omitempty"` // 事件类型
+	Day                int32                  `protobuf:"varint,5,opt,name=day,proto3" json:"day,omitempty"`                                                                          // 预定发生日期
+	TriggerConditions  []*Condition           `protobuf:"bytes,6,rep,name=trigger_conditions,json=triggerConditions,proto3" json:"trigger_conditions,omitempty"`                      // 触发条件列表
+	Effect             *Effect                `protobuf:"bytes,7,opt,name=effect,proto3" json:"effect,omitempty"`                                                                     // 事件触发时产生的效果
+	IsMandatory        bool                   `protobuf:"varint,8,opt,name=is_mandatory,json=isMandatory,proto3" json:"is_mandatory,omitempty"`                                       // 是否为必发事件
+	CulpritCharacterId int32                  `protobuf:"varint,9,opt,name=culprit_character_id,json=culpritCharacterId,proto3" json:"culprit_character_id,omitempty"`                // 事件主谋角色ID（如适用）
+	VictimCharacterId  int32                  `protobuf:"varint,10,opt,name=victim_character_id,json=victimCharacterId,proto3" json:"victim_character_id,omitempty"`                  // 事件受害者角色ID（如适用）
+	LocationId         int32                  `protobuf:"varint,11,opt,name=location_id,json=locationId,proto3" json:"location_id,omitempty"`                                         // 事件发生地点ID（如适用）
+	IsMainPlotIncident bool                   `protobuf:"varint,12,opt,name=is_main_plot_incident,json=isMainPlotIncident,proto3" json:"is_main_plot_incident,omitempty"`             // 是否是主线剧情的事件
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
 
 func (x *IncidentConfig) Reset() {
 	*x = IncidentConfig{}
-	mi := &file_v1_incident_proto_msgTypes[1]
+	mi := &file_tragedylooper_v1_incident_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -148,7 +147,7 @@ func (x *IncidentConfig) String() string {
 func (*IncidentConfig) ProtoMessage() {}
 
 func (x *IncidentConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_incident_proto_msgTypes[1]
+	mi := &file_tragedylooper_v1_incident_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -161,7 +160,7 @@ func (x *IncidentConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IncidentConfig.ProtoReflect.Descriptor instead.
 func (*IncidentConfig) Descriptor() ([]byte, []int) {
-	return file_v1_incident_proto_rawDescGZIP(), []int{1}
+	return file_tragedylooper_v1_incident_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *IncidentConfig) GetId() int32 {
@@ -258,7 +257,7 @@ type IncidentConfigLib struct {
 
 func (x *IncidentConfigLib) Reset() {
 	*x = IncidentConfigLib{}
-	mi := &file_v1_incident_proto_msgTypes[2]
+	mi := &file_tragedylooper_v1_incident_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -270,7 +269,7 @@ func (x *IncidentConfigLib) String() string {
 func (*IncidentConfigLib) ProtoMessage() {}
 
 func (x *IncidentConfigLib) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_incident_proto_msgTypes[2]
+	mi := &file_tragedylooper_v1_incident_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -283,7 +282,7 @@ func (x *IncidentConfigLib) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IncidentConfigLib.ProtoReflect.Descriptor instead.
 func (*IncidentConfigLib) Descriptor() ([]byte, []int) {
-	return file_v1_incident_proto_rawDescGZIP(), []int{2}
+	return file_tragedylooper_v1_incident_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *IncidentConfigLib) GetIncidents() map[int32]*IncidentConfig {
@@ -293,70 +292,69 @@ func (x *IncidentConfigLib) GetIncidents() map[int32]*IncidentConfig {
 	return nil
 }
 
-var File_v1_incident_proto protoreflect.FileDescriptor
+var File_tragedylooper_v1_incident_proto protoreflect.FileDescriptor
 
-const file_v1_incident_proto_rawDesc = "" +
+const file_tragedylooper_v1_incident_proto_rawDesc = "" +
 	"\n" +
-	"\x11v1/incident.proto\x12\x02v1\x1a\x12v1/condition.proto\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\xe7\x01\n" +
-	"\bIncident\x12*\n" +
-	"\x06config\x18\x01 \x01(\v2\x12.v1.IncidentConfigR\x06config\x12\x12\n" +
+	"\x1ftragedylooper/v1/incident.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\"\xf5\x01\n" +
+	"\bIncident\x128\n" +
+	"\x06config\x18\x01 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x06config\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x10\n" +
 	"\x03day\x18\x03 \x01(\x05R\x03day\x12\x18\n" +
 	"\aculprit\x18\x04 \x01(\tR\aculprit\x12\x16\n" +
 	"\x06victim\x18\x05 \x01(\tR\x06victim\x12 \n" +
 	"\vdescription\x18\x06 \x01(\tR\vdescription\x125\n" +
-	"\x17has_triggered_this_loop\x18\a \x01(\bR\x14hasTriggeredThisLoop\"\xda\x03\n" +
+	"\x17has_triggered_this_loop\x18\a \x01(\bR\x14hasTriggeredThisLoop\"\x84\x04\n" +
 	"\x0eIncidentConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x125\n" +
-	"\rincident_type\x18\x04 \x01(\x0e2\x10.v1.IncidentTypeR\fincidentType\x12\x10\n" +
-	"\x03day\x18\x05 \x01(\x05R\x03day\x12<\n" +
-	"\x12trigger_conditions\x18\x06 \x03(\v2\r.v1.ConditionR\x11triggerConditions\x12\"\n" +
-	"\x06effect\x18\a \x01(\v2\n" +
-	".v1.EffectR\x06effect\x12!\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12C\n" +
+	"\rincident_type\x18\x04 \x01(\x0e2\x1e.tragedylooper.v1.IncidentTypeR\fincidentType\x12\x10\n" +
+	"\x03day\x18\x05 \x01(\x05R\x03day\x12J\n" +
+	"\x12trigger_conditions\x18\x06 \x03(\v2\x1b.tragedylooper.v1.ConditionR\x11triggerConditions\x120\n" +
+	"\x06effect\x18\a \x01(\v2\x18.tragedylooper.v1.EffectR\x06effect\x12!\n" +
 	"\fis_mandatory\x18\b \x01(\bR\visMandatory\x120\n" +
 	"\x14culprit_character_id\x18\t \x01(\x05R\x12culpritCharacterId\x12.\n" +
 	"\x13victim_character_id\x18\n" +
 	" \x01(\x05R\x11victimCharacterId\x12\x1f\n" +
 	"\vlocation_id\x18\v \x01(\x05R\n" +
 	"locationId\x121\n" +
-	"\x15is_main_plot_incident\x18\f \x01(\bR\x12isMainPlotIncident\"\xa9\x01\n" +
-	"\x11IncidentConfigLib\x12B\n" +
-	"\tincidents\x18\x01 \x03(\v2$.v1.IncidentConfigLib.IncidentsEntryR\tincidents\x1aP\n" +
+	"\x15is_main_plot_incident\x18\f \x01(\bR\x12isMainPlotIncident\"\xc5\x01\n" +
+	"\x11IncidentConfigLib\x12P\n" +
+	"\tincidents\x18\x01 \x03(\v22.tragedylooper.v1.IncidentConfigLib.IncidentsEntryR\tincidents\x1a^\n" +
 	"\x0eIncidentsEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12(\n" +
-	"\x05value\x18\x02 \x01(\v2\x12.v1.IncidentConfigR\x05value:\x028\x01B&Z$tragedylooper/internal/game/proto/v1b\x06proto3"
+	"\x03key\x18\x01 \x01(\x05R\x03key\x126\n" +
+	"\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01B\x1cZ\x1atragedylooper/pkg/proto/v1b\x06proto3"
 
 var (
-	file_v1_incident_proto_rawDescOnce sync.Once
-	file_v1_incident_proto_rawDescData []byte
+	file_tragedylooper_v1_incident_proto_rawDescOnce sync.Once
+	file_tragedylooper_v1_incident_proto_rawDescData []byte
 )
 
-func file_v1_incident_proto_rawDescGZIP() []byte {
-	file_v1_incident_proto_rawDescOnce.Do(func() {
-		file_v1_incident_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_v1_incident_proto_rawDesc), len(file_v1_incident_proto_rawDesc)))
+func file_tragedylooper_v1_incident_proto_rawDescGZIP() []byte {
+	file_tragedylooper_v1_incident_proto_rawDescOnce.Do(func() {
+		file_tragedylooper_v1_incident_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_incident_proto_rawDesc), len(file_tragedylooper_v1_incident_proto_rawDesc)))
 	})
-	return file_v1_incident_proto_rawDescData
+	return file_tragedylooper_v1_incident_proto_rawDescData
 }
 
-var file_v1_incident_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-var file_v1_incident_proto_goTypes = []any{
-	(*Incident)(nil),          // 0: v1.Incident
-	(*IncidentConfig)(nil),    // 1: v1.IncidentConfig
-	(*IncidentConfigLib)(nil), // 2: v1.IncidentConfigLib
-	nil,                       // 3: v1.IncidentConfigLib.IncidentsEntry
-	(IncidentType)(0),         // 4: v1.IncidentType
-	(*Condition)(nil),         // 5: v1.Condition
-	(*Effect)(nil),            // 6: v1.Effect
+var file_tragedylooper_v1_incident_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_tragedylooper_v1_incident_proto_goTypes = []any{
+	(*Incident)(nil),          // 0: tragedylooper.v1.Incident
+	(*IncidentConfig)(nil),    // 1: tragedylooper.v1.IncidentConfig
+	(*IncidentConfigLib)(nil), // 2: tragedylooper.v1.IncidentConfigLib
+	nil,                       // 3: tragedylooper.v1.IncidentConfigLib.IncidentsEntry
+	(IncidentType)(0),         // 4: tragedylooper.v1.IncidentType
+	(*Condition)(nil),         // 5: tragedylooper.v1.Condition
+	(*Effect)(nil),            // 6: tragedylooper.v1.Effect
 }
-var file_v1_incident_proto_depIdxs = []int32{
-	1, // 0: v1.Incident.config:type_name -> v1.IncidentConfig
-	4, // 1: v1.IncidentConfig.incident_type:type_name -> v1.IncidentType
-	5, // 2: v1.IncidentConfig.trigger_conditions:type_name -> v1.Condition
-	6, // 3: v1.IncidentConfig.effect:type_name -> v1.Effect
-	3, // 4: v1.IncidentConfigLib.incidents:type_name -> v1.IncidentConfigLib.IncidentsEntry
-	1, // 5: v1.IncidentConfigLib.IncidentsEntry.value:type_name -> v1.IncidentConfig
+var file_tragedylooper_v1_incident_proto_depIdxs = []int32{
+	1, // 0: tragedylooper.v1.Incident.config:type_name -> tragedylooper.v1.IncidentConfig
+	4, // 1: tragedylooper.v1.IncidentConfig.incident_type:type_name -> tragedylooper.v1.IncidentType
+	5, // 2: tragedylooper.v1.IncidentConfig.trigger_conditions:type_name -> tragedylooper.v1.Condition
+	6, // 3: tragedylooper.v1.IncidentConfig.effect:type_name -> tragedylooper.v1.Effect
+	3, // 4: tragedylooper.v1.IncidentConfigLib.incidents:type_name -> tragedylooper.v1.IncidentConfigLib.IncidentsEntry
+	1, // 5: tragedylooper.v1.IncidentConfigLib.IncidentsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
 	6, // [6:6] is the sub-list for method output_type
 	6, // [6:6] is the sub-list for method input_type
 	6, // [6:6] is the sub-list for extension type_name
@@ -364,29 +362,29 @@ var file_v1_incident_proto_depIdxs = []int32{
 	0, // [0:6] is the sub-list for field type_name
 }
 
-func init() { file_v1_incident_proto_init() }
-func file_v1_incident_proto_init() {
-	if File_v1_incident_proto != nil {
+func init() { file_tragedylooper_v1_incident_proto_init() }
+func file_tragedylooper_v1_incident_proto_init() {
+	if File_tragedylooper_v1_incident_proto != nil {
 		return
 	}
-	file_v1_condition_proto_init()
-	file_v1_effect_proto_init()
-	file_v1_enums_proto_init()
+	file_tragedylooper_v1_condition_proto_init()
+	file_tragedylooper_v1_effect_proto_init()
+	file_tragedylooper_v1_enums_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_incident_proto_rawDesc), len(file_v1_incident_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_incident_proto_rawDesc), len(file_tragedylooper_v1_incident_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_v1_incident_proto_goTypes,
-		DependencyIndexes: file_v1_incident_proto_depIdxs,
-		MessageInfos:      file_v1_incident_proto_msgTypes,
+		GoTypes:           file_tragedylooper_v1_incident_proto_goTypes,
+		DependencyIndexes: file_tragedylooper_v1_incident_proto_depIdxs,
+		MessageInfos:      file_tragedylooper_v1_incident_proto_msgTypes,
 	}.Build()
-	File_v1_incident_proto = out.File
-	file_v1_incident_proto_goTypes = nil
-	file_v1_incident_proto_depIdxs = nil
+	File_tragedylooper_v1_incident_proto = out.File
+	file_tragedylooper_v1_incident_proto_goTypes = nil
+	file_tragedylooper_v1_incident_proto_depIdxs = nil
 }

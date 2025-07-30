@@ -8,9 +8,9 @@
                     "enum": [
                         "PLAYER_ROLE_UNSPECIFIED",
                         0,
-                        "MASTERMIND",
+                        "PLAYER_ROLE_MASTERMIND",
                         1,
-                        "PROTAGONIST",
+                        "PLAYER_ROLE_PROTAGONIST",
                         2
                     ],
                     "oneOf": [

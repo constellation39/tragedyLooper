@@ -2,7 +2,7 @@ package effecthandler
 
 import (
 	"fmt"
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/tragedylooper/v1"
 )
 
 // init 函数在包加载时自动执行，注册 AdjustStat 效果处理器。

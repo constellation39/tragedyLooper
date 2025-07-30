@@ -6,7 +6,7 @@
             "properties": {
                 "characters": {
                     "additionalProperties": {
-                        "$ref": "#/definitions/v1.CharacterConfig",
+                        "$ref": "#/definitions/tragedylooper.v1.CharacterConfig",
                         "additionalProperties": true
                     },
                     "type": "object",
@@ -18,7 +18,7 @@
             "title": "Character Config Lib",
             "description": "角色配置库"
         },
-        "v1.CharacterConfig": {
+        "tragedylooper.v1.CharacterConfig": {
             "properties": {
                 "id": {
                     "type": "integer",
@@ -56,7 +56,7 @@
                 },
                 "rules": {
                     "items": {
-                        "$ref": "#/definitions/v1.CharacterRule"
+                        "$ref": "#/definitions/tragedylooper.v1.CharacterRule"
                     },
                     "type": "array",
                     "description": "角色特殊规则列表"
@@ -71,7 +71,7 @@
             "title": "Character Config",
             "description": "角色静态配置（全局角色库）"
         },
-        "v1.CharacterRule": {
+        "tragedylooper.v1.CharacterRule": {
             "properties": {
                 "name": {
                     "type": "string",
@@ -85,27 +85,27 @@
                     "enum": [
                         "TRIGGER_TYPE_UNSPECIFIED",
                         0,
-                        "ON_GAME_SETUP",
+                        "TRIGGER_TYPE_ON_GAME_SETUP",
                         1,
-                        "ON_LOOP_START",
+                        "TRIGGER_TYPE_ON_LOOP_START",
                         2,
-                        "ON_DAY_START",
+                        "TRIGGER_TYPE_ON_DAY_START",
                         3,
-                        "ON_PHASE_START",
+                        "TRIGGER_TYPE_ON_PHASE_START",
                         4,
-                        "ON_PHASE_END",
+                        "TRIGGER_TYPE_ON_PHASE_END",
                         5,
-                        "ON_GAME_EVENT",
+                        "TRIGGER_TYPE_ON_GAME_EVENT",
                         6,
-                        "ON_PASSIVE",
+                        "TRIGGER_TYPE_ON_PASSIVE",
                         7,
-                        "ON_GUESS_MADE",
+                        "TRIGGER_TYPE_ON_GUESS_MADE",
                         8,
-                        "ON_GAME_END",
+                        "TRIGGER_TYPE_ON_GAME_END",
                         9,
-                        "ON_DAY_END",
+                        "TRIGGER_TYPE_ON_DAY_END",
                         10,
-                        "ON_LOOP_END",
+                        "TRIGGER_TYPE_ON_LOOP_END",
                         11
                     ],
                     "oneOf": [
@@ -120,17 +120,17 @@
                     "description": "触发器类型（能力或规则何时触发）"
                 },
                 "turf_selection_effect": {
-                    "$ref": "#/definitions/v1.TurfSelectionEffect",
+                    "$ref": "#/definitions/tragedylooper.v1.TurfSelectionEffect",
                     "additionalProperties": true,
                     "description": "地盘选择效果"
                 },
                 "delayed_entry_effect": {
-                    "$ref": "#/definitions/v1.DelayedEntryEffect",
+                    "$ref": "#/definitions/tragedylooper.v1.DelayedEntryEffect",
                     "additionalProperties": true,
                     "description": "延迟登场效果"
                 },
                 "special_movement_rule": {
-                    "$ref": "#/definitions/v1.SpecialMovementRule",
+                    "$ref": "#/definitions/tragedylooper.v1.SpecialMovementRule",
                     "additionalProperties": true,
                     "description": "特殊移动规则"
                 }
@@ -140,7 +140,7 @@
             "title": "Character Rule",
             "description": "角色特殊规则"
         },
-        "v1.DelayedEntryEffect": {
+        "tragedylooper.v1.DelayedEntryEffect": {
             "properties": {
                 "day_of_entry": {
                     "type": "integer",
@@ -150,13 +150,13 @@
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
-                        "HOSPITAL",
+                        "LOCATION_TYPE_HOSPITAL",
                         1,
-                        "SHRINE",
+                        "LOCATION_TYPE_SHRINE",
                         2,
-                        "CITY",
+                        "LOCATION_TYPE_CITY",
                         3,
-                        "SCHOOL",
+                        "LOCATION_TYPE_SCHOOL",
                         4
                     ],
                     "oneOf": [
@@ -176,20 +176,20 @@
             "title": "Delayed Entry Effect",
             "description": "延迟登场效果"
         },
-        "v1.SpecialMovementRule": {
+        "tragedylooper.v1.SpecialMovementRule": {
             "properties": {
                 "restricted_locations": {
                     "items": {
                         "enum": [
                             "LOCATION_TYPE_UNSPECIFIED",
                             0,
-                            "HOSPITAL",
+                            "LOCATION_TYPE_HOSPITAL",
                             1,
-                            "SHRINE",
+                            "LOCATION_TYPE_SHRINE",
                             2,
-                            "CITY",
+                            "LOCATION_TYPE_CITY",
                             3,
-                            "SCHOOL",
+                            "LOCATION_TYPE_SCHOOL",
                             4
                         ]
                     },
@@ -207,20 +207,20 @@
             "title": "Special Movement Rule",
             "description": "特殊移动规则"
         },
-        "v1.TurfSelectionEffect": {
+        "tragedylooper.v1.TurfSelectionEffect": {
             "properties": {
                 "possible_locations": {
                     "items": {
                         "enum": [
                             "LOCATION_TYPE_UNSPECIFIED",
                             0,
-                            "HOSPITAL",
+                            "LOCATION_TYPE_HOSPITAL",
                             1,
-                            "SHRINE",
+                            "LOCATION_TYPE_SHRINE",
                             2,
-                            "CITY",
+                            "LOCATION_TYPE_CITY",
                             3,
-                            "SCHOOL",
+                            "LOCATION_TYPE_SCHOOL",
                             4
                         ]
                     },

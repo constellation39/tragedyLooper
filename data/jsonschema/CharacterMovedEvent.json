@@ -12,13 +12,13 @@
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
-                        "HOSPITAL",
+                        "LOCATION_TYPE_HOSPITAL",
                         1,
-                        "SHRINE",
+                        "LOCATION_TYPE_SHRINE",
                         2,
-                        "CITY",
+                        "LOCATION_TYPE_CITY",
                         3,
-                        "SCHOOL",
+                        "LOCATION_TYPE_SCHOOL",
                         4
                     ],
                     "oneOf": [

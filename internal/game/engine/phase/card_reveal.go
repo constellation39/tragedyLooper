@@ -1,7 +1,7 @@
 package phase
 
 import (
-	model "tragedylooper/pkg/proto/v1"
+	model "tragedylooper/pkg/proto/tragedylooper/v1"
 )
 
 // CardRevealPhase 卡牌揭示阶段

@@ -2,17 +2,16 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        (unknown)
-// source: v1/condition.proto
+// source: tragedylooper/v1/condition.proto
 
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -26,24 +25,24 @@ type CompoundCondition_Operator int32
 
 const (
 	CompoundCondition_OPERATOR_UNSPECIFIED CompoundCondition_Operator = 0 // 未指定
-	CompoundCondition_AND                  CompoundCondition_Operator = 1 // 逻辑与
-	CompoundCondition_OR                   CompoundCondition_Operator = 2 // 逻辑或
-	CompoundCondition_NOT                  CompoundCondition_Operator = 3 // 逻辑非（作用于第一个条件）
+	CompoundCondition_OPERATOR_AND         CompoundCondition_Operator = 1 // 逻辑与
+	CompoundCondition_OPERATOR_OR          CompoundCondition_Operator = 2 // 逻辑或
+	CompoundCondition_OPERATOR_NOT         CompoundCondition_Operator = 3 // 逻辑非（作用于第一个条件）
 )
 
 // Enum value maps for CompoundCondition_Operator.
 var (
 	CompoundCondition_Operator_name = map[int32]string{
 		0: "OPERATOR_UNSPECIFIED",
-		1: "AND",
-		2: "OR",
-		3: "NOT",
+		1: "OPERATOR_AND",
+		2: "OPERATOR_OR",
+		3: "OPERATOR_NOT",
 	}
 	CompoundCondition_Operator_value = map[string]int32{
 		"OPERATOR_UNSPECIFIED": 0,
-		"AND":                  1,
-		"OR":                   2,
-		"NOT":                  3,
+		"OPERATOR_AND":         1,
+		"OPERATOR_OR":          2,
+		"OPERATOR_NOT":         3,
 	}
 )
 
@@ -58,11 +57,11 @@ func (x CompoundCondition_Operator) String() string {
 }
 
 func (CompoundCondition_Operator) Descriptor() protoreflect.EnumDescriptor {
-	return file_v1_condition_proto_enumTypes[0].Descriptor()
+	return file_tragedylooper_v1_condition_proto_enumTypes[0].Descriptor()
 }
 
 func (CompoundCondition_Operator) Type() protoreflect.EnumType {
-	return &file_v1_condition_proto_enumTypes[0]
+	return &file_tragedylooper_v1_condition_proto_enumTypes[0]
 }
 
 func (x CompoundCondition_Operator) Number() protoreflect.EnumNumber {
@@ -71,31 +70,31 @@ func (x CompoundCondition_Operator) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use CompoundCondition_Operator.Descriptor instead.
 func (CompoundCondition_Operator) EnumDescriptor() ([]byte, []int) {
-	return file_v1_condition_proto_rawDescGZIP(), []int{1, 0}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{1, 0}
 }
 
 type StatCondition_StatType int32
 
 const (
 	StatCondition_STAT_TYPE_UNSPECIFIED StatCondition_StatType = 0 // 未指定
-	StatCondition_PARANOIA              StatCondition_StatType = 1 // 妄想
-	StatCondition_GOODWILL              StatCondition_StatType = 2 // 好感
-	StatCondition_INTRIGUE              StatCondition_StatType = 3 // 阴谋
+	StatCondition_STAT_TYPE_PARANOIA    StatCondition_StatType = 1 // 妄想
+	StatCondition_STAT_TYPE_GOODWILL    StatCondition_StatType = 2 // 好感
+	StatCondition_STAT_TYPE_INTRIGUE    StatCondition_StatType = 3 // 阴谋
 )
 
 // Enum value maps for StatCondition_StatType.
 var (
 	StatCondition_StatType_name = map[int32]string{
 		0: "STAT_TYPE_UNSPECIFIED",
-		1: "PARANOIA",
-		2: "GOODWILL",
-		3: "INTRIGUE",
+		1: "STAT_TYPE_PARANOIA",
+		2: "STAT_TYPE_GOODWILL",
+		3: "STAT_TYPE_INTRIGUE",
 	}
 	StatCondition_StatType_value = map[string]int32{
 		"STAT_TYPE_UNSPECIFIED": 0,
-		"PARANOIA":              1,
-		"GOODWILL":              2,
-		"INTRIGUE":              3,
+		"STAT_TYPE_PARANOIA":    1,
+		"STAT_TYPE_GOODWILL":    2,
+		"STAT_TYPE_INTRIGUE":    3,
 	}
 )
 
@@ -110,11 +109,11 @@ func (x StatCondition_StatType) String() string {
 }
 
 func (StatCondition_StatType) Descriptor() protoreflect.EnumDescriptor {
-	return file_v1_condition_proto_enumTypes[1].Descriptor()
+	return file_tragedylooper_v1_condition_proto_enumTypes[1].Descriptor()
 }
 
 func (StatCondition_StatType) Type() protoreflect.EnumType {
-	return &file_v1_condition_proto_enumTypes[1]
+	return &file_tragedylooper_v1_condition_proto_enumTypes[1]
 }
 
 func (x StatCondition_StatType) Number() protoreflect.EnumNumber {
@@ -123,37 +122,37 @@ func (x StatCondition_StatType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StatCondition_StatType.Descriptor instead.
 func (StatCondition_StatType) EnumDescriptor() ([]byte, []int) {
-	return file_v1_condition_proto_rawDescGZIP(), []int{2, 0}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{2, 0}
 }
 
 type StatCondition_Comparator int32
 
 const (
-	StatCondition_COMPARATOR_UNSPECIFIED StatCondition_Comparator = 0 // 未指定
-	StatCondition_GREATER_THAN           StatCondition_Comparator = 1 // 大于
-	StatCondition_LESS_THAN              StatCondition_Comparator = 2 // 小于
-	StatCondition_EQUAL_TO               StatCondition_Comparator = 3 // 等于
-	StatCondition_GREATER_THAN_OR_EQUAL  StatCondition_Comparator = 4 // 大于等于
-	StatCondition_LESS_THAN_OR_EQUAL     StatCondition_Comparator = 5 // 小于等于
+	StatCondition_COMPARATOR_UNSPECIFIED           StatCondition_Comparator = 0 // 未指定
+	StatCondition_COMPARATOR_GREATER_THAN          StatCondition_Comparator = 1 // 大于
+	StatCondition_COMPARATOR_LESS_THAN             StatCondition_Comparator = 2 // 小于
+	StatCondition_COMPARATOR_EQUAL_TO              StatCondition_Comparator = 3 // 等于
+	StatCondition_COMPARATOR_GREATER_THAN_OR_EQUAL StatCondition_Comparator = 4 // 大于等于
+	StatCondition_COMPARATOR_LESS_THAN_OR_EQUAL    StatCondition_Comparator = 5 // 小于等于
 )
 
 // Enum value maps for StatCondition_Comparator.
 var (
 	StatCondition_Comparator_name = map[int32]string{
 		0: "COMPARATOR_UNSPECIFIED",
-		1: "GREATER_THAN",
-		2: "LESS_THAN",
-		3: "EQUAL_TO",
-		4: "GREATER_THAN_OR_EQUAL",
-		5: "LESS_THAN_OR_EQUAL",
+		1: "COMPARATOR_GREATER_THAN",
+		2: "COMPARATOR_LESS_THAN",
+		3: "COMPARATOR_EQUAL_TO",
+		4: "COMPARATOR_GREATER_THAN_OR_EQUAL",
+		5: "COMPARATOR_LESS_THAN_OR_EQUAL",
 	}
 	StatCondition_Comparator_value = map[string]int32{
-		"COMPARATOR_UNSPECIFIED": 0,
-		"GREATER_THAN":           1,
-		"LESS_THAN":              2,
-		"EQUAL_TO":               3,
-		"GREATER_THAN_OR_EQUAL":  4,
-		"LESS_THAN_OR_EQUAL":     5,
+		"COMPARATOR_UNSPECIFIED":           0,
+		"COMPARATOR_GREATER_THAN":          1,
+		"COMPARATOR_LESS_THAN":             2,
+		"COMPARATOR_EQUAL_TO":              3,
+		"COMPARATOR_GREATER_THAN_OR_EQUAL": 4,
+		"COMPARATOR_LESS_THAN_OR_EQUAL":    5,
 	}
 )
 
@@ -168,11 +167,11 @@ func (x StatCondition_Comparator) String() string {
 }
 
 func (StatCondition_Comparator) Descriptor() protoreflect.EnumDescriptor {
-	return file_v1_condition_proto_enumTypes[2].Descriptor()
+	return file_tragedylooper_v1_condition_proto_enumTypes[2].Descriptor()
 }
 
 func (StatCondition_Comparator) Type() protoreflect.EnumType {
-	return &file_v1_condition_proto_enumTypes[2]
+	return &file_tragedylooper_v1_condition_proto_enumTypes[2]
 }
 
 func (x StatCondition_Comparator) Number() protoreflect.EnumNumber {
@@ -181,31 +180,31 @@ func (x StatCondition_Comparator) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StatCondition_Comparator.Descriptor instead.
 func (StatCondition_Comparator) EnumDescriptor() ([]byte, []int) {
-	return file_v1_condition_proto_rawDescGZIP(), []int{2, 1}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{2, 1}
 }
 
 type DayCondition_Comparator int32
 
 const (
 	DayCondition_COMPARATOR_UNSPECIFIED DayCondition_Comparator = 0 // 未指定
-	DayCondition_BEFORE                 DayCondition_Comparator = 1 // 在某天之前
-	DayCondition_ON                     DayCondition_Comparator = 2 // 在某天当天
-	DayCondition_AFTER                  DayCondition_Comparator = 3 // 在某天之后
+	DayCondition_COMPARATOR_BEFORE      DayCondition_Comparator = 1 // 在某天之前
+	DayCondition_COMPARATOR_ON          DayCondition_Comparator = 2 // 在某天当天
+	DayCondition_COMPARATOR_AFTER       DayCondition_Comparator = 3 // 在某天之后
 )
 
 // Enum value maps for DayCondition_Comparator.
 var (
 	DayCondition_Comparator_name = map[int32]string{
 		0: "COMPARATOR_UNSPECIFIED",
-		1: "BEFORE",
-		2: "ON",
-		3: "AFTER",
+		1: "COMPARATOR_BEFORE",
+		2: "COMPARATOR_ON",
+		3: "COMPARATOR_AFTER",
 	}
 	DayCondition_Comparator_value = map[string]int32{
 		"COMPARATOR_UNSPECIFIED": 0,
-		"BEFORE":                 1,
-		"ON":                     2,
-		"AFTER":                  3,
+		"COMPARATOR_BEFORE":      1,
+		"COMPARATOR_ON":          2,
+		"COMPARATOR_AFTER":       3,
 	}
 )
 
@@ -220,11 +219,11 @@ func (x DayCondition_Comparator) String() string {
 }
 
 func (DayCondition_Comparator) Descriptor() protoreflect.EnumDescriptor {
-	return file_v1_condition_proto_enumTypes[3].Descriptor()
+	return file_tragedylooper_v1_condition_proto_enumTypes[3].Descriptor()
 }
 
 func (DayCondition_Comparator) Type() protoreflect.EnumType {
-	return &file_v1_condition_proto_enumTypes[3]
+	return &file_tragedylooper_v1_condition_proto_enumTypes[3]
 }
 
 func (x DayCondition_Comparator) Number() protoreflect.EnumNumber {
@@ -233,49 +232,49 @@ func (x DayCondition_Comparator) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use DayCondition_Comparator.Descriptor instead.
 func (DayCondition_Comparator) EnumDescriptor() ([]byte, []int) {
-	return file_v1_condition_proto_rawDescGZIP(), []int{6, 0}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{6, 0}
 }
 
 type TargetSelector_SelectorType int32
 
 const (
-	TargetSelector_SELECTOR_TYPE_UNSPECIFIED  TargetSelector_SelectorType = 0 // 未指定
-	TargetSelector_SPECIFIC_CHARACTER         TargetSelector_SelectorType = 1 // 指定的某个角色
-	TargetSelector_TRIGGERING_CHARACTER       TargetSelector_SelectorType = 2 // 触发事件的角色
-	TargetSelector_CULPRIT                    TargetSelector_SelectorType = 3 // 事件的犯人
-	TargetSelector_VICTIM                     TargetSelector_SelectorType = 4 // 事件的受害者
-	TargetSelector_ANY_CHARACTER_WITH_ROLE    TargetSelector_SelectorType = 5 // 任意一个有指定身份的角色
-	TargetSelector_ALL_CHARACTERS_AT_LOCATION TargetSelector_SelectorType = 6 // 在某地的所有角色
-	TargetSelector_ABILITY_USER               TargetSelector_SelectorType = 7
-	TargetSelector_ABILITY_TARGET             TargetSelector_SelectorType = 8
-	TargetSelector_ALL_CHARACTERS             TargetSelector_SelectorType = 9
+	TargetSelector_SELECTOR_TYPE_UNSPECIFIED                TargetSelector_SelectorType = 0 // 未指定
+	TargetSelector_SELECTOR_TYPE_SPECIFIC_CHARACTER         TargetSelector_SelectorType = 1 // 指定的某个角色
+	TargetSelector_SELECTOR_TYPE_TRIGGERING_CHARACTER       TargetSelector_SelectorType = 2 // 触发事件的角色
+	TargetSelector_SELECTOR_TYPE_CULPRIT                    TargetSelector_SelectorType = 3 // 事件的犯人
+	TargetSelector_SELECTOR_TYPE_VICTIM                     TargetSelector_SelectorType = 4 // 事件的受害者
+	TargetSelector_SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE    TargetSelector_SelectorType = 5 // 任意一个有指定身份的角色
+	TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION TargetSelector_SelectorType = 6 // 在某地的所有角色
+	TargetSelector_SELECTOR_TYPE_ABILITY_USER               TargetSelector_SelectorType = 7
+	TargetSelector_SELECTOR_TYPE_ABILITY_TARGET             TargetSelector_SelectorType = 8
+	TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS             TargetSelector_SelectorType = 9
 )
 
 // Enum value maps for TargetSelector_SelectorType.
 var (
 	TargetSelector_SelectorType_name = map[int32]string{
 		0: "SELECTOR_TYPE_UNSPECIFIED",
-		1: "SPECIFIC_CHARACTER",
-		2: "TRIGGERING_CHARACTER",
-		3: "CULPRIT",
-		4: "VICTIM",
-		5: "ANY_CHARACTER_WITH_ROLE",
-		6: "ALL_CHARACTERS_AT_LOCATION",
-		7: "ABILITY_USER",
-		8: "ABILITY_TARGET",
-		9: "ALL_CHARACTERS",
+		1: "SELECTOR_TYPE_SPECIFIC_CHARACTER",
+		2: "SELECTOR_TYPE_TRIGGERING_CHARACTER",
+		3: "SELECTOR_TYPE_CULPRIT",
+		4: "SELECTOR_TYPE_VICTIM",
+		5: "SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE",
+		6: "SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION",
+		7: "SELECTOR_TYPE_ABILITY_USER",
+		8: "SELECTOR_TYPE_ABILITY_TARGET",
+		9: "SELECTOR_TYPE_ALL_CHARACTERS",
 	}
 	TargetSelector_SelectorType_value = map[string]int32{
-		"SELECTOR_TYPE_UNSPECIFIED":  0,
-		"SPECIFIC_CHARACTER":         1,
-		"TRIGGERING_CHARACTER":       2,
-		"CULPRIT":                    3,
-		"VICTIM":                     4,
-		"ANY_CHARACTER_WITH_ROLE":    5,
-		"ALL_CHARACTERS_AT_LOCATION": 6,
-		"ABILITY_USER":               7,
-		"ABILITY_TARGET":             8,
-		"ALL_CHARACTERS":             9,
+		"SELECTOR_TYPE_UNSPECIFIED":                0,
+		"SELECTOR_TYPE_SPECIFIC_CHARACTER":         1,
+		"SELECTOR_TYPE_TRIGGERING_CHARACTER":       2,
+		"SELECTOR_TYPE_CULPRIT":                    3,
+		"SELECTOR_TYPE_VICTIM":                     4,
+		"SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE":    5,
+		"SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION": 6,
+		"SELECTOR_TYPE_ABILITY_USER":               7,
+		"SELECTOR_TYPE_ABILITY_TARGET":             8,
+		"SELECTOR_TYPE_ALL_CHARACTERS":             9,
 	}
 )
 
@@ -290,11 +289,11 @@ func (x TargetSelector_SelectorType) String() string {
 }
 
 func (TargetSelector_SelectorType) Descriptor() protoreflect.EnumDescriptor {
-	return file_v1_condition_proto_enumTypes[4].Descriptor()
+	return file_tragedylooper_v1_condition_proto_enumTypes[4].Descriptor()
 }
 
 func (TargetSelector_SelectorType) Type() protoreflect.EnumType {
-	return &file_v1_condition_proto_enumTypes[4]
+	return &file_tragedylooper_v1_condition_proto_enumTypes[4]
 }
 
 func (x TargetSelector_SelectorType) Number() protoreflect.EnumNumber {
@@ -303,7 +302,7 @@ func (x TargetSelector_SelectorType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TargetSelector_SelectorType.Descriptor instead.
 func (TargetSelector_SelectorType) EnumDescriptor() ([]byte, []int) {
-	return file_v1_condition_proto_rawDescGZIP(), []int{8, 0}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{8, 0}
 }
 
 // 条件，用于规则、事件和效果的触发判断
@@ -325,7 +324,7 @@ type Condition struct {
 
 func (x *Condition) Reset() {
 	*x = Condition{}
-	mi := &file_v1_condition_proto_msgTypes[0]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -337,7 +336,7 @@ func (x *Condition) String() string {
 func (*Condition) ProtoMessage() {}
 
 func (x *Condition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_condition_proto_msgTypes[0]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -350,7 +349,7 @@ func (x *Condition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Condition.ProtoReflect.Descriptor instead.
 func (*Condition) Descriptor() ([]byte, []int) {
-	return file_v1_condition_proto_rawDescGZIP(), []int{0}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Condition) GetConditionType() isCondition_ConditionType {
@@ -472,15 +471,15 @@ func (*Condition_CompoundCondition) isCondition_ConditionType() {}
 // 复合条件，用于组合多个条件
 type CompoundCondition struct {
 	state         protoimpl.MessageState     `protogen:"open.v1"`
-	Operator      CompoundCondition_Operator `protobuf:"varint,1,opt,name=operator,proto3,enum=v1.CompoundCondition_Operator" json:"operator,omitempty"` // 逻辑操作符
-	SubConditions []*Condition               `protobuf:"bytes,2,rep,name=sub_conditions,json=subConditions,proto3" json:"sub_conditions,omitempty"`      // 子条件列表
+	Operator      CompoundCondition_Operator `protobuf:"varint,1,opt,name=operator,proto3,enum=tragedylooper.v1.CompoundCondition_Operator" json:"operator,omitempty"` // 逻辑操作符
+	SubConditions []*Condition               `protobuf:"bytes,2,rep,name=sub_conditions,json=subConditions,proto3" json:"sub_conditions,omitempty"`                    // 子条件列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CompoundCondition) Reset() {
 	*x = CompoundCondition{}
-	mi := &file_v1_condition_proto_msgTypes[1]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -492,7 +491,7 @@ func (x *CompoundCondition) String() string {
 func (*CompoundCondition) ProtoMessage() {}
 
 func (x *CompoundCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_condition_proto_msgTypes[1]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -505,7 +504,7 @@ func (x *CompoundCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CompoundCondition.ProtoReflect.Descriptor instead.
 func (*CompoundCondition) Descriptor() ([]byte, []int) {
-	return file_v1_condition_proto_rawDescGZIP(), []int{1}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *CompoundCondition) GetOperator() CompoundCondition_Operator {
@@ -525,17 +524,17 @@ func (x *CompoundCondition) GetSubConditions() []*Condition {
 // 属性条件
 type StatCondition struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	Target        *TargetSelector          `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`                                                     // 目标角色选择器
-	StatType      StatCondition_StatType   `protobuf:"varint,2,opt,name=stat_type,json=statType,proto3,enum=v1.StatCondition_StatType" json:"stat_type,omitempty"` // 检查的属性类型
-	Comparator    StatCondition_Comparator `protobuf:"varint,3,opt,name=comparator,proto3,enum=v1.StatCondition_Comparator" json:"comparator,omitempty"`           // 比较符
-	Value         int32                    `protobuf:"varint,4,opt,name=value,proto3" json:"value,omitempty"`                                                      // 比较的值
+	Target        *TargetSelector          `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`                                                                   // 目标角色选择器
+	StatType      StatCondition_StatType   `protobuf:"varint,2,opt,name=stat_type,json=statType,proto3,enum=tragedylooper.v1.StatCondition_StatType" json:"stat_type,omitempty"` // 检查的属性类型
+	Comparator    StatCondition_Comparator `protobuf:"varint,3,opt,name=comparator,proto3,enum=tragedylooper.v1.StatCondition_Comparator" json:"comparator,omitempty"`           // 比较符
+	Value         int32                    `protobuf:"varint,4,opt,name=value,proto3" json:"value,omitempty"`                                                                    // 比较的值
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *StatCondition) Reset() {
 	*x = StatCondition{}
-	mi := &file_v1_condition_proto_msgTypes[2]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -547,7 +546,7 @@ func (x *StatCondition) String() string {
 func (*StatCondition) ProtoMessage() {}
 
 func (x *StatCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_condition_proto_msgTypes[2]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -560,7 +559,7 @@ func (x *StatCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatCondition.ProtoReflect.Descriptor instead.
 func (*StatCondition) Descriptor() ([]byte, []int) {
-	return file_v1_condition_proto_rawDescGZIP(), []int{2}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *StatCondition) GetTarget() *TargetSelector {
@@ -594,18 +593,18 @@ func (x *StatCondition) GetValue() int32 {
 // 地点条件
 type LocationCondition struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Target        *TargetSelector        `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`                                    // 目标角色选择器
-	Location      LocationType           `protobuf:"varint,2,opt,name=location,proto3,enum=v1.LocationType" json:"location,omitempty"`          // 目标地点
-	IsAtLocation  bool                   `protobuf:"varint,3,opt,name=is_at_location,json=isAtLocation,proto3" json:"is_at_location,omitempty"` // 是否在该地点 (默认为true)
-	IsAlone       bool                   `protobuf:"varint,4,opt,name=is_alone,json=isAlone,proto3" json:"is_alone,omitempty"`                  // 是否在该地点独处
-	NotAlone      bool                   `protobuf:"varint,5,opt,name=not_alone,json=notAlone,proto3" json:"not_alone,omitempty"`               // 是否在该地点不独处
+	Target        *TargetSelector        `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`                                         // 目标角色选择器
+	Location      LocationType           `protobuf:"varint,2,opt,name=location,proto3,enum=tragedylooper.v1.LocationType" json:"location,omitempty"` // 目标地点
+	IsAtLocation  bool                   `protobuf:"varint,3,opt,name=is_at_location,json=isAtLocation,proto3" json:"is_at_location,omitempty"`      // 是否在该地点 (默认为true)
+	IsAlone       bool                   `protobuf:"varint,4,opt,name=is_alone,json=isAlone,proto3" json:"is_alone,omitempty"`                       // 是否在该地点独处
+	NotAlone      bool                   `protobuf:"varint,5,opt,name=not_alone,json=notAlone,proto3" json:"not_alone,omitempty"`                    // 是否在该地点不独处
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *LocationCondition) Reset() {
 	*x = LocationCondition{}
-	mi := &file_v1_condition_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -617,7 +616,7 @@ func (x *LocationCondition) String() string {
 func (*LocationCondition) ProtoMessage() {}
 
 func (x *LocationCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_condition_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -630,7 +629,7 @@ func (x *LocationCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LocationCondition.ProtoReflect.Descriptor instead.
 func (*LocationCondition) Descriptor() ([]byte, []int) {
-	return file_v1_condition_proto_rawDescGZIP(), []int{3}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *LocationCondition) GetTarget() *TargetSelector {
@@ -671,16 +670,16 @@ func (x *LocationCondition) GetNotAlone() bool {
 // 身份条件
 type RoleCondition struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Target        *TargetSelector        `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`                   // 目标角色选择器
-	Role          RoleType               `protobuf:"varint,2,opt,name=role,proto3,enum=v1.RoleType" json:"role,omitempty"`     // 目标身份
-	HasRole       bool                   `protobuf:"varint,3,opt,name=has_role,json=hasRole,proto3" json:"has_role,omitempty"` // 是否拥有该身份 (默认为true)
+	Target        *TargetSelector        `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`                             // 目标角色选择器
+	Role          RoleType               `protobuf:"varint,2,opt,name=role,proto3,enum=tragedylooper.v1.RoleType" json:"role,omitempty"` // 目标身份
+	HasRole       bool                   `protobuf:"varint,3,opt,name=has_role,json=hasRole,proto3" json:"has_role,omitempty"`           // 是否拥有该身份 (默认为true)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RoleCondition) Reset() {
 	*x = RoleCondition{}
-	mi := &file_v1_condition_proto_msgTypes[4]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -692,7 +691,7 @@ func (x *RoleCondition) String() string {
 func (*RoleCondition) ProtoMessage() {}
 
 func (x *RoleCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_condition_proto_msgTypes[4]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -705,7 +704,7 @@ func (x *RoleCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleCondition.ProtoReflect.Descriptor instead.
 func (*RoleCondition) Descriptor() ([]byte, []int) {
-	return file_v1_condition_proto_rawDescGZIP(), []int{4}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *RoleCondition) GetTarget() *TargetSelector {
@@ -741,7 +740,7 @@ type TraitCondition struct {
 
 func (x *TraitCondition) Reset() {
 	*x = TraitCondition{}
-	mi := &file_v1_condition_proto_msgTypes[5]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -753,7 +752,7 @@ func (x *TraitCondition) String() string {
 func (*TraitCondition) ProtoMessage() {}
 
 func (x *TraitCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_condition_proto_msgTypes[5]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -766,7 +765,7 @@ func (x *TraitCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TraitCondition.ProtoReflect.Descriptor instead.
 func (*TraitCondition) Descriptor() ([]byte, []int) {
-	return file_v1_condition_proto_rawDescGZIP(), []int{5}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *TraitCondition) GetTarget() *TargetSelector {
@@ -793,15 +792,15 @@ func (x *TraitCondition) GetHasTrait() bool {
 // 日期条件
 type DayCondition struct {
 	state         protoimpl.MessageState  `protogen:"open.v1"`
-	Comparator    DayCondition_Comparator `protobuf:"varint,1,opt,name=comparator,proto3,enum=v1.DayCondition_Comparator" json:"comparator,omitempty"` // 比较符
-	Day           int32                   `protobuf:"varint,2,opt,name=day,proto3" json:"day,omitempty"`                                               // 目标天数
+	Comparator    DayCondition_Comparator `protobuf:"varint,1,opt,name=comparator,proto3,enum=tragedylooper.v1.DayCondition_Comparator" json:"comparator,omitempty"` // 比较符
+	Day           int32                   `protobuf:"varint,2,opt,name=day,proto3" json:"day,omitempty"`                                                             // 目标天数
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DayCondition) Reset() {
 	*x = DayCondition{}
-	mi := &file_v1_condition_proto_msgTypes[6]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -813,7 +812,7 @@ func (x *DayCondition) String() string {
 func (*DayCondition) ProtoMessage() {}
 
 func (x *DayCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_condition_proto_msgTypes[6]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -826,7 +825,7 @@ func (x *DayCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DayCondition.ProtoReflect.Descriptor instead.
 func (*DayCondition) Descriptor() ([]byte, []int) {
-	return file_v1_condition_proto_rawDescGZIP(), []int{6}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *DayCondition) GetComparator() DayCondition_Comparator {
@@ -846,14 +845,14 @@ func (x *DayCondition) GetDay() int32 {
 // 玩家条件
 type PlayerCondition struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PlayerRole    PlayerRole             `protobuf:"varint,1,opt,name=player_role,json=playerRole,proto3,enum=v1.PlayerRole" json:"player_role,omitempty"` // 目标玩家角色
+	PlayerRole    PlayerRole             `protobuf:"varint,1,opt,name=player_role,json=playerRole,proto3,enum=tragedylooper.v1.PlayerRole" json:"player_role,omitempty"` // 目标玩家角色
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *PlayerCondition) Reset() {
 	*x = PlayerCondition{}
-	mi := &file_v1_condition_proto_msgTypes[7]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -865,7 +864,7 @@ func (x *PlayerCondition) String() string {
 func (*PlayerCondition) ProtoMessage() {}
 
 func (x *PlayerCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_condition_proto_msgTypes[7]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -878,7 +877,7 @@ func (x *PlayerCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlayerCondition.ProtoReflect.Descriptor instead.
 func (*PlayerCondition) Descriptor() ([]byte, []int) {
-	return file_v1_condition_proto_rawDescGZIP(), []int{7}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *PlayerCondition) GetPlayerRole() PlayerRole {
@@ -891,17 +890,17 @@ func (x *PlayerCondition) GetPlayerRole() PlayerRole {
 // 目标选择器，用于动态指定条件或效果的目标
 type TargetSelector struct {
 	state          protoimpl.MessageState      `protogen:"open.v1"`
-	SelectorType   TargetSelector_SelectorType `protobuf:"varint,1,opt,name=selector_type,json=selectorType,proto3,enum=v1.TargetSelector_SelectorType" json:"selector_type,omitempty"` // 选择器类型
-	CharacterId    int32                       `protobuf:"varint,2,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`                                        // 当类型为 SPECIFIC_CHARACTER 时使用
-	RoleFilter     RoleType                    `protobuf:"varint,3,opt,name=role_filter,json=roleFilter,proto3,enum=v1.RoleType" json:"role_filter,omitempty"`                          // 当类型为 ANY_CHARACTER_WITH_ROLE 时使用
-	LocationFilter LocationType                `protobuf:"varint,4,opt,name=location_filter,json=locationFilter,proto3,enum=v1.LocationType" json:"location_filter,omitempty"`          // 当类型为 ALL_CHARACTERS_AT_LOCATION 时使用
+	SelectorType   TargetSelector_SelectorType `protobuf:"varint,1,opt,name=selector_type,json=selectorType,proto3,enum=tragedylooper.v1.TargetSelector_SelectorType" json:"selector_type,omitempty"` // 选择器类型
+	CharacterId    int32                       `protobuf:"varint,2,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`                                                      // 当类型为 SPECIFIC_CHARACTER 时使用
+	RoleFilter     RoleType                    `protobuf:"varint,3,opt,name=role_filter,json=roleFilter,proto3,enum=tragedylooper.v1.RoleType" json:"role_filter,omitempty"`                          // 当类型为 ANY_CHARACTER_WITH_ROLE 时使用
+	LocationFilter LocationType                `protobuf:"varint,4,opt,name=location_filter,json=locationFilter,proto3,enum=tragedylooper.v1.LocationType" json:"location_filter,omitempty"`          // 当类型为 ALL_CHARACTERS_AT_LOCATION 时使用
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
 
 func (x *TargetSelector) Reset() {
 	*x = TargetSelector{}
-	mi := &file_v1_condition_proto_msgTypes[8]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -913,7 +912,7 @@ func (x *TargetSelector) String() string {
 func (*TargetSelector) ProtoMessage() {}
 
 func (x *TargetSelector) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_condition_proto_msgTypes[8]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -926,7 +925,7 @@ func (x *TargetSelector) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TargetSelector.ProtoReflect.Descriptor instead.
 func (*TargetSelector) Descriptor() ([]byte, []int) {
-	return file_v1_condition_proto_rawDescGZIP(), []int{8}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *TargetSelector) GetSelectorType() TargetSelector_SelectorType {
@@ -957,152 +956,150 @@ func (x *TargetSelector) GetLocationFilter() LocationType {
 	return LocationType_LOCATION_TYPE_UNSPECIFIED
 }
 
-var File_v1_condition_proto protoreflect.FileDescriptor
+var File_tragedylooper_v1_condition_proto protoreflect.FileDescriptor
 
-const file_v1_condition_proto_rawDesc = "" +
+const file_tragedylooper_v1_condition_proto_rawDesc = "" +
 	"\n" +
-	"\x12v1/condition.proto\x12\x02v1\x1a\x0ev1/enums.proto\"\xdf\x03\n" +
-	"\tCondition\x12:\n" +
-	"\x0estat_condition\x18\x01 \x01(\v2\x11.v1.StatConditionH\x00R\rstatCondition\x12F\n" +
-	"\x12location_condition\x18\x02 \x01(\v2\x15.v1.LocationConditionH\x00R\x11locationCondition\x12:\n" +
-	"\x0erole_condition\x18\x03 \x01(\v2\x11.v1.RoleConditionH\x00R\rroleCondition\x12=\n" +
-	"\x0ftrait_condition\x18\x04 \x01(\v2\x12.v1.TraitConditionH\x00R\x0etraitCondition\x127\n" +
-	"\rday_condition\x18\x05 \x01(\v2\x10.v1.DayConditionH\x00R\fdayCondition\x12@\n" +
-	"\x10player_condition\x18\x06 \x01(\v2\x13.v1.PlayerConditionH\x00R\x0fplayerCondition\x12F\n" +
-	"\x12compound_condition\x18\a \x01(\v2\x15.v1.CompoundConditionH\x00R\x11compoundConditionB\x10\n" +
-	"\x0econdition_type\"\xc5\x01\n" +
-	"\x11CompoundCondition\x12:\n" +
-	"\boperator\x18\x01 \x01(\x0e2\x1e.v1.CompoundCondition.OperatorR\boperator\x124\n" +
-	"\x0esub_conditions\x18\x02 \x03(\v2\r.v1.ConditionR\rsubConditions\">\n" +
+	" tragedylooper/v1/condition.proto\x12\x10tragedylooper.v1\x1a\x1ctragedylooper/v1/enums.proto\"\xc1\x04\n" +
+	"\tCondition\x12H\n" +
+	"\x0estat_condition\x18\x01 \x01(\v2\x1f.tragedylooper.v1.StatConditionH\x00R\rstatCondition\x12T\n" +
+	"\x12location_condition\x18\x02 \x01(\v2#.tragedylooper.v1.LocationConditionH\x00R\x11locationCondition\x12H\n" +
+	"\x0erole_condition\x18\x03 \x01(\v2\x1f.tragedylooper.v1.RoleConditionH\x00R\rroleCondition\x12K\n" +
+	"\x0ftrait_condition\x18\x04 \x01(\v2 .tragedylooper.v1.TraitConditionH\x00R\x0etraitCondition\x12E\n" +
+	"\rday_condition\x18\x05 \x01(\v2\x1e.tragedylooper.v1.DayConditionH\x00R\fdayCondition\x12N\n" +
+	"\x10player_condition\x18\x06 \x01(\v2!.tragedylooper.v1.PlayerConditionH\x00R\x0fplayerCondition\x12T\n" +
+	"\x12compound_condition\x18\a \x01(\v2#.tragedylooper.v1.CompoundConditionH\x00R\x11compoundConditionB\x10\n" +
+	"\x0econdition_type\"\xfc\x01\n" +
+	"\x11CompoundCondition\x12H\n" +
+	"\boperator\x18\x01 \x01(\x0e2,.tragedylooper.v1.CompoundCondition.OperatorR\boperator\x12B\n" +
+	"\x0esub_conditions\x18\x02 \x03(\v2\x1b.tragedylooper.v1.ConditionR\rsubConditions\"Y\n" +
 	"\bOperator\x12\x18\n" +
-	"\x14OPERATOR_UNSPECIFIED\x10\x00\x12\a\n" +
-	"\x03AND\x10\x01\x12\x06\n" +
-	"\x02OR\x10\x02\x12\a\n" +
-	"\x03NOT\x10\x03\"\xa6\x03\n" +
-	"\rStatCondition\x12*\n" +
-	"\x06target\x18\x01 \x01(\v2\x12.v1.TargetSelectorR\x06target\x127\n" +
-	"\tstat_type\x18\x02 \x01(\x0e2\x1a.v1.StatCondition.StatTypeR\bstatType\x12<\n" +
+	"\x14OPERATOR_UNSPECIFIED\x10\x00\x12\x10\n" +
+	"\fOPERATOR_AND\x10\x01\x12\x0f\n" +
+	"\vOPERATOR_OR\x10\x02\x12\x10\n" +
+	"\fOPERATOR_NOT\x10\x03\"\xa5\x04\n" +
+	"\rStatCondition\x128\n" +
+	"\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12E\n" +
+	"\tstat_type\x18\x02 \x01(\x0e2(.tragedylooper.v1.StatCondition.StatTypeR\bstatType\x12J\n" +
 	"\n" +
-	"comparator\x18\x03 \x01(\x0e2\x1c.v1.StatCondition.ComparatorR\n" +
+	"comparator\x18\x03 \x01(\x0e2*.tragedylooper.v1.StatCondition.ComparatorR\n" +
 	"comparator\x12\x14\n" +
-	"\x05value\x18\x04 \x01(\x05R\x05value\"O\n" +
+	"\x05value\x18\x04 \x01(\x05R\x05value\"m\n" +
 	"\bStatType\x12\x19\n" +
-	"\x15STAT_TYPE_UNSPECIFIED\x10\x00\x12\f\n" +
-	"\bPARANOIA\x10\x01\x12\f\n" +
-	"\bGOODWILL\x10\x02\x12\f\n" +
-	"\bINTRIGUE\x10\x03\"\x8a\x01\n" +
+	"\x15STAT_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
+	"\x12STAT_TYPE_PARANOIA\x10\x01\x12\x16\n" +
+	"\x12STAT_TYPE_GOODWILL\x10\x02\x12\x16\n" +
+	"\x12STAT_TYPE_INTRIGUE\x10\x03\"\xc1\x01\n" +
 	"\n" +
 	"Comparator\x12\x1a\n" +
-	"\x16COMPARATOR_UNSPECIFIED\x10\x00\x12\x10\n" +
-	"\fGREATER_THAN\x10\x01\x12\r\n" +
-	"\tLESS_THAN\x10\x02\x12\f\n" +
-	"\bEQUAL_TO\x10\x03\x12\x19\n" +
-	"\x15GREATER_THAN_OR_EQUAL\x10\x04\x12\x16\n" +
-	"\x12LESS_THAN_OR_EQUAL\x10\x05\"\xcb\x01\n" +
-	"\x11LocationCondition\x12*\n" +
-	"\x06target\x18\x01 \x01(\v2\x12.v1.TargetSelectorR\x06target\x12,\n" +
-	"\blocation\x18\x02 \x01(\x0e2\x10.v1.LocationTypeR\blocation\x12$\n" +
+	"\x16COMPARATOR_UNSPECIFIED\x10\x00\x12\x1b\n" +
+	"\x17COMPARATOR_GREATER_THAN\x10\x01\x12\x18\n" +
+	"\x14COMPARATOR_LESS_THAN\x10\x02\x12\x17\n" +
+	"\x13COMPARATOR_EQUAL_TO\x10\x03\x12$\n" +
+	" COMPARATOR_GREATER_THAN_OR_EQUAL\x10\x04\x12!\n" +
+	"\x1dCOMPARATOR_LESS_THAN_OR_EQUAL\x10\x05\"\xe7\x01\n" +
+	"\x11LocationCondition\x128\n" +
+	"\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12:\n" +
+	"\blocation\x18\x02 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeR\blocation\x12$\n" +
 	"\x0eis_at_location\x18\x03 \x01(\bR\fisAtLocation\x12\x19\n" +
 	"\bis_alone\x18\x04 \x01(\bR\aisAlone\x12\x1b\n" +
-	"\tnot_alone\x18\x05 \x01(\bR\bnotAlone\"x\n" +
-	"\rRoleCondition\x12*\n" +
-	"\x06target\x18\x01 \x01(\v2\x12.v1.TargetSelectorR\x06target\x12 \n" +
-	"\x04role\x18\x02 \x01(\x0e2\f.v1.RoleTypeR\x04role\x12\x19\n" +
-	"\bhas_role\x18\x03 \x01(\bR\ahasRole\"o\n" +
-	"\x0eTraitCondition\x12*\n" +
-	"\x06target\x18\x01 \x01(\v2\x12.v1.TargetSelectorR\x06target\x12\x14\n" +
+	"\tnot_alone\x18\x05 \x01(\bR\bnotAlone\"\x94\x01\n" +
+	"\rRoleCondition\x128\n" +
+	"\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12.\n" +
+	"\x04role\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.RoleTypeR\x04role\x12\x19\n" +
+	"\bhas_role\x18\x03 \x01(\bR\ahasRole\"}\n" +
+	"\x0eTraitCondition\x128\n" +
+	"\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12\x14\n" +
 	"\x05trait\x18\x02 \x01(\tR\x05trait\x12\x1b\n" +
-	"\thas_trait\x18\x03 \x01(\bR\bhasTrait\"\xa6\x01\n" +
-	"\fDayCondition\x12;\n" +
+	"\thas_trait\x18\x03 \x01(\bR\bhasTrait\"\xd5\x01\n" +
+	"\fDayCondition\x12I\n" +
 	"\n" +
-	"comparator\x18\x01 \x01(\x0e2\x1b.v1.DayCondition.ComparatorR\n" +
+	"comparator\x18\x01 \x01(\x0e2).tragedylooper.v1.DayCondition.ComparatorR\n" +
 	"comparator\x12\x10\n" +
-	"\x03day\x18\x02 \x01(\x05R\x03day\"G\n" +
+	"\x03day\x18\x02 \x01(\x05R\x03day\"h\n" +
 	"\n" +
 	"Comparator\x12\x1a\n" +
-	"\x16COMPARATOR_UNSPECIFIED\x10\x00\x12\n" +
-	"\n" +
-	"\x06BEFORE\x10\x01\x12\x06\n" +
-	"\x02ON\x10\x02\x12\t\n" +
-	"\x05AFTER\x10\x03\"B\n" +
-	"\x0fPlayerCondition\x12/\n" +
-	"\vplayer_role\x18\x01 \x01(\x0e2\x0e.v1.PlayerRoleR\n" +
-	"playerRole\"\xd5\x03\n" +
-	"\x0eTargetSelector\x12D\n" +
-	"\rselector_type\x18\x01 \x01(\x0e2\x1f.v1.TargetSelector.SelectorTypeR\fselectorType\x12!\n" +
-	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\x12-\n" +
-	"\vrole_filter\x18\x03 \x01(\x0e2\f.v1.RoleTypeR\n" +
-	"roleFilter\x129\n" +
-	"\x0flocation_filter\x18\x04 \x01(\x0e2\x10.v1.LocationTypeR\x0elocationFilter\"\xef\x01\n" +
+	"\x16COMPARATOR_UNSPECIFIED\x10\x00\x12\x15\n" +
+	"\x11COMPARATOR_BEFORE\x10\x01\x12\x11\n" +
+	"\rCOMPARATOR_ON\x10\x02\x12\x14\n" +
+	"\x10COMPARATOR_AFTER\x10\x03\"P\n" +
+	"\x0fPlayerCondition\x12=\n" +
+	"\vplayer_role\x18\x01 \x01(\x0e2\x1c.tragedylooper.v1.PlayerRoleR\n" +
+	"playerRole\"\xfd\x04\n" +
+	"\x0eTargetSelector\x12R\n" +
+	"\rselector_type\x18\x01 \x01(\x0e2-.tragedylooper.v1.TargetSelector.SelectorTypeR\fselectorType\x12!\n" +
+	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\x12;\n" +
+	"\vrole_filter\x18\x03 \x01(\x0e2\x1a.tragedylooper.v1.RoleTypeR\n" +
+	"roleFilter\x12G\n" +
+	"\x0flocation_filter\x18\x04 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeR\x0elocationFilter\"\xed\x02\n" +
 	"\fSelectorType\x12\x1d\n" +
-	"\x19SELECTOR_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
-	"\x12SPECIFIC_CHARACTER\x10\x01\x12\x18\n" +
-	"\x14TRIGGERING_CHARACTER\x10\x02\x12\v\n" +
-	"\aCULPRIT\x10\x03\x12\n" +
-	"\n" +
-	"\x06VICTIM\x10\x04\x12\x1b\n" +
-	"\x17ANY_CHARACTER_WITH_ROLE\x10\x05\x12\x1e\n" +
-	"\x1aALL_CHARACTERS_AT_LOCATION\x10\x06\x12\x10\n" +
-	"\fABILITY_USER\x10\a\x12\x12\n" +
-	"\x0eABILITY_TARGET\x10\b\x12\x12\n" +
-	"\x0eALL_CHARACTERS\x10\tB&Z$tragedylooper/internal/game/proto/v1b\x06proto3"
+	"\x19SELECTOR_TYPE_UNSPECIFIED\x10\x00\x12$\n" +
+	" SELECTOR_TYPE_SPECIFIC_CHARACTER\x10\x01\x12&\n" +
+	"\"SELECTOR_TYPE_TRIGGERING_CHARACTER\x10\x02\x12\x19\n" +
+	"\x15SELECTOR_TYPE_CULPRIT\x10\x03\x12\x18\n" +
+	"\x14SELECTOR_TYPE_VICTIM\x10\x04\x12)\n" +
+	"%SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE\x10\x05\x12,\n" +
+	"(SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION\x10\x06\x12\x1e\n" +
+	"\x1aSELECTOR_TYPE_ABILITY_USER\x10\a\x12 \n" +
+	"\x1cSELECTOR_TYPE_ABILITY_TARGET\x10\b\x12 \n" +
+	"\x1cSELECTOR_TYPE_ALL_CHARACTERS\x10\tB\x1cZ\x1atragedylooper/pkg/proto/v1b\x06proto3"
 
 var (
-	file_v1_condition_proto_rawDescOnce sync.Once
-	file_v1_condition_proto_rawDescData []byte
+	file_tragedylooper_v1_condition_proto_rawDescOnce sync.Once
+	file_tragedylooper_v1_condition_proto_rawDescData []byte
 )
 
-func file_v1_condition_proto_rawDescGZIP() []byte {
-	file_v1_condition_proto_rawDescOnce.Do(func() {
-		file_v1_condition_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_v1_condition_proto_rawDesc), len(file_v1_condition_proto_rawDesc)))
+func file_tragedylooper_v1_condition_proto_rawDescGZIP() []byte {
+	file_tragedylooper_v1_condition_proto_rawDescOnce.Do(func() {
+		file_tragedylooper_v1_condition_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_condition_proto_rawDesc), len(file_tragedylooper_v1_condition_proto_rawDesc)))
 	})
-	return file_v1_condition_proto_rawDescData
+	return file_tragedylooper_v1_condition_proto_rawDescData
 }
 
-var file_v1_condition_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
-var file_v1_condition_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
-var file_v1_condition_proto_goTypes = []any{
-	(CompoundCondition_Operator)(0),  // 0: v1.CompoundCondition.Operator
-	(StatCondition_StatType)(0),      // 1: v1.StatCondition.StatType
-	(StatCondition_Comparator)(0),    // 2: v1.StatCondition.Comparator
-	(DayCondition_Comparator)(0),     // 3: v1.DayCondition.Comparator
-	(TargetSelector_SelectorType)(0), // 4: v1.TargetSelector.SelectorType
-	(*Condition)(nil),                // 5: v1.Condition
-	(*CompoundCondition)(nil),        // 6: v1.CompoundCondition
-	(*StatCondition)(nil),            // 7: v1.StatCondition
-	(*LocationCondition)(nil),        // 8: v1.LocationCondition
-	(*RoleCondition)(nil),            // 9: v1.RoleCondition
-	(*TraitCondition)(nil),           // 10: v1.TraitCondition
-	(*DayCondition)(nil),             // 11: v1.DayCondition
-	(*PlayerCondition)(nil),          // 12: v1.PlayerCondition
-	(*TargetSelector)(nil),           // 13: v1.TargetSelector
-	(LocationType)(0),                // 14: v1.LocationType
-	(RoleType)(0),                    // 15: v1.RoleType
-	(PlayerRole)(0),                  // 16: v1.PlayerRole
+var file_tragedylooper_v1_condition_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
+var file_tragedylooper_v1_condition_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_tragedylooper_v1_condition_proto_goTypes = []any{
+	(CompoundCondition_Operator)(0),  // 0: tragedylooper.v1.CompoundCondition.Operator
+	(StatCondition_StatType)(0),      // 1: tragedylooper.v1.StatCondition.StatType
+	(StatCondition_Comparator)(0),    // 2: tragedylooper.v1.StatCondition.Comparator
+	(DayCondition_Comparator)(0),     // 3: tragedylooper.v1.DayCondition.Comparator
+	(TargetSelector_SelectorType)(0), // 4: tragedylooper.v1.TargetSelector.SelectorType
+	(*Condition)(nil),                // 5: tragedylooper.v1.Condition
+	(*CompoundCondition)(nil),        // 6: tragedylooper.v1.CompoundCondition
+	(*StatCondition)(nil),            // 7: tragedylooper.v1.StatCondition
+	(*LocationCondition)(nil),        // 8: tragedylooper.v1.LocationCondition
+	(*RoleCondition)(nil),            // 9: tragedylooper.v1.RoleCondition
+	(*TraitCondition)(nil),           // 10: tragedylooper.v1.TraitCondition
+	(*DayCondition)(nil),             // 11: tragedylooper.v1.DayCondition
+	(*PlayerCondition)(nil),          // 12: tragedylooper.v1.PlayerCondition
+	(*TargetSelector)(nil),           // 13: tragedylooper.v1.TargetSelector
+	(LocationType)(0),                // 14: tragedylooper.v1.LocationType
+	(RoleType)(0),                    // 15: tragedylooper.v1.RoleType
+	(PlayerRole)(0),                  // 16: tragedylooper.v1.PlayerRole
 }
-var file_v1_condition_proto_depIdxs = []int32{
-	7,  // 0: v1.Condition.stat_condition:type_name -> v1.StatCondition
-	8,  // 1: v1.Condition.location_condition:type_name -> v1.LocationCondition
-	9,  // 2: v1.Condition.role_condition:type_name -> v1.RoleCondition
-	10, // 3: v1.Condition.trait_condition:type_name -> v1.TraitCondition
-	11, // 4: v1.Condition.day_condition:type_name -> v1.DayCondition
-	12, // 5: v1.Condition.player_condition:type_name -> v1.PlayerCondition
-	6,  // 6: v1.Condition.compound_condition:type_name -> v1.CompoundCondition
-	0,  // 7: v1.CompoundCondition.operator:type_name -> v1.CompoundCondition.Operator
-	5,  // 8: v1.CompoundCondition.sub_conditions:type_name -> v1.Condition
-	13, // 9: v1.StatCondition.target:type_name -> v1.TargetSelector
-	1,  // 10: v1.StatCondition.stat_type:type_name -> v1.StatCondition.StatType
-	2,  // 11: v1.StatCondition.comparator:type_name -> v1.StatCondition.Comparator
-	13, // 12: v1.LocationCondition.target:type_name -> v1.TargetSelector
-	14, // 13: v1.LocationCondition.location:type_name -> v1.LocationType
-	13, // 14: v1.RoleCondition.target:type_name -> v1.TargetSelector
-	15, // 15: v1.RoleCondition.role:type_name -> v1.RoleType
-	13, // 16: v1.TraitCondition.target:type_name -> v1.TargetSelector
-	3,  // 17: v1.DayCondition.comparator:type_name -> v1.DayCondition.Comparator
-	16, // 18: v1.PlayerCondition.player_role:type_name -> v1.PlayerRole
-	4,  // 19: v1.TargetSelector.selector_type:type_name -> v1.TargetSelector.SelectorType
-	15, // 20: v1.TargetSelector.role_filter:type_name -> v1.RoleType
-	14, // 21: v1.TargetSelector.location_filter:type_name -> v1.LocationType
+var file_tragedylooper_v1_condition_proto_depIdxs = []int32{
+	7,  // 0: tragedylooper.v1.Condition.stat_condition:type_name -> tragedylooper.v1.StatCondition
+	8,  // 1: tragedylooper.v1.Condition.location_condition:type_name -> tragedylooper.v1.LocationCondition
+	9,  // 2: tragedylooper.v1.Condition.role_condition:type_name -> tragedylooper.v1.RoleCondition
+	10, // 3: tragedylooper.v1.Condition.trait_condition:type_name -> tragedylooper.v1.TraitCondition
+	11, // 4: tragedylooper.v1.Condition.day_condition:type_name -> tragedylooper.v1.DayCondition
+	12, // 5: tragedylooper.v1.Condition.player_condition:type_name -> tragedylooper.v1.PlayerCondition
+	6,  // 6: tragedylooper.v1.Condition.compound_condition:type_name -> tragedylooper.v1.CompoundCondition
+	0,  // 7: tragedylooper.v1.CompoundCondition.operator:type_name -> tragedylooper.v1.CompoundCondition.Operator
+	5,  // 8: tragedylooper.v1.CompoundCondition.sub_conditions:type_name -> tragedylooper.v1.Condition
+	13, // 9: tragedylooper.v1.StatCondition.target:type_name -> tragedylooper.v1.TargetSelector
+	1,  // 10: tragedylooper.v1.StatCondition.stat_type:type_name -> tragedylooper.v1.StatCondition.StatType
+	2,  // 11: tragedylooper.v1.StatCondition.comparator:type_name -> tragedylooper.v1.StatCondition.Comparator
+	13, // 12: tragedylooper.v1.LocationCondition.target:type_name -> tragedylooper.v1.TargetSelector
+	14, // 13: tragedylooper.v1.LocationCondition.location:type_name -> tragedylooper.v1.LocationType
+	13, // 14: tragedylooper.v1.RoleCondition.target:type_name -> tragedylooper.v1.TargetSelector
+	15, // 15: tragedylooper.v1.RoleCondition.role:type_name -> tragedylooper.v1.RoleType
+	13, // 16: tragedylooper.v1.TraitCondition.target:type_name -> tragedylooper.v1.TargetSelector
+	3,  // 17: tragedylooper.v1.DayCondition.comparator:type_name -> tragedylooper.v1.DayCondition.Comparator
+	16, // 18: tragedylooper.v1.PlayerCondition.player_role:type_name -> tragedylooper.v1.PlayerRole
+	4,  // 19: tragedylooper.v1.TargetSelector.selector_type:type_name -> tragedylooper.v1.TargetSelector.SelectorType
+	15, // 20: tragedylooper.v1.TargetSelector.role_filter:type_name -> tragedylooper.v1.RoleType
+	14, // 21: tragedylooper.v1.TargetSelector.location_filter:type_name -> tragedylooper.v1.LocationType
 	22, // [22:22] is the sub-list for method output_type
 	22, // [22:22] is the sub-list for method input_type
 	22, // [22:22] is the sub-list for extension type_name
@@ -1110,13 +1107,13 @@ var file_v1_condition_proto_depIdxs = []int32{
 	0,  // [0:22] is the sub-list for field type_name
 }
 
-func init() { file_v1_condition_proto_init() }
-func file_v1_condition_proto_init() {
-	if File_v1_condition_proto != nil {
+func init() { file_tragedylooper_v1_condition_proto_init() }
+func file_tragedylooper_v1_condition_proto_init() {
+	if File_tragedylooper_v1_condition_proto != nil {
 		return
 	}
-	file_v1_enums_proto_init()
-	file_v1_condition_proto_msgTypes[0].OneofWrappers = []any{
+	file_tragedylooper_v1_enums_proto_init()
+	file_tragedylooper_v1_condition_proto_msgTypes[0].OneofWrappers = []any{
 		(*Condition_StatCondition)(nil),
 		(*Condition_LocationCondition)(nil),
 		(*Condition_RoleCondition)(nil),
@@ -1129,18 +1126,18 @@ func file_v1_condition_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_condition_proto_rawDesc), len(file_v1_condition_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_condition_proto_rawDesc), len(file_tragedylooper_v1_condition_proto_rawDesc)),
 			NumEnums:      5,
 			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_v1_condition_proto_goTypes,
-		DependencyIndexes: file_v1_condition_proto_depIdxs,
-		EnumInfos:         file_v1_condition_proto_enumTypes,
-		MessageInfos:      file_v1_condition_proto_msgTypes,
+		GoTypes:           file_tragedylooper_v1_condition_proto_goTypes,
+		DependencyIndexes: file_tragedylooper_v1_condition_proto_depIdxs,
+		EnumInfos:         file_tragedylooper_v1_condition_proto_enumTypes,
+		MessageInfos:      file_tragedylooper_v1_condition_proto_msgTypes,
 	}.Build()
-	File_v1_condition_proto = out.File
-	file_v1_condition_proto_goTypes = nil
-	file_v1_condition_proto_depIdxs = nil
+	File_tragedylooper_v1_condition_proto = out.File
+	file_tragedylooper_v1_condition_proto_goTypes = nil
+	file_tragedylooper_v1_condition_proto_depIdxs = nil
 }

@@ -6,7 +6,7 @@
             "properties": {
                 "cards": {
                     "additionalProperties": {
-                        "$ref": "#/definitions/v1.CardConfig",
+                        "$ref": "#/definitions/tragedylooper.v1.CardConfig",
                         "additionalProperties": true
                     },
                     "type": "object",
@@ -18,10 +18,10 @@
             "title": "Card Config Lib",
             "description": "卡牌配置库"
         },
-        "v1.AddTraitEffect": {
+        "tragedylooper.v1.AddTraitEffect": {
             "properties": {
                 "target": {
-                    "$ref": "#/definitions/v1.TargetSelector",
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
                     "additionalProperties": true,
                     "description": "目标角色"
                 },
@@ -35,10 +35,10 @@
             "title": "Add Trait Effect",
             "description": "添加特征效果"
         },
-        "v1.AdjustStatEffect": {
+        "tragedylooper.v1.AdjustStatEffect": {
             "properties": {
                 "target": {
-                    "$ref": "#/definitions/v1.TargetSelector",
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
                     "additionalProperties": true,
                     "description": "目标角色"
                 },
@@ -46,11 +46,11 @@
                     "enum": [
                         "STAT_TYPE_UNSPECIFIED",
                         0,
-                        "PARANOIA",
+                        "STAT_TYPE_PARANOIA",
                         1,
-                        "GOODWILL",
+                        "STAT_TYPE_GOODWILL",
                         2,
-                        "INTRIGUE",
+                        "STAT_TYPE_INTRIGUE",
                         3
                     ],
                     "oneOf": [
@@ -73,7 +73,7 @@
             "title": "Adjust Stat Effect",
             "description": "调整属性效果"
         },
-        "v1.CardConfig": {
+        "tragedylooper.v1.CardConfig": {
             "properties": {
                 "id": {
                     "type": "integer",
@@ -91,35 +91,35 @@
                     "enum": [
                         "CARD_TYPE_UNSPECIFIED",
                         0,
-                        "MOVE_HORIZONTALLY",
+                        "CARD_TYPE_MOVE_HORIZONTALLY",
                         1,
-                        "PARANOIA_PLUS",
+                        "CARD_TYPE_PARANOIA_PLUS",
                         2,
-                        "PARANOIA_MINUS",
+                        "CARD_TYPE_PARANOIA_MINUS",
                         3,
-                        "GOODWILL_PLUS",
+                        "CARD_TYPE_GOODWILL_PLUS",
                         4,
-                        "GOODWILL_MINUS",
+                        "CARD_TYPE_GOODWILL_MINUS",
                         5,
-                        "INTRIGUE_PLUS",
+                        "CARD_TYPE_INTRIGUE_PLUS",
                         6,
-                        "FORBID_MOVEMENT",
+                        "CARD_TYPE_FORBID_MOVEMENT",
                         7,
-                        "FORBID_PARANOIA_INCREASE",
+                        "CARD_TYPE_FORBID_PARANOIA_INCREASE",
                         8,
-                        "FORBID_GOODWILL_INCREASE",
+                        "CARD_TYPE_FORBID_GOODWILL_INCREASE",
                         9,
-                        "FORBID_INTRIGUE_INCREASE",
+                        "CARD_TYPE_FORBID_INTRIGUE_INCREASE",
                         10,
-                        "MOVE_VERTICALLY",
+                        "CARD_TYPE_MOVE_VERTICALLY",
                         11,
-                        "MOVE_DIAGONALLY",
+                        "CARD_TYPE_MOVE_DIAGONALLY",
                         12,
-                        "ADD_PARANOIA",
+                        "CARD_TYPE_ADD_PARANOIA",
                         13,
-                        "ADD_GOODWILL",
+                        "CARD_TYPE_ADD_GOODWILL",
                         14,
-                        "ADD_INTRIGUE",
+                        "CARD_TYPE_ADD_INTRIGUE",
                         15
                     ],
                     "oneOf": [
@@ -137,9 +137,9 @@
                     "enum": [
                         "PLAYER_ROLE_UNSPECIFIED",
                         0,
-                        "MASTERMIND",
+                        "PLAYER_ROLE_MASTERMIND",
                         1,
-                        "PROTAGONIST",
+                        "PLAYER_ROLE_PROTAGONIST",
                         2
                     ],
                     "oneOf": [
@@ -154,7 +154,7 @@
                     "description": "玩家角色"
                 },
                 "effect": {
-                    "$ref": "#/definitions/v1.CompoundEffect",
+                    "$ref": "#/definitions/tragedylooper.v1.CompoundEffect",
                     "additionalProperties": true,
                     "description": "卡牌效果"
                 },
@@ -172,10 +172,10 @@
             "title": "Card Config",
             "description": "卡牌静态配置"
         },
-        "v1.ChangeRoleEffect": {
+        "tragedylooper.v1.ChangeRoleEffect": {
             "properties": {
                 "target": {
-                    "$ref": "#/definitions/v1.TargetSelector",
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
                     "additionalProperties": true,
                     "description": "目标角色"
                 },
@@ -183,31 +183,31 @@
                     "enum": [
                         "ROLE_TYPE_UNSPECIFIED",
                         0,
-                        "ROLE_UNKNOWN",
+                        "ROLE_TYPE_ROLE_UNKNOWN",
                         1,
-                        "PERSON",
+                        "ROLE_TYPE_PERSON",
                         2,
-                        "KILLER",
+                        "ROLE_TYPE_KILLER",
                         3,
-                        "BRAIN",
+                        "ROLE_TYPE_BRAIN",
                         4,
-                        "KEY_PERSON",
+                        "ROLE_TYPE_KEY_PERSON",
                         5,
-                        "CULTIST",
+                        "ROLE_TYPE_CULTIST",
                         6,
-                        "FRIEND",
+                        "ROLE_TYPE_FRIEND",
                         7,
-                        "LOVED_ONE",
+                        "ROLE_TYPE_LOVED_ONE",
                         8,
-                        "CONSPIRACY_THEORIST",
+                        "ROLE_TYPE_CONSPIRACY_THEORIST",
                         9,
-                        "SERIAL_KILLER",
+                        "ROLE_TYPE_SERIAL_KILLER",
                         10,
-                        "FACTOR",
+                        "ROLE_TYPE_FACTOR",
                         11,
-                        "WITCH",
+                        "ROLE_TYPE_WITCH",
                         12,
-                        "TIME_TRAVELER",
+                        "ROLE_TYPE_TIME_TRAVELER",
                         13
                     ],
                     "oneOf": [
@@ -227,15 +227,15 @@
             "title": "Change Role Effect",
             "description": "改变身份效果"
         },
-        "v1.CompoundEffect": {
+        "tragedylooper.v1.CompoundEffect": {
             "properties": {
                 "operator": {
                     "enum": [
                         "OPERATOR_UNSPECIFIED",
                         0,
-                        "SEQUENCE",
+                        "OPERATOR_SEQUENCE",
                         1,
-                        "CHOOSE_ONE",
+                        "OPERATOR_CHOOSE_ONE",
                         2
                     ],
                     "oneOf": [
@@ -250,7 +250,7 @@
                 },
                 "sub_effects": {
                     "items": {
-                        "$ref": "#/definitions/v1.Effect"
+                        "$ref": "#/definitions/tragedylooper.v1.Effect"
                     },
                     "type": "array",
                     "description": "子效果列表"
@@ -261,60 +261,60 @@
             "title": "Compound Effect",
             "description": "复合效果，用于组合多个效果"
         },
-        "v1.Effect": {
+        "tragedylooper.v1.Effect": {
             "properties": {
                 "adjust_stat": {
-                    "$ref": "#/definitions/v1.AdjustStatEffect",
+                    "$ref": "#/definitions/tragedylooper.v1.AdjustStatEffect",
                     "additionalProperties": true,
                     "description": "调整属性"
                 },
                 "move_character": {
-                    "$ref": "#/definitions/v1.MoveCharacterEffect",
+                    "$ref": "#/definitions/tragedylooper.v1.MoveCharacterEffect",
                     "additionalProperties": true,
                     "description": "移动角色"
                 },
                 "forbid": {
-                    "$ref": "#/definitions/v1.ForbidEffect",
+                    "$ref": "#/definitions/tragedylooper.v1.ForbidEffect",
                     "additionalProperties": true,
                     "description": "禁止行动"
                 },
                 "grant_ability": {
-                    "$ref": "#/definitions/v1.GrantAbilityEffect",
+                    "$ref": "#/definitions/tragedylooper.v1.GrantAbilityEffect",
                     "additionalProperties": true,
                     "description": "授予能力"
                 },
                 "reveal_role": {
-                    "$ref": "#/definitions/v1.RevealRoleEffect",
+                    "$ref": "#/definitions/tragedylooper.v1.RevealRoleEffect",
                     "additionalProperties": true,
                     "description": "揭示身份"
                 },
                 "change_role": {
-                    "$ref": "#/definitions/v1.ChangeRoleEffect",
+                    "$ref": "#/definitions/tragedylooper.v1.ChangeRoleEffect",
                     "additionalProperties": true,
                     "description": "改变身份"
                 },
                 "trigger_incident": {
-                    "$ref": "#/definitions/v1.TriggerIncidentEffect",
+                    "$ref": "#/definitions/tragedylooper.v1.TriggerIncidentEffect",
                     "additionalProperties": true,
                     "description": "触发事件"
                 },
                 "end_game": {
-                    "$ref": "#/definitions/v1.EndGameEffect",
+                    "$ref": "#/definitions/tragedylooper.v1.EndGameEffect",
                     "additionalProperties": true,
                     "description": "结束游戏"
                 },
                 "add_trait": {
-                    "$ref": "#/definitions/v1.AddTraitEffect",
+                    "$ref": "#/definitions/tragedylooper.v1.AddTraitEffect",
                     "additionalProperties": true,
                     "description": "添加特征"
                 },
                 "remove_trait": {
-                    "$ref": "#/definitions/v1.RemoveTraitEffect",
+                    "$ref": "#/definitions/tragedylooper.v1.RemoveTraitEffect",
                     "additionalProperties": true,
                     "description": "移除特征"
                 },
                 "compound_effect": {
-                    "$ref": "#/definitions/v1.CompoundEffect",
+                    "$ref": "#/definitions/tragedylooper.v1.CompoundEffect",
                     "additionalProperties": true,
                     "description": "复合效果"
                 }
@@ -324,15 +324,15 @@
             "title": "Effect",
             "description": "效果，定义了能力、卡牌或规则的具体作用"
         },
-        "v1.EndGameEffect": {
+        "tragedylooper.v1.EndGameEffect": {
             "properties": {
                 "winner": {
                     "enum": [
                         "PLAYER_ROLE_UNSPECIFIED",
                         0,
-                        "MASTERMIND",
+                        "PLAYER_ROLE_MASTERMIND",
                         1,
-                        "PROTAGONIST",
+                        "PLAYER_ROLE_PROTAGONIST",
                         2
                     ],
                     "oneOf": [
@@ -356,10 +356,10 @@
             "title": "End Game Effect",
             "description": "结束游戏效果"
         },
-        "v1.ForbidEffect": {
+        "tragedylooper.v1.ForbidEffect": {
             "properties": {
                 "target": {
-                    "$ref": "#/definitions/v1.TargetSelector",
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
                     "additionalProperties": true,
                     "description": "目标角色"
                 },
@@ -367,13 +367,13 @@
                     "enum": [
                         "FORBID_TYPE_UNSPECIFIED",
                         0,
-                        "MOVEMENT",
+                        "FORBID_TYPE_MOVEMENT",
                         1,
-                        "PARANOIA_CHANGE",
+                        "FORBID_TYPE_PARANOIA_CHANGE",
                         2,
-                        "GOODWILL_CHANGE",
+                        "FORBID_TYPE_GOODWILL_CHANGE",
                         3,
-                        "INTRIGUE_CHANGE",
+                        "FORBID_TYPE_INTRIGUE_CHANGE",
                         4
                     ],
                     "oneOf": [
@@ -392,10 +392,10 @@
             "title": "Forbid Effect",
             "description": "禁止效果"
         },
-        "v1.GrantAbilityEffect": {
+        "tragedylooper.v1.GrantAbilityEffect": {
             "properties": {
                 "target": {
-                    "$ref": "#/definitions/v1.TargetSelector",
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
                     "additionalProperties": true,
                     "description": "目标角色"
                 },
@@ -413,10 +413,10 @@
             "title": "Grant Ability Effect",
             "description": "授予能力效果"
         },
-        "v1.MoveCharacterEffect": {
+        "tragedylooper.v1.MoveCharacterEffect": {
             "properties": {
                 "target": {
-                    "$ref": "#/definitions/v1.TargetSelector",
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
                     "additionalProperties": true,
                     "description": "目标角色"
                 },
@@ -424,13 +424,13 @@
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
-                        "HOSPITAL",
+                        "LOCATION_TYPE_HOSPITAL",
                         1,
-                        "SHRINE",
+                        "LOCATION_TYPE_SHRINE",
                         2,
-                        "CITY",
+                        "LOCATION_TYPE_CITY",
                         3,
-                        "SCHOOL",
+                        "LOCATION_TYPE_SCHOOL",
                         4
                     ],
                     "oneOf": [
@@ -450,10 +450,10 @@
             "title": "Move Character Effect",
             "description": "移动角色效果"
         },
-        "v1.RemoveTraitEffect": {
+        "tragedylooper.v1.RemoveTraitEffect": {
             "properties": {
                 "target": {
-                    "$ref": "#/definitions/v1.TargetSelector",
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
                     "additionalProperties": true,
                     "description": "目标角色"
                 },
@@ -467,10 +467,10 @@
             "title": "Remove Trait Effect",
             "description": "移除特征效果"
         },
-        "v1.RevealRoleEffect": {
+        "tragedylooper.v1.RevealRoleEffect": {
             "properties": {
                 "target": {
-                    "$ref": "#/definitions/v1.TargetSelector",
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
                     "additionalProperties": true,
                     "description": "目标角色"
                 }
@@ -480,29 +480,29 @@
             "title": "Reveal Role Effect",
             "description": "揭示身份效果"
         },
-        "v1.TargetSelector": {
+        "tragedylooper.v1.TargetSelector": {
             "properties": {
                 "selector_type": {
                     "enum": [
                         "SELECTOR_TYPE_UNSPECIFIED",
                         0,
-                        "SPECIFIC_CHARACTER",
+                        "SELECTOR_TYPE_SPECIFIC_CHARACTER",
                         1,
-                        "TRIGGERING_CHARACTER",
+                        "SELECTOR_TYPE_TRIGGERING_CHARACTER",
                         2,
-                        "CULPRIT",
+                        "SELECTOR_TYPE_CULPRIT",
                         3,
-                        "VICTIM",
+                        "SELECTOR_TYPE_VICTIM",
                         4,
-                        "ANY_CHARACTER_WITH_ROLE",
+                        "SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE",
                         5,
-                        "ALL_CHARACTERS_AT_LOCATION",
+                        "SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION",
                         6,
-                        "ABILITY_USER",
+                        "SELECTOR_TYPE_ABILITY_USER",
                         7,
-                        "ABILITY_TARGET",
+                        "SELECTOR_TYPE_ABILITY_TARGET",
                         8,
-                        "ALL_CHARACTERS",
+                        "SELECTOR_TYPE_ALL_CHARACTERS",
                         9
                     ],
                     "oneOf": [
@@ -523,31 +523,31 @@
                     "enum": [
                         "ROLE_TYPE_UNSPECIFIED",
                         0,
-                        "ROLE_UNKNOWN",
+                        "ROLE_TYPE_ROLE_UNKNOWN",
                         1,
-                        "PERSON",
+                        "ROLE_TYPE_PERSON",
                         2,
-                        "KILLER",
+                        "ROLE_TYPE_KILLER",
                         3,
-                        "BRAIN",
+                        "ROLE_TYPE_BRAIN",
                         4,
-                        "KEY_PERSON",
+                        "ROLE_TYPE_KEY_PERSON",
                         5,
-                        "CULTIST",
+                        "ROLE_TYPE_CULTIST",
                         6,
-                        "FRIEND",
+                        "ROLE_TYPE_FRIEND",
                         7,
-                        "LOVED_ONE",
+                        "ROLE_TYPE_LOVED_ONE",
                         8,
-                        "CONSPIRACY_THEORIST",
+                        "ROLE_TYPE_CONSPIRACY_THEORIST",
                         9,
-                        "SERIAL_KILLER",
+                        "ROLE_TYPE_SERIAL_KILLER",
                         10,
-                        "FACTOR",
+                        "ROLE_TYPE_FACTOR",
                         11,
-                        "WITCH",
+                        "ROLE_TYPE_WITCH",
                         12,
-                        "TIME_TRAVELER",
+                        "ROLE_TYPE_TIME_TRAVELER",
                         13
                     ],
                     "oneOf": [
@@ -565,13 +565,13 @@
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
-                        "HOSPITAL",
+                        "LOCATION_TYPE_HOSPITAL",
                         1,
-                        "SHRINE",
+                        "LOCATION_TYPE_SHRINE",
                         2,
-                        "CITY",
+                        "LOCATION_TYPE_CITY",
                         3,
-                        "SCHOOL",
+                        "LOCATION_TYPE_SCHOOL",
                         4
                     ],
                     "oneOf": [
@@ -591,7 +591,7 @@
             "title": "Target Selector",
             "description": "目标选择器，用于动态指定条件或效果的目标"
         },
-        "v1.TriggerIncidentEffect": {
+        "tragedylooper.v1.TriggerIncidentEffect": {
             "properties": {
                 "incident_id": {
                     "type": "integer",
