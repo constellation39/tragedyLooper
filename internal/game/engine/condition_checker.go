@@ -34,7 +34,7 @@ func (cc *conditionChecker) Check(gs *model.GameState, condition *model.Conditio
 
 func (cc *conditionChecker) checkCompoundCondition(gs *model.GameState, condition *model.CompoundCondition) (bool, error) {
 	switch condition.Operator {
-	case model.CompoundCondition_AND:
+	case model.CompoundCondition_OPERATOR_AND:
 		for _, sub := range condition.SubConditions {
 			result, err := cc.Check(gs, sub)
 			if err != nil || !result {
@@ -42,7 +42,7 @@ func (cc *conditionChecker) checkCompoundCondition(gs *model.GameState, conditio
 			}
 		}
 		return true, nil
-	case model.CompoundCondition_OR:
+	case model.CompoundCondition_OPERATOR_OR:
 		for _, sub := range condition.SubConditions {
 			result, err := cc.Check(gs, sub)
 			if err == nil && result {
@@ -50,7 +50,7 @@ func (cc *conditionChecker) checkCompoundCondition(gs *model.GameState, conditio
 			}
 		}
 		return false, nil
-	case model.CompoundCondition_NOT:
+	case model.CompoundCondition_OPERATOR_NOT:
 		if len(condition.SubConditions) != 1 {
 			return false, fmt.Errorf("NOT operator requires exactly one sub-condition")
 		}
@@ -71,11 +71,11 @@ func (cc *conditionChecker) checkStatCondition(gs *model.GameState, condition *m
 
 	var statValue int32
 	switch condition.StatType {
-	case model.StatCondition_PARANOIA:
+	case model.StatCondition_STAT_TYPE_PARANOIA:
 		statValue = char.Paranoia
-	case model.StatCondition_GOODWILL:
+	case model.StatCondition_STAT_TYPE_GOODWILL:
 		statValue = char.Goodwill
-	case model.StatCondition_INTRIGUE:
+	case model.StatCondition_STAT_TYPE_INTRIGUE:
 		statValue = char.Intrigue
 	default:
 		return false, fmt.Errorf("unknown stat type: %v", condition.StatType)

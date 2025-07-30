@@ -10,7 +10,9 @@ import (
 type ProtagonistGuessPhase struct{ basePhase }
 
 // Type 返回阶段类型，表示当前是主角猜测阶段。
-func (p *ProtagonistGuessPhase) Type() model.GamePhase { return model.GamePhase_PROTAGONIST_GUESS }
+func (p *ProtagonistGuessPhase) Type() model.GamePhase {
+	return model.GamePhase_GAME_PHASE_PROTAGONIST_GUESS
+}
 
 // HandleAction 处理玩家在主角猜测阶段的操作。
 func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {

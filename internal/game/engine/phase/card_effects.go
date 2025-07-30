@@ -2,7 +2,7 @@ package phase
 
 import (
 	"sort"
-	v1 "tragedylooper/pkg/proto/tragedylooper/v1"
+	model "tragedylooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
 )
@@ -11,7 +11,7 @@ import (
 type CardEffectsPhase struct{ basePhase }
 
 // Type 返回阶段类型。
-func (p *CardEffectsPhase) Type() v1.GamePhase { return v1.GamePhase_CARD_EFFECTS }
+func (p *CardEffectsPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_CARD_EFFECTS }
 
 // Enter 在阶段开始时调用。
 func (p *CardEffectsPhase) Enter(ge GameEngine) Phase {
@@ -41,11 +41,11 @@ func (p *CardEffectsPhase) Enter(ge GameEngine) Phase {
 	return &AbilitiesPhase{}
 }
 
-func (p *CardEffectsPhase) resolveForbidMovement(logger *zap.Logger, cards []*v1.Card) map[int32]bool {
+func (p *CardEffectsPhase) resolveForbidMovement(logger *zap.Logger, cards []*model.Card) map[int32]bool {
 	forbidden := make(map[int32]bool)
 	for _, card := range cards {
-		if card.Config.Type == v1.CardType_FORBID_MOVEMENT {
-			if target, ok := card.Target.(*v1.Card_TargetCharacterId); ok {
+		if card.Config.Type == model.CardType_CARD_TYPE_FORBID_MOVEMENT {
+			if target, ok := card.Target.(*model.Card_TargetCharacterId); ok {
 				logger.Info("Character movement forbidden", zap.Int32("charID", target.TargetCharacterId), zap.String("card", card.Config.Name))
 				forbidden[target.TargetCharacterId] = true
 			}
@@ -54,11 +54,11 @@ func (p *CardEffectsPhase) resolveForbidMovement(logger *zap.Logger, cards []*v1
 	return forbidden
 }
 
-func (p *CardEffectsPhase) resolveMovement(logger *zap.Logger, ge GameEngine, cards []*v1.Card, forbiddenMoves map[int32]bool) {
+func (p *CardEffectsPhase) resolveMovement(logger *zap.Logger, ge GameEngine, cards []*model.Card, forbiddenMoves map[int32]bool) {
 	movements := make(map[int32]struct{ H, V, D int })
 
 	for _, card := range cards {
-		if target, ok := card.Target.(*v1.Card_TargetCharacterId); ok {
+		if target, ok := card.Target.(*model.Card_TargetCharacterId); ok {
 			charID := target.TargetCharacterId
 			if forbiddenMoves[charID] {
 				continue
@@ -66,11 +66,11 @@ func (p *CardEffectsPhase) resolveMovement(logger *zap.Logger, ge GameEngine, ca
 
 			move := movements[charID]
 			switch card.Config.Type {
-			case v1.CardType_MOVE_HORIZONTALLY:
+			case model.CardType_CARD_TYPE_MOVE_HORIZONTALLY:
 				move.H++
-			case v1.CardType_MOVE_VERTICALLY:
+			case model.CardType_CARD_TYPE_MOVE_VERTICALLY:
 				move.V++
-			case v1.CardType_MOVE_DIAGONALLY:
+			case model.CardType_CARD_TYPE_MOVE_DIAGONALLY:
 				move.D++
 			}
 			movements[charID] = move
@@ -98,11 +98,11 @@ func (p *CardEffectsPhase) resolveMovement(logger *zap.Logger, ge GameEngine, ca
 	}
 }
 
-func (p *CardEffectsPhase) resolveStatEffects(logger *zap.Logger, ge GameEngine, cards []*v1.Card) {
+func (p *CardEffectsPhase) resolveStatEffects(logger *zap.Logger, ge GameEngine, cards []*model.Card) {
 	forbidParanoiaInc, forbidGoodwillInc, forbidIntrigueInc := p.gatherForbidEffects(cards)
 
 	for _, card := range cards {
-		if target, ok := card.Target.(*v1.Card_TargetCharacterId); ok {
+		if target, ok := card.Target.(*model.Card_TargetCharacterId); ok {
 			charID := target.TargetCharacterId
 			char := ge.GetCharacterByID(charID)
 			if char == nil {
@@ -115,20 +115,20 @@ func (p *CardEffectsPhase) resolveStatEffects(logger *zap.Logger, ge GameEngine,
 	}
 }
 
-func (p *CardEffectsPhase) gatherForbidEffects(cards []*v1.Card) (map[int32]bool, map[int32]bool, map[int32]bool) {
+func (p *CardEffectsPhase) gatherForbidEffects(cards []*model.Card) (map[int32]bool, map[int32]bool, map[int32]bool) {
 	forbidParanoiaInc := make(map[int32]bool)
 	forbidGoodwillInc := make(map[int32]bool)
 	forbidIntrigueInc := make(map[int32]bool)
 
 	for _, card := range cards {
-		if target, ok := card.Target.(*v1.Card_TargetCharacterId); ok {
+		if target, ok := card.Target.(*model.Card_TargetCharacterId); ok {
 			charID := target.TargetCharacterId
 			switch card.Config.Type {
-			case v1.CardType_CARD_TYPE_FORBID_PARANOIA_INCREASE:
+			case model.CardType_CARD_TYPE_FORBID_PARANOIA_INCREASE:
 				forbidParanoiaInc[charID] = true
-			case v1.CardType_CARD_TYPE_FORBID_GOODWILL_INCREASE:
+			case model.CardType_CARD_TYPE_FORBID_GOODWILL_INCREASE:
 				forbidGoodwillInc[charID] = true
-			case v1.CardType_CARD_TYPE_FORBID_INTRIGUE_INCREASE:
+			case model.CardType_CARD_TYPE_FORBID_INTRIGUE_INCREASE:
 				forbidIntrigueInc[charID] = true
 			}
 		}
@@ -136,37 +136,37 @@ func (p *CardEffectsPhase) gatherForbidEffects(cards []*v1.Card) (map[int32]bool
 	return forbidParanoiaInc, forbidGoodwillInc, forbidIntrigueInc
 }
 
-func (p *CardEffectsPhase) applyStatEffect(logger *zap.Logger, ge GameEngine, charID int32, cardType v1.CardType, amount int32, forbidParanoia, forbidGoodwill, forbidIntrigue map[int32]bool) {
+func (p *CardEffectsPhase) applyStatEffect(logger *zap.Logger, ge GameEngine, charID int32, cardType model.CardType, amount int32, forbidParanoia, forbidGoodwill, forbidIntrigue map[int32]bool) {
 	switch cardType {
-	case v1.CardType_CARD_TYPE_ADD_PARANOIA:
+	case model.CardType_CARD_TYPE_ADD_PARANOIA:
 		if forbidParanoia[charID] && amount > 0 {
 			logger.Info("Paranoia increase forbidden", zap.Int32("charID", charID))
 			return
 		}
-		ge.ApplyAndPublishEvent(v1.GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED, &v1.EventPayload{
-			Payload: &v1.EventPayload_ParanoiaAdjusted{ParanoiaAdjusted: &v1.ParanoiaAdjustedEvent{
+		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED, &model.EventPayload{
+			Payload: &model.EventPayload_ParanoiaAdjusted{ParanoiaAdjusted: &model.ParanoiaAdjustedEvent{
 				CharacterId: charID,
 				Amount:      amount,
 			}},
 		})
-	case v1.CardType_CARD_TYPE_ADD_GOODWILL:
+	case model.CardType_CARD_TYPE_ADD_GOODWILL:
 		if forbidGoodwill[charID] && amount > 0 {
 			logger.Info("Goodwill increase forbidden", zap.Int32("charID", charID))
 			return
 		}
-		ge.ApplyAndPublishEvent(v1.GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED, &v1.EventPayload{
-			Payload: &v1.EventPayload_GoodwillAdjusted{GoodwillAdjusted: &v1.GoodwillAdjustedEvent{
+		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED, &model.EventPayload{
+			Payload: &model.EventPayload_GoodwillAdjusted{GoodwillAdjusted: &model.GoodwillAdjustedEvent{
 				CharacterId: charID,
 				Amount:      amount,
 			}},
 		})
-	case v1.CardType_CARD_TYPE_ADD_INTRIGUE:
+	case model.CardType_CARD_TYPE_ADD_INTRIGUE:
 		if forbidIntrigue[charID] && amount > 0 {
 			logger.Info("Intrigue increase forbidden", zap.Int32("charID", charID))
 			return
 		}
-		ge.ApplyAndPublishEvent(v1.GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED, &v1.EventPayload{
-			Payload: &v1.EventPayload_IntrigueAdjusted{IntrigueAdjusted: &v1.IntrigueAdjustedEvent{
+		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED, &model.EventPayload{
+			Payload: &model.EventPayload_IntrigueAdjusted{IntrigueAdjusted: &model.IntrigueAdjustedEvent{
 				CharacterId: charID,
 				Amount:      amount,
 			}},
@@ -176,8 +176,8 @@ func (p *CardEffectsPhase) applyStatEffect(logger *zap.Logger, ge GameEngine, ch
 
 // getAllPlayedCards 将已打出卡牌的映射扁平化为单个切片并对其进行排序。
 // 排序对于确保确定性的解析顺序很重要。
-func getAllPlayedCards(ge GameEngine) []*v1.Card {
-	var cards []*v1.Card
+func getAllPlayedCards(ge GameEngine) []*model.Card {
+	var cards []*model.Card
 	for _, cardList := range ge.GetGameState().PlayedCardsThisDay {
 		cards = append(cards, cardList.Cards...)
 	}
