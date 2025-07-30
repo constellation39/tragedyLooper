@@ -2,7 +2,7 @@ package loader
 
 import (
 	"fmt"
-	v1 "tragedylooper/pkg/proto/v1"
+	v1 "tragedylooper/pkg/proto/tragedylooper/v1"
 )
 
 // repository 保存所有游戏数据。

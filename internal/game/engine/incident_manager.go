@@ -45,7 +45,7 @@ func (im *incidentManager) TriggerIncidents() {
 			incident.HasTriggeredThisLoop = true
 
 			// 发布触发事件
-			im.engine.ApplyAndPublishEvent(model.GameEventType_INCIDENT_TRIGGERED, &model.EventPayload{
+			im.engine.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_INCIDENT_TRIGGERED, &model.EventPayload{
 				Payload: &model.EventPayload_IncidentTriggered{IncidentTriggered: &model.IncidentTriggeredEvent{Incident: incident}},
 			})
 

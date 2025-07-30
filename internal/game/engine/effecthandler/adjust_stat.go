@@ -44,25 +44,25 @@ func (h *AdjustStatHandler) Apply(ge GameEngine, effect *model.Effect, ctx *Effe
 		}
 
 		switch adjustStatEffect.StatType {
-		case model.StatCondition_PARANOIA:
+		case model.StatCondition_STAT_TYPE_PARANOIA:
 			// 调整偏执并发布 ParanoiaAdjustedEvent。
 			newParanoia := char.Paranoia + adjustStatEffect.Amount
 			event := &model.ParanoiaAdjustedEvent{CharacterId: targetID, NewParanoia: newParanoia, Amount: adjustStatEffect.Amount}
-			ge.ApplyAndPublishEvent(model.GameEventType_PARANOIA_ADJUSTED, &model.EventPayload{
+			ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED, &model.EventPayload{
 				Payload: &model.EventPayload_ParanoiaAdjusted{ParanoiaAdjusted: event},
 			})
-		case model.StatCondition_INTRIGUE:
+		case model.StatCondition_STAT_TYPE_INTRIGUE:
 			// 调整阴谋并发布 IntrigueAdjustedEvent。
 			newIntrigue := char.Intrigue + adjustStatEffect.Amount
 			event := &model.IntrigueAdjustedEvent{CharacterId: targetID, NewIntrigue: newIntrigue, Amount: adjustStatEffect.Amount}
-			ge.ApplyAndPublishEvent(model.GameEventType_INTRIGUE_ADJUSTED, &model.EventPayload{
+			ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED, &model.EventPayload{
 				Payload: &model.EventPayload_IntrigueAdjusted{IntrigueAdjusted: event},
 			})
-		case model.StatCondition_GOODWILL:
+		case model.StatCondition_STAT_TYPE_GOODWILL:
 			// 调整好感并发布 GoodwillAdjustedEvent。
 			newGoodwill := char.Goodwill + adjustStatEffect.Amount
 			event := &model.GoodwillAdjustedEvent{CharacterId: targetID, NewGoodwill: newGoodwill, Amount: adjustStatEffect.Amount}
-			ge.ApplyAndPublishEvent(model.GameEventType_GOODWILL_ADJUSTED, &model.EventPayload{
+			ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED, &model.EventPayload{
 				Payload: &model.EventPayload_GoodwillAdjusted{GoodwillAdjusted: event},
 			})
 		}

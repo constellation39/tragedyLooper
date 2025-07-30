@@ -10,7 +10,7 @@ import (
 type DayEndPhase struct{ basePhase }
 
 // Type 返回阶段类型。
-func (p *DayEndPhase) Type() model.GamePhase { return model.GamePhase_DAY_END }
+func (p *DayEndPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_DAY_END }
 
 // Enter 在阶段开始时调用。
 func (p *DayEndPhase) Enter(ge GameEngine) Phase {
@@ -19,7 +19,7 @@ func (p *DayEndPhase) Enter(ge GameEngine) Phase {
 
 	// 1. 检查循环失败条件
 	for _, endCond := range script.LoseConditions {
-		if endCond.Type == model.EndConditionType_PROTAGONIST_GUESS_FAIL {
+		if endCond.Type == model.EndConditionType_END_CONDITION_TYPE_PROTAGONIST_GUESS_FAIL {
 			for _, req := range endCond.Requirements {
 				met, err := ge.CheckCondition(req)
 				if err != nil {
@@ -28,7 +28,7 @@ func (p *DayEndPhase) Enter(ge GameEngine) Phase {
 				}
 				if met {
 					logger.Info("Loop loss condition met", zap.String("description", endCond.Description))
-					ge.ApplyAndPublishEvent(model.GameEventType_LOOP_LOSS, &model.EventPayload{})
+					ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_LOSS, &model.EventPayload{})
 					return &LoopEndPhase{}
 				}
 			}

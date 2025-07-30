@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	Register(model.GameEventType_INTRIGUE_ADJUSTED, &IntrigueAdjustedHandler{})
+	Register(model.GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED, &IntrigueAdjustedHandler{})
 }
 
 // IntrigueAdjustedHandler handles the IntrigueAdjustedEvent.

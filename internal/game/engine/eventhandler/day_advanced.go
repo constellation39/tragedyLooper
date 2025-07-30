@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	Register(model.GameEventType_DAY_ADVANCED, &DayAdvancedHandler{})
+	Register(model.GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED, &DayAdvancedHandler{})
 }
 
 // DayAdvancedHandler handles the DayAdvancedEvent.

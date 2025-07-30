@@ -42,9 +42,9 @@ func (ge *GameEngine) GeneratePlayerView(playerID int32) *model.PlayerView {
 			InPanicMode:     charCopy.InPanicMode,
 			Rules:           charCopy.Config.Rules,
 		}
-		if player.Role == model.PlayerRole_PROTAGONIST {
+		if player.Role == model.PlayerRole_PLAYER_ROLE_PROTAGONIST {
 			// 对主角隐藏真实角色，显示为未指定。
-			playerViewChar.Role = model.RoleType_ROLE_UNKNOWN
+			playerViewChar.Role = model.RoleType_ROLE_TYPE_ROLE_UNKNOWN
 		} else {
 			playerViewChar.Role = charCopy.HiddenRole
 		}
@@ -64,8 +64,8 @@ func (ge *GameEngine) GeneratePlayerView(playerID int32) *model.PlayerView {
 	}
 
 	// 添加玩家特定信息
-	view.YourHand = player.Hand
-	if player.Role == model.PlayerRole_PROTAGONIST {
+	view.YourHand = player.Hand.Cards
+	if player.Role == model.PlayerRole_PLAYER_ROLE_PROTAGONIST {
 		view.YourDeductions = player.DeductionKnowledge
 	}
 

@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	Register(model.GameEventType_CARD_REVEALED, &CardRevealedHandler{})
+	Register(model.GameEventType_GAME_EVENT_TYPE_CARD_REVEALED, &CardRevealedHandler{})
 }
 
 // CardRevealedHandler handles the CardRevealedEvent.

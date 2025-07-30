@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	Register(model.GameEventType_PARANOIA_ADJUSTED, &ParanoiaAdjustedHandler{})
+	Register(model.GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED, &ParanoiaAdjustedHandler{})
 }
 
 // ParanoiaAdjustedHandler handles the ParanoiaAdjustedEvent.

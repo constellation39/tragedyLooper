@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	Register(model.GameEventType_TRAIT_ADDED, &TraitAddedHandler{})
+	Register(model.GameEventType_GAME_EVENT_TYPE_TRAIT_ADDED, &TraitAddedHandler{})
 }
 
 // TraitAddedHandler 处理 TraitAddedEvent。

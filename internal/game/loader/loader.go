@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	v1 "tragedylooper/pkg/proto/v1"
+	v1 "tragedylooper/pkg/proto/tragedylooper/v1"
 
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"

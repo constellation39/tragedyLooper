@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	Register(model.GameEventType_LOOP_WIN, &LoopWinHandler{})
+	Register(model.GameEventType_GAME_EVENT_TYPE_LOOP_WIN, &LoopWinHandler{})
 }
 
 // LoopWinHandler handles the LoopWinEvent.

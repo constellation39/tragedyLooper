@@ -15,7 +15,7 @@ type MastermindCardPlayPhase struct {
 }
 
 // Type 返回阶段类型。
-func (p *MastermindCardPlayPhase) Type() model.GamePhase { return model.GamePhase_CARD_PLAY }
+func (p *MastermindCardPlayPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_CARD_PLAY }
 
 // Enter 在阶段开始时调用。
 func (p *MastermindCardPlayPhase) Enter(ge GameEngine) Phase {
@@ -26,7 +26,7 @@ func (p *MastermindCardPlayPhase) Enter(ge GameEngine) Phase {
 
 // HandleAction 处理来自玩家的行动。
 func (p *MastermindCardPlayPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
-	if player.Role != model.PlayerRole_MASTERMIND {
+	if player.Role != model.PlayerRole_PLAYER_ROLE_MASTERMIND {
 		ge.Logger().Warn("Received action from non-mastermind player during MastermindCardPlayPhase", zap.String("player", player.Name))
 		return nil
 	}
@@ -100,10 +100,10 @@ func (p *MastermindCardPlayPhase) handlePlayCardAction(ge GameEngine, player *mo
 
 // takeCardFromPlayer 从玩家手牌中找到一张牌，将其移除并返回。
 func takeCardFromPlayer(player *model.Player, cardID int32) (*model.Card, error) {
-	for i, card := range player.Hand {
+	for i, card := range player.Hand.Cards {
 		if card.Config.Id == cardID {
 			// 从手牌中移除卡牌并返回
-			player.Hand = append(player.Hand[:i], player.Hand[i+1:]...)
+			player.Hand.Cards = append(player.Hand.Cards[:i], player.Hand.Cards[i+1:]...)
 			return card, nil
 		}
 	}

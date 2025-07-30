@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	Register(model.GameEventType_GOODWILL_ADJUSTED, &GoodwillAdjustedHandler{})
+	Register(model.GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED, &GoodwillAdjustedHandler{})
 }
 
 // GoodwillAdjustedHandler handles the GoodwillAdjustedEvent.

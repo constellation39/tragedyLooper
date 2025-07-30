@@ -10,7 +10,7 @@ import (
 type IncidentsPhase struct{ basePhase }
 
 // Type 返回阶段类型。
-func (p *IncidentsPhase) Type() model.GamePhase { return model.GamePhase_INCIDENTS }
+func (p *IncidentsPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_INCIDENTS }
 
 // Enter 在阶段开始时调用。
 func (p *IncidentsPhase) Enter(ge GameEngine) Phase {

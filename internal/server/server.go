@@ -152,7 +152,7 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		Name:               req.PlayerName,
 		Role:               req.PlayerRole,
 		IsLlm:              req.IsLlm,
-		Hand:               make([]*model.Card, 0), // 卡牌将由游戏引擎处理
+		Hand:               &model.CardList{Cards: make([]*model.Card, 0)}, // 卡牌将由游戏引擎处理
 		DeductionKnowledge: &model.PlayerDeductionKnowledge{},
 		LlmSessionId:       "",
 	})
@@ -216,7 +216,7 @@ func (s *Server) HandleJoinRoom(w http.ResponseWriter, r *http.Request) {
 		Name:               req.PlayerName,
 		Role:               req.PlayerRole,
 		IsLlm:              req.IsLlm,
-		Hand:               make([]*model.Card, 0),
+		Hand:               &model.CardList{Cards: make([]*model.Card, 0)},
 		DeductionKnowledge: &model.PlayerDeductionKnowledge{},
 	}
 
@@ -235,7 +235,7 @@ func (s *Server) HandleListRooms(w http.ResponseWriter, _ *http.Request) {
 	var roomList []map[string]interface{}
 	for id, room := range s.rooms {
 		// 只列出未满或未开始的房间
-		if room.gameEngine.GameState.CurrentPhase == model.GamePhase_SETUP { // 示例条件
+		if room.gameEngine.GameState.CurrentPhase == model.GamePhase_GAME_PHASE_SETUP { // 示例条件
 			roomList = append(roomList, map[string]interface{}{
 				"id":            id,
 				"script_name":   "", // 占位符，因为 Script 不再直接在 GameState 上

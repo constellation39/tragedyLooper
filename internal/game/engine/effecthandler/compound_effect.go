@@ -24,7 +24,7 @@ func (h *CompoundEffectHandler) ResolveChoices(ge GameEngine, effect *model.Effe
 	}
 
 	switch compoundEffect.Operator {
-	case model.CompoundEffect_CHOOSE_ONE:
+	case model.CompoundEffect_OPERATOR_CHOOSE_ONE:
 		// 如果是 CHOOSE_ONE 类型，为每个子效果创建一个选项。
 		if len(compoundEffect.SubEffects) >= math.MaxInt32 {
 			return nil, fmt.Errorf("too many sub-effects, exceeds int32 range")
@@ -39,7 +39,7 @@ func (h *CompoundEffectHandler) ResolveChoices(ge GameEngine, effect *model.Effe
 			})
 		}
 		return choices, nil
-	case model.CompoundEffect_SEQUENCE:
+	case model.CompoundEffect_OPERATOR_SEQUENCE:
 		// 如果是 SEQUENCE 类型，按顺序为子效果解析选项，直到找到第一个需要选择的子效果。
 		for _, subEffect := range compoundEffect.SubEffects {
 			// 在序列中，我们提供第一个需要选择的效果。
@@ -66,7 +66,7 @@ func (h *CompoundEffectHandler) Apply(ge GameEngine, effect *model.Effect, ctx *
 	}
 
 	switch compoundEffect.Operator {
-	case model.CompoundEffect_SEQUENCE:
+	case model.CompoundEffect_OPERATOR_SEQUENCE:
 		// 如果是 SEQUENCE 类型，按顺序应用所有子效果。
 		for _, subEffect := range compoundEffect.SubEffects {
 			handler, err := GetEffectHandler(subEffect)
@@ -78,7 +78,7 @@ func (h *CompoundEffectHandler) Apply(ge GameEngine, effect *model.Effect, ctx *
 				return err
 			}
 		}
-	case model.CompoundEffect_CHOOSE_ONE:
+	case model.CompoundEffect_OPERATOR_CHOOSE_ONE:
 		// 如果是 CHOOSE_ONE 类型，根据玩家的选择应用相应的子效果。
 		if ctx == nil || ctx.Choice == nil {
 			return fmt.Errorf("a choice is required to apply a CHOOSE_ONE compound effect")

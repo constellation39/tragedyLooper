@@ -22,7 +22,7 @@ type AbilitiesPhase struct {
 }
 
 // Type 返回阶段类型。
-func (p *AbilitiesPhase) Type() model.GamePhase { return model.GamePhase_ABILITIES }
+func (p *AbilitiesPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_ABILITIES }
 
 // Enter 在阶段开始时调用。
 func (p *AbilitiesPhase) Enter(ge GameEngine) Phase {
@@ -78,7 +78,7 @@ func (p *AbilitiesPhase) TimeoutDuration() time.Duration { return 60 * time.Seco
 
 func (p *AbilitiesPhase) isActionInTurn(ge GameEngine, player *model.Player) bool {
 	if p.turn == MastermindAbilityTurn {
-		return player.Role == model.PlayerRole_MASTERMIND
+		return player.Role == model.PlayerRole_PLAYER_ROLE_MASTERMIND
 	}
 
 	protagonists := ge.GetProtagonistPlayers()

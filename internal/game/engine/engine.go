@@ -12,10 +12,10 @@ import (
 
 // LocationGrid 定义了 2x2 的地图布局
 var LocationGrid = map[model.LocationType]struct{ X, Y int }{
-	model.LocationType_SHRINE:   {0, 0},
-	model.LocationType_SCHOOL:   {1, 0},
-	model.LocationType_HOSPITAL: {0, 1},
-	model.LocationType_CITY:     {1, 1},
+	model.LocationType_LOCATION_TYPE_SHRINE:   {0, 0},
+	model.LocationType_LOCATION_TYPE_SCHOOL:   {1, 0},
+	model.LocationType_LOCATION_TYPE_HOSPITAL: {0, 1},
+	model.LocationType_LOCATION_TYPE_CITY:     {1, 1},
 }
 
 // engineAction 是一个空接口，用于标记所有可以发送到游戏引擎主循环的请求类型。
@@ -91,9 +91,9 @@ func (ge *GameEngine) initializePlayers(players []*model.Player) map[int32]*mode
 	playerMap := make(map[int32]*model.Player)
 	for _, player := range players {
 		switch player.Role {
-		case model.PlayerRole_MASTERMIND:
+		case model.PlayerRole_PLAYER_ROLE_MASTERMIND:
 			ge.mastermindPlayerID = player.Id
-		case model.PlayerRole_PROTAGONIST:
+		case model.PlayerRole_PLAYER_ROLE_PROTAGONIST:
 			ge.protagonistPlayerIDs = append(ge.protagonistPlayerIDs, player.Id)
 		default:
 			ge.logger.Warn("Unknown player role", zap.Int32("playerID", player.Id))
@@ -149,11 +149,9 @@ func (ge *GameEngine) dealInitialCards() {
 		for _, cardConfig := range cardConfigs {
 			if cardConfig.Role == model.PlayerRole_PLAYER_ROLE_UNSPECIFIED || cardConfig.Role == player.Role {
 				card := &model.Card{
-					Id:     cardConfig.Id,
 					Config: cardConfig,
-					Owner:  player,
 				}
-				player.Cards.Cards = append(player.Cards.Cards, card)
+				player.Hand.Cards = append(player.Hand.Cards, card)
 			}
 		}
 	}
@@ -369,7 +367,7 @@ func (ge *GameEngine) ApplyEffect(effect *model.Effect, ability *model.Ability, 
 
 	if len(choices) > 0 && choice == nil {
 		choiceEvent := &model.ChoiceRequiredEvent{Choices: choices}
-		ge.ApplyAndPublishEvent(model.GameEventType_CHOICE_REQUIRED, &model.EventPayload{
+		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_CHOICE_REQUIRED, &model.EventPayload{
 			Payload: &model.EventPayload_ChoiceRequired{ChoiceRequired: choiceEvent},
 		})
 		return nil // 停止处理，直到做出选择

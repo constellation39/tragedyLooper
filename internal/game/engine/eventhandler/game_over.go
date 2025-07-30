@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	Register(model.GameEventType_GAME_ENDED, &GameOverHandler{})
+	Register(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &GameOverHandler{})
 }
 
 // GameOverHandler handles the GameOverEvent.

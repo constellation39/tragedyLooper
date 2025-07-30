@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	Register(model.GameEventType_INCIDENT_TRIGGERED, &IncidentTriggeredHandler{})
+	Register(model.GameEventType_GAME_EVENT_TYPE_INCIDENT_TRIGGERED, &IncidentTriggeredHandler{})
 }
 
 // IncidentTriggeredHandler handles the IncidentTriggeredEvent.

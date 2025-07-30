@@ -15,7 +15,7 @@ type ProtagonistCardPlayPhase struct {
 
 // Type 返回阶段类型。
 func (p *ProtagonistCardPlayPhase) Type() model.GamePhase {
-	return model.GamePhase_CARD_PLAY
+	return model.GamePhase_GAME_PHASE_CARD_PLAY
 }
 
 // Enter 在阶段开始时调用。

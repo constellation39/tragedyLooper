@@ -23,7 +23,7 @@ func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, player *model.Player
 // handleMakeGuessAction 处理玩家进行猜测的操作。
 func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.MakeGuessPayload) Phase {
 	// 目前，我们假设第一个猜测的主角结束游戏。
-	if player.Role != model.PlayerRole_PROTAGONIST {
+	if player.Role != model.PlayerRole_PLAYER_ROLE_PROTAGONIST {
 		ge.Logger().Warn("non-protagonist player tried to make a guess", zap.Int32("player_id", player.Id))
 		return nil
 	}
@@ -31,8 +31,8 @@ func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.M
 	script := ge.GetGameRepo().GetScript()
 	if script == nil {
 		ge.Logger().Error("failed to get script to verify guess")
-		ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.EventPayload{
-			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_MASTERMIND}},
+		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
+			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND}},
 		}) // 游戏结束，出现错误时主谋默认获胜
 		return &GameOverPhase{}
 	}
@@ -49,12 +49,12 @@ func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.M
 
 	// 如果所有猜测都正确，则主角获胜；否则主谋获胜。
 	if correctGuesses == len(script.Characters) {
-		ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.EventPayload{
-			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_PROTAGONIST}},
+		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
+			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_PLAYER_ROLE_PROTAGONIST}},
 		})
 	} else {
-		ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.EventPayload{
-			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_MASTERMIND}},
+		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
+			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND}},
 		})
 	}
 	return &GameOverPhase{}

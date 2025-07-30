@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	Register(model.GameEventType_LOOP_RESET, &LoopResetHandler{})
+	Register(model.GameEventType_GAME_EVENT_TYPE_LOOP_RESET, &LoopResetHandler{})
 }
 
 // LoopResetHandler handles the LoopResetEvent.

@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	Register(model.GameEventType_CHARACTER_MOVED, &CharacterMovedHandler{})
+	Register(model.GameEventType_GAME_EVENT_TYPE_CHARACTER_MOVED, &CharacterMovedHandler{})
 }
 
 // CharacterMovedHandler handles the CharacterMovedEvent.

@@ -29,7 +29,7 @@ func (g *LLMActionGenerator) GenerateAction(ctx context.Context, data *engine.Ac
 	pBuilder := promptbuilder.NewPromptBuilder()
 	var prompt string
 
-	if data.Player.Role == model.PlayerRole_MASTERMIND {
+	if data.Player.Role == model.PlayerRole_PLAYER_ROLE_MASTERMIND {
 		charactersWithStringKeys := make(map[string]*model.Character)
 		for id, char := range data.AllCharacters {
 			charactersWithStringKeys[fmt.Sprint(id)] = char

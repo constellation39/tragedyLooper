@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	Register(model.GameEventType_LOOP_LOSS, &LoopLossHandler{})
+	Register(model.GameEventType_GAME_EVENT_TYPE_LOOP_LOSS, &LoopLossHandler{})
 }
 
 // LoopLossHandler handles the LoopLossEvent.

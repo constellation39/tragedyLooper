@@ -27,17 +27,17 @@ func (tm *targetManager) resolveSelector(gs *model.GameState, sel *model.TargetS
 	var err error
 
 	switch s := sel.SelectorType; {
-	case s == model.TargetSelector_SPECIFIC_CHARACTER:
+	case s == model.TargetSelector_SELECTOR_TYPE_SPECIFIC_CHARACTER:
 		characterIDs = append(characterIDs, sel.CharacterId)
-	case s == model.TargetSelector_ALL_CHARACTERS_AT_LOCATION:
+	case s == model.TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION:
 		characterIDs = tm.engine.cm.GetCharactersInLocation(sel.LocationFilter)
-	case s == model.TargetSelector_ALL_CHARACTERS:
+	case s == model.TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS:
 		characterIDs = tm.engine.cm.GetAllCharacterIDs()
-	case s == model.TargetSelector_ABILITY_USER:
+	case s == model.TargetSelector_SELECTOR_TYPE_ABILITY_USER:
 		if ctx != nil && ctx.Payload != nil {
 			characterIDs = append(characterIDs, ctx.Payload.PlayerId)
 		}
-	case s == model.TargetSelector_ABILITY_TARGET:
+	case s == model.TargetSelector_SELECTOR_TYPE_ABILITY_TARGET:
 		if ctx != nil && ctx.Payload != nil {
 			if t, ok := ctx.Payload.Target.(*model.UseAbilityPayload_TargetCharacterId); ok {
 				characterIDs = append(characterIDs, t.TargetCharacterId)

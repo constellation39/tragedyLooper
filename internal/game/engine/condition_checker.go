@@ -82,15 +82,15 @@ func (cc *conditionChecker) checkStatCondition(gs *model.GameState, condition *m
 	}
 
 	switch condition.Comparator {
-	case model.StatCondition_GREATER_THAN:
+	case model.StatCondition_COMPARATOR_GREATER_THAN:
 		return statValue > condition.Value, nil
-	case model.StatCondition_LESS_THAN:
+	case model.StatCondition_COMPARATOR_LESS_THAN:
 		return statValue < condition.Value, nil
-	case model.StatCondition_EQUAL_TO:
+	case model.StatCondition_COMPARATOR_EQUAL_TO:
 		return statValue == condition.Value, nil
-	case model.StatCondition_GREATER_THAN_OR_EQUAL:
+	case model.StatCondition_COMPARATOR_GREATER_THAN_OR_EQUAL:
 		return statValue >= condition.Value, nil
-	case model.StatCondition_LESS_THAN_OR_EQUAL:
+	case model.StatCondition_COMPARATOR_LESS_THAN_OR_EQUAL:
 		return statValue <= condition.Value, nil
 	default:
 		return false, fmt.Errorf("unknown comparator: %v", condition.Comparator)

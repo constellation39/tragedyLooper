@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	Register(model.GameEventType_TRAIT_REMOVED, &TraitRemovedHandler{})
+	Register(model.GameEventType_GAME_EVENT_TYPE_TRAIT_REMOVED, &TraitRemovedHandler{})
 }
 
 // TraitRemovedHandler handles the TraitRemovedEvent.
