@@ -1,165 +1,186 @@
-package phase // 定义游戏阶段包
+package phase
 
 import (
-	model "tragedylooper/pkg/proto/v1" // 导入协议缓冲区模型
+	model "tragedylooper/pkg/proto/v1"
+	"sort"
 
-	"go.uber.org/zap" // 导入 Zap 日志库
+	"go.uber.org/zap"
 )
 
-// CardEffectsPhase 卡牌效果阶段，在此阶段处理已打出卡牌的效果。
+// CardEffectsPhase is where the effects of played cards are resolved.
 type CardEffectsPhase struct{ basePhase }
 
-// Type 返回阶段类型，表示当前是卡牌效果阶段。
-func (p *CardEffectsPhase) Type() model.GamePhase { return model.GamePhase_CARD_RESOLVE }
+// Type returns the phase type.
+func (p *CardEffectsPhase) Type() model.GamePhase { return model.GamePhase_CARD_EFFECTS }
 
-// Enter 进入卡牌效果阶段。
-// ge: 游戏引擎接口。
-// 返回值: 下一个阶段的实例。
+// Enter is called when the phase begins.
 func (p *CardEffectsPhase) Enter(ge GameEngine) Phase {
-	resolver := NewMovementResolver()
-	charMovements := resolver.CalculateMovements(ge.GetGameState().PlayedCardsThisDay)
+	logger := ge.Logger().Named("CardEffectsPhase")
+	playedCards := getAllPlayedCards(ge)
 
-	// 应用计算出的移动
-	for charID, movement := range charMovements {
-		if movement.Forbidden {
-			continue
-		}
+	// --- Resolution Order --- //
+	// 1. Forbid Movement
+	// 2. Movement
+	// 3. Other Forbid Effects
+	// 4. Other Effects (Paranoia, Goodwill, Intrigue)
 
-		char := ge.GetCharacterByID(charID)
-		if char == nil || !char.IsAlive {
-			continue
-		}
+	logger.Info("Resolving card effects")
 
-		finalH := movement.H
-		finalV := movement.V
+	// Step 1: Resolve Forbid Movement
+	forbiddenMoves := p.resolveForbidMovement(logger, playedCards)
 
-		// 对角线移动算作一次水平移动和一次垂直移动
-		if movement.D > 0 {
-			finalH += movement.D
-			finalV += movement.D
-		}
+	// Step 2: Resolve Movement
+	p.resolveMovement(logger, ge, playedCards, forbiddenMoves)
 
-		// 水平和垂直移动的组合成为对角线移动
-		if finalH > 0 && finalV > 0 {
-			finalH--
-			finalV--
-			// 实际上，我们正在进行一次对角线移动，然后是任何剩余的水平/垂直移动
-			ge.MoveCharacter(char, 1, 1) // 对角线
-		}
+	// Step 3 & 4: Resolve other effects (including their forbids)
+	p.resolveStatEffects(logger, ge, playedCards)
 
-		if finalH > 0 {
-			ge.MoveCharacter(char, finalH, 0) // 水平
-		}
-		if finalV > 0 {
-			ge.MoveCharacter(char, 0, finalV) // 垂直
-		}
-	}
+	logger.Info("Finished resolving card effects")
 
-	resolveOtherCards(ge)
-
-	// 卡牌效果结算后，我们可能会进入能力阶段
+	// After card effects are resolved, we might go to the ability phase
 	return &AbilitiesPhase{}
 }
 
-// CharacterMovement 保存角色的计算移动向量。
-type CharacterMovement struct {
-	H         int  // 水平移动量
-	V         int  // 垂直移动量
-	D         int  // 对角线移动量
-	Forbidden bool // 是否禁止移动
-}
-
-// MovementResolver 根据打出的牌计算角色移动。
-type MovementResolver struct{}
-
-// NewMovementResolver 创建一个新的 MovementResolver 实例。
-func NewMovementResolver() *MovementResolver {
-	return &MovementResolver{}
-}
-
-// CalculateMovements 汇总每个角色从打出的牌中获得的移动效果。
-// playedCards: 已打出的卡牌映射。
-// 返回值: 角色ID到其计算出的移动量的映射。
-func (mr *MovementResolver) CalculateMovements(playedCards map[int32]*model.Card) map[int32]CharacterMovement {
-	charMovements := make(map[int32]CharacterMovement)
-
-	for _, card := range playedCards {
-		targetCharID, isCharTarget := card.Target.(*model.Card_TargetCharacterId)
-		if !isCharTarget {
-			continue
+func (p *CardEffectsPhase) resolveForbidMovement(logger *zap.Logger, cards []*model.Card) map[int32]bool {
+	forbidden := make(map[int32]bool)
+	for _, card := range cards {
+		if card.Config.Type == model.CardType_FORBID_MOVEMENT {
+			if target, ok := card.Target.(*model.Card_TargetCharacterId); ok {
+				logger.Info("Character movement forbidden", zap.Int32("charID", target.TargetCharacterId), zap.String("card", card.Config.Name))
+				forbidden[target.TargetCharacterId] = true
+			}
 		}
-
-		movement := charMovements[targetCharID.TargetCharacterId]
-		if movement.Forbidden {
-			continue // 移动已被禁止，无需进一步计算
-		}
-
-		switch card.Config.Type {
-		case model.CardType_MOVE_HORIZONTALLY:
-			movement.H++
-		case model.CardType_MOVE_VERTICALLY:
-			movement.V++
-		case model.CardType_MOVE_DIAGONALLY:
-			movement.D++
-		case model.CardType_FORBID_MOVEMENT:
-			movement = CharacterMovement{Forbidden: true} // 取消所有移动
-		}
-		charMovements[targetCharID.TargetCharacterId] = movement
 	}
-	return charMovements
+	return forbidden
 }
 
-// resolveMovement 处理回合中打出的所有移动牌
-func resolveMovement(ge GameEngine) {
-	resolver := NewMovementResolver()
-	charMovements := resolver.CalculateMovements(ge.GetGameState().PlayedCardsThisDay)
+func (p *CardEffectsPhase) resolveMovement(logger *zap.Logger, ge GameEngine, cards []*model.Card, forbiddenMoves map[int32]bool) {
+	movements := make(map[int32]struct{ H, V, D int })
 
-	// 应用计算出的移动
-	for charID, movement := range charMovements {
-		if movement.Forbidden {
-			continue
+	for _, card := range cards {
+		if target, ok := card.Target.(*model.Card_TargetCharacterId); ok {
+			charID := target.TargetCharacterId
+			if forbiddenMoves[charID] {
+				continue
+			}
+
+			move := movements[charID]
+			switch card.Config.Type {
+			case model.CardType_MOVE_HORIZONTALLY:
+				move.H++
+			case model.CardType_MOVE_VERTICALLY:
+				move.V++
+			case model.CardType_MOVE_DIAGONALLY:
+				move.D++
+			}
+			movements[charID] = move
 		}
+	}
 
+	for charID, move := range movements {
 		char := ge.GetCharacterByID(charID)
 		if char == nil || !char.IsAlive {
 			continue
 		}
 
-		finalH := movement.H
-		finalV := movement.V
-
-		// 对角线移动算作一次水平移动和一次垂直移动
-		if movement.D > 0 {
-			finalH += movement.D
-			finalV += movement.D
+		// Simplified movement logic: apply diagonal, then horizontal, then vertical
+		// This logic might need to be adjusted based on specific game rules for combining movements.
+		if move.D > 0 {
+			ge.MoveCharacter(char, move.D, move.D)
 		}
-
-		// 水平和垂直移动的组合成为对角线移动
-		if finalH > 0 && finalV > 0 {
-			finalH--
-			finalV--
-			// 实际上，我们正在进行一次对角线移动，然后是任何剩余的水平/垂直移动
-			ge.MoveCharacter(char, 1, 1) // 对角线
+		if move.H > 0 {
+			ge.MoveCharacter(char, move.H, 0)
 		}
-
-		if finalH > 0 {
-			ge.MoveCharacter(char, finalH, 0) // 水平
+		if move.V > 0 {
+			ge.MoveCharacter(char, 0, move.V)
 		}
-		if finalV > 0 {
-			ge.MoveCharacter(char, 0, finalV) // 垂直
+		logger.Info("Character moved", zap.Int32("charID", charID), zap.Any("movement", move))
+	}
+}
+
+func (p *CardEffectsPhase) resolveStatEffects(logger *zap.Logger, ge GameEngine, cards []*model.Card) {
+	// Step 3: Gather all forbid effects for stats
+	forbidParanoiaInc := make(map[int32]bool)
+	forbidGoodwillInc := make(map[int32]bool)
+	forbidIntrigueInc := make(map[int32]bool)
+
+	for _, card := range cards {
+		if target, ok := card.Target.(*model.Card_TargetCharacterId); ok {
+			charID := target.TargetCharacterId
+			switch card.Config.Type {
+			case model.CardType_FORBID_PARANOIA_INCREASE:
+				forbidParanoiaInc[charID] = true
+			case model.CardType_FORBID_GOODWILL_INCREASE:
+				forbidGoodwillInc[charID] = true
+			case model.CardType_FORBID_INTRIGUE_INCREASE:
+				forbidIntrigueInc[charID] = true
+			}
+		}
+	}
+
+	// Step 4: Apply stat adjustments
+	for _, card := range cards {
+		if target, ok := card.Target.(*model.Card_TargetCharacterId); ok {
+			charID := target.TargetCharacterId
+			char := ge.GetCharacterByID(charID)
+			if char == nil {
+				continue
+			}
+
+			var amount int32 = 1 // Default amount, can be specified on the card later
+
+			switch card.Config.Type {
+			case model.CardType_ADD_PARANOIA:
+				if forbidParanoiaInc[charID] && amount > 0 {
+					logger.Info("Paranoia increase forbidden", zap.Int32("charID", charID))
+					continue
+				}
+				ge.ApplyAndPublishEvent(model.GameEventType_PARANOIA_ADJUSTED, &model.EventPayload{
+					Payload: &model.EventPayload_ParanoiaAdjusted{ParanoiaAdjusted: &model.ParanoiaAdjustedEvent{
+						CharacterId: charID,
+						Amount:      amount,
+					}},
+				})
+			case model.CardType_ADD_GOODWILL:
+				if forbidGoodwillInc[charID] && amount > 0 {
+					logger.Info("Goodwill increase forbidden", zap.Int32("charID", charID))
+					continue
+				}
+				ge.ApplyAndPublishEvent(model.GameEventType_GOODWILL_ADJUSTED, &model.EventPayload{
+					Payload: &model.EventPayload_GoodwillAdjusted{GoodwillAdjusted: &model.GoodwillAdjustedEvent{
+						CharacterId: charID,
+						Amount:      amount,
+					}},
+				})
+			case model.CardType_ADD_INTRIGUE:
+				if forbidIntrigueInc[charID] && amount > 0 {
+					logger.Info("Intrigue increase forbidden", zap.Int32("charID", charID))
+					continue
+				}
+				ge.ApplyAndPublishEvent(model.GameEventType_INTRIGUE_ADJUSTED, &model.EventPayload{
+					Payload: &model.EventPayload_IntrigueAdjusted{IntrigueAdjusted: &model.IntrigueAdjustedEvent{
+						CharacterId: charID,
+						Amount:      amount,
+					}},
+				})
+			}
 		}
 	}
 }
 
-// resolveOtherCards 处理非移动牌
-func resolveOtherCards(ge GameEngine) {
-	for _, card := range ge.GetGameState().PlayedCardsThisDay {
-		switch card.Config.Type {
-		case model.CardType_MOVE_HORIZONTALLY, model.CardType_MOVE_VERTICALLY, model.CardType_MOVE_DIAGONALLY, model.CardType_FORBID_MOVEMENT:
-			continue // 已经处理过
-		default:
-			// TODO: 为其他卡牌类型（妄想、好感等）实现逻辑
-			ge.Logger().Info("resolving other card", zap.String("card", card.Config.Name))
-		}
+// getAllPlayedCards flattens the map of played cards into a single slice and sorts them.
+// The sorting is important to ensure a deterministic resolution order.
+func getAllPlayedCards(ge GameEngine) []*model.Card {
+	var cards []*model.Card
+	for _, cardList := range ge.GetGameState().PlayedCardsThisDay {
+		cards = append(cards, cardList.Cards...)
 	}
+
+	// Sort cards by a deterministic key, e.g., Card ID.
+	// This ensures that the resolution order is consistent between game instances.
+	sort.Slice(cards, func(i, j int) bool {
+		return cards[i].Config.Id < cards[j].Config.Id
+	})
+
+	return cards
 }

@@ -32,6 +32,9 @@ type GameEngine interface {
 	GetCharacterByID(id int32) *model.Character
 	// MoveCharacter 移动角色。
 	MoveCharacter(char *model.Character, dx, dy int)
+	GetMastermindPlayer() *model.Player
+	GetProtagonistPlayers() []*model.Player
+	ApplyEffect(effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error
 }
 
 // Phase 是游戏阶段的接口，定义了每个阶段必须实现的方法。

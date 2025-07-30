@@ -217,9 +217,39 @@ func (ge *GameEngine) GetCharacterByID(charID int32) *model.Character {
 	return char
 }
 
-// TriggerIncidents 触发事件。
+// TriggerIncidents checks and triggers incidents based on their conditions.
 func (ge *GameEngine) TriggerIncidents() {
-	// TODO: 实现事件触发逻辑
+	logger := ge.logger.Named("TriggerIncidents")
+	incidents := ge.gameConfig.Incidents
+
+	for _, incident := range incidents {
+		if incident.HasTriggeredThisLoop {
+			continue
+		}
+
+		met, err := ge.CheckCondition(incident.TriggerCondition)
+		if err != nil {
+			logger.Error("Error checking incident condition", zap.String("incident", incident.Name), zap.Error(err))
+			continue
+		}
+
+		if met {
+			logger.Info("Incident triggered", zap.String("incident", incident.Name))
+			incident.HasTriggeredThisLoop = true
+
+			// Publish the trigger event
+			ge.ApplyAndPublishEvent(model.GameEventType_INCIDENT_TRIGGERED, &model.EventPayload{
+				Payload: &model.EventPayload_IncidentTriggered{IncidentTriggered: &model.IncidentTriggeredEvent{Incident: incident}},
+			})
+
+			// Apply the incident's effect
+			if incident.Effect != nil {
+				if err := ge.ApplyEffect(incident.Effect, nil, nil, nil); err != nil {
+					logger.Error("Error applying incident effect", zap.String("incident", incident.Name), zap.Error(err))
+				}
+			}
+		}
+	}
 }
 
 // MoveCharacter 移动角色。
@@ -324,6 +354,56 @@ func (ge *GameEngine) ResolveSelectorToCharacters(gs *model.GameState, sel *mode
 }
 
 // --- AI 集成 ---
+
+// GetProtagonistPlayers returns the protagonist players.
+func (ge *GameEngine) GetProtagonistPlayers() []*model.Player {
+	players := make([]*model.Player, 0, len(ge.protagonistPlayerIDs))
+	for _, id := range ge.protagonistPlayerIDs {
+		players = append(players, ge.getPlayerByID(id))
+	}
+	return players
+}
+
+// GetMastermindPlayer returns the mastermind player.
+func (ge *GameEngine) GetMastermindPlayer() *model.Player {
+	return ge.getPlayerByID(ge.mastermindPlayerID)
+}
+
+// ApplyEffect finds the appropriate handler for an effect, resolves choices, and then applies the effect.
+func (ge *GameEngine) ApplyEffect(effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
+	handler, err := effecthandler.GetEffectHandler(effect)
+	if err != nil {
+		return err
+	}
+
+	ctx := &effecthandler.EffectContext{
+		Ability: ability,
+		Payload: payload,
+		Choice:  choice,
+	}
+
+	// 1. Resolve Choices
+	choices, err := handler.ResolveChoices(ge, effect, ctx)
+	if err != nil {
+		return fmt.Errorf("error resolving choices: %w", err)
+	}
+
+	if len(choices) > 0 && choice == nil {
+		choiceEvent := &model.ChoiceRequiredEvent{Choices: choices}
+		ge.ApplyAndPublishEvent(model.GameEventType_CHOICE_REQUIRED, &model.EventPayload{
+			Payload: &model.EventPayload_ChoiceRequired{ChoiceRequired: choiceEvent},
+		})
+		return nil // Stop processing until a choice is made
+	}
+
+	// 2. Apply Effect
+	err = handler.Apply(ge, effect, ctx)
+	if err != nil {
+		return fmt.Errorf("error applying effect: %w", err)
+	}
+
+	return nil
+}
 
 // TriggerAIPlayerAction 提示 AI 玩家做出决定。
 // playerID: AI 玩家的ID。
