@@ -63,5 +63,3 @@ func (ge *GameEngine) checkConditions(conditions []*model.Condition, player *mod
 func (ge *GameEngine) checkGameEndConditions() (bool, model.PlayerRole) {
 	return false, model.PlayerRole_PLAYER_ROLE_UNSPECIFIED
 }
-
-

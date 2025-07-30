@@ -74,4 +74,3 @@ func (cm *CharacterManager) GetAllCharacterIDs() []int32 {
 	}
 	return charIDs
 }
-

@@ -55,4 +55,3 @@ func (tm *TargetManager) resolveSelector(gs *model.GameState, sel *model.TargetS
 	// TODO: apply filters from selector
 	return characterIDs, nil
 }
-

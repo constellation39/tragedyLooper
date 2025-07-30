@@ -97,7 +97,7 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 
 	// --- Verification: Wait for the day to end and then check the state ---
 	waitForEvent(t, engine, v1.GameEventType_DAY_ADVANCED)
-	engine.TriggerIncidents() // Manually trigger incidents for testing
+	engine.TriggerIncidents()                                    // Manually trigger incidents for testing
 	waitForEvent(t, engine, v1.GameEventType_INCIDENT_TRIGGERED) // Wait for the incident to be processed
 
 	doctorAfterIncident := engine.GetCharacterByID(2)
@@ -120,7 +120,7 @@ func TestEngine_GetPlayerView(t *testing.T) {
 	defer engine.StopGameLoop()
 
 	// --- Get Views for Mastermind and a Protagonist ---
-	mastermindView := engine.GetPlayerView(1) // Mastermind ID
+	mastermindView := engine.GetPlayerView(1)  // Mastermind ID
 	protagonistView := engine.GetPlayerView(2) // Protagonist ID
 
 	assert.NotNil(t, mastermindView)
