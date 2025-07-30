@@ -1,11 +1,11 @@
-package phase // 定义游戏阶段包
+package phase
 
 import (
 	"time"
-	"tragedylooper/internal/game/loader" // 导入游戏数据加载器
-	model "tragedylooper/pkg/proto/v1"   // 导入协议缓冲区模型
+	"tragedylooper/internal/game/loader"
+	model "tragedylooper/pkg/proto/v1"
 
-	"go.uber.org/zap" // 导入 Zap 日志库
+	"go.uber.org/zap"
 )
 
 // GameEngine 定义了阶段可以与之交互的游戏引擎的接口。
@@ -14,7 +14,7 @@ type GameEngine interface {
 	ApplyAndPublishEvent(eventType model.GameEventType, eventData *model.EventPayload)
 	// AreAllPlayersReady 检查所有玩家是否都已准备好。
 	AreAllPlayersReady() bool
-	// CheckCondition checks if a condition is met.
+	// CheckCondition 检查条件是否满足。
 	CheckCondition(condition *model.Condition) (bool, error)
 	// Logger 返回游戏引擎的日志记录器。
 	Logger() *zap.Logger
@@ -28,7 +28,7 @@ type GameEngine interface {
 	TriggerIncidents()
 	// GetGameState 返回当前游戏状态。
 	GetGameState() *model.GameState
-	// GetGameConfig 返回游戏配置。
+	// GetGameRepo 返回游戏配置。
 	GetGameRepo() loader.GameConfig
 	// GetCharacterByID 根据角色ID获取角色对象。
 	GetCharacterByID(id int32) *model.Character

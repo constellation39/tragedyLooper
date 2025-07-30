@@ -51,6 +51,6 @@ func (tm *TargetManager) resolveSelector(gs *model.GameState, sel *model.TargetS
 		return nil, err
 	}
 
-	// TODO: apply filters from selector
+	// TODO: 应用选择器中的过滤器
 	return characterIDs, nil
 }

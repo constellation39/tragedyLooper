@@ -7,26 +7,26 @@ import (
 	"go.uber.org/zap"
 )
 
-// ProtagonistCardPlayPhase is the phase where the Protagonists play their cards.
+// ProtagonistCardPlayPhase 是主角出牌的阶段。
 type ProtagonistCardPlayPhase struct {
 	basePhase
 	currentPlayerIndex int
 }
 
-// Type returns the phase type.
+// Type 返回阶段类型。
 func (p *ProtagonistCardPlayPhase) Type() model.GamePhase {
 	return model.GamePhase_CARD_PLAY
 }
 
-// Enter is called when the phase begins.
+// Enter 在阶段开始时调用。
 func (p *ProtagonistCardPlayPhase) Enter(ge GameEngine) Phase {
 	p.currentPlayerIndex = 0
 	ge.ResetPlayerReadiness()
-	// Potentially trigger AI action for the first protagonist here.
+	// 可以在此处为第一个主角触发 AI 行动。
 	return nil
 }
 
-// HandleAction handles an action from a player.
+// HandleAction 处理来自玩家的行动。
 func (p *ProtagonistCardPlayPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
 	protagonists := ge.GetProtagonistPlayers()
 	if len(protagonists) == 0 {
@@ -52,19 +52,19 @@ func (p *ProtagonistCardPlayPhase) HandleAction(ge GameEngine, player *model.Pla
 		return &CardRevealPhase{}
 	}
 
-	// Potentially trigger AI for the next protagonist.
+	// 可能会为下一个主角触发 AI。
 	return nil
 }
 
-// HandleTimeout handles a timeout.
+// HandleTimeout 处理超时。
 func (p *ProtagonistCardPlayPhase) HandleTimeout(ge GameEngine) Phase {
-	// Handle timeout, maybe play a random card or pass the turn.
+	// 处理超时，可以随机出牌或跳过回合。
 	protagonists := ge.GetProtagonistPlayers()
 	if len(protagonists) == 0 {
 		return &CardRevealPhase{}
 	}
 
-	// Pass the turn for the current player
+	// 为当前玩家跳过回合
 	ge.SetPlayerReady(protagonists[p.currentPlayerIndex].Id)
 	p.currentPlayerIndex++
 
@@ -72,14 +72,14 @@ func (p *ProtagonistCardPlayPhase) HandleTimeout(ge GameEngine) Phase {
 		return &CardRevealPhase{}
 	}
 
-	// Potentially trigger AI for the next protagonist.
+	// 可能会为下一个主角触发 AI。
 	return nil
 }
 
-// TimeoutDuration returns the timeout duration for this phase.
+// TimeoutDuration 返回此阶段的超时持续时间。
 func (p *ProtagonistCardPlayPhase) TimeoutDuration() time.Duration { return 30 * time.Second }
 
-// handlePlayCardAction handles a protagonist playing a card.
+// handlePlayCardAction 处理主角出牌的动作。
 func handlePlayCardAction(ge GameEngine, player *model.Player, payload *model.PlayCardPayload) {
 	playedCard, err := takeCardFromPlayer(player, payload.CardId)
 	if err != nil {
@@ -87,14 +87,14 @@ func handlePlayCardAction(ge GameEngine, player *model.Player, payload *model.Pl
 		return
 	}
 
-	// Add target info to the card instance before storing it
+	// 在存储卡牌实例之前向其添加目标信息
 	switch t := payload.Target.(type) {
 	case *model.PlayCardPayload_TargetCharacterId:
 		playedCard.Target = &model.Card_TargetCharacterId{TargetCharacterId: t.TargetCharacterId}
 	case *model.PlayCardPayload_TargetLocation:
 		playedCard.Target = &model.Card_TargetLocation{TargetLocation: t.TargetLocation}
 	}
-	playedCard.UsedThisLoop = true // Mark as used
+	playedCard.UsedThisLoop = true // 标记为已使用
 
 	dayState, ok := ge.GetGameState().PlayedCardsThisDay[player.Id]
 	if !ok {
@@ -103,10 +103,10 @@ func handlePlayCardAction(ge GameEngine, player *model.Player, payload *model.Pl
 	}
 	dayState.Cards = append(dayState.Cards, playedCard)
 
-	// Mark the card as used for this loop
+	// 将卡牌标记为本循环已使用
 	ge.GetGameState().PlayedCardsThisLoop[playedCard.Config.Id] = true
 
-	// Apply the card's effects
+	// 应用卡牌效果
 	if playedCard.Config.Effect != nil {
 		abilityPayload := &model.UseAbilityPayload{}
 		switch t := payload.Target.(type) {
@@ -125,7 +125,7 @@ func handlePlayCardAction(ge GameEngine, player *model.Player, payload *model.Pl
 	}
 }
 
-// handlePassTurnAction handles a player passing their turn.
+// handlePassTurnAction 处理玩家跳过回合的动作。
 func handlePassTurnAction(ge GameEngine, player *model.Player) {
 	ge.Logger().Info("Player passed turn", zap.String("player", player.Name))
 }

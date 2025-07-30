@@ -5,7 +5,7 @@ import (
 	v1 "tragedylooper/pkg/proto/v1"
 )
 
-// repository holds all the game data.
+// repository 保存所有游戏数据。
 type repository struct {
 	abilities  map[int32]*v1.AbilityConfig
 	cards      map[int32]*v1.CardConfig

@@ -13,10 +13,10 @@ func NewConditionChecker(engine *GameEngine) *ConditionChecker {
 	return &ConditionChecker{engine: engine}
 }
 
-// Check evaluates a condition against the current game state.
+// Check 根据当前游戏状态评估条件。
 func (cc *ConditionChecker) Check(gs *model.GameState, condition *model.Condition) (bool, error) {
 	if condition == nil {
-		return true, nil // A nil condition is considered true
+		return true, nil // nil 条件被视为 true
 	}
 
 	switch c := condition.ConditionType.(type) {
@@ -24,7 +24,7 @@ func (cc *ConditionChecker) Check(gs *model.GameState, condition *model.Conditio
 		return cc.checkStatCondition(gs, c.StatCondition)
 	case *model.Condition_LocationCondition:
 		return cc.checkLocationCondition(gs, c.LocationCondition)
-	// Add other condition checks here as they are implemented
+	// 在此处添加其他条件检查
 	case *model.Condition_CompoundCondition:
 		return cc.checkCompoundCondition(gs, c.CompoundCondition)
 	default:
@@ -62,8 +62,8 @@ func (cc *ConditionChecker) checkCompoundCondition(gs *model.GameState, conditio
 }
 
 func (cc *ConditionChecker) checkStatCondition(gs *model.GameState, condition *model.StatCondition) (bool, error) {
-	// This is a simplified implementation. A full implementation would need to resolve the TargetSelector.
-	// For now, we'll assume the target is always a specific character.
+	// 这是一个简化的实现。完整的实现需要解析 TargetSelector。
+	// 目前，我们假设目标始终是特定角色。
 	char, ok := gs.Characters[condition.Target.CharacterId]
 	if !ok {
 		return false, fmt.Errorf("character not found in stat condition: %d", condition.Target.CharacterId)
@@ -98,7 +98,7 @@ func (cc *ConditionChecker) checkStatCondition(gs *model.GameState, condition *m
 }
 
 func (cc *ConditionChecker) checkLocationCondition(gs *model.GameState, condition *model.LocationCondition) (bool, error) {
-	// Simplified implementation
+	// 简化实现
 	char, ok := gs.Characters[condition.Target.CharacterId]
 	if !ok {
 		return false, fmt.Errorf("character not found in location condition: %d", condition.Target.CharacterId)

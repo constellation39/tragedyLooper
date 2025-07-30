@@ -8,22 +8,22 @@ func init() {
 	Register(model.GameEventType_TRAIT_ADDED, &TraitAddedHandler{})
 }
 
-// TraitAddedHandler handles the TraitAddedEvent.
+// TraitAddedHandler 处理 TraitAddedEvent。
 type TraitAddedHandler struct{}
 
-// Handle adds a trait to a character if it doesn't exist yet.
+// Handle 如果特征尚不存在，则将其添加到角色中。
 func (h *TraitAddedHandler) Handle(ge GameEngine, event *model.GameEvent) error {
 	e, ok := event.Payload.Payload.(*model.EventPayload_TraitAdded)
 	if !ok {
-		return nil // Or handle error appropriately
+		return nil // 或适当处理错误
 	}
 
 	state := ge.GetGameState()
 	if char, ok := state.Characters[e.TraitAdded.CharacterId]; ok {
-		// Avoid duplicates
+		// 避免重复
 		for _, t := range char.Traits {
 			if t == e.TraitAdded.Trait {
-				return nil // Already exists, not an error
+				return nil // 已存在，不是错误
 			}
 		}
 		char.Traits = append(char.Traits, e.TraitAdded.Trait)

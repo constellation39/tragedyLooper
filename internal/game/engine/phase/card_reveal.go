@@ -4,12 +4,12 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
-// --- CardRevealPhase ---
+// CardRevealPhase 卡牌揭示阶段
 type CardRevealPhase struct{ basePhase }
 
 func (p *CardRevealPhase) Type() model.GamePhase { return model.GamePhase_CARD_REVEAL }
 func (p *CardRevealPhase) Enter(ge GameEngine) Phase {
-	// Reveal all cards played this turn.
+	// 揭示本回合打出的所有牌。
 	allPlayedCards := make(map[int32]*model.CardList)
 	for playerID, cardList := range ge.GetGameState().PlayedCardsThisDay {
 		allPlayedCards[playerID] = cardList

@@ -1,4 +1,4 @@
-package effecthandler // Defines the package for effect handlers
+package effecthandler // 效果处理器
 
 import (
 	"fmt"
@@ -8,13 +8,13 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
-// init automatically executes when the package is loaded, registering the CompoundEffect effect handler.
+// init 函数在包加载时自动执行，注册复合效果处理器。
 func init() {
 	Register[*model.Effect_CompoundEffect](&CompoundEffectHandler{})
 }
 
-// CompoundEffectHandler implements the logic for handling compound effects.
-// A compound effect can contain multiple sub-effects and executes them based on an operator (e.g., sequence or choose one).
+// CompoundEffectHandler 实现处理复合效果的逻辑。
+// 复合效果可以包含多个子效果，并根据操作符（例如，序列或选择其一）来执行它们。
 type CompoundEffectHandler struct{}
 
 func (h *CompoundEffectHandler) ResolveChoices(ge GameEngine, effect *model.Effect, ctx *EffectContext) ([]*model.Choice, error) {
@@ -25,7 +25,7 @@ func (h *CompoundEffectHandler) ResolveChoices(ge GameEngine, effect *model.Effe
 
 	switch compoundEffect.Operator {
 	case model.CompoundEffect_CHOOSE_ONE:
-		// If it's a CHOOSE_ONE type, create a choice for each sub-effect.
+		// 如果是 CHOOSE_ONE 类型，为每个子效果创建一个选项。
 		if len(compoundEffect.SubEffects) >= math.MaxInt32 {
 			return nil, fmt.Errorf("too many sub-effects, exceeds int32 range")
 		}
@@ -34,15 +34,15 @@ func (h *CompoundEffectHandler) ResolveChoices(ge GameEngine, effect *model.Effe
 			choiceID := fmt.Sprintf("effect_choice_%d", i)
 			choices = append(choices, &model.Choice{
 				Id:          choiceID,
-				Description: GetEffectDescription(ge, subEffect),                          // We need a way to get the description
+				Description: GetEffectDescription(ge, subEffect),                          // 我们需要一种方法来获取描述
 				ChoiceType:  &model.Choice_EffectOptionIndex{EffectOptionIndex: int32(i)}, //nolint:gosec
 			})
 		}
 		return choices, nil
 	case model.CompoundEffect_SEQUENCE:
-		// If it's a SEQUENCE type, resolve choices for sub-effects in order until the first one that requires a choice is found.
+		// 如果是 SEQUENCE 类型，按顺序为子效果解析选项，直到找到第一个需要选择的子效果。
 		for _, subEffect := range compoundEffect.SubEffects {
-			// In a sequence, we present the first effect that requires a choice.
+			// 在序列中，我们提供第一个需要选择的效果。
 			handler, err := GetEffectHandler(subEffect)
 			if err != nil {
 				return nil, err
@@ -67,7 +67,7 @@ func (h *CompoundEffectHandler) Apply(ge GameEngine, effect *model.Effect, ctx *
 
 	switch compoundEffect.Operator {
 	case model.CompoundEffect_SEQUENCE:
-		// If it's a SEQUENCE type, apply all sub-effects in order.
+		// 如果是 SEQUENCE 类型，按顺序应用所有子效果。
 		for _, subEffect := range compoundEffect.SubEffects {
 			handler, err := GetEffectHandler(subEffect)
 			if err != nil {
@@ -79,7 +79,7 @@ func (h *CompoundEffectHandler) Apply(ge GameEngine, effect *model.Effect, ctx *
 			}
 		}
 	case model.CompoundEffect_CHOOSE_ONE:
-		// If it's a CHOOSE_ONE type, apply the corresponding sub-effect based on the player's choice.
+		// 如果是 CHOOSE_ONE 类型，根据玩家的选择应用相应的子效果。
 		if ctx == nil || ctx.Choice == nil {
 			return fmt.Errorf("a choice is required to apply a CHOOSE_ONE compound effect")
 		}
@@ -108,6 +108,6 @@ func (h *CompoundEffectHandler) Apply(ge GameEngine, effect *model.Effect, ctx *
 }
 
 func (h *CompoundEffectHandler) GetDescription(effect *model.Effect) string {
-	// Returns the description string for the compound effect.
+	// 返回复合效果的描述字符串。
 	return "Choose one of the following effects"
 }

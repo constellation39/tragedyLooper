@@ -14,29 +14,29 @@ const (
 	ProtagonistAbilityTurn
 )
 
-// AbilitiesPhase is the phase where players can use character abilities.
+// AbilitiesPhase 是玩家可以使用角色能力的阶段。
 type AbilitiesPhase struct {
 	basePhase
 	turn                 AbilityTurn
 	protagonistTurnIndex int
 }
 
-// Type returns the phase type.
+// Type 返回阶段类型。
 func (p *AbilitiesPhase) Type() model.GamePhase { return model.GamePhase_ABILITIES }
 
-// Enter is called when the phase begins.
+// Enter 在阶段开始时调用。
 func (p *AbilitiesPhase) Enter(ge GameEngine) Phase {
 	p.turn = MastermindAbilityTurn
 	p.protagonistTurnIndex = 0
 	ge.ResetPlayerReadiness()
 
-	// Optional: Trigger AI for mastermind
+	// 可选：为主谋触发 AI
 	// ge.TriggerAIPlayerAction(ge.GetMastermindPlayer().Id)
 
 	return nil
 }
 
-// HandleAction handles an action from a player.
+// HandleAction 处理来自玩家的行动。
 func (p *AbilitiesPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
 	if !p.isActionInTurn(ge, player) {
 		ge.Logger().Warn("Received action from player out of turn", zap.String("player", player.Name))
@@ -46,8 +46,8 @@ func (p *AbilitiesPhase) HandleAction(ge GameEngine, player *model.Player, actio
 	switch payload := action.Payload.(type) {
 	case *model.PlayerActionPayload_UseAbility:
 		p.handleUseAbilityAction(ge, player, payload.UseAbility)
-		// Note: Using an ability does not automatically end the turn.
-		// The player must explicitly pass.
+		// 注意：使用能力不会自动结束回合。
+		// 玩家必须明确跳过。
 	case *model.PlayerActionPayload_PassTurn:
 		return p.handlePassTurn(ge, player)
 	}
@@ -55,7 +55,7 @@ func (p *AbilitiesPhase) HandleAction(ge GameEngine, player *model.Player, actio
 	return nil
 }
 
-// HandleTimeout handles a timeout.
+// HandleTimeout 处理超时。
 func (p *AbilitiesPhase) HandleTimeout(ge GameEngine) Phase {
 	ge.Logger().Info("Abilities phase timed out, passing turn.")
 	var player *model.Player
@@ -73,7 +73,7 @@ func (p *AbilitiesPhase) HandleTimeout(ge GameEngine) Phase {
 	return &IncidentsPhase{}
 }
 
-// TimeoutDuration returns the timeout duration for this phase.
+// TimeoutDuration 返回此阶段的超时持续时间。
 func (p *AbilitiesPhase) TimeoutDuration() time.Duration { return 60 * time.Second }
 
 func (p *AbilitiesPhase) isActionInTurn(ge GameEngine, player *model.Player) bool {
@@ -83,7 +83,7 @@ func (p *AbilitiesPhase) isActionInTurn(ge GameEngine, player *model.Player) boo
 
 	protagonists := ge.GetProtagonistPlayers()
 	if p.protagonistTurnIndex >= len(protagonists) {
-		return false // Should not happen
+		return false // 不应该发生
 	}
 	return player.Id == protagonists[p.protagonistTurnIndex].Id
 }
@@ -94,7 +94,7 @@ func (p *AbilitiesPhase) handlePassTurn(ge GameEngine, player *model.Player) Pha
 	if p.turn == MastermindAbilityTurn {
 		p.turn = ProtagonistAbilityTurn
 		ge.Logger().Info("Transitioning to Protagonist ability turn")
-		// Optional: Trigger AI for the first protagonist
+		// 可选：为第一个主角触发 AI
 		// protagonists := ge.GetProtagonistPlayers()
 		// if len(protagonists) > 0 {
 		// 	ge.TriggerAIPlayerAction(protagonists[0].Id)
@@ -109,7 +109,7 @@ func (p *AbilitiesPhase) handlePassTurn(ge GameEngine, player *model.Player) Pha
 		return &IncidentsPhase{}
 	}
 
-	// Optional: Trigger AI for the next protagonist
+	// 可选：为下一个主角触发 AI
 	// ge.TriggerAIPlayerAction(protagonists[p.protagonistTurnIndex].Id)
 	return nil
 }
@@ -141,9 +141,9 @@ func (p *AbilitiesPhase) handleUseAbilityAction(ge GameEngine, player *model.Pla
 		return
 	}
 
-	// Here we need to check if the player has the right to use this ability.
-	// For now, we assume if they are in turn, they can.
-	// A more complex check for Goodwill abilities might be needed here.
+	// 在这里，我们需要检查玩家是否有权使用此能力。
+	// 目前，我们假设如果轮到他们，他们就可以。
+	// 这里可能需要对好感能力进行更复杂的检查。
 
 	if err := ge.ApplyEffect(ability.Config.Effect, ability, payload, nil); err != nil {
 		ge.Logger().Error("Failed to apply effect for ability", zap.String("abilityName", ability.Config.Name), zap.Error(err))

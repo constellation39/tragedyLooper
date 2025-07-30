@@ -4,8 +4,8 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
-// GameEngine provides the necessary methods for handlers to interact with the game state and engine logic.
-// This interface helps to decouple the handlers from the main engine package.
+// GameEngine 提供了处理程序与游戏状态和引擎逻辑交互所需的方法。
+// 此接口有助于将处理程序与主引擎包解耦。
 type GameEngine interface {
 	GetGameState() *model.GameState
 	ApplyAndPublishEvent(eventType model.GameEventType, payload *model.EventPayload)
@@ -14,21 +14,21 @@ type GameEngine interface {
 	MoveCharacter(char *model.Character, dx, dy int)
 }
 
-// EffectContext provides contextual information for effect resolution and application.
+// EffectContext 为效果解析和应用提供上下文信息。
 type EffectContext struct {
 	Ability *model.Ability
 	Payload *model.UseAbilityPayload
 	Choice  *model.ChooseOptionPayload
 }
 
-// EffectHandler defines the interface for processing a specific type of game effect.
+// EffectHandler 定义了处理特定类型游戏效果的接口。
 type EffectHandler interface {
-	// ResolveChoices checks if the effect requires a player choice and returns the available options.
+	// ResolveChoices 检查效果是否需要玩家选择，并返回可用选项。
 	ResolveChoices(ge GameEngine, effect *model.Effect, ctx *EffectContext) ([]*model.Choice, error)
 
-	// Apply executes the effect's logic, applying state changes and publishing events.
+	// Apply 执行效果的逻辑，应用状态更改并发布事件。
 	Apply(ge GameEngine, effect *model.Effect, ctx *EffectContext) error
 
-	// GetDescription returns a human-readable description of the effect.
+	// GetDescription 返回效果的人类可读描述。
 	GetDescription(effect *model.Effect) string
 }

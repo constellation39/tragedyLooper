@@ -23,7 +23,7 @@ func (cm *CharacterManager) MoveCharacter(char *model.Character, dx, dy int) {
 		return
 	}
 
-	// 计算新位置，在 2x2 网格上环绕。
+	// Calculate the new position, wrapping around the 2x2 grid.
 	newX := (startPos.X + dx) % 2
 	newY := (startPos.Y + dy) % 2
 
@@ -36,13 +36,13 @@ func (cm *CharacterManager) MoveCharacter(char *model.Character, dx, dy int) {
 	}
 
 	if newLoc != model.LocationType_LOCATION_TYPE_UNSPECIFIED && newLoc != char.CurrentLocation {
-		// 检查移动限制
+		// Check for movement restrictions
 		for _, rule := range char.Config.Rules {
 			if smr, ok := rule.Effect.(*model.CharacterRule_SpecialMovementRule); ok {
 				for _, restricted := range smr.SpecialMovementRule.RestrictedLocations {
 					if restricted == newLoc {
 						cm.engine.logger.Info("character movement restricted", zap.String("char", char.Config.Name), zap.String("location", newLoc.String()))
-						return // 禁止移动
+						return // Movement forbidden
 					}
 				}
 			}

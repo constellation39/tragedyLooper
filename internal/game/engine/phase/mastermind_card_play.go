@@ -8,23 +8,23 @@ import (
 	"go.uber.org/zap"
 )
 
-// MastermindCardPlayPhase is the phase where the Mastermind plays their cards.
+// MastermindCardPlayPhase 是主谋出牌的阶段。
 type MastermindCardPlayPhase struct {
 	basePhase
 	cardsPlayed int
 }
 
-// Type returns the phase type.
+// Type 返回阶段类型。
 func (p *MastermindCardPlayPhase) Type() model.GamePhase { return model.GamePhase_CARD_PLAY }
 
-// Enter is called when the phase begins.
+// Enter 在阶段开始时调用。
 func (p *MastermindCardPlayPhase) Enter(ge GameEngine) Phase {
 	p.cardsPlayed = 0
-	// Potentially trigger AI action for the Mastermind here.
+	// 可以在此处触发主谋的 AI 行动。
 	return nil
 }
 
-// HandleAction handles an action from a player.
+// HandleAction 处理来自玩家的行动。
 func (p *MastermindCardPlayPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
 	if player.Role != model.PlayerRole_MASTERMIND {
 		ge.Logger().Warn("Received action from non-mastermind player during MastermindCardPlayPhase", zap.String("player", player.Name))
@@ -42,13 +42,13 @@ func (p *MastermindCardPlayPhase) HandleAction(ge GameEngine, player *model.Play
 	return nil
 }
 
-// HandleTimeout handles a timeout.
+// HandleTimeout 处理超时。
 func (p *MastermindCardPlayPhase) HandleTimeout(ge GameEngine) Phase {
-	// Handle timeout, maybe play random cards for the mastermind.
+	// 处理超时，可以为主谋随机出牌。
 	return &ProtagonistCardPlayPhase{}
 }
 
-// TimeoutDuration returns the timeout duration for this phase.
+// TimeoutDuration 返回此阶段的超时持续时间。
 func (p *MastermindCardPlayPhase) TimeoutDuration() time.Duration { return 30 * time.Second }
 
 func (p *MastermindCardPlayPhase) handlePlayCardAction(ge GameEngine, player *model.Player, payload *model.PlayCardPayload) {
@@ -58,14 +58,14 @@ func (p *MastermindCardPlayPhase) handlePlayCardAction(ge GameEngine, player *mo
 		return
 	}
 
-	// Add target info to the card instance before storing it
+	// 在存储卡牌实例之前向其添加目标信息
 	switch t := payload.Target.(type) {
 	case *model.PlayCardPayload_TargetCharacterId:
 		playedCard.Target = &model.Card_TargetCharacterId{TargetCharacterId: t.TargetCharacterId}
 	case *model.PlayCardPayload_TargetLocation:
 		playedCard.Target = &model.Card_TargetLocation{TargetLocation: t.TargetLocation}
 	}
-	playedCard.UsedThisLoop = true // Mark as used
+	playedCard.UsedThisLoop = true // 标记为已使用
 
 	dayState, ok := ge.GetGameState().PlayedCardsThisDay[player.Id]
 	if !ok {
@@ -74,10 +74,10 @@ func (p *MastermindCardPlayPhase) handlePlayCardAction(ge GameEngine, player *mo
 	}
 	dayState.Cards = append(dayState.Cards, playedCard)
 
-	// Mark the card as used for this loop
+	// 将卡牌标记为本循环已使用
 	ge.GetGameState().PlayedCardsThisLoop[playedCard.Config.Id] = true
 
-	// Apply the card's effects
+	// 应用卡牌效果
 	if playedCard.Config.Effect != nil {
 		abilityPayload := &model.UseAbilityPayload{}
 		switch t := payload.Target.(type) {
@@ -98,11 +98,11 @@ func (p *MastermindCardPlayPhase) handlePlayCardAction(ge GameEngine, player *mo
 	p.cardsPlayed++
 }
 
-// takeCardFromPlayer finds a card in the player's hand, removes it, and returns it.
+// takeCardFromPlayer 从玩家手牌中找到一张牌，将其移除并返回。
 func takeCardFromPlayer(player *model.Player, cardID int32) (*model.Card, error) {
 	for i, card := range player.Hand {
 		if card.Config.Id == cardID {
-			// Remove card from hand and return it
+			// 从手牌中移除卡牌并返回
 			player.Hand = append(player.Hand[:i], player.Hand[i+1:]...)
 			return card, nil
 		}

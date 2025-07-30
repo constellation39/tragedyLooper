@@ -6,18 +6,18 @@ import (
 	"go.uber.org/zap"
 )
 
-// DayEndPhase is where end-of-day checks are performed.
+// DayEndPhase 是执行天末检查的阶段。
 type DayEndPhase struct{ basePhase }
 
-// Type returns the phase type.
+// Type 返回阶段类型。
 func (p *DayEndPhase) Type() model.GamePhase { return model.GamePhase_DAY_END }
 
-// Enter is called when the phase begins.
+// Enter 在阶段开始时调用。
 func (p *DayEndPhase) Enter(ge GameEngine) Phase {
 	logger := ge.Logger().Named("DayEndPhase")
 	script := ge.GetGameRepo().GetScript()
 
-	// 1. Check for loop loss conditions
+	// 1. 检查循环失败条件
 	for _, endCond := range script.LoseConditions {
 		if endCond.Type == model.EndConditionType_PROTAGONIST_GUESS_FAIL {
 			for _, req := range endCond.Requirements {
@@ -35,17 +35,17 @@ func (p *DayEndPhase) Enter(ge GameEngine) Phase {
 		}
 	}
 
-	// 2. Check for protagonist win conditions (e.g., all loss conditions prevented)
-	// This logic can be complex. A simple version checks if all incidents that are part of loss conditions were prevented.
-	// For now, we will assume a simple check.
+	// 2. 检查主角胜利条件（例如，所有失败条件都已阻止）
+	// 这个逻辑可能很复杂。一个简单的版本是检查作为失败条件一部分的所有事件是否都已阻止。
+	// 目前，我们假设一个简单的检查。
 
-	// 3. If no win/loss, check if it's the last day of the loop
+	// 3. 如果没有胜利/失败，检查是否是循环的最后一天
 	if ge.GetGameState().CurrentDay >= ge.GetGameState().DaysPerLoop {
 		logger.Info("End of loop reached by day count")
 		return &LoopEndPhase{}
 	}
 
-	// 4. Otherwise, proceed to the next day
+	// 4. 否则，进入下一天
 	logger.Info("Proceeding to next day")
 	return &DayStartPhase{}
 }

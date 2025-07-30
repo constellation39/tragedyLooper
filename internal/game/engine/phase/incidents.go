@@ -6,30 +6,30 @@ import (
 	"go.uber.org/zap"
 )
 
-// IncidentsPhase is where incident conditions are checked and triggered.
+// IncidentsPhase 是检查和触发事件条件的阶段。
 type IncidentsPhase struct{ basePhase }
 
-// Type returns the phase type.
+// Type 返回阶段类型。
 func (p *IncidentsPhase) Type() model.GamePhase { return model.GamePhase_INCIDENTS }
 
-// Enter is called when the phase begins.
+// Enter 在阶段开始时调用。
 func (p *IncidentsPhase) Enter(ge GameEngine) Phase {
 	ge.TriggerIncidents()
 
-	// After triggering, we check if any choices are pending. If not, we can move on.
-	// A more robust system might wait for an explicit signal that all incidents are resolved.
+	// 触发后，我们检查是否有任何待处理的选择。如果没有，我们可以继续。
+	// 一个更健壮的系统可能会等待一个明确的信号，表明所有事件都已解决。
 	return &DayEndPhase{}
 }
 
-// HandleAction handles actions during the incident phase, primarily for choices.
+// HandleAction 处理事件阶段的行动，主要用于选择。
 func (p *IncidentsPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
 	if payload, ok := action.Payload.(*model.PlayerActionPayload_ChooseOption); ok {
-		// Here, we would need to find the original effect that required the choice
-		// and re-apply it with the choice provided. This is a complex problem.
-		// For now, we'll log it and assume the choice resolves something.
+		// 在这里，我们需要找到需要选择的原始效果
+		// 并使用提供的选择重新应用它。这是一个复杂的问题。
+		// 目前，我们将记录它并假设选择解决了某些问题。
 		ge.Logger().Info("Player made a choice during IncidentsPhase", zap.Any("choice", payload))
-		// After a choice, we might need to re-evaluate incidents or other conditions.
-		// For simplicity, we don't transition here, assuming the game loop continues.
+		// 选择后，我们可能需要重新评估事件或其他条件。
+		// 为简单起见，我们不在此处转换，假设游戏循环继续。
 	}
 	return nil
 }

@@ -5,9 +5,7 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
-// GetEffectDescription finds the appropriate handler and returns the description for an effect.
-// effect: The effect to get the description for.
-// Returns: The description string for the effect.
+// GetEffectDescription 查找适当的处理程序并返回效果的描述。
 func (ge *GameEngine) GetEffectDescription(effect *model.Effect) string {
 	return effecthandler.GetEffectDescription(ge, effect)
 }

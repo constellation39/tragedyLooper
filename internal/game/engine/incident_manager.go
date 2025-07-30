@@ -44,12 +44,12 @@ func (im *IncidentManager) TriggerIncidents() {
 			logger.Info("Incident triggered", zap.String("incident", incident.GetConfig().GetName()))
 			incident.HasTriggeredThisLoop = true
 
-			// Publish the trigger event
+			// 发布触发事件
 			im.engine.ApplyAndPublishEvent(model.GameEventType_INCIDENT_TRIGGERED, &model.EventPayload{
 				Payload: &model.EventPayload_IncidentTriggered{IncidentTriggered: &model.IncidentTriggeredEvent{Incident: incident}},
 			})
 
-			// Apply the incident's effect
+			// 应用事件效果
 			if incident.GetConfig().GetEffect() != nil {
 				if err := im.engine.ApplyEffect(incident.GetConfig().GetEffect(), nil, nil, nil); err != nil {
 					logger.Error("Error applying incident effect", zap.String("incident", incident.GetConfig().GetName()), zap.Error(err))

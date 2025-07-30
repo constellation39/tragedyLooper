@@ -5,17 +5,17 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
-// CreateChoicesFromSelector is a helper function to generate player choices if a target selector
-// resolves to more than one character.
+// CreateChoicesFromSelector 是一个辅助函数，用于在目标选择器
+// 解析为多个角色时生成玩家选项。
 func CreateChoicesFromSelector(ge GameEngine, selector *model.TargetSelector, ctx *EffectContext, description string) ([]*model.Choice, error) {
 	state := ge.GetGameState()
-	// We pass nils here because we are just trying to find out *if* a choice is needed.
+	// 我们在这里传递 nil，因为我们只是想知道是否需要一个选择。
 	charIDs, err := ge.ResolveSelectorToCharacters(state, selector, ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	// If the selector resolves to more than one character, a choice is required.
+	// 如果选择器解析为多个角色，则需要一个选择。
 	if len(charIDs) > 1 {
 		var choices []*model.Choice
 		for _, charID := range charIDs {

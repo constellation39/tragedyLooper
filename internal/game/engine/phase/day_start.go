@@ -4,7 +4,7 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
-// --- DayStartPhase ---
+// DayStartPhase 天开始阶段
 type DayStartPhase struct{ basePhase }
 
 func (p *DayStartPhase) Type() model.GamePhase { return model.GamePhase_DAY_START }

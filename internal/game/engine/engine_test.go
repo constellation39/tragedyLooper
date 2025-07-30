@@ -11,12 +11,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// mockActionGenerator is a simple AI action generator for testing purposes.
+// mockActionGenerator 是一个用于测试的简单 AI 行动生成器。
 type mockActionGenerator struct{}
 
 func (m *mockActionGenerator) GenerateAction(ctx context.Context, agc *ActionGeneratorContext) (*v1.PlayerActionPayload, error) {
-	// For this test, we don't need complex AI logic.
-	// We can return a simple pass action.
+	// 对于此测试，我们不需要复杂的 AI 逻辑。
+	// 我们可以返回一个简单的跳过行动。
 	return &v1.PlayerActionPayload{
 		Payload: &v1.PlayerActionPayload_PassTurn{
 			PassTurn: &v1.PassTurnAction{},
@@ -48,17 +48,17 @@ func helper_NewGameEngineForTest(t *testing.T) *GameEngine {
 	return engine
 }
 
-// TestEngine_Integration_CardPlayAndIncidentTrigger validates the entire data flow:
-// 1. load game data from JSON files.
-// 2. Initialize the engine.
-// 3. A player plays a card to increase a character's paranoia.
-// 4. Verify the paranoia stat is updated.
-// 5. Continue increasing paranoia until an incident is triggered.
-// 6. Verify the incident's effects are applied (a character gains a new trait).
+// TestEngine_Integration_CardPlayAndIncidentTrigger 验证整个数据流：
+// 1. 从 JSON 文件加载游戏数据。
+// 2. 初始化引擎。
+// 3. 玩家打出一张牌以增加角色的偏执。
+// 4. 验证偏执状态已更新。
+// 5. 继续增加偏执，直到触发事件。
+// 6. 验证事件的效果已应用（角色获得新特征）。
 func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 	engine := helper_NewGameEngineForTest(t)
 
-	// --- Setup: Pre-position characters and prepare the Mastermind's hand ---
+	// --- 设置：预先放置角色并准备主谋的手牌 ---
 	mastermind := engine.getPlayerByID(1)
 	doctor := engine.GetCharacterByID(2)
 	highSchoolGirl := engine.GetCharacterByID(1)
@@ -66,10 +66,10 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 	assert.NotNil(t, doctor)
 	assert.NotNil(t, highSchoolGirl)
 
-	// Move High School Girl to the same location as the Doctor (Hospital)
+	// 将高中女生移动到与医生相同的位置（医院）
 	doctor.CurrentLocation = highSchoolGirl.CurrentLocation
 
-	// Give the Mastermind three "Add Paranoia" cards (ID 4)
+	// 给主谋三张“增加偏执”牌（ID 4）
 	card4Config, err := loader.Get[*v1.CardConfig](engine.gameConfig, 4)
 	assert.NoError(t, err)
 	mastermind.Hand = []*v1.Card{
@@ -78,11 +78,11 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 		{Config: card4Config},
 	}
 
-	// --- Execution: Start the game and let it run ---
+	// --- 执行：开始游戏并让其运行 ---
 	engine.StartGameLoop()
 	defer engine.StopGameLoop()
 
-	// Mastermind plays all three cards
+	// 主谋打出所有三张牌
 	for i := 0; i < 3; i++ {
 		playCardAction := &v1.PlayerActionPayload{
 			Payload: &v1.PlayerActionPayload_PlayCard{
@@ -95,10 +95,10 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 		engine.SubmitPlayerAction(mastermind.Id, playCardAction)
 	}
 
-	// --- Verification: Wait for the day to end and then check the state ---
+	// --- 验证：等待一天结束，然后检查状态 ---
 	waitForEvent(t, engine, v1.GameEventType_DAY_ADVANCED)
-	engine.TriggerIncidents()                                    // Manually trigger incidents for testing
-	waitForEvent(t, engine, v1.GameEventType_INCIDENT_TRIGGERED) // Wait for the incident to be processed
+	engine.TriggerIncidents()                                    // 为测试手动触发事件
+	waitForEvent(t, engine, v1.GameEventType_INCIDENT_TRIGGERED) // 等待事件被处理
 
 	doctorAfterIncident := engine.GetCharacterByID(2)
 	assert.NotNil(t, doctorAfterIncident)
@@ -119,58 +119,58 @@ func TestEngine_GetPlayerView(t *testing.T) {
 	engine.StartGameLoop()
 	defer engine.StopGameLoop()
 
-	// --- Get Views for Mastermind and a Protagonist ---
-	mastermindView := engine.GetPlayerView(1)  // Mastermind ID
-	protagonistView := engine.GetPlayerView(2) // Protagonist ID
+	// --- 获取主谋和主角的视图 ---
+	mastermindView := engine.GetPlayerView(1)  // 主谋 ID
+	protagonistView := engine.GetPlayerView(2) // 主角 ID
 
 	assert.NotNil(t, mastermindView)
 	assert.NotNil(t, protagonistView)
 
-	// --- Verification for Mastermind ---
-	// The Mastermind should see the hidden roles of all characters.
-	// In 'first_steps', the Doctor (ID 2) is the 'Serial Killer'.
+	// --- 主谋验证 ---
+	// 主谋应该能看到所有角色的隐藏角色。
+	// 在“第一步”中，医生（ID 2）是“连环杀手”。
 	doctorForMastermind := helper_GetCharacterFromView(t, mastermindView, 2)
 	assert.NotNil(t, doctorForMastermind)
 	assert.Equal(t, v1.RoleType_KILLER, doctorForMastermind.Role, "Mastermind should see the Doctor's hidden role")
 
-	// --- Verification for Protagonist ---
-	// The Protagonist should NOT see the hidden roles. It should be UNKNOWN.
+	// --- 主角验证 ---
+	// 主角不应该看到隐藏的角色。它应该是未知的。
 	doctorForProtagonist := helper_GetCharacterFromView(t, protagonistView, 2)
 	assert.NotNil(t, doctorForProtagonist)
 	assert.Equal(t, v1.RoleType_ROLE_UNKNOWN, doctorForProtagonist.Role, "Protagonist should not see the Doctor's hidden role")
 
-	// Both players should see public information, like the character's name.
+	// 两个玩家都应该能看到公共信息，比如角色的名字。
 	assert.Equal(t, "Doctor", doctorForMastermind.Name)
 	assert.Equal(t, "Doctor", doctorForProtagonist.Name)
 }
 
 func TestEngine_CharacterMovement(t *testing.T) {
 	engine := helper_NewGameEngineForTest(t)
-	char := engine.GetCharacterByID(1) // High School Girl, starts at SCHOOL
+	char := engine.GetCharacterByID(1) // 高中女生，从学校开始
 	assert.NotNil(t, char)
 	assert.Equal(t, v1.LocationType_SCHOOL, char.CurrentLocation)
 
-	// --- Test Valid Moves ---
-	// Move Right from SCHOOL (1,0) to SHRINE (0,0) - This is horizontal move, dx= -1, dy=0, but the locations are not adjacent this way.
-	// Let's check the grid. School is (1,0), Shrine is (0,0). So dx should be -1.
-	// Let's move from School (1,0) to City (1,1), dy=1
+	// --- 测试有效移动 ---
+	// 从学校（1,0）向右移动到神社（0,0）- 这是水平移动，dx=-1，dy=0，但位置不是这样相邻的。
+	// 让我们检查一下网格。学校是（1,0），神社是（0,0）。所以 dx 应该是 -1。
+	// 让我们从学校（1,0）移动到城市（1,1），dy=1
 	engine.MoveCharacter(char, 0, 1)
 	assert.Equal(t, v1.LocationType_CITY, char.CurrentLocation, "Should move from School to City")
 
-	// Move Left from CITY (1,1) to HOSPITAL (0,1), dx=-1
+	// 从城市（1,1）向左移动到医院（0,1），dx=-1
 	engine.MoveCharacter(char, -1, 0)
 	assert.Equal(t, v1.LocationType_HOSPITAL, char.CurrentLocation, "Should move from City to Hospital")
 
-	// --- Test Invalid Moves (Out of Bounds) ---
-	// Try to move Left from HOSPITAL (0,1) which is out of bounds
+	// --- 测试无效移动（越界）---
+	// 尝试从医院（0,1）向左移动，越界
 	engine.MoveCharacter(char, -1, 0)
 	assert.Equal(t, v1.LocationType_HOSPITAL, char.CurrentLocation, "Should not move out of bounds (left)")
 
-	// Try to move Up from HOSPITAL (0,1) to (0,0) which is Shrine
+	// 尝试从医院（0,1）向上移动到（0,0），即神社
 	engine.MoveCharacter(char, 0, -1)
 	assert.Equal(t, v1.LocationType_SHRINE, char.CurrentLocation, "Should move from Hospital to Shrine")
 
-	// Try to move Up from SHRINE (0,0) which is out of bounds
+	// 尝试从神社（0,0）向上移动，越界
 	engine.MoveCharacter(char, 0, -1)
 	assert.Equal(t, v1.LocationType_SHRINE, char.CurrentLocation, "Should not move out of bounds (up)")
 }
@@ -178,9 +178,9 @@ func TestEngine_CharacterMovement(t *testing.T) {
 func TestEngine_GameOverOnMaxLoops(t *testing.T) {
 	engine := helper_NewGameEngineForTest(t)
 
-	// --- Setup: Give mastermind cards to play ---
+	// --- 设置：给主谋发牌 ---
 	mastermind := engine.GetMastermindPlayer()
-	card4Config, err := loader.Get[*v1.CardConfig](engine.gameConfig, 4) // Add Paranoia card
+	card4Config, err := loader.Get[*v1.CardConfig](engine.gameConfig, 4) // 增加偏执牌
 	assert.NoError(t, err)
 	mastermind.Hand = []*v1.Card{
 		{Config: card4Config},
@@ -191,15 +191,15 @@ func TestEngine_GameOverOnMaxLoops(t *testing.T) {
 	engine.StartGameLoop()
 	defer engine.StopGameLoop()
 
-	// Manually set the loop count to the maximum
+	// 手动将循环次数设置为最大值
 	engine.GameState.CurrentLoop = engine.gameConfig.GetScript().LoopCount
-	// Set day to the last day of the loop
+	// 将日期设置为循环的最后一天
 	engine.GameState.CurrentDay = engine.gameConfig.GetScript().DaysPerLoop
 
-	// Wait for the game to be ready for player actions
+	// 等待游戏准备好玩家行动
 	waitForPhase(t, engine, v1.GamePhase_CARD_PLAY)
 
-	// --- Mastermind Plays Cards ---
+	// --- 主谋出牌 ---
 	playCardAction := &v1.PlayerActionPayload{
 		Payload: &v1.PlayerActionPayload_PlayCard{
 			PlayCard: &v1.PlayCardPayload{
@@ -212,7 +212,7 @@ func TestEngine_GameOverOnMaxLoops(t *testing.T) {
 		engine.SubmitPlayerAction(mastermind.Id, playCardAction)
 	}
 
-	// --- Protagonists Pass ---
+	// --- 主角跳过 ---
 	passAction := &v1.PlayerActionPayload{
 		Payload: &v1.PlayerActionPayload_PassTurn{
 			PassTurn: &v1.PassTurnAction{},
@@ -223,15 +223,15 @@ func TestEngine_GameOverOnMaxLoops(t *testing.T) {
 		engine.SubmitPlayerAction(player.Id, passAction)
 	}
 
-	// We expect a GAME_ENDED event with the protagonist as the winner
-	// because the mastermind failed to achieve their goals within the loops.
+	// 我们期望一个 GAME_ENDED 事件，主角是赢家
+	// 因为主谋未能在循环内实现其目标。
 	waitForEvent(t, engine, v1.GameEventType_GAME_ENDED)
 
-	// We can also check the final phase if needed, but the event is a stronger signal.
+	// 如果需要，我们也可以检查最终阶段，但事件是更强的信号。
 	assert.Equal(t, v1.GamePhase_GAME_OVER, engine.GetCurrentPhase(), "Game should be in the GAME_OVER phase")
 }
 
-// helper_GetCharacterFromView is a test helper to find a character in a player view by its ID.
+// helper_GetCharacterFromView 是一个测试助手，用于通过 ID 在玩家视图中查找角色。
 func helper_GetCharacterFromView(t *testing.T, view *v1.PlayerView, charID int32) *v1.PlayerViewCharacter {
 	t.Helper()
 	for _, char := range view.Characters {
@@ -243,14 +243,13 @@ func helper_GetCharacterFromView(t *testing.T, view *v1.PlayerView, charID int32
 	return nil
 }
 
-// waitForEvent is a helper function to block until the game engine emits a specific event.
+// waitForEvent 是一个辅助函数，用于阻塞直到游戏引擎发出特定事件。
 func waitForEvent(t *testing.T, engine *GameEngine, targetEvent v1.GameEventType) {
 	t.Helper()
-	timeout := time.After(2 * time.Second) // 2-second timeout
+	timeout := time.After(2 * time.Second) // 2 秒超时
 
-	// We need to consume events from the channel to find our target event.
-	// This should be done in a separate goroutine to avoid blocking the main test thread
-	// if the event never comes.
+	// 我们需要从通道中消费事件以找到我们的目标事件。
+	// 这应该在一个单独的 goroutine 中完成，以避免在事件永远不会到来时阻塞主测试线程。
 	eventChan := engine.GetGameEvents()
 
 	for {
@@ -265,7 +264,7 @@ func waitForEvent(t *testing.T, engine *GameEngine, targetEvent v1.GameEventType
 	}
 }
 
-// waitForPhase is a helper function to block until the game engine reaches a specific phase.
+// waitForPhase 是一个辅助函数，用于阻塞直到游戏引擎达到特定阶段。
 func waitForPhase(t *testing.T, engine *GameEngine, targetPhase v1.GamePhase) {
 	t.Helper()
 	timeout := time.After(2 * time.Second)
@@ -279,7 +278,7 @@ func waitForPhase(t *testing.T, engine *GameEngine, targetPhase v1.GamePhase) {
 		case <-timeout:
 			t.Fatalf("timed out waiting for phase %s, current phase is %s", targetPhase, currentPhase)
 		case <-time.After(10 * time.Millisecond):
-			// continue polling
+			// 继续轮询
 		}
 	}
 }

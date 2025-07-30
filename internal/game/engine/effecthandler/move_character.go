@@ -1,4 +1,4 @@
-package effecthandler // 定义效果处理器的包
+package effecthandler
 
 import (
 	"fmt"

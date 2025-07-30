@@ -1,16 +1,16 @@
-package engine // 定义游戏引擎包
+package engine
 
 import (
-	"context" // 导入 context 包，用于管理请求的生命周期
+	"context"
 	"fmt"
 	"tragedylooper/internal/game/engine/effecthandler"
-	"tragedylooper/internal/game/loader" // 导入游戏数据加载器
-	model "tragedylooper/pkg/proto/v1"   // 导入协议缓冲区模型
+	"tragedylooper/internal/game/loader"
+	model "tragedylooper/pkg/proto/v1"
 
-	"go.uber.org/zap" // 导入 Zap 日志库
+	"go.uber.org/zap"
 )
 
-// LocationGrid 定义了 2x2 的地图布局，将地点类型映射到网格坐标。
+// LocationGrid 定义了 2x2 的地图布局
 var LocationGrid = map[model.LocationType]struct{ X, Y int }{
 	model.LocationType_SHRINE:   {0, 0},
 	model.LocationType_SCHOOL:   {1, 0},
@@ -23,53 +23,48 @@ type engineAction interface{}
 
 // getPlayerViewRequest 是获取玩家过滤后的游戏状态视图的请求。
 type getPlayerViewRequest struct {
-	playerID     int32                  // 请求视图的玩家ID
-	responseChan chan *model.PlayerView // 用于发送响应的通道
+	playerID     int32
+	responseChan chan *model.PlayerView
 }
 
 // actionCompleteRequest 表示 AI 或玩家操作已完成并准备好由游戏引擎处理。
 type actionCompleteRequest struct {
-	playerID int32                      // 执行操作的玩家ID
-	action   *model.PlayerActionPayload // 玩家操作的负载
+	playerID int32
+	action   *model.PlayerActionPayload
 }
 
-// getCurrentPhaseRequest is a request to get the current game phase safely.
+// getCurrentPhaseRequest 是一个安全获取当前游戏阶段的请求。
 type getCurrentPhaseRequest struct {
 	responseChan chan model.GamePhase
 }
 
-// GameEngine manages the state and logic of a single game instance.
+// GameEngine 管理单个游戏实例的状态和逻辑。
 type GameEngine struct {
-	GameState *model.GameState // The current state of the game.
-	logger    *zap.Logger      // Logger for logging.
+	GameState *model.GameState
+	logger    *zap.Logger
 
-	actionGenerator ActionGenerator   // Interface for generating actions for AI players.
-	gameConfig      loader.GameConfig // The data repository for the game.
-	pm              *phaseManager     // Phase manager.
-	em              *eventManager     // Event manager.
+	actionGenerator ActionGenerator
+	gameConfig      loader.GameConfig
+	pm              *phaseManager
+	em              *eventManager
 	im              *IncidentManager
 	cm              *CharacterManager
 	cc              *ConditionChecker
 	tm              *TargetManager
 
-	// engineChan is the central channel for all incoming requests (player actions, AI actions, etc.).
-	// It ensures that all modifications to the game state are processed sequentially in the main game loop,
-	// preventing race conditions.
-	engineChan chan engineAction // Channel for engine requests.
-	stopChan   chan struct{}     // Channel to stop the game loop.
+	// engineChan 是所有传入请求（玩家操作、AI 操作等）的中央通道。
+	// 它确保对游戏状态的所有修改都在主游戏循环中按顺序处理，
+	// 从而防止竞争条件。
+	engineChan chan engineAction
+	stopChan   chan struct{}
 
-	playerReady map[int32]bool // Records whether each player is ready for the next phase.
+	playerReady map[int32]bool
 
-	mastermindPlayerID   int32   // ID of the mastermind player.
-	protagonistPlayerIDs []int32 // List of protagonist player IDs.
+	mastermindPlayerID   int32
+	protagonistPlayerIDs []int32
 }
 
-// NewGameEngine creates a new instance of the game engine.
-// logger: The logger.
-// players: The list of players in the game.
-// actionGenerator: The AI action generator.
-// gameConfig: The game configuration.
-// Returns: A new GameEngine instance and a possible error.
+// NewGameEngine 创建一个新的游戏引擎实例。
 func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator ActionGenerator, gameConfig loader.GameConfig) (*GameEngine, error) {
 	ge := &GameEngine{
 		logger:               logger,
@@ -118,7 +113,7 @@ func (ge *GameEngine) initializeGameStateFromScript(playerMap map[int32]*model.P
 	characterConfigs := ge.gameConfig.GetCharacters()
 	incidentConfigs := ge.gameConfig.GetIncidents()
 
-	// Merge script incidents into the main incident config list
+	// 将脚本事件合并到主事件配置列表中
 	for _, incident := range script.Incidents {
 		incidentConfigs[incident.Id] = incident
 	}
@@ -149,7 +144,7 @@ func (ge *GameEngine) initializeGameStateFromScript(playerMap map[int32]*model.P
 }
 
 func (ge *GameEngine) dealInitialCards() {
-	// Implementation omitted for brevity
+	// 为简洁起见，省略了实现
 }
 
 // StartGameLoop 启动游戏主循环。
@@ -163,8 +158,6 @@ func (ge *GameEngine) StopGameLoop() {
 }
 
 // SubmitPlayerAction 提交玩家操作到游戏引擎。
-// playerID: 玩家ID。
-// action: 玩家操作的负载。
 func (ge *GameEngine) SubmitPlayerAction(playerID int32, action *model.PlayerActionPayload) {
 	if action == nil {
 		ge.logger.Warn("Received nil action from player")
@@ -183,8 +176,6 @@ func (ge *GameEngine) GetGameEvents() <-chan *model.GameEvent {
 }
 
 // GetPlayerView 获取指定玩家的游戏状态视图。
-// playerID: 玩家ID。
-// 返回值: 玩家的游戏视图。
 func (ge *GameEngine) GetPlayerView(playerID int32) *model.PlayerView {
 	responseChan := make(chan *model.PlayerView)
 	req := &getPlayerViewRequest{
@@ -198,7 +189,7 @@ func (ge *GameEngine) GetPlayerView(playerID int32) *model.PlayerView {
 	return view
 }
 
-// GetCurrentPhase safely gets the current game phase from the engine.
+// GetCurrentPhase 安全地从引擎获取当前游戏阶段。
 func (ge *GameEngine) GetCurrentPhase() model.GamePhase {
 	responseChan := make(chan model.GamePhase)
 	req := &getCurrentPhaseRequest{
@@ -231,7 +222,6 @@ func (ge *GameEngine) runGameLoop() {
 }
 
 // handleEngineRequest 处理来自引擎通道的传入请求。
-// req: 传入的引擎动作请求。
 func (ge *GameEngine) handleEngineRequest(req engineAction) {
 	switch r := req.(type) {
 	case *actionCompleteRequest:
@@ -261,9 +251,6 @@ func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, payloa
 	ge.em.createAndProcess(eventType, payload)
 }
 
-// endGame 结束游戏并宣布获胜方。
-// winner: 获胜方的角色类型。
-
 // ResetPlayerReadiness 重置所有玩家的准备状态。
 func (ge *GameEngine) ResetPlayerReadiness() {
 	for playerID := range ge.GameState.Players {
@@ -272,8 +259,6 @@ func (ge *GameEngine) ResetPlayerReadiness() {
 }
 
 // GetCharacterByID 根据角色ID获取角色对象。
-// charID: 角色ID。
-// 返回值: 角色对象，如果未找到则返回 nil。
 func (ge *GameEngine) GetCharacterByID(charID int32) *model.Character {
 	char, ok := ge.GameState.Characters[charID]
 	if !ok {
@@ -299,8 +284,6 @@ func (ge *GameEngine) ResolveSelectorToCharacters(gs *model.GameState, sel *mode
 }
 
 // getPlayerByID 根据玩家ID获取玩家对象。
-// playerID: 玩家ID。
-// 返回值: 玩家对象，如果未找到则返回 nil。
 func (ge *GameEngine) getPlayerByID(playerID int32) *model.Player {
 	player, ok := ge.GameState.Players[playerID]
 	if !ok {
@@ -333,14 +316,13 @@ func (ge *GameEngine) Logger() *zap.Logger {
 }
 
 // SetPlayerReady 设置指定玩家的准备状态为 true。
-// playerID: 玩家ID。
 func (ge *GameEngine) SetPlayerReady(playerID int32) {
 	ge.playerReady[playerID] = true
 }
 
 // --- AI 集成 ---
 
-// GetProtagonistPlayers returns the protagonist players.
+// GetProtagonistPlayers 返回主角玩家。
 func (ge *GameEngine) GetProtagonistPlayers() []*model.Player {
 	players := make([]*model.Player, 0, len(ge.protagonistPlayerIDs))
 	for _, id := range ge.protagonistPlayerIDs {
@@ -349,12 +331,12 @@ func (ge *GameEngine) GetProtagonistPlayers() []*model.Player {
 	return players
 }
 
-// GetMastermindPlayer returns the mastermind player.
+// GetMastermindPlayer 返回主谋玩家。
 func (ge *GameEngine) GetMastermindPlayer() *model.Player {
 	return ge.getPlayerByID(ge.mastermindPlayerID)
 }
 
-// ApplyEffect finds the appropriate handler for an effect, resolves choices, and then applies the effect.
+// ApplyEffect 查找效果的适当处理程序，解析选项，然后应用效果。
 func (ge *GameEngine) ApplyEffect(effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
 	handler, err := effecthandler.GetEffectHandler(effect)
 	if err != nil {
@@ -367,7 +349,7 @@ func (ge *GameEngine) ApplyEffect(effect *model.Effect, ability *model.Ability, 
 		Choice:  choice,
 	}
 
-	// 1. Resolve Choices
+	// 1. 解析选项
 	choices, err := handler.ResolveChoices(ge, effect, ctx)
 	if err != nil {
 		return fmt.Errorf("error resolving choices: %w", err)
@@ -378,10 +360,10 @@ func (ge *GameEngine) ApplyEffect(effect *model.Effect, ability *model.Ability, 
 		ge.ApplyAndPublishEvent(model.GameEventType_CHOICE_REQUIRED, &model.EventPayload{
 			Payload: &model.EventPayload_ChoiceRequired{ChoiceRequired: choiceEvent},
 		})
-		return nil // Stop processing until a choice is made
+		return nil // 停止处理，直到做出选择
 	}
 
-	// 2. Apply Effect
+	// 2. 应用效果
 	err = handler.Apply(ge, effect, ctx)
 	if err != nil {
 		return fmt.Errorf("error applying effect: %w", err)
@@ -391,7 +373,6 @@ func (ge *GameEngine) ApplyEffect(effect *model.Effect, ability *model.Ability, 
 }
 
 // TriggerAIPlayerAction 提示 AI 玩家做出决定。
-// playerID: AI 玩家的ID。
 func (ge *GameEngine) TriggerAIPlayerAction(playerID int32) {
 	player := ge.getPlayerByID(playerID)
 	if player == nil || !player.IsLlm { // TODO: 使此检查更通用（例如，IsAI）
@@ -400,7 +381,7 @@ func (ge *GameEngine) TriggerAIPlayerAction(playerID int32) {
 
 	ge.logger.Info("Triggering AI for player", zap.String("player", player.Name))
 
-	// Create context for the action generator
+	// 为动作生成器创建上下文
 	ctx := &ActionGeneratorContext{
 		Player:        player,
 		PlayerView:    ge.GetPlayerView(playerID),

@@ -6,12 +6,12 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
-// generatePlayerView creates a filtered view of the game state for a specific player.
-// This method is NOT thread-safe and must only be called from within the runGameLoop goroutine.
+// GeneratePlayerView 为特定玩家创建游戏状态的过滤视图。
+// 此方法不是线程安全的，必须仅在 runGameLoop goroutine 中调用。
 func (ge *GameEngine) GeneratePlayerView(playerID int32) *model.PlayerView {
 	player := ge.GameState.Players[playerID]
 	if player == nil {
-		return &model.PlayerView{} // Or handle error
+		return &model.PlayerView{}
 	}
 
 	view := &model.PlayerView{
@@ -24,10 +24,10 @@ func (ge *GameEngine) GeneratePlayerView(playerID int32) *model.PlayerView {
 		PublicEvents:       ge.GameState.DayEvents,
 	}
 
-	// Filter characters based on player role
+	// 根据玩家角色过滤角色信息
 	view.Characters = make(map[int32]*model.PlayerViewCharacter)
 	for id, char := range ge.GameState.Characters {
-		// Create a copy to avoid races and unintended modification of the core state.
+		// 创建一个副本以避免竞争和对核心状态的意外修改。
 		charCopy := proto.Clone(char).(*model.Character)
 		playerViewChar := &model.PlayerViewCharacter{
 			Id:              id,
@@ -43,7 +43,7 @@ func (ge *GameEngine) GeneratePlayerView(playerID int32) *model.PlayerView {
 			Rules:           charCopy.Config.Rules,
 		}
 		if player.Role == model.PlayerRole_PROTAGONIST {
-			// Hide the true role from Protagonists, showing it as unspecified.
+			// 对主角隐藏真实角色，显示为未指定。
 			playerViewChar.Role = model.RoleType_ROLE_UNKNOWN
 		} else {
 			playerViewChar.Role = charCopy.HiddenRole
@@ -51,7 +51,7 @@ func (ge *GameEngine) GeneratePlayerView(playerID int32) *model.PlayerView {
 		view.Characters[id] = playerViewChar
 	}
 
-	// Filter player info
+	// 过滤玩家信息
 	view.Players = make(map[int32]*model.PlayerViewPlayer)
 	for id, p := range ge.GameState.Players {
 		playerCopy := proto.Clone(p).(*model.Player)
@@ -60,11 +60,10 @@ func (ge *GameEngine) GeneratePlayerView(playerID int32) *model.PlayerView {
 			Name: playerCopy.Name,
 			Role: playerCopy.Role,
 		}
-		// playerCopy.Hand = nil // Hide other players' hands - not applicable to PlayerViewPlayer
 		view.Players[id] = playerViewPlayer
 	}
 
-	// Add player-specific info
+	// 添加玩家特定信息
 	view.YourHand = player.Hand
 	if player.Role == model.PlayerRole_PROTAGONIST {
 		view.YourDeductions = player.DeductionKnowledge

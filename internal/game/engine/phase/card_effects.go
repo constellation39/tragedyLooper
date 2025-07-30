@@ -7,37 +7,37 @@ import (
 	"go.uber.org/zap"
 )
 
-// CardEffectsPhase is where the effects of played cards are resolved.
+// CardEffectsPhase 是解析已打出卡牌效果的阶段。
 type CardEffectsPhase struct{ basePhase }
 
-// Type returns the phase type.
+// Type 返回阶段类型。
 func (p *CardEffectsPhase) Type() model.GamePhase { return model.GamePhase_CARD_EFFECTS }
 
-// Enter is called when the phase begins.
+// Enter 在阶段开始时调用。
 func (p *CardEffectsPhase) Enter(ge GameEngine) Phase {
 	logger := ge.Logger().Named("CardEffectsPhase")
 	playedCards := getAllPlayedCards(ge)
 
-	// --- Resolution Order --- //
-	// 1. Forbid Movement
-	// 2. Movement
-	// 3. Other Forbid Effects
-	// 4. Other Effects (Paranoia, Goodwill, Intrigue)
+	// --- 解析顺序 --- //
+	// 1. 禁止移动
+	// 2. 移动
+	// 3. 其他禁止效果
+	// 4. 其他效果（偏执、好感、阴谋）
 
 	logger.Info("Resolving card effects")
 
-	// Step 1: Resolve Forbid Movement
+	// 步骤 1：解析禁止移动
 	forbiddenMoves := p.resolveForbidMovement(logger, playedCards)
 
-	// Step 2: Resolve Movement
+	// 步骤 2：解析移动
 	p.resolveMovement(logger, ge, playedCards, forbiddenMoves)
 
-	// Step 3 & 4: Resolve other effects (including their forbids)
+	// 步骤 3 & 4：解析其他效果（包括其禁止效果）
 	p.resolveStatEffects(logger, ge, playedCards)
 
 	logger.Info("Finished resolving card effects")
 
-	// After card effects are resolved, we might go to the ability phase
+	// 卡牌效果解析后，我们可能会进入能力阶段
 	return &AbilitiesPhase{}
 }
 
@@ -83,8 +83,8 @@ func (p *CardEffectsPhase) resolveMovement(logger *zap.Logger, ge GameEngine, ca
 			continue
 		}
 
-		// Simplified movement logic: apply diagonal, then horizontal, then vertical
-		// This logic might need to be adjusted based on specific game rules for combining movements.
+		// 简化的移动逻辑：应用对角线，然后是水平，然后是垂直
+		// 此逻辑可能需要根据组合移动的具体游戏规则进行调整。
 		if move.D > 0 {
 			ge.MoveCharacter(char, move.D, move.D)
 		}
@@ -109,7 +109,7 @@ func (p *CardEffectsPhase) resolveStatEffects(logger *zap.Logger, ge GameEngine,
 				continue
 			}
 
-			var amount int32 = 1 // Default amount
+			var amount int32 = 1 // 默认数量
 			p.applyStatEffect(logger, ge, charID, card.Config.Type, amount, forbidParanoiaInc, forbidGoodwillInc, forbidIntrigueInc)
 		}
 	}
@@ -174,16 +174,16 @@ func (p *CardEffectsPhase) applyStatEffect(logger *zap.Logger, ge GameEngine, ch
 	}
 }
 
-// getAllPlayedCards flattens the map of played cards into a single slice and sorts them.
-// The sorting is important to ensure a deterministic resolution order.
+// getAllPlayedCards 将已打出卡牌的映射扁平化为单个切片并对其进行排序。
+// 排序对于确保确定性的解析顺序很重要。
 func getAllPlayedCards(ge GameEngine) []*model.Card {
 	var cards []*model.Card
 	for _, cardList := range ge.GetGameState().PlayedCardsThisDay {
 		cards = append(cards, cardList.Cards...)
 	}
 
-	// Sort cards by a deterministic key, e.g., Card ID.
-	// This ensures that the resolution order is consistent between game instances.
+	// 按确定性键（例如，卡牌 ID）对卡牌进行排序。
+	// 这确保了游戏实例之间的解析顺序是一致的。
 	sort.Slice(cards, func(i, j int) bool {
 		return cards[i].Config.Id < cards[j].Config.Id
 	})
