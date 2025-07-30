@@ -42,6 +42,10 @@ type GameEngine struct {
 	gameConfig      loader.GameConfig // The data repository for the game.
 	pm              *phaseManager     // Phase manager.
 	em              *eventManager     // Event manager.
+	im              *IncidentManager
+	cm              *CharacterManager
+	cc              *ConditionChecker
+	tm              *TargetManager
 
 	// engineChan is the central channel for all incoming requests (player actions, AI actions, etc.).
 	// It ensures that all modifications to the game state are processed sequentially in the main game loop,
@@ -74,7 +78,20 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator 
 	}
 	ge.pm = newPhaseManager(ge)
 	ge.em = newEventManager(ge)
+	ge.im = NewIncidentManager(ge)
+	ge.cm = NewCharacterManager(ge)
+	ge.cc = NewConditionChecker(ge)
+	ge.tm = NewTargetManager(ge)
 
+	playerMap := ge.initializePlayers(players)
+
+	ge.initializeGameStateFromScript(playerMap)
+	ge.dealInitialCards()
+
+	return ge, nil
+}
+
+func (ge *GameEngine) initializePlayers(players []*model.Player) map[int32]*model.Player {
 	playerMap := make(map[int32]*model.Player)
 	for _, player := range players {
 		switch player.Role {
@@ -88,11 +105,7 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator 
 
 		playerMap[player.Id] = player
 	}
-
-	ge.initializeGameStateFromScript(playerMap)
-	ge.dealInitialCards()
-
-	return ge, nil
+	return playerMap
 }
 
 // StartGameLoop 启动游戏主循环。
@@ -218,57 +231,11 @@ func (ge *GameEngine) GetCharacterByID(charID int32) *model.Character {
 	return char
 }
 
-// TriggerIncidents checks and triggers incidents based on their conditions.
 func (ge *GameEngine) TriggerIncidents() {
-	logger := ge.logger.Named("TriggerIncidents")
-	incidents := ge.gameConfig.GetIncidents()
-
-	for _, incidentConfig := range incidents {
-		incident := &model.Incident{Config: incidentConfig}
-		if incident.GetHasTriggeredThisLoop() {
-			continue
-		}
-
-		allConditionsMet := true
-		for _, condition := range incident.GetConfig().GetTriggerConditions() {
-			met, err := ge.CheckCondition(condition)
-			if err != nil {
-				logger.Error("Error checking incident condition", zap.String("incident", incident.GetConfig().GetName()), zap.Error(err))
-				allConditionsMet = false
-				break
-			}
-			if !met {
-				allConditionsMet = false
-				break
-			}
-		}
-
-		if allConditionsMet {
-			logger.Info("Incident triggered", zap.String("incident", incident.GetConfig().GetName()))
-			incident.HasTriggeredThisLoop = true
-
-			// Publish the trigger event
-			ge.ApplyAndPublishEvent(model.GameEventType_INCIDENT_TRIGGERED, &model.EventPayload{
-				Payload: &model.EventPayload_IncidentTriggered{IncidentTriggered: &model.IncidentTriggeredEvent{Incident: incident}},
-			})
-
-			// Apply the incident's effect
-			if incident.GetConfig().GetEffect() != nil {
-				if err := ge.ApplyEffect(incident.GetConfig().GetEffect(), nil, nil, nil); err != nil {
-					logger.Error("Error applying incident effect", zap.String("incident", incident.GetConfig().GetName()), zap.Error(err))
-				}
-			}
-		}
-	}
+	ge.im.TriggerIncidents()
 }
 
-// MoveCharacter 移动角色。
-// char: 要移动的角色。
-// dx: X轴上的移动量。
-// dy: Y轴上的移动量。
-func (ge *GameEngine) MoveCharacter(char *model.Character, dx, dy int) {
-	ge.moveCharacter(char, dx, dy)
-}
+ 
 
 // getPlayerByID 根据玩家ID获取玩家对象。
 // playerID: 玩家ID。
@@ -281,50 +248,7 @@ func (ge *GameEngine) getPlayerByID(playerID int32) *model.Player {
 	return player
 }
 
-// moveCharacter 移动角色到新位置。
-// char: 要移动的角色。
-// dx: X轴上的移动量。
-// dy: Y轴上的移动量。
-func (ge *GameEngine) moveCharacter(char *model.Character, dx, dy int) {
-	startPos, ok := LocationGrid[char.CurrentLocation]
-	if !ok {
-		ge.logger.Warn("character in unknown location", zap.String("char", char.Config.Name))
-		return
-	}
-
-	// 计算新位置，在 2x2 网格上环绕。
-	newX := (startPos.X + dx) % 2
-	newY := (startPos.Y + dy) % 2
-
-	var newLoc model.LocationType
-	for loc, pos := range LocationGrid {
-		if pos.X == newX && pos.Y == newY {
-			newLoc = loc
-			break
-		}
-	}
-
-	if newLoc != model.LocationType_LOCATION_TYPE_UNSPECIFIED && newLoc != char.CurrentLocation {
-		// 检查移动限制
-		for _, rule := range char.Config.Rules {
-			if smr, ok := rule.Effect.(*model.CharacterRule_SpecialMovementRule); ok {
-				for _, restricted := range smr.SpecialMovementRule.RestrictedLocations {
-					if restricted == newLoc {
-						ge.logger.Info("character movement restricted", zap.String("char", char.Config.Name), zap.String("location", newLoc.String()))
-						return // 禁止移动
-					}
-				}
-			}
-		}
-
-		ge.ApplyAndPublishEvent(model.GameEventType_CHARACTER_MOVED, &model.EventPayload{
-			Payload: &model.EventPayload_CharacterMoved{CharacterMoved: &model.CharacterMovedEvent{
-				CharacterId: char.Config.Id,
-				NewLocation: newLoc,
-			}},
-		})
-	}
-}
+ 
 
 // GetGameState 实现 phases.GameEngine 接口，返回当前游戏状态。
 func (ge *GameEngine) GetGameState() *model.GameState {
@@ -335,10 +259,13 @@ func (ge *GameEngine) GetGameRepo() loader.GameConfig {
 	return ge.gameConfig
 }
 
-// AreAllPlayersReady 检查所有玩家是否都已准备好。
-// TODO: 实现我
 func (ge *GameEngine) AreAllPlayersReady() bool {
-	return false
+	for playerID := range ge.GameState.Players {
+		if !ge.playerReady[playerID] {
+			return false
+		}
+	}
+	return true
 }
 
 // Logger 返回游戏引擎的日志记录器。
@@ -352,11 +279,7 @@ func (ge *GameEngine) SetPlayerReady(playerID int32) {
 	ge.playerReady[playerID] = true
 }
 
-// ResolveSelectorToCharacters is a placeholder implementation.
-func (ge *GameEngine) ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, ctx *effecthandler.EffectContext) ([]int32, error) {
-	// TODO: Implement this method based on the game's logic for target selection.
-	return nil, fmt.Errorf("ResolveSelectorToCharacters not implemented")
-}
+ 
 
 // --- AI 集成 ---
 
