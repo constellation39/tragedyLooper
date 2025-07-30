@@ -14,29 +14,29 @@ func NewConditionChecker(engine *GameEngine) *ConditionChecker {
 }
 
 // Check evaluates a condition against the current game state.
-func (cc *ConditionChecker) Check(condition *model.Condition) (bool, error) {
+func (cc *ConditionChecker) Check(gs *model.GameState, condition *model.Condition) (bool, error) {
 	if condition == nil {
 		return true, nil // A nil condition is considered true
 	}
 
 	switch c := condition.ConditionType.(type) {
 	case *model.Condition_StatCondition:
-		return cc.checkStatCondition(c.StatCondition)
+		return cc.checkStatCondition(gs, c.StatCondition)
 	case *model.Condition_LocationCondition:
-		return cc.checkLocationCondition(c.LocationCondition)
+		return cc.checkLocationCondition(gs, c.LocationCondition)
 	// Add other condition checks here as they are implemented
 	case *model.Condition_CompoundCondition:
-		return cc.checkCompoundCondition(c.CompoundCondition)
+		return cc.checkCompoundCondition(gs, c.CompoundCondition)
 	default:
 		return false, fmt.Errorf("unhandled condition type: %T", c)
 	}
 }
 
-func (cc *ConditionChecker) checkCompoundCondition(condition *model.CompoundCondition) (bool, error) {
+func (cc *ConditionChecker) checkCompoundCondition(gs *model.GameState, condition *model.CompoundCondition) (bool, error) {
 	switch condition.Operator {
 	case model.CompoundCondition_AND:
 		for _, sub := range condition.SubConditions {
-			result, err := cc.Check(sub)
+			result, err := cc.Check(gs, sub)
 			if err != nil || !result {
 				return false, err
 			}
@@ -44,7 +44,7 @@ func (cc *ConditionChecker) checkCompoundCondition(condition *model.CompoundCond
 		return true, nil
 	case model.CompoundCondition_OR:
 		for _, sub := range condition.SubConditions {
-			result, err := cc.Check(sub)
+			result, err := cc.Check(gs, sub)
 			if err == nil && result {
 				return true, nil
 			}
@@ -54,17 +54,17 @@ func (cc *ConditionChecker) checkCompoundCondition(condition *model.CompoundCond
 		if len(condition.SubConditions) != 1 {
 			return false, fmt.Errorf("NOT operator requires exactly one sub-condition")
 		}
-		result, err := cc.Check(condition.SubConditions[0])
+		result, err := cc.Check(gs, condition.SubConditions[0])
 		return !result, err
 	default:
 		return false, fmt.Errorf("unknown compound operator: %v", condition.Operator)
 	}
 }
 
-func (cc *ConditionChecker) checkStatCondition(condition *model.StatCondition) (bool, error) {
+func (cc *ConditionChecker) checkStatCondition(gs *model.GameState, condition *model.StatCondition) (bool, error) {
 	// This is a simplified implementation. A full implementation would need to resolve the TargetSelector.
 	// For now, we'll assume the target is always a specific character.
-	char, ok := cc.engine.GameState.Characters[condition.Target.CharacterId]
+	char, ok := gs.Characters[condition.Target.CharacterId]
 	if !ok {
 		return false, fmt.Errorf("character not found in stat condition: %d", condition.Target.CharacterId)
 	}
@@ -97,9 +97,9 @@ func (cc *ConditionChecker) checkStatCondition(condition *model.StatCondition) (
 	}
 }
 
-func (cc *ConditionChecker) checkLocationCondition(condition *model.LocationCondition) (bool, error) {
+func (cc *ConditionChecker) checkLocationCondition(gs *model.GameState, condition *model.LocationCondition) (bool, error) {
 	// Simplified implementation
-	char, ok := cc.engine.GameState.Characters[condition.Target.CharacterId]
+	char, ok := gs.Characters[condition.Target.CharacterId]
 	if !ok {
 		return false, fmt.Errorf("character not found in location condition: %d", condition.Target.CharacterId)
 	}

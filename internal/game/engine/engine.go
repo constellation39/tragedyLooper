@@ -235,7 +235,17 @@ func (ge *GameEngine) TriggerIncidents() {
 	ge.im.TriggerIncidents()
 }
 
- 
+func (ge *GameEngine) MoveCharacter(char *model.Character, dx, dy int) {
+	ge.cm.MoveCharacter(char, dx, dy)
+}
+
+func (ge *GameEngine) CheckCondition(condition *model.Condition) (bool, error) {
+	return ge.cc.Check(ge.GameState, condition)
+}
+
+func (ge *GameEngine) ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, ctx *effecthandler.EffectContext) ([]int32, error) {
+	return ge.tm.ResolveSelectorToCharacters(gs, sel, ctx)
+}
 
 // getPlayerByID 根据玩家ID获取玩家对象。
 // playerID: 玩家ID。
@@ -247,8 +257,6 @@ func (ge *GameEngine) getPlayerByID(playerID int32) *model.Player {
 	}
 	return player
 }
-
- 
 
 // GetGameState 实现 phases.GameEngine 接口，返回当前游戏状态。
 func (ge *GameEngine) GetGameState() *model.GameState {
@@ -278,8 +286,6 @@ func (ge *GameEngine) Logger() *zap.Logger {
 func (ge *GameEngine) SetPlayerReady(playerID int32) {
 	ge.playerReady[playerID] = true
 }
-
- 
 
 // --- AI 集成 ---
 

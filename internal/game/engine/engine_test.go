@@ -102,7 +102,7 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 	// Let's move the High School Girl to the Hospital.
 	highSchoolGirl := engine.GetCharacterByID(1)
 	assert.NotNil(t, highSchoolGirl)
-	engine.moveCharacter(highSchoolGirl, 0, 1) // Move to Hospital (0,1)
+	engine.MoveCharacter(highSchoolGirl, 0, 1) // Move to Hospital (0,1)
 	_ = engine.GetPlayerView(mastermind.Id)    // Sync with engine
 
 	// Now, play the "Add Paranoia" card two more times.
