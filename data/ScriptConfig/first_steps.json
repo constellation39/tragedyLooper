@@ -73,6 +73,31 @@
       "name": "Suicide",
       "culprit_character_id": 35,
       "description": "A key witness commits suicide."
+    },
+    {
+      "name": "Culprit",
+      "trigger_conditions": [
+        {
+          "stat_condition": {
+            "target": {
+              "selector_type": "SPECIFIC_CHARACTER",
+              "character_id": 2
+            },
+            "stat_type": "PARANOIA",
+            "comparator": "GREATER_THAN_OR_EQUAL",
+            "value": 3
+          }
+        }
+      ],
+      "effect": {
+        "add_trait": {
+          "target": {
+            "selector_type": "SPECIFIC_CHARACTER",
+            "character_id": 2
+          },
+          "trait": "Culprit"
+        }
+      }
     }
   ]
 }

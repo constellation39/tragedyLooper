@@ -113,6 +113,45 @@ func (ge *GameEngine) initializePlayers(players []*model.Player) map[int32]*mode
 	return playerMap
 }
 
+func (ge *GameEngine) initializeGameStateFromScript(playerMap map[int32]*model.Player) {
+	script := ge.gameConfig.GetScript()
+	characterConfigs := ge.gameConfig.GetCharacters()
+	incidentConfigs := ge.gameConfig.GetIncidents()
+
+	// Merge script incidents into the main incident config list
+	for _, incident := range script.Incidents {
+		incidentConfigs[incident.Id] = incident
+	}
+
+	ge.GameState = &model.GameState{
+		CurrentLoop:         1,
+		CurrentDay:          1,
+		Players:             playerMap,
+		Characters:          make(map[int32]*model.Character),
+		PlayedCardsThisLoop: make(map[int32]bool),
+		PlayedCardsThisDay:  make(map[int32]*model.CardList),
+		TriggeredIncidents:  make(map[string]bool),
+	}
+
+	for _, charInScript := range script.Characters {
+		charConfig, ok := characterConfigs[charInScript.CharacterId]
+		if !ok {
+			ge.logger.Warn("Character in script not found in character config", zap.Int32("charID", charInScript.CharacterId))
+			continue
+		}
+
+		ge.GameState.Characters[charInScript.CharacterId] = &model.Character{
+			Config:          charConfig,
+			HiddenRole:      charInScript.HiddenRole,
+			CurrentLocation: charInScript.InitialLocation,
+		}
+	}
+}
+
+func (ge *GameEngine) dealInitialCards() {
+	// Implementation omitted for brevity
+}
+
 // StartGameLoop 启动游戏主循环。
 func (ge *GameEngine) StartGameLoop() {
 	go ge.runGameLoop()

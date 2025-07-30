@@ -56,3 +56,22 @@ func (cm *CharacterManager) MoveCharacter(char *model.Character, dx, dy int) {
 		})
 	}
 }
+
+func (cm *CharacterManager) GetCharactersInLocation(location model.LocationType) []int32 {
+	var charIDs []int32
+	for id, char := range cm.engine.GameState.Characters {
+		if char.CurrentLocation == location {
+			charIDs = append(charIDs, id)
+		}
+	}
+	return charIDs
+}
+
+func (cm *CharacterManager) GetAllCharacterIDs() []int32 {
+	var charIDs []int32
+	for id := range cm.engine.GameState.Characters {
+		charIDs = append(charIDs, id)
+	}
+	return charIDs
+}
+

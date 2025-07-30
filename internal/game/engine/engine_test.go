@@ -97,6 +97,8 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 
 	// --- Verification: Wait for the day to end and then check the state ---
 	waitForEvent(t, engine, v1.GameEventType_DAY_ADVANCED)
+	engine.TriggerIncidents() // Manually trigger incidents for testing
+	waitForEvent(t, engine, v1.GameEventType_INCIDENT_TRIGGERED) // Wait for the incident to be processed
 
 	doctorAfterIncident := engine.GetCharacterByID(2)
 	assert.NotNil(t, doctorAfterIncident)

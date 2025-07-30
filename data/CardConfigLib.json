@@ -54,6 +54,9 @@
                 "sub_effects": [
                     {
                         "adjust_stat": {
+                            "target": {
+                                "selector_type": "ABILITY_TARGET"
+                            },
                             "stat_type": "PARANOIA",
                             "amount": 1
                         }

@@ -1,11 +1,7 @@
 package engine // 定义游戏引擎包
 
 import (
-	"time"
-	"tragedylooper/internal/game/loader" // 导入游戏数据加载器
-	model "tragedylooper/pkg/proto/v1"   // 导入协议缓冲区模型
-
-	"go.uber.org/zap" // 导入 Zap 日志库
+	model "tragedylooper/pkg/proto/v1"
 )
 
 // getProtagonistPlayers 获取所有主角玩家。
@@ -68,97 +64,4 @@ func (ge *GameEngine) checkGameEndConditions() (bool, model.PlayerRole) {
 	return false, model.PlayerRole_PLAYER_ROLE_UNSPECIFIED
 }
 
-// initializeGameStateFromScript 根据剧本初始化游戏状态。
-// gameConfig: 游戏配置。
-// playerMap: 玩家ID到玩家对象的映射。
-func (ge *GameEngine) initializeGameStateFromScript(playerMap map[int32]*model.Player) {
-	characters := make(map[int32]*model.Character)
-	for _, charInScript := range ge.gameConfig.GetScript().Characters {
 
-		charData, err := loader.Get[*model.CharacterConfig](ge.gameConfig, charInScript.CharacterId)
-		if err != nil {
-			ge.logger.Warn("character config not found", zap.Int32("characterID", charInScript.CharacterId))
-			continue
-		}
-
-		abilities := make([]*model.Ability, 0)
-
-		for _, ab := range charData.AbilityIds {
-			ability, err := loader.Get[*model.AbilityConfig](ge.gameConfig, ab)
-			if err != nil {
-				ge.logger.Warn("ability config not found", zap.Int32("abilityID", ab))
-				continue
-			}
-			abilities = append(abilities, &model.Ability{
-				Config:           ability,
-				UsedThisLoop:     false,
-				OwnerCharacterId: 0,
-			})
-		}
-
-		characters[charInScript.CharacterId] = &model.Character{
-			Config:          charData,
-			CurrentLocation: charInScript.InitialLocation,
-			Paranoia:        charInScript.InitialParanoia,
-			Goodwill:        charInScript.InitialGoodwill,
-			Intrigue:        charInScript.InitialIntrigue,
-			HiddenRole:      charInScript.HiddenRole,
-			Abilities:       abilities,
-			IsAlive:         true,
-			InPanicMode:     false,
-			Traits:          charData.Traits,
-		}
-	}
-
-	ge.GameState = &model.GameState{
-		GameId:                  "new_game", // 应该生成
-		Characters:              characters,
-		Players:                 playerMap,
-		CurrentDay:              1,
-		CurrentLoop:             1,
-		CurrentPhase:            ge.pm.CurrentPhase().Type(),
-		ActiveTragedies:         make(map[int32]bool),
-		PreventedTragedies:      make(map[int32]bool),
-		PlayedCardsThisDay:      make(map[int32]*model.CardList),
-		PlayedCardsThisLoop:     make(map[int32]bool),
-		LastUpdateTime:          time.Now().Unix(),
-		DayEvents:               make([]*model.GameEvent, 0),
-		LoopEvents:              make([]*model.GameEvent, 0),
-		CharacterParanoiaLimits: make(map[int32]int32),
-		CharacterGoodwillLimits: make(map[int32]int32),
-		CharacterIntrigueLimits: make(map[int32]int32),
-	}
-}
-
-// dealInitialCards 根据剧本为玩家分发初始卡牌。
-func (ge *GameEngine) dealInitialCards() {
-	script := ge.gameConfig.GetScript()
-	if script == nil {
-		ge.logger.Error("cannot deal cards, script not loaded")
-		return
-	}
-
-	mastermind := ge.getMastermindPlayer()
-	if mastermind != nil {
-		for _, cardID := range script.MastermindCardIds {
-			cardConfig, err := loader.Get[*model.CardConfig](ge.gameConfig, cardID)
-			if err != nil {
-				ge.logger.Warn("mastermind card config not found", zap.Int32("cardID", cardID))
-				continue
-			}
-			mastermind.Hand = append(mastermind.Hand, &model.Card{Config: cardConfig})
-		}
-	}
-
-	protagonists := ge.getProtagonistPlayers()
-	for _, protagonist := range protagonists {
-		for _, cardID := range script.ProtagonistCardIds {
-			cardConfig, err := loader.Get[*model.CardConfig](ge.gameConfig, cardID)
-			if err != nil {
-				ge.logger.Warn("protagonist card config not found", zap.Int32("cardID", cardID))
-				continue
-			}
-			protagonist.Hand = append(protagonist.Hand, &model.Card{Config: cardConfig})
-		}
-	}
-}
