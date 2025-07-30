@@ -26,6 +26,9 @@ linters:
 linters-settings:
   gocyclo:
     min-complexity: 15  # Lower the complexity threshold
+  gocritic:
+    enabled-checkers:
+      - switchDefault
   revive:
     rules:
       - name: empty-block

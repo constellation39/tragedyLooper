@@ -22,9 +22,9 @@ func (h *TraitAddedHandler) Handle(ge GameEngine, event *model.GameEvent) error 
 	if char, ok := state.Characters[e.TraitAdded.CharacterId]; ok {
 		// Avoid duplicates
 		for _, t := range char.Traits {
-		if t == e.TraitAdded.Trait {
-			return nil // Already exists, not an error
-		}
+			if t == e.TraitAdded.Trait {
+				return nil // Already exists, not an error
+			}
 		}
 		char.Traits = append(char.Traits, e.TraitAdded.Trait)
 	}

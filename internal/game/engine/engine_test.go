@@ -6,7 +6,7 @@ import (
 	"tragedylooper/internal/game/engine/phase"
 	"tragedylooper/internal/game/loader"
 	"tragedylooper/internal/logger"
-	"tragedylooper/pkg/proto/v1"
+	v1 "tragedylooper/pkg/proto/v1"
 
 	"github.com/stretchr/testify/assert"
 )
