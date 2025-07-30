@@ -33,6 +33,11 @@ type actionCompleteRequest struct {
 	action   *model.PlayerActionPayload // 玩家操作的负载
 }
 
+// getCurrentPhaseRequest is a request to get the current game phase safely.
+type getCurrentPhaseRequest struct {
+	responseChan chan model.GamePhase
+}
+
 // GameEngine manages the state and logic of a single game instance.
 type GameEngine struct {
 	GameState *model.GameState // The current state of the game.
@@ -154,6 +159,16 @@ func (ge *GameEngine) GetPlayerView(playerID int32) *model.PlayerView {
 	return view
 }
 
+// GetCurrentPhase safely gets the current game phase from the engine.
+func (ge *GameEngine) GetCurrentPhase() model.GamePhase {
+	responseChan := make(chan model.GamePhase)
+	req := &getCurrentPhaseRequest{
+		responseChan: responseChan,
+	}
+	ge.engineChan <- req
+	return <-responseChan
+}
+
 // runGameLoop 是游戏引擎的核心。它是一个单线程循环，按顺序处理所有游戏事件
 // 和状态更改，从而在没有复杂锁定的情况下确保线程安全。
 func (ge *GameEngine) runGameLoop() {
@@ -191,6 +206,8 @@ func (ge *GameEngine) handleEngineRequest(req engineAction) {
 	case *getPlayerViewRequest:
 		// 对特定于玩家的游戏状态视图的请求。
 		r.responseChan <- ge.GeneratePlayerView(r.playerID)
+	case *getCurrentPhaseRequest:
+		r.responseChan <- ge.pm.CurrentPhase().Type()
 	default:
 		ge.logger.Warn("Unhandled request type in engine channel")
 	}
@@ -304,7 +321,7 @@ func (ge *GameEngine) GetMastermindPlayer() *model.Player {
 }
 
 // ApplyEffect finds the appropriate handler for an effect, resolves choices, and then applies the effect.
-func (ge *GameEngine) ApplyEffect(effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
+func (ge *GameEngine) ApplyEffect(effect *model.Effect, ability *model.Ability, payload interface{}, choice *model.ChooseOptionPayload) error {
 	handler, err := effecthandler.GetEffectHandler(effect)
 	if err != nil {
 		return err

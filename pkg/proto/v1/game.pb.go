@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -34,7 +33,7 @@ type GameState struct {
 	CurrentPhase            GamePhase              `protobuf:"varint,7,opt,name=current_phase,json=currentPhase,proto3,enum=v1.GamePhase" json:"current_phase,omitempty"`                                                                                              // 当前游戏阶段
 	ActiveTragedies         map[int32]bool         `protobuf:"bytes,8,rep,name=active_tragedies,json=activeTragedies,proto3" json:"active_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                            // 当前循环中已激活（满足条件）的悲剧，键为 TragedyType
 	PreventedTragedies      map[int32]bool         `protobuf:"bytes,9,rep,name=prevented_tragedies,json=preventedTragedies,proto3" json:"prevented_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                   // 当前循环中已被阻止的悲剧，键为 TragedyType
-	PlayedCardsThisDay      map[int32]*Card        `protobuf:"bytes,10,rep,name=played_cards_this_day,json=playedCardsThisDay,proto3" json:"played_cards_this_day,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`               // 今天打出的牌，键为 player_id
+	PlayedCardsThisDay      map[int32]*CardList    `protobuf:"bytes,10,rep,name=played_cards_this_day,json=playedCardsThisDay,proto3" json:"played_cards_this_day,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`               // 今天打出的牌，键为 player_id
 	PlayedCardsThisLoop     map[int32]bool         `protobuf:"bytes,11,rep,name=played_cards_this_loop,json=playedCardsThisLoop,proto3" json:"played_cards_this_loop,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`           // 本循环中已打出的牌的ID
 	TriggeredIncidents      map[string]bool        `protobuf:"bytes,12,rep,name=triggered_incidents,json=triggeredIncidents,proto3" json:"triggered_incidents,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                   // Key is the incident name
 	LastUpdateTime          int64                  `protobuf:"varint,13,opt,name=last_update_time,json=lastUpdateTime,proto3" json:"last_update_time,omitempty"`                                                                                                       // 最后更新时间戳 (Unix timestamp)
@@ -140,7 +139,7 @@ func (x *GameState) GetPreventedTragedies() map[int32]bool {
 	return nil
 }
 
-func (x *GameState) GetPlayedCardsThisDay() map[int32]*Card {
+func (x *GameState) GetPlayedCardsThisDay() map[int32]*CardList {
 	if x != nil {
 		return x.PlayedCardsThisDay
 	}
@@ -732,7 +731,7 @@ var File_v1_game_proto protoreflect.FileDescriptor
 
 const file_v1_game_proto_rawDesc = "" +
 	"\n" +
-	"\rv1/game.proto\x12\x02v1\x1a\x10v1/ability.proto\x1a\rv1/card.proto\x1a\x12v1/character.proto\x1a\x0ev1/enums.proto\x1a\x0ev1/event.proto\x1a\x0fv1/script.proto\"\x90\x0f\n" +
+	"\rv1/game.proto\x12\x02v1\x1a\x10v1/ability.proto\x1a\rv1/card.proto\x1a\x12v1/character.proto\x1a\x0ev1/enums.proto\x1a\x0ev1/event.proto\x1a\x0fv1/script.proto\"\x94\x0f\n" +
 	"\tGameState\x12\x17\n" +
 	"\agame_id\x18\x01 \x01(\tR\x06gameId\x12=\n" +
 	"\n" +
@@ -770,10 +769,10 @@ const file_v1_game_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aE\n" +
 	"\x17PreventedTragediesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aO\n" +
+	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aS\n" +
 	"\x17PlayedCardsThisDayEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x1e\n" +
-	"\x05value\x18\x02 \x01(\v2\b.v1.CardR\x05value:\x028\x01\x1aF\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12\"\n" +
+	"\x05value\x18\x02 \x01(\v2\f.v1.CardListR\x05value:\x028\x01\x1aF\n" +
 	"\x18PlayedCardsThisLoopEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aE\n" +
@@ -904,7 +903,8 @@ var file_v1_game_proto_goTypes = []any{
 	(*Ability)(nil),                  // 28: v1.Ability
 	(*CharacterRule)(nil),            // 29: v1.CharacterRule
 	(*Character)(nil),                // 30: v1.Character
-	(RoleType)(0),                    // 31: v1.RoleType
+	(*CardList)(nil),                 // 31: v1.CardList
+	(RoleType)(0),                    // 32: v1.RoleType
 }
 var file_v1_game_proto_depIdxs = []int32{
 	7,  // 0: v1.GameState.characters:type_name -> v1.GameState.CharactersEntry
@@ -939,9 +939,9 @@ var file_v1_game_proto_depIdxs = []int32{
 	25, // 29: v1.PlayerViewPlayer.role:type_name -> v1.PlayerRole
 	30, // 30: v1.GameState.CharactersEntry.value:type_name -> v1.Character
 	1,  // 31: v1.GameState.PlayersEntry.value:type_name -> v1.Player
-	26, // 32: v1.GameState.PlayedCardsThisDayEntry.value:type_name -> v1.Card
+	31, // 32: v1.GameState.PlayedCardsThisDayEntry.value:type_name -> v1.CardList
 	1,  // 33: v1.PlayerLib.PlayersEntry.value:type_name -> v1.Player
-	31, // 34: v1.PlayerDeductionKnowledge.GuessedRolesEntry.value:type_name -> v1.RoleType
+	32, // 34: v1.PlayerDeductionKnowledge.GuessedRolesEntry.value:type_name -> v1.RoleType
 	5,  // 35: v1.PlayerView.CharactersEntry.value:type_name -> v1.PlayerViewCharacter
 	6,  // 36: v1.PlayerView.PlayersEntry.value:type_name -> v1.PlayerViewPlayer
 	37, // [37:37] is the sub-list for method output_type

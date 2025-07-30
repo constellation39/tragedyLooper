@@ -14,5 +14,5 @@ func (p *CardResolvePhase) Type() model.GamePhase { return model.GamePhase_CARD_
 // ge: 游戏引擎接口。
 // 返回值: 下一个阶段的实例。
 func (p *CardResolvePhase) Enter(ge GameEngine) Phase {
-	return &CardEffectsPhase{}
+	return &CardRevealPhase{}
 }

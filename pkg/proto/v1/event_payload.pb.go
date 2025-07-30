@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -840,7 +839,7 @@ func (x *CardPlayedEvent) GetCard() *Card {
 // 卡牌揭示事件
 type CardRevealedEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Cards         map[int32]*Card        `protobuf:"bytes,1,rep,name=cards,proto3" json:"cards,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // player_id -> card
+	Cards         map[int32]*CardList    `protobuf:"bytes,1,rep,name=cards,proto3" json:"cards,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // player_id -> card
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -875,7 +874,7 @@ func (*CardRevealedEvent) Descriptor() ([]byte, []int) {
 	return file_v1_event_payload_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *CardRevealedEvent) GetCards() map[int32]*Card {
+func (x *CardRevealedEvent) GetCards() map[int32]*CardList {
 	if x != nil {
 		return x.Cards
 	}
@@ -1420,13 +1419,13 @@ const file_v1_event_payload_proto_rawDesc = "" +
 	"\x04loop\x18\x02 \x01(\x05R\x04loop\"L\n" +
 	"\x0fCardPlayedEvent\x12\x1b\n" +
 	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12\x1c\n" +
-	"\x04card\x18\x02 \x01(\v2\b.v1.CardR\x04card\"\x8f\x01\n" +
+	"\x04card\x18\x02 \x01(\v2\b.v1.CardR\x04card\"\x93\x01\n" +
 	"\x11CardRevealedEvent\x126\n" +
-	"\x05cards\x18\x01 \x03(\v2 .v1.CardRevealedEvent.CardsEntryR\x05cards\x1aB\n" +
+	"\x05cards\x18\x01 \x03(\v2 .v1.CardRevealedEvent.CardsEntryR\x05cards\x1aF\n" +
 	"\n" +
 	"CardsEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x1e\n" +
-	"\x05value\x18\x02 \x01(\v2\b.v1.CardR\x05value:\x028\x01\"1\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12\"\n" +
+	"\x05value\x18\x02 \x01(\v2\f.v1.CardListR\x05value:\x028\x01\"1\n" +
 	"\x0eLoopResetEvent\x12\x1f\n" +
 	"\vloop_number\x18\x01 \x01(\x05R\n" +
 	"loopNumber\"7\n" +
@@ -1496,6 +1495,7 @@ var file_v1_event_payload_proto_goTypes = []any{
 	(PlayerRole)(0),                // 24: v1.PlayerRole
 	(*Incident)(nil),               // 25: v1.Incident
 	(*PlayerActionPayload)(nil),    // 26: v1.PlayerActionPayload
+	(*CardList)(nil),               // 27: v1.CardList
 }
 var file_v1_event_payload_proto_depIdxs = []int32{
 	1,  // 0: v1.EventPayload.character_moved:type_name -> v1.CharacterMovedEvent
@@ -1525,7 +1525,7 @@ var file_v1_event_payload_proto_depIdxs = []int32{
 	25, // 24: v1.IncidentTriggeredEvent.incident:type_name -> v1.Incident
 	22, // 25: v1.TragedyTriggeredEvent.tragedy_type:type_name -> v1.IncidentType
 	26, // 26: v1.PlayerActionTakenEvent.action:type_name -> v1.PlayerActionPayload
-	23, // 27: v1.CardRevealedEvent.CardsEntry.value:type_name -> v1.Card
+	27, // 27: v1.CardRevealedEvent.CardsEntry.value:type_name -> v1.CardList
 	28, // [28:28] is the sub-list for method output_type
 	28, // [28:28] is the sub-list for method input_type
 	28, // [28:28] is the sub-list for extension type_name

@@ -119,7 +119,7 @@ func (ge *GameEngine) initializeGameStateFromScript(playerMap map[int32]*model.P
 		CurrentPhase:            ge.pm.CurrentPhase().Type(),
 		ActiveTragedies:         make(map[int32]bool),
 		PreventedTragedies:      make(map[int32]bool),
-		PlayedCardsThisDay:      make(map[int32]*model.Card),
+		PlayedCardsThisDay:      make(map[int32]*model.CardList),
 		PlayedCardsThisLoop:     make(map[int32]bool),
 		LastUpdateTime:          time.Now().Unix(),
 		DayEvents:               make([]*model.GameEvent, 0),

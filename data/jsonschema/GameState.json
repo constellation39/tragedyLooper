@@ -94,7 +94,7 @@
                 },
                 "played_cards_this_day": {
                     "additionalProperties": {
-                        "$ref": "#/definitions/v1.Card",
+                        "$ref": "#/definitions/v1.CardList",
                         "additionalProperties": true
                     },
                     "type": "object",
@@ -559,6 +559,21 @@
             "title": "Card Config",
             "description": "卡牌静态配置"
         },
+        "v1.CardList": {
+            "properties": {
+                "cards": {
+                    "items": {
+                        "$ref": "#/definitions/v1.Card"
+                    },
+                    "type": "array",
+                    "description": "卡牌实例列表"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Card List",
+            "description": "卡牌列表"
+        },
         "v1.CardPlayedEvent": {
             "properties": {
                 "player_id": {
@@ -578,7 +593,7 @@
             "properties": {
                 "cards": {
                     "additionalProperties": {
-                        "$ref": "#/definitions/v1.Card",
+                        "$ref": "#/definitions/v1.CardList",
                         "additionalProperties": true
                     },
                     "type": "object",

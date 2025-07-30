@@ -165,7 +165,7 @@
         "11": {
             "id": 11,
             "name": "Forbid Goodwill",
-            "type": "FORBID_GOODWILL",
+            "type": "FORBID_GOODWILL_INCREASE",
             "owner_role": "MASTERMIND",
             "effect": {
                 "sub_effects": [

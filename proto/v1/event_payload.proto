@@ -87,7 +87,7 @@ message CardPlayedEvent {
 
 // 卡牌揭示事件
 message CardRevealedEvent {
-  map<int32, Card> cards = 1; // player_id -> card
+  map<int32, CardList> cards = 1; // player_id -> card
 }
 
 // 循环重置事件

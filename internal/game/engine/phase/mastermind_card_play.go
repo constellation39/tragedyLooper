@@ -70,13 +70,23 @@ func (p *MastermindCardPlayPhase) handlePlayCardAction(ge GameEngine, player *mo
 
 	dayState, ok := ge.GetGameState().PlayedCardsThisDay[player.Id]
 	if !ok {
-		dayState = &model.Card{}
+		dayState = &model.CardList{}
 		ge.GetGameState().PlayedCardsThisDay[player.Id] = dayState
 	}
-	ge.GetGameState().PlayedCardsThisDay[player.Id] = playedCard
+	dayState.Cards = append(dayState.Cards, playedCard)
 
 	// Mark the card as used for this loop
 	ge.GetGameState().PlayedCardsThisLoop[playedCard.Config.Id] = true
+
+	// Apply the card's effects
+	if playedCard.Config.Effect != nil {
+		for _, effect := range playedCard.Config.Effect.SubEffects {
+			err := ge.ApplyEffect(effect, nil, payload, nil)
+			if err != nil {
+				ge.Logger().Error("Failed to apply card effect", zap.Error(err))
+			}
+		}
+	}
 
 	p.cardsPlayed++
 }
