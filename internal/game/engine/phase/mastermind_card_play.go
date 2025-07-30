@@ -80,8 +80,16 @@ func (p *MastermindCardPlayPhase) handlePlayCardAction(ge GameEngine, player *mo
 
 	// Apply the card's effects
 	if playedCard.Config.Effect != nil {
+		abilityPayload := &model.UseAbilityPayload{}
+		switch t := payload.Target.(type) {
+		case *model.PlayCardPayload_TargetCharacterId:
+			abilityPayload.Target = &model.UseAbilityPayload_TargetCharacterId{TargetCharacterId: t.TargetCharacterId}
+		case *model.PlayCardPayload_TargetLocation:
+			abilityPayload.Target = &model.UseAbilityPayload_TargetLocation{TargetLocation: t.TargetLocation}
+		}
+
 		for _, effect := range playedCard.Config.Effect.SubEffects {
-			err := ge.ApplyEffect(effect, nil, payload, nil)
+			err := ge.ApplyEffect(effect, nil, abilityPayload, nil)
 			if err != nil {
 				ge.Logger().Error("Failed to apply card effect", zap.Error(err))
 			}

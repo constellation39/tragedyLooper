@@ -321,7 +321,7 @@ func (ge *GameEngine) GetMastermindPlayer() *model.Player {
 }
 
 // ApplyEffect finds the appropriate handler for an effect, resolves choices, and then applies the effect.
-func (ge *GameEngine) ApplyEffect(effect *model.Effect, ability *model.Ability, payload interface{}, choice *model.ChooseOptionPayload) error {
+func (ge *GameEngine) ApplyEffect(effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error {
 	handler, err := effecthandler.GetEffectHandler(effect)
 	if err != nil {
 		return err

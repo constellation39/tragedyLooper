@@ -172,8 +172,8 @@ func (p *CardEffectsPhase) resolveStatEffects(logger *zap.Logger, ge GameEngine,
 // The sorting is important to ensure a deterministic resolution order.
 func getAllPlayedCards(ge GameEngine) []*model.Card {
 	var cards []*model.Card
-	for _, card := range ge.GetGameState().PlayedCardsThisDay {
-		cards = append(cards, card)
+	for _, cardList := range ge.GetGameState().PlayedCardsThisDay {
+		cards = append(cards, cardList.Cards...)
 	}
 
 	// Sort cards by a deterministic key, e.g., Card ID.
