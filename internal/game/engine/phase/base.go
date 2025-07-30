@@ -14,6 +14,8 @@ type GameEngine interface {
 	ApplyAndPublishEvent(eventType model.GameEventType, eventData *model.EventPayload)
 	// AreAllPlayersReady 检查所有玩家是否都已准备好。
 	AreAllPlayersReady() bool
+	// CheckCondition checks if a condition is met.
+	CheckCondition(condition *model.Condition) (bool, error)
 	// Logger 返回游戏引擎的日志记录器。
 	Logger() *zap.Logger
 	// ResetPlayerReadiness 重置所有玩家的准备状态。

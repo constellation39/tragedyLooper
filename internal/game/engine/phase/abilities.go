@@ -1,8 +1,8 @@
 package phase
 
 import (
-	model "tragedylooper/pkg/proto/v1"
 	"time"
+	model "tragedylooper/pkg/proto/v1"
 
 	"go.uber.org/zap"
 )

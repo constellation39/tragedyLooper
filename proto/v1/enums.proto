@@ -20,7 +20,7 @@ enum GamePhase {
   DAY_START = 4; // 日开始阶段
   CARD_PLAY = 5; // 卡牌打出阶段
   CARD_REVEAL = 6; // 卡牌揭示阶段
-  CARD_RESOLVE = 7; // 卡牌结算阶段
+  CARD_EFFECTS = 7; // 卡牌效果阶段
   ABILITIES = 8; // 能力结算阶段
   INCIDENTS = 9; // 事件结算阶段
   DAY_END = 10; // 日结束阶段
@@ -39,11 +39,14 @@ enum CardType {
   GOODWILL_MINUS = 5; // 减少好感
   INTRIGUE_PLUS = 6; // 增加阴谋
   FORBID_MOVEMENT = 7; // 禁止移动
-  FORBID_PARANOIA = 8; // 禁止妄想变化
-  FORBID_GOODWILL = 9; // 禁止好感变化
-  FORBID_INTRIGUE = 10; // 禁止阴谋变化
+  FORBID_PARANOIA_INCREASE = 8; // 禁止妄想增加
+  FORBID_GOODWILL_INCREASE = 9; // 禁止好感增加
+  FORBID_INTRIGUE_INCREASE = 10; // 禁止阴谋增加
   MOVE_VERTICALLY = 11; // 垂直移动
   MOVE_DIAGONALLY = 12; // 对角移动
+  ADD_PARANOIA = 13;
+  ADD_GOODWILL = 14;
+  ADD_INTRIGUE = 15;
 }
 
 // 角色身份类型

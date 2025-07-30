@@ -83,7 +83,7 @@ const (
 	GamePhase_DAY_START              GamePhase = 4  // 日开始阶段
 	GamePhase_CARD_PLAY              GamePhase = 5  // 卡牌打出阶段
 	GamePhase_CARD_REVEAL            GamePhase = 6  // 卡牌揭示阶段
-	GamePhase_CARD_RESOLVE           GamePhase = 7  // 卡牌结算阶段
+	GamePhase_CARD_EFFECTS           GamePhase = 7  // 卡牌效果阶段
 	GamePhase_ABILITIES              GamePhase = 8  // 能力结算阶段
 	GamePhase_INCIDENTS              GamePhase = 9  // 事件结算阶段
 	GamePhase_DAY_END                GamePhase = 10 // 日结束阶段
@@ -102,7 +102,7 @@ var (
 		4:  "DAY_START",
 		5:  "CARD_PLAY",
 		6:  "CARD_REVEAL",
-		7:  "CARD_RESOLVE",
+		7:  "CARD_EFFECTS",
 		8:  "ABILITIES",
 		9:  "INCIDENTS",
 		10: "DAY_END",
@@ -118,7 +118,7 @@ var (
 		"DAY_START":              4,
 		"CARD_PLAY":              5,
 		"CARD_REVEAL":            6,
-		"CARD_RESOLVE":           7,
+		"CARD_EFFECTS":           7,
 		"ABILITIES":              8,
 		"INCIDENTS":              9,
 		"DAY_END":                10,
@@ -159,19 +159,22 @@ func (GamePhase) EnumDescriptor() ([]byte, []int) {
 type CardType int32
 
 const (
-	CardType_CARD_TYPE_UNSPECIFIED CardType = 0  // 未指定
-	CardType_MOVE_HORIZONTALLY     CardType = 1  // 水平移动
-	CardType_PARANOIA_PLUS         CardType = 2  // 增加妄想
-	CardType_PARANOIA_MINUS        CardType = 3  // 减少妄想
-	CardType_GOODWILL_PLUS         CardType = 4  // 增加好感
-	CardType_GOODWILL_MINUS        CardType = 5  // 减少好感
-	CardType_INTRIGUE_PLUS         CardType = 6  // 增加阴谋
-	CardType_FORBID_MOVEMENT       CardType = 7  // 禁止移动
-	CardType_FORBID_PARANOIA       CardType = 8  // 禁止妄想变化
-	CardType_FORBID_GOODWILL       CardType = 9  // 禁止好感变化
-	CardType_FORBID_INTRIGUE       CardType = 10 // 禁止阴谋变化
-	CardType_MOVE_VERTICALLY       CardType = 11 // 垂直移动
-	CardType_MOVE_DIAGONALLY       CardType = 12 // 对角移动
+	CardType_CARD_TYPE_UNSPECIFIED    CardType = 0  // 未指定
+	CardType_MOVE_HORIZONTALLY        CardType = 1  // 水平移动
+	CardType_PARANOIA_PLUS            CardType = 2  // 增加妄想
+	CardType_PARANOIA_MINUS           CardType = 3  // 减少妄想
+	CardType_GOODWILL_PLUS            CardType = 4  // 增加好感
+	CardType_GOODWILL_MINUS           CardType = 5  // 减少好感
+	CardType_INTRIGUE_PLUS            CardType = 6  // 增加阴谋
+	CardType_FORBID_MOVEMENT          CardType = 7  // 禁止移动
+	CardType_FORBID_PARANOIA_INCREASE CardType = 8  // 禁止妄想增加
+	CardType_FORBID_GOODWILL_INCREASE CardType = 9  // 禁止好感增加
+	CardType_FORBID_INTRIGUE_INCREASE CardType = 10 // 禁止阴谋增加
+	CardType_MOVE_VERTICALLY          CardType = 11 // 垂直移动
+	CardType_MOVE_DIAGONALLY          CardType = 12 // 对角移动
+	CardType_ADD_PARANOIA             CardType = 13
+	CardType_ADD_GOODWILL             CardType = 14
+	CardType_ADD_INTRIGUE             CardType = 15
 )
 
 // Enum value maps for CardType.
@@ -185,26 +188,32 @@ var (
 		5:  "GOODWILL_MINUS",
 		6:  "INTRIGUE_PLUS",
 		7:  "FORBID_MOVEMENT",
-		8:  "FORBID_PARANOIA",
-		9:  "FORBID_GOODWILL",
-		10: "FORBID_INTRIGUE",
+		8:  "FORBID_PARANOIA_INCREASE",
+		9:  "FORBID_GOODWILL_INCREASE",
+		10: "FORBID_INTRIGUE_INCREASE",
 		11: "MOVE_VERTICALLY",
 		12: "MOVE_DIAGONALLY",
+		13: "ADD_PARANOIA",
+		14: "ADD_GOODWILL",
+		15: "ADD_INTRIGUE",
 	}
 	CardType_value = map[string]int32{
-		"CARD_TYPE_UNSPECIFIED": 0,
-		"MOVE_HORIZONTALLY":     1,
-		"PARANOIA_PLUS":         2,
-		"PARANOIA_MINUS":        3,
-		"GOODWILL_PLUS":         4,
-		"GOODWILL_MINUS":        5,
-		"INTRIGUE_PLUS":         6,
-		"FORBID_MOVEMENT":       7,
-		"FORBID_PARANOIA":       8,
-		"FORBID_GOODWILL":       9,
-		"FORBID_INTRIGUE":       10,
-		"MOVE_VERTICALLY":       11,
-		"MOVE_DIAGONALLY":       12,
+		"CARD_TYPE_UNSPECIFIED":    0,
+		"MOVE_HORIZONTALLY":        1,
+		"PARANOIA_PLUS":            2,
+		"PARANOIA_MINUS":           3,
+		"GOODWILL_PLUS":            4,
+		"GOODWILL_MINUS":           5,
+		"INTRIGUE_PLUS":            6,
+		"FORBID_MOVEMENT":          7,
+		"FORBID_PARANOIA_INCREASE": 8,
+		"FORBID_GOODWILL_INCREASE": 9,
+		"FORBID_INTRIGUE_INCREASE": 10,
+		"MOVE_VERTICALLY":          11,
+		"MOVE_DIAGONALLY":          12,
+		"ADD_PARANOIA":             13,
+		"ADD_GOODWILL":             14,
+		"ADD_INTRIGUE":             15,
 	}
 )
 
@@ -928,14 +937,14 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\tDAY_START\x10\x04\x12\r\n" +
 	"\tCARD_PLAY\x10\x05\x12\x0f\n" +
 	"\vCARD_REVEAL\x10\x06\x12\x10\n" +
-	"\fCARD_RESOLVE\x10\a\x12\r\n" +
+	"\fCARD_EFFECTS\x10\a\x12\r\n" +
 	"\tABILITIES\x10\b\x12\r\n" +
 	"\tINCIDENTS\x10\t\x12\v\n" +
 	"\aDAY_END\x10\n" +
 	"\x12\f\n" +
 	"\bLOOP_END\x10\v\x12\x15\n" +
 	"\x11PROTAGONIST_GUESS\x10\f\x12\r\n" +
-	"\tGAME_OVER\x10\r*\x9b\x02\n" +
+	"\tGAME_OVER\x10\r*\xec\x02\n" +
 	"\bCardType\x12\x19\n" +
 	"\x15CARD_TYPE_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11MOVE_HORIZONTALLY\x10\x01\x12\x11\n" +
@@ -944,13 +953,16 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\rGOODWILL_PLUS\x10\x04\x12\x12\n" +
 	"\x0eGOODWILL_MINUS\x10\x05\x12\x11\n" +
 	"\rINTRIGUE_PLUS\x10\x06\x12\x13\n" +
-	"\x0fFORBID_MOVEMENT\x10\a\x12\x13\n" +
-	"\x0fFORBID_PARANOIA\x10\b\x12\x13\n" +
-	"\x0fFORBID_GOODWILL\x10\t\x12\x13\n" +
-	"\x0fFORBID_INTRIGUE\x10\n" +
+	"\x0fFORBID_MOVEMENT\x10\a\x12\x1c\n" +
+	"\x18FORBID_PARANOIA_INCREASE\x10\b\x12\x1c\n" +
+	"\x18FORBID_GOODWILL_INCREASE\x10\t\x12\x1c\n" +
+	"\x18FORBID_INTRIGUE_INCREASE\x10\n" +
 	"\x12\x13\n" +
 	"\x0fMOVE_VERTICALLY\x10\v\x12\x13\n" +
-	"\x0fMOVE_DIAGONALLY\x10\f*\xd6\x01\n" +
+	"\x0fMOVE_DIAGONALLY\x10\f\x12\x10\n" +
+	"\fADD_PARANOIA\x10\r\x12\x10\n" +
+	"\fADD_GOODWILL\x10\x0e\x12\x10\n" +
+	"\fADD_INTRIGUE\x10\x0f*\xd6\x01\n" +
 	"\bRoleType\x12\x19\n" +
 	"\x15ROLE_TYPE_UNSPECIFIED\x10\x00\x12\n" +
 	"\n" +

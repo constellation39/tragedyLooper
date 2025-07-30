@@ -42,7 +42,7 @@ func (ge *GameEngine) checkAndTriggerAbilities(triggerType model.TriggerType) {
 
 			// 由于这是一个自动触发器，我们假设没有特定的玩家操作有效负载。
 			// 应用能力的效果。
-			if err := ge.applyEffect(ability.Config.Effect, ability, nil, nil); err != nil {
+			if err := ge.ApplyEffect(ability.Config.Effect, ability, nil, nil); err != nil {
 				ge.logger.Error("Error applying triggered ability effect", zap.Error(err))
 			}
 

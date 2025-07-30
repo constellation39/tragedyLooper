@@ -14,7 +14,9 @@ type ProtagonistCardPlayPhase struct {
 }
 
 // Type returns the phase type.
-func (p *ProtagonistCardPlayPhase) Type() model.GamePhase { return model.GamePhase_PROTAGONIST_CARD_PLAY }
+func (p *ProtagonistCardPlayPhase) Type() model.GamePhase {
+	return model.GamePhase_CARD_PLAY
+}
 
 // Enter is called when the phase begins.
 func (p *ProtagonistCardPlayPhase) Enter(ge GameEngine) Phase {
@@ -94,12 +96,7 @@ func handlePlayCardAction(ge GameEngine, player *model.Player, payload *model.Pl
 	}
 	playedCard.UsedThisLoop = true // Mark as used
 
-	dayState, ok := ge.GetGameState().PlayedCardsThisDay[player.Id]
-	if !ok {
-		dayState = &model.CardList{}
-		ge.GetGameState().PlayedCardsThisDay[player.Id] = dayState
-	}
-	dayState.Cards = append(dayState.Cards, playedCard)
+	ge.GetGameState().PlayedCardsThisDay[player.Id] = playedCard
 
 	// Mark the card as used for this loop
 	ge.GetGameState().PlayedCardsThisLoop[playedCard.Config.Id] = true

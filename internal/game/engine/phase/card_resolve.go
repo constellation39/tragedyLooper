@@ -8,7 +8,7 @@ import (
 type CardResolvePhase struct{ basePhase }
 
 // Type 返回阶段类型，表示当前是卡牌结算阶段。
-func (p *CardResolvePhase) Type() model.GamePhase { return model.GamePhase_CARD_RESOLVE }
+func (p *CardResolvePhase) Type() model.GamePhase { return model.GamePhase_CARD_EFFECTS }
 
 // Enter 进入卡牌结算阶段。
 // ge: 游戏引擎接口。

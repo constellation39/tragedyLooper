@@ -105,16 +105,22 @@
                         6,
                         "FORBID_MOVEMENT",
                         7,
-                        "FORBID_PARANOIA",
+                        "FORBID_PARANOIA_INCREASE",
                         8,
-                        "FORBID_GOODWILL",
+                        "FORBID_GOODWILL_INCREASE",
                         9,
-                        "FORBID_INTRIGUE",
+                        "FORBID_INTRIGUE_INCREASE",
                         10,
                         "MOVE_VERTICALLY",
                         11,
                         "MOVE_DIAGONALLY",
-                        12
+                        12,
+                        "ADD_PARANOIA",
+                        13,
+                        "ADD_GOODWILL",
+                        14,
+                        "ADD_INTRIGUE",
+                        15
                     ],
                     "oneOf": [
                         {

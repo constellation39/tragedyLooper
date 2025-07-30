@@ -15,7 +15,7 @@ type MastermindCardPlayPhase struct {
 }
 
 // Type returns the phase type.
-func (p *MastermindCardPlayPhase) Type() model.GamePhase { return model.GamePhase_MASTERMIND_CARD_PLAY }
+func (p *MastermindCardPlayPhase) Type() model.GamePhase { return model.GamePhase_CARD_PLAY }
 
 // Enter is called when the phase begins.
 func (p *MastermindCardPlayPhase) Enter(ge GameEngine) Phase {
@@ -70,10 +70,10 @@ func (p *MastermindCardPlayPhase) handlePlayCardAction(ge GameEngine, player *mo
 
 	dayState, ok := ge.GetGameState().PlayedCardsThisDay[player.Id]
 	if !ok {
-		dayState = &model.CardList{}
+		dayState = &model.Card{}
 		ge.GetGameState().PlayedCardsThisDay[player.Id] = dayState
 	}
-	dayState.Cards = append(dayState.Cards, playedCard)
+	ge.GetGameState().PlayedCardsThisDay[player.Id] = playedCard
 
 	// Mark the card as used for this loop
 	ge.GetGameState().PlayedCardsThisLoop[playedCard.Config.Id] = true
@@ -85,9 +85,6 @@ func (p *MastermindCardPlayPhase) handlePlayCardAction(ge GameEngine, player *mo
 func takeCardFromPlayer(player *model.Player, cardID int32) (*model.Card, error) {
 	for i, card := range player.Hand {
 		if card.Config.Id == cardID {
-			if card.Config.OncePerLoop && card.UsedThisLoop {
-				return nil, fmt.Errorf("card %d was already used this loop", cardID)
-			}
 			// Remove card from hand and return it
 			player.Hand = append(player.Hand[:i], player.Hand[i+1:]...)
 			return card, nil

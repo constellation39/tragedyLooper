@@ -2,6 +2,7 @@ package engine // 定义游戏引擎包
 
 import (
 	"context" // 导入 context 包，用于管理请求的生命周期
+	"fmt"
 	"tragedylooper/internal/game/engine/effecthandler"
 	"tragedylooper/internal/game/loader" // 导入游戏数据加载器
 	model "tragedylooper/pkg/proto/v1"   // 导入协议缓冲区模型
@@ -220,21 +221,22 @@ func (ge *GameEngine) GetCharacterByID(charID int32) *model.Character {
 // TriggerIncidents checks and triggers incidents based on their conditions.
 func (ge *GameEngine) TriggerIncidents() {
 	logger := ge.logger.Named("TriggerIncidents")
-	incidents := ge.gameConfig.Incidents
+	incidents := ge.gameConfig.GetIncidents()
 
-	for _, incident := range incidents {
-		if incident.HasTriggeredThisLoop {
+	for _, incidentConfig := range incidents {
+		incident := &model.Incident{Config: incidentConfig}
+		if incident.GetHasTriggeredThisLoop() {
 			continue
 		}
 
-		met, err := ge.CheckCondition(incident.TriggerCondition)
+		met, err := ge.CheckCondition(incident.GetConfig().GetTriggerCondition())
 		if err != nil {
-			logger.Error("Error checking incident condition", zap.String("incident", incident.Name), zap.Error(err))
+			logger.Error("Error checking incident condition", zap.String("incident", incident.GetConfig().GetName()), zap.Error(err))
 			continue
 		}
 
 		if met {
-			logger.Info("Incident triggered", zap.String("incident", incident.Name))
+			logger.Info("Incident triggered", zap.String("incident", incident.GetConfig().GetName()))
 			incident.HasTriggeredThisLoop = true
 
 			// Publish the trigger event
@@ -243,9 +245,9 @@ func (ge *GameEngine) TriggerIncidents() {
 			})
 
 			// Apply the incident's effect
-			if incident.Effect != nil {
-				if err := ge.ApplyEffect(incident.Effect, nil, nil, nil); err != nil {
-					logger.Error("Error applying incident effect", zap.String("incident", incident.Name), zap.Error(err))
+			if incident.GetConfig().GetEffect() != nil {
+				if err := ge.ApplyEffect(incident.GetConfig().GetEffect(), nil, nil, nil); err != nil {
+					logger.Error("Error applying incident effect", zap.String("incident", incident.GetConfig().GetName()), zap.Error(err))
 				}
 			}
 		}
@@ -342,15 +344,10 @@ func (ge *GameEngine) SetPlayerReady(playerID int32) {
 	ge.playerReady[playerID] = true
 }
 
-// ResolveSelectorToCharacters 根据目标选择器解析出对应的角色ID列表。
-// gs: 游戏状态。
-// sel: 目标选择器。
-// player: 相关的玩家（如果适用）。
-// payload: 相关的操作负载（如果适用）。
-// ability: 相关的能力（如果适用）。
-// 返回值: 角色ID列表和可能发生的错误。
+// ResolveSelectorToCharacters is a placeholder implementation.
 func (ge *GameEngine) ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, ctx *effecthandler.EffectContext) ([]int32, error) {
-	return []int32{}, nil
+	// TODO: Implement this method based on the game's logic for target selection.
+	return nil, fmt.Errorf("ResolveSelectorToCharacters not implemented")
 }
 
 // --- AI 集成 ---

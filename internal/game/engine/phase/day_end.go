@@ -18,8 +18,8 @@ func (p *DayEndPhase) Enter(ge GameEngine) Phase {
 	script := ge.GetGameRepo().GetScript()
 
 	// 1. Check for loop loss conditions
-	for _, endCond := range script.EndConditions {
-		if endCond.Type == model.EndConditionType_LOOP_LOSS {
+	for _, endCond := range script.LoseConditions {
+		if endCond.Type == model.EndConditionType_PROTAGONIST_GUESS_FAIL {
 			for _, req := range endCond.Requirements {
 				met, err := ge.CheckCondition(req)
 				if err != nil {
