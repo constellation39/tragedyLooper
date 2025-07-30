@@ -5,16 +5,16 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
-type ConditionChecker struct {
+type conditionChecker struct {
 	engine *GameEngine
 }
 
-func NewConditionChecker(engine *GameEngine) *ConditionChecker {
-	return &ConditionChecker{engine: engine}
+func newConditionChecker(engine *GameEngine) *conditionChecker {
+	return &conditionChecker{engine: engine}
 }
 
 // Check 根据当前游戏状态评估条件。
-func (cc *ConditionChecker) Check(gs *model.GameState, condition *model.Condition) (bool, error) {
+func (cc *conditionChecker) Check(gs *model.GameState, condition *model.Condition) (bool, error) {
 	if condition == nil {
 		return true, nil // nil 条件被视为 true
 	}
@@ -32,7 +32,7 @@ func (cc *ConditionChecker) Check(gs *model.GameState, condition *model.Conditio
 	}
 }
 
-func (cc *ConditionChecker) checkCompoundCondition(gs *model.GameState, condition *model.CompoundCondition) (bool, error) {
+func (cc *conditionChecker) checkCompoundCondition(gs *model.GameState, condition *model.CompoundCondition) (bool, error) {
 	switch condition.Operator {
 	case model.CompoundCondition_AND:
 		for _, sub := range condition.SubConditions {
@@ -61,7 +61,7 @@ func (cc *ConditionChecker) checkCompoundCondition(gs *model.GameState, conditio
 	}
 }
 
-func (cc *ConditionChecker) checkStatCondition(gs *model.GameState, condition *model.StatCondition) (bool, error) {
+func (cc *conditionChecker) checkStatCondition(gs *model.GameState, condition *model.StatCondition) (bool, error) {
 	// 这是一个简化的实现。完整的实现需要解析 TargetSelector。
 	// 目前，我们假设目标始终是特定角色。
 	char, ok := gs.Characters[condition.Target.CharacterId]
@@ -97,7 +97,7 @@ func (cc *ConditionChecker) checkStatCondition(gs *model.GameState, condition *m
 	}
 }
 
-func (cc *ConditionChecker) checkLocationCondition(gs *model.GameState, condition *model.LocationCondition) (bool, error) {
+func (cc *conditionChecker) checkLocationCondition(gs *model.GameState, condition *model.LocationCondition) (bool, error) {
 	// 简化实现
 	char, ok := gs.Characters[condition.Target.CharacterId]
 	if !ok {

@@ -6,17 +6,17 @@ import (
 	"go.uber.org/zap"
 )
 
-type CharacterManager struct {
+type characterManager struct {
 	engine *GameEngine
 }
 
-func NewCharacterManager(engine *GameEngine) *CharacterManager {
-	return &CharacterManager{
+func newCharacterManager(engine *GameEngine) *characterManager {
+	return &characterManager{
 		engine: engine,
 	}
 }
 
-func (cm *CharacterManager) MoveCharacter(char *model.Character, dx, dy int) {
+func (cm *characterManager) MoveCharacter(char *model.Character, dx, dy int) {
 	startPos, ok := LocationGrid[char.CurrentLocation]
 	if !ok {
 		cm.engine.logger.Warn("character in unknown location", zap.String("char", char.Config.Name))
@@ -57,7 +57,7 @@ func (cm *CharacterManager) MoveCharacter(char *model.Character, dx, dy int) {
 	}
 }
 
-func (cm *CharacterManager) GetCharactersInLocation(location model.LocationType) []int32 {
+func (cm *characterManager) GetCharactersInLocation(location model.LocationType) []int32 {
 	var charIDs []int32
 	for id, char := range cm.engine.GameState.Characters {
 		if char.CurrentLocation == location {
@@ -67,7 +67,7 @@ func (cm *CharacterManager) GetCharactersInLocation(location model.LocationType)
 	return charIDs
 }
 
-func (cm *CharacterManager) GetAllCharacterIDs() []int32 {
+func (cm *characterManager) GetAllCharacterIDs() []int32 {
 	var charIDs []int32
 	for id := range cm.engine.GameState.Characters {
 		charIDs = append(charIDs, id)

@@ -47,14 +47,12 @@ type GameEngine struct {
 	gameConfig      loader.GameConfig
 	pm              *phaseManager
 	em              *eventManager
-	im              *IncidentManager
-	cm              *CharacterManager
-	cc              *ConditionChecker
-	tm              *TargetManager
+	im              *incidentManager
+	cm              *characterManager
+	cc              *conditionChecker
+	tm              *targetManager
 
 	// engineChan 是所有传入请求（玩家操作、AI 操作等）的中央通道。
-	// 它确保对游戏状态的所有修改都在主游戏循环中按顺序处理，
-	// 从而防止竞争条件。
 	engineChan chan engineAction
 	stopChan   chan struct{}
 
@@ -78,14 +76,12 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator 
 	}
 	ge.pm = newPhaseManager(ge)
 	ge.em = newEventManager(ge)
-	ge.im = NewIncidentManager(ge)
-	ge.cm = NewCharacterManager(ge)
-	ge.cc = NewConditionChecker(ge)
-	ge.tm = NewTargetManager(ge)
+	ge.im = newIncidentManager(ge)
+	ge.cm = newCharacterManager(ge)
+	ge.cc = newConditionChecker(ge)
+	ge.tm = newTargetManager(ge)
 
-	playerMap := ge.initializePlayers(players)
-
-	ge.initializeGameStateFromScript(playerMap)
+	ge.initializeGameStateFromScript(players)
 	ge.dealInitialCards()
 
 	return ge, nil
@@ -108,7 +104,9 @@ func (ge *GameEngine) initializePlayers(players []*model.Player) map[int32]*mode
 	return playerMap
 }
 
-func (ge *GameEngine) initializeGameStateFromScript(playerMap map[int32]*model.Player) {
+func (ge *GameEngine) initializeGameStateFromScript(players []*model.Player) {
+	playerMap := ge.initializePlayers(players)
+
 	script := ge.gameConfig.GetScript()
 	characterConfigs := ge.gameConfig.GetCharacters()
 	incidentConfigs := ge.gameConfig.GetIncidents()

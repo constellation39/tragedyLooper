@@ -6,17 +6,17 @@ import (
 	"go.uber.org/zap"
 )
 
-type IncidentManager struct {
+type incidentManager struct {
 	engine *GameEngine
 }
 
-func NewIncidentManager(engine *GameEngine) *IncidentManager {
-	return &IncidentManager{
+func newIncidentManager(engine *GameEngine) *incidentManager {
+	return &incidentManager{
 		engine: engine,
 	}
 }
 
-func (im *IncidentManager) TriggerIncidents() {
+func (im *incidentManager) TriggerIncidents() {
 	logger := im.engine.logger.Named("TriggerIncidents")
 	incidents := im.engine.gameConfig.GetIncidents()
 

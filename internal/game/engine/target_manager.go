@@ -6,19 +6,19 @@ import (
 	model "tragedylooper/pkg/proto/v1"
 )
 
-type TargetManager struct {
+type targetManager struct {
 	engine *GameEngine
 }
 
-func NewTargetManager(engine *GameEngine) *TargetManager {
-	return &TargetManager{engine: engine}
+func newTargetManager(engine *GameEngine) *targetManager {
+	return &targetManager{engine: engine}
 }
 
-func (tm *TargetManager) ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, ctx *effecthandler.EffectContext) ([]int32, error) {
+func (tm *targetManager) ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, ctx *effecthandler.EffectContext) ([]int32, error) {
 	return tm.resolveSelector(gs, sel, ctx)
 }
 
-func (tm *TargetManager) resolveSelector(gs *model.GameState, sel *model.TargetSelector, ctx *effecthandler.EffectContext) ([]int32, error) {
+func (tm *targetManager) resolveSelector(gs *model.GameState, sel *model.TargetSelector, ctx *effecthandler.EffectContext) ([]int32, error) {
 	if sel == nil {
 		return nil, fmt.Errorf("target selector is nil")
 	}
