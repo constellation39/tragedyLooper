@@ -114,6 +114,135 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 	assert.True(t, foundTrait, "The 'Culprit' trait should have been added to the Doctor")
 }
 
+func TestEngine_GetPlayerView(t *testing.T) {
+	engine := helper_NewGameEngineForTest(t)
+	engine.StartGameLoop()
+	defer engine.StopGameLoop()
+
+	// --- Get Views for Mastermind and a Protagonist ---
+	mastermindView := engine.GetPlayerView(1) // Mastermind ID
+	protagonistView := engine.GetPlayerView(2) // Protagonist ID
+
+	assert.NotNil(t, mastermindView)
+	assert.NotNil(t, protagonistView)
+
+	// --- Verification for Mastermind ---
+	// The Mastermind should see the hidden roles of all characters.
+	// In 'first_steps', the Doctor (ID 2) is the 'Serial Killer'.
+	doctorForMastermind := helper_GetCharacterFromView(t, mastermindView, 2)
+	assert.NotNil(t, doctorForMastermind)
+	assert.Equal(t, v1.RoleType_KILLER, doctorForMastermind.Role, "Mastermind should see the Doctor's hidden role")
+
+	// --- Verification for Protagonist ---
+	// The Protagonist should NOT see the hidden roles. It should be UNKNOWN.
+	doctorForProtagonist := helper_GetCharacterFromView(t, protagonistView, 2)
+	assert.NotNil(t, doctorForProtagonist)
+	assert.Equal(t, v1.RoleType_ROLE_UNKNOWN, doctorForProtagonist.Role, "Protagonist should not see the Doctor's hidden role")
+
+	// Both players should see public information, like the character's name.
+	assert.Equal(t, "Doctor", doctorForMastermind.Name)
+	assert.Equal(t, "Doctor", doctorForProtagonist.Name)
+}
+
+func TestEngine_CharacterMovement(t *testing.T) {
+	engine := helper_NewGameEngineForTest(t)
+	char := engine.GetCharacterByID(1) // High School Girl, starts at SCHOOL
+	assert.NotNil(t, char)
+	assert.Equal(t, v1.LocationType_SCHOOL, char.CurrentLocation)
+
+	// --- Test Valid Moves ---
+	// Move Right from SCHOOL (1,0) to SHRINE (0,0) - This is horizontal move, dx= -1, dy=0, but the locations are not adjacent this way.
+	// Let's check the grid. School is (1,0), Shrine is (0,0). So dx should be -1.
+	// Let's move from School (1,0) to City (1,1), dy=1
+	engine.MoveCharacter(char, 0, 1)
+	assert.Equal(t, v1.LocationType_CITY, char.CurrentLocation, "Should move from School to City")
+
+	// Move Left from CITY (1,1) to HOSPITAL (0,1), dx=-1
+	engine.MoveCharacter(char, -1, 0)
+	assert.Equal(t, v1.LocationType_HOSPITAL, char.CurrentLocation, "Should move from City to Hospital")
+
+	// --- Test Invalid Moves (Out of Bounds) ---
+	// Try to move Left from HOSPITAL (0,1) which is out of bounds
+	engine.MoveCharacter(char, -1, 0)
+	assert.Equal(t, v1.LocationType_HOSPITAL, char.CurrentLocation, "Should not move out of bounds (left)")
+
+	// Try to move Up from HOSPITAL (0,1) to (0,0) which is Shrine
+	engine.MoveCharacter(char, 0, -1)
+	assert.Equal(t, v1.LocationType_SHRINE, char.CurrentLocation, "Should move from Hospital to Shrine")
+
+	// Try to move Up from SHRINE (0,0) which is out of bounds
+	engine.MoveCharacter(char, 0, -1)
+	assert.Equal(t, v1.LocationType_SHRINE, char.CurrentLocation, "Should not move out of bounds (up)")
+}
+
+func TestEngine_GameOverOnMaxLoops(t *testing.T) {
+	engine := helper_NewGameEngineForTest(t)
+
+	// --- Setup: Give mastermind cards to play ---
+	mastermind := engine.GetMastermindPlayer()
+	card4Config, err := loader.Get[*v1.CardConfig](engine.gameConfig, 4) // Add Paranoia card
+	assert.NoError(t, err)
+	mastermind.Hand = []*v1.Card{
+		{Config: card4Config},
+		{Config: card4Config},
+		{Config: card4Config},
+	}
+
+	engine.StartGameLoop()
+	defer engine.StopGameLoop()
+
+	// Manually set the loop count to the maximum
+	engine.GameState.CurrentLoop = engine.gameConfig.GetScript().LoopCount
+	// Set day to the last day of the loop
+	engine.GameState.CurrentDay = engine.gameConfig.GetScript().DaysPerLoop
+
+	// Wait for the game to be ready for player actions
+	waitForPhase(t, engine, v1.GamePhase_CARD_PLAY)
+
+	// --- Mastermind Plays Cards ---
+	playCardAction := &v1.PlayerActionPayload{
+		Payload: &v1.PlayerActionPayload_PlayCard{
+			PlayCard: &v1.PlayCardPayload{
+				CardId: 4,
+				Target: &v1.PlayCardPayload_TargetCharacterId{TargetCharacterId: 1},
+			},
+		},
+	}
+	for i := 0; i < 3; i++ {
+		engine.SubmitPlayerAction(mastermind.Id, playCardAction)
+	}
+
+	// --- Protagonists Pass ---
+	passAction := &v1.PlayerActionPayload{
+		Payload: &v1.PlayerActionPayload_PassTurn{
+			PassTurn: &v1.PassTurnAction{},
+		},
+	}
+	protagonists := engine.GetProtagonistPlayers()
+	for _, player := range protagonists {
+		engine.SubmitPlayerAction(player.Id, passAction)
+	}
+
+	// We expect a GAME_ENDED event with the protagonist as the winner
+	// because the mastermind failed to achieve their goals within the loops.
+	waitForEvent(t, engine, v1.GameEventType_GAME_ENDED)
+
+	// We can also check the final phase if needed, but the event is a stronger signal.
+	assert.Equal(t, v1.GamePhase_GAME_OVER, engine.GetCurrentPhase(), "Game should be in the GAME_OVER phase")
+}
+
+// helper_GetCharacterFromView is a test helper to find a character in a player view by its ID.
+func helper_GetCharacterFromView(t *testing.T, view *v1.PlayerView, charID int32) *v1.PlayerViewCharacter {
+	t.Helper()
+	for _, char := range view.Characters {
+		if char.Id == charID {
+			return char
+		}
+	}
+	t.Fatalf("Character with ID %d not found in player view", charID)
+	return nil
+}
+
 // waitForEvent is a helper function to block until the game engine emits a specific event.
 func waitForEvent(t *testing.T, engine *GameEngine, targetEvent v1.GameEventType) {
 	t.Helper()
@@ -132,6 +261,25 @@ func waitForEvent(t *testing.T, engine *GameEngine, targetEvent v1.GameEventType
 			if event.Type == targetEvent {
 				return
 			}
+		}
+	}
+}
+
+// waitForPhase is a helper function to block until the game engine reaches a specific phase.
+func waitForPhase(t *testing.T, engine *GameEngine, targetPhase v1.GamePhase) {
+	t.Helper()
+	timeout := time.After(2 * time.Second)
+
+	for {
+		currentPhase := engine.GetCurrentPhase()
+		if currentPhase == targetPhase {
+			return
+		}
+		select {
+		case <-timeout:
+			t.Fatalf("timed out waiting for phase %s, current phase is %s", targetPhase, currentPhase)
+		case <-time.After(10 * time.Millisecond):
+			// continue polling
 		}
 	}
 }

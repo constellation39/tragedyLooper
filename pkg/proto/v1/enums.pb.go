@@ -248,51 +248,54 @@ type RoleType int32
 
 const (
 	RoleType_ROLE_TYPE_UNSPECIFIED RoleType = 0  // 未指定
-	RoleType_PERSON                RoleType = 1  // 普通人
-	RoleType_KILLER                RoleType = 2  // 杀手
-	RoleType_BRAIN                 RoleType = 3  // 洗脑者
-	RoleType_KEY_PERSON            RoleType = 4  // 关键人物
-	RoleType_CULTIST               RoleType = 5  // 邪教徒
-	RoleType_FRIEND                RoleType = 6  // 朋友
-	RoleType_LOVED_ONE             RoleType = 7  // 恋人
-	RoleType_CONSPIRACY_THEORIST   RoleType = 8  // 阴谋论者
-	RoleType_SERIAL_KILLER         RoleType = 9  // 连环杀手
-	RoleType_FACTOR                RoleType = 10 // X因素
-	RoleType_WITCH                 RoleType = 11 // 女巫
-	RoleType_TIME_TRAVELER         RoleType = 12 // 时间旅行者
+	RoleType_ROLE_UNKNOWN          RoleType = 1  // 未知
+	RoleType_PERSON                RoleType = 2  // 普通人
+	RoleType_KILLER                RoleType = 3  // 杀手
+	RoleType_BRAIN                 RoleType = 4  // 洗脑者
+	RoleType_KEY_PERSON            RoleType = 5  // 关键人物
+	RoleType_CULTIST               RoleType = 6  // 邪教徒
+	RoleType_FRIEND                RoleType = 7  // 朋友
+	RoleType_LOVED_ONE             RoleType = 8  // 恋人
+	RoleType_CONSPIRACY_THEORIST   RoleType = 9  // 阴谋论者
+	RoleType_SERIAL_KILLER         RoleType = 10 // 连环杀手
+	RoleType_FACTOR                RoleType = 11 // X因素
+	RoleType_WITCH                 RoleType = 12 // 女巫
+	RoleType_TIME_TRAVELER         RoleType = 13 // 时间旅行者
 )
 
 // Enum value maps for RoleType.
 var (
 	RoleType_name = map[int32]string{
 		0:  "ROLE_TYPE_UNSPECIFIED",
-		1:  "PERSON",
-		2:  "KILLER",
-		3:  "BRAIN",
-		4:  "KEY_PERSON",
-		5:  "CULTIST",
-		6:  "FRIEND",
-		7:  "LOVED_ONE",
-		8:  "CONSPIRACY_THEORIST",
-		9:  "SERIAL_KILLER",
-		10: "FACTOR",
-		11: "WITCH",
-		12: "TIME_TRAVELER",
+		1:  "ROLE_UNKNOWN",
+		2:  "PERSON",
+		3:  "KILLER",
+		4:  "BRAIN",
+		5:  "KEY_PERSON",
+		6:  "CULTIST",
+		7:  "FRIEND",
+		8:  "LOVED_ONE",
+		9:  "CONSPIRACY_THEORIST",
+		10: "SERIAL_KILLER",
+		11: "FACTOR",
+		12: "WITCH",
+		13: "TIME_TRAVELER",
 	}
 	RoleType_value = map[string]int32{
 		"ROLE_TYPE_UNSPECIFIED": 0,
-		"PERSON":                1,
-		"KILLER":                2,
-		"BRAIN":                 3,
-		"KEY_PERSON":            4,
-		"CULTIST":               5,
-		"FRIEND":                6,
-		"LOVED_ONE":             7,
-		"CONSPIRACY_THEORIST":   8,
-		"SERIAL_KILLER":         9,
-		"FACTOR":                10,
-		"WITCH":                 11,
-		"TIME_TRAVELER":         12,
+		"ROLE_UNKNOWN":          1,
+		"PERSON":                2,
+		"KILLER":                3,
+		"BRAIN":                 4,
+		"KEY_PERSON":            5,
+		"CULTIST":               6,
+		"FRIEND":                7,
+		"LOVED_ONE":             8,
+		"CONSPIRACY_THEORIST":   9,
+		"SERIAL_KILLER":         10,
+		"FACTOR":                11,
+		"WITCH":                 12,
+		"TIME_TRAVELER":         13,
 	}
 )
 
@@ -961,27 +964,28 @@ const file_v1_enums_proto_rawDesc = "" +
 	"\x0fMOVE_DIAGONALLY\x10\f\x12\x10\n" +
 	"\fADD_PARANOIA\x10\r\x12\x10\n" +
 	"\fADD_GOODWILL\x10\x0e\x12\x10\n" +
-	"\fADD_INTRIGUE\x10\x0f*\xd6\x01\n" +
+	"\fADD_INTRIGUE\x10\x0f*\xe8\x01\n" +
 	"\bRoleType\x12\x19\n" +
-	"\x15ROLE_TYPE_UNSPECIFIED\x10\x00\x12\n" +
+	"\x15ROLE_TYPE_UNSPECIFIED\x10\x00\x12\x10\n" +
+	"\fROLE_UNKNOWN\x10\x01\x12\n" +
 	"\n" +
-	"\x06PERSON\x10\x01\x12\n" +
+	"\x06PERSON\x10\x02\x12\n" +
 	"\n" +
-	"\x06KILLER\x10\x02\x12\t\n" +
-	"\x05BRAIN\x10\x03\x12\x0e\n" +
+	"\x06KILLER\x10\x03\x12\t\n" +
+	"\x05BRAIN\x10\x04\x12\x0e\n" +
 	"\n" +
-	"KEY_PERSON\x10\x04\x12\v\n" +
-	"\aCULTIST\x10\x05\x12\n" +
+	"KEY_PERSON\x10\x05\x12\v\n" +
+	"\aCULTIST\x10\x06\x12\n" +
 	"\n" +
-	"\x06FRIEND\x10\x06\x12\r\n" +
-	"\tLOVED_ONE\x10\a\x12\x17\n" +
-	"\x13CONSPIRACY_THEORIST\x10\b\x12\x11\n" +
-	"\rSERIAL_KILLER\x10\t\x12\n" +
+	"\x06FRIEND\x10\a\x12\r\n" +
+	"\tLOVED_ONE\x10\b\x12\x17\n" +
+	"\x13CONSPIRACY_THEORIST\x10\t\x12\x11\n" +
+	"\rSERIAL_KILLER\x10\n" +
+	"\x12\n" +
 	"\n" +
-	"\x06FACTOR\x10\n" +
-	"\x12\t\n" +
-	"\x05WITCH\x10\v\x12\x11\n" +
-	"\rTIME_TRAVELER\x10\f*\x9f\x01\n" +
+	"\x06FACTOR\x10\v\x12\t\n" +
+	"\x05WITCH\x10\f\x12\x11\n" +
+	"\rTIME_TRAVELER\x10\r*\x9f\x01\n" +
 	"\fIncidentType\x12\x1d\n" +
 	"\x19INCIDENT_TYPE_UNSPECIFIED\x10\x00\x12\n" +
 	"\n" +

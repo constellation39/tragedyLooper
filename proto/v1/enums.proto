@@ -52,18 +52,19 @@ enum CardType {
 // 角色身份类型
 enum RoleType {
   ROLE_TYPE_UNSPECIFIED = 0; // 未指定
-  PERSON = 1; // 普通人
-  KILLER = 2; // 杀手
-  BRAIN = 3; // 洗脑者
-  KEY_PERSON = 4; // 关键人物
-  CULTIST = 5; // 邪教徒
-  FRIEND = 6; // 朋友
-  LOVED_ONE = 7; // 恋人
-  CONSPIRACY_THEORIST = 8; // 阴谋论者
-  SERIAL_KILLER = 9; // 连环杀手
-  FACTOR = 10; // X因素
-  WITCH = 11; // 女巫
-  TIME_TRAVELER = 12; // 时间旅行者
+  ROLE_UNKNOWN = 1; // 未知
+  PERSON = 2; // 普通人
+  KILLER = 3; // 杀手
+  BRAIN = 4; // 洗脑者
+  KEY_PERSON = 5; // 关键人物
+  CULTIST = 6; // 邪教徒
+  FRIEND = 7; // 朋友
+  LOVED_ONE = 8; // 恋人
+  CONSPIRACY_THEORIST = 9; // 阴谋论者
+  SERIAL_KILLER = 10; // 连环杀手
+  FACTOR = 11; // X因素
+  WITCH = 12; // 女巫
+  TIME_TRAVELER = 13; // 时间旅行者
 }
 
 // 事件类型

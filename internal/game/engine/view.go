@@ -43,9 +43,10 @@ func (ge *GameEngine) GeneratePlayerView(playerID int32) *model.PlayerView {
 			Rules:           charCopy.Config.Rules,
 		}
 		if player.Role == model.PlayerRole_PROTAGONIST {
-			// Hide the true role from Protagonists, showing it as unspecified.
-			// The Mastermind will see the true roles.
-			// charCopy.HiddenRole = model.RoleType_ROLE_TYPE_UNSPECIFIED // This field does not exist on PlayerViewCharacter
+				// Hide the true role from Protagonists, showing it as unspecified.
+				playerViewChar.Role = model.RoleType_ROLE_UNKNOWN
+		} else {
+				playerViewChar.Role = charCopy.HiddenRole
 		}
 		view.Characters[id] = playerViewChar
 	}

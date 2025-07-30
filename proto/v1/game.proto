@@ -86,6 +86,7 @@ message PlayerViewCharacter {
   bool is_alive = 9; // 角色是否存活
   bool in_panic_mode = 10; // 是否处于恐慌模式
   repeated CharacterRule rules = 11; // 角色特有规则
+  RoleType role = 12; // 角色身份（对主角可能为UNKNOWN）
   // 隐藏身份 (hidden_role) 不会在这里显示
 }
 

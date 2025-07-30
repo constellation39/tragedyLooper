@@ -555,6 +555,7 @@ type PlayerViewCharacter struct {
 	IsAlive         bool                   `protobuf:"varint,9,opt,name=is_alive,json=isAlive,proto3" json:"is_alive,omitempty"`                                              // 角色是否存活
 	InPanicMode     bool                   `protobuf:"varint,10,opt,name=in_panic_mode,json=inPanicMode,proto3" json:"in_panic_mode,omitempty"`                               // 是否处于恐慌模式
 	Rules           []*CharacterRule       `protobuf:"bytes,11,rep,name=rules,proto3" json:"rules,omitempty"`                                                                 // 角色特有规则
+	Role            RoleType               `protobuf:"varint,12,opt,name=role,proto3,enum=v1.RoleType" json:"role,omitempty"`                                                 // 角色身份（对主角可能为UNKNOWN）
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -664,6 +665,13 @@ func (x *PlayerViewCharacter) GetRules() []*CharacterRule {
 		return x.Rules
 	}
 	return nil
+}
+
+func (x *PlayerViewCharacter) GetRole() RoleType {
+	if x != nil {
+		return x.Role
+	}
+	return RoleType_ROLE_TYPE_UNSPECIFIED
 }
 
 // 玩家视角下的其他玩家信息（不包含私密数据）
@@ -839,7 +847,7 @@ const file_v1_game_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aE\n" +
 	"\x17PreventedTragediesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\"\xf5\x02\n" +
+	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\"\x97\x03\n" +
 	"\x13PlayerViewCharacter\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
@@ -852,7 +860,8 @@ const file_v1_game_proto_rawDesc = "" +
 	"\bis_alive\x18\t \x01(\bR\aisAlive\x12\"\n" +
 	"\rin_panic_mode\x18\n" +
 	" \x01(\bR\vinPanicMode\x12'\n" +
-	"\x05rules\x18\v \x03(\v2\x11.v1.CharacterRuleR\x05rules\"Z\n" +
+	"\x05rules\x18\v \x03(\v2\x11.v1.CharacterRuleR\x05rules\x12 \n" +
+	"\x04role\x18\f \x01(\x0e2\f.v1.RoleTypeR\x04role\"Z\n" +
 	"\x10PlayerViewPlayer\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\"\n" +
@@ -902,9 +911,9 @@ var file_v1_game_proto_goTypes = []any{
 	(LocationType)(0),                // 27: v1.LocationType
 	(*Ability)(nil),                  // 28: v1.Ability
 	(*CharacterRule)(nil),            // 29: v1.CharacterRule
-	(*Character)(nil),                // 30: v1.Character
-	(*CardList)(nil),                 // 31: v1.CardList
-	(RoleType)(0),                    // 32: v1.RoleType
+	(RoleType)(0),                    // 30: v1.RoleType
+	(*Character)(nil),                // 31: v1.Character
+	(*CardList)(nil),                 // 32: v1.CardList
 }
 var file_v1_game_proto_depIdxs = []int32{
 	7,  // 0: v1.GameState.characters:type_name -> v1.GameState.CharactersEntry
@@ -936,19 +945,20 @@ var file_v1_game_proto_depIdxs = []int32{
 	27, // 26: v1.PlayerViewCharacter.current_location:type_name -> v1.LocationType
 	28, // 27: v1.PlayerViewCharacter.abilities:type_name -> v1.Ability
 	29, // 28: v1.PlayerViewCharacter.rules:type_name -> v1.CharacterRule
-	25, // 29: v1.PlayerViewPlayer.role:type_name -> v1.PlayerRole
-	30, // 30: v1.GameState.CharactersEntry.value:type_name -> v1.Character
-	1,  // 31: v1.GameState.PlayersEntry.value:type_name -> v1.Player
-	31, // 32: v1.GameState.PlayedCardsThisDayEntry.value:type_name -> v1.CardList
-	1,  // 33: v1.PlayerLib.PlayersEntry.value:type_name -> v1.Player
-	32, // 34: v1.PlayerDeductionKnowledge.GuessedRolesEntry.value:type_name -> v1.RoleType
-	5,  // 35: v1.PlayerView.CharactersEntry.value:type_name -> v1.PlayerViewCharacter
-	6,  // 36: v1.PlayerView.PlayersEntry.value:type_name -> v1.PlayerViewPlayer
-	37, // [37:37] is the sub-list for method output_type
-	37, // [37:37] is the sub-list for method input_type
-	37, // [37:37] is the sub-list for extension type_name
-	37, // [37:37] is the sub-list for extension extendee
-	0,  // [0:37] is the sub-list for field type_name
+	30, // 29: v1.PlayerViewCharacter.role:type_name -> v1.RoleType
+	25, // 30: v1.PlayerViewPlayer.role:type_name -> v1.PlayerRole
+	31, // 31: v1.GameState.CharactersEntry.value:type_name -> v1.Character
+	1,  // 32: v1.GameState.PlayersEntry.value:type_name -> v1.Player
+	32, // 33: v1.GameState.PlayedCardsThisDayEntry.value:type_name -> v1.CardList
+	1,  // 34: v1.PlayerLib.PlayersEntry.value:type_name -> v1.Player
+	30, // 35: v1.PlayerDeductionKnowledge.GuessedRolesEntry.value:type_name -> v1.RoleType
+	5,  // 36: v1.PlayerView.CharactersEntry.value:type_name -> v1.PlayerViewCharacter
+	6,  // 37: v1.PlayerView.PlayersEntry.value:type_name -> v1.PlayerViewPlayer
+	38, // [38:38] is the sub-list for method output_type
+	38, // [38:38] is the sub-list for method input_type
+	38, // [38:38] is the sub-list for extension type_name
+	38, // [38:38] is the sub-list for extension extendee
+	0,  // [0:38] is the sub-list for field type_name
 }
 
 func init() { file_v1_game_proto_init() }
