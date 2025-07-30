@@ -59,7 +59,6 @@ func New() *zap.Logger {
 
 	// AddCallerSkip(1) is important to make sure the caller is reported correctly
 	logger := zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1))
-	logger = zap.New(core, zap.AddCaller())
 
 	return logger
 }

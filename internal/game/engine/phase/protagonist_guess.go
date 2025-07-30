@@ -18,8 +18,7 @@ func (p *ProtagonistGuessPhase) Type() model.GamePhase { return model.GamePhase_
 // action: 玩家操作的负载。
 // 返回值: 如果阶段发生变化，则返回新的阶段实例；否则返回 nil。
 func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
-	switch payload := action.Payload.(type) {
-	case *model.PlayerActionPayload_MakeGuess:
+	if payload, ok := action.Payload.(*model.PlayerActionPayload_MakeGuess); ok {
 		return handleMakeGuessAction(ge, player, payload.MakeGuess)
 	}
 	return nil

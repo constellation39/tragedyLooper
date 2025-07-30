@@ -1,13 +1,13 @@
 syntax = "proto3";
 
-package v1;
+package tragedylooper.v1;
 
-import "v1/condition.proto";
-import "v1/effect.proto";
-import "v1/enums.proto";
-import "v1/incident.proto";
+import "tragedylooper/v1/condition.proto";
+import "tragedylooper/v1/effect.proto";
+import "tragedylooper/v1/enums.proto";
+import "tragedylooper/v1/incident.proto";
 
-option go_package = "tragedylooper/internal/game/proto/v1";
+option go_package = "tragedylooper/pkg/proto/v1";
 
 // 剧本配置
 message ScriptConfig {

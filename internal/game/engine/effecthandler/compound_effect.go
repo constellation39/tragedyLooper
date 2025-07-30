@@ -2,6 +2,7 @@ package effecthandler // Defines the package for effect handlers
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 	model "tragedylooper/pkg/proto/v1"
@@ -25,13 +26,16 @@ func (h *CompoundEffectHandler) ResolveChoices(ge GameEngine, effect *model.Effe
 	switch compoundEffect.Operator {
 	case model.CompoundEffect_CHOOSE_ONE:
 		// If it's a CHOOSE_ONE type, create a choice for each sub-effect.
+		if len(compoundEffect.SubEffects) >= math.MaxInt32 {
+			return nil, fmt.Errorf("too many sub-effects, exceeds int32 range")
+		}
 		var choices []*model.Choice
 		for i, subEffect := range compoundEffect.SubEffects {
 			choiceID := fmt.Sprintf("effect_choice_%d", i)
 			choices = append(choices, &model.Choice{
 				Id:          choiceID,
-				Description: GetEffectDescription(ge, subEffect), // We need a way to get the description
-				ChoiceType:  &model.Choice_EffectOptionIndex{EffectOptionIndex: int32(i)},
+				Description: GetEffectDescription(ge, subEffect),                          // We need a way to get the description
+				ChoiceType:  &model.Choice_EffectOptionIndex{EffectOptionIndex: int32(i)}, //nolint:gosec
 			})
 		}
 		return choices, nil

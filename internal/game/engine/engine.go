@@ -263,11 +263,6 @@ func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, payloa
 
 // endGame 结束游戏并宣布获胜方。
 // winner: 获胜方的角色类型。
-func (ge *GameEngine) endGame(winner model.PlayerRole) {
-	ge.logger.Info("Game over", zap.String("winner", winner.String()))
-	// This event will be handled by the event manager, leading to state updates and phase transitions.
-	ge.ApplyAndPublishEvent(model.GameEventType_GAME_ENDED, &model.EventPayload{Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: winner}}})
-}
 
 // ResetPlayerReadiness 重置所有玩家的准备状态。
 func (ge *GameEngine) ResetPlayerReadiness() {

@@ -37,11 +37,6 @@ func (pm *phaseManager) start() {
 	pm.transitionTo(pm.currentPhase)
 }
 
-// stop 清理并停止阶段管理器的计时器。
-func (pm *phaseManager) stop() {
-	pm.phaseTimer.Stop()
-}
-
 // timer 返回阶段计时器的通道。
 // 返回值: 计时器通道。
 func (pm *phaseManager) timer() <-chan time.Time {

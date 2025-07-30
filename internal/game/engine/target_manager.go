@@ -39,8 +39,7 @@ func (tm *TargetManager) resolveSelector(gs *model.GameState, sel *model.TargetS
 		}
 	case s == model.TargetSelector_ABILITY_TARGET:
 		if ctx != nil && ctx.Payload != nil {
-			switch t := ctx.Payload.Target.(type) {
-			case *model.UseAbilityPayload_TargetCharacterId:
+			if t, ok := ctx.Payload.Target.(*model.UseAbilityPayload_TargetCharacterId); ok {
 				characterIDs = append(characterIDs, t.TargetCharacterId)
 			}
 		}

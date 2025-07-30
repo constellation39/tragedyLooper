@@ -99,7 +99,23 @@ func (p *CardEffectsPhase) resolveMovement(logger *zap.Logger, ge GameEngine, ca
 }
 
 func (p *CardEffectsPhase) resolveStatEffects(logger *zap.Logger, ge GameEngine, cards []*model.Card) {
-	// Step 3: Gather all forbid effects for stats
+	forbidParanoiaInc, forbidGoodwillInc, forbidIntrigueInc := p.gatherForbidEffects(cards)
+
+	for _, card := range cards {
+		if target, ok := card.Target.(*model.Card_TargetCharacterId); ok {
+			charID := target.TargetCharacterId
+			char := ge.GetCharacterByID(charID)
+			if char == nil {
+				continue
+			}
+
+			var amount int32 = 1 // Default amount
+			p.applyStatEffect(logger, ge, charID, card.Config.Type, amount, forbidParanoiaInc, forbidGoodwillInc, forbidIntrigueInc)
+		}
+	}
+}
+
+func (p *CardEffectsPhase) gatherForbidEffects(cards []*model.Card) (map[int32]bool, map[int32]bool, map[int32]bool) {
 	forbidParanoiaInc := make(map[int32]bool)
 	forbidGoodwillInc := make(map[int32]bool)
 	forbidIntrigueInc := make(map[int32]bool)
@@ -117,54 +133,44 @@ func (p *CardEffectsPhase) resolveStatEffects(logger *zap.Logger, ge GameEngine,
 			}
 		}
 	}
+	return forbidParanoiaInc, forbidGoodwillInc, forbidIntrigueInc
+}
 
-	// Step 4: Apply stat adjustments
-	for _, card := range cards {
-		if target, ok := card.Target.(*model.Card_TargetCharacterId); ok {
-			charID := target.TargetCharacterId
-			char := ge.GetCharacterByID(charID)
-			if char == nil {
-				continue
-			}
-
-			var amount int32 = 1 // Default amount, can be specified on the card later
-
-			switch card.Config.Type {
-			case model.CardType_ADD_PARANOIA:
-				if forbidParanoiaInc[charID] && amount > 0 {
-					logger.Info("Paranoia increase forbidden", zap.Int32("charID", charID))
-					continue
-				}
-				ge.ApplyAndPublishEvent(model.GameEventType_PARANOIA_ADJUSTED, &model.EventPayload{
-					Payload: &model.EventPayload_ParanoiaAdjusted{ParanoiaAdjusted: &model.ParanoiaAdjustedEvent{
-						CharacterId: charID,
-						Amount:      amount,
-					}},
-				})
-			case model.CardType_ADD_GOODWILL:
-				if forbidGoodwillInc[charID] && amount > 0 {
-					logger.Info("Goodwill increase forbidden", zap.Int32("charID", charID))
-					continue
-				}
-				ge.ApplyAndPublishEvent(model.GameEventType_GOODWILL_ADJUSTED, &model.EventPayload{
-					Payload: &model.EventPayload_GoodwillAdjusted{GoodwillAdjusted: &model.GoodwillAdjustedEvent{
-						CharacterId: charID,
-						Amount:      amount,
-					}},
-				})
-			case model.CardType_ADD_INTRIGUE:
-				if forbidIntrigueInc[charID] && amount > 0 {
-					logger.Info("Intrigue increase forbidden", zap.Int32("charID", charID))
-					continue
-				}
-				ge.ApplyAndPublishEvent(model.GameEventType_INTRIGUE_ADJUSTED, &model.EventPayload{
-					Payload: &model.EventPayload_IntrigueAdjusted{IntrigueAdjusted: &model.IntrigueAdjustedEvent{
-						CharacterId: charID,
-						Amount:      amount,
-					}},
-				})
-			}
+func (p *CardEffectsPhase) applyStatEffect(logger *zap.Logger, ge GameEngine, charID int32, cardType model.CardType, amount int32, forbidParanoia, forbidGoodwill, forbidIntrigue map[int32]bool) {
+	switch cardType {
+	case model.CardType_ADD_PARANOIA:
+		if forbidParanoia[charID] && amount > 0 {
+			logger.Info("Paranoia increase forbidden", zap.Int32("charID", charID))
+			return
 		}
+		ge.ApplyAndPublishEvent(model.GameEventType_PARANOIA_ADJUSTED, &model.EventPayload{
+			Payload: &model.EventPayload_ParanoiaAdjusted{ParanoiaAdjusted: &model.ParanoiaAdjustedEvent{
+				CharacterId: charID,
+				Amount:      amount,
+			}},
+		})
+	case model.CardType_ADD_GOODWILL:
+		if forbidGoodwill[charID] && amount > 0 {
+			logger.Info("Goodwill increase forbidden", zap.Int32("charID", charID))
+			return
+		}
+		ge.ApplyAndPublishEvent(model.GameEventType_GOODWILL_ADJUSTED, &model.EventPayload{
+			Payload: &model.EventPayload_GoodwillAdjusted{GoodwillAdjusted: &model.GoodwillAdjustedEvent{
+				CharacterId: charID,
+				Amount:      amount,
+			}},
+		})
+	case model.CardType_ADD_INTRIGUE:
+		if forbidIntrigue[charID] && amount > 0 {
+			logger.Info("Intrigue increase forbidden", zap.Int32("charID", charID))
+			return
+		}
+		ge.ApplyAndPublishEvent(model.GameEventType_INTRIGUE_ADJUSTED, &model.EventPayload{
+			Payload: &model.EventPayload_IntrigueAdjusted{IntrigueAdjusted: &model.IntrigueAdjustedEvent{
+				CharacterId: charID,
+				Amount:      amount,
+			}},
+		})
 	}
 }
 

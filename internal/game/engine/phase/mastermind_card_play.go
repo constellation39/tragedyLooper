@@ -31,8 +31,7 @@ func (p *MastermindCardPlayPhase) HandleAction(ge GameEngine, player *model.Play
 		return nil
 	}
 
-	switch payload := action.Payload.(type) {
-	case *model.PlayerActionPayload_PlayCard:
+	if payload, ok := action.Payload.(*model.PlayerActionPayload_PlayCard); ok {
 		p.handlePlayCardAction(ge, player, payload.PlayCard)
 	}
 

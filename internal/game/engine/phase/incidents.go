@@ -23,8 +23,7 @@ func (p *IncidentsPhase) Enter(ge GameEngine) Phase {
 
 // HandleAction handles actions during the incident phase, primarily for choices.
 func (p *IncidentsPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
-	switch payload := action.Payload.(type) {
-	case *model.PlayerActionPayload_ChooseOption:
+	if payload, ok := action.Payload.(*model.PlayerActionPayload_ChooseOption); ok {
 		// Here, we would need to find the original effect that required the choice
 		// and re-apply it with the choice provided. This is a complex problem.
 		// For now, we'll log it and assume the choice resolves something.

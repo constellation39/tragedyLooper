@@ -1,12 +1,12 @@
 syntax = "proto3";
 
-package v1;
+package tragedylooper.v1;
 
-import "v1/condition.proto";
-import "v1/effect.proto";
-import "v1/enums.proto";
+import "tragedylooper/v1/condition.proto";
+import "tragedylooper/v1/effect.proto";
+import "tragedylooper/v1/enums.proto";
 
-option go_package = "tragedylooper/internal/game/proto/v1";
+option go_package = "tragedylooper/pkg/proto/v1";
 
 // 事件实例，在游戏运行时创建
 message Incident {

@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package v1;
+package tragedylooper.v1;
 
-import "v1/condition.proto"; // 引入TargetSelector
-import "v1/enums.proto";
+import "tragedylooper/v1/condition.proto"; // 引入TargetSelector
+import "tragedylooper/v1/enums.proto";
 
-option go_package = "tragedylooper/internal/game/proto/v1";
+option go_package = "tragedylooper/pkg/proto/v1";
 
 // 效果，定义了能力、卡牌或规则的具体作用
 message Effect {
@@ -28,8 +28,8 @@ message Effect {
 message CompoundEffect {
   enum Operator {
     OPERATOR_UNSPECIFIED = 0;
-    SEQUENCE = 1; // 顺序执行所有效果
-    CHOOSE_ONE = 2; // 玩家选择一个效果执行
+    OPERATOR_SEQUENCE = 1; // 顺序执行所有效果
+    OPERATOR_CHOOSE_ONE = 2; // 玩家选择一个效果执行
   }
   Operator operator = 1; // 效果组合操作符
   repeated Effect sub_effects = 2; // 子效果列表
@@ -53,10 +53,10 @@ message ForbidEffect {
   TargetSelector target = 1; // 目标角色
   enum ForbidType {
     FORBID_TYPE_UNSPECIFIED = 0; // 未指定
-    MOVEMENT = 1; // 禁止移动
-    PARANOIA_CHANGE = 2; // 禁止妄想值变化
-    GOODWILL_CHANGE = 3; // 禁止好感值变化
-    INTRIGUE_CHANGE = 4; // 禁止阴谋值变化
+    FORBID_TYPE_MOVEMENT = 1; // 禁止移动
+    FORBID_TYPE_PARANOIA_CHANGE = 2; // 禁止妄想值变化
+    FORBID_TYPE_GOODWILL_CHANGE = 3; // 禁止好感值变化
+    FORBID_TYPE_INTRIGUE_CHANGE = 4; // 禁止阴谋值变化
   }
   ForbidType forbid_type = 2; // 禁止的行动类型
 }

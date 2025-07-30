@@ -1,13 +1,13 @@
 syntax = "proto3";
 
-package v1;
+package tragedylooper.v1;
 
 import "google/protobuf/any.proto";
 import "google/protobuf/timestamp.proto";
-import "v1/enums.proto";
-import "v1/event_payload.proto";
+import "tragedylooper/v1/enums.proto";
+import "tragedylooper/v1/event_payload.proto";
 
-option go_package = "tragedylooper/internal/game/proto/v1";
+option go_package = "tragedylooper/pkg/proto/v1";
 
 // GameEvent 表示游戏中发生的事件。
 message GameEvent {

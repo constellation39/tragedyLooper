@@ -1,12 +1,12 @@
 syntax = "proto3";
 
-package v1;
+package tragedylooper.v1;
 
-import "v1/condition.proto";
-import "v1/effect.proto";
-import "v1/enums.proto";
+import "tragedylooper/v1/condition.proto";
+import "tragedylooper/v1/effect.proto";
+import "tragedylooper/v1/enums.proto";
 
-option go_package = "tragedylooper/internal/game/proto/v1";
+option go_package = "tragedylooper/pkg/proto/v1";
 
 message AbilityConfig {
   int32 id = 1; // 能力唯一ID
@@ -27,8 +27,8 @@ message AbilityConfig {
 message CompoundAbility {
   enum Operator {
     OPERATOR_UNSPECIFIED = 0;
-    AND = 1;
-    OR = 2;
+    OPERATOR_AND = 1;
+    OPERATOR_OR = 2;
   }
   Operator operator = 1;
   repeated AbilityConfig sub_abilities = 2;

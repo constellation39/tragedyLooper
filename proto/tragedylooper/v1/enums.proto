@@ -1,0 +1,180 @@
+syntax = "proto3";
+
+package tragedylooper.v1;
+
+option go_package = "tragedylooper/pkg/proto/v1";
+
+// 玩家角色
+enum PlayerRole {
+  PLAYER_ROLE_UNSPECIFIED = 0; // 未指定
+  PLAYER_ROLE_MASTERMIND = 1; // 主谋
+  PLAYER_ROLE_PROTAGONIST = 2; // 主角
+}
+
+// 游戏阶段
+enum GamePhase {
+  GAME_PHASE_UNSPECIFIED = 0; // 未指定
+  GAME_PHASE_SETUP = 1; // 游戏设置阶段
+  GAME_PHASE_MASTERMIND_SETUP = 2; // 主谋设置阶段
+  GAME_PHASE_LOOP_START = 3; // 循环开始阶段
+  GAME_PHASE_DAY_START = 4; // 日开始阶段
+  GAME_PHASE_CARD_PLAY = 5; // 卡牌打出阶段
+  GAME_PHASE_CARD_REVEAL = 6; // 卡牌揭示阶段
+  GAME_PHASE_CARD_EFFECTS = 7; // 卡牌效果阶段
+  GAME_PHASE_ABILITIES = 8; // 能力结算阶段
+  GAME_PHASE_INCIDENTS = 9; // 事件结算阶段
+  GAME_PHASE_DAY_END = 10; // 日结束阶段
+  GAME_PHASE_LOOP_END = 11; // 循环结束阶段
+  GAME_PHASE_PROTAGONIST_GUESS = 12; // 主角推理阶段
+  GAME_PHASE_GAME_OVER = 13; // 游戏结束阶段
+}
+
+// 卡牌类型
+enum CardType {
+  CARD_TYPE_UNSPECIFIED = 0; // 未指定
+  CARD_TYPE_MOVE_HORIZONTALLY = 1; // 水平移动
+  CARD_TYPE_PARANOIA_PLUS = 2; // 增加妄想
+  CARD_TYPE_PARANOIA_MINUS = 3; // 减少妄想
+  CARD_TYPE_GOODWILL_PLUS = 4; // 增加好感
+  CARD_TYPE_GOODWILL_MINUS = 5; // 减少好感
+  CARD_TYPE_INTRIGUE_PLUS = 6; // 增加阴谋
+  CARD_TYPE_FORBID_MOVEMENT = 7; // 禁止移动
+  CARD_TYPE_FORBID_PARANOIA_INCREASE = 8; // 禁止妄想增加
+  CARD_TYPE_FORBID_GOODWILL_INCREASE = 9; // 禁止好感增加
+  CARD_TYPE_FORBID_INTRIGUE_INCREASE = 10; // 禁止阴谋增加
+  CARD_TYPE_MOVE_VERTICALLY = 11; // 垂直移动
+  CARD_TYPE_MOVE_DIAGONALLY = 12; // 对角移动
+  CARD_TYPE_ADD_PARANOIA = 13;
+  CARD_TYPE_ADD_GOODWILL = 14;
+  CARD_TYPE_ADD_INTRIGUE = 15;
+}
+
+// 角色身份类型
+enum RoleType {
+  ROLE_TYPE_UNSPECIFIED = 0; // 未指定
+  ROLE_TYPE_ROLE_UNKNOWN = 1; // 未知
+  ROLE_TYPE_PERSON = 2; // 普通人
+  ROLE_TYPE_KILLER = 3; // 杀手
+  ROLE_TYPE_BRAIN = 4; // 洗脑者
+  ROLE_TYPE_KEY_PERSON = 5; // 关键人物
+  ROLE_TYPE_CULTIST = 6; // 邪教徒
+  ROLE_TYPE_FRIEND = 7; // 朋友
+  ROLE_TYPE_LOVED_ONE = 8; // 恋人
+  ROLE_TYPE_CONSPIRACY_THEORIST = 9; // 阴谋论者
+  ROLE_TYPE_SERIAL_KILLER = 10; // 连环杀手
+  ROLE_TYPE_FACTOR = 11; // X因素
+  ROLE_TYPE_WITCH = 12; // 女巫
+  ROLE_TYPE_TIME_TRAVELER = 13; // 时间旅行者
+}
+
+// 事件类型
+enum IncidentType {
+  INCIDENT_TYPE_UNSPECIFIED = 0; // 未指定
+  INCIDENT_TYPE_MURDER = 1; // 杀人事件
+  INCIDENT_TYPE_SUICIDE = 2; // 自杀
+  INCIDENT_TYPE_ACCIDENT = 3; // 意外死亡
+  INCIDENT_TYPE_DISAPPEARANCE = 4; // 失踪
+  INCIDENT_TYPE_HOSPITAL_CONSPIRACY = 5; // 医院阴谋
+  INCIDENT_TYPE_MURDER_MYSTERY = 6; // 谋杀之谜
+  INCIDENT_TYPE_PANIC = 7; // 恐慌爆发
+}
+
+// 悲剧集合类型
+enum TragedySetType {
+  TRAGEDY_SET_TYPE_UNSPECIFIED = 0; // 未指定
+  TRAGEDY_SET_TYPE_BASIC_TRAGEDY = 1; // 基础悲剧
+  TRAGEDY_SET_TYPE_FIRST_STEP = 2; // 最初的悲剧
+  TRAGEDY_SET_TYPE_MIDNIGHT_ZONE = 3; // 午夜禁区
+  TRAGEDY_SET_TYPE_GHOSTLY_MIST = 4; // 魅影薄雾
+  // 可根据扩展包增加
+}
+
+// 剧本难度
+enum ScriptDifficulty {
+  SCRIPT_DIFFICULTY_UNSPECIFIED = 0; // 未指定
+  SCRIPT_DIFFICULTY_EASY = 1; // 简单
+  SCRIPT_DIFFICULTY_NORMAL = 2; // 普通
+  SCRIPT_DIFFICULTY_HARD = 3; // 困难
+  SCRIPT_DIFFICULTY_EXPERT = 4; // 专家
+}
+
+// 剧情类型
+enum PlotType {
+  PLOT_TYPE_UNSPECIFIED = 0; // 未指定
+  PLOT_TYPE_MAIN_PLOT = 1; // 主线剧情
+  PLOT_TYPE_SUB_PLOT = 2; // 支线剧情
+}
+
+// 地点类型（也可通过LocationConfig扩展）
+enum LocationType {
+  LOCATION_TYPE_UNSPECIFIED = 0; // 未指定
+  LOCATION_TYPE_HOSPITAL = 1; // 医院
+  LOCATION_TYPE_SHRINE = 2; // 神社
+  LOCATION_TYPE_CITY = 3; // 城市
+  LOCATION_TYPE_SCHOOL = 4; // 学校
+  // 可根据具体剧本扩展
+}
+
+// 触发器类型（能力或规则何时触发）
+enum TriggerType {
+  TRIGGER_TYPE_UNSPECIFIED = 0; // 未指定
+  TRIGGER_TYPE_ON_GAME_SETUP = 1; // 游戏设置时
+  TRIGGER_TYPE_ON_LOOP_START = 2; // 循环开始时
+  TRIGGER_TYPE_ON_DAY_START = 3; // 每天开始时
+  TRIGGER_TYPE_ON_PHASE_START = 4; // 特定阶段开始时（需配合GamePhase）
+  TRIGGER_TYPE_ON_PHASE_END = 5; // 特定阶段结束时（需配合GamePhase）
+  TRIGGER_TYPE_ON_GAME_EVENT = 6; // 发生特定游戏事件时
+  TRIGGER_TYPE_ON_PASSIVE = 7; // 被动（条件满足时持续生效）
+  TRIGGER_TYPE_ON_GUESS_MADE = 8; // 推理发生时
+  TRIGGER_TYPE_ON_GAME_END = 9; // 游戏结束时
+  TRIGGER_TYPE_ON_DAY_END = 10; // 每日结束时
+  TRIGGER_TYPE_ON_LOOP_END = 11; // 循环结束时
+}
+
+// 游戏事件类型（用于能力触发器过滤）
+enum GameEventType {
+  GAME_EVENT_TYPE_UNSPECIFIED = 0; // 未指定
+  GAME_EVENT_TYPE_CHARACTER_MOVED = 1; // 角色移动事件
+  GAME_EVENT_TYPE_PARANOIA_ADJUSTED = 2; // 妄想值调整事件
+  GAME_EVENT_TYPE_GOODWILL_ADJUSTED = 3; // 好感值调整事件
+  GAME_EVENT_TYPE_INTRIGUE_ADJUSTED = 4; // 阴谋值调整事件
+  GAME_EVENT_TYPE_INCIDENT_TRIGGERED = 5; // 悲剧触发事件
+  GAME_EVENT_TYPE_INCIDENT_PREVENTED = 6; // 悲剧阻止事件
+  GAME_EVENT_TYPE_ROLE_REVEALED = 7; // 角色身份揭示事件
+  GAME_EVENT_TYPE_ABILITY_GRANTED = 8; // 授予能力事件
+  GAME_EVENT_TYPE_CHOICE_REQUIRED = 9; // 需要玩家选择事件
+  GAME_EVENT_TYPE_LOOP_WIN = 10; // 循环胜利事件
+  GAME_EVENT_TYPE_LOOP_LOSS = 11; // 循环失败事件
+  GAME_EVENT_TYPE_FIRST_GUESS_MADE = 12; // 首次猜测事件
+  GAME_EVENT_TYPE_FINAL_GUESS_MADE = 13; // 最终猜测事件
+  GAME_EVENT_TYPE_GOODWILL_REFUSAL_TEST = 14; // 好感度拒绝测试事件
+  GAME_EVENT_TYPE_LOOP_OVER = 15; // 循环结束事件
+  GAME_EVENT_TYPE_DAY_ADVANCED = 16; // 天数推进事件
+  GAME_EVENT_TYPE_TRAGEDY_TRIGGERED = 17; // 悲剧触发事件
+  GAME_EVENT_TYPE_LOOP_RESET = 18; // 循环重置事件
+  GAME_EVENT_TYPE_TRAIT_ADDED = 19; // 特性添加事件
+  GAME_EVENT_TYPE_TRAIT_REMOVED = 20; // 特性移除事件
+  GAME_EVENT_TYPE_CARD_PLAYED = 21; // 卡牌打出事件
+  GAME_EVENT_TYPE_CARD_REVEALED = 22; // 卡牌揭示事件
+  GAME_EVENT_TYPE_GAME_ENDED = 23; // 游戏结束事件
+  GAME_EVENT_TYPE_PLAYER_ACTION = 24; // 玩家行动事件
+}
+
+// 游戏结束条件类型
+enum EndConditionType {
+  END_CONDITION_TYPE_UNSPECIFIED = 0; // 未指定
+  END_CONDITION_TYPE_PROTAGONIST_GUESS_SUCCESS = 1; // 主角推理成功
+  END_CONDITION_TYPE_PROTAGONIST_GUESS_FAIL = 2; // 主角推理失败
+  END_CONDITION_TYPE_MAX_LOOPS_REACHED = 3; // 达到最大循环次数
+  END_CONDITION_TYPE_SPECIFIC_INCIDENT_TRIGGERED = 4; // 特定事件触发
+  END_CONDITION_TYPE_ALL_INCIDENTS_PREVENTED = 5; // 所有（指定）事件被阻止
+  END_CONDITION_TYPE_CUSTOM_CONDITION = 6; // 自定义条件（通过Condition组合）
+}
+
+enum ForbidType {
+  FORBID_TYPE_UNSPECIFIED = 0;
+  FORBID_TYPE_MOVEMENT = 1;
+  FORBID_TYPE_PARANOIA_CHANGE = 2;
+  FORBID_TYPE_GOODWILL_CHANGE = 3;
+  FORBID_TYPE_INTRIGUE_CHANGE = 4;
+}

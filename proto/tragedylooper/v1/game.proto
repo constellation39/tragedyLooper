@@ -1,15 +1,14 @@
 syntax = "proto3";
 
-package v1;
+package tragedylooper.v1;
 
-import "v1/ability.proto";
-import "v1/card.proto";
-import "v1/character.proto";
-import "v1/enums.proto";
-import "v1/event.proto";
-import "v1/script.proto";
+import "tragedylooper/v1/ability.proto";
+import "tragedylooper/v1/card.proto";
+import "tragedylooper/v1/character.proto";
+import "tragedylooper/v1/enums.proto";
+import "tragedylooper/v1/event.proto";
 
-option go_package = "tragedylooper/internal/game/proto/v1";
+option go_package = "tragedylooper/pkg/proto/v1";
 
 // 游戏当前状态
 message GameState {

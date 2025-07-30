@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package v1;
+package tragedylooper.v1;
 
-import "v1/enums.proto";
+import "tragedylooper/v1/enums.proto";
 
-option go_package = "tragedylooper/internal/game/proto/v1";
+option go_package = "tragedylooper/pkg/proto/v1";
 
 // 玩家打出卡牌的操作负载
 message PlayCardPayload {
