@@ -229,13 +229,21 @@ func (ge *GameEngine) TriggerIncidents() {
 			continue
 		}
 
-		met, err := ge.CheckCondition(incident.GetConfig().GetTriggerCondition())
-		if err != nil {
-			logger.Error("Error checking incident condition", zap.String("incident", incident.GetConfig().GetName()), zap.Error(err))
-			continue
+		allConditionsMet := true
+		for _, condition := range incident.GetConfig().GetTriggerConditions() {
+			met, err := ge.CheckCondition(condition)
+			if err != nil {
+				logger.Error("Error checking incident condition", zap.String("incident", incident.GetConfig().GetName()), zap.Error(err))
+				allConditionsMet = false
+				break
+			}
+			if !met {
+				allConditionsMet = false
+				break
+			}
 		}
 
-		if met {
+		if allConditionsMet {
 			logger.Info("Incident triggered", zap.String("incident", incident.GetConfig().GetName()))
 			incident.HasTriggeredThisLoop = true
 

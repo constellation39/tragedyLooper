@@ -16,6 +16,7 @@ message Incident {
   string culprit = 4; // 犯人（角色名称或描述）
   string victim = 5; // 受害者（角色名称或描述）
   string description = 6; // 事件描述
+  bool has_triggered_this_loop = 7;
 }
 
 // 事件/悲剧在剧本中的配置

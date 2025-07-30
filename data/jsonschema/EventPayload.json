@@ -863,6 +863,9 @@
                 "description": {
                     "type": "string",
                     "description": "事件描述"
+                },
+                "has_triggered_this_loop": {
+                    "type": "boolean"
                 }
             },
             "additionalProperties": true,

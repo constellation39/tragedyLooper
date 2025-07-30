@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -24,15 +23,16 @@ const (
 
 // 事件实例，在游戏运行时创建
 type Incident struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Config        *IncidentConfig        `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`           // 事件唯一ID
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`               // 事件名称
-	Day           int32                  `protobuf:"varint,3,opt,name=day,proto3" json:"day,omitempty"`                // 事件发生的日期
-	Culprit       string                 `protobuf:"bytes,4,opt,name=culprit,proto3" json:"culprit,omitempty"`         // 犯人（角色名称或描述）
-	Victim        string                 `protobuf:"bytes,5,opt,name=victim,proto3" json:"victim,omitempty"`           // 受害者（角色名称或描述）
-	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"` // 事件描述
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	Config               *IncidentConfig        `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`           // 事件唯一ID
+	Name                 string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`               // 事件名称
+	Day                  int32                  `protobuf:"varint,3,opt,name=day,proto3" json:"day,omitempty"`                // 事件发生的日期
+	Culprit              string                 `protobuf:"bytes,4,opt,name=culprit,proto3" json:"culprit,omitempty"`         // 犯人（角色名称或描述）
+	Victim               string                 `protobuf:"bytes,5,opt,name=victim,proto3" json:"victim,omitempty"`           // 受害者（角色名称或描述）
+	Description          string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"` // 事件描述
+	HasTriggeredThisLoop bool                   `protobuf:"varint,7,opt,name=has_triggered_this_loop,json=hasTriggeredThisLoop,proto3" json:"has_triggered_this_loop,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
 }
 
 func (x *Incident) Reset() {
@@ -105,6 +105,13 @@ func (x *Incident) GetDescription() string {
 		return x.Description
 	}
 	return ""
+}
+
+func (x *Incident) GetHasTriggeredThisLoop() bool {
+	if x != nil {
+		return x.HasTriggeredThisLoop
+	}
+	return false
 }
 
 // 事件/悲剧在剧本中的配置
@@ -289,14 +296,15 @@ var File_v1_incident_proto protoreflect.FileDescriptor
 
 const file_v1_incident_proto_rawDesc = "" +
 	"\n" +
-	"\x11v1/incident.proto\x12\x02v1\x1a\x12v1/condition.proto\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\xb0\x01\n" +
+	"\x11v1/incident.proto\x12\x02v1\x1a\x12v1/condition.proto\x1a\x0fv1/effect.proto\x1a\x0ev1/enums.proto\"\xe7\x01\n" +
 	"\bIncident\x12*\n" +
 	"\x06config\x18\x01 \x01(\v2\x12.v1.IncidentConfigR\x06config\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x10\n" +
 	"\x03day\x18\x03 \x01(\x05R\x03day\x12\x18\n" +
 	"\aculprit\x18\x04 \x01(\tR\aculprit\x12\x16\n" +
 	"\x06victim\x18\x05 \x01(\tR\x06victim\x12 \n" +
-	"\vdescription\x18\x06 \x01(\tR\vdescription\"\xda\x03\n" +
+	"\vdescription\x18\x06 \x01(\tR\vdescription\x125\n" +
+	"\x17has_triggered_this_loop\x18\a \x01(\bR\x14hasTriggeredThisLoop\"\xda\x03\n" +
 	"\x0eIncidentConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
