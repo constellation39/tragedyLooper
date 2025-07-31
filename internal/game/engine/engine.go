@@ -10,6 +10,7 @@ import (
 	model "tragedylooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // LocationGrid 定义了 2x2 的地图布局
@@ -48,7 +49,7 @@ type GameEngine struct {
 	actionGenerator ActionGenerator
 	gameConfig      loader.GameConfig
 	pm              *phase.PhaseManager
-	em              *eventManager
+	em              *eventhandler.Manager
 	im              *incidentManager
 	cm              *characterManager
 	cc              *conditionChecker
@@ -77,7 +78,7 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator 
 		protagonistPlayerIDs: nil,
 	}
 	ge.pm = phase.NewPhaseManager(ge)
-	ge.em = newEventManager(ge)
+	ge.em = eventhandler.NewManager(ge)
 	ge.im = newIncidentManager(ge)
 	ge.cm = newCharacterManager(ge)
 	ge.cc = newConditionChecker(ge)
@@ -183,7 +184,7 @@ func (ge *GameEngine) SubmitPlayerAction(playerID int32, action *model.PlayerAct
 
 // GetGameEvents 返回游戏事件的只读通道。
 func (ge *GameEngine) GetGameEvents() <-chan *model.GameEvent {
-	return ge.em.eventsChannel()
+	return ge.em.EventsChannel()
 }
 
 // GetPlayerView 获取指定玩家的游戏状态视图。
@@ -218,7 +219,7 @@ func (ge *GameEngine) runGameLoop() {
 
 	// 阶段管理器已启动，它将启动第一个阶段转换。
 	ge.pm.Start()
-	defer ge.em.close()
+	defer ge.em.Close()
 
 	for {
 		select {
@@ -254,8 +255,34 @@ func (ge *GameEngine) handleEngineRequest(req engineAction) {
 }
 
 func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, payload *model.EventPayload) {
-	ge.em.createAndProcess(eventType, payload)
+	event := &model.GameEvent{
+		Type:      eventType,
+		Timestamp: timestamppb.Now(),
+		Payload:   payload,
+	}
+
+	// Step 1: Apply the event to the game state through the appropriate handler.
+	if err := ge.em.ApplyEvent(event); err != nil {
+		ge.logger.Error("failed to apply event", zap.String("event", event.Type.String()), zap.Error(err))
+		return
+	}
+
+	// Step 2: Let the current phase react to the event.
+	ge.pm.HandleEvent(event)
+
+	// Step 3: Record the event in the game state for player review.
+	gs := ge.GetGameState()
+	gs.DayEvents = append(gs.DayEvents, event)
+	gs.LoopEvents = append(gs.LoopEvents, event)
+
+	// Step 4: Publish the event to external listeners.
+	ge.em.Dispatch(event)
+
+	// TODO: Re-implement trigger logic here, after the state is fully updated.
+	// em.engine.checkForTriggers(event)
 }
+
+
 
 // ResetPlayerReadiness 重置所有玩家的准备状态。
 func (ge *GameEngine) ResetPlayerReadiness() {
@@ -303,9 +330,7 @@ func (ge *GameEngine) GetGameState() *model.GameState {
 	return ge.GameState
 }
 
-func (ge *GameEngine) GetPhaseManager() eventhandler.PhaseManager {
-	return ge.pm
-}
+
 
 func (ge *GameEngine) GetGameRepo() loader.GameConfig {
 	return ge.gameConfig

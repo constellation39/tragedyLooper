@@ -4,7 +4,6 @@ import (
 	model "tragedylooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // Manager is responsible for creating, processing, and dispatching all game events.
@@ -27,47 +26,7 @@ func NewManager(engine GameEngine) *Manager {
 	}
 }
 
-// CreateAndProcess is the central method for creating, applying, and broadcasting a game event.
-// It ensures a consistent order of operations:
-// 1. An event is created from a payload.
-// 2. The phaseManager is notified, allowing the current phase to react and potentially trigger a transition.
-// 3. The event is broadcast to external listeners and recorded in the game's history.
-// eventType: The type of the game event.
-// payload: The payload for the event, which must be a protobuf message.
-func (em *Manager) CreateAndProcess(eventType model.GameEventType, payload *model.EventPayload) {
-	event := &model.GameEvent{
-		Type:      eventType,
-		Timestamp: timestamppb.Now(),
-		Payload:   payload,
-	}
-
-	// Step 1: Apply the event to the game state through the appropriate handler.
-	if err := em.applyEvent(event); err != nil {
-		em.logger.Error("failed to apply event", zap.String("event", event.Type.String()), zap.Error(err))
-		return
-	}
-
-	// Step 2: Let the current phase react to the event.
-	em.engine.GetPhaseManager().HandleEvent(event)
-
-	// Step 3: Record the event in the game state for player review.
-	gs := em.engine.GetGameState()
-	gs.DayEvents = append(gs.DayEvents, event)
-	gs.LoopEvents = append(gs.LoopEvents, event)
-
-	// Step 4: Publish the event to external listeners.
-	select {
-	case em.dispatchGameEvent <- event:
-		// Event successfully dispatched.
-	default:
-		em.logger.Warn("Game event channel full, dropping event", zap.String("eventType", event.Type.String()))
-	}
-
-	// TODO: Re-implement trigger logic here, after the state is fully updated.
-	// em.engine.checkForTriggers(event)
-}
-
-func (em *Manager) applyEvent(event *model.GameEvent) error {
+func (em *Manager) ApplyEvent(event *model.GameEvent) error {
 	handler, ok := GetHandler(event.Type)
 	if !ok {
 		// Not all events have handlers, so this is not an error.
@@ -76,6 +35,15 @@ func (em *Manager) applyEvent(event *model.GameEvent) error {
 	}
 
 	return handler.Handle(em.engine, event)
+}
+
+func (em *Manager) Dispatch(event *model.GameEvent) {
+	select {
+	case em.dispatchGameEvent <- event:
+		// Event successfully dispatched.
+	default:
+		em.logger.Warn("Game event channel full, dropping event", zap.String("eventType", event.Type.String()))
+	}
 }
 
 // EventsChannel returns the outbound channel for game events.

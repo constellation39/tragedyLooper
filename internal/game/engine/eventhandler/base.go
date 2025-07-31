@@ -7,18 +7,11 @@ import (
 	"go.uber.org/zap"
 )
 
-// PhaseManager defines the interface for a component that manages game phases
-// and can react to events. This is implemented by engine.PhaseManager.
-type PhaseManager interface {
-	HandleEvent(event *model.GameEvent)
-}
-
 // GameEngine defines the dependencies that event handlers and the event manager need
 // from the main game engine. It's an interface to decouple the packages.
 type GameEngine interface {
 	GetGameState() *model.GameState
 	Logger() *zap.Logger
-	GetPhaseManager() PhaseManager
 }
 
 // EventHandler defines the interface for handling a game event.
