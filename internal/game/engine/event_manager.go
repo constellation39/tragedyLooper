@@ -59,12 +59,14 @@ func (em *eventManager) createAndProcess(eventType model.GameEventType, payload 
 	// Step 2: Let the current phase react to the event.
 	em.engine.pm.handleEvent(event)
 
-	// Step 3: Publish the event to external listeners and for logging.
+	// Step 3: Record the event in the game state for player review.
+	em.engine.GameState.DayEvents = append(em.engine.GameState.DayEvents, event)
+	em.engine.GameState.LoopEvents = append(em.engine.GameState.LoopEvents, event)
+
+	// Step 4: Publish the event to external listeners.
 	select {
 	case em.dispatchGameEvent <- event:
-		// Also log the event in the game state for player review
-		em.engine.GameState.DayEvents = append(em.engine.GameState.DayEvents, event)
-		em.engine.GameState.LoopEvents = append(em.engine.GameState.LoopEvents, event)
+		// Event successfully dispatched.
 	default:
 		em.logger.Warn("Game event channel full, dropping event", zap.String("eventType", event.Type.String()))
 	}

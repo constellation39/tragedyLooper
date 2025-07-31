@@ -88,7 +88,9 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator 
 }
 
 func (ge *GameEngine) initializePlayers(players []*model.Player) map[int32]*model.Player {
-	playerMap := make(map[int32]*model.Player)
+	playerMap := make(map[int32]*model.Player, len(players))
+	ge.protagonistPlayerIDs = make([]int32, 0, len(players)-1)
+
 	for _, player := range players {
 		switch player.Role {
 		case model.PlayerRole_PLAYER_ROLE_MASTERMIND:
@@ -145,15 +147,11 @@ func (ge *GameEngine) dealInitialCards() {
 	cardConfigs := ge.gameConfig.GetCards()
 
 	for _, player := range ge.GameState.Players {
-		player.Hand = &model.CardList{Cards: make([]*model.Card, 0)}
+		player.Hand = &model.CardList{Cards: make([]*model.Card, 0, len(cardConfigs))}
 		for _, cardConfig := range cardConfigs {
-			if cardConfig.OwnerRole != player.Role {
-				continue
+			if cardConfig.OwnerRole == player.Role {
+				player.Hand.Cards = append(player.Hand.Cards, &model.Card{Config: cardConfig})
 			}
-			card := &model.Card{
-				Config: cardConfig,
-			}
-			player.Hand.Cards = append(player.Hand.Cards, card)
 		}
 	}
 }

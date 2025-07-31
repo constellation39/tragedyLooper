@@ -26,34 +26,36 @@ func (im *incidentManager) TriggerIncidents() {
 			continue
 		}
 
-		allConditionsMet := true
+		conditionsMet := true
 		for _, condition := range incident.GetConfig().GetTriggerConditions() {
 			met, err := im.engine.CheckCondition(condition)
 			if err != nil {
 				logger.Error("Error checking incident condition", zap.String("incident", incident.GetConfig().GetName()), zap.Error(err))
-				allConditionsMet = false
+				conditionsMet = false
 				break
 			}
 			if !met {
-				allConditionsMet = false
+				conditionsMet = false
 				break
 			}
 		}
 
-		if allConditionsMet {
-			logger.Info("Incident triggered", zap.String("incident", incident.GetConfig().GetName()))
-			incident.HasTriggeredThisLoop = true
+		if !conditionsMet {
+			continue
+		}
 
-			// 发布触发事件
-			im.engine.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_INCIDENT_TRIGGERED, &model.EventPayload{
-				Payload: &model.EventPayload_IncidentTriggered{IncidentTriggered: &model.IncidentTriggeredEvent{Incident: incident}},
-			})
+		logger.Info("Incident triggered", zap.String("incident", incident.GetConfig().GetName()))
+		incident.HasTriggeredThisLoop = true
 
-			// 应用事件效果
-			if incident.GetConfig().GetEffect() != nil {
-				if err := im.engine.ApplyEffect(incident.GetConfig().GetEffect(), nil, nil, nil); err != nil {
-					logger.Error("Error applying incident effect", zap.String("incident", incident.GetConfig().GetName()), zap.Error(err))
-				}
+		// Publish the trigger event
+		im.engine.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_INCIDENT_TRIGGERED, &model.EventPayload{
+			Payload: &model.EventPayload_IncidentTriggered{IncidentTriggered: &model.IncidentTriggeredEvent{Incident: incident}},
+		})
+
+		// Apply the incident's effect
+		if incident.GetConfig().GetEffect() != nil {
+			if err := im.engine.ApplyEffect(incident.GetConfig().GetEffect(), nil, nil, nil); err != nil {
+				logger.Error("Error applying incident effect", zap.String("incident", incident.GetConfig().GetName()), zap.Error(err))
 			}
 		}
 	}

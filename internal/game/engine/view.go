@@ -24,46 +24,42 @@ func (ge *GameEngine) GeneratePlayerView(playerID int32) *model.PlayerView {
 		PublicEvents:       ge.GameState.DayEvents,
 	}
 
-	// 根据玩家角色过滤角色信息
-	view.Characters = make(map[int32]*model.PlayerViewCharacter)
+	// Filter character information based on player role
+	view.Characters = make(map[int32]*model.PlayerViewCharacter, len(ge.GameState.Characters))
 	for id, char := range ge.GameState.Characters {
-		// 创建一个副本以避免竞争和对核心状态的意外修改。
-		charCopy := proto.Clone(char).(*model.Character)
 		playerViewChar := &model.PlayerViewCharacter{
 			Id:              id,
-			Name:            charCopy.Config.Name,
-			Traits:          charCopy.Traits,
-			CurrentLocation: charCopy.CurrentLocation,
-			Paranoia:        charCopy.Paranoia,
-			Goodwill:        charCopy.Goodwill,
-			Intrigue:        charCopy.Intrigue,
-			Abilities:       charCopy.Abilities,
-			IsAlive:         charCopy.IsAlive,
-			InPanicMode:     charCopy.InPanicMode,
-			Rules:           charCopy.Config.Rules,
+			Name:            char.Config.Name,
+			Traits:          char.Traits,
+			CurrentLocation: char.CurrentLocation,
+			Paranoia:        char.Paranoia,
+			Goodwill:        char.Goodwill,
+			Intrigue:        char.Intrigue,
+			Abilities:       char.Abilities,
+			IsAlive:         char.IsAlive,
+			InPanicMode:     char.InPanicMode,
+			Rules:           char.Config.Rules,
 		}
 		if player.Role == model.PlayerRole_PLAYER_ROLE_PROTAGONIST {
-			// 对主角隐藏真实角色，显示为未指定。
+			// Hide the true role from protagonists, show as unknown.
 			playerViewChar.Role = model.RoleType_ROLE_TYPE_ROLE_UNKNOWN
 		} else {
-			playerViewChar.Role = charCopy.HiddenRole
+			playerViewChar.Role = char.HiddenRole
 		}
 		view.Characters[id] = playerViewChar
 	}
 
-	// 过滤玩家信息
-	view.Players = make(map[int32]*model.PlayerViewPlayer)
+	// Filter player information
+	view.Players = make(map[int32]*model.PlayerViewPlayer, len(ge.GameState.Players))
 	for id, p := range ge.GameState.Players {
-		playerCopy := proto.Clone(p).(*model.Player)
-		playerViewPlayer := &model.PlayerViewPlayer{
+		view.Players[id] = &model.PlayerViewPlayer{
 			Id:   id,
-			Name: playerCopy.Name,
-			Role: playerCopy.Role,
+			Name: p.Name,
+			Role: p.Role,
 		}
-		view.Players[id] = playerViewPlayer
 	}
 
-	// 添加玩家特定信息
+	// Add player-specific information
 	view.YourHand = player.Hand.Cards
 	if player.Role == model.PlayerRole_PLAYER_ROLE_PROTAGONIST {
 		view.YourDeductions = player.DeductionKnowledge

@@ -61,12 +61,20 @@ func (cc *conditionChecker) checkCompoundCondition(gs *model.GameState, conditio
 	}
 }
 
-func (cc *conditionChecker) checkStatCondition(gs *model.GameState, condition *model.StatCondition) (bool, error) {
-	// 这是一个简化的实现。完整的实现需要解析 TargetSelector。
-	// 目前，我们假设目标始终是特定角色。
-	char, ok := gs.Characters[condition.Target.CharacterId]
+func (cc *conditionChecker) getCharacter(gs *model.GameState, target *model.TargetSelector) (*model.Character, error) {
+	// This is a simplified implementation. A full implementation would resolve the TargetSelector.
+	// For now, we assume the target is always a specific character.
+	char, ok := gs.Characters[target.CharacterId]
 	if !ok {
-		return false, fmt.Errorf("character not found in stat condition: %d", condition.Target.CharacterId)
+		return nil, fmt.Errorf("character not found: %d", target.CharacterId)
+	}
+	return char, nil
+}
+
+func (cc *conditionChecker) checkStatCondition(gs *model.GameState, condition *model.StatCondition) (bool, error) {
+	char, err := cc.getCharacter(gs, condition.Target)
+	if err != nil {
+		return false, fmt.Errorf("failed to get character for stat condition: %w", err)
 	}
 
 	var statValue int32
@@ -98,10 +106,9 @@ func (cc *conditionChecker) checkStatCondition(gs *model.GameState, condition *m
 }
 
 func (cc *conditionChecker) checkLocationCondition(gs *model.GameState, condition *model.LocationCondition) (bool, error) {
-	// 简化实现
-	char, ok := gs.Characters[condition.Target.CharacterId]
-	if !ok {
-		return false, fmt.Errorf("character not found in location condition: %d", condition.Target.CharacterId)
+	char, err := cc.getCharacter(gs, condition.Target)
+	if err != nil {
+		return false, fmt.Errorf("failed to get character for location condition: %w", err)
 	}
 
 	isAtLocation := char.CurrentLocation == condition.Location

@@ -24,33 +24,28 @@ func (tm *targetManager) resolveSelector(gs *model.GameState, sel *model.TargetS
 	}
 
 	var characterIDs []int32
-	var err error
 
-	switch s := sel.SelectorType; {
-	case s == model.TargetSelector_SELECTOR_TYPE_SPECIFIC_CHARACTER:
+	switch sel.SelectorType {
+	case model.TargetSelector_SELECTOR_TYPE_SPECIFIC_CHARACTER:
 		characterIDs = append(characterIDs, sel.CharacterId)
-	case s == model.TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION:
+	case model.TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION:
 		characterIDs = tm.engine.cm.GetCharactersInLocation(sel.LocationFilter)
-	case s == model.TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS:
+	case model.TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS:
 		characterIDs = tm.engine.cm.GetAllCharacterIDs()
-	case s == model.TargetSelector_SELECTOR_TYPE_ABILITY_USER:
+	case model.TargetSelector_SELECTOR_TYPE_ABILITY_USER:
 		if ctx != nil && ctx.Payload != nil {
 			characterIDs = append(characterIDs, ctx.Payload.PlayerId)
 		}
-	case s == model.TargetSelector_SELECTOR_TYPE_ABILITY_TARGET:
+	case model.TargetSelector_SELECTOR_TYPE_ABILITY_TARGET:
 		if ctx != nil && ctx.Payload != nil {
 			if t, ok := ctx.Payload.Target.(*model.UseAbilityPayload_TargetCharacterId); ok {
 				characterIDs = append(characterIDs, t.TargetCharacterId)
 			}
 		}
 	default:
-		return nil, fmt.Errorf("unsupported target selector type: %T", s)
+		return nil, fmt.Errorf("unsupported target selector type: %v", sel.SelectorType)
 	}
 
-	if err != nil {
-		return nil, err
-	}
-
-	// TODO: 应用选择器中的过滤器
+	// TODO: Apply filters from the selector
 	return characterIDs, nil
 }
