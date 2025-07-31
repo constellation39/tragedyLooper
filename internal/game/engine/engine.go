@@ -17,14 +17,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// LocationGrid defines the 2x2 map layout
-var LocationGrid = map[model.LocationType]struct{ X, Y int }{
-	model.LocationType_LOCATION_TYPE_SHRINE:   {0, 0},
-	model.LocationType_LOCATION_TYPE_SCHOOL:   {1, 0},
-	model.LocationType_LOCATION_TYPE_HOSPITAL: {0, 1},
-	model.LocationType_LOCATION_TYPE_CITY:     {1, 1},
-}
-
 // engineAction 是一个空接口，用于标记所有可以发送到游戏引擎主循环的请求类型。
 type engineAction interface{}
 
@@ -55,7 +47,6 @@ type GameEngine struct {
 	pm              *phasehandler.Manager
 	em              *eventhandler.Manager
 
-	// engineChan is the central channel for all incoming requests (player actions, AI actions, etc.).
 	engineChan chan engineAction
 	stopChan   chan struct{}
 
@@ -191,7 +182,6 @@ func (ge *GameEngine) GetPlayerView(playerID int32) *model.PlayerView {
 		responseChan: responseChan,
 	}
 
-	// 这将阻塞，直到主游戏循环处理请求并发送响应。
 	ge.engineChan <- req
 	view := <-responseChan
 	return view
@@ -236,7 +226,6 @@ func (ge *GameEngine) runGameLoop() {
 func (ge *GameEngine) handleEngineRequest(req engineAction) {
 	switch r := req.(type) {
 	case *actionCompleteRequest:
-		// AI 或玩家已提交操作。
 		player, ok := ge.GameState.Players[r.playerID]
 		if !ok {
 			ge.logger.Warn("Action from unknown player", zap.Int32("playerID", r.playerID))
@@ -247,7 +236,6 @@ func (ge *GameEngine) handleEngineRequest(req engineAction) {
 			ge.ResetPlayerReadiness()
 		}
 	case *getPlayerViewRequest:
-		// 对特定于玩家的游戏状态视图的请求。
 		r.responseChan <- ge.GeneratePlayerView(r.playerID)
 	case *getCurrentPhaseRequest:
 		r.responseChan <- ge.pm.CurrentPhase().Type()
@@ -284,8 +272,6 @@ func (ge *GameEngine) TriggerEvent(eventType model.GameEventType, payload *model
 
 	// Step 4: Publish the event to external listeners.
 	ge.em.Dispatch(event)
-
-	// Incident triggers are now handled by the IncidentsPhase to prevent recursion.
 }
 
 // ResetPlayerReadiness 重置所有玩家的准备状态。
