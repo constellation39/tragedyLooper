@@ -45,29 +45,29 @@ func (pm *Manager) CurrentPhase() Phase {
 }
 
 // HandleAction 将操作委托给当前阶段并转换到下一个阶段。
-func (pm *Manager) HandleAction(player *model.Player, action *model.PlayerActionPayload) {
+func (pm *Manager) HandleAction(player *model.Player, action *model.PlayerActionPayload) bool {
 	nextPhase := pm.currentPhase.HandleAction(pm.engine, player, action)
-	pm.transitionTo(nextPhase)
+	return pm.transitionTo(nextPhase)
 }
 
 // handleEvent 将事件委托给当前阶段并转换到下一个阶段。
-func (pm *Manager) HandleEvent(event *model.GameEvent) {
+func (pm *Manager) HandleEvent(event *model.GameEvent) bool {
 	nextPhase := pm.currentPhase.HandleEvent(pm.engine, event)
-	pm.transitionTo(nextPhase)
+	return pm.transitionTo(nextPhase)
 }
 
 // handleTimeout 处理阶段超时并转换到下一个阶段。
-func (pm *Manager) HandleTimeout() {
+func (pm *Manager) HandleTimeout() bool {
 	nextPhase := pm.currentPhase.HandleTimeout(pm.engine)
-	pm.transitionTo(nextPhase)
+	return pm.transitionTo(nextPhase)
 }
 
 // transitionTo 处理从一个游戏阶段移动到另一个游戏阶段的逻辑。
 // 它使用一个循环来处理连续的即时阶段转换，而无需递归。
-func (pm *Manager) transitionTo(nextPhase Phase) {
+func (pm *Manager) transitionTo(nextPhase Phase) bool {
 	// nil 的 nextPhase 表示不需要状态更改。
 	if nextPhase == nil {
-		return
+		return false
 	}
 
 	// 循环处理一连串的即时阶段转换（例如，设置 -> 主要 -> 行动）。
@@ -98,4 +98,5 @@ func (pm *Manager) transitionTo(nextPhase Phase) {
 		// 循环继续到下一个阶段（如果有）。
 		nextPhase = followingPhase
 	}
+	return true
 }

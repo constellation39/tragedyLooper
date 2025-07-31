@@ -28,7 +28,7 @@ func (p *AbilitiesPhase) Type() model.GamePhase { return model.GamePhase_GAME_PH
 func (p *AbilitiesPhase) Enter(ge GameEngine) Phase {
 	p.turn = MastermindAbilityTurn
 	p.protagonistTurnIndex = 0
-	ge.ResetPlayerReadiness()
+	
 
 	// 可选：为主谋触发 AI
 	// ge.TriggerAIPlayerAction(ge.GetMastermindPlayer().Id)

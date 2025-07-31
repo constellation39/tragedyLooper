@@ -21,7 +21,7 @@ func (p *ProtagonistCardPlayPhase) Type() model.GamePhase {
 // Enter is called when the phasehandler begins.
 func (p *ProtagonistCardPlayPhase) Enter(ge GameEngine) Phase {
 	p.currentPlayerIndex = 0
-	ge.ResetPlayerReadiness()
+	
 	// TODO: Trigger Protagonist AI action here.
 	return nil
 }
@@ -45,7 +45,7 @@ func (p *ProtagonistCardPlayPhase) HandleAction(ge GameEngine, player *model.Pla
 		handlePassTurnAction(ge, player)
 	}
 
-	ge.SetPlayerReady(player.Id)
+	
 	p.currentPlayerIndex++
 
 	if p.currentPlayerIndex >= len(protagonists) {

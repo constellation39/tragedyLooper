@@ -11,7 +11,7 @@ func (p *DayStartPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHA
 func (p *DayStartPhase) Enter(ge GameEngine) Phase {
 	ge.GetGameState().CurrentDay++
 	ge.GetGameState().PlayedCardsThisDay = make(map[int32]*model.CardList)
-	ge.ResetPlayerReadiness()
+	
 	ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED, &model.EventPayload{
 		Payload: &model.EventPayload_DayAdvanced{DayAdvanced: &model.DayAdvancedEvent{Day: ge.GetGameState().CurrentDay, Loop: ge.GetGameState().CurrentLoop}},
 	})

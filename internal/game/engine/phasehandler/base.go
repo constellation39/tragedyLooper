@@ -12,16 +12,11 @@ import (
 type GameEngine interface {
 	// TriggerEvent 应用事件并发布。
 	TriggerEvent(eventType model.GameEventType, eventData *model.EventPayload)
-	// AreAllPlayersReady 检查所有玩家是否都已准备好。
-	AreAllPlayersReady() bool
 	// CheckCondition 检查条件是否满足。
 	CheckCondition(condition *model.Condition) (bool, error)
 	// Logger 返回游戏引擎的日志记录器。
 	Logger() *zap.Logger
-	// ResetPlayerReadiness 重置所有玩家的准备状态。
-	ResetPlayerReadiness()
-	// SetPlayerReady 设置指定玩家的准备状态为 true。
-	SetPlayerReady(playerID int32)
+	
 	// TriggerIncidents 触发事件。
 	TriggerIncidents()
 	// GetGameState 返回当前游戏状态。

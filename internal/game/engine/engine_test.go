@@ -80,7 +80,7 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 
 	// --- 执行：开始游戏并让其运行 ---
 	engine.Start()
-	defer engine.StopGameLoop()
+	defer engine.Stop()
 
 	// 主谋打出所有三张牌
 	for i := 0; i < 3; i++ {
@@ -117,7 +117,7 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 func TestEngine_GetPlayerView(t *testing.T) {
 	engine := helper_NewGameEngineForTest(t)
 	engine.Start()
-	defer engine.StopGameLoop()
+	defer engine.Stop()
 
 	// --- 获取主谋和主角的视图 ---
 	mastermindView := engine.GetPlayerView(1)  // 主谋 ID
@@ -189,7 +189,7 @@ func TestEngine_GameOverOnMaxLoops(t *testing.T) {
 	}}
 
 	engine.Start()
-	defer engine.StopGameLoop()
+	defer engine.Stop()
 
 	// 手动将循环次数设置为最大值
 	engine.GameState.CurrentLoop = engine.gameConfig.GetScript().LoopCount

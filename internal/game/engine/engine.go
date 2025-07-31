@@ -219,6 +219,7 @@ func (ge *GameEngine) runGameLoop() {
 
 	// 阶段管理器已启动，它将启动第一个阶段转换。
 	ge.pm.Start()
+	ge.ResetPlayerReadiness()
 	defer ge.em.Close()
 
 	for {
@@ -228,7 +229,9 @@ func (ge *GameEngine) runGameLoop() {
 		case req := <-ge.engineChan:
 			ge.handleEngineRequest(req)
 		case <-ge.pm.Timer():
-			ge.pm.HandleTimeout()
+			if ge.pm.HandleTimeout() {
+				ge.ResetPlayerReadiness()
+			}
 		}
 	}
 }
@@ -243,7 +246,11 @@ func (ge *GameEngine) handleEngineRequest(req engineAction) {
 			ge.logger.Warn("Action from unknown player", zap.Int32("playerID", r.playerID))
 			return
 		}
-		ge.pm.HandleAction(player, r.action)
+		if ge.pm.HandleAction(player, r.action) {
+			ge.ResetPlayerReadiness()
+		} else {
+			ge.SetPlayerReady(r.playerID)
+		}
 	case *getPlayerViewRequest:
 		// 对特定于玩家的游戏状态视图的请求。
 		r.responseChan <- ge.GeneratePlayerView(r.playerID)
@@ -271,7 +278,9 @@ func (ge *GameEngine) TriggerEvent(eventType model.GameEventType, payload *model
 	// 这是一个重要的钩子，允许一个阶段根据发生的事件来改变游戏流程（例如，转换到不同的阶段）。
 	// 注意：大多数阶段使用默认的空实现，因此这个调用通常不执行任何操作。
 	// 但它为需要响应特定事件的阶段提供了必要的扩展点。
-	ge.pm.HandleEvent(event)
+	if ge.pm.HandleEvent(event) {
+		ge.ResetPlayerReadiness()
+	}
 
 	// Step 3: Record the event in the game state for player review.
 	gs := ge.GetGameState()

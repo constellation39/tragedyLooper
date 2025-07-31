@@ -19,7 +19,7 @@ func (p *MastermindCardPlayPhase) Type() model.GamePhase {
 // Enter is called when the phasehandler begins.
 func (p *MastermindCardPlayPhase) Enter(ge GameEngine) Phase {
 	p.mastermindCardsPlayed = 0
-	ge.ResetPlayerReadiness()
+	
 	// TODO: Trigger Mastermind AI action here.
 	return nil
 }

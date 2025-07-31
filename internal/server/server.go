@@ -353,7 +353,7 @@ func (r *Room) Start() {
 
 // Stop 停止房间的游戏引擎和广播。
 func (r *Room) Stop() {
-	r.gameEngine.StopGameLoop()
+	r.gameEngine.Stop()
 	close(r.stopChan)
 	r.logger.Info("Room signaled to stop.", zap.String("roomID", r.GameId))
 }
