@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"tragedylooper/internal/game/engine/effecthandler"
+	"tragedylooper/internal/game/engine/phase"
 	"tragedylooper/internal/game/loader"
 	model "tragedylooper/pkg/proto/tragedylooper/v1"
 
@@ -45,7 +46,7 @@ type GameEngine struct {
 
 	actionGenerator ActionGenerator
 	gameConfig      loader.GameConfig
-	pm              *phaseManager
+	pm              *phase.PhaseManager
 	em              *eventManager
 	im              *incidentManager
 	cm              *characterManager
@@ -74,7 +75,7 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator 
 		mastermindPlayerID:   0,
 		protagonistPlayerIDs: nil,
 	}
-	ge.pm = newPhaseManager(ge)
+	ge.pm = phase.NewPhaseManager(ge)
 	ge.em = newEventManager(ge)
 	ge.im = newIncidentManager(ge)
 	ge.cm = newCharacterManager(ge)
@@ -215,7 +216,7 @@ func (ge *GameEngine) runGameLoop() {
 	defer ge.logger.Info("Game loop stopped.")
 
 	// 阶段管理器已启动，它将启动第一个阶段转换。
-	ge.pm.start()
+	ge.pm.Start()
 	defer ge.em.close()
 
 	for {
@@ -224,7 +225,7 @@ func (ge *GameEngine) runGameLoop() {
 			return
 		case req := <-ge.engineChan:
 			ge.handleEngineRequest(req)
-		case <-ge.pm.timer():
+		case <-ge.pm.Timer():
 			ge.handleTimeout()
 		}
 	}
@@ -240,7 +241,7 @@ func (ge *GameEngine) handleEngineRequest(req engineAction) {
 			ge.logger.Warn("Action from unknown player", zap.Int32("playerID", r.playerID))
 			return
 		}
-		ge.pm.handleAction(player, r.action)
+		ge.pm.HandleAction(player, r.action)
 	case *getPlayerViewRequest:
 		// 对特定于玩家的游戏状态视图的请求。
 		r.responseChan <- ge.GeneratePlayerView(r.playerID)
@@ -253,7 +254,7 @@ func (ge *GameEngine) handleEngineRequest(req engineAction) {
 
 // handleTimeout 在当前阶段的计时器到期时调用。
 func (ge *GameEngine) handleTimeout() {
-	ge.pm.handleTimeout()
+	ge.pm.HandleTimeout()
 }
 
 func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, payload *model.EventPayload) {

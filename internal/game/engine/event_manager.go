@@ -57,7 +57,7 @@ func (em *eventManager) createAndProcess(eventType model.GameEventType, payload 
 	}
 
 	// Step 2: Let the current phase react to the event.
-	em.engine.pm.handleEvent(event)
+	em.engine.pm.HandleEvent(event)
 
 	// Step 3: Record the event in the game state for player review.
 	em.engine.GameState.DayEvents = append(em.engine.GameState.DayEvents, event)

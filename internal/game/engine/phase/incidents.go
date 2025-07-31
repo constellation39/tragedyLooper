@@ -18,7 +18,11 @@ func (p *IncidentsPhase) Enter(ge GameEngine) Phase {
 
 	// 触发后，我们检查是否有任何待处理的选择。如果没有，我们可以继续。
 	// 一个更健壮的系统可能会等待一个明确的信号，表明所有事件都已解决。
-	return &DayEndPhase{}
+	return GetPhase(model.GamePhase_GAME_PHASE_DAY_END)
+}
+
+func init() {
+	RegisterPhase(&IncidentsPhase{})
 }
 
 // HandleAction 处理事件阶段的行动，主要用于选择。

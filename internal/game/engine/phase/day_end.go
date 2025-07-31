@@ -29,7 +29,7 @@ func (p *DayEndPhase) Enter(ge GameEngine) Phase {
 				if met {
 					logger.Info("Loop loss condition met", zap.String("description", endCond.Description))
 					ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_LOSS, &model.EventPayload{})
-					return &LoopEndPhase{}
+					return GetPhase(model.GamePhase_GAME_PHASE_LOOP_END)
 				}
 			}
 		}
@@ -42,10 +42,14 @@ func (p *DayEndPhase) Enter(ge GameEngine) Phase {
 	// 3. 如果没有胜利/失败，检查是否是循环的最后一天
 	if ge.GetGameState().CurrentDay >= ge.GetGameState().DaysPerLoop {
 		logger.Info("End of loop reached by day count")
-		return &LoopEndPhase{}
+		return GetPhase(model.GamePhase_GAME_PHASE_LOOP_END)
 	}
 
 	// 4. 否则，进入下一天
 	logger.Info("Proceeding to next day")
-	return &DayStartPhase{}
+	return GetPhase(model.GamePhase_GAME_PHASE_DAY_START)
+}
+
+func init() {
+	RegisterPhase(&DayEndPhase{})
 }

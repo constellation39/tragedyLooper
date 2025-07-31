@@ -12,5 +12,9 @@ func (p *CardResolvePhase) Type() model.GamePhase { return model.GamePhase_GAME_
 
 // Enter 进入卡牌结算阶段。
 func (p *CardResolvePhase) Enter(ge GameEngine) Phase {
-	return &CardRevealPhase{}
+	return GetPhase(model.GamePhase_GAME_PHASE_INCIDENTS)
+}
+
+func init() {
+	RegisterPhase(&CardResolvePhase{})
 }

@@ -14,5 +14,9 @@ func (p *LoopStartPhase) Enter(ge GameEngine) Phase {
 	ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_RESET, &model.EventPayload{
 		Payload: &model.EventPayload_LoopReset{LoopReset: &model.LoopResetEvent{LoopNumber: ge.GetGameState().CurrentLoop}},
 	})
-	return &DayStartPhase{}
+	return GetPhase(model.GamePhase_GAME_PHASE_DAY_START)
+}
+
+func init() {
+	RegisterPhase(&LoopStartPhase{})
 }

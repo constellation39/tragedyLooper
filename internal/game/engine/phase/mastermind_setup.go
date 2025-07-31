@@ -13,5 +13,9 @@ func (p *MastermindSetupPhase) Type() model.GamePhase {
 func (p *MastermindSetupPhase) Enter(ge GameEngine) Phase {
 	// TODO: Mastermind places characters and sets up their board.
 	// For now, we transition directly.
-	return &LoopStartPhase{}
+	return GetPhase(model.GamePhase_GAME_PHASE_LOOP_START)
+}
+
+func init() {
+	RegisterPhase(&MastermindSetupPhase{})
 }

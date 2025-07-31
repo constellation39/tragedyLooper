@@ -101,7 +101,7 @@
       "ability_ids": [22],
       "rules": [
         {
-          "trigger": "ON_GAME_SETUP",
+          "trigger": "TRIGGER_TYPE_ON_GAME_SETUP",
           "description": "The Mastermind chooses a location to be the Boss's turf.",
           "turf_selection_effect": {}
         }
@@ -178,7 +178,7 @@
       "ability_ids": [36, 37],
       "rules": [
         {
-          "trigger": "ON_LOOP_START",
+          "trigger": "TRIGGER_TYPE_ON_LOOP_START",
           "description": "The Godly Being does not appear in the game until a specific, scripted loop number.",
           "delayed_entry_effect": {}
         }

@@ -1,8 +1,6 @@
 package engine
 
 import (
-	"google.golang.org/protobuf/proto"
-
 	model "tragedylooper/pkg/proto/tragedylooper/v1"
 )
 

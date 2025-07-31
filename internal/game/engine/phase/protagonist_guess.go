@@ -16,8 +16,14 @@ func (p *ProtagonistGuessPhase) Type() model.GamePhase {
 
 // HandleAction 处理玩家在主角猜测阶段的操作。
 func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
-	if payload, ok := action.Payload.(*model.PlayerActionPayload_MakeGuess); ok {
+	switch payload := action.Payload.(type) {
+	case *model.PlayerActionPayload_MakeGuess:
 		return handleMakeGuessAction(ge, player, payload.MakeGuess)
+	case *model.PlayerActionPayload_PassTurn:
+		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
+			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND}},
+		})
+		return GetPhase(model.GamePhase_GAME_PHASE_GAME_OVER)
 	}
 	return nil
 }
@@ -36,7 +42,7 @@ func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.M
 		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
 			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND}},
 		}) // 游戏结束，出现错误时主谋默认获胜
-		return &GameOverPhase{}
+		return GetPhase(model.GamePhase_GAME_PHASE_GAME_OVER)
 	}
 
 	correctGuesses := 0
@@ -59,5 +65,9 @@ func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.M
 			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND}},
 		})
 	}
-	return &GameOverPhase{}
+	return GetPhase(model.GamePhase_GAME_PHASE_GAME_OVER)
+}
+
+func init() {
+	RegisterPhase(&ProtagonistGuessPhase{})
 }

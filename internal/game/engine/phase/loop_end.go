@@ -11,8 +11,12 @@ func (p *LoopEndPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHAS
 func (p *LoopEndPhase) Enter(ge GameEngine) Phase {
 	if ge.GetGameState().CurrentLoop >= ge.GetGameRepo().GetScript().LoopCount {
 		// Protagonists get a final chance to guess
-		return &ProtagonistGuessPhase{}
+		return GetPhase(model.GamePhase_GAME_PHASE_PROTAGONIST_GUESS)
 	} else {
-		return &LoopStartPhase{}
+		return GetPhase(model.GamePhase_GAME_PHASE_LOOP_START)
 	}
+}
+
+func init() {
+	RegisterPhase(&LoopEndPhase{})
 }

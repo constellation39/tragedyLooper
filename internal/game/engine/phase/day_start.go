@@ -15,5 +15,9 @@ func (p *DayStartPhase) Enter(ge GameEngine) Phase {
 	ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED, &model.EventPayload{
 		Payload: &model.EventPayload_DayAdvanced{DayAdvanced: &model.DayAdvancedEvent{Day: ge.GetGameState().CurrentDay, Loop: ge.GetGameState().CurrentLoop}},
 	})
-	return &MastermindCardPlayPhase{}
+	return GetPhase(model.GamePhase_GAME_PHASE_CARD_PLAY)
+}
+
+func init() {
+	RegisterPhase(&DayStartPhase{})
 }

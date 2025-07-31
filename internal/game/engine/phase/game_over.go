@@ -13,3 +13,7 @@ func (p *GameOverPhase) Enter(ge GameEngine) Phase {
 	ge.StopGameLoop()
 	return nil
 }
+
+func init() {
+	RegisterPhase(&GameOverPhase{})
+}
