@@ -246,10 +246,9 @@ func (ge *GameEngine) handleEngineRequest(req engineAction) {
 			ge.logger.Warn("Action from unknown player", zap.Int32("playerID", r.playerID))
 			return
 		}
+		ge.SetPlayerReady(r.playerID)
 		if ge.pm.HandleAction(player, r.action) {
 			ge.ResetPlayerReadiness()
-		} else {
-			ge.SetPlayerReady(r.playerID)
 		}
 	case *getPlayerViewRequest:
 		// 对特定于玩家的游戏状态视图的请求。

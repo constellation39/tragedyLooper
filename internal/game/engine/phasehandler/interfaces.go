@@ -29,6 +29,7 @@ type GameEngine interface {
 	GetMastermindPlayer() *model.Player
 	GetProtagonistPlayers() []*model.Player
 	ApplyEffect(effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error
+	RequestAIAction(playerID int32)
 }
 
 // Phase is the interface for a game phase, defining methods that each phase must implement.

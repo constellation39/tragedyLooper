@@ -45,10 +45,13 @@ func (p *CardPlayPhase) Type() model.GamePhase {
 func (p *CardPlayPhase) Enter(ge GameEngine) Phase {
 	if p.turn == MastermindCardTurn {
 		p.mastermindCardsPlayed = 0
-		// TODO: Trigger Mastermind AI action here.
+		ge.RequestAIAction(ge.GetMastermindPlayer().Id)
 	} else {
 		p.protagonistTurnIndex = 0
-		// TODO: Trigger Protagonist AI action here.
+		protagonists := ge.GetProtagonistPlayers()
+		if len(protagonists) > 0 {
+			ge.RequestAIAction(protagonists[0].Id)
+		}
 	}
 	return nil
 }
@@ -113,7 +116,10 @@ func (p *CardPlayPhase) handleProtagonistAction(ge GameEngine, player *model.Pla
 		return GetPhase(model.GamePhase_GAME_PHASE_CARD_REVEAL)
 	}
 
-	// TODO: Trigger AI for the next protagonist.
+	// Trigger AI for the next protagonist.
+	nextProtagonist := protagonists[p.protagonistTurnIndex]
+	ge.RequestAIAction(nextProtagonist.Id)
+
 	return nil
 }
 

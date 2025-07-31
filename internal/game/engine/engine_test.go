@@ -58,18 +58,13 @@ func helper_NewGameEngineForTest(t *testing.T) *GameEngine {
 func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 	engine := helper_NewGameEngineForTest(t)
 
-	// --- 设置：预先放置角色并准备主谋的手牌 ---
-	mastermind := engine.getPlayerByID(1)
+	// --- Setup: Get characters and mastermind player ---
+	mastermind := engine.GetMastermindPlayer()
 	doctor := engine.GetCharacterByID(2)
-	highSchoolGirl := engine.GetCharacterByID(1)
 	assert.NotNil(t, mastermind)
 	assert.NotNil(t, doctor)
-	assert.NotNil(t, highSchoolGirl)
 
-	// 将高中女生移动到与医生相同的位置（医院）
-	doctor.CurrentLocation = highSchoolGirl.CurrentLocation
-
-	// Give the mastermind three "Increase Paranoia" cards (ID 4)
+	// Manually give the mastermind three "Increase Paranoia" cards (ID 4)
 	card4Config, err := loader.Get[*v1.CardConfig](engine.gameConfig, 4)
 	assert.NoError(t, err)
 	mastermind.Hand = &v1.CardList{Cards: []*v1.Card{
@@ -78,27 +73,27 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 		{Config: card4Config},
 	}}
 
-	// --- 执行：开始游戏并让其运行 ---
+	// --- Execution: Start the engine and play cards ---
 	engine.Start()
 	defer engine.Stop()
 
-	// 主谋打出所有三张牌
+	// The mastermind plays three "Increase Paranoia" cards on the Doctor.
 	for i := 0; i < 3; i++ {
-		playCardAction := &v1.PlayerActionPayload{
+		engine.SubmitPlayerAction(mastermind.Id, &v1.PlayerActionPayload{
 			Payload: &v1.PlayerActionPayload_PlayCard{
 				PlayCard: &v1.PlayCardPayload{
-					CardId: 4,
+					CardId: 4, // Increase Paranoia
 					Target: &v1.PlayCardPayload_TargetCharacterId{TargetCharacterId: doctor.Config.Id},
 				},
 			},
-		}
-		engine.SubmitPlayerAction(mastermind.Id, playCardAction)
+		})
+		// We need to let the engine process the action
+		time.Sleep(10 * time.Millisecond)
 	}
 
-	// --- 验证：等待一天结束，然后检查状态 ---
-	waitForEvent(t, engine, v1.GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED)
-	engine.TriggerIncidents()                                                    // 为测试手动触发事件
-	waitForEvent(t, engine, v1.GameEventType_GAME_EVENT_TYPE_INCIDENT_TRIGGERED) // 等待事件被处理
+	// --- Verification: Wait for the incident to trigger and check the result ---
+	// The "Culprit" incident should trigger when the Doctor's paranoia reaches 3.
+	waitForEvent(t, engine, v1.GameEventType_GAME_EVENT_TYPE_INCIDENT_TRIGGERED)
 
 	doctorAfterIncident := engine.GetCharacterByID(2)
 	assert.NotNil(t, doctorAfterIncident)
