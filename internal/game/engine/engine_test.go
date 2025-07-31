@@ -220,22 +220,3 @@ func waitForEvent(t *testing.T, engine *GameEngine, targetEvent v1.GameEventType
 		}
 	}
 }
-
-// waitForPhase 是一个辅助函数，用于阻塞直到游戏引擎达到特定阶段。
-func waitForPhase(t *testing.T, engine *GameEngine, targetPhase v1.GamePhase) {
-	t.Helper()
-	timeout := time.After(2 * time.Second)
-
-	for {
-		currentPhase := engine.GetCurrentPhase()
-		if currentPhase == targetPhase {
-			return
-		}
-		select {
-		case <-timeout:
-			t.Fatalf("timed out waiting for phasehandler %s, current phasehandler is %s", targetPhase, currentPhase)
-		case <-time.After(10 * time.Millisecond):
-			// 继续轮询
-		}
-	}
-}

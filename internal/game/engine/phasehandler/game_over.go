@@ -25,7 +25,6 @@ func (p *GameOverPhase) Exit(ge GameEngine) {}
 // TimeoutDuration is the default implementation for Phase interface, returns 0, indicating no timeout.
 func (p *GameOverPhase) TimeoutDuration() time.Duration { return 0 }
 
-
 func (p *GameOverPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_GAME_OVER }
 func (p *GameOverPhase) Enter(ge GameEngine) Phase {
 	// Clean up, announce winner, etc.

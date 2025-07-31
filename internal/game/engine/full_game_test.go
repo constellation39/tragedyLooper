@@ -6,7 +6,7 @@ import (
 	"time"
 	"tragedylooper/internal/game/loader"
 	"tragedylooper/internal/logger"
-	"tragedylooper/pkg/proto/tragedylooper/v1"
+	v1 "tragedylooper/pkg/proto/tragedylooper/v1"
 
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"

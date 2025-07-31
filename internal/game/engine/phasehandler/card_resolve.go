@@ -25,7 +25,6 @@ func (p *CardResolvePhase) Exit(ge GameEngine) {}
 // TimeoutDuration is the default implementation for Phase interface, returns 0, indicating no timeout.
 func (p *CardResolvePhase) TimeoutDuration() time.Duration { return 0 }
 
-
 // Type 返回阶段类型，表示当前是卡牌结算阶段。
 func (p *CardResolvePhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_CARD_RESOLVE }
 

@@ -25,12 +25,11 @@ func (p *DayStartPhase) Exit(ge GameEngine) {}
 // TimeoutDuration is the default implementation for Phase interface, returns 0, indicating no timeout.
 func (p *DayStartPhase) TimeoutDuration() time.Duration { return 0 }
 
-
 func (p *DayStartPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_DAY_START }
 func (p *DayStartPhase) Enter(ge GameEngine) Phase {
 	ge.GetGameState().CurrentDay++
 	ge.GetGameState().PlayedCardsThisDay = make(map[int32]*model.CardList)
-	
+
 	ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED, &model.EventPayload{
 		Payload: &model.EventPayload_DayAdvanced{DayAdvanced: &model.DayAdvancedEvent{Day: ge.GetGameState().CurrentDay, Loop: ge.GetGameState().CurrentLoop}},
 	})

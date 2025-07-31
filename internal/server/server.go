@@ -68,14 +68,18 @@ func (s *Server) LoggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requestID := uuid.New().String()
 		ctxLogger := s.logger.With(zap.String("request_id", requestID))
-		ctx := logger.WithContext(r.Context(), ctxLogger)
+		ctx := logger.ContextWithLogger(r.Context(), ctxLogger)
+
+		// Initialize call depth tracking for this request.
+		ctx = logger.WithCallDepth(ctx)
+
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 
 // HandleWebSocket 处理传入的 WebSocket 连接。
 func (s *Server) HandleWebSocket(w http.ResponseWriter, r *http.Request) {
-	ctxLogger := logger.FromContext(r.Context())
+	ctxLogger := logger.LoggerFromContext(r.Context())
 
 	conn, err := s.upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -119,7 +123,9 @@ func (s *Server) HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 
 // HandleCreateRoom 处理创建新游戏房间的请求。
 func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
-	ctxLogger := logger.FromContext(r.Context())
+	ctx := r.Context()
+	ctx = logger.WithCallDepth(ctx)
+	ctxLogger := logger.LoggerFromContext(ctx)
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -184,7 +190,7 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 
 // HandleJoinRoom 处理加入现有游戏房间的请求。
 func (s *Server) HandleJoinRoom(w http.ResponseWriter, r *http.Request) {
-	ctxLogger := logger.FromContext(r.Context())
+	ctxLogger := logger.LoggerFromContext(r.Context())
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return

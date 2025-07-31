@@ -27,7 +27,6 @@ func (p *DayEndPhase) Exit(ge GameEngine) {}
 // TimeoutDuration is the default implementation for Phase interface, returns 0, indicating no timeout.
 func (p *DayEndPhase) TimeoutDuration() time.Duration { return 0 }
 
-
 // Type 返回阶段类型。
 func (p *DayEndPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_DAY_END }
 
