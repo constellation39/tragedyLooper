@@ -69,14 +69,14 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 	// 将高中女生移动到与医生相同的位置（医院）
 	doctor.CurrentLocation = highSchoolGirl.CurrentLocation
 
-	// 给主谋三张“增加偏执”牌（ID 4）
+	// Give the mastermind three "Increase Paranoia" cards (ID 4)
 	card4Config, err := loader.Get[*v1.CardConfig](engine.gameConfig, 4)
 	assert.NoError(t, err)
-	mastermind.Hand = []*v1.Card{
+	mastermind.Hand = &v1.CardList{Cards: []*v1.Card{
 		{Config: card4Config},
 		{Config: card4Config},
 		{Config: card4Config},
-	}
+	}}
 
 	// --- 执行：开始游戏并让其运行 ---
 	engine.StartGameLoop()
@@ -178,15 +178,15 @@ func TestEngine_CharacterMovement(t *testing.T) {
 func TestEngine_GameOverOnMaxLoops(t *testing.T) {
 	engine := helper_NewGameEngineForTest(t)
 
-	// --- 设置：给主谋发牌 ---
+	// --- Setup: Deal cards to the mastermind ---
 	mastermind := engine.GetMastermindPlayer()
-	card4Config, err := loader.Get[*v1.CardConfig](engine.gameConfig, 4) // 增加偏执牌
+	card4Config, err := loader.Get[*v1.CardConfig](engine.gameConfig, 4) // Increase Paranoia card
 	assert.NoError(t, err)
-	mastermind.Hand = []*v1.Card{
+	mastermind.Hand = &v1.CardList{Cards: []*v1.Card{
 		{Config: card4Config},
 		{Config: card4Config},
 		{Config: card4Config},
-	}
+	}}
 
 	engine.StartGameLoop()
 	defer engine.StopGameLoop()

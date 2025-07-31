@@ -147,12 +147,13 @@ func (ge *GameEngine) dealInitialCards() {
 	for _, player := range ge.GameState.Players {
 		player.Hand = &model.CardList{Cards: make([]*model.Card, 0)}
 		for _, cardConfig := range cardConfigs {
-			if cardConfig.Role == model.PlayerRole_PLAYER_ROLE_UNSPECIFIED || cardConfig.Role == player.Role {
-				card := &model.Card{
-					Config: cardConfig,
-				}
-				player.Hand.Cards = append(player.Hand.Cards, card)
+			if cardConfig.OwnerRole != player.Role {
+				continue
 			}
+			card := &model.Card{
+				Config: cardConfig,
+			}
+			player.Hand.Cards = append(player.Hand.Cards, card)
 		}
 	}
 }
