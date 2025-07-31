@@ -226,7 +226,7 @@ func (ge *GameEngine) runGameLoop() {
 		case req := <-ge.engineChan:
 			ge.handleEngineRequest(req)
 		case <-ge.pm.Timer():
-			ge.handleTimeout()
+			ge.pm.HandleTimeout()
 		}
 	}
 }
@@ -250,11 +250,6 @@ func (ge *GameEngine) handleEngineRequest(req engineAction) {
 	default:
 		ge.logger.Warn("Unhandled request type in engine channel")
 	}
-}
-
-// handleTimeout 在当前阶段的计时器到期时调用。
-func (ge *GameEngine) handleTimeout() {
-	ge.pm.HandleTimeout()
 }
 
 func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, payload *model.EventPayload) {
@@ -329,8 +324,6 @@ func (ge *GameEngine) Logger() *zap.Logger {
 func (ge *GameEngine) SetPlayerReady(playerID int32) {
 	ge.playerReady[playerID] = true
 }
-
-// --- AI 集成 ---
 
 // GetProtagonistPlayers 返回主角玩家。
 func (ge *GameEngine) GetProtagonistPlayers() []*model.Player {
