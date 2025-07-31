@@ -3,9 +3,12 @@ package engine
 import (
 	"context"
 	"fmt"
+	"tragedylooper/internal/game/engine/character"
+	"tragedylooper/internal/game/engine/condition"
 	"tragedylooper/internal/game/engine/effecthandler"
 	"tragedylooper/internal/game/engine/eventhandler"
 	"tragedylooper/internal/game/engine/phasehandler"
+	"tragedylooper/internal/game/engine/target"
 	"tragedylooper/internal/game/loader"
 	model "tragedylooper/pkg/proto/tragedylooper/v1"
 
@@ -13,7 +16,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// LocationGrid 定义了 2x2 的地图布局
+// LocationGrid defines the 2x2 map layout
 var LocationGrid = map[model.LocationType]struct{ X, Y int }{
 	model.LocationType_LOCATION_TYPE_SHRINE:   {0, 0},
 	model.LocationType_LOCATION_TYPE_SCHOOL:   {1, 0},
@@ -24,24 +27,24 @@ var LocationGrid = map[model.LocationType]struct{ X, Y int }{
 // engineAction 是一个空接口，用于标记所有可以发送到游戏引擎主循环的请求类型。
 type engineAction interface{}
 
-// getPlayerViewRequest 是获取玩家过滤后的游戏状态视图的请求。
+// getPlayerViewRequest is a request to get a player's filtered view of the game state.
 type getPlayerViewRequest struct {
 	playerID     int32
 	responseChan chan *model.PlayerView
 }
 
-// actionCompleteRequest 表示 AI 或玩家操作已完成并准备好由游戏引擎处理。
+// actionCompleteRequest signifies that an AI or player action has been completed and is ready for processing by the game engine.
 type actionCompleteRequest struct {
 	playerID int32
 	action   *model.PlayerActionPayload
 }
 
-// getCurrentPhaseRequest 是一个安全获取当前游戏阶段的请求。
+// getCurrentPhaseRequest is a request to safely get the current game phase.
 type getCurrentPhaseRequest struct {
 	responseChan chan model.GamePhase
 }
 
-// GameEngine 管理单个游戏实例的状态和逻辑。
+// GameEngine manages the state and logic of a single game instance.
 type GameEngine struct {
 	GameState *model.GameState
 	logger    *zap.Logger
@@ -50,12 +53,8 @@ type GameEngine struct {
 	gameConfig      loader.GameConfig
 	pm              *phasehandler.Manager
 	em              *eventhandler.Manager
-	im              *incidentManager
-	cm              *characterManager
-	cc              *conditionChecker
-	tm              *targetManager
 
-	// engineChan 是所有传入请求（玩家操作、AI 操作等）的中央通道。
+	// engineChan is the central channel for all incoming requests (player actions, AI actions, etc.).
 	engineChan chan engineAction
 	stopChan   chan struct{}
 
@@ -65,7 +64,7 @@ type GameEngine struct {
 	protagonistPlayerIDs []int32
 }
 
-// NewGameEngine 创建一个新的游戏引擎实例。
+// NewGameEngine creates a new game engine instance.
 func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator ActionGenerator, gameConfig loader.GameConfig) (*GameEngine, error) {
 	ge := &GameEngine{
 		logger:               logger,
@@ -79,10 +78,6 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator 
 	}
 	ge.pm = phasehandler.NewManager(ge)
 	ge.em = eventhandler.NewManager(ge)
-	ge.im = newIncidentManager(ge)
-	ge.cm = newCharacterManager(ge)
-	ge.cc = newConditionChecker(ge)
-	ge.tm = newTargetManager(ge)
 
 	ge.initializeGameStateFromScript(players)
 	ge.dealInitialCards()
@@ -308,20 +303,16 @@ func (ge *GameEngine) GetCharacterByID(charID int32) *model.Character {
 	return char
 }
 
-func (ge *GameEngine) TriggerIncidents() {
-	ge.im.TriggerIncidents()
-}
-
 func (ge *GameEngine) MoveCharacter(char *model.Character, dx, dy int) {
-	ge.cm.MoveCharacter(char, dx, dy)
+	character.MoveCharacter(ge.logger, ge, ge.GameState, char, dx, dy)
 }
 
-func (ge *GameEngine) CheckCondition(condition *model.Condition) (bool, error) {
-	return ge.cc.Check(ge.GameState, condition)
+func (ge *GameEngine) CheckCondition(cond *model.Condition) (bool, error) {
+	return condition.Check(ge.GameState, cond)
 }
 
 func (ge *GameEngine) ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, ctx *effecthandler.EffectContext) ([]int32, error) {
-	return ge.tm.ResolveSelectorToCharacters(gs, sel, ctx)
+	return target.ResolveSelectorToCharacters(gs, sel, ctx)
 }
 
 // getPlayerByID 根据玩家ID获取玩家对象。
@@ -445,4 +436,66 @@ func (ge *GameEngine) RequestAIAction(playerID int32) {
 			action:   action,
 		}
 	}()
+}
+
+// GeneratePlayerView 为特定玩家创建游戏状态的过滤视图。
+// 此方法不是线程安全的，必须仅在 runGameLoop goroutine 中调用。
+func (ge *GameEngine) GeneratePlayerView(playerID int32) *model.PlayerView {
+	player := ge.GameState.Players[playerID]
+	if player == nil {
+		return &model.PlayerView{}
+	}
+
+	view := &model.PlayerView{
+		GameId:             ge.GameState.GameId,
+		CurrentDay:         ge.GameState.CurrentDay,
+		CurrentLoop:        ge.GameState.CurrentLoop,
+		CurrentPhase:       ge.GameState.CurrentPhase,
+		ActiveTragedies:    ge.GameState.ActiveTragedies,
+		PreventedTragedies: ge.GameState.PreventedTragedies,
+		PublicEvents:       ge.GameState.DayEvents,
+	}
+
+	// Filter character information based on player role
+	view.Characters = make(map[int32]*model.PlayerViewCharacter, len(ge.GameState.Characters))
+	for id, char := range ge.GameState.Characters {
+		playerViewChar := &model.PlayerViewCharacter{
+			Id:              id,
+			Name:            char.Config.Name,
+			Traits:          char.Traits,
+			CurrentLocation: char.CurrentLocation,
+			Paranoia:        char.Paranoia,
+			Goodwill:        char.Goodwill,
+			Intrigue:        char.Intrigue,
+			Abilities:       char.Abilities,
+			IsAlive:         char.IsAlive,
+			InPanicMode:     char.InPanicMode,
+			Rules:           char.Config.Rules,
+		}
+		if player.Role == model.PlayerRole_PLAYER_ROLE_PROTAGONIST {
+			// Hide the true role from protagonists, show as unknown.
+			playerViewChar.Role = model.RoleType_ROLE_TYPE_ROLE_UNKNOWN
+		} else {
+			playerViewChar.Role = char.HiddenRole
+		}
+		view.Characters[id] = playerViewChar
+	}
+
+	// Filter player information
+	view.Players = make(map[int32]*model.PlayerViewPlayer, len(ge.GameState.Players))
+	for id, p := range ge.GameState.Players {
+		view.Players[id] = &model.PlayerViewPlayer{
+			Id:   id,
+			Name: p.Name,
+			Role: p.Role,
+		}
+	}
+
+	// Add player-specific information
+	view.YourHand = player.Hand.Cards
+	if player.Role == model.PlayerRole_PLAYER_ROLE_PROTAGONIST {
+		view.YourDeductions = player.DeductionKnowledge
+	}
+
+	return view
 }

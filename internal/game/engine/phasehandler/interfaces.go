@@ -12,8 +12,6 @@ import (
 type GameEngine interface {
 	// TriggerEvent applies and publishes an event.
 	TriggerEvent(eventType model.GameEventType, eventData *model.EventPayload)
-	// TriggerIncidents checks and triggers incidents.
-	TriggerIncidents()
 	// CheckCondition checks if a condition is met.
 	CheckCondition(condition *model.Condition) (bool, error)
 	// Logger returns the logger for the game engine.

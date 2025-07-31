@@ -1,4 +1,4 @@
-package engine
+package target
 
 import (
 	"fmt"
@@ -6,19 +6,8 @@ import (
 	model "tragedylooper/pkg/proto/tragedylooper/v1"
 )
 
-type targetManager struct {
-	engine *GameEngine
-}
-
-func newTargetManager(engine *GameEngine) *targetManager {
-	return &targetManager{engine: engine}
-}
-
-func (tm *targetManager) ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, ctx *effecthandler.EffectContext) ([]int32, error) {
-	return tm.resolveSelector(gs, sel, ctx)
-}
-
-func (tm *targetManager) resolveSelector(gs *model.GameState, sel *model.TargetSelector, ctx *effecthandler.EffectContext) ([]int32, error) {
+// ResolveSelectorToCharacters resolves a target selector to a list of character IDs.
+func ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, ctx *effecthandler.EffectContext) ([]int32, error) {
 	if sel == nil {
 		return nil, fmt.Errorf("target selector is nil")
 	}
@@ -29,9 +18,9 @@ func (tm *targetManager) resolveSelector(gs *model.GameState, sel *model.TargetS
 	case model.TargetSelector_SELECTOR_TYPE_SPECIFIC_CHARACTER:
 		characterIDs = append(characterIDs, sel.CharacterId)
 	case model.TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION:
-		characterIDs = tm.engine.cm.GetCharactersInLocation(sel.LocationFilter)
+		characterIDs = getCharactersInLocation(gs, sel.LocationFilter)
 	case model.TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS:
-		characterIDs = tm.engine.cm.GetAllCharacterIDs()
+		characterIDs = getAllCharacterIDs(gs)
 	case model.TargetSelector_SELECTOR_TYPE_ABILITY_USER:
 		if ctx != nil && ctx.Payload != nil {
 			characterIDs = append(characterIDs, ctx.Payload.PlayerId)
@@ -48,4 +37,22 @@ func (tm *targetManager) resolveSelector(gs *model.GameState, sel *model.TargetS
 
 	// TODO: Apply filters from the selector
 	return characterIDs, nil
+}
+
+func getCharactersInLocation(gs *model.GameState, location model.LocationType) []int32 {
+	var charIDs []int32
+	for id, char := range gs.Characters {
+		if char.CurrentLocation == location {
+			charIDs = append(charIDs, id)
+		}
+	}
+	return charIDs
+}
+
+func getAllCharacterIDs(gs *model.GameState) []int32 {
+	charIDs := make([]int32, 0, len(gs.Characters))
+	for id := range gs.Characters {
+		charIDs = append(charIDs, id)
+	}
+	return charIDs
 }
