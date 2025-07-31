@@ -25,35 +25,42 @@ func (h *CompoundEffectHandler) ResolveChoices(ge GameEngine, effect *model.Effe
 
 	switch compoundEffect.Operator {
 	case model.CompoundEffect_OPERATOR_CHOOSE_ONE:
-		// 如果是 CHOOSE_ONE 类型，为每个子效果创建一个选项。
-		if len(compoundEffect.SubEffects) >= math.MaxInt32 {
-			return nil, fmt.Errorf("too many sub-effects, exceeds int32 range")
-		}
-		var choices []*model.Choice
-		for i, subEffect := range compoundEffect.SubEffects {
-			choiceID := fmt.Sprintf("effect_choice_%d", i)
-			choices = append(choices, &model.Choice{
-				Id:          choiceID,
-				Description: GetEffectDescription(ge, subEffect),                          // 我们需要一种方法来获取描述
-				ChoiceType:  &model.Choice_EffectOptionIndex{EffectOptionIndex: int32(i)}, //nolint:gosec
-			})
-		}
-		return choices, nil
+		return h.resolveChooseOneChoices(ge, compoundEffect)
 	case model.CompoundEffect_OPERATOR_SEQUENCE:
-		// 如果是 SEQUENCE 类型，按顺序为子效果解析选项，直到找到第一个需要选择的子效果。
-		for _, subEffect := range compoundEffect.SubEffects {
-			// 在序列中，我们提供第一个需要选择的效果。
-			handler, err := GetEffectHandler(subEffect)
-			if err != nil {
-				return nil, err
-			}
-			choices, err := handler.ResolveChoices(ge, subEffect, ctx)
-			if err != nil {
-				return nil, err
-			}
-			if len(choices) > 0 {
-				return choices, nil
-			}
+		return h.resolveSequenceChoices(ge, compoundEffect, ctx)
+	default:
+		return nil, fmt.Errorf("unknown compound effect operator: %v", compoundEffect.Operator)
+	}
+}
+
+func (h *CompoundEffectHandler) resolveChooseOneChoices(ge GameEngine, compoundEffect *model.CompoundEffect) ([]*model.Choice, error) {
+	if len(compoundEffect.SubEffects) >= math.MaxInt32 {
+		return nil, fmt.Errorf("too many sub-effects, exceeds int32 range")
+	}
+	var choices []*model.Choice
+	for i, subEffect := range compoundEffect.SubEffects {
+		choiceID := fmt.Sprintf("effect_choice_%d", i)
+		choices = append(choices, &model.Choice{
+			Id:          choiceID,
+			Description: GetEffectDescription(ge, subEffect),
+			ChoiceType:  &model.Choice_EffectOptionIndex{EffectOptionIndex: int32(i)}, //nolint:gosec
+		})
+	}
+	return choices, nil
+}
+
+func (h *CompoundEffectHandler) resolveSequenceChoices(ge GameEngine, compoundEffect *model.CompoundEffect, ctx *EffectContext) ([]*model.Choice, error) {
+	for _, subEffect := range compoundEffect.SubEffects {
+		handler, err := GetEffectHandler(subEffect)
+		if err != nil {
+			return nil, err
+		}
+		choices, err := handler.ResolveChoices(ge, subEffect, ctx)
+		if err != nil {
+			return nil, err
+		}
+		if len(choices) > 0 {
+			return choices, nil
 		}
 	}
 	return nil, nil
@@ -67,44 +74,43 @@ func (h *CompoundEffectHandler) Apply(ge GameEngine, effect *model.Effect, ctx *
 
 	switch compoundEffect.Operator {
 	case model.CompoundEffect_OPERATOR_SEQUENCE:
-		// 如果是 SEQUENCE 类型，按顺序应用所有子效果。
-		for _, subEffect := range compoundEffect.SubEffects {
-			handler, err := GetEffectHandler(subEffect)
-			if err != nil {
-				return err
-			}
-			err = handler.Apply(ge, subEffect, ctx)
-			if err != nil {
-				return err
-			}
-		}
+		return h.applySequence(ge, compoundEffect, ctx)
 	case model.CompoundEffect_OPERATOR_CHOOSE_ONE:
-		// 如果是 CHOOSE_ONE 类型，根据玩家的选择应用相应的子效果。
-		if ctx == nil || ctx.Choice == nil {
-			return fmt.Errorf("a choice is required to apply a CHOOSE_ONE compound effect")
-		}
-		choiceID := ctx.Choice.GetChosenOptionId()
-		if !strings.HasPrefix(choiceID, "effect_choice_") {
-			return fmt.Errorf("invalid choice id for compound effect: %s", choiceID)
-		}
-		indexStr := strings.TrimPrefix(choiceID, "effect_choice_")
-		choiceIndex, err := strconv.Atoi(indexStr)
-		if err != nil {
-			return fmt.Errorf("invalid choice index: %s", indexStr)
-		}
+		return h.applyChooseOne(ge, compoundEffect, ctx)
+	default:
+		return fmt.Errorf("unknown compound effect operator: %v", compoundEffect.Operator)
+	}
+}
 
-		if choiceIndex < 0 || choiceIndex >= len(compoundEffect.SubEffects) {
-			return fmt.Errorf("choice index out of bounds: %d", choiceIndex)
+func (h *CompoundEffectHandler) applySequence(ge GameEngine, compoundEffect *model.CompoundEffect, ctx *EffectContext) error {
+	for _, subEffect := range compoundEffect.SubEffects {
+		if err := ApplyEffect(ge, subEffect, ctx); err != nil {
+			return fmt.Errorf("failed to apply sub-effect in sequence: %w", err)
 		}
-
-		chosenEffect := compoundEffect.SubEffects[choiceIndex]
-		handler, err := GetEffectHandler(chosenEffect)
-		if err != nil {
-			return err
-		}
-		return handler.Apply(ge, chosenEffect, ctx)
 	}
 	return nil
+}
+
+func (h *CompoundEffectHandler) applyChooseOne(ge GameEngine, compoundEffect *model.CompoundEffect, ctx *EffectContext) error {
+	if ctx == nil || ctx.Choice == nil {
+		return fmt.Errorf("a choice is required to apply a CHOOSE_ONE compound effect")
+	}
+	choiceID := ctx.Choice.GetChosenOptionId()
+	if !strings.HasPrefix(choiceID, "effect_choice_") {
+		return fmt.Errorf("invalid choice id for compound effect: %s", choiceID)
+	}
+	indexStr := strings.TrimPrefix(choiceID, "effect_choice_")
+	choiceIndex, err := strconv.Atoi(indexStr)
+	if err != nil {
+		return fmt.Errorf("invalid choice index: %s", indexStr)
+	}
+
+	if choiceIndex < 0 || choiceIndex >= len(compoundEffect.SubEffects) {
+		return fmt.Errorf("choice index out of bounds: %d", choiceIndex)
+	}
+
+	chosenEffect := compoundEffect.SubEffects[choiceIndex]
+	return ApplyEffect(ge, chosenEffect, ctx)
 }
 
 func (h *CompoundEffectHandler) GetDescription(effect *model.Effect) string {

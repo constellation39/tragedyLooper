@@ -37,12 +37,41 @@ func GetEffectHandler(effect *model.Effect) (EffectHandler, error) {
 	return handler, nil
 }
 
-// GetEffectDescription is a helper to get the description for an effect.
-func GetEffectDescription(ge GameEngine, effect *model.Effect) string {
+// withHandler is a higher-order function that retrieves the handler for an effect
+// and executes a given function with it. This reduces boilerplate in helper functions.
+func withHandler[T any](ge GameEngine, effect *model.Effect, fn func(EffectHandler) (T, error)) (T, error) {
+	var zero T
 	handler, err := GetEffectHandler(effect)
 	if err != nil {
-		// Consider logging this error
+		return zero, err
+	}
+	return fn(handler)
+}
+
+// GetEffectDescription is a helper to get the description for an effect.
+func GetEffectDescription(ge GameEngine, effect *model.Effect) string {
+	description, err := withHandler(ge, effect, func(h EffectHandler) (string, error) {
+		return h.GetDescription(effect), nil
+	})
+	if err != nil {
+		// Log the error, as GetDescription is not expected to fail but the handler might be missing.
+		// logger.Error("failed to get effect description", "error", err)
 		return "(Unknown Effect)"
 	}
-	return handler.GetDescription(effect)
+	return description
+}
+
+// ResolveChoices is a helper to resolve choices for an effect.
+func ResolveChoices(ge GameEngine, effect *model.Effect, ctx *EffectContext) ([]*model.Choice, error) {
+	return withHandler(ge, effect, func(h EffectHandler) ([]*model.Choice, error) {
+		return h.ResolveChoices(ge, effect, ctx)
+	})
+}
+
+// ApplyEffect is a helper to apply an effect.
+func ApplyEffect(ge GameEngine, effect *model.Effect, ctx *EffectContext) error {
+	_, err := withHandler(ge, effect, func(h EffectHandler) (any, error) {
+		return nil, h.Apply(ge, effect, ctx)
+	})
+	return err
 }

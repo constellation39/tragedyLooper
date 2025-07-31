@@ -30,43 +30,76 @@ func (h *AdjustStatHandler) Apply(ge GameEngine, effect *model.Effect, ctx *Effe
 	}
 
 	state := ge.GetGameState()
-	// 解析目标选择器以获取所有受影响的角色 ID。
 	targetIDs, err := ge.ResolveSelectorToCharacters(state, adjustStatEffect.Target, ctx)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to resolve selector to characters: %w", err)
 	}
 
-	// 遍历所有目标角色，根据 StatType 调整相应的属性，并发布相应的事件。
 	for _, targetID := range targetIDs {
-		char, ok := state.Characters[targetID]
-		if !ok {
-			continue // 或返回错误
-		}
-
-		switch adjustStatEffect.StatType {
-		case model.StatCondition_STAT_TYPE_PARANOIA:
-			// 调整偏执并发布 ParanoiaAdjustedEvent。
-			newParanoia := char.Paranoia + adjustStatEffect.Amount
-			event := &model.ParanoiaAdjustedEvent{CharacterId: targetID, NewParanoia: newParanoia, Amount: adjustStatEffect.Amount}
-			ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED, &model.EventPayload{
-				Payload: &model.EventPayload_ParanoiaAdjusted{ParanoiaAdjusted: event},
-			})
-		case model.StatCondition_STAT_TYPE_INTRIGUE:
-			// 调整阴谋并发布 IntrigueAdjustedEvent。
-			newIntrigue := char.Intrigue + adjustStatEffect.Amount
-			event := &model.IntrigueAdjustedEvent{CharacterId: targetID, NewIntrigue: newIntrigue, Amount: adjustStatEffect.Amount}
-			ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED, &model.EventPayload{
-				Payload: &model.EventPayload_IntrigueAdjusted{IntrigueAdjusted: event},
-			})
-		case model.StatCondition_STAT_TYPE_GOODWILL:
-			// 调整好感并发布 GoodwillAdjustedEvent。
-			newGoodwill := char.Goodwill + adjustStatEffect.Amount
-			event := &model.GoodwillAdjustedEvent{CharacterId: targetID, NewGoodwill: newGoodwill, Amount: adjustStatEffect.Amount}
-			ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED, &model.EventPayload{
-				Payload: &model.EventPayload_GoodwillAdjusted{GoodwillAdjusted: event},
-			})
+		if err := h.applyStatAdjustment(ge, targetID, adjustStatEffect); err != nil {
+			// Consider whether to continue on error or return immediately
+			// For now, we'll log the error and continue
+			// logger.Error("failed to apply stat adjustment", "error", err, "targetID", targetID)
+			continue
 		}
 	}
+	return nil
+}
+
+func (h *AdjustStatHandler) applyStatAdjustment(ge GameEngine, targetID int32, effect *model.AdjustStatEffect) error {
+	char, ok := ge.GetGameState().Characters[targetID]
+	if !ok {
+		return fmt.Errorf("character with id %d not found", targetID)
+	}
+
+	var eventType model.GameEventType
+	var payload *model.EventPayload
+
+	switch effect.StatType {
+	case model.StatCondition_STAT_TYPE_PARANOIA:
+		newParanoia := char.Paranoia + effect.Amount
+		eventType = model.GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED
+		payload = &model.EventPayload{
+			Payload: &model.EventPayload_ParanoiaAdjusted{
+				ParanoiaAdjusted: &model.ParanoiaAdjustedEvent{
+					CharacterId: targetID,
+					NewParanoia: newParanoia,
+					Amount:      effect.Amount,
+				},
+			},
+		}
+
+	case model.StatCondition_STAT_TYPE_INTRIGUE:
+		newIntrigue := char.Intrigue + effect.Amount
+		eventType = model.GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED
+		payload = &model.EventPayload{
+			Payload: &model.EventPayload_IntrigueAdjusted{
+				IntrigueAdjusted: &model.IntrigueAdjustedEvent{
+					CharacterId: targetID,
+					NewIntrigue: newIntrigue,
+					Amount:      effect.Amount,
+				},
+			},
+		}
+
+	case model.StatCondition_STAT_TYPE_GOODWILL:
+		newGoodwill := char.Goodwill + effect.Amount
+		eventType = model.GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED
+		payload = &model.EventPayload{
+			Payload: &model.EventPayload_GoodwillAdjusted{
+				GoodwillAdjusted: &model.GoodwillAdjustedEvent{
+					CharacterId: targetID,
+					NewGoodwill: newGoodwill,
+					Amount:      effect.Amount,
+				},
+			},
+		}
+
+	default:
+		return fmt.Errorf("unknown stat type: %s", effect.StatType)
+	}
+
+	ge.ApplyAndPublishEvent(eventType, payload)
 	return nil
 }
 
