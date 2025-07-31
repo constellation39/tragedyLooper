@@ -20,7 +20,7 @@ func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, player *model.Player
 	case *model.PlayerActionPayload_MakeGuess:
 		return handleMakeGuessAction(ge, player, payload.MakeGuess)
 	case *model.PlayerActionPayload_PassTurn:
-		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
+		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
 			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND}},
 		})
 		return GetPhase(model.GamePhase_GAME_PHASE_GAME_OVER)
@@ -39,7 +39,7 @@ func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.M
 	script := ge.GetGameRepo().GetScript()
 	if script == nil {
 		ge.Logger().Error("failed to get script to verify guess")
-		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
+		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
 			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND}},
 		}) // 游戏结束，出现错误时主谋默认获胜
 		return GetPhase(model.GamePhase_GAME_PHASE_GAME_OVER)
@@ -57,11 +57,11 @@ func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.M
 
 	// 如果所有猜测都正确，则主角获胜；否则主谋获胜。
 	if correctGuesses == len(script.Characters) {
-		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
+		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
 			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_PLAYER_ROLE_PROTAGONIST}},
 		})
 	} else {
-		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
+		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
 			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND}},
 		})
 	}

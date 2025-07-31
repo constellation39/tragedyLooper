@@ -138,15 +138,7 @@ graph TD
                 direction TB
                 Engine(engine.go)
                 PhaseMgr(phase_manager.go)
-                EventMgr(event_manager.go)
-                EffectMgr(effects_manager.go)
-                
-                Engine -- Manages --> PhaseMgr
-                Engine -- Contains --> GameState(GameState)
-                
                 EventMgr -- Dispatches to --> EventHandlers(eventhandler/*)
-                EventHandlers -- Triggers --> EffectMgr
-                EffectMgr -- Dispatches to --> EffectHandlers(effecthandler/*)
                 EffectHandlers -- Modify --> GameState
             end
 

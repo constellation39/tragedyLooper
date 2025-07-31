@@ -8,7 +8,7 @@ import (
 // 此接口有助于将处理程序与主引擎包解耦。
 type GameEngine interface {
 	GetGameState() *model.GameState
-	ApplyAndPublishEvent(eventType model.GameEventType, payload *model.EventPayload)
+	TriggerEvent(eventType model.GameEventType, payload *model.EventPayload)
 	ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, ctx *EffectContext) ([]int32, error)
 	GetCharacterByID(id int32) *model.Character
 	MoveCharacter(char *model.Character, dx, dy int)

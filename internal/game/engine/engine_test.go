@@ -197,7 +197,7 @@ func TestEngine_GameOverOnMaxLoops(t *testing.T) {
 	engine.GameState.CurrentDay = engine.gameConfig.GetScript().DaysPerLoop
 
 	// 等待游戏准备好玩家行动
-	waitForPhase(t, engine, v1.GamePhase_GAME_PHASE_CARD_PLAY)
+	waitForPhase(t, engine, v1.GamePhase_GAME_PHASE_PROTAGONIST_CARD_PLAY)
 
 	// --- 主谋出牌 ---
 	playCardAction := &v1.PlayerActionPayload{

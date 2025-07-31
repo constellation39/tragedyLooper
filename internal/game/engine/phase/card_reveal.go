@@ -14,7 +14,7 @@ func (p *CardRevealPhase) Enter(ge GameEngine) Phase {
 	for playerID, cardList := range ge.GetGameState().PlayedCardsThisDay {
 		allPlayedCards[playerID] = cardList
 	}
-	ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_CARD_REVEALED, &model.EventPayload{
+	ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_CARD_REVEALED, &model.EventPayload{
 		Payload: &model.EventPayload_CardRevealed{CardRevealed: &model.CardRevealedEvent{Cards: allPlayedCards}},
 	})
 	return GetPhase(model.GamePhase_GAME_PHASE_CARD_EFFECTS)

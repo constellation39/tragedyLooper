@@ -28,7 +28,7 @@ func (p *DayEndPhase) Enter(ge GameEngine) Phase {
 				}
 				if met {
 					logger.Info("Loop loss condition met", zap.String("description", endCond.Description))
-					ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_LOSS, &model.EventPayload{})
+					ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_LOSS, &model.EventPayload{})
 					return GetPhase(model.GamePhase_GAME_PHASE_LOOP_END)
 				}
 			}

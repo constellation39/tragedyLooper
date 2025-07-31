@@ -48,7 +48,7 @@ func (im *incidentManager) TriggerIncidents() {
 		incident.HasTriggeredThisLoop = true
 
 		// Publish the trigger event. The engine's main loop will handle applying the effect.
-		im.engine.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_INCIDENT_TRIGGERED, &model.EventPayload{
+		im.engine.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_INCIDENT_TRIGGERED, &model.EventPayload{
 			Payload: &model.EventPayload_IncidentTriggered{IncidentTriggered: &model.IncidentTriggeredEvent{Incident: incident}},
 		})
 	}

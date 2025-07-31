@@ -254,7 +254,7 @@ func (ge *GameEngine) handleEngineRequest(req engineAction) {
 	}
 }
 
-func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, payload *model.EventPayload) {
+func (ge *GameEngine) TriggerEvent(eventType model.GameEventType, payload *model.EventPayload) {
 	event := &model.GameEvent{
 		Type:      eventType,
 		Timestamp: timestamppb.Now(),
@@ -396,7 +396,7 @@ func (ge *GameEngine) ApplyEffect(effect *model.Effect, ability *model.Ability, 
 
 	if len(choices) > 0 && choice == nil {
 		choiceEvent := &model.ChoiceRequiredEvent{Choices: choices}
-		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_CHOICE_REQUIRED, &model.EventPayload{
+		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_CHOICE_REQUIRED, &model.EventPayload{
 			Payload: &model.EventPayload_ChoiceRequired{ChoiceRequired: choiceEvent},
 		})
 		return nil // 停止处理，直到做出选择

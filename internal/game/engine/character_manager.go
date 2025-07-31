@@ -39,7 +39,7 @@ func (cm *characterManager) MoveCharacter(char *model.Character, dx, dy int) {
 		}
 	}
 
-	cm.engine.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_CHARACTER_MOVED, &model.EventPayload{
+	cm.engine.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_CHARACTER_MOVED, &model.EventPayload{
 		Payload: &model.EventPayload_CharacterMoved{CharacterMoved: &model.CharacterMovedEvent{
 			CharacterId: char.Config.Id,
 			NewLocation: newLoc,

@@ -143,7 +143,7 @@ func (p *CardEffectsPhase) applyStatEffect(logger *zap.Logger, ge GameEngine, ch
 			logger.Info("Paranoia increase forbidden", zap.Int32("charID", charID))
 			return
 		}
-		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED, &model.EventPayload{
+		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_PARANOIA_ADJUSTED, &model.EventPayload{
 			Payload: &model.EventPayload_ParanoiaAdjusted{ParanoiaAdjusted: &model.ParanoiaAdjustedEvent{
 				CharacterId: charID,
 				Amount:      amount,
@@ -154,7 +154,7 @@ func (p *CardEffectsPhase) applyStatEffect(logger *zap.Logger, ge GameEngine, ch
 			logger.Info("Goodwill increase forbidden", zap.Int32("charID", charID))
 			return
 		}
-		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED, &model.EventPayload{
+		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GOODWILL_ADJUSTED, &model.EventPayload{
 			Payload: &model.EventPayload_GoodwillAdjusted{GoodwillAdjusted: &model.GoodwillAdjustedEvent{
 				CharacterId: charID,
 				Amount:      amount,
@@ -165,7 +165,7 @@ func (p *CardEffectsPhase) applyStatEffect(logger *zap.Logger, ge GameEngine, ch
 			logger.Info("Intrigue increase forbidden", zap.Int32("charID", charID))
 			return
 		}
-		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED, &model.EventPayload{
+		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_INTRIGUE_ADJUSTED, &model.EventPayload{
 			Payload: &model.EventPayload_IntrigueAdjusted{IntrigueAdjusted: &model.IntrigueAdjustedEvent{
 				CharacterId: charID,
 				Amount:      amount,

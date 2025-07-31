@@ -39,7 +39,7 @@ func (h *AddTraitHandler) Apply(ge GameEngine, effect *model.Effect, ctx *Effect
 	// 遍历所有目标角色，为每个角色添加特征，并发布 TraitAdded 事件。
 	for _, targetID := range targetIDs {
 		event := &model.TraitAddedEvent{CharacterId: targetID, Trait: addTraitEffect.Trait}
-		ge.ApplyAndPublishEvent(model.GameEventType_GAME_EVENT_TYPE_TRAIT_ADDED, &model.EventPayload{
+		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_TRAIT_ADDED, &model.EventPayload{
 			Payload: &model.EventPayload_TraitAdded{TraitAdded: event},
 		})
 	}

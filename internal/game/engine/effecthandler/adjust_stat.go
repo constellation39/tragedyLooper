@@ -99,7 +99,7 @@ func (h *AdjustStatHandler) applyStatAdjustment(ge GameEngine, targetID int32, e
 		return fmt.Errorf("unknown stat type: %s", effect.StatType)
 	}
 
-	ge.ApplyAndPublishEvent(eventType, payload)
+	ge.TriggerEvent(eventType, payload)
 	return nil
 }
 
