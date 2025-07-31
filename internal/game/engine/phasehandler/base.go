@@ -1,4 +1,4 @@
-package phase
+package phasehandler
 
 import (
 	"time"
@@ -22,8 +22,6 @@ type GameEngine interface {
 	ResetPlayerReadiness()
 	// SetPlayerReady 设置指定玩家的准备状态为 true。
 	SetPlayerReady(playerID int32)
-	// StopGameLoop 停止游戏主循环。
-	StopGameLoop()
 	// TriggerIncidents 触发事件。
 	TriggerIncidents()
 	// GetGameState 返回当前游戏状态。

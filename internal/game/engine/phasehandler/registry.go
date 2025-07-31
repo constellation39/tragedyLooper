@@ -1,4 +1,4 @@
-package phase
+package phasehandler
 
 import (
 	"fmt"
@@ -12,10 +12,10 @@ var (
 // RegisterPhase 注册一个游戏阶段。
 func RegisterPhase(p Phase) {
 	if p == nil {
-		panic("phase: Register of nil phase")
+		panic("phasehandler: Register of nil phasehandler")
 	}
 	if _, dup := phases[p.Type()]; dup {
-		panic("phase: Register called twice for phase " + p.Type().String())
+		panic("phasehandler: Register called twice for phasehandler " + p.Type().String())
 	}
 	phases[p.Type()] = p
 }
@@ -24,7 +24,7 @@ func RegisterPhase(p Phase) {
 func GetPhase(phaseType model.GamePhase) Phase {
 	p, ok := phases[phaseType]
 	if !ok {
-		panic(fmt.Sprintf("phase: unknown phase %s", phaseType.String()))
+		panic(fmt.Sprintf("phasehandler: unknown phasehandler %s", phaseType.String()))
 	}
 	return p
 }

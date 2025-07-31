@@ -63,7 +63,7 @@ func (pb *PromptBuilder) BuildMastermindPrompt(
 	}
 
 	sb.WriteString("\n--- Instructions ---\n")
-	sb.WriteString(fmt.Sprintf("It is currently the %s phase.\n", fullGameState.CurrentPhase))
+	sb.WriteString(fmt.Sprintf("It is currently the %s phasehandler.\n", fullGameState.CurrentPhase))
 	sb.WriteString("Based on the current model state and your objective, decide your action.\n")
 	sb.WriteString("You can play a card (ActionPlayCard) or use an ability (ActionUseAbility) or signal readiness (ActionReadyForNextPhase).\n")
 	sb.WriteString("If playing a card, specify 'card_id', 'target_character_id' (if applicable), 'target_location' (if applicable).\n")
@@ -119,7 +119,7 @@ func (pb *PromptBuilder) BuildProtagonistPrompt(
 	}
 
 	sb.WriteString("\n--- Instructions ---\n")
-	sb.WriteString(fmt.Sprintf("It is currently the %s phase.\n", playerView.CurrentPhase))
+	sb.WriteString(fmt.Sprintf("It is currently the %s phasehandler.\n", playerView.CurrentPhase))
 	sb.WriteString("Based on the current model state and your deductions, decide your action.\n")
 	sb.WriteString("You can play a card (ActionPlayCard) or use an ability (ActionUseAbility) or signal readiness (ActionReadyForNextPhase).\n")
 	sb.WriteString("If playing a card, specify 'card_id', 'target_character_id' (if applicable), 'target_location' (if applicable).\n")

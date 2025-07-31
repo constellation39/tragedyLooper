@@ -1,4 +1,4 @@
-package phase
+package phasehandler
 
 import (
 	"time"
@@ -7,18 +7,18 @@ import (
 	"go.uber.org/zap"
 )
 
-// ProtagonistCardPlayPhase is the phase where the protagonists play their cards.
+// ProtagonistCardPlayPhase is the phasehandler where the protagonists play their cards.
 type ProtagonistCardPlayPhase struct {
 	basePhase
 	currentPlayerIndex int
 }
 
-// Type returns the phase type.
+// Type returns the phasehandler type.
 func (p *ProtagonistCardPlayPhase) Type() model.GamePhase {
 	return model.GamePhase_GAME_PHASE_PROTAGONIST_CARD_PLAY
 }
 
-// Enter is called when the phase begins.
+// Enter is called when the phasehandler begins.
 func (p *ProtagonistCardPlayPhase) Enter(ge GameEngine) Phase {
 	p.currentPlayerIndex = 0
 	ge.ResetPlayerReadiness()
@@ -61,7 +61,7 @@ func (p *ProtagonistCardPlayPhase) HandleTimeout(ge GameEngine) Phase {
 	return GetPhase(model.GamePhase_GAME_PHASE_CARD_REVEAL)
 }
 
-// TimeoutDuration returns the timeout duration for this phase.
+// TimeoutDuration returns the timeout duration for this phasehandler.
 func (p *ProtagonistCardPlayPhase) TimeoutDuration() time.Duration { return 30 * time.Second }
 
 func init() {

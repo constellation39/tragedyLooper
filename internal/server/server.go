@@ -347,7 +347,7 @@ func (r *Room) RemoveClient(playerID int32) {
 
 // Start 启动房间的游戏引擎和事件广播。
 func (r *Room) Start() {
-	r.gameEngine.StartGameLoop()
+	r.gameEngine.Start()
 	go r.broadcastGameEvents()
 }
 

@@ -79,7 +79,7 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 	}}
 
 	// --- 执行：开始游戏并让其运行 ---
-	engine.StartGameLoop()
+	engine.Start()
 	defer engine.StopGameLoop()
 
 	// 主谋打出所有三张牌
@@ -116,7 +116,7 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 
 func TestEngine_GetPlayerView(t *testing.T) {
 	engine := helper_NewGameEngineForTest(t)
-	engine.StartGameLoop()
+	engine.Start()
 	defer engine.StopGameLoop()
 
 	// --- 获取主谋和主角的视图 ---
@@ -188,7 +188,7 @@ func TestEngine_GameOverOnMaxLoops(t *testing.T) {
 		{Config: card4Config},
 	}}
 
-	engine.StartGameLoop()
+	engine.Start()
 	defer engine.StopGameLoop()
 
 	// 手动将循环次数设置为最大值
@@ -228,7 +228,7 @@ func TestEngine_GameOverOnMaxLoops(t *testing.T) {
 	waitForEvent(t, engine, v1.GameEventType_GAME_EVENT_TYPE_GAME_ENDED)
 
 	// 如果需要，我们也可以检查最终阶段，但事件是更强的信号。
-	assert.Equal(t, v1.GamePhase_GAME_PHASE_GAME_OVER, engine.GetCurrentPhase(), "Game should be in the GAME_OVER phase")
+	assert.Equal(t, v1.GamePhase_GAME_PHASE_GAME_OVER, engine.GetCurrentPhase(), "Game should be in the GAME_OVER phasehandler")
 }
 
 // helper_GetCharacterFromView 是一个测试助手，用于通过 ID 在玩家视图中查找角色。
@@ -276,7 +276,7 @@ func waitForPhase(t *testing.T, engine *GameEngine, targetPhase v1.GamePhase) {
 		}
 		select {
 		case <-timeout:
-			t.Fatalf("timed out waiting for phase %s, current phase is %s", targetPhase, currentPhase)
+			t.Fatalf("timed out waiting for phasehandler %s, current phasehandler is %s", targetPhase, currentPhase)
 		case <-time.After(10 * time.Millisecond):
 			// 继续轮询
 		}

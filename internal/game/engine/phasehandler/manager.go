@@ -1,4 +1,4 @@
-package phase
+package phasehandler
 
 import (
 	"time"
@@ -9,7 +9,7 @@ import (
 
 // phaseManager 负责管理游戏的阶段生命周期，包括转换和超时。
 // 它封装了以前在 GameEngine 中的逻辑，从而实现了更清晰的关注点分离。
-type PhaseManager struct {
+type Manager struct {
 	engine       GameEngine  // 对父引擎的引用，以访问游戏状态和其他组件。
 	logger       *zap.Logger // 日志记录器
 	currentPhase Phase       // 当前的游戏阶段。
@@ -18,10 +18,10 @@ type PhaseManager struct {
 }
 
 // newPhaseManager 创建一个新的阶段管理器。
-func NewPhaseManager(engine GameEngine) *PhaseManager {
-	pm := &PhaseManager{
+func NewManager(engine GameEngine) *Manager {
+	pm := &Manager{
 		engine:       engine,
-		logger:       engine.Logger().Named("PhaseManager"),
+		logger:       engine.Logger().Named("Manager"),
 		currentPhase: GetPhase(model.GamePhase_GAME_PHASE_SETUP), // 初始阶段从注册表获取
 		phaseTimer:   time.NewTimer(time.Hour),                   // 用一个很长的时间初始化。
 	}
@@ -30,41 +30,41 @@ func NewPhaseManager(engine GameEngine) *PhaseManager {
 }
 
 // start 开始阶段生命周期，转换到初始阶段。
-func (pm *PhaseManager) Start() {
+func (pm *Manager) Start() {
 	pm.transitionTo(pm.currentPhase)
 }
 
 // timer 返回阶段计时器的通道。
-func (pm *PhaseManager) Timer() <-chan time.Time {
+func (pm *Manager) Timer() <-chan time.Time {
 	return pm.phaseTimer.C
 }
 
 // CurrentPhase 返回当前的游戏阶段。
-func (pm *PhaseManager) CurrentPhase() Phase {
+func (pm *Manager) CurrentPhase() Phase {
 	return pm.currentPhase
 }
 
 // HandleAction 将操作委托给当前阶段并转换到下一个阶段。
-func (pm *PhaseManager) HandleAction(player *model.Player, action *model.PlayerActionPayload) {
+func (pm *Manager) HandleAction(player *model.Player, action *model.PlayerActionPayload) {
 	nextPhase := pm.currentPhase.HandleAction(pm.engine, player, action)
 	pm.transitionTo(nextPhase)
 }
 
 // handleEvent 将事件委托给当前阶段并转换到下一个阶段。
-func (pm *PhaseManager) HandleEvent(event *model.GameEvent) {
+func (pm *Manager) HandleEvent(event *model.GameEvent) {
 	nextPhase := pm.currentPhase.HandleEvent(pm.engine, event)
 	pm.transitionTo(nextPhase)
 }
 
 // handleTimeout 处理阶段超时并转换到下一个阶段。
-func (pm *PhaseManager) HandleTimeout() {
+func (pm *Manager) HandleTimeout() {
 	nextPhase := pm.currentPhase.HandleTimeout(pm.engine)
 	pm.transitionTo(nextPhase)
 }
 
 // transitionTo 处理从一个游戏阶段移动到另一个游戏阶段的逻辑。
 // 它使用一个循环来处理连续的即时阶段转换，而无需递归。
-func (pm *PhaseManager) transitionTo(nextPhase Phase) {
+func (pm *Manager) transitionTo(nextPhase Phase) {
 	// nil 的 nextPhase 表示不需要状态更改。
 	if nextPhase == nil {
 		return
@@ -76,10 +76,10 @@ func (pm *PhaseManager) transitionTo(nextPhase Phase) {
 		pm.phaseTimer.Stop()
 
 		if pm.gameStarted {
-			pm.logger.Info("Transitioning phase", zap.String("from", pm.currentPhase.Type().String()), zap.String("to", nextPhase.Type().String()))
+			pm.logger.Info("Transitioning phasehandler", zap.String("from", pm.currentPhase.Type().String()), zap.String("to", nextPhase.Type().String()))
 			pm.currentPhase.Exit(pm.engine)
 		} else {
-			pm.logger.Info("Entering initial phase", zap.String("to", nextPhase.Type().String()))
+			pm.logger.Info("Entering initial phasehandler", zap.String("to", nextPhase.Type().String()))
 			pm.gameStarted = true
 		}
 

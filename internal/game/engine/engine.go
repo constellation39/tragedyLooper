@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"tragedylooper/internal/game/engine/effecthandler"
 	"tragedylooper/internal/game/engine/eventhandler"
-	"tragedylooper/internal/game/engine/phase"
+	"tragedylooper/internal/game/engine/phasehandler"
 	"tragedylooper/internal/game/loader"
 	model "tragedylooper/pkg/proto/tragedylooper/v1"
 
@@ -48,7 +48,7 @@ type GameEngine struct {
 
 	actionGenerator ActionGenerator
 	gameConfig      loader.GameConfig
-	pm              *phase.PhaseManager
+	pm              *phasehandler.Manager
 	em              *eventhandler.Manager
 	im              *incidentManager
 	cm              *characterManager
@@ -77,7 +77,7 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator 
 		mastermindPlayerID:   0,
 		protagonistPlayerIDs: nil,
 	}
-	ge.pm = phase.NewPhaseManager(ge)
+	ge.pm = phasehandler.NewManager(ge)
 	ge.em = eventhandler.NewManager(ge)
 	ge.im = newIncidentManager(ge)
 	ge.cm = newCharacterManager(ge)
@@ -159,13 +159,13 @@ func (ge *GameEngine) dealInitialCards() {
 	}
 }
 
-// StartGameLoop 启动游戏主循环。
-func (ge *GameEngine) StartGameLoop() {
+// Start 启动游戏主循环。
+func (ge *GameEngine) Start() {
 	go ge.runGameLoop()
 }
 
-// StopGameLoop 停止游戏主循环。
-func (ge *GameEngine) StopGameLoop() {
+// Stop 停止游戏主循环。
+func (ge *GameEngine) Stop() {
 	close(ge.stopChan)
 }
 
@@ -339,8 +339,6 @@ func (ge *GameEngine) GetGameState() *model.GameState {
 	return ge.GameState
 }
 
-
-
 func (ge *GameEngine) GetGameRepo() loader.GameConfig {
 	return ge.gameConfig
 }
@@ -414,8 +412,8 @@ func (ge *GameEngine) ApplyEffect(effect *model.Effect, ability *model.Ability, 
 	return nil
 }
 
-// TriggerAIPlayerAction 提示 AI 玩家做出决定。
-func (ge *GameEngine) TriggerAIPlayerAction(playerID int32) {
+// RequestAIAction 请求 AI 玩家做出决定。
+func (ge *GameEngine) RequestAIAction(playerID int32) {
 	player := ge.getPlayerByID(playerID)
 	if player == nil || !player.IsLlm { // TODO: 使此检查更通用（例如，IsAI）
 		return

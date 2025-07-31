@@ -1,4 +1,4 @@
-package phase
+package phasehandler
 
 import (
 	model "tragedylooper/pkg/proto/tragedylooper/v1"

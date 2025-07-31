@@ -1,22 +1,22 @@
-package phase
+package phasehandler
 
 import (
 	"time"
 	model "tragedylooper/pkg/proto/tragedylooper/v1"
 )
 
-// MastermindCardPlayPhase is the phase where the mastermind plays their cards.
+// MastermindCardPlayPhase is the phasehandler where the mastermind plays their cards.
 type MastermindCardPlayPhase struct {
 	basePhase
 	mastermindCardsPlayed int
 }
 
-// Type returns the phase type.
+// Type returns the phasehandler type.
 func (p *MastermindCardPlayPhase) Type() model.GamePhase {
 	return model.GamePhase_GAME_PHASE_MASTERMIND_CARD_PLAY
 }
 
-// Enter is called when the phase begins.
+// Enter is called when the phasehandler begins.
 func (p *MastermindCardPlayPhase) Enter(ge GameEngine) Phase {
 	p.mastermindCardsPlayed = 0
 	ge.ResetPlayerReadiness()
@@ -47,7 +47,7 @@ func (p *MastermindCardPlayPhase) HandleTimeout(ge GameEngine) Phase {
 	return GetPhase(model.GamePhase_GAME_PHASE_PROTAGONIST_CARD_PLAY)
 }
 
-// TimeoutDuration returns the timeout duration for this phase.
+// TimeoutDuration returns the timeout duration for this phasehandler.
 func (p *MastermindCardPlayPhase) TimeoutDuration() time.Duration { return 30 * time.Second }
 
 func init() {

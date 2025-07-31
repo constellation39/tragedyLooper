@@ -1,4 +1,4 @@
-package phase
+package phasehandler
 
 import (
 	"time"
@@ -57,7 +57,7 @@ func (p *AbilitiesPhase) HandleAction(ge GameEngine, player *model.Player, actio
 
 // HandleTimeout 处理超时。
 func (p *AbilitiesPhase) HandleTimeout(ge GameEngine) Phase {
-	ge.Logger().Info("Abilities phase timed out, passing turn.")
+	ge.Logger().Info("Abilities phasehandler timed out, passing turn.")
 	var player *model.Player
 	if p.turn == MastermindAbilityTurn {
 		player = ge.GetMastermindPlayer()
