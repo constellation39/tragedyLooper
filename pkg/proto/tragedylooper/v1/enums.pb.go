@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -76,20 +75,21 @@ func (PlayerRole) EnumDescriptor() ([]byte, []int) {
 type GamePhase int32
 
 const (
-	GamePhase_GAME_PHASE_UNSPECIFIED       GamePhase = 0  // 未指定
-	GamePhase_GAME_PHASE_SETUP             GamePhase = 1  // 游戏设置阶段
-	GamePhase_GAME_PHASE_MASTERMIND_SETUP  GamePhase = 2  // 主谋设置阶段
-	GamePhase_GAME_PHASE_LOOP_START        GamePhase = 3  // 循环开始阶段
-	GamePhase_GAME_PHASE_DAY_START         GamePhase = 4  // 日开始阶段
-	GamePhase_GAME_PHASE_CARD_PLAY         GamePhase = 5  // 卡牌打出阶段
-	GamePhase_GAME_PHASE_CARD_REVEAL       GamePhase = 6  // 卡牌揭示阶段
-	GamePhase_GAME_PHASE_CARD_EFFECTS      GamePhase = 7  // 卡牌效果阶段
-	GamePhase_GAME_PHASE_ABILITIES         GamePhase = 8  // 能力结算阶段
-	GamePhase_GAME_PHASE_INCIDENTS         GamePhase = 9  // 事件结算阶段
-	GamePhase_GAME_PHASE_DAY_END           GamePhase = 10 // 日结束阶段
-	GamePhase_GAME_PHASE_LOOP_END          GamePhase = 11 // 循环结束阶段
-	GamePhase_GAME_PHASE_PROTAGONIST_GUESS GamePhase = 12 // 主角推理阶段
-	GamePhase_GAME_PHASE_GAME_OVER         GamePhase = 13 // 游戏结束阶段
+	GamePhase_GAME_PHASE_UNSPECIFIED           GamePhase = 0  // 未指定
+	GamePhase_GAME_PHASE_SETUP                 GamePhase = 1  // 游戏设置阶段
+	GamePhase_GAME_PHASE_MASTERMIND_SETUP      GamePhase = 2  // 主谋设置阶段
+	GamePhase_GAME_PHASE_LOOP_START            GamePhase = 3  // 循环开始阶段
+	GamePhase_GAME_PHASE_DAY_START             GamePhase = 4  // 日开始阶段
+	GamePhase_GAME_PHASE_MASTERMIND_CARD_PLAY  GamePhase = 5  // 主谋出牌阶段
+	GamePhase_GAME_PHASE_PROTAGONIST_CARD_PLAY GamePhase = 14 // 主角出牌阶段
+	GamePhase_GAME_PHASE_CARD_REVEAL           GamePhase = 6  // 卡牌揭示阶段
+	GamePhase_GAME_PHASE_CARD_EFFECTS          GamePhase = 7  // 卡牌效果阶段
+	GamePhase_GAME_PHASE_ABILITIES             GamePhase = 8  // 能力结算阶段
+	GamePhase_GAME_PHASE_INCIDENTS             GamePhase = 9  // 事件结算阶段
+	GamePhase_GAME_PHASE_DAY_END               GamePhase = 10 // 日结束阶段
+	GamePhase_GAME_PHASE_LOOP_END              GamePhase = 11 // 循环结束阶段
+	GamePhase_GAME_PHASE_PROTAGONIST_GUESS     GamePhase = 12 // 主角推理阶段
+	GamePhase_GAME_PHASE_GAME_OVER             GamePhase = 13 // 游戏结束阶段
 )
 
 // Enum value maps for GamePhase.
@@ -100,7 +100,8 @@ var (
 		2:  "GAME_PHASE_MASTERMIND_SETUP",
 		3:  "GAME_PHASE_LOOP_START",
 		4:  "GAME_PHASE_DAY_START",
-		5:  "GAME_PHASE_CARD_PLAY",
+		5:  "GAME_PHASE_MASTERMIND_CARD_PLAY",
+		14: "GAME_PHASE_PROTAGONIST_CARD_PLAY",
 		6:  "GAME_PHASE_CARD_REVEAL",
 		7:  "GAME_PHASE_CARD_EFFECTS",
 		8:  "GAME_PHASE_ABILITIES",
@@ -111,20 +112,21 @@ var (
 		13: "GAME_PHASE_GAME_OVER",
 	}
 	GamePhase_value = map[string]int32{
-		"GAME_PHASE_UNSPECIFIED":       0,
-		"GAME_PHASE_SETUP":             1,
-		"GAME_PHASE_MASTERMIND_SETUP":  2,
-		"GAME_PHASE_LOOP_START":        3,
-		"GAME_PHASE_DAY_START":         4,
-		"GAME_PHASE_CARD_PLAY":         5,
-		"GAME_PHASE_CARD_REVEAL":       6,
-		"GAME_PHASE_CARD_EFFECTS":      7,
-		"GAME_PHASE_ABILITIES":         8,
-		"GAME_PHASE_INCIDENTS":         9,
-		"GAME_PHASE_DAY_END":           10,
-		"GAME_PHASE_LOOP_END":          11,
-		"GAME_PHASE_PROTAGONIST_GUESS": 12,
-		"GAME_PHASE_GAME_OVER":         13,
+		"GAME_PHASE_UNSPECIFIED":           0,
+		"GAME_PHASE_SETUP":                 1,
+		"GAME_PHASE_MASTERMIND_SETUP":      2,
+		"GAME_PHASE_LOOP_START":            3,
+		"GAME_PHASE_DAY_START":             4,
+		"GAME_PHASE_MASTERMIND_CARD_PLAY":  5,
+		"GAME_PHASE_PROTAGONIST_CARD_PLAY": 14,
+		"GAME_PHASE_CARD_REVEAL":           6,
+		"GAME_PHASE_CARD_EFFECTS":          7,
+		"GAME_PHASE_ABILITIES":             8,
+		"GAME_PHASE_INCIDENTS":             9,
+		"GAME_PHASE_DAY_END":               10,
+		"GAME_PHASE_LOOP_END":              11,
+		"GAME_PHASE_PROTAGONIST_GUESS":     12,
+		"GAME_PHASE_GAME_OVER":             13,
 	}
 )
 
@@ -929,14 +931,15 @@ const file_tragedylooper_v1_enums_proto_rawDesc = "" +
 	"PlayerRole\x12\x1b\n" +
 	"\x17PLAYER_ROLE_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16PLAYER_ROLE_MASTERMIND\x10\x01\x12\x1b\n" +
-	"\x17PLAYER_ROLE_PROTAGONIST\x10\x02*\x87\x03\n" +
+	"\x17PLAYER_ROLE_PROTAGONIST\x10\x02*\xb8\x03\n" +
 	"\tGamePhase\x12\x1a\n" +
 	"\x16GAME_PHASE_UNSPECIFIED\x10\x00\x12\x14\n" +
 	"\x10GAME_PHASE_SETUP\x10\x01\x12\x1f\n" +
 	"\x1bGAME_PHASE_MASTERMIND_SETUP\x10\x02\x12\x19\n" +
 	"\x15GAME_PHASE_LOOP_START\x10\x03\x12\x18\n" +
-	"\x14GAME_PHASE_DAY_START\x10\x04\x12\x18\n" +
-	"\x14GAME_PHASE_CARD_PLAY\x10\x05\x12\x1a\n" +
+	"\x14GAME_PHASE_DAY_START\x10\x04\x12#\n" +
+	"\x1fGAME_PHASE_MASTERMIND_CARD_PLAY\x10\x05\x12$\n" +
+	" GAME_PHASE_PROTAGONIST_CARD_PLAY\x10\x0e\x12\x1a\n" +
 	"\x16GAME_PHASE_CARD_REVEAL\x10\x06\x12\x1b\n" +
 	"\x17GAME_PHASE_CARD_EFFECTS\x10\a\x12\x18\n" +
 	"\x14GAME_PHASE_ABILITIES\x10\b\x12\x18\n" +
