@@ -1333,8 +1333,8 @@
                     "$ref": "#/definitions/tragedylooper.v1.LoopResetEvent",
                     "additionalProperties": true
                 },
-                "game_over": {
-                    "$ref": "#/definitions/tragedylooper.v1.GameOverEvent",
+                "game_ended": {
+                    "$ref": "#/definitions/tragedylooper.v1.GameEndedEvent",
                     "additionalProperties": true
                 },
                 "choice_required": {
@@ -1401,6 +1401,38 @@
             "type": "object",
             "title": "Forbid Effect",
             "description": "禁止效果"
+        },
+        "tragedylooper.v1.GameEndedEvent": {
+            "properties": {
+                "winner": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "PLAYER_ROLE_MASTERMIND",
+                        1,
+                        "PLAYER_ROLE_PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色"
+                },
+                "reason": {
+                    "type": "string",
+                    "description": "游戏结束原因"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Game Ended Event",
+            "description": "游戏结束事件"
         },
         "tragedylooper.v1.GameEvent": {
             "properties": {
@@ -1482,34 +1514,6 @@
             "type": "object",
             "title": "Game Event",
             "description": "GameEvent 表示游戏中发生的事件。"
-        },
-        "tragedylooper.v1.GameOverEvent": {
-            "properties": {
-                "winner": {
-                    "enum": [
-                        "PLAYER_ROLE_UNSPECIFIED",
-                        0,
-                        "PLAYER_ROLE_MASTERMIND",
-                        1,
-                        "PLAYER_ROLE_PROTAGONIST",
-                        2
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Player Role",
-                    "description": "玩家角色"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Game Over Event",
-            "description": "游戏结束事件"
         },
         "tragedylooper.v1.GoodwillAdjustedEvent": {
             "properties": {

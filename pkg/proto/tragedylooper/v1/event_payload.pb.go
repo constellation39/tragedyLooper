@@ -36,7 +36,7 @@ type EventPayload struct {
 	//	*EventPayload_CardPlayed
 	//	*EventPayload_CardRevealed
 	//	*EventPayload_LoopReset
-	//	*EventPayload_GameOver
+	//	*EventPayload_GameEnded
 	//	*EventPayload_ChoiceRequired
 	//	*EventPayload_IncidentTriggered
 	//	*EventPayload_TragedyTriggered
@@ -184,10 +184,10 @@ func (x *EventPayload) GetLoopReset() *LoopResetEvent {
 	return nil
 }
 
-func (x *EventPayload) GetGameOver() *GameOverEvent {
+func (x *EventPayload) GetGameEnded() *GameEndedEvent {
 	if x != nil {
-		if x, ok := x.Payload.(*EventPayload_GameOver); ok {
-			return x.GameOver
+		if x, ok := x.Payload.(*EventPayload_GameEnded); ok {
+			return x.GameEnded
 		}
 	}
 	return nil
@@ -295,8 +295,8 @@ type EventPayload_LoopReset struct {
 	LoopReset *LoopResetEvent `protobuf:"bytes,11,opt,name=loop_reset,json=loopReset,proto3,oneof"`
 }
 
-type EventPayload_GameOver struct {
-	GameOver *GameOverEvent `protobuf:"bytes,12,opt,name=game_over,json=gameOver,proto3,oneof"`
+type EventPayload_GameEnded struct {
+	GameEnded *GameEndedEvent `protobuf:"bytes,12,opt,name=game_ended,json=gameEnded,proto3,oneof"`
 }
 
 type EventPayload_ChoiceRequired struct {
@@ -345,7 +345,7 @@ func (*EventPayload_CardRevealed) isEventPayload_Payload() {}
 
 func (*EventPayload_LoopReset) isEventPayload_Payload() {}
 
-func (*EventPayload_GameOver) isEventPayload_Payload() {}
+func (*EventPayload_GameEnded) isEventPayload_Payload() {}
 
 func (*EventPayload_ChoiceRequired) isEventPayload_Payload() {}
 
@@ -927,27 +927,28 @@ func (x *LoopResetEvent) GetLoopNumber() int32 {
 }
 
 // 游戏结束事件
-type GameOverEvent struct {
+type GameEndedEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Winner        PlayerRole             `protobuf:"varint,1,opt,name=winner,proto3,enum=tragedylooper.v1.PlayerRole" json:"winner,omitempty"` // 胜利的玩家角色
+	Reason        string                 `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`                                   // 游戏结束原因
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GameOverEvent) Reset() {
-	*x = GameOverEvent{}
+func (x *GameEndedEvent) Reset() {
+	*x = GameEndedEvent{}
 	mi := &file_tragedylooper_v1_event_payload_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GameOverEvent) String() string {
+func (x *GameEndedEvent) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GameOverEvent) ProtoMessage() {}
+func (*GameEndedEvent) ProtoMessage() {}
 
-func (x *GameOverEvent) ProtoReflect() protoreflect.Message {
+func (x *GameEndedEvent) ProtoReflect() protoreflect.Message {
 	mi := &file_tragedylooper_v1_event_payload_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -959,16 +960,23 @@ func (x *GameOverEvent) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GameOverEvent.ProtoReflect.Descriptor instead.
-func (*GameOverEvent) Descriptor() ([]byte, []int) {
+// Deprecated: Use GameEndedEvent.ProtoReflect.Descriptor instead.
+func (*GameEndedEvent) Descriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_event_payload_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *GameOverEvent) GetWinner() PlayerRole {
+func (x *GameEndedEvent) GetWinner() PlayerRole {
 	if x != nil {
 		return x.Winner
 	}
 	return PlayerRole_PLAYER_ROLE_UNSPECIFIED
+}
+
+func (x *GameEndedEvent) GetReason() string {
+	if x != nil {
+		return x.Reason
+	}
+	return ""
 }
 
 // Choice 表示玩家可以做出的选择。
@@ -1368,7 +1376,7 @@ var File_tragedylooper_v1_event_payload_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_event_payload_proto_rawDesc = "" +
 	"\n" +
-	"$tragedylooper/v1/event_payload.proto\x12\x10tragedylooper.v1\x1a\x1btragedylooper/v1/card.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1ftragedylooper/v1/incident.proto\x1a\x1etragedylooper/v1/payload.proto\"\x8a\v\n" +
+	"$tragedylooper/v1/event_payload.proto\x12\x10tragedylooper.v1\x1a\x1btragedylooper/v1/card.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1ftragedylooper/v1/incident.proto\x1a\x1etragedylooper/v1/payload.proto\"\x8d\v\n" +
 	"\fEventPayload\x12P\n" +
 	"\x0fcharacter_moved\x18\x01 \x01(\v2%.tragedylooper.v1.CharacterMovedEventH\x00R\x0echaracterMoved\x12V\n" +
 	"\x11paranoia_adjusted\x18\x02 \x01(\v2'.tragedylooper.v1.ParanoiaAdjustedEventH\x00R\x10paranoiaAdjusted\x12V\n" +
@@ -1383,8 +1391,9 @@ const file_tragedylooper_v1_event_payload_proto_rawDesc = "" +
 	"\rcard_revealed\x18\n" +
 	" \x01(\v2#.tragedylooper.v1.CardRevealedEventH\x00R\fcardRevealed\x12A\n" +
 	"\n" +
-	"loop_reset\x18\v \x01(\v2 .tragedylooper.v1.LoopResetEventH\x00R\tloopReset\x12>\n" +
-	"\tgame_over\x18\f \x01(\v2\x1f.tragedylooper.v1.GameOverEventH\x00R\bgameOver\x12P\n" +
+	"loop_reset\x18\v \x01(\v2 .tragedylooper.v1.LoopResetEventH\x00R\tloopReset\x12A\n" +
+	"\n" +
+	"game_ended\x18\f \x01(\v2 .tragedylooper.v1.GameEndedEventH\x00R\tgameEnded\x12P\n" +
 	"\x0fchoice_required\x18\r \x01(\v2%.tragedylooper.v1.ChoiceRequiredEventH\x00R\x0echoiceRequired\x12Y\n" +
 	"\x12incident_triggered\x18\x0e \x01(\v2(.tragedylooper.v1.IncidentTriggeredEventH\x00R\x11incidentTriggered\x12V\n" +
 	"\x11tragedy_triggered\x18\x0f \x01(\v2'.tragedylooper.v1.TragedyTriggeredEventH\x00R\x10tragedyTriggered\x12D\n" +
@@ -1428,9 +1437,10 @@ const file_tragedylooper_v1_event_payload_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\v2\x1a.tragedylooper.v1.CardListR\x05value:\x028\x01\"1\n" +
 	"\x0eLoopResetEvent\x12\x1f\n" +
 	"\vloop_number\x18\x01 \x01(\x05R\n" +
-	"loopNumber\"E\n" +
-	"\rGameOverEvent\x124\n" +
-	"\x06winner\x18\x01 \x01(\x0e2\x1c.tragedylooper.v1.PlayerRoleR\x06winner\"\xad\x01\n" +
+	"loopNumber\"^\n" +
+	"\x0eGameEndedEvent\x124\n" +
+	"\x06winner\x18\x01 \x01(\x0e2\x1c.tragedylooper.v1.PlayerRoleR\x06winner\x12\x16\n" +
+	"\x06reason\x18\x02 \x01(\tR\x06reason\"\xad\x01\n" +
 	"\x06Choice\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x120\n" +
@@ -1479,7 +1489,7 @@ var file_tragedylooper_v1_event_payload_proto_goTypes = []any{
 	(*CardPlayedEvent)(nil),        // 9: tragedylooper.v1.CardPlayedEvent
 	(*CardRevealedEvent)(nil),      // 10: tragedylooper.v1.CardRevealedEvent
 	(*LoopResetEvent)(nil),         // 11: tragedylooper.v1.LoopResetEvent
-	(*GameOverEvent)(nil),          // 12: tragedylooper.v1.GameOverEvent
+	(*GameEndedEvent)(nil),         // 12: tragedylooper.v1.GameEndedEvent
 	(*Choice)(nil),                 // 13: tragedylooper.v1.Choice
 	(*ChoiceRequiredEvent)(nil),    // 14: tragedylooper.v1.ChoiceRequiredEvent
 	(*IncidentTriggeredEvent)(nil), // 15: tragedylooper.v1.IncidentTriggeredEvent
@@ -1508,7 +1518,7 @@ var file_tragedylooper_v1_event_payload_proto_depIdxs = []int32{
 	9,  // 8: tragedylooper.v1.EventPayload.card_played:type_name -> tragedylooper.v1.CardPlayedEvent
 	10, // 9: tragedylooper.v1.EventPayload.card_revealed:type_name -> tragedylooper.v1.CardRevealedEvent
 	11, // 10: tragedylooper.v1.EventPayload.loop_reset:type_name -> tragedylooper.v1.LoopResetEvent
-	12, // 11: tragedylooper.v1.EventPayload.game_over:type_name -> tragedylooper.v1.GameOverEvent
+	12, // 11: tragedylooper.v1.EventPayload.game_ended:type_name -> tragedylooper.v1.GameEndedEvent
 	14, // 12: tragedylooper.v1.EventPayload.choice_required:type_name -> tragedylooper.v1.ChoiceRequiredEvent
 	15, // 13: tragedylooper.v1.EventPayload.incident_triggered:type_name -> tragedylooper.v1.IncidentTriggeredEvent
 	16, // 14: tragedylooper.v1.EventPayload.tragedy_triggered:type_name -> tragedylooper.v1.TragedyTriggeredEvent
@@ -1519,7 +1529,7 @@ var file_tragedylooper_v1_event_payload_proto_depIdxs = []int32{
 	22, // 19: tragedylooper.v1.LoopLossEvent.incident_type:type_name -> tragedylooper.v1.IncidentType
 	23, // 20: tragedylooper.v1.CardPlayedEvent.card:type_name -> tragedylooper.v1.Card
 	20, // 21: tragedylooper.v1.CardRevealedEvent.cards:type_name -> tragedylooper.v1.CardRevealedEvent.CardsEntry
-	24, // 22: tragedylooper.v1.GameOverEvent.winner:type_name -> tragedylooper.v1.PlayerRole
+	24, // 22: tragedylooper.v1.GameEndedEvent.winner:type_name -> tragedylooper.v1.PlayerRole
 	13, // 23: tragedylooper.v1.ChoiceRequiredEvent.choices:type_name -> tragedylooper.v1.Choice
 	25, // 24: tragedylooper.v1.IncidentTriggeredEvent.incident:type_name -> tragedylooper.v1.Incident
 	22, // 25: tragedylooper.v1.TragedyTriggeredEvent.tragedy_type:type_name -> tragedylooper.v1.IncidentType
@@ -1553,7 +1563,7 @@ func file_tragedylooper_v1_event_payload_proto_init() {
 		(*EventPayload_CardPlayed)(nil),
 		(*EventPayload_CardRevealed)(nil),
 		(*EventPayload_LoopReset)(nil),
-		(*EventPayload_GameOver)(nil),
+		(*EventPayload_GameEnded)(nil),
 		(*EventPayload_ChoiceRequired)(nil),
 		(*EventPayload_IncidentTriggered)(nil),
 		(*EventPayload_TragedyTriggered)(nil),

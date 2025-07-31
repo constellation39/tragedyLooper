@@ -797,8 +797,8 @@
                     "$ref": "#/definitions/tragedylooper.v1.LoopResetEvent",
                     "additionalProperties": true
                 },
-                "game_over": {
-                    "$ref": "#/definitions/tragedylooper.v1.GameOverEvent",
+                "game_ended": {
+                    "$ref": "#/definitions/tragedylooper.v1.GameEndedEvent",
                     "additionalProperties": true
                 },
                 "choice_required": {
@@ -866,7 +866,7 @@
             "title": "Forbid Effect",
             "description": "禁止效果"
         },
-        "tragedylooper.v1.GameOverEvent": {
+        "tragedylooper.v1.GameEndedEvent": {
             "properties": {
                 "winner": {
                     "enum": [
@@ -887,11 +887,15 @@
                     ],
                     "title": "Player Role",
                     "description": "玩家角色"
+                },
+                "reason": {
+                    "type": "string",
+                    "description": "游戏结束原因"
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Game Over Event",
+            "title": "Game Ended Event",
             "description": "游戏结束事件"
         },
         "tragedylooper.v1.GoodwillAdjustedEvent": {

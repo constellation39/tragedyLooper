@@ -37,7 +37,7 @@ func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, player *model.Player
 		return handleMakeGuessAction(ge, player, payload.MakeGuess)
 	case *model.PlayerActionPayload_PassTurn:
 		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
-			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND}},
+			Payload: &model.EventPayload_GameEnded{GameEnded: &model.GameEndedEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND, Reason: "Failed to guess all roles"}},
 		})
 		return GetPhase(model.GamePhase_GAME_PHASE_GAME_OVER)
 	}
@@ -56,7 +56,7 @@ func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.M
 	if script == nil {
 		ge.Logger().Error("failed to get script to verify guess")
 		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
-			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND}},
+			Payload: &model.EventPayload_GameEnded{GameEnded: &model.GameEndedEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND, Reason: "Failed to guess all roles"}},
 		}) // 游戏结束，出现错误时主谋默认获胜
 		return GetPhase(model.GamePhase_GAME_PHASE_GAME_OVER)
 	}
@@ -74,11 +74,11 @@ func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.M
 	// 如果所有猜测都正确，则主角获胜；否则主谋获胜。
 	if correctGuesses == len(script.Characters) {
 		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
-			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_PLAYER_ROLE_PROTAGONIST}},
+			Payload: &model.EventPayload_GameEnded{GameEnded: &model.GameEndedEvent{Winner: model.PlayerRole_PLAYER_ROLE_PROTAGONIST, Reason: "Correctly guessed all roles"}},
 		})
 	} else {
 		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
-			Payload: &model.EventPayload_GameOver{GameOver: &model.GameOverEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND}},
+			Payload: &model.EventPayload_GameEnded{GameEnded: &model.GameEndedEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND, Reason: "Failed to guess all roles"}},
 		})
 	}
 	return GetPhase(model.GamePhase_GAME_PHASE_GAME_OVER)

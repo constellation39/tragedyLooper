@@ -204,7 +204,7 @@ func TestEngine_GameOverOnMaxLoops(t *testing.T) {
 		Payload: &v1.PlayerActionPayload_PlayCard{
 			PlayCard: &v1.PlayCardPayload{
 				CardId: 4,
-				Target: &v1.PlayCardPayload_TargetCharacterId{TargetCharacterId: 1},
+				Target: &v1.PlayerActionPayload_TargetCharacterId{TargetCharacterId: 1},
 			},
 		},
 	}

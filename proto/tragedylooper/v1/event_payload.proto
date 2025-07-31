@@ -22,7 +22,7 @@ message EventPayload {
     CardPlayedEvent card_played = 9;
     CardRevealedEvent card_revealed = 10;
     LoopResetEvent loop_reset = 11;
-    GameOverEvent game_over = 12;
+    GameEndedEvent game_ended = 12;
     ChoiceRequiredEvent choice_required = 13;
     IncidentTriggeredEvent incident_triggered = 14;
     TragedyTriggeredEvent tragedy_triggered = 15;
@@ -96,8 +96,9 @@ message LoopResetEvent {
 }
 
 // 游戏结束事件
-message GameOverEvent {
+message GameEndedEvent {
   PlayerRole winner = 1; // 胜利的玩家角色
+  string reason = 2; // 游戏结束原因
 }
 
 // Choice 表示玩家可以做出的选择。
