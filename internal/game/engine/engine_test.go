@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 	"time"
+	"tragedylooper/internal/game/engine/ai"
 	"tragedylooper/internal/game/loader"
 	"tragedylooper/internal/logger"
 	v1 "tragedylooper/pkg/proto/tragedylooper/v1"
@@ -14,7 +15,7 @@ import (
 // mockActionGenerator 是一个用于测试的简单 AI 行动生成器。
 type mockActionGenerator struct{}
 
-func (m *mockActionGenerator) GenerateAction(ctx context.Context, agc *ActionGeneratorContext) (*v1.PlayerActionPayload, error) {
+func (m *mockActionGenerator) GenerateAction(ctx context.Context, agc *ai.ActionGeneratorContext) (*v1.PlayerActionPayload, error) {
 	// 对于此测试，我们不需要复杂的 AI 逻辑。
 	// 我们可以返回一个简单的跳过行动。
 	return &v1.PlayerActionPayload{

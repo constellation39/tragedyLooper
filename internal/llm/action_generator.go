@@ -3,10 +3,10 @@ package llm
 import (
 	"context"
 	"fmt"
+	"tragedylooper/internal/game/engine/ai"
 
 	"go.uber.org/zap"
 
-	"tragedylooper/internal/game/engine"
 	promptbuilder "tragedylooper/internal/llm/prompt"
 	model "tragedylooper/pkg/proto/tragedylooper/v1"
 )
@@ -23,7 +23,7 @@ func NewLLMActionGenerator(client Client, logger *zap.Logger) *LLMActionGenerato
 }
 
 // GenerateAction prompts the LLM to generate a player action based on the provided context.
-func (g *LLMActionGenerator) GenerateAction(ctx context.Context, data *engine.ActionGeneratorContext) (*model.PlayerActionPayload, error) {
+func (g *LLMActionGenerator) GenerateAction(ctx context.Context, data *ai.ActionGeneratorContext) (*model.PlayerActionPayload, error) {
 	g.Logger.Info("Generating action for LLM player", zap.String("player", data.Player.Name))
 
 	pBuilder := promptbuilder.NewPromptBuilder()

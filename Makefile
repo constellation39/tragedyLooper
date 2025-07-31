@@ -59,9 +59,10 @@ lint: format
 	@$(SHELL_PREFIX) golangci-lint run
 	@$(SHELL_PREFIX) go run github.com/bufbuild/buf/cmd/buf@latest lint
 
-# Install protobuf tools
+# Install tools
 install-tools:
-	@echo "Installing protobuf tools..."
+	@echo "Installing tools..."
+	@$(SHELL_PREFIX) go install golang.org/x/tools/cmd/goimports@latest
 	@$(SHELL_PREFIX) go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	@$(SHELL_PREFIX) go install github.com/chrusty/protoc-gen-jsonschema/cmd/protoc-gen-jsonschema@latest
 

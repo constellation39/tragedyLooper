@@ -3,6 +3,7 @@ package engine
 import (
 	"context"
 	"fmt"
+	"tragedylooper/internal/game/engine/ai"
 	"tragedylooper/internal/game/engine/character"
 	"tragedylooper/internal/game/engine/condition"
 	"tragedylooper/internal/game/engine/effecthandler"
@@ -49,7 +50,7 @@ type GameEngine struct {
 	GameState *model.GameState
 	logger    *zap.Logger
 
-	actionGenerator ActionGenerator
+	actionGenerator ai.ActionGenerator
 	gameConfig      loader.GameConfig
 	pm              *phasehandler.Manager
 	em              *eventhandler.Manager
@@ -65,7 +66,7 @@ type GameEngine struct {
 }
 
 // NewGameEngine creates a new game engine instance.
-func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator ActionGenerator, gameConfig loader.GameConfig) (*GameEngine, error) {
+func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator ai.ActionGenerator, gameConfig loader.GameConfig) (*GameEngine, error) {
 	ge := &GameEngine{
 		logger:               logger,
 		actionGenerator:      actionGenerator,
@@ -412,7 +413,7 @@ func (ge *GameEngine) RequestAIAction(playerID int32) {
 	ge.logger.Info("Triggering AI for player", zap.String("player", player.Name))
 
 	// 为动作生成器创建上下文
-	ctx := &ActionGeneratorContext{
+	ctx := &ai.ActionGeneratorContext{
 		Player:        player,
 		PlayerView:    ge.GetPlayerView(playerID),
 		AllCharacters: ge.GameState.Characters,

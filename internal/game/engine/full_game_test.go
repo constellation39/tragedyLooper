@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 	"time"
+	"tragedylooper/internal/game/engine/ai"
 	"tragedylooper/internal/game/loader"
 	"tragedylooper/internal/logger"
 	v1 "tragedylooper/pkg/proto/tragedylooper/v1"
@@ -19,7 +20,7 @@ type smartMockActionGenerator struct {
 	logger *zap.Logger
 }
 
-func (m *smartMockActionGenerator) GenerateAction(ctx context.Context, agc *ActionGeneratorContext) (*v1.PlayerActionPayload, error) {
+func (m *smartMockActionGenerator) GenerateAction(ctx context.Context, agc *ai.ActionGeneratorContext) (*v1.PlayerActionPayload, error) {
 	m.logger.Info("Smart mock AI generating action for player", zap.Int32("playerID", agc.Player.Id))
 
 	doctor := helper_GetCharacterFromView(m.t, agc.PlayerView, 2)
