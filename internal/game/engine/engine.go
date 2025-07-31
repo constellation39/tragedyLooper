@@ -278,11 +278,17 @@ func (ge *GameEngine) ApplyAndPublishEvent(eventType model.GameEventType, payloa
 	// Step 4: Publish the event to external listeners.
 	ge.em.Dispatch(event)
 
-	// TODO: Re-implement trigger logic here, after the state is fully updated.
-	// em.engine.checkForTriggers(event)
+	// Now that the state is updated, check if this event triggered any incidents.
+	ge.im.TriggerIncidents()
 }
 
-
+// checkForTriggers is called after any state-changing event. It iterates through
+// all incidents and checks if their trigger conditions are now met.
+func (ge *GameEngine) checkForTriggers(event *model.GameEvent) {
+	// TODO: We could optimize this by mapping event types to potentially affected incidents.
+	// For now, we check all incidents.
+	ge.im.TriggerIncidents()
+}
 
 // ResetPlayerReadiness 重置所有玩家的准备状态。
 func (ge *GameEngine) ResetPlayerReadiness() {

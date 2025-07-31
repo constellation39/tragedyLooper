@@ -71,8 +71,8 @@ func (em *eventManager) createAndProcess(eventType model.GameEventType, payload 
 		em.logger.Warn("Game event channel full, dropping event", zap.String("eventType", event.Type.String()))
 	}
 
-	// TODO: Re-implement trigger logic here, after the state is fully updated.
-	// em.engine.checkForTriggers(event)
+	// Step 5: After the state is fully updated, check for any new triggered incidents.
+	em.engine.TriggerIncidents()
 }
 
 func (em *eventManager) applyEvent(event *model.GameEvent) error {
