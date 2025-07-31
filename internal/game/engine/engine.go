@@ -267,7 +267,10 @@ func (ge *GameEngine) TriggerEvent(eventType model.GameEventType, payload *model
 		return
 	}
 
-	// Step 2: Let the current phase react to the event.
+	// Step 2: 让当前阶段对事件做出反应。
+	// 这是一个重要的钩子，允许一个阶段根据发生的事件来改变游戏流程（例如，转换到不同的阶段）。
+	// 注意：大多数阶段使用默认的空实现，因此这个调用通常不执行任何操作。
+	// 但它为需要响应特定事件的阶段提供了必要的扩展点。
 	ge.pm.HandleEvent(event)
 
 	// Step 3: Record the event in the game state for player review.
