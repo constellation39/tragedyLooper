@@ -7,7 +7,25 @@ import (
 )
 
 // DayEndPhase 是执行天末检查的阶段。
-type DayEndPhase struct{ basePhase }
+type DayEndPhase struct{}
+
+// HandleAction is the default implementation for Phase interface, does nothing and returns nil.
+func (p *DayEndPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
+	return nil
+}
+
+// HandleEvent is the default implementation for Phase interface, does nothing and returns nil.
+func (p *DayEndPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+
+// HandleTimeout is the default implementation for Phase interface, does nothing and returns nil.
+func (p *DayEndPhase) HandleTimeout(ge GameEngine) Phase { return nil }
+
+// Exit is the default implementation for Phase interface, does nothing.
+func (p *DayEndPhase) Exit(ge GameEngine) {}
+
+// TimeoutDuration is the default implementation for Phase interface, returns 0, indicating no timeout.
+func (p *DayEndPhase) TimeoutDuration() time.Duration { return 0 }
+
 
 // Type 返回阶段类型。
 func (p *DayEndPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_DAY_END }

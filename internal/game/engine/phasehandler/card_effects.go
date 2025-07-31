@@ -7,8 +7,26 @@ import (
 	"go.uber.org/zap"
 )
 
-// CardEffectsPhase 是解析已打出卡牌效果的阶段。
-type CardEffectsPhase struct{ basePhase }
+// CardEffectsPhase is the phase where the effects of played cards are resolved.
+type CardEffectsPhase struct{}
+
+// HandleAction is the default implementation for Phase interface, does nothing and returns nil.
+func (p *CardEffectsPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
+	return nil
+}
+
+// HandleEvent is the default implementation for Phase interface, does nothing and returns nil.
+func (p *CardEffectsPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+
+// HandleTimeout is the default implementation for Phase interface, does nothing and returns nil.
+func (p *CardEffectsPhase) HandleTimeout(ge GameEngine) Phase { return nil }
+
+// Exit is the default implementation for Phase interface, does nothing.
+func (p *CardEffectsPhase) Exit(ge GameEngine) {}
+
+// TimeoutDuration is the default implementation for Phase interface, returns 0, indicating no timeout.
+func (p *CardEffectsPhase) TimeoutDuration() time.Duration { return 0 }
+
 
 // Type 返回阶段类型。
 func (p *CardEffectsPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_CARD_EFFECTS }
@@ -189,4 +207,8 @@ func getAllPlayedCards(ge GameEngine) []*model.Card {
 	})
 
 	return cards
+}
+
+func init() {
+	RegisterPhase(&CardEffectsPhase{})
 }

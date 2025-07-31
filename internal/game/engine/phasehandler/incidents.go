@@ -1,13 +1,26 @@
 package phasehandler
 
 import (
+	"time"
 	model "tragedylooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
 )
 
-// IncidentsPhase 是检查和触发事件条件的阶段。
-type IncidentsPhase struct{ basePhase }
+// IncidentsPhase is the phase where incident conditions are checked and triggered.
+type IncidentsPhase struct{}
+
+// HandleEvent is the default implementation for Phase interface, does nothing and returns nil.
+func (p *IncidentsPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+
+// HandleTimeout is the default implementation for Phase interface, does nothing and returns nil.
+func (p *IncidentsPhase) HandleTimeout(ge GameEngine) Phase { return nil }
+
+// Exit is the default implementation for Phase interface, does nothing.
+func (p *IncidentsPhase) Exit(ge GameEngine) {}
+
+// TimeoutDuration is the default implementation for Phase interface, returns 0, indicating no timeout.
+func (p *IncidentsPhase) TimeoutDuration() time.Duration { return 0 }
 
 // Type 返回阶段类型。
 func (p *IncidentsPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_INCIDENTS }

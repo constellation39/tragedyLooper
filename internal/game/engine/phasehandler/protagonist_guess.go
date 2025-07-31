@@ -1,13 +1,29 @@
 package phasehandler
 
 import (
+	"time"
 	model "tragedylooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
 )
 
-// ProtagonistGuessPhase 主角猜测阶段，主角在此阶段尝试猜测其他角色的隐藏身份。
-type ProtagonistGuessPhase struct{ basePhase }
+// ProtagonistGuessPhase is the phase where protagonists try to guess the hidden roles of other characters.
+type ProtagonistGuessPhase struct{}
+
+// Enter is the default implementation for Phase interface, does nothing and returns nil.
+func (p *ProtagonistGuessPhase) Enter(ge GameEngine) Phase { return nil }
+
+// HandleEvent is the default implementation for Phase interface, does nothing and returns nil.
+func (p *ProtagonistGuessPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+
+// HandleTimeout is the default implementation for Phase interface, does nothing and returns nil.
+func (p *ProtagonistGuessPhase) HandleTimeout(ge GameEngine) Phase { return nil }
+
+// Exit is the default implementation for Phase interface, does nothing.
+func (p *ProtagonistGuessPhase) Exit(ge GameEngine) {}
+
+// TimeoutDuration is the default implementation for Phase interface, returns 0, indicating no timeout.
+func (p *ProtagonistGuessPhase) TimeoutDuration() time.Duration { return 0 }
 
 // Type 返回阶段类型，表示当前是主角猜测阶段。
 func (p *ProtagonistGuessPhase) Type() model.GamePhase {

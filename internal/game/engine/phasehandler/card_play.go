@@ -16,11 +16,17 @@ const (
 
 // CardPlayPhase is the phase where players play their cards.
 type CardPlayPhase struct {
-	basePhase
 	turn                  CardPlayTurn
 	mastermindCardsPlayed int
 	protagonistTurnIndex  int
 }
+
+// HandleEvent is the default implementation for Phase interface, does nothing and returns nil.
+func (p *CardPlayPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+
+// Exit is the default implementation for Phase interface, does nothing.
+func (p *CardPlayPhase) Exit(ge GameEngine) {}
+
 
 // NewCardPlayPhase creates a new CardPlayPhase.
 func NewCardPlayPhase(turn CardPlayTurn) Phase {

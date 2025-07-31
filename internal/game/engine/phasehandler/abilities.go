@@ -16,10 +16,15 @@ const (
 
 // AbilitiesPhase 是玩家可以使用角色能力的阶段。
 type AbilitiesPhase struct {
-	basePhase
 	turn                 AbilityTurn
 	protagonistTurnIndex int
 }
+
+// HandleEvent is the default implementation for Phase interface, does nothing and returns nil.
+func (p *AbilitiesPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+
+// Exit is the default implementation for Phase interface, does nothing.
+func (p *AbilitiesPhase) Exit(ge GameEngine) {}
 
 // Type 返回阶段类型。
 func (p *AbilitiesPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_ABILITIES }
@@ -28,7 +33,6 @@ func (p *AbilitiesPhase) Type() model.GamePhase { return model.GamePhase_GAME_PH
 func (p *AbilitiesPhase) Enter(ge GameEngine) Phase {
 	p.turn = MastermindAbilityTurn
 	p.protagonistTurnIndex = 0
-	
 
 	// 可选：为主谋触发 AI
 	// ge.TriggerAIPlayerAction(ge.GetMastermindPlayer().Id)
@@ -155,4 +159,8 @@ func (p *AbilitiesPhase) handleUseAbilityAction(ge GameEngine, player *model.Pla
 	}
 
 	ge.Logger().Info("Player used ability", zap.String("player", player.Name), zap.String("ability", ability.Config.Name))
+}
+
+func init() {
+	RegisterPhase(&AbilitiesPhase{})
 }
