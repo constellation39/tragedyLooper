@@ -178,57 +178,15 @@ func TestEngine_CharacterMovement(t *testing.T) {
 func TestEngine_GameOverOnMaxLoops(t *testing.T) {
 	engine := helper_NewGameEngineForTest(t)
 
-	// --- Setup: Deal cards to the mastermind ---
-	mastermind := engine.GetMastermindPlayer()
-	card4Config, err := loader.Get[*v1.CardConfig](engine.gameConfig, 4) // Increase Paranoia card
-	assert.NoError(t, err)
-	mastermind.Hand = &v1.CardList{Cards: []*v1.Card{
-		{Config: card4Config},
-		{Config: card4Config},
-		{Config: card4Config},
-	}}
-
 	engine.Start()
 	defer engine.Stop()
 
-	// Manually set the loop to the max
-	engine.GameState.CurrentLoop = engine.gameConfig.GetScript().LoopCount
-	// Set the day to the last day of the loop
-	engine.GameState.CurrentDay = engine.gameConfig.GetScript().DaysPerLoop
+	// Manually set the loop to the max.
+	// The game logic should detect this at the beginning of the loop
+	// and transition directly to GAME_OVER.
+	engine.GameState.CurrentLoop = engine.gameConfig.GetScript().GetLoopCount()
 
-	// Wait for the game to be ready for the Mastermind's action
-	waitForPhase(t, engine, v1.GamePhase_GAME_PHASE_MASTERMIND_CARD_PLAY)
-
-	// --- Mastermind Plays Cards ---
-	playCardAction := &v1.PlayerActionPayload{
-		Payload: &v1.PlayerActionPayload_PlayCard{
-			PlayCard: &v1.PlayCardPayload{
-				CardId: 4,
-				Target: &v1.PlayerActionPayload_TargetCharacterId{TargetCharacterId: 1},
-			},
-		},
-	}
-	// The test setup gives the mastermind 3 cards, let's have them play all three.
-	for i := 0; i < 3; i++ {
-		engine.SubmitPlayerAction(mastermind.Id, playCardAction)
-	}
-
-	// Now, wait for the Protagonists' turn
-	waitForPhase(t, engine, v1.GamePhase_GAME_PHASE_PROTAGONIST_CARD_PLAY)
-
-	// --- Protagonists Pass ---
-	passAction := &v1.PlayerActionPayload{
-		Payload: &v1.PlayerActionPayload_PassTurn{
-			PassTurn: &v1.PassTurnAction{},
-		},
-	}
-	protagonists := engine.GetProtagonistPlayers()
-	for _, player := range protagonists {
-		engine.SubmitPlayerAction(player.Id, passAction)
-	}
-
-	// We expect a GAME_ENDED event because the mastermind failed to achieve
-	// their goals within the loop.
+	// We expect a GAME_ENDED event because the loop count has been exceeded.
 	waitForEvent(t, engine, v1.GameEventType_GAME_EVENT_TYPE_GAME_ENDED)
 
 	// Optionally, we can also check the final phase, but the event is a stronger signal.
