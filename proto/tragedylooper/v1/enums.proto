@@ -22,6 +22,7 @@ enum GamePhase {
   GAME_PHASE_PROTAGONIST_CARD_PLAY = 14; // 主角出牌阶段
   GAME_PHASE_CARD_REVEAL = 6; // 卡牌揭示阶段
   GAME_PHASE_CARD_EFFECTS = 7; // 卡牌效果阶段
+  GAME_PHASE_CARD_RESOLVE = 15; // 卡牌结算阶段
   GAME_PHASE_ABILITIES = 8; // 能力结算阶段
   GAME_PHASE_INCIDENTS = 9; // 事件结算阶段
   GAME_PHASE_DAY_END = 10; // 日结束阶段

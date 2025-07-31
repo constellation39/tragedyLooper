@@ -12,6 +12,7 @@ import (
 type GameEngine interface {
 	GetGameState() *model.GameState
 	Logger() *zap.Logger
+	ApplyEffect(effect *model.Effect, ability *model.Ability, payload *model.UseAbilityPayload, choice *model.ChooseOptionPayload) error
 }
 
 // EventHandler defines the interface for handling a game event.

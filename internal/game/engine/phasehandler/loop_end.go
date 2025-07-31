@@ -27,10 +27,21 @@ func (p *LoopEndPhase) TimeoutDuration() time.Duration { return 0 }
 
 func (p *LoopEndPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_LOOP_END }
 func (p *LoopEndPhase) Enter(ge GameEngine) Phase {
-	if ge.GetGameState().CurrentLoop >= ge.GetGameRepo().GetScript().LoopCount {
-		// Protagonists get a final chance to guess
-		return GetPhase(model.GamePhase_GAME_PHASE_PROTAGONIST_GUESS)
+	gs := ge.GetGameState()
+	script := ge.GetGameRepo().GetScript()
+
+	if gs.CurrentLoop >= script.LoopCount {
+		// Final loop has ended. Check for protagonist win condition.
+		// This is a simplification. A real game would have more complex win/loss checks.
+		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_WIN, &model.EventPayload{
+			Payload: &model.EventPayload_LoopWin{LoopWin: &model.LoopWinEvent{}},
+		})
+		return GetPhase(model.GamePhase_GAME_PHASE_GAME_OVER)
 	} else {
+		// Reset for the next loop
+		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_RESET, &model.EventPayload{
+			Payload: &model.EventPayload_LoopReset{LoopReset: &model.LoopResetEvent{LoopNumber: gs.CurrentLoop + 1}},
+		})
 		return GetPhase(model.GamePhase_GAME_PHASE_LOOP_START)
 	}
 }

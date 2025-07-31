@@ -191,15 +191,15 @@ func TestEngine_GameOverOnMaxLoops(t *testing.T) {
 	engine.Start()
 	defer engine.Stop()
 
-	// 手动将循环次数设置为最大值
+	// Manually set the loop to the max
 	engine.GameState.CurrentLoop = engine.gameConfig.GetScript().LoopCount
-	// 将日期设置为循环的最后一天
+	// Set the day to the last day of the loop
 	engine.GameState.CurrentDay = engine.gameConfig.GetScript().DaysPerLoop
 
-	// 等待游戏准备好玩家行动
-	waitForPhase(t, engine, v1.GamePhase_GAME_PHASE_PROTAGONIST_CARD_PLAY)
+	// Wait for the game to be ready for the Mastermind's action
+	waitForPhase(t, engine, v1.GamePhase_GAME_PHASE_MASTERMIND_CARD_PLAY)
 
-	// --- 主谋出牌 ---
+	// --- Mastermind Plays Cards ---
 	playCardAction := &v1.PlayerActionPayload{
 		Payload: &v1.PlayerActionPayload_PlayCard{
 			PlayCard: &v1.PlayCardPayload{
@@ -208,11 +208,15 @@ func TestEngine_GameOverOnMaxLoops(t *testing.T) {
 			},
 		},
 	}
+	// The test setup gives the mastermind 3 cards, let's have them play all three.
 	for i := 0; i < 3; i++ {
 		engine.SubmitPlayerAction(mastermind.Id, playCardAction)
 	}
 
-	// --- 主角跳过 ---
+	// Now, wait for the Protagonists' turn
+	waitForPhase(t, engine, v1.GamePhase_GAME_PHASE_PROTAGONIST_CARD_PLAY)
+
+	// --- Protagonists Pass ---
 	passAction := &v1.PlayerActionPayload{
 		Payload: &v1.PlayerActionPayload_PassTurn{
 			PassTurn: &v1.PassTurnAction{},
@@ -223,12 +227,12 @@ func TestEngine_GameOverOnMaxLoops(t *testing.T) {
 		engine.SubmitPlayerAction(player.Id, passAction)
 	}
 
-	// 我们期望一个 GAME_ENDED 事件，主角是赢家
-	// 因为主谋未能在循环内实现其目标。
+	// We expect a GAME_ENDED event because the mastermind failed to achieve
+	// their goals within the loop.
 	waitForEvent(t, engine, v1.GameEventType_GAME_EVENT_TYPE_GAME_ENDED)
 
-	// 如果需要，我们也可以检查最终阶段，但事件是更强的信号。
-	assert.Equal(t, v1.GamePhase_GAME_PHASE_GAME_OVER, engine.GetCurrentPhase(), "Game should be in the GAME_OVER phasehandler")
+	// Optionally, we can also check the final phase, but the event is a stronger signal.
+	assert.Equal(t, v1.GamePhase_GAME_PHASE_GAME_OVER, engine.GetCurrentPhase(), "Game should be in the GAME_OVER phase")
 }
 
 // helper_GetCharacterFromView 是一个测试助手，用于通过 ID 在玩家视图中查找角色。
