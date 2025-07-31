@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"tragedylooper/internal/game/engine/effecthandler"
+	"tragedylooper/internal/game/engine/eventhandler"
 	"tragedylooper/internal/game/engine/phase"
 	"tragedylooper/internal/game/loader"
 	model "tragedylooper/pkg/proto/tragedylooper/v1"
@@ -297,9 +298,13 @@ func (ge *GameEngine) getPlayerByID(playerID int32) *model.Player {
 	return player
 }
 
-// GetGameState 实现 phases.GameEngine 接口，返回当前游戏状态。
+// GetGameState implement phases.GameEngine, return current game state.
 func (ge *GameEngine) GetGameState() *model.GameState {
 	return ge.GameState
+}
+
+func (ge *GameEngine) GetPhaseManager() eventhandler.PhaseManager {
+	return ge.pm
 }
 
 func (ge *GameEngine) GetGameRepo() loader.GameConfig {
