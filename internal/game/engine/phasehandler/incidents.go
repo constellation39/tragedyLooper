@@ -11,7 +11,7 @@ import (
 
 type IncidentsPhase struct{}
 
-func (p *IncidentsPhase) Enter(ge GameEngine) Phase {
+func (p *IncidentsPhase) Enter(ge GameEngine) {
 	gs := ge.GetGameState()
 	script := ge.GetGameRepo().GetScript()
 
@@ -34,23 +34,28 @@ func (p *IncidentsPhase) Enter(ge GameEngine) Phase {
 		// Check for game over condition after loop reset
 		if gs.CurrentLoop > script.GetLoopCount() {
 			ge.Logger().Info("Final loop has ended. Game over.")
-			return &GameOverPhase{}
+			ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{})
+			return
 		}
 
 		// Reset for the new loop
 		resetForNewLoop(ge)
-		return &DayStartPhase{}
+		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED, &model.EventPayload{
+			Payload: &model.EventPayload_DayAdvanced{DayAdvanced: &model.DayAdvancedEvent{Day: gs.CurrentDay, Loop: gs.CurrentLoop}},
+		})
+		return
 	}
 
 	// Reset for the new day
 	resetForNewDay(ge)
-	return &DayStartPhase{}
+	ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED, &model.EventPayload{
+		Payload: &model.EventPayload_DayAdvanced{DayAdvanced: &model.DayAdvancedEvent{Day: gs.CurrentDay, Loop: gs.CurrentLoop}},
+	})
 }
 
-func (p *IncidentsPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
-	return nil
+func (p *IncidentsPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) {
 }
-func (p *IncidentsPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+func (p *IncidentsPhase) HandleEvent(ge GameEngine, event *model.GameEvent) {}
 func (p *IncidentsPhase) HandleTimeout(ge GameEngine) {}
 func (p *IncidentsPhase) Exit(ge GameEngine)                                     {}
 func (p *IncidentsPhase) Type() model.GamePhase                                  { return model.GamePhase_GAME_PHASE_INCIDENTS }

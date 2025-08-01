@@ -9,15 +9,14 @@ import (
 type CardResolvePhase struct{}
 
 // HandleAction is the default implementation for Phase interface, does nothing and returns nil.
-func (p *CardResolvePhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
-	return nil
+func (p *CardResolvePhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) {
 }
 
 // HandleEvent is the default implementation for Phase interface, does nothing and returns nil.
-func (p *CardResolvePhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+func (p *CardResolvePhase) HandleEvent(ge GameEngine, event *model.GameEvent) {}
 
 // HandleTimeout is the default implementation for Phase interface, does nothing and returns nil.
-func (p *CardResolvePhase) HandleTimeout(ge GameEngine) Phase { return nil }
+func (p *CardResolvePhase) HandleTimeout(ge GameEngine) {}
 
 // Exit is the default implementation for Phase interface, does nothing.
 func (p *CardResolvePhase) Exit(ge GameEngine) {}

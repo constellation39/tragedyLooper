@@ -10,14 +10,13 @@ import (
 // ProtagonistGuessPhase is the phase where protagonists try to guess the hidden roles of other characters.
 type ProtagonistGuessPhase struct{}
 
-// Enter is the default implementation for Phase interface, does nothing and returns nil.
-func (p *ProtagonistGuessPhase) Enter(ge GameEngine) Phase { return nil }
+func (p *ProtagonistGuessPhase) Enter(ge GameEngine) {}
 
 // HandleEvent is the default implementation for Phase interface, does nothing and returns nil.
-func (p *ProtagonistGuessPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+func (p *ProtagonistGuessPhase) HandleEvent(ge GameEngine, event *model.GameEvent) {}
 
 // HandleTimeout is the default implementation for Phase interface, does nothing and returns nil.
-func (p *ProtagonistGuessPhase) HandleTimeout(ge GameEngine) Phase { return nil }
+func (p *ProtagonistGuessPhase) HandleTimeout(ge GameEngine) {}
 
 // Exit is the default implementation for Phase interface, does nothing.
 func (p *ProtagonistGuessPhase) Exit(ge GameEngine) {}
@@ -31,17 +30,15 @@ func (p *ProtagonistGuessPhase) Type() model.GamePhase {
 }
 
 // HandleAction 处理玩家在主角猜测阶段的操作。
-func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
+func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) {
 	switch payload := action.Payload.(type) {
 	case *model.PlayerActionPayload_MakeGuess:
-		return handleMakeGuessAction(ge, player, payload.MakeGuess)
+		handleMakeGuessAction(ge, player, payload.MakeGuess)
 	case *model.PlayerActionPayload_PassTurn:
 		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
 			Payload: &model.EventPayload_GameEnded{GameEnded: &model.GameEndedEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND, Reason: "Failed to guess all roles"}},
 		})
-		return GetPhase(model.GamePhase_GAME_PHASE_GAME_OVER)
 	}
-	return nil
 }
 
 // handleMakeGuessAction 处理玩家进行猜测的操作。

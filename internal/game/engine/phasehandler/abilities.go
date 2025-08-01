@@ -21,8 +21,8 @@ type AbilitiesPhase struct {
 	protagonistTurnIndex int
 }
 
-// HandleEvent is the default implementation for Phase interface, does nothing and returns nil.
-func (p *AbilitiesPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+// HandleEvent is the default implementation for Phase interface, does nothing.
+func (p *AbilitiesPhase) HandleEvent(ge GameEngine, event *model.GameEvent) {}
 
 // Exit is the default implementation for Phase interface, does nothing.
 func (p *AbilitiesPhase) Exit(ge GameEngine) {}
@@ -31,31 +31,27 @@ func (p *AbilitiesPhase) Exit(ge GameEngine) {}
 func (p *AbilitiesPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_ABILITIES }
 
 // Enter 在阶段开始时调用。
-func (p *AbilitiesPhase) Enter(ge GameEngine) Phase {
+func (p *AbilitiesPhase) Enter(ge GameEngine) {
 	// 在允许玩家行动之前，检查是否有任何由先前阶段的行动触发的事件。
-	if nextPhase := checkTriggers(ge); nextPhase != nil {
-		return nextPhase
-	}
+	checkTriggers(ge)
 
 	p.turn = MastermindAbilityTurn
 	p.protagonistTurnIndex = 0
 
 	// 如果没有玩家需要行动（例如，由于特殊规则），则直接进入下一阶段。
 	if ge.GetMastermindPlayer() == nil && len(ge.GetProtagonistPlayers()) == 0 {
-		return &IncidentsPhase{}
+		return
 	}
 
 	// 为主谋触发 AI（如果适用）
 	ge.RequestAIAction(ge.GetMastermindPlayer().Id)
-
-	return nil
 }
 
 // HandleAction 处理来自玩家的行动。
-func (p *AbilitiesPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
+func (p *AbilitiesPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) {
 	if !p.isActionInTurn(ge, player) {
 		ge.Logger().Warn("Received action from player out of turn", zap.String("player", player.Name))
-		return nil
+		return
 	}
 
 	switch payload := action.Payload.(type) {
@@ -64,15 +60,13 @@ func (p *AbilitiesPhase) HandleAction(ge GameEngine, player *model.Player, actio
 		// 注意：使用能力不会自动结束回合。
 		// 玩家必须明确跳过。
 	case *model.PlayerActionPayload_PassTurn:
-		return p.handlePassTurn(ge, player)
+		p.handlePassTurn(ge, player)
 	}
-
-	return nil
 }
 
 // HandleTimeout 处理超时。
-func (p *AbilitiesPhase) HandleTimeout(ge GameEngine) Phase {
-	ge.Logger().Info("Abilities phasehandler timed out, passing turn.")
+func (p *AbilitiesPhase) HandleTimeout(ge GameEngine) {
+	ge.Logger().Info("Abilities phase timed out, passing turn.")
 	var player *model.Player
 	if p.turn == MastermindAbilityTurn {
 		player = ge.GetMastermindPlayer()
@@ -83,9 +77,8 @@ func (p *AbilitiesPhase) HandleTimeout(ge GameEngine) Phase {
 		}
 	}
 	if player != nil {
-		return p.handlePassTurn(ge, player)
+		p.handlePassTurn(ge, player)
 	}
-	return &IncidentsPhase{}
 }
 
 // TimeoutDuration 返回此阶段的超时持续时间。
@@ -103,7 +96,7 @@ func (p *AbilitiesPhase) isActionInTurn(ge GameEngine, player *model.Player) boo
 	return player.Id == protagonists[p.protagonistTurnIndex].Id
 }
 
-func (p *AbilitiesPhase) handlePassTurn(ge GameEngine, player *model.Player) Phase {
+func (p *AbilitiesPhase) handlePassTurn(ge GameEngine, player *model.Player) {
 	ge.Logger().Info("Player passed ability turn", zap.String("player", player.Name))
 
 	if p.turn == MastermindAbilityTurn {
@@ -114,19 +107,18 @@ func (p *AbilitiesPhase) handlePassTurn(ge GameEngine, player *model.Player) Pha
 		// if len(protagonists) > 0 {
 		// 	ge.TriggerAIPlayerAction(protagonists[0].Id)
 		// }
-		return nil
+		return
 	}
 
 	p.protagonistTurnIndex++
 	protagonists := ge.GetProtagonistPlayers()
 	if p.protagonistTurnIndex >= len(protagonists) {
 		ge.Logger().Info("All protagonists have acted, moving to Incidents Phase")
-		return &IncidentsPhase{}
+		return
 	}
 
 	// 可选：为下一个主角触发 AI
 	// ge.TriggerAIPlayerAction(protagonists[p.protagonistTurnIndex].Id)
-	return nil
 }
 
 func (p *AbilitiesPhase) handleUseAbilityAction(ge GameEngine, player *model.Player, payload *model.UseAbilityPayload) {
@@ -173,8 +165,7 @@ func (p *AbilitiesPhase) handleUseAbilityAction(ge GameEngine, player *model.Pla
 }
 
 // checkTriggers 检查游戏状态是否有任何触发器（事件、悲剧、游戏结束）。
-// 如果触发了游戏结束条件，它将返回 GameOverPhase。
-func checkTriggers(ge GameEngine) Phase {
+func checkTriggers(ge GameEngine) {
 	gs := ge.GetGameState()
 
 	// 1. 检查事件触发器
@@ -219,11 +210,7 @@ func checkTriggers(ge GameEngine) Phase {
 	// ... 此处应添加悲剧检查逻辑 ...
 
 	// 3. 检查游戏结束条件
-	if nextPhase := checkEndConditions(ge); nextPhase != nil {
-		return nextPhase
-	}
-
-	return nil
+	checkEndConditions(ge)
 }
 
 // checkEndConditions 检查是否满足任何游戏结束条件。

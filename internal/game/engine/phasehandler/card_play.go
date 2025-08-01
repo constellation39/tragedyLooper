@@ -21,14 +21,14 @@ type CardPlayPhase struct {
 	protagonistTurnIndex  int
 }
 
-// HandleEvent is the default implementation for Phase interface, does nothing and returns nil.
-func (p *CardPlayPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+// HandleEvent is the default implementation for Phase interface, does nothing.
+func (p *CardPlayPhase) HandleEvent(ge GameEngine, event *model.GameEvent) {}
 
 // Exit is the default implementation for Phase interface, does nothing.
 func (p *CardPlayPhase) Exit(ge GameEngine) {}
 
 // NewCardPlayPhase creates a new CardPlayPhase.
-func NewCardPlayPhase(turn CardPlayTurn) Phase {
+func NewCardPlayPhase(turn CardPlayTurn) *CardPlayPhase {
 	return &CardPlayPhase{turn: turn}
 }
 
@@ -41,7 +41,7 @@ func (p *CardPlayPhase) Type() model.GamePhase {
 }
 
 // Enter is called when the phase begins.
-func (p *CardPlayPhase) Enter(ge GameEngine) Phase {
+func (p *CardPlayPhase) Enter(ge GameEngine) {
 	if p.turn == MastermindCardTurn {
 		p.mastermindCardsPlayed = 0
 		ge.RequestAIAction(ge.GetMastermindPlayer().Id)
@@ -52,43 +52,32 @@ func (p *CardPlayPhase) Enter(ge GameEngine) Phase {
 			ge.RequestAIAction(protagonists[0].Id)
 		}
 	}
-	return nil
 }
 
 // HandleAction handles an action from a player.
-func (p *CardPlayPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
+func (p *CardPlayPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) {
 	if p.turn == MastermindCardTurn {
-		return p.handleMastermindAction(ge, player, action)
+		p.handleMastermindAction(ge, player, action)
+	} else {
+		p.handleProtagonistAction(ge, player, action)
 	}
-	return p.handleProtagonistAction(ge, player, action)
 }
 
 // HandleTimeout handles a timeout.
-func (p *CardPlayPhase) HandleTimeout(ge GameEngine) Phase {
-	if p.turn == MastermindCardTurn {
-		return GetPhase(model.GamePhase_GAME_PHASE_PROTAGONIST_CARD_PLAY)
-	}
-	return GetPhase(model.GamePhase_GAME_PHASE_CARD_REVEAL)
-}
+func (p *CardPlayPhase) HandleTimeout(ge GameEngine) {}
 
 // TimeoutDuration returns the timeout duration for this phase.
 func (p *CardPlayPhase) TimeoutDuration() time.Duration { return 30 * time.Second }
 
-func (p *CardPlayPhase) handleMastermindAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
+func (p *CardPlayPhase) handleMastermindAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) {
 	if player.Role != model.PlayerRole_PLAYER_ROLE_MASTERMIND {
-		return nil
+		return
 	}
 
 	if payload, ok := action.Payload.(*model.PlayerActionPayload_PlayCard); ok {
 		handlePlayCardAction(ge, player, payload.PlayCard)
 		p.mastermindCardsPlayed++
 	}
-
-	if p.mastermindCardsPlayed >= 3 {
-		return GetPhase(model.GamePhase_GAME_PHASE_PROTAGONIST_CARD_PLAY)
-	}
-
-	return nil
 }
 
 func (p *CardPlayPhase) handleProtagonistAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) {

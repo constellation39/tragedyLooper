@@ -9,15 +9,14 @@ import (
 type MastermindSetupPhase struct{}
 
 // HandleAction is the default implementation for Phase interface, does nothing and returns nil.
-func (p *MastermindSetupPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
-	return nil
+func (p *MastermindSetupPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) {
 }
 
 // HandleEvent is the default implementation for Phase interface, does nothing and returns nil.
-func (p *MastermindSetupPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+func (p *MastermindSetupPhase) HandleEvent(ge GameEngine, event *model.GameEvent) {}
 
 // HandleTimeout is the default implementation for Phase interface, does nothing and returns nil.
-func (p *MastermindSetupPhase) HandleTimeout(ge GameEngine) Phase { return nil }
+func (p *MastermindSetupPhase) HandleTimeout(ge GameEngine) {}
 
 // Exit is the default implementation for Phase interface, does nothing.
 func (p *MastermindSetupPhase) Exit(ge GameEngine) {}

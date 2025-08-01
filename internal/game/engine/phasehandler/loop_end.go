@@ -9,15 +9,14 @@ import (
 type LoopEndPhase struct{}
 
 // HandleAction is the default implementation for Phase interface, does nothing and returns nil.
-func (p *LoopEndPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
-	return nil
+func (p *LoopEndPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) {
 }
 
 // HandleEvent is the default implementation for Phase interface, does nothing and returns nil.
-func (p *LoopEndPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+func (p *LoopEndPhase) HandleEvent(ge GameEngine, event *model.GameEvent) {}
 
 // HandleTimeout is the default implementation for Phase interface, does nothing and returns nil.
-func (p *LoopEndPhase) HandleTimeout(ge GameEngine) Phase { return nil }
+func (p *LoopEndPhase) HandleTimeout(ge GameEngine) {}
 
 // Exit is the default implementation for Phase interface, does nothing.
 func (p *LoopEndPhase) Exit(ge GameEngine) {}

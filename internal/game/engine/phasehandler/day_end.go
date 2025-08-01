@@ -11,15 +11,14 @@ import (
 type DayEndPhase struct{}
 
 // HandleAction is the default implementation for Phase interface, does nothing and returns nil.
-func (p *DayEndPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
-	return nil
+func (p *DayEndPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) {
 }
 
 // HandleEvent is the default implementation for Phase interface, does nothing and returns nil.
-func (p *DayEndPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+func (p *DayEndPhase) HandleEvent(ge GameEngine, event *model.GameEvent) {}
 
 // HandleTimeout is the default implementation for Phase interface, does nothing and returns nil.
-func (p *DayEndPhase) HandleTimeout(ge GameEngine) Phase { return nil }
+func (p *DayEndPhase) HandleTimeout(ge GameEngine) {}
 
 // Exit is the default implementation for Phase interface, does nothing.
 func (p *DayEndPhase) Exit(ge GameEngine) {}
