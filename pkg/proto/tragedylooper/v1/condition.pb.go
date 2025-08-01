@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -1043,7 +1042,7 @@ const file_tragedylooper_v1_condition_proto_rawDesc = "" +
 	"(SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION\x10\x06\x12\x1e\n" +
 	"\x1aSELECTOR_TYPE_ABILITY_USER\x10\a\x12 \n" +
 	"\x1cSELECTOR_TYPE_ABILITY_TARGET\x10\b\x12 \n" +
-	"\x1cSELECTOR_TYPE_ALL_CHARACTERS\x10\tB\x1cZ\x1atragedylooper/pkg/proto/v1b\x06proto3"
+	"\x1cSELECTOR_TYPE_ALL_CHARACTERS\x10\tB7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3"
 
 var (
 	file_tragedylooper_v1_condition_proto_rawDescOnce sync.Once

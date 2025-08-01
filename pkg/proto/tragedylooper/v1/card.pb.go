@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -341,7 +340,7 @@ const file_tragedylooper_v1_card_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x122\n" +
 	"\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.CardConfigR\x05value:\x028\x01\"8\n" +
 	"\bCardList\x12,\n" +
-	"\x05cards\x18\x01 \x03(\v2\x16.tragedylooper.v1.CardR\x05cardsB\x1cZ\x1atragedylooper/pkg/proto/v1b\x06proto3"
+	"\x05cards\x18\x01 \x03(\v2\x16.tragedylooper.v1.CardR\x05cardsB7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3"
 
 var (
 	file_tragedylooper_v1_card_proto_rawDescOnce sync.Once

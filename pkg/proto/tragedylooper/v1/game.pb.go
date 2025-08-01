@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -864,7 +863,7 @@ const file_tragedylooper_v1_game_proto_rawDesc = "" +
 	"\x10PlayerViewPlayer\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x120\n" +
-	"\x04role\x18\x03 \x01(\x0e2\x1c.tragedylooper.v1.PlayerRoleR\x04roleB\x1cZ\x1atragedylooper/pkg/proto/v1b\x06proto3"
+	"\x04role\x18\x03 \x01(\x0e2\x1c.tragedylooper.v1.PlayerRoleR\x04roleB7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3"
 
 var (
 	file_tragedylooper_v1_game_proto_rawDescOnce sync.Once

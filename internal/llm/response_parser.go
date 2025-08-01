@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	model "tragedylooper/pkg/proto/tragedylooper/v1"
+	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
 // ResponseParser 将 LLM 响应解析为结构化游戏动作。

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"time"
-	model "tragedylooper/pkg/proto/tragedylooper/v1"
+	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 
 	"google.golang.org/protobuf/encoding/protojson"
 )

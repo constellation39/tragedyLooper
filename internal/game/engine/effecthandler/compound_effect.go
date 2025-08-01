@@ -5,7 +5,7 @@ import (
 	"math"
 	"strconv"
 	"strings"
-	model "tragedylooper/pkg/proto/tragedylooper/v1"
+	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
 // init 函数在包加载时自动执行，注册复合效果处理器。

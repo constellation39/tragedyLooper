@@ -1,7 +1,7 @@
 package effecthandler
 
 import (
-	model "tragedylooper/pkg/proto/tragedylooper/v1"
+	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
 // GameEngine 提供了处理程序与游戏状态和引擎逻辑交互所需的方法。

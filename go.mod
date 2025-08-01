@@ -1,4 +1,4 @@
-module tragedylooper
+module github.com/constellation39/tragedyLooper
 
 go 1.24
 

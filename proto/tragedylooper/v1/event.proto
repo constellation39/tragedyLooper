@@ -7,7 +7,7 @@ import "google/protobuf/timestamp.proto";
 import "tragedylooper/v1/enums.proto";
 import "tragedylooper/v1/event_payload.proto";
 
-option go_package = "tragedylooper/pkg/proto/v1";
+option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
 // GameEvent 表示游戏中发生的事件。
 message GameEvent {

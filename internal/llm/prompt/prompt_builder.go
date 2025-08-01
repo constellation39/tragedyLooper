@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	model "tragedylooper/pkg/proto/tragedylooper/v1"
+	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
 // PromptBuilder 帮助构建 LLM 玩家的提示词。

@@ -3,12 +3,12 @@ package llm
 import (
 	"context"
 	"fmt"
-	"tragedylooper/internal/game/engine/ai"
+	"github.com/constellation39/tragedyLooper/internal/game/engine/ai"
 
 	"go.uber.org/zap"
 
-	promptbuilder "tragedylooper/internal/llm/prompt"
-	model "tragedylooper/pkg/proto/tragedylooper/v1"
+	promptbuilder "github.com/constellation39/tragedyLooper/internal/llm/prompt"
+	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
 // LLMActionGenerator is an implementation of engine.ActionGenerator that uses an LLM.

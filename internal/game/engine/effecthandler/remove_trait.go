@@ -2,7 +2,7 @@ package effecthandler
 
 import (
 	"fmt"
-	model "tragedylooper/pkg/proto/tragedylooper/v1"
+	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
 // init 函数在包加载时自动执行，用于注册 RemoveTrait 效果处理器。

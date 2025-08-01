@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -1005,7 +1004,7 @@ const file_tragedylooper_v1_effect_proto_rawDesc = "" +
 	"\x05trait\x18\x02 \x01(\tR\x05trait\"c\n" +
 	"\x11RemoveTraitEffect\x128\n" +
 	"\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12\x14\n" +
-	"\x05trait\x18\x02 \x01(\tR\x05traitB\x1cZ\x1atragedylooper/pkg/proto/v1b\x06proto3"
+	"\x05trait\x18\x02 \x01(\tR\x05traitB7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3"
 
 var (
 	file_tragedylooper_v1_effect_proto_rawDescOnce sync.Once

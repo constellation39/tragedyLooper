@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -574,7 +573,7 @@ const file_tragedylooper_v1_payload_proto_rawDesc = "" +
 	"make_guess\x18\x03 \x01(\v2\".tragedylooper.v1.MakeGuessPayloadH\x00R\tmakeGuess\x12L\n" +
 	"\rchoose_option\x18\x04 \x01(\v2%.tragedylooper.v1.ChooseOptionPayloadH\x00R\fchooseOption\x12?\n" +
 	"\tpass_turn\x18\x05 \x01(\v2 .tragedylooper.v1.PassTurnActionH\x00R\bpassTurnB\t\n" +
-	"\apayloadB\x1cZ\x1atragedylooper/pkg/proto/v1b\x06proto3"
+	"\apayloadB7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3"
 
 var (
 	file_tragedylooper_v1_payload_proto_rawDescOnce sync.Once

@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -1462,7 +1461,7 @@ const file_tragedylooper_v1_event_payload_proto_rawDesc = "" +
 	"\x05trait\x18\x02 \x01(\tR\x05trait\"t\n" +
 	"\x16PlayerActionTakenEvent\x12\x1b\n" +
 	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12=\n" +
-	"\x06action\x18\x02 \x01(\v2%.tragedylooper.v1.PlayerActionPayloadR\x06actionB\x1cZ\x1atragedylooper/pkg/proto/v1b\x06proto3"
+	"\x06action\x18\x02 \x01(\v2%.tragedylooper.v1.PlayerActionPayloadR\x06actionB7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3"
 
 var (
 	file_tragedylooper_v1_event_payload_proto_rawDescOnce sync.Once

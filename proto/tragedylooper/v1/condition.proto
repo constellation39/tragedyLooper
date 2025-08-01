@@ -4,7 +4,7 @@ package tragedylooper.v1;
 
 import "tragedylooper/v1/enums.proto";
 
-option go_package = "tragedylooper/pkg/proto/v1";
+option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
 // 条件，用于规则、事件和效果的触发判断
 message Condition {

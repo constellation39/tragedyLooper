@@ -16,7 +16,7 @@ A Go implementation of the Tragedy Looper board game. This project is a Go-based
 
 1.  **Clone the repository:**
     ```sh
-    git clone https://github.com/your-username/tragedyLooper.git
+    git clone https://github.com/constellation39/tragedyLooper.git
     cd tragedyLooper
     ```
 

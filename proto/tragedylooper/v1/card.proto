@@ -5,7 +5,7 @@ package tragedylooper.v1;
 import "tragedylooper/v1/effect.proto";
 import "tragedylooper/v1/enums.proto";
 
-option go_package = "tragedylooper/pkg/proto/v1";
+option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
 // 卡牌静态配置
 message CardConfig {

@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -628,7 +627,7 @@ const file_tragedylooper_v1_character_proto_rawDesc = "" +
 	"\x0eentry_location\x18\x02 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeR\rentryLocation\"\x8a\x01\n" +
 	"\x13SpecialMovementRule\x12Q\n" +
 	"\x14restricted_locations\x18\x01 \x03(\x0e2\x1e.tragedylooper.v1.LocationTypeR\x13restrictedLocations\x12 \n" +
-	"\vdescription\x18\x02 \x01(\tR\vdescriptionB\x1cZ\x1atragedylooper/pkg/proto/v1b\x06proto3"
+	"\vdescription\x18\x02 \x01(\tR\vdescriptionB7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3"
 
 var (
 	file_tragedylooper_v1_character_proto_rawDescOnce sync.Once

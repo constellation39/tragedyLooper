@@ -2,7 +2,7 @@ package phasehandler
 
 import (
 	"time"
-	model "tragedylooper/pkg/proto/tragedylooper/v1"
+	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
 // CardResolvePhase 卡牌结算阶段，在此阶段处理已打出卡牌的效果。

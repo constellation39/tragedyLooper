@@ -2,8 +2,8 @@ package phasehandler
 
 import (
 	"time"
-	"tragedylooper/internal/game/loader"
-	model "tragedylooper/pkg/proto/tragedylooper/v1"
+	"github.com/constellation39/tragedyLooper/internal/game/loader"
+	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
 )

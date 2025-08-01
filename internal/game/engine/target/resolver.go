@@ -2,8 +2,8 @@ package target
 
 import (
 	"fmt"
-	"tragedylooper/internal/game/engine/effecthandler"
-	model "tragedylooper/pkg/proto/tragedylooper/v1"
+	"github.com/constellation39/tragedyLooper/internal/game/engine/effecthandler"
+	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
 // ResolveSelectorToCharacters resolves a target selector to a list of character IDs.

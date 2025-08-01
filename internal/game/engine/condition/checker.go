@@ -2,7 +2,7 @@ package condition
 
 import (
 	"fmt"
-	model "tragedylooper/pkg/proto/tragedylooper/v1"
+	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
 // Check evaluates a condition against the current game state.

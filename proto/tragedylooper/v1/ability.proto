@@ -6,7 +6,7 @@ import "tragedylooper/v1/condition.proto";
 import "tragedylooper/v1/effect.proto";
 import "tragedylooper/v1/enums.proto";
 
-option go_package = "tragedylooper/pkg/proto/v1";
+option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
 message AbilityConfig {
   int32 id = 1; // 能力唯一ID

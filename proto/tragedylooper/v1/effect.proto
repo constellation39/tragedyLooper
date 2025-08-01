@@ -5,7 +5,7 @@ package tragedylooper.v1;
 import "tragedylooper/v1/condition.proto"; // 引入TargetSelector
 import "tragedylooper/v1/enums.proto";
 
-option go_package = "tragedylooper/pkg/proto/v1";
+option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
 // 效果，定义了能力、卡牌或规则的具体作用
 message Effect {

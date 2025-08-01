@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 	"time"
-	"tragedylooper/internal/game/engine/ai"
-	"tragedylooper/internal/game/loader"
-	"tragedylooper/internal/logger"
-	v1 "tragedylooper/pkg/proto/tragedylooper/v1"
+	"github.com/constellation39/tragedyLooper/internal/game/engine/ai"
+	"github.com/constellation39/tragedyLooper/internal/game/loader"
+	"github.com/constellation39/tragedyLooper/internal/logger"
+	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 
 	"github.com/stretchr/testify/assert"
 )

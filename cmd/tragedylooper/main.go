@@ -8,9 +8,9 @@ import (
 	"syscall"
 	"time"
 
-	"tragedylooper/internal/llm"
-	"tragedylooper/internal/logger"
-	"tragedylooper/internal/server"
+	"github.com/constellation39/tragedyLooper/internal/llm"
+	"github.com/constellation39/tragedyLooper/internal/logger"
+	"github.com/constellation39/tragedyLooper/internal/server"
 
 	"go.uber.org/zap"
 )

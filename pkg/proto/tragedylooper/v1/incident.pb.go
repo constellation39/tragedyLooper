@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -325,7 +324,7 @@ const file_tragedylooper_v1_incident_proto_rawDesc = "" +
 	"\tincidents\x18\x01 \x03(\v22.tragedylooper.v1.IncidentConfigLib.IncidentsEntryR\tincidents\x1a^\n" +
 	"\x0eIncidentsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x126\n" +
-	"\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01B\x1cZ\x1atragedylooper/pkg/proto/v1b\x06proto3"
+	"\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01B7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3"
 
 var (
 	file_tragedylooper_v1_incident_proto_rawDescOnce sync.Once

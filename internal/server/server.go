@@ -8,11 +8,11 @@ import (
 	"sync"
 	"time"
 
-	"tragedylooper/internal/game/engine"
-	"tragedylooper/internal/game/loader"
-	"tragedylooper/internal/llm"
-	"tragedylooper/internal/logger"
-	model "tragedylooper/pkg/proto/tragedylooper/v1"
+	"github.com/constellation39/tragedyLooper/internal/game/engine"
+	"github.com/constellation39/tragedyLooper/internal/game/loader"
+	"github.com/constellation39/tragedyLooper/internal/llm"
+	"github.com/constellation39/tragedyLooper/internal/logger"
+	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"

@@ -7,12 +7,11 @@
 package v1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -1074,7 +1073,7 @@ const file_tragedylooper_v1_enums_proto_rawDesc = "" +
 	"\x14FORBID_TYPE_MOVEMENT\x10\x01\x12\x1f\n" +
 	"\x1bFORBID_TYPE_PARANOIA_CHANGE\x10\x02\x12\x1f\n" +
 	"\x1bFORBID_TYPE_GOODWILL_CHANGE\x10\x03\x12\x1f\n" +
-	"\x1bFORBID_TYPE_INTRIGUE_CHANGE\x10\x04B\x1cZ\x1atragedylooper/pkg/proto/v1b\x06proto3"
+	"\x1bFORBID_TYPE_INTRIGUE_CHANGE\x10\x04B7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3"
 
 var (
 	file_tragedylooper_v1_enums_proto_rawDescOnce sync.Once

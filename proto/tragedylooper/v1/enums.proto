@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package tragedylooper.v1;
 
-option go_package = "tragedylooper/pkg/proto/v1";
+option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
 // 玩家角色
 enum PlayerRole {

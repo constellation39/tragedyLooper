@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"tragedylooper/internal/logger"
+	"github.com/constellation39/tragedyLooper/internal/logger"
 
 	"github.com/stretchr/testify/assert"
 )
