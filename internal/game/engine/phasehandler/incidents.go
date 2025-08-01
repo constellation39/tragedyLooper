@@ -20,15 +20,15 @@ func (p *IncidentsPhase) Enter(ge GameEngine) Phase {
 
 	gs.CurrentDay++
 	ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED, &model.EventPayload{
-		Payload: &model.EventPayload_DayAdvanced{DayAdvanced: &model.DayAdvancedEvent{NewDay: gs.CurrentDay}},
+		Payload: &model.EventPayload_DayAdvanced{DayAdvanced: &model.DayAdvancedEvent{Day: gs.CurrentDay, Loop: gs.CurrentLoop}},
 	})
 
-	if gs.CurrentDay > script.GetDayCount() {
+	if gs.CurrentDay > script.GetDaysPerLoop() {
 		// End of the loop
 		ge.Logger().Info("Loop has ended. Resetting for the next loop.")
 		gs.CurrentLoop++
 		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_RESET, &model.EventPayload{
-			Payload: &model.EventPayload_LoopReset{LoopReset: &model.LoopResetEvent{NewLoop: gs.CurrentLoop}},
+			Payload: &model.EventPayload_LoopReset{LoopReset: &model.LoopResetEvent{LoopNumber: gs.CurrentLoop}},
 		})
 
 		// Check for game over condition after loop reset

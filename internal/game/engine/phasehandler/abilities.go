@@ -2,6 +2,7 @@ package phasehandler
 
 import (
 	"time"
+
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
@@ -183,7 +184,15 @@ func checkTriggers(ge GameEngine) Phase {
 			continue
 		}
 
-		triggered, err := ge.CheckCondition(incident.GetTrigger())
+		compoundCondition := &model.Condition{
+			ConditionType: &model.Condition_CompoundCondition{
+				CompoundCondition: &model.CompoundCondition{
+					Operator:      model.CompoundCondition_OPERATOR_AND,
+					SubConditions: incident.GetTriggerConditions(),
+				},
+			},
+		}
+		triggered, err := ge.CheckCondition(compoundCondition)
 		if err != nil {
 			ge.Logger().Error("Error checking incident trigger", zap.String("incident", incident.GetName()), zap.Error(err))
 			continue
@@ -193,7 +202,15 @@ func checkTriggers(ge GameEngine) Phase {
 			ge.Logger().Info("Incident triggered", zap.String("incident", incident.GetName()))
 			gs.TriggeredIncidents[incident.GetName()] = true
 			ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_INCIDENT_TRIGGERED, &model.EventPayload{
-				Payload: &model.EventPayload_IncidentTriggered{IncidentTriggered: &model.IncidentTriggeredEvent{IncidentId: incident.GetId()}},
+				Payload: &model.EventPayload_IncidentTriggered{IncidentTriggered: &model.IncidentTriggeredEvent{Incident: &model.Incident{
+					Config:               incident,
+					Name:                 "",
+					Day:                  0,
+					Culprit:              "",
+					Victim:               "",
+					Description:          "",
+					HasTriggeredThisLoop: false,
+				}}},
 			})
 		}
 	}
