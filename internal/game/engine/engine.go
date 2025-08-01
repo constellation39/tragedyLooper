@@ -12,6 +12,7 @@ import (
 	"github.com/constellation39/tragedyLooper/internal/game/engine/eventhandler"
 	"github.com/constellation39/tragedyLooper/internal/game/engine/phasehandler"
 	"github.com/constellation39/tragedyLooper/internal/game/engine/target"
+	"github.com/constellation39/tragedyLooper/internal/game/ticker"
 	"github.com/constellation39/tragedyLooper/internal/game/loader"
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 
@@ -211,7 +212,7 @@ func (ge *GameEngine) runGameLoop() {
 	defer ge.em.Close()
 
 	// 创建一个定期触发器来驱动游戏状态（例如，用于超时）。
-	ticker := time.NewTicker(100 * time.Millisecond) // TODO: 使其可配置
+	ticker := time.NewTicker(time.Second / ticker.TicksPerSecond)
 	defer ticker.Stop()
 
 	for {

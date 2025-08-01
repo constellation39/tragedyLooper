@@ -1,10 +1,7 @@
 package phasehandler
 
 import (
-	"time"
-
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
-
 	"go.uber.org/zap"
 )
 
@@ -21,8 +18,6 @@ type AbilitiesPhase struct {
 	turn                 AbilityTurn
 	protagonistTurnIndex int
 }
-
-
 
 // Type 返回阶段类型。
 func (p *AbilitiesPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_ABILITIES }
@@ -78,9 +73,6 @@ func (p *AbilitiesPhase) HandleTimeout(ge GameEngine) {
 		p.handlePassTurn(ge, player)
 	}
 }
-
-// TimeoutDuration 返回此阶段的超时持续时间。
-func (p *AbilitiesPhase) TimeoutDuration() time.Duration { return 60 * time.Second }
 
 func (p *AbilitiesPhase) isActionInTurn(ge GameEngine, player *model.Player) bool {
 	if p.turn == MastermindAbilityTurn {

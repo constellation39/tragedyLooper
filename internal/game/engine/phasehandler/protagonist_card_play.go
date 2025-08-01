@@ -1,7 +1,6 @@
 package phasehandler
 
 import (
-	"time"
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
@@ -57,9 +56,6 @@ func (p *ProtagonistCardPlayPhase) HandleAction(ge GameEngine, player *model.Pla
 	ge.RequestAIAction(nextProtagonist.Id)
 	return false
 }
-
-// TimeoutDuration returns the timeout duration for this phase.
-func (p *ProtagonistCardPlayPhase) TimeoutDuration() time.Duration { return 30 * time.Second }
 
 func init() {
 	RegisterPhase(&ProtagonistCardPlayPhase{})

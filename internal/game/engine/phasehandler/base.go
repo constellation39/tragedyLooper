@@ -34,5 +34,5 @@ func (p *BasePhase) HandleTimeout(ge GameEngine) {}
 // Exit is a default implementation that does nothing.
 func (p *BasePhase) Exit(ge GameEngine) {}
 
-// TimeoutDuration is a default implementation that returns 0, indicating no timeout.
-func (p *BasePhase) TimeoutDuration() time.Duration { return 0 }
+// TimeoutTicks is a default implementation that returns 0, indicating no timeout.
+func (p *BasePhase) TimeoutTicks() int64 { return 0 }

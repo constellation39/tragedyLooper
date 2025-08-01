@@ -1,7 +1,6 @@
 package phasehandler
 
 import (
-	"time"
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
@@ -34,9 +33,6 @@ func (p *MastermindCardPlayPhase) HandleAction(ge GameEngine, player *model.Play
 	}
 	return p.mastermindCardsPlayed >= 1
 }
-
-// TimeoutDuration returns the timeout duration for this phase.
-func (p *MastermindCardPlayPhase) TimeoutDuration() time.Duration { return 30 * time.Second }
 
 func init() {
 	RegisterPhase(&MastermindCardPlayPhase{})

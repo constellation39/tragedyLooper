@@ -1,7 +1,6 @@
 package phasehandler
 
 import (
-	"time"
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
@@ -9,12 +8,12 @@ import (
 
 // Manager orchestrates the game's lifecycle by executing phases determined by a flowchart.
 type Manager struct {
-	engine       GameEngine
-	logger       *zap.Logger
-	currentPhase Phase
-	phaseTimer   *time.Timer
-	gameStarted  bool
-	flowchart    *FlowchartManager
+	engine        GameEngine
+	logger        *zap.Logger
+	currentPhase  Phase
+	timeoutTarget int64 // The tick count at which the current phase will time out.
+	gameStarted   bool
+	flowchart     *FlowchartManager
 }
 
 // NewManager creates a new phase manager.
@@ -23,10 +22,8 @@ func NewManager(engine GameEngine) *Manager {
 		engine:       engine,
 		logger:       engine.Logger().Named("Manager"),
 		currentPhase: GetPhase(model.GamePhase_GAME_PHASE_SETUP),
-		phaseTimer:   time.NewTimer(time.Hour), // Initialized with a long duration.
 		flowchart:    NewFlowchartManager(engine),
 	}
-	pm.phaseTimer.Stop() // Stopped immediately; it will be reset on the first transition.
 	return pm
 }
 
@@ -37,11 +34,8 @@ func (pm *Manager) Start() {
 
 // OnTick is called periodically by the game engine to check for phase timeouts.
 func (pm *Manager) OnTick() {
-	select {
-	case <-pm.phaseTimer.C:
+	if pm.timeoutTarget > 0 && pm.engine.GetGameState().Tick >= pm.timeoutTarget {
 		pm.HandleTimeout()
-	default:
-		// Non-blocking: timer has not fired.
 	}
 }
 
@@ -82,7 +76,7 @@ func (pm *Manager) transitionTo(nextPhaseType model.GamePhase) bool {
 		return false
 	}
 
-	pm.phaseTimer.Stop()
+	pm.timeoutTarget = 0
 
 	if pm.gameStarted {
 		pm.logger.Info("Transitioning phase", zap.String("from", pm.currentPhase.Type().String()), zap.String("to", nextPhase.Type().String()))
@@ -99,9 +93,9 @@ func (pm *Manager) transitionTo(nextPhaseType model.GamePhase) bool {
 	pm.currentPhase.Enter(pm.engine)
 
 	// Set the timer for the new phase.
-	duration := pm.currentPhase.TimeoutDuration()
-	if duration > 0 {
-		pm.phaseTimer.Reset(duration)
+	ticks := pm.currentPhase.TimeoutTicks()
+	if ticks > 0 {
+		pm.timeoutTarget = pm.engine.GetGameState().Tick + ticks
 	}
 
 	// After entering, immediately check if we should transition again.

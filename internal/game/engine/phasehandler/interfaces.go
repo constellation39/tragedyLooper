@@ -44,6 +44,6 @@ type Phase interface {
 	HandleTimeout(ge GameEngine)
 	// Exit is called when exiting this phase.
 	Exit(ge GameEngine)
-	// TimeoutDuration returns the timeout duration for this phase.
-	TimeoutDuration() time.Duration
+	// TimeoutTicks returns the timeout duration in game ticks for this phase.
+	TimeoutTicks() int64
 }
