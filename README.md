@@ -1,5 +1,7 @@
 # Tragedy Looper
 
+> **Note:** This project is currently under active development. The API and features are subject to change.
+
 A Go implementation of the Tragedy Looper board game. This project is a Go-based server for the Tragedy Looper game, allowing players to connect and play through a client-server architecture. It also includes an AI opponent powered by Large Language Models (LLMs).
 
 ## Getting Started
@@ -279,13 +281,3 @@ graph TD
     21. **Return View**: The resulting `PlayerView` is returned to the server, which then sends it to the player's client to update the UI.
 
 This complete, event-driven loop allows the game logic to handle complex causal chains while keeping the individual components modular and clear.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a pull request.
-
-1.  Fork the Project
-2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the Branch (`git push origin feature/AmazingFeature`)
-5.  Open a Pull Request
