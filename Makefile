@@ -71,7 +71,7 @@ install-tools:
 proto:
 	@echo "Generating Go code and JSON schema from protobuf..."
 	@$(SHELL_PREFIX) buf generate
-	@$(SHELL_PREFIX) cue get go .\pkg\proto\tragedylooper\v1
+	@$(SHELL_PREFIX) cue get go github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1
 
 # Clean generated protobuf files
 clean-proto:

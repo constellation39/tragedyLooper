@@ -37,6 +37,7 @@ type GameState struct {
 	PlayedCardsThisLoop     map[int32]bool         `protobuf:"bytes,11,rep,name=played_cards_this_loop,json=playedCardsThisLoop,proto3" json:"played_cards_this_loop,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`           // 本循环中已打出的牌的ID
 	TriggeredIncidents      map[string]bool        `protobuf:"bytes,12,rep,name=triggered_incidents,json=triggeredIncidents,proto3" json:"triggered_incidents,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                   // Key is the incident name
 	LastUpdateTime          int64                  `protobuf:"varint,13,opt,name=last_update_time,json=lastUpdateTime,proto3" json:"last_update_time,omitempty"`                                                                                                       // 最后更新时间戳 (Unix timestamp)
+	Tick                    int64                  `protobuf:"varint,20,opt,name=tick,proto3" json:"tick,omitempty"`                                                                                                                                                   // 游戏时间
 	DayEvents               []*GameEvent           `protobuf:"bytes,14,rep,name=day_events,json=dayEvents,proto3" json:"day_events,omitempty"`                                                                                                                         // 本日发生的事件日志
 	LoopEvents              []*GameEvent           `protobuf:"bytes,15,rep,name=loop_events,json=loopEvents,proto3" json:"loop_events,omitempty"`                                                                                                                      // 本循环发生的事件日志
 	CharacterParanoiaLimits map[int32]int32        `protobuf:"bytes,16,rep,name=character_paranoia_limits,json=characterParanoiaLimits,proto3" json:"character_paranoia_limits,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 每个角色的妄想上限映射
@@ -163,6 +164,13 @@ func (x *GameState) GetTriggeredIncidents() map[string]bool {
 func (x *GameState) GetLastUpdateTime() int64 {
 	if x != nil {
 		return x.LastUpdateTime
+	}
+	return 0
+}
+
+func (x *GameState) GetTick() int64 {
+	if x != nil {
+		return x.Tick
 	}
 	return 0
 }
@@ -423,6 +431,7 @@ type PlayerView struct {
 	YourHand           []*Card                        `protobuf:"bytes,10,rep,name=your_hand,json=yourHand,proto3" json:"your_hand,omitempty"`                                                                                                          // 当前玩家的手牌列表
 	YourDeductions     *PlayerDeductionKnowledge      `protobuf:"bytes,11,opt,name=your_deductions,json=yourDeductions,proto3" json:"your_deductions,omitempty"`                                                                                        // 当前玩家的推理知识
 	PublicEvents       []*GameEvent                   `protobuf:"bytes,12,rep,name=public_events,json=publicEvents,proto3" json:"public_events,omitempty"`                                                                                              // 对所有玩家公开的事件日志
+	Tick               int64                          `protobuf:"varint,13,opt,name=tick,proto3" json:"tick,omitempty"`                                                                                                                                 // 游戏时间
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -539,6 +548,13 @@ func (x *PlayerView) GetPublicEvents() []*GameEvent {
 		return x.PublicEvents
 	}
 	return nil
+}
+
+func (x *PlayerView) GetTick() int64 {
+	if x != nil {
+		return x.Tick
+	}
+	return 0
 }
 
 // 玩家视角下的角色信息（不包含隐藏身份）
@@ -739,7 +755,7 @@ var File_tragedylooper_v1_game_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_game_proto_rawDesc = "" +
 	"\n" +
-	"\x1btragedylooper/v1/game.proto\x12\x10tragedylooper.v1\x1a\x1etragedylooper/v1/ability.proto\x1a\x1btragedylooper/v1/card.proto\x1a tragedylooper/v1/character.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1ctragedylooper/v1/event.proto\"\xf4\x10\n" +
+	"\x1btragedylooper/v1/game.proto\x12\x10tragedylooper.v1\x1a\x1etragedylooper/v1/ability.proto\x1a\x1btragedylooper/v1/card.proto\x1a tragedylooper/v1/character.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1ctragedylooper/v1/event.proto\"\x88\x11\n" +
 	"\tGameState\x12\x17\n" +
 	"\agame_id\x18\x01 \x01(\tR\x06gameId\x12K\n" +
 	"\n" +
@@ -757,7 +773,8 @@ const file_tragedylooper_v1_game_proto_rawDesc = "" +
 	" \x03(\v23.tragedylooper.v1.GameState.PlayedCardsThisDayEntryR\x12playedCardsThisDay\x12i\n" +
 	"\x16played_cards_this_loop\x18\v \x03(\v24.tragedylooper.v1.GameState.PlayedCardsThisLoopEntryR\x13playedCardsThisLoop\x12d\n" +
 	"\x13triggered_incidents\x18\f \x03(\v23.tragedylooper.v1.GameState.TriggeredIncidentsEntryR\x12triggeredIncidents\x12(\n" +
-	"\x10last_update_time\x18\r \x01(\x03R\x0elastUpdateTime\x12:\n" +
+	"\x10last_update_time\x18\r \x01(\x03R\x0elastUpdateTime\x12\x12\n" +
+	"\x04tick\x18\x14 \x01(\x03R\x04tick\x12:\n" +
 	"\n" +
 	"day_events\x18\x0e \x03(\v2\x1b.tragedylooper.v1.GameEventR\tdayEvents\x12<\n" +
 	"\vloop_events\x18\x0f \x03(\v2\x1b.tragedylooper.v1.GameEventR\n" +
@@ -815,7 +832,7 @@ const file_tragedylooper_v1_game_proto_rawDesc = "" +
 	"\btheories\x18\x03 \x03(\tR\btheories\x1a[\n" +
 	"\x11GuessedRolesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x120\n" +
-	"\x05value\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.RoleTypeR\x05value:\x028\x01\"\xbd\b\n" +
+	"\x05value\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.RoleTypeR\x05value:\x028\x01\"\xd1\b\n" +
 	"\n" +
 	"PlayerView\x12\x17\n" +
 	"\agame_id\x18\x01 \x01(\tR\x06gameId\x12\x1b\n" +
@@ -833,7 +850,8 @@ const file_tragedylooper_v1_game_proto_rawDesc = "" +
 	"\tyour_hand\x18\n" +
 	" \x03(\v2\x16.tragedylooper.v1.CardR\byourHand\x12S\n" +
 	"\x0fyour_deductions\x18\v \x01(\v2*.tragedylooper.v1.PlayerDeductionKnowledgeR\x0eyourDeductions\x12@\n" +
-	"\rpublic_events\x18\f \x03(\v2\x1b.tragedylooper.v1.GameEventR\fpublicEvents\x1ad\n" +
+	"\rpublic_events\x18\f \x03(\v2\x1b.tragedylooper.v1.GameEventR\fpublicEvents\x12\x12\n" +
+	"\x04tick\x18\r \x01(\x03R\x04tick\x1ad\n" +
 	"\x0fCharactersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12;\n" +
 	"\x05value\x18\x02 \x01(\v2%.tragedylooper.v1.PlayerViewCharacterR\x05value:\x028\x01\x1a^\n" +

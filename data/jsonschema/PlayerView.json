@@ -114,6 +114,10 @@
                     },
                     "type": "array",
                     "description": "对所有玩家公开的事件日志"
+                },
+                "tick": {
+                    "type": "string",
+                    "description": "游戏时间"
                 }
             },
             "additionalProperties": true,

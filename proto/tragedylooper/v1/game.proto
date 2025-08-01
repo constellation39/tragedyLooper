@@ -25,6 +25,7 @@ message GameState {
   map<int32, bool> played_cards_this_loop = 11; // 本循环中已打出的牌的ID
   map<string, bool> triggered_incidents = 12; // Key is the incident name
   int64 last_update_time = 13; // 最后更新时间戳 (Unix timestamp)
+  int64 tick = 20; // 游戏时间
   repeated GameEvent day_events = 14; // 本日发生的事件日志
   repeated GameEvent loop_events = 15; // 本循环发生的事件日志
   map<int32, int32> character_paranoia_limits = 16; // 每个角色的妄想上限映射
@@ -69,6 +70,7 @@ message PlayerView {
   repeated Card your_hand = 10; // 当前玩家的手牌列表
   PlayerDeductionKnowledge your_deductions = 11; // 当前玩家的推理知识
   repeated GameEvent public_events = 12; // 对所有玩家公开的事件日志
+  int64 tick = 13; // 游戏时间
   // 可以在此添加其他公开信息
 }
 

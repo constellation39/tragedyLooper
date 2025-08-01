@@ -218,10 +218,23 @@ func (ge *GameEngine) runGameLoop() {
 		select {
 		case <-ge.stopChan:
 			return
+		case <-ticker.C:
+			ge.GameState.Tick++
+			ge.processPendingRequests()
+			ge.pm.OnTick()
+		}
+	}
+}
+
+// processPendingRequests handles all available requests in the engine channel without blocking.
+func (ge *GameEngine) processPendingRequests() {
+	for {
+		select {
 		case req := <-ge.engineChan:
 			ge.handleEngineRequest(req)
-		case <-ticker.C:
-			ge.pm.OnTick()
+		default:
+			// No more requests in the channel.
+			return
 		}
 	}
 }
@@ -441,6 +454,7 @@ func (ge *GameEngine) GeneratePlayerView(playerID int32) *model.PlayerView {
 		ActiveTragedies:    ge.GameState.ActiveTragedies,
 		PreventedTragedies: ge.GameState.PreventedTragedies,
 		PublicEvents:       ge.GameState.DayEvents,
+		Tick:               ge.GameState.Tick,
 	}
 
 	// Filter character information based on player role

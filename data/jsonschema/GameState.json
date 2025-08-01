@@ -122,6 +122,10 @@
                     "type": "string",
                     "description": "最后更新时间戳 (Unix timestamp)"
                 },
+                "tick": {
+                    "type": "string",
+                    "description": "游戏时间"
+                },
                 "day_events": {
                     "items": {
                         "$ref": "#/definitions/tragedylooper.v1.GameEvent"
