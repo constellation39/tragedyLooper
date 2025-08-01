@@ -31,7 +31,7 @@ func (p *DayEndPhase) TimeoutDuration() time.Duration { return 0 }
 func (p *DayEndPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_DAY_END }
 
 // Enter 在阶段开始时调用。
-func (p *DayEndPhase) Enter(ge GameEngine) Phase {
+func (p *DayEndPhase) Enter(ge GameEngine) {
 	logger := ge.Logger().Named("DayEndPhase")
 	script := ge.GetGameRepo().GetScript()
 
@@ -47,7 +47,7 @@ func (p *DayEndPhase) Enter(ge GameEngine) Phase {
 				if met {
 					logger.Info("Loop loss condition met", zap.String("description", endCond.Description))
 					ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_LOSS, &model.EventPayload{})
-					return GetPhase(model.GamePhase_GAME_PHASE_LOOP_END)
+					return
 				}
 			}
 		}
@@ -60,12 +60,11 @@ func (p *DayEndPhase) Enter(ge GameEngine) Phase {
 	// 3. 如果没有胜利/失败，检查是否是循环的最后一天
 	if ge.GetGameState().CurrentDay >= ge.GetGameState().DaysPerLoop {
 		logger.Info("End of loop reached by day count")
-		return GetPhase(model.GamePhase_GAME_PHASE_LOOP_END)
+		return
 	}
 
 	// 4. 否则，进入下一天
 	logger.Info("Proceeding to next day")
-	return GetPhase(model.GamePhase_GAME_PHASE_DAY_START)
 }
 
 func init() {

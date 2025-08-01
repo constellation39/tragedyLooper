@@ -28,10 +28,9 @@ func (p *MastermindSetupPhase) TimeoutDuration() time.Duration { return 0 }
 func (p *MastermindSetupPhase) Type() model.GamePhase {
 	return model.GamePhase_GAME_PHASE_MASTERMIND_SETUP
 }
-func (p *MastermindSetupPhase) Enter(ge GameEngine) Phase {
+func (p *MastermindSetupPhase) Enter(ge GameEngine) {
 	// TODO: Mastermind places characters and sets up their board.
 	// For now, we transition directly.
-	return GetPhase(model.GamePhase_GAME_PHASE_LOOP_START)
 }
 
 func init() {

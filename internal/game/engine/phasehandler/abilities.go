@@ -227,7 +227,7 @@ func checkTriggers(ge GameEngine) Phase {
 }
 
 // checkEndConditions 检查是否满足任何游戏结束条件。
-func checkEndConditions(ge GameEngine) Phase {
+func checkEndConditions(ge GameEngine) {
 	gs := ge.GetGameState()
 	script := ge.GetGameRepo().GetScript()
 
@@ -237,12 +237,9 @@ func checkEndConditions(ge GameEngine) Phase {
 		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
 			Payload: &model.EventPayload_GameEnded{GameEnded: &model.GameEndedEvent{Winner: model.PlayerRole_PLAYER_ROLE_PROTAGONIST}},
 		})
-		return &GameOverPhase{}
 	}
 
 	// ... 此处可以添加其他游戏结束条件（例如，所有主角死亡） ...
-
-	return nil
 }
 
 func init() {

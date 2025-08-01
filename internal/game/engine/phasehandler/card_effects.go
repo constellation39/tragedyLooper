@@ -32,7 +32,7 @@ func (p *CardEffectsPhase) TimeoutDuration() time.Duration { return 0 }
 func (p *CardEffectsPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_CARD_EFFECTS }
 
 // Enter 在阶段开始时调用。
-func (p *CardEffectsPhase) Enter(ge GameEngine) Phase {
+func (p *CardEffectsPhase) Enter(ge GameEngine) {
 	logger := ge.Logger().Named("CardEffectsPhase")
 	playedCards := getAllPlayedCards(ge)
 
@@ -54,9 +54,6 @@ func (p *CardEffectsPhase) Enter(ge GameEngine) Phase {
 	p.resolveStatEffects(logger, ge, playedCards)
 
 	logger.Info("Finished resolving card effects")
-
-	// 卡牌效果解析后，我们可能会进入能力阶段
-	return &AbilitiesPhase{}
 }
 
 func (p *CardEffectsPhase) resolveForbidMovement(logger *zap.Logger, cards []*model.Card) map[int32]bool {

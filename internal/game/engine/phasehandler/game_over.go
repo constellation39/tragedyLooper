@@ -26,9 +26,8 @@ func (p *GameOverPhase) Exit(ge GameEngine) {}
 func (p *GameOverPhase) TimeoutDuration() time.Duration { return 0 }
 
 func (p *GameOverPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_GAME_OVER }
-func (p *GameOverPhase) Enter(ge GameEngine) Phase {
+func (p *GameOverPhase) Enter(ge GameEngine) {
 	// Clean up, announce winner, etc.
-	return nil
 }
 
 func init() {

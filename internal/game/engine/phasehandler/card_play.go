@@ -91,15 +91,15 @@ func (p *CardPlayPhase) handleMastermindAction(ge GameEngine, player *model.Play
 	return nil
 }
 
-func (p *CardPlayPhase) handleProtagonistAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
+func (p *CardPlayPhase) handleProtagonistAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) {
 	protagonists := ge.GetProtagonistPlayers()
 	if len(protagonists) == 0 {
-		return GetPhase(model.GamePhase_GAME_PHASE_CARD_REVEAL)
+		return
 	}
 
 	if player.Role != model.PlayerRole_PLAYER_ROLE_PROTAGONIST || player.Id != protagonists[p.protagonistTurnIndex].Id {
 		ge.Logger().Warn("Received action from player out of turn", zap.String("expected_player", protagonists[p.protagonistTurnIndex].Name), zap.String("actual_player", player.Name))
-		return nil
+		return
 	}
 
 	switch payload := action.Payload.(type) {
@@ -112,14 +112,12 @@ func (p *CardPlayPhase) handleProtagonistAction(ge GameEngine, player *model.Pla
 	p.protagonistTurnIndex++
 
 	if p.protagonistTurnIndex >= len(protagonists) {
-		return GetPhase(model.GamePhase_GAME_PHASE_CARD_REVEAL)
+		return
 	}
 
 	// Trigger AI for the next protagonist.
 	nextProtagonist := protagonists[p.protagonistTurnIndex]
 	ge.RequestAIAction(nextProtagonist.Id)
-
-	return nil
 }
 
 func init() {

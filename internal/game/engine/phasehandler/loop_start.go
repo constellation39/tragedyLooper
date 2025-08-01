@@ -26,7 +26,7 @@ func (p *LoopStartPhase) Exit(ge GameEngine) {}
 func (p *LoopStartPhase) TimeoutDuration() time.Duration { return 0 }
 
 func (p *LoopStartPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_LOOP_START }
-func (p *LoopStartPhase) Enter(ge GameEngine) Phase {
+func (p *LoopStartPhase) Enter(ge GameEngine) {
 	gs := ge.GetGameState()
 	script := ge.GetGameRepo().GetScript()
 
@@ -34,7 +34,7 @@ func (p *LoopStartPhase) Enter(ge GameEngine) Phase {
 		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
 			Payload: &model.EventPayload_GameEnded{GameEnded: &model.GameEndedEvent{Reason: "Max loops reached"}},
 		})
-		return GetPhase(model.GamePhase_GAME_PHASE_GAME_OVER)
+		return
 	}
 
 	gs.CurrentLoop++
@@ -42,7 +42,6 @@ func (p *LoopStartPhase) Enter(ge GameEngine) Phase {
 	ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_RESET, &model.EventPayload{
 		Payload: &model.EventPayload_LoopReset{LoopReset: &model.LoopResetEvent{LoopNumber: gs.CurrentLoop}},
 	})
-	return GetPhase(model.GamePhase_GAME_PHASE_DAY_START)
 }
 
 func init() {

@@ -51,7 +51,7 @@ func (p *IncidentsPhase) HandleAction(ge GameEngine, player *model.Player, actio
 	return nil
 }
 func (p *IncidentsPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
-func (p *IncidentsPhase) HandleTimeout(ge GameEngine) Phase                     { return nil }
+func (p *IncidentsPhase) HandleTimeout(ge GameEngine) {}
 func (p *IncidentsPhase) Exit(ge GameEngine)                                     {}
 func (p *IncidentsPhase) Type() model.GamePhase                                  { return model.GamePhase_GAME_PHASE_INCIDENTS }
 func (p *IncidentsPhase) TimeoutDuration() time.Duration                         { return 0 }

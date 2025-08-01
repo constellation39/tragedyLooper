@@ -45,11 +45,11 @@ func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, player *model.Player
 }
 
 // handleMakeGuessAction 处理玩家进行猜测的操作。
-func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.MakeGuessPayload) Phase {
+func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.MakeGuessPayload) {
 	// 目前，我们假设第一个猜测的主角结束游戏。
 	if player.Role != model.PlayerRole_PLAYER_ROLE_PROTAGONIST {
 		ge.Logger().Warn("non-protagonist player tried to make a guess", zap.Int32("player_id", player.Id))
-		return nil
+		return
 	}
 
 	script := ge.GetGameRepo().GetScript()
@@ -58,7 +58,7 @@ func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.M
 		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
 			Payload: &model.EventPayload_GameEnded{GameEnded: &model.GameEndedEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND, Reason: "Failed to guess all roles"}},
 		}) // 游戏结束，出现错误时主谋默认获胜
-		return GetPhase(model.GamePhase_GAME_PHASE_GAME_OVER)
+		return
 	}
 
 	correctGuesses := 0
@@ -81,7 +81,6 @@ func handleMakeGuessAction(ge GameEngine, player *model.Player, payload *model.M
 			Payload: &model.EventPayload_GameEnded{GameEnded: &model.GameEndedEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND, Reason: "Failed to guess all roles"}},
 		})
 	}
-	return GetPhase(model.GamePhase_GAME_PHASE_GAME_OVER)
 }
 
 func init() {

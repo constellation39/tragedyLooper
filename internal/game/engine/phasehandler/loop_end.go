@@ -26,7 +26,7 @@ func (p *LoopEndPhase) Exit(ge GameEngine) {}
 func (p *LoopEndPhase) TimeoutDuration() time.Duration { return 0 }
 
 func (p *LoopEndPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_LOOP_END }
-func (p *LoopEndPhase) Enter(ge GameEngine) Phase {
+func (p *LoopEndPhase) Enter(ge GameEngine) {
 	gs := ge.GetGameState()
 	script := ge.GetGameRepo().GetScript()
 
@@ -36,13 +36,11 @@ func (p *LoopEndPhase) Enter(ge GameEngine) Phase {
 		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_WIN, &model.EventPayload{
 			Payload: &model.EventPayload_LoopWin{LoopWin: &model.LoopWinEvent{}},
 		})
-		return GetPhase(model.GamePhase_GAME_PHASE_GAME_OVER)
 	} else {
 		// Reset for the next loop
 		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_RESET, &model.EventPayload{
 			Payload: &model.EventPayload_LoopReset{LoopReset: &model.LoopResetEvent{LoopNumber: gs.CurrentLoop + 1}},
 		})
-		return GetPhase(model.GamePhase_GAME_PHASE_LOOP_START)
 	}
 }
 
