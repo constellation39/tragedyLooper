@@ -12,7 +12,6 @@ A Go implementation of the Tragedy Looper board game. This project is a Go-based
 - Git
 - Buf
 - protoc-gen-go
-- protoc-gen-jsonschema
 
 ### Installation
 
@@ -82,7 +81,8 @@ A brief overview of the key directories in this project.
 ```
 . (tragedyLooper)
 |-- cmd/tragedylooper/main.go   # Main application entry point.
-|-- data/                         # All game data (cards, characters, scripts) and their JSON schemas.
+|-- data/                         # All game data (cards, characters, scripts).
+|-- cue.mod/                      # CUE definitions for game data validation.
 |-- internal/                     # Private application code, not intended for import by other projects.
 |   |-- game/                     # The core game engine, state management, and logic.
 |   |-- llm/                      # Handles all communication with the external Large Language Model for AI.
@@ -102,7 +102,7 @@ The project's architecture is modern, robust, and well-suited for a complex, sta
 
 ### High-Level Design
 
-1.  **Configuration Driven:** The entire game's content—cards, characters, scripts, and incidents—is defined in external JSON files (`data/`). This decouples the game logic from the game data, allowing for easy updates and modifications to game content without changing any code. The use of JSON schemas (`data/jsonschema/`) ensures this data remains valid and consistent.
+1.  **Configuration Driven:** The entire game's content—cards, characters, scripts, and incidents—is defined in external JSON files (`data/`). This decouples the game logic from the game data, allowing for easy updates and modifications to game content without changing any code. The use of CUE (`cue.mod/`) ensures this data remains valid and consistent.
 
 2.  **Event-Driven Core Engine:** The game's heart (`internal/game/engine/`) operates on an event-driven model. Player actions, AI decisions, and internal game mechanics do not directly modify the game state. Instead, they generate **events** (e.g., `CardPlayedEvent`). These events are processed by dedicated handlers (`internal/game/engine/eventhandler/`) which in turn trigger **effects** (`internal/game/engine/effecthandler/`). This approach elegantly handles complex chain reactions and makes the game logic easy to extend and debug.
 
@@ -118,25 +118,25 @@ The following diagram illustrates the interaction between these core components.
 graph TD
     subgraph " "
         direction LR
-        subgraph "外部客户端 (Client)"
+        subgraph "Client"
             direction TB
-            UI[玩家界面 / Client]
+            UI[Client]
         end
 
-        subgraph "游戏服务器 (Go Application)"
+        subgraph "Go Application"
             direction TB
             
-            subgraph "配置层 (Configuration Layer)"
+            subgraph "Configuration Layer"
                 direction RL
                 JSON[data/*.json] -->|Load & Parse| Loader(internal/game/loader)
-                Schema[data/jsonschema/*.json] -->|Validate| Loader
+                Schema[cue.mod/**/*.cue] -->|Validate| Loader
                 Proto(proto/v1/*.proto) -->|Generate| PB(pkg/proto/v1/*.pb.go)
                 Loader -->|Instantiate| PB
             end
             
             Server(internal/server/server.go)
 
-            subgraph "游戏引擎 (Game Engine)"
+            subgraph "Game Engine"
                 direction TB
                 Engine(engine.go)
                 PhaseMgr(phase_manager.go)
@@ -144,7 +144,7 @@ graph TD
                 EffectHandlers -- Modify --> GameState
             end
 
-            subgraph "AI/LLM 驱动 (AI/LLM Driver)"
+            subgraph "AI/LLM Driver"
                 direction TB
                 GameAI(engine/ai.go)
                 LLM_Client(internal/llm/client.go)
@@ -247,37 +247,3 @@ graph TD
         C2 -- "28. Send to client" --> D1
     end
 ```
-
-#### Flow Explanation
-
-*   **Phase 1: Setup & Data Loading**
-    1.  **Define Contracts (`.proto`)**: All core game data structures (Characters, Cards, Events, etc.) are defined in `.proto` files.
-    2.  **Generate Code (`.pb.go`)**: Before compilation, the `protoc` tool generates Go structs and serialization methods from the `.proto` files. This ensures type safety.
-    3.  **Load Configuration (`.json`)**: On application startup, the `loader` module reads JSON files from the `data/` directory. These files define the actual game content (scripts, card effects, etc.). The loader parses this JSON data into the Go structs generated in step 2.
-
-*   **Phase 2: Application Startup**
-    4.  **Entry Point (`main.go`)**: The application starts here, initializing logging, configuration, and the main server.
-    5.  **Server (`server.go`)**: The server (gRPC or HTTP) listens for network requests, manages client connections, and holds an instance of the core **Game Engine**.
-    6.  **Engine Initialization**: When creating the game engine instance, the server "injects" the loaded game configuration data from Phase 1 into it. This makes the engine aware of all available cards, characters, and rules.
-
-*   **Phase 3: The Core Game Loop**
-    This is the complete response flow for a single player action:
-    7.  **Receive Action**: A player's client sends an action (e.g., "Play Card") to the server.
-    8.  **Dispatch Action**: The server forwards the action to the game engine for processing.
-    9.  **Action Handling (`actions.go`)**: The engine first calls the **Action Handler**.
-    10. **Validate Legality**: The action handler **reads** the current `GameState` to verify that the action is legal (e.g., does the player have this card?).
-    11. **Create Initial Event**: If the action is legal, the handler creates an event describing it (e.g., `CardPlayedEvent`) and places it into the **Event Queue**.
-    12. **Process Event**: The engine's main loop retrieves an event from the queue.
-    13. **Execute Effects (`effects.go`)**: The engine looks up the effects associated with the event and calls the **Effect Handler**.
-    14. **Mutate State**: The **Effect Handler is the only component that modifies the `GameState`**. It performs the specific operation, like "Paranoia +1".
-    15. **Trigger Chain Reaction**: Any change to the `GameState` immediately triggers a checkpoint.
-    16. **Check Triggers and Handlers**:
-        *   **`triggers.go`**: Checks if any script or rule conditions have been met due to the state change.
-        *   **`event_handlers.go`**: Checks if any modules need to respond to the specific type of event that just occurred.
-    17. **Create New Events**: If a trigger or handler determines that a follow-up action is needed, it creates a **new event** and adds it to the event queue.
-    18. **The Loop**: **This is the engine's heartbeat**. As long as the event queue is not empty, the process returns to step 12, continuously processing new events caused by previous ones until all chain reactions are complete.
-    19. **Advance Phase (`phase_handlers.go`)**: When the event queue is empty, the action and all its consequences are fully resolved. The engine then calls the **Phase Handler** to check if the game day or phase should advance.
-    20. **Generate View (`view.go`)**: The engine calls the **View Generator**, which reads the final `GameState` and filters out all information not visible to a specific player (e.g., other players' hands, unrevealed roles).
-    21. **Return View**: The resulting `PlayerView` is returned to the server, which then sends it to the player's client to update the UI.
-
-This complete, event-driven loop allows the game logic to handle complex causal chains while keeping the individual components modular and clear.
