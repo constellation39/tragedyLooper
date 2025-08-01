@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 	"time"
+
 	"github.com/constellation39/tragedyLooper/internal/game/engine/ai"
 	"github.com/constellation39/tragedyLooper/internal/game/loader"
 	"github.com/constellation39/tragedyLooper/internal/logger"

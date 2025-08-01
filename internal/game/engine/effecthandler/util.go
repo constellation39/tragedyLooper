@@ -2,6 +2,7 @@ package effecthandler
 
 import (
 	"fmt"
+
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 

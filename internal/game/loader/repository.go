@@ -2,6 +2,7 @@ package loader
 
 import (
 	"fmt"
+
 	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 

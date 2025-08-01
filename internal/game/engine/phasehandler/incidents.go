@@ -1,15 +1,13 @@
 package phasehandler
 
 import (
-	
-
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
 // IncidentsPhase is the phase where the consequences of the day are resolved.
 // It advances the day or loop if necessary.
 
-type IncidentsPhase struct{
+type IncidentsPhase struct {
 	BasePhase
 }
 
@@ -54,8 +52,6 @@ func (p *IncidentsPhase) Enter(ge GameEngine) {
 		Payload: &model.EventPayload_DayAdvanced{DayAdvanced: &model.DayAdvancedEvent{Day: gs.CurrentDay, Loop: gs.CurrentLoop}},
 	})
 }
-
-
 
 func (p *IncidentsPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_INCIDENTS }
 

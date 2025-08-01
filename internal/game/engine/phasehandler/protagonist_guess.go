@@ -1,18 +1,15 @@
 package phasehandler
 
 import (
-	
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
 )
 
 // ProtagonistGuessPhase is the phase where protagonists try to guess the hidden roles of other characters.
-type ProtagonistGuessPhase struct{
+type ProtagonistGuessPhase struct {
 	BasePhase
 }
-
-
 
 // Type 返回阶段类型，表示当前是主角猜测阶段。
 func (p *ProtagonistGuessPhase) Type() model.GamePhase {

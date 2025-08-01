@@ -12,8 +12,8 @@ import (
 	"github.com/constellation39/tragedyLooper/internal/game/engine/eventhandler"
 	"github.com/constellation39/tragedyLooper/internal/game/engine/phasehandler"
 	"github.com/constellation39/tragedyLooper/internal/game/engine/target"
-	"github.com/constellation39/tragedyLooper/internal/game/ticker"
 	"github.com/constellation39/tragedyLooper/internal/game/loader"
+	"github.com/constellation39/tragedyLooper/internal/game/ticker"
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"

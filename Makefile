@@ -16,7 +16,8 @@ all: build
 format:
 	@echo "Formatting..."
 	@$(SHELL_PREFIX) go run github.com/bufbuild/buf/cmd/buf@latest format -w
-	@$(SHELL_PREFIX) goimports -w .
+	@$(SHELL_PREFIX) go fmt ./...
+	@$(SHELL_PREFIX) goimports -w cmd internal pkg tools
 
 # Build the application
 build:

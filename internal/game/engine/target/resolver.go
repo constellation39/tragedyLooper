@@ -2,6 +2,7 @@ package target
 
 import (
 	"fmt"
+
 	"github.com/constellation39/tragedyLooper/internal/game/engine/effecthandler"
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )

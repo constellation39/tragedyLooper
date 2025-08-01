@@ -1,16 +1,13 @@
 package phasehandler
 
 import (
-	
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
 // --- MastermindSetupPhase ---
-type MastermindSetupPhase struct{
+type MastermindSetupPhase struct {
 	BasePhase
 }
-
-
 
 func (p *MastermindSetupPhase) Type() model.GamePhase {
 	return model.GamePhase_GAME_PHASE_MASTERMIND_SETUP

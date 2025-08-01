@@ -1,18 +1,15 @@
 package phasehandler
 
 import (
-	
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
 )
 
 // DayEndPhase 是执行天末检查的阶段。
-type DayEndPhase struct{
+type DayEndPhase struct {
 	BasePhase
 }
-
-
 
 // Type 返回阶段类型。
 func (p *DayEndPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_DAY_END }

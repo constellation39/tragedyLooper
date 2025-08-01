@@ -52,7 +52,7 @@ var Flowchart = map[model.GamePhase][]Transition{
 			Condition: func(ge GameEngine) bool {
 				// Placeholder for loop failure condition
 				// For example: return ge.GetGameState().IsLoopOver
-				return false 
+				return false
 			},
 		},
 		{

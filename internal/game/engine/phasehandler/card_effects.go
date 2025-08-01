@@ -2,18 +2,16 @@ package phasehandler
 
 import (
 	"sort"
-	
+
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
 )
 
 // CardEffectsPhase is the phase where the effects of played cards are resolved.
-type CardEffectsPhase struct{
+type CardEffectsPhase struct {
 	BasePhase
 }
-
-
 
 // Type 返回阶段类型。
 func (p *CardEffectsPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_CARD_EFFECTS }

@@ -1,16 +1,13 @@
 package phasehandler
 
 import (
-	
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
 // --- LoopStartPhase ---
-type LoopStartPhase struct{
+type LoopStartPhase struct {
 	BasePhase
 }
-
-
 
 func (p *LoopStartPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_LOOP_START }
 func (p *LoopStartPhase) Enter(ge GameEngine) {

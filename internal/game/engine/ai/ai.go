@@ -2,6 +2,7 @@ package ai
 
 import (
 	"context"
+
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 

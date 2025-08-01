@@ -1,16 +1,13 @@
 package phasehandler
 
 import (
-	
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
 // DayStartPhase 天开始阶段
-type DayStartPhase struct{
+type DayStartPhase struct {
 	BasePhase
 }
-
-
 
 func (p *DayStartPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_DAY_START }
 func (p *DayStartPhase) Enter(ge GameEngine) {
