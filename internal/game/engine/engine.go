@@ -401,7 +401,7 @@ func (ge *GameEngine) RequestAIAction(playerID int32) {
 	// 为动作生成器创建上下文
 	ctx := &ai.ActionGeneratorContext{
 		Player:        player,
-		PlayerView:    ge.GetPlayerView(playerID),
+		PlayerView:    ge.GeneratePlayerView(playerID),
 		AllCharacters: ge.GameState.Characters,
 	}
 

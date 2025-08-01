@@ -2,87 +2,90 @@ package phasehandler
 
 import (
 	"time"
-	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 
-	"go.uber.org/zap"
+	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
-// IncidentsPhase is the phase where incident conditions are checked and triggered.
+// IncidentsPhase is the phase where the consequences of the day are resolved.
+// It advances the day or loop if necessary.
+
 type IncidentsPhase struct{}
 
-// HandleEvent is the default implementation for Phase interface, does nothing and returns nil.
-func (p *IncidentsPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase {
-	return nil
-}
-
-// HandleTimeout is the default implementation for Phase interface, returns the next phase.
-func (p *IncidentsPhase) HandleTimeout(ge GameEngine) Phase {
-	ge.Logger().Info("IncidentsPhase timed out, moving to DayEnd")
-	return GetPhase(model.GamePhase_GAME_PHASE_DAY_END)
-}
-
-// Exit is the default implementation for Phase interface, does nothing.
-func (p *IncidentsPhase) Exit(ge GameEngine) {}
-
-// TimeoutDuration is the default implementation for Phase interface, returns a short duration.
-func (p *IncidentsPhase) TimeoutDuration() time.Duration { return 5 * time.Second }
-
-// Type returns the phase type.
-func (p *IncidentsPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_INCIDENTS }
-
-// Enter is called when the phase begins.
 func (p *IncidentsPhase) Enter(ge GameEngine) Phase {
-	ge.Logger().Info("Entering IncidentsPhase, checking for incidents.")
-	p.triggerIncidents(ge)
-
-	// The phase will transition via timeout, allowing time for any triggered events
-	// (and subsequent player choices) to be processed.
-	return nil
-}
-
-// HandleAction handles actions during the incidents phase, primarily for choices.
-func (p *IncidentsPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
-	if payload, ok := action.Payload.(*model.PlayerActionPayload_ChooseOption); ok {
-		ge.Logger().Info("Player made a choice during IncidentsPhase", zap.Any("choice", payload))
-		// The engine's effect handler is responsible for continuing the effect chain.
-	}
-	return nil
-}
-
-func (p *IncidentsPhase) triggerIncidents(ge GameEngine) {
-	logger := ge.Logger().Named("TriggerIncidents")
-	incidents := ge.GetGameRepo().GetIncidents()
 	gs := ge.GetGameState()
+	script := ge.GetGameRepo().GetScript()
 
-	for _, incidentConfig := range incidents {
-		if _, triggered := gs.TriggeredIncidents[incidentConfig.GetName()]; triggered {
-			continue
-		}
+	// Check for day-ending tragedies or other conditions here.
+	// For now, we'll just advance the day.
 
-		conditionsMet := true
-		for _, condition := range incidentConfig.GetTriggerConditions() {
-			met, err := ge.CheckCondition(condition)
-			if err != nil {
-				logger.Error("Error checking incident condition", zap.String("incident", incidentConfig.GetName()), zap.Error(err))
-				conditionsMet = false
-				break
-			}
-			if !met {
-				conditionsMet = false
-				break
-			}
-		}
+	gs.CurrentDay++
+	ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED, &model.EventPayload{
+		Payload: &model.EventPayload_DayAdvanced{DayAdvanced: &model.DayAdvancedEvent{NewDay: gs.CurrentDay}},
+	})
 
-		if !conditionsMet {
-			continue
-		}
-
-		gs.TriggeredIncidents[incidentConfig.GetName()] = true
-
-		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_INCIDENT_TRIGGERED, &model.EventPayload{
-			Payload: &model.EventPayload_IncidentTriggered{IncidentTriggered: &model.IncidentTriggeredEvent{Incident: &model.Incident{Config: incidentConfig}}},
+	if gs.CurrentDay > script.GetDayCount() {
+		// End of the loop
+		ge.Logger().Info("Loop has ended. Resetting for the next loop.")
+		gs.CurrentLoop++
+		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_RESET, &model.EventPayload{
+			Payload: &model.EventPayload_LoopReset{LoopReset: &model.LoopResetEvent{NewLoop: gs.CurrentLoop}},
 		})
+
+		// Check for game over condition after loop reset
+		if gs.CurrentLoop > script.GetLoopCount() {
+			ge.Logger().Info("Final loop has ended. Game over.")
+			return &GameOverPhase{}
+		}
+
+		// Reset for the new loop
+		resetForNewLoop(ge)
+		return &DayStartPhase{}
 	}
+
+	// Reset for the new day
+	resetForNewDay(ge)
+	return &DayStartPhase{}
+}
+
+func (p *IncidentsPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) Phase {
+	return nil
+}
+func (p *IncidentsPhase) HandleEvent(ge GameEngine, event *model.GameEvent) Phase { return nil }
+func (p *IncidentsPhase) HandleTimeout(ge GameEngine) Phase                     { return nil }
+func (p *IncidentsPhase) Exit(ge GameEngine)                                     {}
+func (p *IncidentsPhase) Type() model.GamePhase                                  { return model.GamePhase_GAME_PHASE_INCIDENTS }
+func (p *IncidentsPhase) TimeoutDuration() time.Duration                         { return 0 }
+
+// resetForNewDay resets the daily state of the game.
+func resetForNewDay(ge GameEngine) {
+	gs := ge.GetGameState()
+	gs.PlayedCardsThisDay = make(map[int32]*model.CardList)
+	gs.DayEvents = nil
+	// Other daily resets can go here.
+}
+
+// resetForNewLoop resets the loop-specific state of the game.
+func resetForNewLoop(ge GameEngine) {
+	gs := ge.GetGameState()
+	gs.CurrentDay = 1
+	gs.PlayedCardsThisLoop = make(map[int32]bool)
+	gs.TriggeredIncidents = make(map[string]bool)
+	gs.LoopEvents = nil
+
+	// Reset characters to their initial state
+	script := ge.GetGameRepo().GetScript()
+	for _, charInScript := range script.Characters {
+		if char, ok := gs.Characters[charInScript.CharacterId]; ok {
+			char.CurrentLocation = charInScript.InitialLocation
+			char.Paranoia = 0
+			char.Intrigue = 0
+			char.Goodwill = 0
+			char.Traits = nil // Or reset to initial traits
+			// Reset other character stats as needed
+		}
+	}
+
+	resetForNewDay(ge) // Also perform daily reset
 }
 
 func init() {

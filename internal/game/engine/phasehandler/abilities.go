@@ -31,11 +31,21 @@ func (p *AbilitiesPhase) Type() model.GamePhase { return model.GamePhase_GAME_PH
 
 // Enter 在阶段开始时调用。
 func (p *AbilitiesPhase) Enter(ge GameEngine) Phase {
+	// 在允许玩家行动之前，检查是否有任何由先前阶段的行动触发的事件。
+	if nextPhase := checkTriggers(ge); nextPhase != nil {
+		return nextPhase
+	}
+
 	p.turn = MastermindAbilityTurn
 	p.protagonistTurnIndex = 0
 
-	// 可选：为主谋触发 AI
-	// ge.TriggerAIPlayerAction(ge.GetMastermindPlayer().Id)
+	// 如果没有玩家需要行动（例如，由于特殊规则），则直接进入下一阶段。
+	if ge.GetMastermindPlayer() == nil && len(ge.GetProtagonistPlayers()) == 0 {
+		return &IncidentsPhase{}
+	}
+
+	// 为主谋触发 AI（如果适用）
+	ge.RequestAIAction(ge.GetMastermindPlayer().Id)
 
 	return nil
 }
@@ -159,6 +169,63 @@ func (p *AbilitiesPhase) handleUseAbilityAction(ge GameEngine, player *model.Pla
 	}
 
 	ge.Logger().Info("Player used ability", zap.String("player", player.Name), zap.String("ability", ability.Config.Name))
+}
+
+// checkTriggers 检查游戏状态是否有任何触发器（事件、悲剧、游戏结束）。
+// 如果触发了游戏结束条件，它将返回 GameOverPhase。
+func checkTriggers(ge GameEngine) Phase {
+	gs := ge.GetGameState()
+
+	// 1. 检查事件触发器
+	for _, incident := range ge.GetGameRepo().GetIncidents() {
+		// 跳过已经触发的事件
+		if gs.TriggeredIncidents[incident.GetName()] {
+			continue
+		}
+
+		triggered, err := ge.CheckCondition(incident.GetTrigger())
+		if err != nil {
+			ge.Logger().Error("Error checking incident trigger", zap.String("incident", incident.GetName()), zap.Error(err))
+			continue
+		}
+
+		if triggered {
+			ge.Logger().Info("Incident triggered", zap.String("incident", incident.GetName()))
+			gs.TriggeredIncidents[incident.GetName()] = true
+			ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_INCIDENT_TRIGGERED, &model.EventPayload{
+				Payload: &model.EventPayload_IncidentTriggered{IncidentTriggered: &model.IncidentTriggeredEvent{IncidentId: incident.GetId()}},
+			})
+		}
+	}
+
+	// 2. 检查悲剧触发器（如果适用）
+	// ... 此处应添加悲剧检查逻辑 ...
+
+	// 3. 检查游戏结束条件
+	if nextPhase := checkEndConditions(ge); nextPhase != nil {
+		return nextPhase
+	}
+
+	return nil
+}
+
+// checkEndConditions 检查是否满足任何游戏结束条件。
+func checkEndConditions(ge GameEngine) Phase {
+	gs := ge.GetGameState()
+	script := ge.GetGameRepo().GetScript()
+
+	// 检查是否达到了最大循环次数
+	if gs.CurrentLoop >= script.GetLoopCount() {
+		ge.Logger().Info("Max loops reached. Protagonists win.")
+		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
+			Payload: &model.EventPayload_GameEnded{GameEnded: &model.GameEndedEvent{Winner: model.PlayerRole_PLAYER_ROLE_PROTAGONIST}},
+		})
+		return &GameOverPhase{}
+	}
+
+	// ... 此处可以添加其他游戏结束条件（例如，所有主角死亡） ...
+
+	return nil
 }
 
 func init() {

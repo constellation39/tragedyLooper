@@ -36,12 +36,12 @@ func helper_NewGameEngineForTest(t *testing.T) *GameEngine {
 	}
 
 	players := []*v1.Player{
-		{Id: 1, Name: "Mastermind", Role: v1.PlayerRole_PLAYER_ROLE_MASTERMIND, IsLlm: true},
-		{Id: 2, Name: "Protagonist 1", Role: v1.PlayerRole_PLAYER_ROLE_PROTAGONIST, IsLlm: true},
-		{Id: 3, Name: "Protagonist 2", Role: v1.PlayerRole_PLAYER_ROLE_PROTAGONIST, IsLlm: true},
+		{Id: 1, Name: "Mastermind", Role: v1.PlayerRole_PLAYER_ROLE_MASTERMIND, IsLlm: false},
+		{Id: 2, Name: "Protagonist 1", Role: v1.PlayerRole_PLAYER_ROLE_PROTAGONIST, IsLlm: false},
+		{Id: 3, Name: "Protagonist 2", Role: v1.PlayerRole_PLAYER_ROLE_PROTAGONIST, IsLlm: false},
 	}
 
-	engine, err := NewGameEngine(log, players, &mockActionGenerator{}, gameConfig)
+	engine, err := NewGameEngine(log, players, nil, gameConfig) // AI is not needed for these tests
 	if err != nil {
 		t.Fatalf("failed to create game engine: %v", err)
 	}
@@ -61,6 +61,8 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 
 	// --- Setup: Get characters and mastermind player ---
 	mastermind := engine.GetMastermindPlayer()
+	protagonist1 := engine.GetProtagonistPlayers()[0]
+	protagonist2 := engine.GetProtagonistPlayers()[1]
 	doctor := engine.GetCharacterByID(2)
 	assert.NotNil(t, mastermind)
 	assert.NotNil(t, doctor)
@@ -78,8 +80,15 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 	engine.Start()
 	defer engine.Stop()
 
-	// The mastermind plays three "Increase Paranoia" cards on the Doctor.
+	passAction := &v1.PlayerActionPayload{
+		Payload: &v1.PlayerActionPayload_PassTurn{
+			PassTurn: &v1.PassTurnAction{},
+		},
+	}
+
+	// The mastermind plays three "Increase Paranoia" cards on the Doctor over three days.
 	for i := 0; i < 3; i++ {
+		// Mastermind's turn
 		engine.SubmitPlayerAction(mastermind.Id, &v1.PlayerActionPayload{
 			Payload: &v1.PlayerActionPayload_PlayCard{
 				PlayCard: &v1.PlayCardPayload{
@@ -88,8 +97,14 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 				},
 			},
 		})
-		// We need to let the engine process the action
-		time.Sleep(10 * time.Millisecond)
+
+		// Protagonists' turn (they pass)
+		engine.SubmitPlayerAction(protagonist1.Id, passAction)
+		engine.SubmitPlayerAction(protagonist2.Id, passAction)
+
+		// Let the engine process the turn. A small sleep is used here for simplicity,
+		// but in a real-world scenario, we might wait for a specific phase transition.
+		time.Sleep(50 * time.Millisecond)
 	}
 
 	// --- Verification: Wait for the incident to trigger and check the result ---
