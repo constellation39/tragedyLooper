@@ -37,9 +37,9 @@ type Phase interface {
 	// Enter is called when entering this phase.
 	Enter(ge GameEngine)
 	// HandleAction handles a player's action in this phase.
-	HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload)
+	HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) bool
 	// HandleEvent handles a game event received in this phase.
-	HandleEvent(ge GameEngine, event *model.GameEvent)
+	HandleEvent(ge GameEngine, event *model.GameEvent) bool
 	// HandleTimeout handles a timeout in this phase.
 	HandleTimeout(ge GameEngine)
 	// Exit is called when exiting this phase.

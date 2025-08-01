@@ -50,16 +50,18 @@ func (pm *Manager) CurrentPhase() Phase {
 	return pm.currentPhase
 }
 
-// HandleAction delegates the action to the current phase and then attempts a transition.
+// HandleAction delegates the action to the current phase and then attempts a transition if the phase is ready.
 func (pm *Manager) HandleAction(player *model.Player, action *model.PlayerActionPayload) {
-	pm.currentPhase.HandleAction(pm.engine, player, action)
-	pm.transitionToNext()
+	if pm.currentPhase.HandleAction(pm.engine, player, action) {
+		pm.transitionToNext()
+	}
 }
 
-// HandleEvent delegates the event to the current phase and then attempts a transition.
+// HandleEvent delegates the event to the current phase and then attempts a transition if the phase is ready.
 func (pm *Manager) HandleEvent(event *model.GameEvent) {
-	pm.currentPhase.HandleEvent(pm.engine, event)
-	pm.transitionToNext()
+	if pm.currentPhase.HandleEvent(pm.engine, event) {
+		pm.transitionToNext()
+	}
 }
 
 // HandleTimeout handles a phase timeout and then attempts a transition.

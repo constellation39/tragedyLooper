@@ -1,28 +1,16 @@
 package phasehandler
 
 import (
-	"time"
+	
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
 // --- SetupPhase ---
-type SetupPhase struct{}
-
-// HandleAction is the default implementation for Phase interface, does nothing and returns nil.
-func (p *SetupPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) {
+type SetupPhase struct{
+	BasePhase
 }
 
-// HandleEvent is the default implementation for Phase interface, does nothing and returns nil.
-func (p *SetupPhase) HandleEvent(ge GameEngine, event *model.GameEvent) {}
 
-// HandleTimeout is the default implementation for Phase interface, does nothing and returns nil.
-func (p *SetupPhase) HandleTimeout(ge GameEngine) {}
-
-// Exit is the default implementation for Phase interface, does nothing.
-func (p *SetupPhase) Exit(ge GameEngine) {}
-
-// TimeoutDuration is the default implementation for Phase interface, returns 0, indicating no timeout.
-func (p *SetupPhase) TimeoutDuration() time.Duration { return 0 }
 
 func (p *SetupPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_SETUP }
 func (p *SetupPhase) Enter(ge GameEngine) {

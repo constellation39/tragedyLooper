@@ -16,16 +16,13 @@ const (
 
 // CardPlayPhase is the phase where players play their cards.
 type CardPlayPhase struct {
+	BasePhase
 	turn                  CardPlayTurn
 	mastermindCardsPlayed int
 	protagonistTurnIndex  int
 }
 
-// HandleEvent is the default implementation for Phase interface, does nothing.
-func (p *CardPlayPhase) HandleEvent(ge GameEngine, event *model.GameEvent) {}
 
-// Exit is the default implementation for Phase interface, does nothing.
-func (p *CardPlayPhase) Exit(ge GameEngine) {}
 
 // NewCardPlayPhase creates a new CardPlayPhase.
 func NewCardPlayPhase(turn CardPlayTurn) *CardPlayPhase {
@@ -55,11 +52,11 @@ func (p *CardPlayPhase) Enter(ge GameEngine) {
 }
 
 // HandleAction handles an action from a player.
-func (p *CardPlayPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) {
+func (p *CardPlayPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) bool {
 	if p.turn == MastermindCardTurn {
-		p.handleMastermindAction(ge, player, action)
+		return p.handleMastermindAction(ge, player, action)
 	} else {
-		p.handleProtagonistAction(ge, player, action)
+		return p.handleProtagonistAction(ge, player, action)
 	}
 }
 
@@ -69,26 +66,27 @@ func (p *CardPlayPhase) HandleTimeout(ge GameEngine) {}
 // TimeoutDuration returns the timeout duration for this phase.
 func (p *CardPlayPhase) TimeoutDuration() time.Duration { return 30 * time.Second }
 
-func (p *CardPlayPhase) handleMastermindAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) {
+func (p *CardPlayPhase) handleMastermindAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) bool {
 	if player.Role != model.PlayerRole_PLAYER_ROLE_MASTERMIND {
-		return
+		return false
 	}
 
 	if payload, ok := action.Payload.(*model.PlayerActionPayload_PlayCard); ok {
-		handlePlayCardAction(ge, player, payload.PlayCard)
-		p.mastermindCardsPlayed++
-	}
+			handlePlayCardAction(ge, player, payload.PlayCard)
+			p.mastermindCardsPlayed++
+		}
+	return p.mastermindCardsPlayed >= 1
 }
 
-func (p *CardPlayPhase) handleProtagonistAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) {
+func (p *CardPlayPhase) handleProtagonistAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) bool {
 	protagonists := ge.GetProtagonistPlayers()
 	if len(protagonists) == 0 {
-		return
+		return true
 	}
 
 	if player.Role != model.PlayerRole_PLAYER_ROLE_PROTAGONIST || player.Id != protagonists[p.protagonistTurnIndex].Id {
 		ge.Logger().Warn("Received action from player out of turn", zap.String("expected_player", protagonists[p.protagonistTurnIndex].Name), zap.String("actual_player", player.Name))
-		return
+		return false
 	}
 
 	switch payload := action.Payload.(type) {
@@ -101,12 +99,13 @@ func (p *CardPlayPhase) handleProtagonistAction(ge GameEngine, player *model.Pla
 	p.protagonistTurnIndex++
 
 	if p.protagonistTurnIndex >= len(protagonists) {
-		return
+		return true
 	}
 
 	// Trigger AI for the next protagonist.
 	nextProtagonist := protagonists[p.protagonistTurnIndex]
 	ge.RequestAIAction(nextProtagonist.Id)
+	return false
 }
 
 func init() {
