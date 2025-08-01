@@ -34,9 +34,17 @@ func (pm *Manager) Start() {
 	pm.transitionTo(pm.currentPhase)
 }
 
-// timer 返回阶段计时器的通道。
-func (pm *Manager) Timer() <-chan time.Time {
-	return pm.phaseTimer.C
+// OnTick 由游戏引擎定期调用。
+// 它会检查阶段超时并触发相应的处理程序。
+// 这将超时检查逻辑从引擎的主 select 循环移入管理器，从而封装了与阶段相关的计时。
+func (pm *Manager) OnTick() bool {
+	select {
+	case <-pm.phaseTimer.C:
+		return pm.HandleTimeout()
+	default:
+		// 非阻塞：计时器尚未触发。
+		return false
+	}
 }
 
 // CurrentPhase 返回当前的游戏阶段。

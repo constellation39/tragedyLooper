@@ -3,6 +3,8 @@ package engine
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/constellation39/tragedyLooper/internal/game/engine/ai"
 	"github.com/constellation39/tragedyLooper/internal/game/engine/character"
 	"github.com/constellation39/tragedyLooper/internal/game/engine/condition"
@@ -208,14 +210,18 @@ func (ge *GameEngine) runGameLoop() {
 	ge.ResetPlayerReadiness()
 	defer ge.em.Close()
 
+	// 创建一个定期触发器来驱动游戏状态（例如，用于超时）。
+	ticker := time.NewTicker(100 * time.Millisecond) // TODO: 使其可配置
+	defer ticker.Stop()
+
 	for {
 		select {
 		case <-ge.stopChan:
 			return
 		case req := <-ge.engineChan:
 			ge.handleEngineRequest(req)
-		case <-ge.pm.Timer():
-			if ge.pm.HandleTimeout() {
+		case <-ticker.C:
+			if ge.pm.OnTick() {
 				ge.ResetPlayerReadiness()
 			}
 		}
