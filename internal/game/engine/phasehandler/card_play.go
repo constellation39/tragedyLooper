@@ -1,114 +1,54 @@
 package phasehandler
 
 import (
-	"time"
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
 )
 
-type CardPlayTurn int
+func handlePlayCardAction(ge GameEngine, player *model.Player, payload *model.PlayCardPayload) {
+	gs := ge.GetGameState()
 
-const (
-	MastermindCardTurn CardPlayTurn = iota
-	ProtagonistCardTurn
-)
-
-// CardPlayPhase is the phase where players play their cards.
-type CardPlayPhase struct {
-	BasePhase
-	turn                  CardPlayTurn
-	mastermindCardsPlayed int
-	protagonistTurnIndex  int
-}
-
-
-
-// NewCardPlayPhase creates a new CardPlayPhase.
-func NewCardPlayPhase(turn CardPlayTurn) *CardPlayPhase {
-	return &CardPlayPhase{turn: turn}
-}
-
-// Type returns the phase type.
-func (p *CardPlayPhase) Type() model.GamePhase {
-	if p.turn == MastermindCardTurn {
-		return model.GamePhase_GAME_PHASE_MASTERMIND_CARD_PLAY
-	}
-	return model.GamePhase_GAME_PHASE_PROTAGONIST_CARD_PLAY
-}
-
-// Enter is called when the phase begins.
-func (p *CardPlayPhase) Enter(ge GameEngine) {
-	if p.turn == MastermindCardTurn {
-		p.mastermindCardsPlayed = 0
-		ge.RequestAIAction(ge.GetMastermindPlayer().Id)
-	} else {
-		p.protagonistTurnIndex = 0
-		protagonists := ge.GetProtagonistPlayers()
-		if len(protagonists) > 0 {
-			ge.RequestAIAction(protagonists[0].Id)
+	// Find the card in the player's hand
+	var card *model.Card
+	cardIndex := -1
+	for i, c := range player.Hand.Cards {
+		if c.Config.Id == payload.CardId {
+			card = c
+			cardIndex = i
+			break
 		}
 	}
+
+	if card == nil {
+		ge.Logger().Warn("Player tried to play a card they don't have", zap.Int32("player_id", player.Id), zap.Int32("card_id", payload.CardId))
+		return
+	}
+
+	if _, ok := gs.PlayedCardsThisLoop[card.Config.Id]; ok && card.Config.Type != model.CardType_CARD_TYPE_UNSPECIFIED {
+		ge.Logger().Warn("Player tried to play a card that has already been played this loop", zap.Int32("player_id", player.Id), zap.String("card_name", card.Config.Name))
+		return
+	}
+
+	// Add card to played cards for the day
+	if _, ok := gs.PlayedCardsThisDay[player.Id]; !ok {
+		gs.PlayedCardsThisDay[player.Id] = &model.CardList{}
+	}
+	gs.PlayedCardsThisDay[player.Id].Cards = append(gs.PlayedCardsThisDay[player.Id].Cards, card)
+
+	// Mark as played this loop
+	gs.PlayedCardsThisLoop[card.Config.Id] = true
+
+	// Remove card from hand
+	player.Hand.Cards = append(player.Hand.Cards[:cardIndex], player.Hand.Cards[cardIndex+1:]...)
+
+	ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_CARD_PLAYED, &model.EventPayload{
+		Payload: &model.EventPayload_CardPlayed{CardPlayed: &model.CardPlayedEvent{PlayerId: player.Id, Card: card}},
+	})
 }
 
-// HandleAction handles an action from a player.
-func (p *CardPlayPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) bool {
-	if p.turn == MastermindCardTurn {
-		return p.handleMastermindAction(ge, player, action)
-	} else {
-		return p.handleProtagonistAction(ge, player, action)
-	}
-}
-
-// HandleTimeout handles a timeout.
-func (p *CardPlayPhase) HandleTimeout(ge GameEngine) {}
-
-// TimeoutDuration returns the timeout duration for this phase.
-func (p *CardPlayPhase) TimeoutDuration() time.Duration { return 30 * time.Second }
-
-func (p *CardPlayPhase) handleMastermindAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) bool {
-	if player.Role != model.PlayerRole_PLAYER_ROLE_MASTERMIND {
-		return false
-	}
-
-	if payload, ok := action.Payload.(*model.PlayerActionPayload_PlayCard); ok {
-			handlePlayCardAction(ge, player, payload.PlayCard)
-			p.mastermindCardsPlayed++
-		}
-	return p.mastermindCardsPlayed >= 1
-}
-
-func (p *CardPlayPhase) handleProtagonistAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) bool {
-	protagonists := ge.GetProtagonistPlayers()
-	if len(protagonists) == 0 {
-		return true
-	}
-
-	if player.Role != model.PlayerRole_PLAYER_ROLE_PROTAGONIST || player.Id != protagonists[p.protagonistTurnIndex].Id {
-		ge.Logger().Warn("Received action from player out of turn", zap.String("expected_player", protagonists[p.protagonistTurnIndex].Name), zap.String("actual_player", player.Name))
-		return false
-	}
-
-	switch payload := action.Payload.(type) {
-	case *model.PlayerActionPayload_PlayCard:
-		handlePlayCardAction(ge, player, payload.PlayCard)
-	case *model.PlayerActionPayload_PassTurn:
-		handlePassTurnAction(ge, player)
-	}
-
-	p.protagonistTurnIndex++
-
-	if p.protagonistTurnIndex >= len(protagonists) {
-		return true
-	}
-
-	// Trigger AI for the next protagonist.
-	nextProtagonist := protagonists[p.protagonistTurnIndex]
-	ge.RequestAIAction(nextProtagonist.Id)
-	return false
-}
-
-func init() {
-	RegisterPhase(NewCardPlayPhase(MastermindCardTurn))
-	RegisterPhase(NewCardPlayPhase(ProtagonistCardTurn))
+func handlePassTurnAction(ge GameEngine, player *model.Player) {
+	ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_PLAYER_ACTION, &model.EventPayload{
+		Payload: &model.EventPayload_PlayerActionTaken{PlayerActionTaken: &model.PlayerActionTakenEvent{PlayerId: player.Id, Action: &model.PlayerActionPayload{Payload: &model.PlayerActionPayload_PassTurn{PassTurn: &model.PassTurnAction{}}}}},
+	})
 }
