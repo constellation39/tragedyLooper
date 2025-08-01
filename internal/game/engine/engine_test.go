@@ -1,30 +1,15 @@
 package engine
 
 import (
-	"context"
 	"testing"
 	"time"
 
-	"github.com/constellation39/tragedyLooper/internal/game/engine/ai"
 	"github.com/constellation39/tragedyLooper/internal/game/loader"
 	"github.com/constellation39/tragedyLooper/internal/logger"
 	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 
 	"github.com/stretchr/testify/assert"
 )
-
-// mockActionGenerator 是一个用于测试的简单 AI 行动生成器。
-type mockActionGenerator struct{}
-
-func (m *mockActionGenerator) GenerateAction(ctx context.Context, agc *ai.ActionGeneratorContext) (*v1.PlayerActionPayload, error) {
-	// 对于此测试，我们不需要复杂的 AI 逻辑。
-	// 我们可以返回一个简单的跳过行动。
-	return &v1.PlayerActionPayload{
-		Payload: &v1.PlayerActionPayload_PassTurn{
-			PassTurn: &v1.PassTurnAction{},
-		},
-	}, nil
-}
 
 func helper_NewGameEngineForTest(t *testing.T) *GameEngine {
 	t.Helper()

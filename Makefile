@@ -1,12 +1,9 @@
 # Makefile for the Tragedy Looper project
 
-# Paths
-GO_BIN_PATH := C:/Users/const/scoop/apps/go/current/bin
-GIT_BIN_PATH := C:/Users/const/scoop/apps/git/current/usr/bin
-SHELL_PREFIX := export PATH="$(GIT_BIN_PATH):$(GO_BIN_PATH):$$PATH" &&
-
 # Binary name
 BINARY_NAME=tragedylooper
+# Go command
+GO := go
 
 .PHONY: all build run test clean lint proto clean-proto install-tools format
 
@@ -15,67 +12,52 @@ all: build
 # Format the code
 format:
 	@echo "Formatting..."
-	@$(SHELL_PREFIX) go run github.com/bufbuild/buf/cmd/buf@latest format -w
-	@$(SHELL_PREFIX) go fmt ./...
-	@$(SHELL_PREFIX) goimports -w cmd internal pkg tools
+	@$(GO) run github.com/bufbuild/buf/cmd/buf@latest format -w
+	@$(GO) fmt ./...
+	@$(GO) run golang.org/x/tools/cmd/goimports@latest -w cmd internal pkg tools
 
 # Build the application
 build:
 	@echo "Building $(BINARY_NAME)..."
-	@$(SHELL_PREFIX) go build -o bin/$(BINARY_NAME) ./cmd/tragedylooper
+	@$(GO) build -o bin/$(BINARY_NAME) ./cmd/tragedylooper
 
 # Run the application
 run:
 	@echo "Running $(BINARY_NAME)..."
-	@$(SHELL_PREFIX) go run ./cmd/tragedylooper
-
-# Build the test client
-build-test-client:
-	@echo "Building test client..."
-	@$(SHELL_PREFIX) go build -o bin/testclient ./cmd/testclient
-
-# Run the test client
-run-test-client:
-	@echo "Running test client..."
-	@$(SHELL_PREFIX) go run ./cmd/testclient
+	@$(GO) run ./cmd/tragedylooper
 
 # Test the application
 test:
 	@echo "Running tests..."
-	@$(SHELL_PREFIX) go test ./...
+	@$(GO) test ./...
 
 # Clean the binary
 clean:
 	@echo "Cleaning..."
-	@$(SHELL_PREFIX) go run ./tools/rmrf bin
-
-# Validate data files
-validate-data:
-	@echo "Validating data files..."
-	@$(SHELL_PREFIX) go run ./tools/autovalidator/main.go
+	@if exist bin ( rmdir /S /Q bin )
 
 # Lint the code
 lint: format
 	@echo "Linting..."
-	@$(SHELL_PREFIX) golangci-lint run
-	@$(SHELL_PREFIX) go run github.com/bufbuild/buf/cmd/buf@latest lint
+	@$(GO) run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run
+	@$(GO) run github.com/bufbuild/buf/cmd/buf@latest lint
 
 # Install tools
 install-tools:
 	@echo "Installing tools..."
-	@$(SHELL_PREFIX) go install golang.org/x/tools/cmd/goimports@latest
-	@$(SHELL_PREFIX) go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-	@$(SHELL_PREFIX) go install github.com/chrusty/protoc-gen-jsonschema/cmd/protoc-gen-jsonschema@latest
-	@$(SHELL_PREFIX) go install cuelang.org/go/cmd/cue@latest
+	@$(GO) install golang.org/x/tools/cmd/goimports@latest
+	@$(GO) install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+	@$(GO) install cuelang.org/go/cmd/cue@latest
+	@$(GO) install github.com/bufbuild/buf/cmd/buf@latest
+	@$(GO) install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 # Protobuf generation
 proto:
-	@echo "Generating Go code and JSON schema from protobuf..."
-	@$(SHELL_PREFIX) buf generate
-	@$(SHELL_PREFIX) cue get go github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1
+	@echo "Generating Go code from protobuf..."
+	@$(GO) run github.com/bufbuild/buf/cmd/buf@latest generate
+	@$(GO) run cuelang.org/go/cmd/cue@latest get go github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1
 
 # Clean generated protobuf files
 clean-proto:
 	@echo "Cleaning generated protobuf files..."
-	@$(SHELL_PREFIX) go run ./tools/rmrf pkg/proto
-	@$(SHELL_PREFIX) go run ./tools/rmrf data/jsonschema
+	@if exist pkg\proto ( rmdir /S /Q pkg\proto )
