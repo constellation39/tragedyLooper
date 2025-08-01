@@ -65,11 +65,13 @@ install-tools:
 	@$(SHELL_PREFIX) go install golang.org/x/tools/cmd/goimports@latest
 	@$(SHELL_PREFIX) go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	@$(SHELL_PREFIX) go install github.com/chrusty/protoc-gen-jsonschema/cmd/protoc-gen-jsonschema@latest
+	@$(SHELL_PREFIX) go install cuelang.org/go/cmd/cue@latest
 
 # Protobuf generation
 proto:
 	@echo "Generating Go code and JSON schema from protobuf..."
 	@$(SHELL_PREFIX) buf generate
+	@$(SHELL_PREFIX) cue get go .\pkg\proto\tragedylooper\v1
 
 # Clean generated protobuf files
 clean-proto:
