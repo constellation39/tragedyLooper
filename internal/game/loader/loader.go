@@ -2,13 +2,12 @@ package loader
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 
 	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
-
-	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
+	"cuelang.org/go/cue/cuecontext"
+	"cuelang.org/go/cue/load"
 )
 
 // GameConfig defines the interface for accessing game configuration data.
@@ -46,27 +45,37 @@ func LoadConfig(dataDir, scriptID string) (GameConfig, error) {
 	return repo, nil
 }
 
-func loadDataFromJSON[T proto.Message](filePath string, data T) error {
+func loadDataFromCUE[T proto.Message](filePath string, data T) error {
 	absPath, err := filepath.Abs(filePath)
 	if err != nil {
 		return fmt.Errorf("failed to get absolute path for %s: %w", filePath, err)
 	}
-	bytes, err := os.ReadFile(absPath)
-	if err != nil {
-		return fmt.Errorf("failed to read file %s: %w", absPath, err)
+
+	c := cuecontext.New()
+	bis := load.Instances([]string{absPath}, nil)
+	if len(bis) == 0 {
+		return fmt.Errorf("no CUE instances found for %s", absPath)
+	}
+	b := bis[0]
+	if err := b.Err; err != nil {
+		return fmt.Errorf("failed to load CUE instance for %s: %w", absPath, err)
+	}
+	v := c.BuildInstance(b)
+	if err := v.Err(); err != nil {
+		return fmt.Errorf("failed to build CUE instance for %s: %w", absPath, err)
 	}
 
-	if err := protojson.Unmarshal(bytes, data); err != nil {
-		return fmt.Errorf("failed to decode json from %s: %w", absPath, err)
+	if err := v.Decode(data); err != nil {
+		return fmt.Errorf("failed to decode CUE from %s: %w", absPath, err)
 	}
 
 	return nil
 }
 
 func loadAbilities(repo *repository, dataDir string) error {
-	filePath := filepath.Join(dataDir, "AbilityConfigLib.json")
+	filePath := filepath.Join(dataDir, "AbilityConfigLib.cue")
 	var abilities v1.AbilityConfigLib
-	if err := loadDataFromJSON(filePath, &abilities); err != nil {
+	if err := loadDataFromCUE(filePath, &abilities); err != nil {
 		return err
 	}
 	repo.abilities = abilities.Abilities
@@ -74,9 +83,9 @@ func loadAbilities(repo *repository, dataDir string) error {
 }
 
 func loadCards(repo *repository, dataDir string) error {
-	filePath := filepath.Join(dataDir, "CardConfigLib.json")
+	filePath := filepath.Join(dataDir, "CardConfigLib.cue")
 	var cards v1.CardConfigLib
-	if err := loadDataFromJSON(filePath, &cards); err != nil {
+	if err := loadDataFromCUE(filePath, &cards); err != nil {
 		return err
 	}
 	repo.cards = cards.Cards
@@ -84,9 +93,9 @@ func loadCards(repo *repository, dataDir string) error {
 }
 
 func loadCharacters(repo *repository, dataDir string) error {
-	filePath := filepath.Join(dataDir, "CharacterConfigLib.json")
+	filePath := filepath.Join(dataDir, "CharacterConfigLib.cue")
 	var characters v1.CharacterConfigLib
-	if err := loadDataFromJSON(filePath, &characters); err != nil {
+	if err := loadDataFromCUE(filePath, &characters); err != nil {
 		return err
 	}
 	repo.characters = characters.Characters
@@ -94,9 +103,9 @@ func loadCharacters(repo *repository, dataDir string) error {
 }
 
 func loadIncidents(repo *repository, dataDir string) error {
-	filePath := filepath.Join(dataDir, "IncidentConfigLib.json")
+	filePath := filepath.Join(dataDir, "IncidentConfigLib.cue")
 	var incidents v1.IncidentConfigLib
-	if err := loadDataFromJSON(filePath, &incidents); err != nil {
+	if err := loadDataFromCUE(filePath, &incidents); err != nil {
 		return err
 	}
 	repo.incidents = incidents.Incidents
@@ -104,9 +113,9 @@ func loadIncidents(repo *repository, dataDir string) error {
 }
 
 func loadScript(repo *repository, dataDir, scriptID string) error {
-	filePath := filepath.Join(dataDir, "ScriptConfig", scriptID+".json")
+	filePath := filepath.Join(dataDir, "ScriptConfig", scriptID+".cue")
 	var script v1.ScriptConfig
-	if err := loadDataFromJSON(filePath, &script); err != nil {
+	if err := loadDataFromCUE(filePath, &script); err != nil {
 		return err
 	}
 	repo.script = &script

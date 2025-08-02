@@ -7,7 +7,6 @@ import (
 
 	"github.com/constellation39/tragedyLooper/internal/game/engine/ai"
 	"github.com/constellation39/tragedyLooper/internal/game/engine/character"
-	"github.com/constellation39/tragedyLooper/internal/game/engine/condition"
 	"github.com/constellation39/tragedyLooper/internal/game/engine/effecthandler"
 	"github.com/constellation39/tragedyLooper/internal/game/engine/eventhandler"
 	"github.com/constellation39/tragedyLooper/internal/game/engine/phasehandler"
@@ -306,10 +305,6 @@ func (ge *GameEngine) GetCharacterByID(charID int32) *model.Character {
 
 func (ge *GameEngine) MoveCharacter(char *model.Character, dx, dy int) {
 	character.MoveCharacter(ge.logger, ge, ge.GameState, char, dx, dy)
-}
-
-func (ge *GameEngine) CheckCondition(cond *model.Condition) (bool, error) {
-	return condition.Check(ge.GameState, cond)
 }
 
 func (ge *GameEngine) ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, ctx *effecthandler.EffectContext) ([]int32, error) {

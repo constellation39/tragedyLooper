@@ -1,6 +1,7 @@
 package phasehandler
 
 import (
+	"github.com/constellation39/tragedyLooper/internal/game/engine/condition"
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 
 	"go.uber.org/zap"
@@ -23,7 +24,7 @@ func (p *DayEndPhase) Enter(ge GameEngine) {
 	for _, endCond := range script.LoseConditions {
 		if endCond.Type == model.EndConditionType_END_CONDITION_TYPE_PROTAGONIST_GUESS_FAIL {
 			for _, req := range endCond.Requirements {
-				met, err := ge.CheckCondition(req)
+				met, err := condition.Check(ge.GetGameState(), req)
 				if err != nil {
 					logger.Error("Error checking loop loss condition", zap.Error(err))
 					continue

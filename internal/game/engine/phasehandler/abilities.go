@@ -1,6 +1,7 @@
 package phasehandler
 
 import (
+	"github.com/constellation39/tragedyLooper/internal/game/engine/condition"
 	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 	"go.uber.org/zap"
 )
@@ -174,7 +175,7 @@ func checkTriggers(ge GameEngine) {
 				},
 			},
 		}
-		triggered, err := ge.CheckCondition(compoundCondition)
+		triggered, err := condition.Check(ge.GetGameState(), compoundCondition)
 		if err != nil {
 			ge.Logger().Error("Error checking incident trigger", zap.String("incident", incident.GetName()), zap.Error(err))
 			continue
