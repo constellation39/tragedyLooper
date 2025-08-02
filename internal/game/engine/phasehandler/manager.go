@@ -45,22 +45,23 @@ func (pm *Manager) CurrentPhase() Phase {
 }
 
 // HandleAction delegates the action to the current phase and then attempts a transition if the phase is ready.
-func (pm *Manager) HandleAction(player *model.Player, action *model.PlayerActionPayload) {
-	if pm.currentPhase.HandleAction(pm.engine, player, action) {
-		pm.transitionToNext()
-	}
+func (pm *Manager) HandleAction(player *model.Player, action *model.PlayerActionPayload) PhaseState {
+	return pm.currentPhase.HandleAction(pm.engine, player, action)
 }
 
 // HandleEvent delegates the event to the current phase and then attempts a transition if the phase is ready.
-func (pm *Manager) HandleEvent(event *model.GameEvent) {
-	if pm.currentPhase.HandleEvent(pm.engine, event) {
-		pm.transitionToNext()
-	}
+func (pm *Manager) HandleEvent(event *model.GameEvent) PhaseState {
+	return pm.currentPhase.HandleEvent(pm.engine, event)
 }
 
 // HandleTimeout handles a phase timeout and then attempts a transition.
 func (pm *Manager) HandleTimeout() {
 	pm.currentPhase.HandleTimeout(pm.engine)
+	pm.transitionToNext()
+}
+
+// Advance to the next phase in the flowchart.
+func (pm *Manager) Advance() {
 	pm.transitionToNext()
 }
 
@@ -90,7 +91,7 @@ func (pm *Manager) transitionTo(nextPhaseType model.GamePhase) bool {
 	pm.engine.GetGameState().CurrentPhase = nextPhase.Type()
 
 	// Enter the new phase.
-	readyToTransition := pm.currentPhase.Enter(pm.engine)
+	phaseState := pm.currentPhase.Enter(pm.engine)
 
 	// Set the timer for the new phase.
 	ticks := pm.currentPhase.TimeoutTicks()
@@ -100,7 +101,7 @@ func (pm *Manager) transitionTo(nextPhaseType model.GamePhase) bool {
 
 	// After entering, immediately check if we should transition again.
 	// This handles auto-advancing phases.
-	if readyToTransition {
+	if phaseState == PhaseComplete {
 		return pm.transitionToNext()
 	}
 	return true

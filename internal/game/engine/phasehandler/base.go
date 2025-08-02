@@ -13,18 +13,18 @@ type BasePhase struct {
 }
 
 // Enter is a default implementation that does nothing.
-func (p *BasePhase) Enter(ge GameEngine) bool {
-	return false
+func (p *BasePhase) Enter(ge GameEngine) PhaseState {
+	return PhaseInProgress
 }
 
 // HandleAction is a default implementation that does nothing and indicates that the phase is not ready to transition.
-func (p *BasePhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) bool {
-	return false
+func (p *BasePhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) PhaseState {
+	return PhaseInProgress
 }
 
 // HandleEvent is a default implementation that does nothing and indicates that the phase is not ready to transition.
-func (p *BasePhase) HandleEvent(ge GameEngine, event *model.GameEvent) bool {
-	return false
+func (p *BasePhase) HandleEvent(ge GameEngine, event *model.GameEvent) PhaseState {
+	return PhaseInProgress
 }
 
 // HandleTimeout is a default implementation that does nothing.

@@ -11,10 +11,7 @@ type IncidentsPhase struct {
 	BasePhase
 }
 
-func (p *IncidentsPhase) Enter(ge GameEngine) {
-	defer func() {
-		p.readyToTransition = true
-	}()
+func (p *IncidentsPhase) Enter(ge GameEngine) PhaseState {
 	gs := ge.GetGameState()
 	script := ge.GetGameRepo().GetScript()
 
@@ -38,7 +35,7 @@ func (p *IncidentsPhase) Enter(ge GameEngine) {
 		if gs.CurrentLoop > script.GetLoopCount() {
 			ge.Logger().Info("Final loop has ended. Game over.")
 			ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{})
-			return
+			return PhaseComplete
 		}
 
 		// Reset for the new loop
@@ -46,7 +43,7 @@ func (p *IncidentsPhase) Enter(ge GameEngine) {
 		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED, &model.EventPayload{
 			Payload: &model.EventPayload_DayAdvanced{DayAdvanced: &model.DayAdvancedEvent{Day: gs.CurrentDay, Loop: gs.CurrentLoop}},
 		})
-		return
+		return PhaseComplete
 	}
 
 	// Reset for the new day
@@ -54,6 +51,7 @@ func (p *IncidentsPhase) Enter(ge GameEngine) {
 	ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED, &model.EventPayload{
 		Payload: &model.EventPayload_DayAdvanced{DayAdvanced: &model.DayAdvancedEvent{Day: gs.CurrentDay, Loop: gs.CurrentLoop}},
 	})
+	return PhaseComplete
 }
 
 func (p *IncidentsPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_INCIDENTS }

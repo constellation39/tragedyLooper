@@ -10,8 +10,7 @@ type LoopStartPhase struct {
 }
 
 func (p *LoopStartPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_LOOP_START }
-func (p *LoopStartPhase) Enter(ge GameEngine) {
-	p.readyToTransition = true
+func (p *LoopStartPhase) Enter(ge GameEngine) PhaseState {
 	gs := ge.GetGameState()
 	script := ge.GetGameRepo().GetScript()
 
@@ -19,7 +18,7 @@ func (p *LoopStartPhase) Enter(ge GameEngine) {
 		ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
 			Payload: &model.EventPayload_GameEnded{GameEnded: &model.GameEndedEvent{Reason: "Max loops reached"}},
 		})
-		return
+		return PhaseComplete
 	}
 
 	gs.CurrentLoop++
@@ -27,6 +26,7 @@ func (p *LoopStartPhase) Enter(ge GameEngine) {
 	ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_LOOP_RESET, &model.EventPayload{
 		Payload: &model.EventPayload_LoopReset{LoopReset: &model.LoopResetEvent{LoopNumber: gs.CurrentLoop}},
 	})
+	return PhaseComplete
 }
 
 func init() {

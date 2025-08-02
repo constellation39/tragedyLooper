@@ -17,10 +17,7 @@ type CardEffectsPhase struct {
 func (p *CardEffectsPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_CARD_EFFECTS }
 
 // Enter 在阶段开始时调用。
-func (p *CardEffectsPhase) Enter(ge GameEngine) {
-	defer func() {
-		p.readyToTransition = true
-	}()
+func (p *CardEffectsPhase) Enter(ge GameEngine) PhaseState {
 	logger := ge.Logger().Named("CardEffectsPhase")
 	playedCards := getAllPlayedCards(ge)
 
@@ -42,6 +39,7 @@ func (p *CardEffectsPhase) Enter(ge GameEngine) {
 	p.resolveStatEffects(logger, ge, playedCards)
 
 	logger.Info("Finished resolving card effects")
+	return PhaseComplete
 }
 
 func (p *CardEffectsPhase) resolveForbidMovement(logger *zap.Logger, cards []*model.Card) map[int32]bool {

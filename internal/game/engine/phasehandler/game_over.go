@@ -10,9 +10,9 @@ type GameOverPhase struct {
 }
 
 func (p *GameOverPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_GAME_OVER }
-func (p *GameOverPhase) Enter(ge GameEngine) bool {
+func (p *GameOverPhase) Enter(ge GameEngine) PhaseState {
 	// Clean up, announce winner, etc.
-	return false
+	return PhaseInProgress
 }
 
 func init() {

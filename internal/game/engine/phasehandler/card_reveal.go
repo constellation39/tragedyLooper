@@ -10,7 +10,7 @@ type CardRevealPhase struct {
 }
 
 func (p *CardRevealPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_CARD_REVEAL }
-func (p *CardRevealPhase) Enter(ge GameEngine) {
+func (p *CardRevealPhase) Enter(ge GameEngine) PhaseState {
 	// 揭示本回合打出的所有牌。
 	allPlayedCards := make(map[int32]*model.CardList)
 	for playerID, cardList := range ge.GetGameState().PlayedCardsThisDay {
@@ -19,7 +19,7 @@ func (p *CardRevealPhase) Enter(ge GameEngine) {
 	ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_CARD_REVEALED, &model.EventPayload{
 		Payload: &model.EventPayload_CardRevealed{CardRevealed: &model.CardRevealedEvent{Cards: allPlayedCards}},
 	})
-	p.readyToTransition = true
+	return PhaseComplete
 }
 
 func init() {

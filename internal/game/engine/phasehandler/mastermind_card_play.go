@@ -16,22 +16,27 @@ func (p *MastermindCardPlayPhase) Type() model.GamePhase {
 }
 
 // Enter is called when the phase begins.
-func (p *MastermindCardPlayPhase) Enter(ge GameEngine) {
+func (p *MastermindCardPlayPhase) Enter(ge GameEngine) PhaseState {
 	p.mastermindCardsPlayed = 0
 	ge.RequestAIAction(ge.GetMastermindPlayer().Id)
+	return PhaseInProgress
 }
 
 // HandleAction handles an action from a player.
-func (p *MastermindCardPlayPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) bool {
+func (p *MastermindCardPlayPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) PhaseState {
 	if player.Role != model.PlayerRole_PLAYER_ROLE_MASTERMIND {
-		return false
+		return PhaseInProgress
 	}
 
 	if payload, ok := action.Payload.(*model.PlayerActionPayload_PlayCard); ok {
 		handlePlayCardAction(ge, player, payload.PlayCard)
 		p.mastermindCardsPlayed++
 	}
-	return p.mastermindCardsPlayed >= 1
+
+	if p.mastermindCardsPlayed >= 1 {
+		return PhaseComplete
+	}
+	return PhaseInProgress
 }
 
 func init() {

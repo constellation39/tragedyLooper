@@ -10,8 +10,7 @@ type LoopEndPhase struct {
 }
 
 func (p *LoopEndPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_LOOP_END }
-func (p *LoopEndPhase) Enter(ge GameEngine) {
-	p.readyToTransition = true
+func (p *LoopEndPhase) Enter(ge GameEngine) PhaseState {
 	gs := ge.GetGameState()
 	script := ge.GetGameRepo().GetScript()
 
@@ -27,6 +26,7 @@ func (p *LoopEndPhase) Enter(ge GameEngine) {
 			Payload: &model.EventPayload_LoopReset{LoopReset: &model.LoopResetEvent{LoopNumber: gs.CurrentLoop + 1}},
 		})
 	}
+	return PhaseComplete
 }
 
 func init() {

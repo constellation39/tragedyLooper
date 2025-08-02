@@ -24,27 +24,28 @@ type AbilitiesPhase struct {
 func (p *AbilitiesPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_ABILITIES }
 
 // Enter 在阶段开始时调用。
-func (p *AbilitiesPhase) Enter(ge GameEngine) {
-	// 在允许玩家行动之前，检查是否有任何由先前阶段的行动触发的事件。
-	checkTriggers(ge)
-
+func (p *AbilitiesPhase) Enter(ge GameEngine) PhaseState {
 	p.turn = MastermindAbilityTurn
 	p.protagonistTurnIndex = 0
 
+	// 检查是否有任何由先前阶段的行动触发的事件。
+	checkTriggers(ge)
+
 	// 如果没有玩家需要行动（例如，由于特殊规则），则直接进入下一阶段。
 	if ge.GetMastermindPlayer() == nil && len(ge.GetProtagonistPlayers()) == 0 {
-		return
+		return PhaseComplete
 	}
 
 	// 为主谋触发 AI（如果适用）
 	ge.RequestAIAction(ge.GetMastermindPlayer().Id)
+	return PhaseInProgress
 }
 
 // HandleAction 处理来自玩家的行动。
-func (p *AbilitiesPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) bool {
+func (p *AbilitiesPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) PhaseState {
 	if !p.isActionInTurn(ge, player) {
 		ge.Logger().Warn("Received action from player out of turn", zap.String("player", player.Name))
-		return false
+		return PhaseInProgress
 	}
 
 	switch payload := action.Payload.(type) {
@@ -55,7 +56,7 @@ func (p *AbilitiesPhase) HandleAction(ge GameEngine, player *model.Player, actio
 	case *model.PlayerActionPayload_PassTurn:
 		return p.handlePassTurn(ge, player)
 	}
-	return false
+	return PhaseInProgress
 }
 
 // HandleTimeout 处理超时。
@@ -87,7 +88,7 @@ func (p *AbilitiesPhase) isActionInTurn(ge GameEngine, player *model.Player) boo
 	return player.Id == protagonists[p.protagonistTurnIndex].Id
 }
 
-func (p *AbilitiesPhase) handlePassTurn(ge GameEngine, player *model.Player) bool {
+func (p *AbilitiesPhase) handlePassTurn(ge GameEngine, player *model.Player) PhaseState {
 	ge.Logger().Info("Player passed ability turn", zap.String("player", player.Name))
 
 	if p.turn == MastermindAbilityTurn {
@@ -98,20 +99,19 @@ func (p *AbilitiesPhase) handlePassTurn(ge GameEngine, player *model.Player) boo
 		// if len(protagonists) > 0 {
 		// 	ge.TriggerAIPlayerAction(protagonists[0].Id)
 		// }
-		return false
+		return PhaseInProgress
 	}
 
 	p.protagonistTurnIndex++
 	protagonists := ge.GetProtagonistPlayers()
 	if p.protagonistTurnIndex >= len(protagonists) {
 		ge.Logger().Info("All protagonists have acted, moving to Incidents Phase")
-		p.readyToTransition = true
-		return false
+		return PhaseComplete
 	}
 
 	// 可选：为下一个主角触发 AI
 	// ge.TriggerAIPlayerAction(protagonists[p.protagonistTurnIndex].Id)
-	return false
+	return PhaseInProgress
 }
 
 func (p *AbilitiesPhase) handleUseAbilityAction(ge GameEngine, player *model.Player, payload *model.UseAbilityPayload) {
