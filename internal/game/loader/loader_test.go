@@ -1,0 +1,49 @@
+package loader
+
+import (
+	"path/filepath"
+	"testing"
+
+	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
+	"github.com/stretchr/testify/assert"
+)
+
+func TestLoadConfig(t *testing.T) {
+	// Use the actual data directory
+	dataDir, err := filepath.Abs("../../../data")
+	assert.NoError(t, err)
+
+	// Load the config for the "first_steps" script
+	config, err := LoadConfig(dataDir, "first_steps")
+
+	// Assertions
+	assert.NoError(t, err)
+	assert.NotNil(t, config)
+
+	// Check script
+	script := config.GetScript()
+	assert.NotNil(t, script)
+	assert.Equal(t, "First Steps", script.Name)
+	assert.Equal(t, int32(3), script.LoopCount)
+	assert.Equal(t, int32(4), script.DaysPerLoop)
+
+	// Check abilities
+	abilities := config.GetAbilities()
+	assert.NotEmpty(t, abilities)
+
+	// Check cards
+	cards := config.GetCards()
+	assert.Len(t, cards, 15)
+	card1 := cards[1]
+	assert.Equal(t, "Move", card1.Name)
+	assert.Equal(t, v1.CardType_CARD_TYPE_FORBID_MOVEMENT, card1.Type)
+	assert.Equal(t, v1.PlayerRole_PLAYER_ROLE_PROTAGONIST, card1.OwnerRole)
+
+	// Check characters
+	characters := config.GetCharacters()
+	assert.NotEmpty(t, characters)
+
+	// Check incidents
+	incidents := config.GetIncidents()
+	assert.NotEmpty(t, incidents)
+}

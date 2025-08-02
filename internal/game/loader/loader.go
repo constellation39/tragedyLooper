@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"path/filepath"
 
-	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
-	"google.golang.org/protobuf/proto"
 	"cuelang.org/go/cue/cuecontext"
 	"cuelang.org/go/cue/load"
+	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
+	"google.golang.org/protobuf/proto"
 )
 
 // GameConfig defines the interface for accessing game configuration data.
