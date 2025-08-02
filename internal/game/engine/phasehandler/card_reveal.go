@@ -19,6 +19,7 @@ func (p *CardRevealPhase) Enter(ge GameEngine) {
 	ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_CARD_REVEALED, &model.EventPayload{
 		Payload: &model.EventPayload_CardRevealed{CardRevealed: &model.CardRevealedEvent{Cards: allPlayedCards}},
 	})
+	p.readyToTransition = true
 }
 
 func init() {

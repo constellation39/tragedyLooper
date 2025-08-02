@@ -18,6 +18,9 @@ func (p *CardEffectsPhase) Type() model.GamePhase { return model.GamePhase_GAME_
 
 // Enter 在阶段开始时调用。
 func (p *CardEffectsPhase) Enter(ge GameEngine) {
+	defer func() {
+		p.readyToTransition = true
+	}()
 	logger := ge.Logger().Named("CardEffectsPhase")
 	playedCards := getAllPlayedCards(ge)
 

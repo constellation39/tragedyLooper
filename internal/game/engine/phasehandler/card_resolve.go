@@ -13,7 +13,9 @@ type CardResolvePhase struct {
 func (p *CardResolvePhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_CARD_RESOLVE }
 
 // Enter 进入卡牌结算阶段。
-func (p *CardResolvePhase) Enter(ge GameEngine) {}
+func (p *CardResolvePhase) Enter(ge GameEngine) {
+	p.readyToTransition = true
+}
 
 func init() {
 	RegisterPhase(&CardResolvePhase{})

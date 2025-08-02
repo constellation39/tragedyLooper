@@ -32,7 +32,8 @@ func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, player *model.Player
 			ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_GAME_ENDED, &model.EventPayload{
 				Payload: &model.EventPayload_GameEnded{GameEnded: &model.GameEndedEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND, Reason: "Failed to guess all roles"}},
 			}) // 游戏结束，出现错误时主谋默认获胜
-			return true
+			p.readyToTransition = true
+			return false
 		}
 
 		correctGuesses := 0
@@ -60,7 +61,8 @@ func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, player *model.Player
 			Payload: &model.EventPayload_GameEnded{GameEnded: &model.GameEndedEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND, Reason: "Failed to guess all roles"}},
 		})
 	}
-	return true
+	p.readyToTransition = true
+	return false
 }
 
 func init() {

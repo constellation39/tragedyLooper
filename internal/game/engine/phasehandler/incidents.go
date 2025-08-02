@@ -12,6 +12,9 @@ type IncidentsPhase struct {
 }
 
 func (p *IncidentsPhase) Enter(ge GameEngine) {
+	defer func() {
+		p.readyToTransition = true
+	}()
 	gs := ge.GetGameState()
 	script := ge.GetGameRepo().GetScript()
 

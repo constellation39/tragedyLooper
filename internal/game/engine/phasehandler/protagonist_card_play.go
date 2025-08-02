@@ -30,7 +30,8 @@ func (p *ProtagonistCardPlayPhase) Enter(ge GameEngine) {
 func (p *ProtagonistCardPlayPhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) bool {
 	protagonists := ge.GetProtagonistPlayers()
 	if len(protagonists) == 0 {
-		return true
+		p.readyToTransition = true
+		return false
 	}
 
 	if player.Role != model.PlayerRole_PLAYER_ROLE_PROTAGONIST || player.Id != protagonists[p.protagonistTurnIndex].Id {
@@ -48,7 +49,8 @@ func (p *ProtagonistCardPlayPhase) HandleAction(ge GameEngine, player *model.Pla
 	p.protagonistTurnIndex++
 
 	if p.protagonistTurnIndex >= len(protagonists) {
-		return true
+		p.readyToTransition = true
+		return false
 	}
 
 	// Trigger AI for the next protagonist.

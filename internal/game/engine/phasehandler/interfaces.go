@@ -39,6 +39,8 @@ type Phase interface {
 	HandleEvent(ge GameEngine, event *model.GameEvent) bool
 	// HandleTimeout handles a timeout in this phase.
 	HandleTimeout(ge GameEngine)
+	// isReadyToTransition checks if the phase is ready to transition to the next phase.
+	isReadyToTransition() bool
 	// Exit is called when exiting this phase.
 	Exit(ge GameEngine)
 	// TimeoutTicks returns the timeout duration in game ticks for this phase.

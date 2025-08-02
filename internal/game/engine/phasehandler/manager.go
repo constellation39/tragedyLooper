@@ -100,7 +100,10 @@ func (pm *Manager) transitionTo(nextPhaseType model.GamePhase) bool {
 
 	// After entering, immediately check if we should transition again.
 	// This handles auto-advancing phases.
-	return pm.transitionToNext()
+	if pm.currentPhase.isReadyToTransition() {
+		return pm.transitionToNext()
+	}
+	return true
 }
 
 // transitionToNext determines the next phase from the flowchart and transitions to it.

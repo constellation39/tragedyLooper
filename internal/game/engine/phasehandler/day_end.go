@@ -17,6 +17,9 @@ func (p *DayEndPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE
 
 // Enter 在阶段开始时调用。
 func (p *DayEndPhase) Enter(ge GameEngine) {
+	defer func() {
+		p.readyToTransition = true
+	}()
 	logger := ge.Logger().Named("DayEndPhase")
 	script := ge.GetGameRepo().GetScript()
 

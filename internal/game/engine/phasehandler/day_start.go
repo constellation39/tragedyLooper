@@ -17,6 +17,7 @@ func (p *DayStartPhase) Enter(ge GameEngine) {
 	ge.TriggerEvent(model.GameEventType_GAME_EVENT_TYPE_DAY_ADVANCED, &model.EventPayload{
 		Payload: &model.EventPayload_DayAdvanced{DayAdvanced: &model.DayAdvancedEvent{Day: ge.GetGameState().CurrentDay, Loop: ge.GetGameState().CurrentLoop}},
 	})
+	p.readyToTransition = true
 }
 
 func init() {

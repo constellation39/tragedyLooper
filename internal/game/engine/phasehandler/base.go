@@ -8,7 +8,15 @@ import (
 // It is intended to be embedded in concrete phase implementations.
 // This way, each phase only needs to implement the methods relevant to it,
 // reducing boilerplate code.
-type BasePhase struct{}
+type BasePhase struct {
+	readyToTransition bool
+}
+
+// isReadyToTransition checks if the phase is ready to transition.
+func (p *BasePhase) isReadyToTransition() bool {
+	return p.readyToTransition
+}
+
 
 // Type is a default implementation that returns UNSPECIFIED. Concrete phases should override this.
 func (p *BasePhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_UNSPECIFIED }

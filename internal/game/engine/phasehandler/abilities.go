@@ -105,7 +105,8 @@ func (p *AbilitiesPhase) handlePassTurn(ge GameEngine, player *model.Player) boo
 	protagonists := ge.GetProtagonistPlayers()
 	if p.protagonistTurnIndex >= len(protagonists) {
 		ge.Logger().Info("All protagonists have acted, moving to Incidents Phase")
-		return true
+		p.readyToTransition = true
+		return false
 	}
 
 	// 可选：为下一个主角触发 AI

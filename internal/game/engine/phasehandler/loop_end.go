@@ -11,6 +11,7 @@ type LoopEndPhase struct {
 
 func (p *LoopEndPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_LOOP_END }
 func (p *LoopEndPhase) Enter(ge GameEngine) {
+	p.readyToTransition = true
 	gs := ge.GetGameState()
 	script := ge.GetGameRepo().GetScript()
 

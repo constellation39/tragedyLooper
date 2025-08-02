@@ -11,6 +11,7 @@ type LoopStartPhase struct {
 
 func (p *LoopStartPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_LOOP_START }
 func (p *LoopStartPhase) Enter(ge GameEngine) {
+	p.readyToTransition = true
 	gs := ge.GetGameState()
 	script := ge.GetGameRepo().GetScript()
 

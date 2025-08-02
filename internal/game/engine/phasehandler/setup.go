@@ -11,6 +11,7 @@ type SetupPhase struct {
 
 func (p *SetupPhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_SETUP }
 func (p *SetupPhase) Enter(ge GameEngine) {
+	p.readyToTransition = true
 	// TODO: Implement logic for Mastermind to choose sub-scenario and place characters.
 	// For now, we transition directly.
 }
