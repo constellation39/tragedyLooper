@@ -12,17 +12,10 @@ type BasePhase struct {
 	readyToTransition bool
 }
 
-// isReadyToTransition checks if the phase is ready to transition.
-func (p *BasePhase) isReadyToTransition() bool {
-	return p.readyToTransition
-}
-
-
-// Type is a default implementation that returns UNSPECIFIED. Concrete phases should override this.
-func (p *BasePhase) Type() model.GamePhase { return model.GamePhase_GAME_PHASE_UNSPECIFIED }
-
 // Enter is a default implementation that does nothing.
-func (p *BasePhase) Enter(ge GameEngine) {}
+func (p *BasePhase) Enter(ge GameEngine) bool {
+	return false
+}
 
 // HandleAction is a default implementation that does nothing and indicates that the phase is not ready to transition.
 func (p *BasePhase) HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) bool {

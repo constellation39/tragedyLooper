@@ -49,8 +49,7 @@ func (p *ProtagonistCardPlayPhase) HandleAction(ge GameEngine, player *model.Pla
 	p.protagonistTurnIndex++
 
 	if p.protagonistTurnIndex >= len(protagonists) {
-		p.readyToTransition = true
-		return false
+		return true
 	}
 
 	// Trigger AI for the next protagonist.

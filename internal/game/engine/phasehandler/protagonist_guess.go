@@ -61,8 +61,7 @@ func (p *ProtagonistGuessPhase) HandleAction(ge GameEngine, player *model.Player
 			Payload: &model.EventPayload_GameEnded{GameEnded: &model.GameEndedEvent{Winner: model.PlayerRole_PLAYER_ROLE_MASTERMIND, Reason: "Failed to guess all roles"}},
 		})
 	}
-	p.readyToTransition = true
-	return false
+	return true
 }
 
 func init() {

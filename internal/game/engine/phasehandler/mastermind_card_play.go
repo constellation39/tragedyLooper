@@ -31,8 +31,7 @@ func (p *MastermindCardPlayPhase) HandleAction(ge GameEngine, player *model.Play
 		handlePlayCardAction(ge, player, payload.PlayCard)
 		p.mastermindCardsPlayed++
 	}
-	p.readyToTransition = p.mastermindCardsPlayed >= 1
-	return false
+	return p.mastermindCardsPlayed >= 1
 }
 
 func init() {

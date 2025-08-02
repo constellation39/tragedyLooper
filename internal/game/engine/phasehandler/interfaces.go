@@ -32,15 +32,14 @@ type Phase interface {
 	// Type returns the type of the phase.
 	Type() model.GamePhase
 	// Enter is called when entering this phase.
-	Enter(ge GameEngine)
+	Enter(ge GameEngine) bool
 	// HandleAction handles a player's action in this phase.
 	HandleAction(ge GameEngine, player *model.Player, action *model.PlayerActionPayload) bool
 	// HandleEvent handles a game event received in this phase.
 	HandleEvent(ge GameEngine, event *model.GameEvent) bool
 	// HandleTimeout handles a timeout in this phase.
 	HandleTimeout(ge GameEngine)
-	// isReadyToTransition checks if the phase is ready to transition to the next phase.
-	isReadyToTransition() bool
+
 	// Exit is called when exiting this phase.
 	Exit(ge GameEngine)
 	// TimeoutTicks returns the timeout duration in game ticks for this phase.

@@ -90,7 +90,7 @@ func (pm *Manager) transitionTo(nextPhaseType model.GamePhase) bool {
 	pm.engine.GetGameState().CurrentPhase = nextPhase.Type()
 
 	// Enter the new phase.
-	pm.currentPhase.Enter(pm.engine)
+	readyToTransition := pm.currentPhase.Enter(pm.engine)
 
 	// Set the timer for the new phase.
 	ticks := pm.currentPhase.TimeoutTicks()
@@ -100,7 +100,7 @@ func (pm *Manager) transitionTo(nextPhaseType model.GamePhase) bool {
 
 	// After entering, immediately check if we should transition again.
 	// This handles auto-advancing phases.
-	if pm.currentPhase.isReadyToTransition() {
+	if readyToTransition {
 		return pm.transitionToNext()
 	}
 	return true
