@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package tragedylooper.v1;
 
+import "vendor/cue/cue.proto";
 import "tragedylooper/v1/condition.proto";
 import "tragedylooper/v1/effect.proto";
 import "tragedylooper/v1/enums.proto";
@@ -15,49 +16,35 @@ option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 // Script defines the configuration for a tragedy looper script.
 message ScriptConfig {
   // The unique identifier for the script.
-  int32 id = 1;
+  int32 id = 1 [ (cue.val) = "{>0}" ];
   // The name of the script.
-  string name = 2;
+  string name = 2 [ (cue.val) = "{len > 0}" ];
   // A description of the script.
   string description = 3;
 
   // Main plot configurations. ID range: 1000-1999
-  map<int32, PlotConfig> main_plots = 4;
+  map<int32, PlotConfig> main_plots = 4 [ (cue.val) = "{ for k, v in main_plots { k: >= 1000 & < 2000 } }" ];
   // Sub plot configurations. ID range: 2000-2999
-  map<int32, PlotConfig> sub_plots = 5;
+  map<int32, PlotConfig> sub_plots = 5 [ (cue.val) = "{ for k, v in sub_plots { k: >= 2000 & < 3000 } }" ];
 
   // Role configurations. ID range: 3000-3999
-  map<int32, RoleConfig> roles = 6;
+  map<int32, RoleConfig> roles = 6 [ (cue.val) = "{ for k, v in roles { k: >= 3000 & < 4000 } }" ];
 
   // Incident configurations. ID range: 4000-4999
-  map<int32, IncidentConfig> incidents = 7;
+  map<int32, IncidentConfig> incidents = 7 [ (cue.val) = "{ for k, v in incidents { k: >= 4000 & < 5000 } }" ];
 
   // Character configurations. ID range: 5000-5999
-  map<int32, CharacterConfig> characters = 8;
+  map<int32, CharacterConfig> characters = 8 [ (cue.val) = "{ for k, v in characters { k: >= 5000 & < 6000 } }" ];
 
   // Mastermind card configurations. ID range: 6000-6999
-  map<int32, CardConfig> mastermind_cards = 9;
+  map<int32, CardConfig> mastermind_cards = 9 [ (cue.val) = "{ for k, v in mastermind_cards { k: >= 6000 & < 7000 } }" ];
   // Protagonist card configurations. ID range: 7000-7999
-  map<int32, CardConfig> protagonist_cards = 10;
+  map<int32, CardConfig> protagonist_cards = 10 [ (cue.val) = "{ for k, v in protagonist_cards { k: >= 7000 & < 8000 } }" ];
 
   // A map of script configurations. ID range: 8000-8999
-  map<int32, ScriptEntity> scripts = 11;
+  map<int32, ScriptModel> script_models = 11 [ (cue.val) = "{ for k, v in scripts { k: >= 8000 & < 9000 } }" ];
 }
 
-// ScriptEntity wraps all possible configuration objects that can be part of a script.
-// This ensures that each entity has a unique ID within the script.
-message ScriptEntity {
-  oneof entity {
-    PlotConfig main_plot = 1;
-    PlotConfig sub_plot = 2;
-    RoleConfig role = 3;
-    IncidentConfig incident = 4;
-    CharacterConfig character = 5;
-    CardConfig mastermind_card = 6;
-    CardConfig protagonist_card = 7;
-    ScriptModel script_model = 8;
-  }
-}
 
 // ScriptConfig defines the configuration for a specific script.
 message ScriptModel {
@@ -82,13 +69,13 @@ message PrivateInfo {
 // PublicInfo defines the public information for a script.
 message PublicInfo {
   // The unique identifier for the script configuration.
-  int32 script_config_id = 1;
+  int32 script_config_id = 1 [ (cue.val) = "{>0}" ];
 
   // Game rules.
   // The number of loops in the game.
-  int32 loop_count = 2;
+  int32 loop_count = 2 [ (cue.val) = "{>0}" ];
   // The number of days per loop.
-  int32 days_per_loop = 3;
+  int32 days_per_loop = 3 [ (cue.val) = "{>0}" ];
   // Whether players can discuss information.
   bool can_discuss = 4;
 
@@ -102,16 +89,16 @@ message PublicInfo {
 // RoleConfig defines the configuration for a role.
 message RoleConfig {
   // The unique identifier for the role.
-  int32 id = 1;
+  int32 id = 1 [ (cue.val) = "{>0}" ];
   // The name of the role.
-  string name = 2;
+  string name = 2 [ (cue.val) = "{len > 0}" ];
   // The limit of characters that can have this role.
-  int32 limit = 3;
+  int32 limit = 3 [ (cue.val) = "{>=1}" ];
   // A map of abilities for this role.
   map<int32, AbilityConfig> abilities = 4;
   // Defines the character's goodwill status.
   // 0: normal, 1: ignore goodwill, 2: always ignore goodwill.
-  int32 goodwill_rule = 5;
+  int32 goodwill_rule = 5 [ (cue.val) = "{>=0 & <=2}" ];
   // Defines if the character can be made invincible.
   bool can_be_invincible = 6;
 }
@@ -119,11 +106,11 @@ message RoleConfig {
 // PlotConfig defines a story plot.
 message PlotConfig {
   // The unique identifier for the plot.
-  int32 id = 1;
+  int32 id = 1 [ (cue.val) = "{>0}" ];
   // The type of the plot.
   PlotType type = 2;
   // The name of the plot.
-  string name = 3;
+  string name = 3 [ (cue.val) = "{len > 0}" ];
   // A description of the plot.
   string description = 4;
   // A map of incident identifiers for this plot.

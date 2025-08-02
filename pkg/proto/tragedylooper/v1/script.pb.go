@@ -7,6 +7,7 @@
 package v1
 
 import (
+	_ "cuelang.org/cueproto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -30,8 +31,22 @@ type ScriptConfig struct {
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	// A description of the script.
 	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	// A map of all script entities, keyed by a unique ID.
-	Entities      map[int32]*ScriptEntity `protobuf:"bytes,4,rep,name=entities,proto3" json:"entities,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// Main plot configurations. ID range: 1000-1999
+	MainPlots map[int32]*PlotConfig `protobuf:"bytes,4,rep,name=main_plots,json=mainPlots,proto3" json:"main_plots,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// Sub plot configurations. ID range: 2000-2999
+	SubPlots map[int32]*PlotConfig `protobuf:"bytes,5,rep,name=sub_plots,json=subPlots,proto3" json:"sub_plots,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// Role configurations. ID range: 3000-3999
+	Roles map[int32]*RoleConfig `protobuf:"bytes,6,rep,name=roles,proto3" json:"roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// Incident configurations. ID range: 4000-4999
+	Incidents map[int32]*IncidentConfig `protobuf:"bytes,7,rep,name=incidents,proto3" json:"incidents,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// Character configurations. ID range: 5000-5999
+	Characters map[int32]*CharacterConfig `protobuf:"bytes,8,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// Mastermind card configurations. ID range: 6000-6999
+	MastermindCards map[int32]*CardConfig `protobuf:"bytes,9,rep,name=mastermind_cards,json=mastermindCards,proto3" json:"mastermind_cards,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// Protagonist card configurations. ID range: 7000-7999
+	ProtagonistCards map[int32]*CardConfig `protobuf:"bytes,10,rep,name=protagonist_cards,json=protagonistCards,proto3" json:"protagonist_cards,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// A map of script configurations. ID range: 8000-8999
+	ScriptModels  map[int32]*ScriptModel `protobuf:"bytes,11,rep,name=script_models,json=scriptModels,proto3" json:"script_models,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -87,192 +102,61 @@ func (x *ScriptConfig) GetDescription() string {
 	return ""
 }
 
-func (x *ScriptConfig) GetEntities() map[int32]*ScriptEntity {
+func (x *ScriptConfig) GetMainPlots() map[int32]*PlotConfig {
 	if x != nil {
-		return x.Entities
+		return x.MainPlots
 	}
 	return nil
 }
 
-// ScriptEntity wraps all possible configuration objects that can be part of a script.
-// This ensures that each entity has a unique ID within the script.
-type ScriptEntity struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Types that are valid to be assigned to Entity:
-	//
-	//	*ScriptEntity_MainPlot
-	//	*ScriptEntity_SubPlot
-	//	*ScriptEntity_Role
-	//	*ScriptEntity_Incident
-	//	*ScriptEntity_Character
-	//	*ScriptEntity_MastermindCard
-	//	*ScriptEntity_ProtagonistCard
-	//	*ScriptEntity_ScriptModel
-	Entity        isScriptEntity_Entity `protobuf_oneof:"entity"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ScriptEntity) Reset() {
-	*x = ScriptEntity{}
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ScriptEntity) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ScriptEntity) ProtoMessage() {}
-
-func (x *ScriptEntity) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[1]
+func (x *ScriptConfig) GetSubPlots() map[int32]*PlotConfig {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ScriptEntity.ProtoReflect.Descriptor instead.
-func (*ScriptEntity) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *ScriptEntity) GetEntity() isScriptEntity_Entity {
-	if x != nil {
-		return x.Entity
+		return x.SubPlots
 	}
 	return nil
 }
 
-func (x *ScriptEntity) GetMainPlot() *PlotConfig {
+func (x *ScriptConfig) GetRoles() map[int32]*RoleConfig {
 	if x != nil {
-		if x, ok := x.Entity.(*ScriptEntity_MainPlot); ok {
-			return x.MainPlot
-		}
+		return x.Roles
 	}
 	return nil
 }
 
-func (x *ScriptEntity) GetSubPlot() *PlotConfig {
+func (x *ScriptConfig) GetIncidents() map[int32]*IncidentConfig {
 	if x != nil {
-		if x, ok := x.Entity.(*ScriptEntity_SubPlot); ok {
-			return x.SubPlot
-		}
+		return x.Incidents
 	}
 	return nil
 }
 
-func (x *ScriptEntity) GetRole() *RoleConfig {
+func (x *ScriptConfig) GetCharacters() map[int32]*CharacterConfig {
 	if x != nil {
-		if x, ok := x.Entity.(*ScriptEntity_Role); ok {
-			return x.Role
-		}
+		return x.Characters
 	}
 	return nil
 }
 
-func (x *ScriptEntity) GetIncident() *IncidentConfig {
+func (x *ScriptConfig) GetMastermindCards() map[int32]*CardConfig {
 	if x != nil {
-		if x, ok := x.Entity.(*ScriptEntity_Incident); ok {
-			return x.Incident
-		}
+		return x.MastermindCards
 	}
 	return nil
 }
 
-func (x *ScriptEntity) GetCharacter() *CharacterConfig {
+func (x *ScriptConfig) GetProtagonistCards() map[int32]*CardConfig {
 	if x != nil {
-		if x, ok := x.Entity.(*ScriptEntity_Character); ok {
-			return x.Character
-		}
+		return x.ProtagonistCards
 	}
 	return nil
 }
 
-func (x *ScriptEntity) GetMastermindCard() *CardConfig {
+func (x *ScriptConfig) GetScriptModels() map[int32]*ScriptModel {
 	if x != nil {
-		if x, ok := x.Entity.(*ScriptEntity_MastermindCard); ok {
-			return x.MastermindCard
-		}
+		return x.ScriptModels
 	}
 	return nil
 }
-
-func (x *ScriptEntity) GetProtagonistCard() *CardConfig {
-	if x != nil {
-		if x, ok := x.Entity.(*ScriptEntity_ProtagonistCard); ok {
-			return x.ProtagonistCard
-		}
-	}
-	return nil
-}
-
-func (x *ScriptEntity) GetScriptModel() *ScriptModel {
-	if x != nil {
-		if x, ok := x.Entity.(*ScriptEntity_ScriptModel); ok {
-			return x.ScriptModel
-		}
-	}
-	return nil
-}
-
-type isScriptEntity_Entity interface {
-	isScriptEntity_Entity()
-}
-
-type ScriptEntity_MainPlot struct {
-	MainPlot *PlotConfig `protobuf:"bytes,1,opt,name=main_plot,json=mainPlot,proto3,oneof"`
-}
-
-type ScriptEntity_SubPlot struct {
-	SubPlot *PlotConfig `protobuf:"bytes,2,opt,name=sub_plot,json=subPlot,proto3,oneof"`
-}
-
-type ScriptEntity_Role struct {
-	Role *RoleConfig `protobuf:"bytes,3,opt,name=role,proto3,oneof"`
-}
-
-type ScriptEntity_Incident struct {
-	Incident *IncidentConfig `protobuf:"bytes,4,opt,name=incident,proto3,oneof"`
-}
-
-type ScriptEntity_Character struct {
-	Character *CharacterConfig `protobuf:"bytes,5,opt,name=character,proto3,oneof"`
-}
-
-type ScriptEntity_MastermindCard struct {
-	MastermindCard *CardConfig `protobuf:"bytes,6,opt,name=mastermind_card,json=mastermindCard,proto3,oneof"`
-}
-
-type ScriptEntity_ProtagonistCard struct {
-	ProtagonistCard *CardConfig `protobuf:"bytes,7,opt,name=protagonist_card,json=protagonistCard,proto3,oneof"`
-}
-
-type ScriptEntity_ScriptModel struct {
-	ScriptModel *ScriptModel `protobuf:"bytes,8,opt,name=script_model,json=scriptModel,proto3,oneof"`
-}
-
-func (*ScriptEntity_MainPlot) isScriptEntity_Entity() {}
-
-func (*ScriptEntity_SubPlot) isScriptEntity_Entity() {}
-
-func (*ScriptEntity_Role) isScriptEntity_Entity() {}
-
-func (*ScriptEntity_Incident) isScriptEntity_Entity() {}
-
-func (*ScriptEntity_Character) isScriptEntity_Entity() {}
-
-func (*ScriptEntity_MastermindCard) isScriptEntity_Entity() {}
-
-func (*ScriptEntity_ProtagonistCard) isScriptEntity_Entity() {}
-
-func (*ScriptEntity_ScriptModel) isScriptEntity_Entity() {}
 
 // ScriptConfig defines the configuration for a specific script.
 type ScriptModel struct {
@@ -287,7 +171,7 @@ type ScriptModel struct {
 
 func (x *ScriptModel) Reset() {
 	*x = ScriptModel{}
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[2]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -299,7 +183,7 @@ func (x *ScriptModel) String() string {
 func (*ScriptModel) ProtoMessage() {}
 
 func (x *ScriptModel) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[2]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -312,7 +196,7 @@ func (x *ScriptModel) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScriptModel.ProtoReflect.Descriptor instead.
 func (*ScriptModel) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{2}
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *ScriptModel) GetPrivateInfo() *PrivateInfo {
@@ -346,7 +230,7 @@ type PrivateInfo struct {
 
 func (x *PrivateInfo) Reset() {
 	*x = PrivateInfo{}
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -358,7 +242,7 @@ func (x *PrivateInfo) String() string {
 func (*PrivateInfo) ProtoMessage() {}
 
 func (x *PrivateInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -371,7 +255,7 @@ func (x *PrivateInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PrivateInfo.ProtoReflect.Descriptor instead.
 func (*PrivateInfo) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{3}
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *PrivateInfo) GetMainPlot() *PlotConfig {
@@ -425,7 +309,7 @@ type PublicInfo struct {
 
 func (x *PublicInfo) Reset() {
 	*x = PublicInfo{}
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[4]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -437,7 +321,7 @@ func (x *PublicInfo) String() string {
 func (*PublicInfo) ProtoMessage() {}
 
 func (x *PublicInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[4]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -450,7 +334,7 @@ func (x *PublicInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PublicInfo.ProtoReflect.Descriptor instead.
 func (*PublicInfo) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{4}
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *PublicInfo) GetScriptConfigId() int32 {
@@ -517,7 +401,7 @@ type RoleConfig struct {
 
 func (x *RoleConfig) Reset() {
 	*x = RoleConfig{}
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[5]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -529,7 +413,7 @@ func (x *RoleConfig) String() string {
 func (*RoleConfig) ProtoMessage() {}
 
 func (x *RoleConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[5]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -542,7 +426,7 @@ func (x *RoleConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleConfig.ProtoReflect.Descriptor instead.
 func (*RoleConfig) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{5}
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *RoleConfig) GetId() int32 {
@@ -608,7 +492,7 @@ type PlotConfig struct {
 
 func (x *PlotConfig) Reset() {
 	*x = PlotConfig{}
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[6]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -620,7 +504,7 @@ func (x *PlotConfig) String() string {
 func (*PlotConfig) ProtoMessage() {}
 
 func (x *PlotConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[6]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -633,7 +517,7 @@ func (x *PlotConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlotConfig.ProtoReflect.Descriptor instead.
 func (*PlotConfig) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{6}
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *PlotConfig) GetId() int32 {
@@ -689,7 +573,7 @@ type ScriptConfigLib struct {
 
 func (x *ScriptConfigLib) Reset() {
 	*x = ScriptConfigLib{}
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[7]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -701,7 +585,7 @@ func (x *ScriptConfigLib) String() string {
 func (*ScriptConfigLib) ProtoMessage() {}
 
 func (x *ScriptConfigLib) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[7]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -714,7 +598,7 @@ func (x *ScriptConfigLib) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScriptConfigLib.ProtoReflect.Descriptor instead.
 func (*ScriptConfigLib) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{7}
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ScriptConfigLib) GetScripts() map[int32]*ScriptConfig {
@@ -728,25 +612,48 @@ var File_tragedylooper_v1_script_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_script_proto_rawDesc = "" +
 	"\n" +
-	"\x1dtragedylooper/v1/script.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1ftragedylooper/v1/incident.proto\x1a tragedylooper/v1/character.proto\x1a\x1btragedylooper/v1/card.proto\x1a\x1etragedylooper/v1/ability.proto\"\xfb\x01\n" +
-	"\fScriptConfig\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12H\n" +
-	"\bentities\x18\x04 \x03(\v2,.tragedylooper.v1.ScriptConfig.EntitiesEntryR\bentities\x1a[\n" +
-	"\rEntitiesEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x124\n" +
-	"\x05value\x18\x02 \x01(\v2\x1e.tragedylooper.v1.ScriptEntityR\x05value:\x028\x01\"\x9f\x04\n" +
-	"\fScriptEntity\x12;\n" +
-	"\tmain_plot\x18\x01 \x01(\v2\x1c.tragedylooper.v1.PlotConfigH\x00R\bmainPlot\x129\n" +
-	"\bsub_plot\x18\x02 \x01(\v2\x1c.tragedylooper.v1.PlotConfigH\x00R\asubPlot\x122\n" +
-	"\x04role\x18\x03 \x01(\v2\x1c.tragedylooper.v1.RoleConfigH\x00R\x04role\x12>\n" +
-	"\bincident\x18\x04 \x01(\v2 .tragedylooper.v1.IncidentConfigH\x00R\bincident\x12A\n" +
-	"\tcharacter\x18\x05 \x01(\v2!.tragedylooper.v1.CharacterConfigH\x00R\tcharacter\x12G\n" +
-	"\x0fmastermind_card\x18\x06 \x01(\v2\x1c.tragedylooper.v1.CardConfigH\x00R\x0emastermindCard\x12I\n" +
-	"\x10protagonist_card\x18\a \x01(\v2\x1c.tragedylooper.v1.CardConfigH\x00R\x0fprotagonistCard\x12B\n" +
-	"\fscript_model\x18\b \x01(\v2\x1d.tragedylooper.v1.ScriptModelH\x00R\vscriptModelB\b\n" +
-	"\x06entity\"\x8e\x01\n" +
+	"\x1dtragedylooper/v1/script.proto\x12\x10tragedylooper.v1\x1a\x14vendor/cue/cue.proto\x1a tragedylooper/v1/condition.proto\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1ftragedylooper/v1/incident.proto\x1a tragedylooper/v1/character.proto\x1a\x1btragedylooper/v1/card.proto\x1a\x1etragedylooper/v1/ability.proto\"\xbe\x0f\n" +
+	"\fScriptConfig\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\x05B\b\x82\xa4<\x04{>0}R\x02id\x12!\n" +
+	"\x04name\x18\x02 \x01(\tB\r\x82\xa4<\t{len > 0}R\x04name\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x84\x01\n" +
+	"\n" +
+	"main_plots\x18\x04 \x03(\v2-.tragedylooper.v1.ScriptConfig.MainPlotsEntryB6\x82\xa4<2{ for k, v in main_plots { k: >= 1000 & < 2000 } }R\tmainPlots\x12\x80\x01\n" +
+	"\tsub_plots\x18\x05 \x03(\v2,.tragedylooper.v1.ScriptConfig.SubPlotsEntryB5\x82\xa4<1{ for k, v in sub_plots { k: >= 2000 & < 3000 } }R\bsubPlots\x12r\n" +
+	"\x05roles\x18\x06 \x03(\v2).tragedylooper.v1.ScriptConfig.RolesEntryB1\x82\xa4<-{ for k, v in roles { k: >= 3000 & < 4000 } }R\x05roles\x12\x82\x01\n" +
+	"\tincidents\x18\a \x03(\v2-.tragedylooper.v1.ScriptConfig.IncidentsEntryB5\x82\xa4<1{ for k, v in incidents { k: >= 4000 & < 5000 } }R\tincidents\x12\x86\x01\n" +
+	"\n" +
+	"characters\x18\b \x03(\v2..tragedylooper.v1.ScriptConfig.CharactersEntryB6\x82\xa4<2{ for k, v in characters { k: >= 5000 & < 6000 } }R\n" +
+	"characters\x12\x9c\x01\n" +
+	"\x10mastermind_cards\x18\t \x03(\v23.tragedylooper.v1.ScriptConfig.MastermindCardsEntryB<\x82\xa4<8{ for k, v in mastermind_cards { k: >= 6000 & < 7000 } }R\x0fmastermindCards\x12\xa0\x01\n" +
+	"\x11protagonist_cards\x18\n" +
+	" \x03(\v24.tragedylooper.v1.ScriptConfig.ProtagonistCardsEntryB=\x82\xa4<9{ for k, v in protagonist_cards { k: >= 7000 & < 8000 } }R\x10protagonistCards\x12\x8a\x01\n" +
+	"\rscript_models\x18\v \x03(\v20.tragedylooper.v1.ScriptConfig.ScriptModelsEntryB3\x82\xa4</{ for k, v in scripts { k: >= 8000 & < 9000 } }R\fscriptModels\x1aZ\n" +
+	"\x0eMainPlotsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x122\n" +
+	"\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.PlotConfigR\x05value:\x028\x01\x1aY\n" +
+	"\rSubPlotsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x122\n" +
+	"\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.PlotConfigR\x05value:\x028\x01\x1aV\n" +
+	"\n" +
+	"RolesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x122\n" +
+	"\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.RoleConfigR\x05value:\x028\x01\x1a^\n" +
+	"\x0eIncidentsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x126\n" +
+	"\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01\x1a`\n" +
+	"\x0fCharactersEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x127\n" +
+	"\x05value\x18\x02 \x01(\v2!.tragedylooper.v1.CharacterConfigR\x05value:\x028\x01\x1a`\n" +
+	"\x14MastermindCardsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x122\n" +
+	"\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.CardConfigR\x05value:\x028\x01\x1aa\n" +
+	"\x15ProtagonistCardsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x122\n" +
+	"\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.CardConfigR\x05value:\x028\x01\x1a^\n" +
+	"\x11ScriptModelsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x123\n" +
+	"\x05value\x18\x02 \x01(\v2\x1d.tragedylooper.v1.ScriptModelR\x05value:\x028\x01\"\x8e\x01\n" +
 	"\vScriptModel\x12@\n" +
 	"\fprivate_info\x18\x01 \x01(\v2\x1d.tragedylooper.v1.PrivateInfoR\vprivateInfo\x12=\n" +
 	"\vpublic_info\x18\x02 \x01(\v2\x1c.tragedylooper.v1.PublicInfoR\n" +
@@ -763,13 +670,13 @@ const file_tragedylooper_v1_script_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\v2!.tragedylooper.v1.CharacterConfigR\x05value:\x028\x01\x1a^\n" +
 	"\x0eIncidentsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x126\n" +
-	"\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01\"\xb2\x04\n" +
+	"\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01\"\xd0\x04\n" +
 	"\n" +
-	"PublicInfo\x12(\n" +
-	"\x10script_config_id\x18\x01 \x01(\x05R\x0escriptConfigId\x12\x1d\n" +
+	"PublicInfo\x122\n" +
+	"\x10script_config_id\x18\x01 \x01(\x05B\b\x82\xa4<\x04{>0}R\x0escriptConfigId\x12'\n" +
 	"\n" +
-	"loop_count\x18\x02 \x01(\x05R\tloopCount\x12\"\n" +
-	"\rdays_per_loop\x18\x03 \x01(\x05R\vdaysPerLoop\x12\x1f\n" +
+	"loop_count\x18\x02 \x01(\x05B\b\x82\xa4<\x04{>0}R\tloopCount\x12,\n" +
+	"\rdays_per_loop\x18\x03 \x01(\x05B\b\x82\xa4<\x04{>0}R\vdaysPerLoop\x12\x1f\n" +
 	"\vcan_discuss\x18\x04 \x01(\bR\n" +
 	"canDiscuss\x12_\n" +
 	"\x11special_incidents\x18\x05 \x03(\v22.tragedylooper.v1.PublicInfo.SpecialIncidentsEntryR\x10specialIncidents\x12e\n" +
@@ -779,23 +686,23 @@ const file_tragedylooper_v1_script_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01\x1ag\n" +
 	"\x17ScheduledIncidentsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x126\n" +
-	"\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01\"\xc1\x02\n" +
+	"\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01\"\xf6\x02\n" +
 	"\n" +
-	"RoleConfig\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
-	"\x05limit\x18\x03 \x01(\x05R\x05limit\x12I\n" +
-	"\tabilities\x18\x04 \x03(\v2+.tragedylooper.v1.RoleConfig.AbilitiesEntryR\tabilities\x12#\n" +
-	"\rgoodwill_rule\x18\x05 \x01(\x05R\fgoodwillRule\x12*\n" +
+	"RoleConfig\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\x05B\b\x82\xa4<\x04{>0}R\x02id\x12!\n" +
+	"\x04name\x18\x02 \x01(\tB\r\x82\xa4<\t{len > 0}R\x04name\x12\x1f\n" +
+	"\x05limit\x18\x03 \x01(\x05B\t\x82\xa4<\x05{>=1}R\x05limit\x12I\n" +
+	"\tabilities\x18\x04 \x03(\v2+.tragedylooper.v1.RoleConfig.AbilitiesEntryR\tabilities\x124\n" +
+	"\rgoodwill_rule\x18\x05 \x01(\x05B\x0f\x82\xa4<\v{>=0 & <=2}R\fgoodwillRule\x12*\n" +
 	"\x11can_be_invincible\x18\x06 \x01(\bR\x0fcanBeInvincible\x1a]\n" +
 	"\x0eAbilitiesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x125\n" +
-	"\x05value\x18\x02 \x01(\v2\x1f.tragedylooper.v1.AbilityConfigR\x05value:\x028\x01\"\xd8\x03\n" +
+	"\x05value\x18\x02 \x01(\v2\x1f.tragedylooper.v1.AbilityConfigR\x05value:\x028\x01\"\xf1\x03\n" +
 	"\n" +
-	"PlotConfig\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x12.\n" +
-	"\x04type\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.PlotTypeR\x04type\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\x12 \n" +
+	"PlotConfig\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\x05B\b\x82\xa4<\x04{>0}R\x02id\x12.\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.PlotTypeR\x04type\x12!\n" +
+	"\x04name\x18\x03 \x01(\tB\r\x82\xa4<\t{len > 0}R\x04name\x12 \n" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12P\n" +
 	"\fincident_ids\x18\x05 \x03(\v2-.tragedylooper.v1.PlotConfig.IncidentIdsEntryR\vincidentIds\x12\\\n" +
 	"\x10role_assignments\x18\x06 \x03(\v21.tragedylooper.v1.PlotConfig.RoleAssignmentsEntryR\x0froleAssignments\x1a`\n" +
@@ -823,67 +730,79 @@ func file_tragedylooper_v1_script_proto_rawDescGZIP() []byte {
 	return file_tragedylooper_v1_script_proto_rawDescData
 }
 
-var file_tragedylooper_v1_script_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_tragedylooper_v1_script_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
 var file_tragedylooper_v1_script_proto_goTypes = []any{
 	(*ScriptConfig)(nil),    // 0: tragedylooper.v1.ScriptConfig
-	(*ScriptEntity)(nil),    // 1: tragedylooper.v1.ScriptEntity
-	(*ScriptModel)(nil),     // 2: tragedylooper.v1.ScriptModel
-	(*PrivateInfo)(nil),     // 3: tragedylooper.v1.PrivateInfo
-	(*PublicInfo)(nil),      // 4: tragedylooper.v1.PublicInfo
-	(*RoleConfig)(nil),      // 5: tragedylooper.v1.RoleConfig
-	(*PlotConfig)(nil),      // 6: tragedylooper.v1.PlotConfig
-	(*ScriptConfigLib)(nil), // 7: tragedylooper.v1.ScriptConfigLib
-	nil,                     // 8: tragedylooper.v1.ScriptConfig.EntitiesEntry
-	nil,                     // 9: tragedylooper.v1.PrivateInfo.CharactersEntry
-	nil,                     // 10: tragedylooper.v1.PrivateInfo.IncidentsEntry
-	nil,                     // 11: tragedylooper.v1.PublicInfo.SpecialIncidentsEntry
-	nil,                     // 12: tragedylooper.v1.PublicInfo.ScheduledIncidentsEntry
-	nil,                     // 13: tragedylooper.v1.RoleConfig.AbilitiesEntry
-	nil,                     // 14: tragedylooper.v1.PlotConfig.IncidentIdsEntry
-	nil,                     // 15: tragedylooper.v1.PlotConfig.RoleAssignmentsEntry
-	nil,                     // 16: tragedylooper.v1.ScriptConfigLib.ScriptsEntry
-	(*IncidentConfig)(nil),  // 17: tragedylooper.v1.IncidentConfig
-	(*CharacterConfig)(nil), // 18: tragedylooper.v1.CharacterConfig
-	(*CardConfig)(nil),      // 19: tragedylooper.v1.CardConfig
-	(PlotType)(0),           // 20: tragedylooper.v1.PlotType
-	(*AbilityConfig)(nil),   // 21: tragedylooper.v1.AbilityConfig
+	(*ScriptModel)(nil),     // 1: tragedylooper.v1.ScriptModel
+	(*PrivateInfo)(nil),     // 2: tragedylooper.v1.PrivateInfo
+	(*PublicInfo)(nil),      // 3: tragedylooper.v1.PublicInfo
+	(*RoleConfig)(nil),      // 4: tragedylooper.v1.RoleConfig
+	(*PlotConfig)(nil),      // 5: tragedylooper.v1.PlotConfig
+	(*ScriptConfigLib)(nil), // 6: tragedylooper.v1.ScriptConfigLib
+	nil,                     // 7: tragedylooper.v1.ScriptConfig.MainPlotsEntry
+	nil,                     // 8: tragedylooper.v1.ScriptConfig.SubPlotsEntry
+	nil,                     // 9: tragedylooper.v1.ScriptConfig.RolesEntry
+	nil,                     // 10: tragedylooper.v1.ScriptConfig.IncidentsEntry
+	nil,                     // 11: tragedylooper.v1.ScriptConfig.CharactersEntry
+	nil,                     // 12: tragedylooper.v1.ScriptConfig.MastermindCardsEntry
+	nil,                     // 13: tragedylooper.v1.ScriptConfig.ProtagonistCardsEntry
+	nil,                     // 14: tragedylooper.v1.ScriptConfig.ScriptModelsEntry
+	nil,                     // 15: tragedylooper.v1.PrivateInfo.CharactersEntry
+	nil,                     // 16: tragedylooper.v1.PrivateInfo.IncidentsEntry
+	nil,                     // 17: tragedylooper.v1.PublicInfo.SpecialIncidentsEntry
+	nil,                     // 18: tragedylooper.v1.PublicInfo.ScheduledIncidentsEntry
+	nil,                     // 19: tragedylooper.v1.RoleConfig.AbilitiesEntry
+	nil,                     // 20: tragedylooper.v1.PlotConfig.IncidentIdsEntry
+	nil,                     // 21: tragedylooper.v1.PlotConfig.RoleAssignmentsEntry
+	nil,                     // 22: tragedylooper.v1.ScriptConfigLib.ScriptsEntry
+	(PlotType)(0),           // 23: tragedylooper.v1.PlotType
+	(*IncidentConfig)(nil),  // 24: tragedylooper.v1.IncidentConfig
+	(*CharacterConfig)(nil), // 25: tragedylooper.v1.CharacterConfig
+	(*CardConfig)(nil),      // 26: tragedylooper.v1.CardConfig
+	(*AbilityConfig)(nil),   // 27: tragedylooper.v1.AbilityConfig
 }
 var file_tragedylooper_v1_script_proto_depIdxs = []int32{
-	8,  // 0: tragedylooper.v1.ScriptConfig.entities:type_name -> tragedylooper.v1.ScriptConfig.EntitiesEntry
-	6,  // 1: tragedylooper.v1.ScriptEntity.main_plot:type_name -> tragedylooper.v1.PlotConfig
-	6,  // 2: tragedylooper.v1.ScriptEntity.sub_plot:type_name -> tragedylooper.v1.PlotConfig
-	5,  // 3: tragedylooper.v1.ScriptEntity.role:type_name -> tragedylooper.v1.RoleConfig
-	17, // 4: tragedylooper.v1.ScriptEntity.incident:type_name -> tragedylooper.v1.IncidentConfig
-	18, // 5: tragedylooper.v1.ScriptEntity.character:type_name -> tragedylooper.v1.CharacterConfig
-	19, // 6: tragedylooper.v1.ScriptEntity.mastermind_card:type_name -> tragedylooper.v1.CardConfig
-	19, // 7: tragedylooper.v1.ScriptEntity.protagonist_card:type_name -> tragedylooper.v1.CardConfig
-	2,  // 8: tragedylooper.v1.ScriptEntity.script_model:type_name -> tragedylooper.v1.ScriptModel
-	3,  // 9: tragedylooper.v1.ScriptModel.private_info:type_name -> tragedylooper.v1.PrivateInfo
-	4,  // 10: tragedylooper.v1.ScriptModel.public_info:type_name -> tragedylooper.v1.PublicInfo
-	6,  // 11: tragedylooper.v1.PrivateInfo.main_plot:type_name -> tragedylooper.v1.PlotConfig
-	6,  // 12: tragedylooper.v1.PrivateInfo.sub_plots:type_name -> tragedylooper.v1.PlotConfig
-	9,  // 13: tragedylooper.v1.PrivateInfo.characters:type_name -> tragedylooper.v1.PrivateInfo.CharactersEntry
-	10, // 14: tragedylooper.v1.PrivateInfo.incidents:type_name -> tragedylooper.v1.PrivateInfo.IncidentsEntry
-	11, // 15: tragedylooper.v1.PublicInfo.special_incidents:type_name -> tragedylooper.v1.PublicInfo.SpecialIncidentsEntry
-	12, // 16: tragedylooper.v1.PublicInfo.scheduled_incidents:type_name -> tragedylooper.v1.PublicInfo.ScheduledIncidentsEntry
-	13, // 17: tragedylooper.v1.RoleConfig.abilities:type_name -> tragedylooper.v1.RoleConfig.AbilitiesEntry
-	20, // 18: tragedylooper.v1.PlotConfig.type:type_name -> tragedylooper.v1.PlotType
-	14, // 19: tragedylooper.v1.PlotConfig.incident_ids:type_name -> tragedylooper.v1.PlotConfig.IncidentIdsEntry
-	15, // 20: tragedylooper.v1.PlotConfig.role_assignments:type_name -> tragedylooper.v1.PlotConfig.RoleAssignmentsEntry
-	16, // 21: tragedylooper.v1.ScriptConfigLib.scripts:type_name -> tragedylooper.v1.ScriptConfigLib.ScriptsEntry
-	1,  // 22: tragedylooper.v1.ScriptConfig.EntitiesEntry.value:type_name -> tragedylooper.v1.ScriptEntity
-	18, // 23: tragedylooper.v1.PrivateInfo.CharactersEntry.value:type_name -> tragedylooper.v1.CharacterConfig
-	17, // 24: tragedylooper.v1.PrivateInfo.IncidentsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
-	17, // 25: tragedylooper.v1.PublicInfo.SpecialIncidentsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
-	17, // 26: tragedylooper.v1.PublicInfo.ScheduledIncidentsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
-	21, // 27: tragedylooper.v1.RoleConfig.AbilitiesEntry.value:type_name -> tragedylooper.v1.AbilityConfig
-	17, // 28: tragedylooper.v1.PlotConfig.IncidentIdsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
-	0,  // 29: tragedylooper.v1.ScriptConfigLib.ScriptsEntry.value:type_name -> tragedylooper.v1.ScriptConfig
-	30, // [30:30] is the sub-list for method output_type
-	30, // [30:30] is the sub-list for method input_type
-	30, // [30:30] is the sub-list for extension type_name
-	30, // [30:30] is the sub-list for extension extendee
-	0,  // [0:30] is the sub-list for field type_name
+	7,  // 0: tragedylooper.v1.ScriptConfig.main_plots:type_name -> tragedylooper.v1.ScriptConfig.MainPlotsEntry
+	8,  // 1: tragedylooper.v1.ScriptConfig.sub_plots:type_name -> tragedylooper.v1.ScriptConfig.SubPlotsEntry
+	9,  // 2: tragedylooper.v1.ScriptConfig.roles:type_name -> tragedylooper.v1.ScriptConfig.RolesEntry
+	10, // 3: tragedylooper.v1.ScriptConfig.incidents:type_name -> tragedylooper.v1.ScriptConfig.IncidentsEntry
+	11, // 4: tragedylooper.v1.ScriptConfig.characters:type_name -> tragedylooper.v1.ScriptConfig.CharactersEntry
+	12, // 5: tragedylooper.v1.ScriptConfig.mastermind_cards:type_name -> tragedylooper.v1.ScriptConfig.MastermindCardsEntry
+	13, // 6: tragedylooper.v1.ScriptConfig.protagonist_cards:type_name -> tragedylooper.v1.ScriptConfig.ProtagonistCardsEntry
+	14, // 7: tragedylooper.v1.ScriptConfig.script_models:type_name -> tragedylooper.v1.ScriptConfig.ScriptModelsEntry
+	2,  // 8: tragedylooper.v1.ScriptModel.private_info:type_name -> tragedylooper.v1.PrivateInfo
+	3,  // 9: tragedylooper.v1.ScriptModel.public_info:type_name -> tragedylooper.v1.PublicInfo
+	5,  // 10: tragedylooper.v1.PrivateInfo.main_plot:type_name -> tragedylooper.v1.PlotConfig
+	5,  // 11: tragedylooper.v1.PrivateInfo.sub_plots:type_name -> tragedylooper.v1.PlotConfig
+	15, // 12: tragedylooper.v1.PrivateInfo.characters:type_name -> tragedylooper.v1.PrivateInfo.CharactersEntry
+	16, // 13: tragedylooper.v1.PrivateInfo.incidents:type_name -> tragedylooper.v1.PrivateInfo.IncidentsEntry
+	17, // 14: tragedylooper.v1.PublicInfo.special_incidents:type_name -> tragedylooper.v1.PublicInfo.SpecialIncidentsEntry
+	18, // 15: tragedylooper.v1.PublicInfo.scheduled_incidents:type_name -> tragedylooper.v1.PublicInfo.ScheduledIncidentsEntry
+	19, // 16: tragedylooper.v1.RoleConfig.abilities:type_name -> tragedylooper.v1.RoleConfig.AbilitiesEntry
+	23, // 17: tragedylooper.v1.PlotConfig.type:type_name -> tragedylooper.v1.PlotType
+	20, // 18: tragedylooper.v1.PlotConfig.incident_ids:type_name -> tragedylooper.v1.PlotConfig.IncidentIdsEntry
+	21, // 19: tragedylooper.v1.PlotConfig.role_assignments:type_name -> tragedylooper.v1.PlotConfig.RoleAssignmentsEntry
+	22, // 20: tragedylooper.v1.ScriptConfigLib.scripts:type_name -> tragedylooper.v1.ScriptConfigLib.ScriptsEntry
+	5,  // 21: tragedylooper.v1.ScriptConfig.MainPlotsEntry.value:type_name -> tragedylooper.v1.PlotConfig
+	5,  // 22: tragedylooper.v1.ScriptConfig.SubPlotsEntry.value:type_name -> tragedylooper.v1.PlotConfig
+	4,  // 23: tragedylooper.v1.ScriptConfig.RolesEntry.value:type_name -> tragedylooper.v1.RoleConfig
+	24, // 24: tragedylooper.v1.ScriptConfig.IncidentsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
+	25, // 25: tragedylooper.v1.ScriptConfig.CharactersEntry.value:type_name -> tragedylooper.v1.CharacterConfig
+	26, // 26: tragedylooper.v1.ScriptConfig.MastermindCardsEntry.value:type_name -> tragedylooper.v1.CardConfig
+	26, // 27: tragedylooper.v1.ScriptConfig.ProtagonistCardsEntry.value:type_name -> tragedylooper.v1.CardConfig
+	1,  // 28: tragedylooper.v1.ScriptConfig.ScriptModelsEntry.value:type_name -> tragedylooper.v1.ScriptModel
+	25, // 29: tragedylooper.v1.PrivateInfo.CharactersEntry.value:type_name -> tragedylooper.v1.CharacterConfig
+	24, // 30: tragedylooper.v1.PrivateInfo.IncidentsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
+	24, // 31: tragedylooper.v1.PublicInfo.SpecialIncidentsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
+	24, // 32: tragedylooper.v1.PublicInfo.ScheduledIncidentsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
+	27, // 33: tragedylooper.v1.RoleConfig.AbilitiesEntry.value:type_name -> tragedylooper.v1.AbilityConfig
+	24, // 34: tragedylooper.v1.PlotConfig.IncidentIdsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
+	0,  // 35: tragedylooper.v1.ScriptConfigLib.ScriptsEntry.value:type_name -> tragedylooper.v1.ScriptConfig
+	36, // [36:36] is the sub-list for method output_type
+	36, // [36:36] is the sub-list for method input_type
+	36, // [36:36] is the sub-list for extension type_name
+	36, // [36:36] is the sub-list for extension extendee
+	0,  // [0:36] is the sub-list for field type_name
 }
 
 func init() { file_tragedylooper_v1_script_proto_init() }
@@ -898,23 +817,13 @@ func file_tragedylooper_v1_script_proto_init() {
 	file_tragedylooper_v1_character_proto_init()
 	file_tragedylooper_v1_card_proto_init()
 	file_tragedylooper_v1_ability_proto_init()
-	file_tragedylooper_v1_script_proto_msgTypes[1].OneofWrappers = []any{
-		(*ScriptEntity_MainPlot)(nil),
-		(*ScriptEntity_SubPlot)(nil),
-		(*ScriptEntity_Role)(nil),
-		(*ScriptEntity_Incident)(nil),
-		(*ScriptEntity_Character)(nil),
-		(*ScriptEntity_MastermindCard)(nil),
-		(*ScriptEntity_ProtagonistCard)(nil),
-		(*ScriptEntity_ScriptModel)(nil),
-	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_script_proto_rawDesc), len(file_tragedylooper_v1_script_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   17,
+			NumMessages:   23,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
