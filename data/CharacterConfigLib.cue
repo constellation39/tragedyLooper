@@ -1,3 +1,7 @@
+import (
+	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
+)
+
 characters: {
 	"1": {
 		id:   1
@@ -99,7 +103,7 @@ characters: {
 		name: "Boss"
 		ability_ids: [22]
 		rules: [{
-			trigger:     "TRIGGER_TYPE_ON_GAME_SETUP"
+			trigger:     v1.#TriggerType_TRIGGER_TYPE_ON_GAME_SETUP
 			description: "The Mastermind chooses a location to be the Boss's turf."
 			turf_selection_effect: {}
 		}]
@@ -174,7 +178,7 @@ characters: {
 		name: "Godly Being"
 		ability_ids: [36, 37]
 		rules: [{
-			trigger:     "TRIGGER_TYPE_ON_LOOP_START"
+			trigger:     v1.#TriggerType_TRIGGER_TYPE_ON_LOOP_START
 			description: "The Godly Being does not appear in the game until a specific, scripted loop number."
 			delayed_entry_effect: {}
 		}]

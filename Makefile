@@ -29,7 +29,7 @@ run:
 # Test the application
 test:
 	@echo "Running tests..."
-	@$(GO) test ./...
+	@$(GO) test ./... -timeout 1m
 
 # Clean the binary
 clean:

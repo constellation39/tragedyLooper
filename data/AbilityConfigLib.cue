@@ -1,9 +1,13 @@
+import (
+	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
+)
+
 abilities: {
 	"1": {
 		id:           1
 		name:         "Vigilant Protection"
 		description:  "If an ally is targeted, you can increase your paranoia to protect them."
-		trigger_type: "TRIGGER_TYPE_ON_PASSIVE"
+		trigger_type: v1.#TriggerType_TRIGGER_TYPE_ON_PASSIVE
 		effect: adjust_stat: {
 			stat_type: "STAT_TYPE_PARANOIA"
 			amount:    1
@@ -14,7 +18,7 @@ abilities: {
 		id:           2
 		name:         "Medical Knowledge"
 		description:  "Can perform medical examinations to gain information."
-		trigger_type: "TRIGGER_TYPE_ON_PHASE_START"
+		trigger_type: v1.#TriggerType_TRIGGER_TYPE_ON_PHASE_START
 		effect: adjust_stat: {
 			stat_type: "STAT_TYPE_INTRIGUE"
 			amount:    -1
@@ -25,7 +29,7 @@ abilities: {
 		id:           3
 		name:         "Charisma"
 		description:  "Can influence other characters' goodwill."
-		trigger_type: "TRIGGER_TYPE_ON_PHASE_START"
+		trigger_type: v1.#TriggerType_TRIGGER_TYPE_ON_PHASE_START
 		effect: adjust_stat: {
 			stat_type: "STAT_TYPE_GOODWILL"
 			amount:    1
@@ -36,7 +40,7 @@ abilities: {
 		id:           4
 		name:         "Focused Work"
 		description:  "Can uncover intrigue by focusing on a single location."
-		trigger_type: "TRIGGER_TYPE_ON_PHASE_START"
+		trigger_type: v1.#TriggerType_TRIGGER_TYPE_ON_PHASE_START
 		effect: adjust_stat: {
 			stat_type: "STAT_TYPE_INTRIGUE"
 			amount:    -2
@@ -47,7 +51,7 @@ abilities: {
 		id:           5
 		name:         "Scoop"
 		description:  "Can expose a character's secrets, increasing their paranoia."
-		trigger_type: "TRIGGER_TYPE_ON_PHASE_START"
+		trigger_type: v1.#TriggerType_TRIGGER_TYPE_ON_PHASE_START
 		effect: adjust_stat: {
 			stat_type: "STAT_TYPE_PARANOIA"
 			amount:    2
@@ -58,7 +62,7 @@ abilities: {
 		id:           6
 		name:         "Information Leak"
 		description:  "Can reveal a character's location to all players."
-		trigger_type: "TRIGGER_TYPE_ON_PHASE_START"
+		trigger_type: v1.#TriggerType_TRIGGER_TYPE_ON_PHASE_START
 		effect: adjust_stat: {
 			stat_type: "STAT_TYPE_INTRIGUE"
 			amount:    1
@@ -69,7 +73,7 @@ abilities: {
 		id:           101
 		name:         "Suspicious Presence"
 		description:  "At the end of each day, all other characters at the same location have their paranoia increased by 1."
-		trigger_type: "TRIGGER_TYPE_ON_DAY_START"
+		trigger_type: v1.#TriggerType_TRIGGER_TYPE_ON_DAY_START
 		effect: adjust_stat: {
 			stat_type: "STAT_TYPE_PARANOIA"
 			amount:    1
