@@ -20,3 +20,4 @@ go.work
 shrimp-rules.md
 *.xlsx
 .shrimp
+flowchart.dot
