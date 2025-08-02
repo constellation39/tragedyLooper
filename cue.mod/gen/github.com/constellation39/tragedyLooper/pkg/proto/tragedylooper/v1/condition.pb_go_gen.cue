@@ -4,6 +4,7 @@
 
 package v1
 
+// The operator to use when combining conditions.
 #CompoundCondition_Operator: int32 // #enumCompoundCondition_Operator
 
 #enumCompoundCondition_Operator:
@@ -19,11 +20,19 @@ package v1
 	CompoundCondition_OPERATOR_NOT:         #CompoundCondition_OPERATOR_NOT
 }
 
+// Unspecified operator.
 #CompoundCondition_OPERATOR_UNSPECIFIED: #CompoundCondition_Operator & 0
-#CompoundCondition_OPERATOR_AND:         #CompoundCondition_Operator & 1
-#CompoundCondition_OPERATOR_OR:          #CompoundCondition_Operator & 2
-#CompoundCondition_OPERATOR_NOT:         #CompoundCondition_Operator & 3
 
+// The logical AND operator.
+#CompoundCondition_OPERATOR_AND: #CompoundCondition_Operator & 1
+
+// The logical OR operator.
+#CompoundCondition_OPERATOR_OR: #CompoundCondition_Operator & 2
+
+// The logical NOT operator (applies to the first condition).
+#CompoundCondition_OPERATOR_NOT: #CompoundCondition_Operator & 3
+
+// The type of stat to check.
 #StatCondition_StatType: int32 // #enumStatCondition_StatType
 
 #enumStatCondition_StatType:
@@ -39,11 +48,19 @@ package v1
 	StatCondition_STAT_TYPE_INTRIGUE:    #StatCondition_STAT_TYPE_INTRIGUE
 }
 
+// Unspecified stat type.
 #StatCondition_STAT_TYPE_UNSPECIFIED: #StatCondition_StatType & 0
-#StatCondition_STAT_TYPE_PARANOIA:    #StatCondition_StatType & 1
-#StatCondition_STAT_TYPE_GOODWILL:    #StatCondition_StatType & 2
-#StatCondition_STAT_TYPE_INTRIGUE:    #StatCondition_StatType & 3
 
+// Paranoia stat.
+#StatCondition_STAT_TYPE_PARANOIA: #StatCondition_StatType & 1
+
+// Goodwill stat.
+#StatCondition_STAT_TYPE_GOODWILL: #StatCondition_StatType & 2
+
+// Intrigue stat.
+#StatCondition_STAT_TYPE_INTRIGUE: #StatCondition_StatType & 3
+
+// The comparator to use.
 #StatCondition_Comparator: int32 // #enumStatCondition_Comparator
 
 #enumStatCondition_Comparator:
@@ -63,13 +80,25 @@ package v1
 	StatCondition_COMPARATOR_LESS_THAN_OR_EQUAL:    #StatCondition_COMPARATOR_LESS_THAN_OR_EQUAL
 }
 
-#StatCondition_COMPARATOR_UNSPECIFIED:           #StatCondition_Comparator & 0
-#StatCondition_COMPARATOR_GREATER_THAN:          #StatCondition_Comparator & 1
-#StatCondition_COMPARATOR_LESS_THAN:             #StatCondition_Comparator & 2
-#StatCondition_COMPARATOR_EQUAL_TO:              #StatCondition_Comparator & 3
-#StatCondition_COMPARATOR_GREATER_THAN_OR_EQUAL: #StatCondition_Comparator & 4
-#StatCondition_COMPARATOR_LESS_THAN_OR_EQUAL:    #StatCondition_Comparator & 5
+// Unspecified comparator.
+#StatCondition_COMPARATOR_UNSPECIFIED: #StatCondition_Comparator & 0
 
+// Greater than.
+#StatCondition_COMPARATOR_GREATER_THAN: #StatCondition_Comparator & 1
+
+// Less than.
+#StatCondition_COMPARATOR_LESS_THAN: #StatCondition_Comparator & 2
+
+// Equal to.
+#StatCondition_COMPARATOR_EQUAL_TO: #StatCondition_Comparator & 3
+
+// Greater than or equal to.
+#StatCondition_COMPARATOR_GREATER_THAN_OR_EQUAL: #StatCondition_Comparator & 4
+
+// Less than or equal to.
+#StatCondition_COMPARATOR_LESS_THAN_OR_EQUAL: #StatCondition_Comparator & 5
+
+// The comparator to use.
 #DayCondition_Comparator: int32 // #enumDayCondition_Comparator
 
 #enumDayCondition_Comparator:
@@ -85,11 +114,19 @@ package v1
 	DayCondition_COMPARATOR_AFTER:       #DayCondition_COMPARATOR_AFTER
 }
 
+// Unspecified comparator.
 #DayCondition_COMPARATOR_UNSPECIFIED: #DayCondition_Comparator & 0
-#DayCondition_COMPARATOR_BEFORE:      #DayCondition_Comparator & 1
-#DayCondition_COMPARATOR_ON:          #DayCondition_Comparator & 2
-#DayCondition_COMPARATOR_AFTER:       #DayCondition_Comparator & 3
 
+// Before a certain day.
+#DayCondition_COMPARATOR_BEFORE: #DayCondition_Comparator & 1
+
+// On a certain day.
+#DayCondition_COMPARATOR_ON: #DayCondition_Comparator & 2
+
+// After a certain day.
+#DayCondition_COMPARATOR_AFTER: #DayCondition_Comparator & 3
+
+// The type of the selector.
 #TargetSelector_SelectorType: int32 // #enumTargetSelector_SelectorType
 
 #enumTargetSelector_SelectorType:
@@ -117,19 +154,40 @@ package v1
 	TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS:             #TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS
 }
 
-#TargetSelector_SELECTOR_TYPE_UNSPECIFIED:                #TargetSelector_SelectorType & 0
-#TargetSelector_SELECTOR_TYPE_SPECIFIC_CHARACTER:         #TargetSelector_SelectorType & 1
-#TargetSelector_SELECTOR_TYPE_TRIGGERING_CHARACTER:       #TargetSelector_SelectorType & 2
-#TargetSelector_SELECTOR_TYPE_CULPRIT:                    #TargetSelector_SelectorType & 3
-#TargetSelector_SELECTOR_TYPE_VICTIM:                     #TargetSelector_SelectorType & 4
-#TargetSelector_SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE:    #TargetSelector_SelectorType & 5
-#TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION: #TargetSelector_SelectorType & 6
-#TargetSelector_SELECTOR_TYPE_ABILITY_USER:               #TargetSelector_SelectorType & 7
-#TargetSelector_SELECTOR_TYPE_ABILITY_TARGET:             #TargetSelector_SelectorType & 8
-#TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS:             #TargetSelector_SelectorType & 9
+// Unspecified selector type.
+#TargetSelector_SELECTOR_TYPE_UNSPECIFIED: #TargetSelector_SelectorType & 0
 
-// 条件，用于规则、事件和效果的触发判断
+// A specific character.
+#TargetSelector_SELECTOR_TYPE_SPECIFIC_CHARACTER: #TargetSelector_SelectorType & 1
+
+// The character that triggered the event.
+#TargetSelector_SELECTOR_TYPE_TRIGGERING_CHARACTER: #TargetSelector_SelectorType & 2
+
+// The culprit of the event.
+#TargetSelector_SELECTOR_TYPE_CULPRIT: #TargetSelector_SelectorType & 3
+
+// The victim of the event.
+#TargetSelector_SELECTOR_TYPE_VICTIM: #TargetSelector_SelectorType & 4
+
+// Any character with a specific role.
+#TargetSelector_SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE: #TargetSelector_SelectorType & 5
+
+// All characters at a specific location.
+#TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION: #TargetSelector_SelectorType & 6
+
+// The user of the ability.
+#TargetSelector_SELECTOR_TYPE_ABILITY_USER: #TargetSelector_SelectorType & 7
+
+// The target of the ability.
+#TargetSelector_SELECTOR_TYPE_ABILITY_TARGET: #TargetSelector_SelectorType & 8
+
+// All characters.
+#TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS: #TargetSelector_SelectorType & 9
+
+// Condition defines a condition for triggering rules, events, and effects.
 #Condition: {
+	// The type of the condition.
+	//
 	// Types that are valid to be assigned to ConditionType:
 	//
 	//	*Condition_StatCondition
@@ -145,87 +203,128 @@ package v1
 _#isCondition_ConditionType: _
 
 #Condition_StatCondition: {
+	// A stat condition.
 	StatCondition?: null | #StatCondition @go(,*StatCondition) @protobuf(1,bytes,opt,name=stat_condition,json=statCondition,proto3,oneof)
 }
 
 #Condition_LocationCondition: {
+	// A location condition.
 	LocationCondition?: null | #LocationCondition @go(,*LocationCondition) @protobuf(2,bytes,opt,name=location_condition,json=locationCondition,proto3,oneof)
 }
 
 #Condition_RoleCondition: {
+	// A role condition.
 	RoleCondition?: null | #RoleCondition @go(,*RoleCondition) @protobuf(3,bytes,opt,name=role_condition,json=roleCondition,proto3,oneof)
 }
 
 #Condition_TraitCondition: {
+	// A trait condition.
 	TraitCondition?: null | #TraitCondition @go(,*TraitCondition) @protobuf(4,bytes,opt,name=trait_condition,json=traitCondition,proto3,oneof)
 }
 
 #Condition_DayCondition: {
+	// A day condition.
 	DayCondition?: null | #DayCondition @go(,*DayCondition) @protobuf(5,bytes,opt,name=day_condition,json=dayCondition,proto3,oneof)
 }
 
 #Condition_PlayerCondition: {
+	// A player condition.
 	PlayerCondition?: null | #PlayerCondition @go(,*PlayerCondition) @protobuf(6,bytes,opt,name=player_condition,json=playerCondition,proto3,oneof)
 }
 
 #Condition_CompoundCondition: {
+	// A compound condition (AND/OR/NOT).
 	CompoundCondition?: null | #CompoundCondition @go(,*CompoundCondition) @protobuf(7,bytes,opt,name=compound_condition,json=compoundCondition,proto3,oneof)
 }
 
-// 复合条件，用于组合多个条件
+// CompoundCondition defines a combination of multiple conditions.
 #CompoundCondition: {
+	// The logical operator to use.
 	operator?: #CompoundCondition_Operator @go(Operator) @protobuf(1,varint,opt,proto3,enum=tragedylooper.v1.CompoundCondition_Operator)
+
+	// A list of sub-conditions.
 	sub_conditions?: [...null | #Condition] @go(SubConditions,[]*Condition) @protobuf(2,bytes,rep,json=subConditions,proto3)
 }
 
-// 属性条件
+// StatCondition defines a condition based on a character's stats.
 #StatCondition: {
-	target?:     null | #TargetSelector    @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
-	stat_type?:  #StatCondition_StatType   @go(StatType) @protobuf(2,varint,opt,json=statType,proto3,enum=tragedylooper.v1.StatCondition_StatType)
+	// The target character selector.
+	target?: null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
+
+	// The type of stat to check.
+	stat_type?: #StatCondition_StatType @go(StatType) @protobuf(2,varint,opt,json=statType,proto3,enum=tragedylooper.v1.StatCondition_StatType)
+
+	// The comparator to use.
 	comparator?: #StatCondition_Comparator @go(Comparator) @protobuf(3,varint,opt,proto3,enum=tragedylooper.v1.StatCondition_Comparator)
-	value?:      int32                     @go(Value) @protobuf(4,varint,opt,proto3)
+
+	// The value to compare against.
+	value?: int32 @go(Value) @protobuf(4,varint,opt,proto3)
 }
 
-// 地点条件
+// LocationCondition defines a condition based on a character's location.
 #LocationCondition: {
-	target?:         null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
-	location?:       #LocationType          @go(Location) @protobuf(2,varint,opt,proto3,enum=tragedylooper.v1.LocationType)
-	is_at_location?: bool                   @go(IsAtLocation) @protobuf(3,varint,opt,json=isAtLocation,proto3)
-	is_alone?:       bool                   @go(IsAlone) @protobuf(4,varint,opt,json=isAlone,proto3)
-	not_alone?:      bool                   @go(NotAlone) @protobuf(5,varint,opt,json=notAlone,proto3)
+	// The target character selector.
+	target?: null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
+
+	// The target location.
+	location?: #LocationType @go(Location) @protobuf(2,varint,opt,proto3,enum=tragedylooper.v1.LocationType)
+
+	// Whether the character is at the location (defaults to true).
+	is_at_location?: bool @go(IsAtLocation) @protobuf(3,varint,opt,json=isAtLocation,proto3)
+
+	// Whether the character is alone at the location.
+	is_alone?: bool @go(IsAlone) @protobuf(4,varint,opt,json=isAlone,proto3)
+
+	// Whether the character is not alone at the location.
+	not_alone?: bool @go(NotAlone) @protobuf(5,varint,opt,json=notAlone,proto3)
 }
 
-// 身份条件
+// RoleCondition defines a condition based on a character's role.
 #RoleCondition: {
-	target?:   null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
-	role?:     #RoleType              @go(Role) @protobuf(2,varint,opt,proto3,enum=tragedylooper.v1.RoleType)
-	has_role?: bool                   @go(HasRole) @protobuf(3,varint,opt,json=hasRole,proto3)
+	// The target character selector.
+	target?: null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
+
+	// Whether the character has the role (defaults to true).
+	has_role?: bool @go(HasRole) @protobuf(2,varint,opt,json=hasRole,proto3)
 }
 
-// 特征条件
+// TraitCondition defines a condition based on a character's traits.
 #TraitCondition: {
-	target?:    null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
-	trait?:     string                 @go(Trait) @protobuf(2,bytes,opt,proto3)
-	has_trait?: bool                   @go(HasTrait) @protobuf(3,varint,opt,json=hasTrait,proto3)
+	// The target character selector.
+	target?: null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
+
+	// The target trait.
+	trait?: string @go(Trait) @protobuf(2,bytes,opt,proto3)
+
+	// Whether the character has the trait (defaults to true).
+	has_trait?: bool @go(HasTrait) @protobuf(3,varint,opt,json=hasTrait,proto3)
 }
 
-// 日期条件
+// DayCondition defines a condition based on the current day.
 #DayCondition: {
+	// The comparator to use.
 	comparator?: #DayCondition_Comparator @go(Comparator) @protobuf(1,varint,opt,proto3,enum=tragedylooper.v1.DayCondition_Comparator)
-	day?:        int32                    @go(Day) @protobuf(2,varint,opt,proto3)
+
+	// The target day.
+	day?: int32 @go(Day) @protobuf(2,varint,opt,proto3)
 }
 
-// 玩家条件
+// PlayerCondition defines a condition based on a player's state.
 #PlayerCondition: {
+	// The target player role.
 	player_role?: #PlayerRole @go(PlayerRole) @protobuf(1,varint,opt,json=playerRole,proto3,enum=tragedylooper.v1.PlayerRole)
 }
 
-// 目标选择器，用于动态指定条件或效果的目标
+// TargetSelector defines a dynamic target for conditions or effects.
 #TargetSelector: {
-	selector_type?:   #TargetSelector_SelectorType @go(SelectorType) @protobuf(1,varint,opt,json=selectorType,proto3,enum=tragedylooper.v1.TargetSelector_SelectorType)
-	character_id?:    int32                        @go(CharacterId) @protobuf(2,varint,opt,json=characterId,proto3)
-	role_filter?:     #RoleType                    @go(RoleFilter) @protobuf(3,varint,opt,json=roleFilter,proto3,enum=tragedylooper.v1.RoleType)
-	location_filter?: #LocationType                @go(LocationFilter) @protobuf(4,varint,opt,json=locationFilter,proto3,enum=tragedylooper.v1.LocationType)
+	// The type of the selector.
+	selector_type?: #TargetSelector_SelectorType @go(SelectorType) @protobuf(1,varint,opt,json=selectorType,proto3,enum=tragedylooper.v1.TargetSelector_SelectorType)
+
+	// The character ID to use when the type is SPECIFIC_CHARACTER.
+	character_id?: int32 @go(CharacterId) @protobuf(2,varint,opt,json=characterId,proto3)
+
+	// The location filter to use when the type is ALL_CHARACTERS_AT_LOCATION.
+	location_filter?: #LocationType @go(LocationFilter) @protobuf(3,varint,opt,json=locationFilter,proto3,enum=tragedylooper.v1.LocationType)
 }
 
-_#file_tragedylooper_v1_condition_proto_rawDesc: '\n tragedylooper/v1/condition.proto\x12\x10tragedylooper.v1\x1a\x1ctragedylooper/v1/enums.proto"\xc1\x04\n\tCondition\x12H\n\x0estat_condition\x18\x01 \x01(\v2\x1f.tragedylooper.v1.StatConditionH\x00R\rstatCondition\x12T\n\x12location_condition\x18\x02 \x01(\v2#.tragedylooper.v1.LocationConditionH\x00R\x11locationCondition\x12H\n\x0erole_condition\x18\x03 \x01(\v2\x1f.tragedylooper.v1.RoleConditionH\x00R\rroleCondition\x12K\n\x0ftrait_condition\x18\x04 \x01(\v2 .tragedylooper.v1.TraitConditionH\x00R\x0etraitCondition\x12E\n\rday_condition\x18\x05 \x01(\v2\x1e.tragedylooper.v1.DayConditionH\x00R\fdayCondition\x12N\n\x10player_condition\x18\x06 \x01(\v2!.tragedylooper.v1.PlayerConditionH\x00R\x0fplayerCondition\x12T\n\x12compound_condition\x18\a \x01(\v2#.tragedylooper.v1.CompoundConditionH\x00R\x11compoundConditionB\x10\n\x0econdition_type"\xfc\x01\n\x11CompoundCondition\x12H\n\boperator\x18\x01 \x01(\x0e2,.tragedylooper.v1.CompoundCondition.OperatorR\boperator\x12B\n\x0esub_conditions\x18\x02 \x03(\v2\x1b.tragedylooper.v1.ConditionR\rsubConditions"Y\n\bOperator\x12\x18\n\x14OPERATOR_UNSPECIFIED\x10\x00\x12\x10\n\fOPERATOR_AND\x10\x01\x12\x0f\n\vOPERATOR_OR\x10\x02\x12\x10\n\fOPERATOR_NOT\x10\x03"\xa5\x04\n\rStatCondition\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12E\n\tstat_type\x18\x02 \x01(\x0e2(.tragedylooper.v1.StatCondition.StatTypeR\bstatType\x12J\n\ncomparator\x18\x03 \x01(\x0e2*.tragedylooper.v1.StatCondition.ComparatorR\ncomparator\x12\x14\n\x05value\x18\x04 \x01(\x05R\x05value"m\n\bStatType\x12\x19\n\x15STAT_TYPE_UNSPECIFIED\x10\x00\x12\x16\n\x12STAT_TYPE_PARANOIA\x10\x01\x12\x16\n\x12STAT_TYPE_GOODWILL\x10\x02\x12\x16\n\x12STAT_TYPE_INTRIGUE\x10\x03"\xc1\x01\n\nComparator\x12\x1a\n\x16COMPARATOR_UNSPECIFIED\x10\x00\x12\x1b\n\x17COMPARATOR_GREATER_THAN\x10\x01\x12\x18\n\x14COMPARATOR_LESS_THAN\x10\x02\x12\x17\n\x13COMPARATOR_EQUAL_TO\x10\x03\x12$\n COMPARATOR_GREATER_THAN_OR_EQUAL\x10\x04\x12!\n\x1dCOMPARATOR_LESS_THAN_OR_EQUAL\x10\x05"\xe7\x01\n\x11LocationCondition\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12:\n\blocation\x18\x02 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeR\blocation\x12$\n\x0eis_at_location\x18\x03 \x01(\bR\fisAtLocation\x12\x19\n\bis_alone\x18\x04 \x01(\bR\aisAlone\x12\x1b\n\tnot_alone\x18\x05 \x01(\bR\bnotAlone"\x94\x01\n\rRoleCondition\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12.\n\x04role\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.RoleTypeR\x04role\x12\x19\n\bhas_role\x18\x03 \x01(\bR\ahasRole"}\n\x0eTraitCondition\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12\x14\n\x05trait\x18\x02 \x01(\tR\x05trait\x12\x1b\n\thas_trait\x18\x03 \x01(\bR\bhasTrait"\xd5\x01\n\fDayCondition\x12I\n\ncomparator\x18\x01 \x01(\x0e2).tragedylooper.v1.DayCondition.ComparatorR\ncomparator\x12\x10\n\x03day\x18\x02 \x01(\x05R\x03day"h\n\nComparator\x12\x1a\n\x16COMPARATOR_UNSPECIFIED\x10\x00\x12\x15\n\x11COMPARATOR_BEFORE\x10\x01\x12\x11\n\rCOMPARATOR_ON\x10\x02\x12\x14\n\x10COMPARATOR_AFTER\x10\x03"P\n\x0fPlayerCondition\x12=\n\vplayer_role\x18\x01 \x01(\x0e2\x1c.tragedylooper.v1.PlayerRoleR\nplayerRole"\xfd\x04\n\x0eTargetSelector\x12R\n\rselector_type\x18\x01 \x01(\x0e2-.tragedylooper.v1.TargetSelector.SelectorTypeR\fselectorType\x12!\n\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\x12;\n\vrole_filter\x18\x03 \x01(\x0e2\x1a.tragedylooper.v1.RoleTypeR\nroleFilter\x12G\n\x0flocation_filter\x18\x04 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeR\x0elocationFilter"\xed\x02\n\fSelectorType\x12\x1d\n\x19SELECTOR_TYPE_UNSPECIFIED\x10\x00\x12$\n SELECTOR_TYPE_SPECIFIC_CHARACTER\x10\x01\x12&\n"SELECTOR_TYPE_TRIGGERING_CHARACTER\x10\x02\x12\x19\n\x15SELECTOR_TYPE_CULPRIT\x10\x03\x12\x18\n\x14SELECTOR_TYPE_VICTIM\x10\x04\x12)\n%SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE\x10\x05\x12,\n(SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION\x10\x06\x12\x1e\n\x1aSELECTOR_TYPE_ABILITY_USER\x10\a\x12 \n\x1cSELECTOR_TYPE_ABILITY_TARGET\x10\b\x12 \n\x1cSELECTOR_TYPE_ALL_CHARACTERS\x10\tB7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3'
+_#file_tragedylooper_v1_condition_proto_rawDesc: '\n tragedylooper/v1/condition.proto\x12\x10tragedylooper.v1\x1a\x1ctragedylooper/v1/enums.proto"\xc1\x04\n\tCondition\x12H\n\x0estat_condition\x18\x01 \x01(\v2\x1f.tragedylooper.v1.StatConditionH\x00R\rstatCondition\x12T\n\x12location_condition\x18\x02 \x01(\v2#.tragedylooper.v1.LocationConditionH\x00R\x11locationCondition\x12H\n\x0erole_condition\x18\x03 \x01(\v2\x1f.tragedylooper.v1.RoleConditionH\x00R\rroleCondition\x12K\n\x0ftrait_condition\x18\x04 \x01(\v2 .tragedylooper.v1.TraitConditionH\x00R\x0etraitCondition\x12E\n\rday_condition\x18\x05 \x01(\v2\x1e.tragedylooper.v1.DayConditionH\x00R\fdayCondition\x12N\n\x10player_condition\x18\x06 \x01(\v2!.tragedylooper.v1.PlayerConditionH\x00R\x0fplayerCondition\x12T\n\x12compound_condition\x18\a \x01(\v2#.tragedylooper.v1.CompoundConditionH\x00R\x11compoundConditionB\x10\n\x0econdition_type"\xfc\x01\n\x11CompoundCondition\x12H\n\boperator\x18\x01 \x01(\x0e2,.tragedylooper.v1.CompoundCondition.OperatorR\boperator\x12B\n\x0esub_conditions\x18\x02 \x03(\v2\x1b.tragedylooper.v1.ConditionR\rsubConditions"Y\n\bOperator\x12\x18\n\x14OPERATOR_UNSPECIFIED\x10\x00\x12\x10\n\fOPERATOR_AND\x10\x01\x12\x0f\n\vOPERATOR_OR\x10\x02\x12\x10\n\fOPERATOR_NOT\x10\x03"\xa5\x04\n\rStatCondition\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12E\n\tstat_type\x18\x02 \x01(\x0e2(.tragedylooper.v1.StatCondition.StatTypeR\bstatType\x12J\n\ncomparator\x18\x03 \x01(\x0e2*.tragedylooper.v1.StatCondition.ComparatorR\ncomparator\x12\x14\n\x05value\x18\x04 \x01(\x05R\x05value"m\n\bStatType\x12\x19\n\x15STAT_TYPE_UNSPECIFIED\x10\x00\x12\x16\n\x12STAT_TYPE_PARANOIA\x10\x01\x12\x16\n\x12STAT_TYPE_GOODWILL\x10\x02\x12\x16\n\x12STAT_TYPE_INTRIGUE\x10\x03"\xc1\x01\n\nComparator\x12\x1a\n\x16COMPARATOR_UNSPECIFIED\x10\x00\x12\x1b\n\x17COMPARATOR_GREATER_THAN\x10\x01\x12\x18\n\x14COMPARATOR_LESS_THAN\x10\x02\x12\x17\n\x13COMPARATOR_EQUAL_TO\x10\x03\x12$\n COMPARATOR_GREATER_THAN_OR_EQUAL\x10\x04\x12!\n\x1dCOMPARATOR_LESS_THAN_OR_EQUAL\x10\x05"\xe7\x01\n\x11LocationCondition\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12:\n\blocation\x18\x02 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeR\blocation\x12$\n\x0eis_at_location\x18\x03 \x01(\bR\fisAtLocation\x12\x19\n\bis_alone\x18\x04 \x01(\bR\aisAlone\x12\x1b\n\tnot_alone\x18\x05 \x01(\bR\bnotAlone"d\n\rRoleCondition\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12\x19\n\bhas_role\x18\x02 \x01(\bR\ahasRole"}\n\x0eTraitCondition\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12\x14\n\x05trait\x18\x02 \x01(\tR\x05trait\x12\x1b\n\thas_trait\x18\x03 \x01(\bR\bhasTrait"\xd5\x01\n\fDayCondition\x12I\n\ncomparator\x18\x01 \x01(\x0e2).tragedylooper.v1.DayCondition.ComparatorR\ncomparator\x12\x10\n\x03day\x18\x02 \x01(\x05R\x03day"h\n\nComparator\x12\x1a\n\x16COMPARATOR_UNSPECIFIED\x10\x00\x12\x15\n\x11COMPARATOR_BEFORE\x10\x01\x12\x11\n\rCOMPARATOR_ON\x10\x02\x12\x14\n\x10COMPARATOR_AFTER\x10\x03"P\n\x0fPlayerCondition\x12=\n\vplayer_role\x18\x01 \x01(\x0e2\x1c.tragedylooper.v1.PlayerRoleR\nplayerRole"\xc0\x04\n\x0eTargetSelector\x12R\n\rselector_type\x18\x01 \x01(\x0e2-.tragedylooper.v1.TargetSelector.SelectorTypeR\fselectorType\x12!\n\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\x12G\n\x0flocation_filter\x18\x03 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeR\x0elocationFilter"\xed\x02\n\fSelectorType\x12\x1d\n\x19SELECTOR_TYPE_UNSPECIFIED\x10\x00\x12$\n SELECTOR_TYPE_SPECIFIC_CHARACTER\x10\x01\x12&\n"SELECTOR_TYPE_TRIGGERING_CHARACTER\x10\x02\x12\x19\n\x15SELECTOR_TYPE_CULPRIT\x10\x03\x12\x18\n\x14SELECTOR_TYPE_VICTIM\x10\x04\x12)\n%SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE\x10\x05\x12,\n(SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION\x10\x06\x12\x1e\n\x1aSELECTOR_TYPE_ABILITY_USER\x10\a\x12 \n\x1cSELECTOR_TYPE_ABILITY_TARGET\x10\b\x12 \n\x1cSELECTOR_TYPE_ALL_CHARACTERS\x10\tB7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3'

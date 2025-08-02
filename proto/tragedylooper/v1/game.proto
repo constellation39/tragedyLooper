@@ -51,7 +51,7 @@ message PlayerLib {
 
 // 主角的推理知识
 message PlayerDeductionKnowledge {
-  map<int32, RoleType> guessed_roles = 1; // 对角色身份的猜测，键为 character_id
+  map<int32, int32> guessed_roles = 1; // 对角色身份的猜测，键为 character_id
   repeated string clues = 2; // 收集到的线索列表
   repeated string theories = 3; // 推理出的理论列表
 }
@@ -87,7 +87,7 @@ message PlayerViewCharacter {
   bool is_alive = 9; // 角色是否存活
   bool in_panic_mode = 10; // 是否处于恐慌模式
   repeated CharacterRule rules = 11; // 角色特有规则
-  RoleType role = 12; // 角色身份（对主角可能为UNKNOWN）
+  int32 role = 12; // 角色身份（对主角可能为UNKNOWN）
   // 隐藏身份 (hidden_role) 不会在这里显示
 }
 

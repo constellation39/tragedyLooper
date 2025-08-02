@@ -61,7 +61,7 @@ message IntrigueAdjustedEvent {
 
 // 循环失败事件
 message LoopLossEvent {
-  IncidentType incident_type = 1; // 导致失败的事件类型
+  int32 incident_id = 1; // 导致失败的事件类型
 }
 
 // 循环胜利事件
@@ -125,7 +125,7 @@ message IncidentTriggeredEvent {
 
 // 悲剧触发事件
 message TragedyTriggeredEvent {
-  IncidentType tragedy_type = 1; // 被触发的悲剧类型
+  int32 tragedy_id = 1; // 被触发的悲剧类型
 }
 
 // 特性添加事件

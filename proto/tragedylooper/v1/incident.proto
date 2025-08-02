@@ -24,7 +24,7 @@ message IncidentConfig {
   int32 id = 1; // 事件唯一ID（剧本内）
   string name = 2; // 事件名称
   string description = 3; // 事件描述
-  IncidentType incident_type = 4; // 事件类型
+  int32 incident_id = 4; // 事件类型
   int32 day = 5; // 预定发生日期
   CompoundCondition compound_condition = 6; // 触发条件列表
   Effect effect = 7; // 事件触发时产生的效果

@@ -4,6 +4,7 @@
 
 package v1
 
+// The operator to use when combining abilities.
 #CompoundAbility_Operator: int32 // #enumCompoundAbility_Operator
 
 #enumCompoundAbility_Operator:
@@ -17,35 +18,76 @@ package v1
 	CompoundAbility_OPERATOR_OR:          #CompoundAbility_OPERATOR_OR
 }
 
+// Unspecified operator.
 #CompoundAbility_OPERATOR_UNSPECIFIED: #CompoundAbility_Operator & 0
-#CompoundAbility_OPERATOR_AND:         #CompoundAbility_Operator & 1
-#CompoundAbility_OPERATOR_OR:          #CompoundAbility_Operator & 2
 
+// The AND operator.
+#CompoundAbility_OPERATOR_AND: #CompoundAbility_Operator & 1
+
+// The OR operator.
+#CompoundAbility_OPERATOR_OR: #CompoundAbility_Operator & 2
+
+// AbilityConfig defines the configuration for a character's ability.
 #AbilityConfig: {
-	id?:           int32        @go(Id) @protobuf(1,varint,opt,proto3)
-	name?:         string       @go(Name) @protobuf(2,bytes,opt,proto3)
-	description?:  string       @go(Description) @protobuf(3,bytes,opt,proto3)
+	// The unique identifier for the ability.
+	id?: int32 @go(Id) @protobuf(1,varint,opt,proto3)
+
+	// The name of the ability.
+	name?: string @go(Name) @protobuf(2,bytes,opt,proto3)
+
+	// A description of the ability.
+	description?: string @go(Description) @protobuf(3,bytes,opt,proto3)
+
+	// The trigger type for the ability.
 	trigger_type?: #TriggerType @go(TriggerType) @protobuf(4,varint,opt,json=triggerType,proto3,enum=tragedylooper.v1.TriggerType)
+
+	// Optional: filters for game event triggers.
 	event_filters?: [...#GameEventType] @go(EventFilters,[]GameEventType) @protobuf(5,varint,rep,packed,json=eventFilters,proto3,enum=tragedylooper.v1.GameEventType)
-	effect?:        null | #Effect @go(Effect,*Effect) @protobuf(6,bytes,opt,proto3)
-	once_per_loop?: bool           @go(OncePerLoop) @protobuf(7,varint,opt,json=oncePerLoop,proto3)
-	refusal_role?:  #PlayerRole    @go(RefusalRole) @protobuf(8,varint,opt,json=refusalRole,proto3,enum=tragedylooper.v1.PlayerRole)
-	is_passive?:    bool           @go(IsPassive) @protobuf(9,varint,opt,json=isPassive,proto3)
-	is_mandatory?:  bool           @go(IsMandatory) @protobuf(10,varint,opt,json=isMandatory,proto3)
-	priority?:      int32          @go(Priority) @protobuf(11,varint,opt,proto3)
+
+	// The effect of the ability.
+	effect?: null | #Effect @go(Effect,*Effect) @protobuf(6,bytes,opt,proto3)
+
+	// Whether the ability can only be used once per loop.
+	once_per_loop?: bool @go(OncePerLoop) @protobuf(7,varint,opt,json=oncePerLoop,proto3)
+
+	// The player role that can refuse this ability.
+	refusal_role?: #PlayerRole @go(RefusalRole) @protobuf(8,varint,opt,json=refusalRole,proto3,enum=tragedylooper.v1.PlayerRole)
+
+	// Whether the ability is passive.
+	is_passive?: bool @go(IsPassive) @protobuf(9,varint,opt,json=isPassive,proto3)
+
+	// Whether the ability is mandatory (cannot be refused).
+	is_mandatory?: bool @go(IsMandatory) @protobuf(10,varint,opt,json=isMandatory,proto3)
+
+	// The priority of the ability's resolution.
+	priority?: int32 @go(Priority) @protobuf(11,varint,opt,proto3)
+
+	// A list of conditions that must be met to use the ability.
 	conditions?: [...null | #Condition] @go(Conditions,[]*Condition) @protobuf(12,bytes,rep,proto3)
+
+	// Whether the ability requires a choice to be made.
 	requires_choice?: bool @go(RequiresChoice) @protobuf(13,varint,opt,json=requiresChoice,proto3)
 }
 
+// CompoundAbility defines a combination of multiple abilities.
 #CompoundAbility: {
+	// The operator to use when combining abilities.
 	operator?: #CompoundAbility_Operator @go(Operator) @protobuf(1,varint,opt,proto3,enum=tragedylooper.v1.CompoundAbility_Operator)
+
+	// The sub-abilities to combine.
 	sub_abilities?: [...null | #AbilityConfig] @go(SubAbilities,[]*AbilityConfig) @protobuf(2,bytes,rep,json=subAbilities,proto3)
 }
 
+// Ability defines a character's ability at runtime.
 #Ability: {
-	config?:             null | #AbilityConfig @go(Config,*AbilityConfig) @protobuf(1,bytes,opt,proto3)
-	used_this_loop?:     bool                  @go(UsedThisLoop) @protobuf(2,varint,opt,json=usedThisLoop,proto3)
-	owner_character_id?: int32                 @go(OwnerCharacterId) @protobuf(3,varint,opt,json=ownerCharacterId,proto3)
+	// The configuration for the ability.
+	config?: null | #AbilityConfig @go(Config,*AbilityConfig) @protobuf(1,bytes,opt,proto3)
+
+	// Whether the ability has been used in the current loop.
+	used_this_loop?: bool @go(UsedThisLoop) @protobuf(2,varint,opt,json=usedThisLoop,proto3)
+
+	// The ID of the character that owns the ability.
+	owner_character_id?: int32 @go(OwnerCharacterId) @protobuf(3,varint,opt,json=ownerCharacterId,proto3)
 }
 
 _#file_tragedylooper_v1_ability_proto_rawDesc: '\n\x1etragedylooper/v1/ability.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto"\xb8\x04\n\rAbilityConfig\x12\x0e\n\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12 \n\vdescription\x18\x03 \x01(\tR\vdescription\x12@\n\ftrigger_type\x18\x04 \x01(\x0e2\x1d.tragedylooper.v1.TriggerTypeR\vtriggerType\x12D\n\revent_filters\x18\x05 \x03(\x0e2\x1f.tragedylooper.v1.GameEventTypeR\feventFilters\x120\n\x06effect\x18\x06 \x01(\v2\x18.tragedylooper.v1.EffectR\x06effect\x12"\n\ronce_per_loop\x18\a \x01(\bR\voncePerLoop\x12?\n\frefusal_role\x18\b \x01(\x0e2\x1c.tragedylooper.v1.PlayerRoleR\vrefusalRole\x12\x1d\n\nis_passive\x18\t \x01(\bR\tisPassive\x12!\n\fis_mandatory\x18\n \x01(\bR\visMandatory\x12\x1a\n\bpriority\x18\v \x01(\x05R\bpriority\x12;\n\nconditions\x18\f \x03(\v2\x1b.tragedylooper.v1.ConditionR\nconditions\x12\'\n\x0frequires_choice\x18\r \x01(\bR\x0erequiresChoice"\xe8\x01\n\x0fCompoundAbility\x12F\n\boperator\x18\x01 \x01(\x0e2*.tragedylooper.v1.CompoundAbility.OperatorR\boperator\x12D\n\rsub_abilities\x18\x02 \x03(\v2\x1f.tragedylooper.v1.AbilityConfigR\fsubAbilities"G\n\bOperator\x12\x18\n\x14OPERATOR_UNSPECIFIED\x10\x00\x12\x10\n\fOPERATOR_AND\x10\x01\x12\x0f\n\vOPERATOR_OR\x10\x02"\x96\x01\n\aAbility\x127\n\x06config\x18\x01 \x01(\v2\x1f.tragedylooper.v1.AbilityConfigR\x06config\x12$\n\x0eused_this_loop\x18\x02 \x01(\bR\fusedThisLoop\x12,\n\x12owner_character_id\x18\x03 \x01(\x05R\x10ownerCharacterId"\xc2\x01\n\x10AbilityConfigLib\x12O\n\tabilities\x18\x01 \x03(\v21.tragedylooper.v1.AbilityConfigLib.AbilitiesEntryR\tabilities\x1a]\n\x0eAbilitiesEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x125\n\x05value\x18\x02 \x01(\v2\x1f.tragedylooper.v1.AbilityConfigR\x05value:\x028\x01B7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3'

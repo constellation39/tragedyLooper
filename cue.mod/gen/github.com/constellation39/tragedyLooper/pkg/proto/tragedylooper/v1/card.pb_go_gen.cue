@@ -4,23 +4,43 @@
 
 package v1
 
-// 卡牌静态配置
+// CardConfig defines the configuration for a card.
 #CardConfig: {
-	id?:            int32                  @go(Id) @protobuf(1,varint,opt,proto3)
-	name?:          string                 @go(Name) @protobuf(2,bytes,opt,proto3)
-	description?:   string                 @go(Description) @protobuf(3,bytes,opt,proto3)
-	type?:          #CardType              @go(Type) @protobuf(4,varint,opt,proto3,enum=tragedylooper.v1.CardType)
-	owner_role?:    #PlayerRole            @go(OwnerRole) @protobuf(5,varint,opt,json=ownerRole,proto3,enum=tragedylooper.v1.PlayerRole)
-	effect?:        null | #CompoundEffect @go(Effect,*CompoundEffect) @protobuf(6,bytes,opt,proto3)
-	once_per_loop?: bool                   @go(OncePerLoop) @protobuf(7,varint,opt,json=oncePerLoop,proto3)
-	priority?:      int32                  @go(Priority) @protobuf(8,varint,opt,proto3)
+	// The unique identifier for the card.
+	id?: int32 @go(Id) @protobuf(1,varint,opt,proto3)
+
+	// The name of the card.
+	name?: string @go(Name) @protobuf(2,bytes,opt,proto3)
+
+	// A description of the card.
+	description?: string @go(Description) @protobuf(3,bytes,opt,proto3)
+
+	// The type of the card.
+	type?: #CardType @go(Type) @protobuf(4,varint,opt,proto3,enum=tragedylooper.v1.CardType)
+
+	// The player role that owns the card (Mastermind or Protagonist).
+	owner_role?: #PlayerRole @go(OwnerRole) @protobuf(5,varint,opt,json=ownerRole,proto3,enum=tragedylooper.v1.PlayerRole)
+
+	// The effect of the card.
+	effect?: null | #CompoundEffect @go(Effect,*CompoundEffect) @protobuf(6,bytes,opt,proto3)
+
+	// Whether the card can only be used once per loop.
+	once_per_loop?: bool @go(OncePerLoop) @protobuf(7,varint,opt,json=oncePerLoop,proto3)
+
+	// The priority of the card's resolution (for cards of the same type).
+	priority?: int32 @go(Priority) @protobuf(8,varint,opt,proto3)
 }
 
-// 卡牌运行时实例
+// Card defines a card instance at runtime.
 #Card: {
-	config?:         null | #CardConfig @go(Config,*CardConfig) @protobuf(1,bytes,opt,proto3)
-	used_this_loop?: bool               @go(UsedThisLoop) @protobuf(2,varint,opt,json=usedThisLoop,proto3)
+	// The configuration for the card.
+	config?: null | #CardConfig @go(Config,*CardConfig) @protobuf(1,bytes,opt,proto3)
 
+	// Whether the card has been used in the current loop.
+	used_this_loop?: bool @go(UsedThisLoop) @protobuf(2,varint,opt,json=usedThisLoop,proto3)
+
+	// The target of the card's ability.
+	//
 	// Types that are valid to be assigned to Target:
 	//
 	//	*Card_TargetCharacterId
@@ -31,15 +51,18 @@ package v1
 _#isCard_Target: _
 
 #Card_TargetCharacterId: {
+	// The ID of the target character, if the ability has one.
 	TargetCharacterId: int32 @protobuf(3,varint,opt,name=target_character_id,json=targetCharacterId,proto3,oneof)
 }
 
 #Card_TargetLocation: {
+	// The target location, if the ability has one.
 	TargetLocation: #LocationType @protobuf(4,varint,opt,name=target_location,json=targetLocation,proto3,enum=tragedylooper.v1.LocationType,oneof)
 }
 
-// 卡牌列表
+// CardList is a list of card instances.
 #CardList: {
+	// A list of card instances.
 	cards?: [...null | #Card] @go(Cards,[]*Card) @protobuf(1,bytes,rep,proto3)
 }
 

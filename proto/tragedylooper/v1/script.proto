@@ -114,7 +114,7 @@ message PlotConfig {
   // A map of incident identifiers for this plot.
   map<int32, IncidentConfig> incident_ids = 5;
   // A map of role assignments for this plot.
-  map<int32, RoleType> role_assignments = 6;
+  map<int32, int32> role_assignments = 6;
 }
 
 // ScriptConfigLib is a library of script configurations.

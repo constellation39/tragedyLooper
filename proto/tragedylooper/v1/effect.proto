@@ -113,7 +113,7 @@ message ChangeRoleEffect {
   // The target character.
   TargetSelector target = 1;
   // The new role.
-  RoleType new_role = 2;
+  int32 new_role = 2;
 }
 
 // TriggerIncidentEffect defines an effect that triggers an incident.

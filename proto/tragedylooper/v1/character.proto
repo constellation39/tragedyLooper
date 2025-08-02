@@ -46,7 +46,7 @@ message Character {
   // The current intrigue level of the character.
   int32 intrigue = 5;
   // The hidden role of the character (assigned by the script).
-  RoleType hidden_role = 6;
+  int32 hidden_role_id = 6;
   // A list of ability instances that the character possesses.
   repeated Ability abilities = 7;
   // Whether the character is alive.

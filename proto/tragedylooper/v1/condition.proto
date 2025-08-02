@@ -102,10 +102,8 @@ message LocationCondition {
 message RoleCondition {
   // The target character selector.
   TargetSelector target = 1;
-  // The target role.
-  RoleType role = 2;
   // Whether the character has the role (defaults to true).
-  bool has_role = 3;
+  bool has_role = 2;
 }
 
 // TraitCondition defines a condition based on a character's traits.
@@ -173,8 +171,6 @@ message TargetSelector {
   SelectorType selector_type = 1;
   // The character ID to use when the type is SPECIFIC_CHARACTER.
   int32 character_id = 2;
-  // The role filter to use when the type is ANY_CHARACTER_WITH_ROLE.
-  RoleType role_filter = 3;
   // The location filter to use when the type is ALL_CHARACTERS_AT_LOCATION.
-  LocationType location_filter = 4;
+  LocationType location_filter = 3;
 }

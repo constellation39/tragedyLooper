@@ -4,71 +4,84 @@
 
 package v1
 
-// 剧本配置
-#ScriptConfig: {
-	id?:          int32             @go(Id) @protobuf(1,varint,opt,proto3)
-	name?:        string            @go(Name) @protobuf(2,bytes,opt,proto3)
-	description?: string            @go(Description) @protobuf(3,bytes,opt,proto3)
-	tragedy_set?: #TragedySetType   @go(TragedySet) @protobuf(4,varint,opt,json=tragedySet,proto3,enum=tragedylooper.v1.TragedySetType)
-	difficulty?:  #ScriptDifficulty @go(Difficulty) @protobuf(5,varint,opt,proto3,enum=tragedylooper.v1.ScriptDifficulty)
+// Script defines the configuration for a tragedy looper script.
+#Script: {
+	// The unique identifier for the script.
+	id?: int32 @go(Id) @protobuf(1,varint,opt,proto3)
 
-	// 剧情配置
-	main_plot?: null | #PlotConfig @go(MainPlot,*PlotConfig) @protobuf(6,bytes,opt,json=mainPlot,proto3)
-	sub_plots?: [...null | #PlotConfig] @go(SubPlots,[]*PlotConfig) @protobuf(7,bytes,rep,json=subPlots,proto3)
+	// The name of the script.
+	name?: string @go(Name) @protobuf(2,bytes,opt,proto3)
 
-	// 角色配置
-	characters?: [...null | #CharacterInScript] @go(Characters,[]*CharacterInScript) @protobuf(8,bytes,rep,proto3)
-
-	// 事件配置
-	incidents?: [...null | #IncidentConfig] @go(Incidents,[]*IncidentConfig) @protobuf(9,bytes,rep,proto3)
-
-	// 游戏规则
-	loop_count?:    int32 @go(LoopCount) @protobuf(10,varint,opt,json=loopCount,proto3)
-	days_per_loop?: int32 @go(DaysPerLoop) @protobuf(11,varint,opt,json=daysPerLoop,proto3)
-	special_rules?: [...null | #SpecialRule] @go(SpecialRules,[]*SpecialRule) @protobuf(12,bytes,rep,json=specialRules,proto3)
-
-	// 卡牌配置
-	mastermind_card_ids?: [...int32] @go(MastermindCardIds,[]int32) @protobuf(13,varint,rep,packed,json=mastermindCardIds,proto3)
-	protagonist_card_ids?: [...int32] @go(ProtagonistCardIds,[]int32) @protobuf(14,varint,rep,packed,json=protagonistCardIds,proto3)
-
-	// 胜负条件
-	win_conditions?: [...null | #EndCondition] @go(WinConditions,[]*EndCondition) @protobuf(15,bytes,rep,json=winConditions,proto3)
-	lose_conditions?: [...null | #EndCondition] @go(LoseConditions,[]*EndCondition) @protobuf(16,bytes,rep,json=loseConditions,proto3)
-}
-
-// 剧本中的角色配置
-#CharacterInScript: {
-	character_id?:     int32         @go(CharacterId) @protobuf(1,varint,opt,json=characterId,proto3)
-	hidden_role?:      #RoleType     @go(HiddenRole) @protobuf(2,varint,opt,json=hiddenRole,proto3,enum=tragedylooper.v1.RoleType)
-	initial_location?: #LocationType @go(InitialLocation) @protobuf(3,varint,opt,json=initialLocation,proto3,enum=tragedylooper.v1.LocationType)
-	initial_paranoia?: int32         @go(InitialParanoia) @protobuf(4,varint,opt,json=initialParanoia,proto3)
-	initial_goodwill?: int32         @go(InitialGoodwill) @protobuf(5,varint,opt,json=initialGoodwill,proto3)
-	initial_intrigue?: int32         @go(InitialIntrigue) @protobuf(6,varint,opt,json=initialIntrigue,proto3)
-	additional_ability_ids?: [...int32] @go(AdditionalAbilityIds,[]int32) @protobuf(7,varint,rep,packed,json=additionalAbilityIds,proto3)
-	starts_in_game?: bool @go(StartsInGame) @protobuf(8,varint,opt,json=startsInGame,proto3)
-}
-
-// 剧情配置
-#PlotConfig: {
-	plot_type?:   #PlotType @go(PlotType) @protobuf(1,varint,opt,json=plotType,proto3,enum=tragedylooper.v1.PlotType)
-	name?:        string    @go(Name) @protobuf(2,bytes,opt,proto3)
-	description?: string    @go(Description) @protobuf(3,bytes,opt,proto3)
-	incident_ids?: [...int32] @go(IncidentIds,[]int32) @protobuf(4,varint,rep,packed,json=incidentIds,proto3)
-}
-
-// 特殊规则
-#SpecialRule: {
-	name?:        string         @go(Name) @protobuf(1,bytes,opt,proto3)
-	description?: string         @go(Description) @protobuf(2,bytes,opt,proto3)
-	trigger?:     #TriggerType   @go(Trigger) @protobuf(3,varint,opt,proto3,enum=tragedylooper.v1.TriggerType)
-	effect?:      null | #Effect @go(Effect,*Effect) @protobuf(4,bytes,opt,proto3)
-}
-
-// 游戏结束条件
-#EndCondition: {
-	type?: #EndConditionType @go(Type) @protobuf(1,varint,opt,proto3,enum=tragedylooper.v1.EndConditionType)
-	requirements?: [...null | #Condition] @go(Requirements,[]*Condition) @protobuf(2,bytes,rep,proto3)
+	// A description of the script.
 	description?: string @go(Description) @protobuf(3,bytes,opt,proto3)
 }
 
-_#file_tragedylooper_v1_script_proto_rawDesc: '\n\x1dtragedylooper/v1/script.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1ftragedylooper/v1/incident.proto"\xcf\x06\n\fScriptConfig\x12\x0e\n\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12 \n\vdescription\x18\x03 \x01(\tR\vdescription\x12A\n\vtragedy_set\x18\x04 \x01(\x0e2 .tragedylooper.v1.TragedySetTypeR\ntragedySet\x12B\n\ndifficulty\x18\x05 \x01(\x0e2".tragedylooper.v1.ScriptDifficultyR\ndifficulty\x129\n\tmain_plot\x18\x06 \x01(\v2\x1c.tragedylooper.v1.PlotConfigR\bmainPlot\x129\n\tsub_plots\x18\a \x03(\v2\x1c.tragedylooper.v1.PlotConfigR\bsubPlots\x12C\n\ncharacters\x18\b \x03(\v2#.tragedylooper.v1.CharacterInScriptR\ncharacters\x12>\n\tincidents\x18\t \x03(\v2 .tragedylooper.v1.IncidentConfigR\tincidents\x12\x1d\n\nloop_count\x18\n \x01(\x05R\tloopCount\x12"\n\rdays_per_loop\x18\v \x01(\x05R\vdaysPerLoop\x12B\n\rspecial_rules\x18\f \x03(\v2\x1d.tragedylooper.v1.SpecialRuleR\fspecialRules\x12.\n\x13mastermind_card_ids\x18\r \x03(\x05R\x11mastermindCardIds\x120\n\x14protagonist_card_ids\x18\x0e \x03(\x05R\x12protagonistCardIds\x12E\n\x0ewin_conditions\x18\x0f \x03(\v2\x1e.tragedylooper.v1.EndConditionR\rwinConditions\x12G\n\x0flose_conditions\x18\x10 \x03(\v2\x1e.tragedylooper.v1.EndConditionR\x0eloseConditions"\x9b\x03\n\x11CharacterInScript\x12!\n\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x12;\n\vhidden_role\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.RoleTypeR\nhiddenRole\x12I\n\x10initial_location\x18\x03 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeR\x0finitialLocation\x12)\n\x10initial_paranoia\x18\x04 \x01(\x05R\x0finitialParanoia\x12)\n\x10initial_goodwill\x18\x05 \x01(\x05R\x0finitialGoodwill\x12)\n\x10initial_intrigue\x18\x06 \x01(\x05R\x0finitialIntrigue\x124\n\x16additional_ability_ids\x18\a \x03(\x05R\x14additionalAbilityIds\x12$\n\x0estarts_in_game\x18\b \x01(\bR\fstartsInGame"\x9e\x01\n\nPlotConfig\x127\n\tplot_type\x18\x01 \x01(\x0e2\x1a.tragedylooper.v1.PlotTypeR\bplotType\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12 \n\vdescription\x18\x03 \x01(\tR\vdescription\x12!\n\fincident_ids\x18\x04 \x03(\x05R\vincidentIds"\xae\x01\n\vSpecialRule\x12\x12\n\x04name\x18\x01 \x01(\tR\x04name\x12 \n\vdescription\x18\x02 \x01(\tR\vdescription\x127\n\atrigger\x18\x03 \x01(\x0e2\x1d.tragedylooper.v1.TriggerTypeR\atrigger\x120\n\x06effect\x18\x04 \x01(\v2\x18.tragedylooper.v1.EffectR\x06effect"\xa9\x01\n\fEndCondition\x126\n\x04type\x18\x01 \x01(\x0e2".tragedylooper.v1.EndConditionTypeR\x04type\x12?\n\frequirements\x18\x02 \x03(\v2\x1b.tragedylooper.v1.ConditionR\frequirements\x12 \n\vdescription\x18\x03 \x01(\tR\vdescription"\xb7\x01\n\x0fScriptConfigLib\x12H\n\ascripts\x18\x01 \x03(\v2..tragedylooper.v1.ScriptConfigLib.ScriptsEntryR\ascripts\x1aZ\n\fScriptsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x124\n\x05value\x18\x02 \x01(\v2\x1e.tragedylooper.v1.ScriptConfigR\x05value:\x028\x01B7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3'
+// ScriptConfig defines the configuration for a specific script.
+#ScriptConfig: {
+	// Private information for the script.
+	private_info?: null | #PrivateInfo @go(PrivateInfo,*PrivateInfo) @protobuf(1,bytes,opt,json=privateInfo,proto3)
+
+	// Public information for the script.
+	public_info?: null | #PublicInfo @go(PublicInfo,*PublicInfo) @protobuf(2,bytes,opt,json=publicInfo,proto3)
+}
+
+// PrivateInfo defines the private information for a script.
+#PrivateInfo: {
+	// The main plot of the script.
+	main_plot?: null | #PlotConfig @go(MainPlot,*PlotConfig) @protobuf(1,bytes,opt,json=mainPlot,proto3)
+
+	// A list of sub plots for the script.
+	sub_plots?: [...null | #PlotConfig] @go(SubPlots,[]*PlotConfig) @protobuf(2,bytes,rep,json=subPlots,proto3)
+}
+
+// PublicInfo defines the public information for a script.
+#PublicInfo: {
+	// The unique identifier for the script configuration.
+	script_config_id?: int32 @go(ScriptConfigId) @protobuf(1,varint,opt,json=scriptConfigId,proto3)
+
+	// Game rules.
+	// The number of loops in the game.
+	loop_count?: int32 @go(LoopCount) @protobuf(2,varint,opt,json=loopCount,proto3)
+
+	// The number of days per loop.
+	days_per_loop?: int32 @go(DaysPerLoop) @protobuf(3,varint,opt,json=daysPerLoop,proto3)
+
+	// Whether players can discuss information.
+	can_discuss?: bool @go(CanDiscuss) @protobuf(4,varint,opt,json=canDiscuss,proto3)
+}
+
+// RoleConfig defines the configuration for a role.
+#RoleConfig: {
+	// The unique identifier for the role.
+	id?: int32 @go(Id) @protobuf(1,varint,opt,proto3)
+
+	// The name of the role.
+	name?: string @go(Name) @protobuf(2,bytes,opt,proto3)
+
+	// The limit of characters that can have this role.
+	limit?: int32 @go(Limit) @protobuf(3,varint,opt,proto3)
+
+	// Defines the character's goodwill status.
+	// 0: normal, 1: ignore goodwill, 2: always ignore goodwill.
+	goodwill_rule?: int32 @go(GoodwillRule) @protobuf(5,varint,opt,json=goodwillRule,proto3)
+
+	// Defines if the character can be made invincible.
+	can_be_invincible?: bool @go(CanBeInvincible) @protobuf(6,varint,opt,json=canBeInvincible,proto3)
+}
+
+// PlotConfig defines a story plot.
+#PlotConfig: {
+	// The unique identifier for the plot.
+	id?: int32 @go(Id) @protobuf(1,varint,opt,proto3)
+
+	// The type of the plot.
+	type?: #PlotType @go(Type) @protobuf(2,varint,opt,proto3,enum=tragedylooper.v1.PlotType)
+
+	// The name of the plot.
+	name?: string @go(Name) @protobuf(3,bytes,opt,proto3)
+
+	// A description of the plot.
+	description?: string @go(Description) @protobuf(4,bytes,opt,proto3)
+}
+
+_#file_tragedylooper_v1_script_proto_rawDesc: '\n\x1dtragedylooper/v1/script.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1ftragedylooper/v1/incident.proto\x1a tragedylooper/v1/character.proto\x1a\x1btragedylooper/v1/card.proto\x1a\x1etragedylooper/v1/ability.proto"\x91\v\n\x06Script\x12\x0e\n\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12 \n\vdescription\x18\x03 \x01(\tR\vdescription\x12F\n\nmain_plots\x18\x04 \x03(\v2\'.tragedylooper.v1.Script.MainPlotsEntryR\tmainPlots\x12C\n\tsub_plots\x18\x05 \x03(\v2&.tragedylooper.v1.Script.SubPlotsEntryR\bsubPlots\x129\n\x05roles\x18\x06 \x03(\v2#.tragedylooper.v1.Script.RolesEntryR\x05roles\x12E\n\tincidents\x18\a \x03(\v2\'.tragedylooper.v1.Script.IncidentsEntryR\tincidents\x12H\n\ncharacters\x18\b \x03(\v2(.tragedylooper.v1.Script.CharactersEntryR\ncharacters\x12X\n\x10mastermind_cards\x18\t \x03(\v2-.tragedylooper.v1.Script.MastermindCardsEntryR\x0fmastermindCards\x12[\n\x11protagonist_cards\x18\n \x03(\v2..tragedylooper.v1.Script.ProtagonistCardsEntryR\x10protagonistCards\x12?\n\ascripts\x18\v \x03(\v2%.tragedylooper.v1.Script.ScriptsEntryR\ascripts\x1aZ\n\x0eMainPlotsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x122\n\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.PlotConfigR\x05value:\x028\x01\x1aY\n\rSubPlotsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x122\n\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.PlotConfigR\x05value:\x028\x01\x1aV\n\nRolesEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x122\n\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.RoleConfigR\x05value:\x028\x01\x1a^\n\x0eIncidentsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x126\n\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01\x1a`\n\x0fCharactersEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x127\n\x05value\x18\x02 \x01(\v2!.tragedylooper.v1.CharacterConfigR\x05value:\x028\x01\x1a`\n\x14MastermindCardsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x122\n\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.CardConfigR\x05value:\x028\x01\x1aa\n\x15ProtagonistCardsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x122\n\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.CardConfigR\x05value:\x028\x01\x1aZ\n\fScriptsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x124\n\x05value\x18\x02 \x01(\v2\x1e.tragedylooper.v1.ScriptConfigR\x05value:\x028\x01"\x8f\x01\n\fScriptConfig\x12@\n\fprivate_info\x18\x01 \x01(\v2\x1d.tragedylooper.v1.PrivateInfoR\vprivateInfo\x12=\n\vpublic_info\x18\x02 \x01(\v2\x1c.tragedylooper.v1.PublicInfoR\npublicInfo"\xe0\x03\n\vPrivateInfo\x129\n\tmain_plot\x18\x01 \x01(\v2\x1c.tragedylooper.v1.PlotConfigR\bmainPlot\x129\n\tsub_plots\x18\x02 \x03(\v2\x1c.tragedylooper.v1.PlotConfigR\bsubPlots\x12M\n\ncharacters\x18\x03 \x03(\v2-.tragedylooper.v1.PrivateInfo.CharactersEntryR\ncharacters\x12J\n\tincidents\x18\x04 \x03(\v2,.tragedylooper.v1.PrivateInfo.IncidentsEntryR\tincidents\x1a`\n\x0fCharactersEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x127\n\x05value\x18\x02 \x01(\v2!.tragedylooper.v1.CharacterConfigR\x05value:\x028\x01\x1a^\n\x0eIncidentsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x126\n\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01"\xb2\x04\n\nPublicInfo\x12(\n\x10script_config_id\x18\x01 \x01(\x05R\x0escriptConfigId\x12\x1d\n\nloop_count\x18\x02 \x01(\x05R\tloopCount\x12"\n\rdays_per_loop\x18\x03 \x01(\x05R\vdaysPerLoop\x12\x1f\n\vcan_discuss\x18\x04 \x01(\bR\ncanDiscuss\x12_\n\x11special_incidents\x18\x05 \x03(\v22.tragedylooper.v1.PublicInfo.SpecialIncidentsEntryR\x10specialIncidents\x12e\n\x13scheduled_incidents\x18\x06 \x03(\v24.tragedylooper.v1.PublicInfo.ScheduledIncidentsEntryR\x12scheduledIncidents\x1ae\n\x15SpecialIncidentsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x126\n\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01\x1ag\n\x17ScheduledIncidentsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x126\n\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01"\xc1\x02\n\nRoleConfig\x12\x0e\n\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n\x05limit\x18\x03 \x01(\x05R\x05limit\x12I\n\tabilities\x18\x04 \x03(\v2+.tragedylooper.v1.RoleConfig.AbilitiesEntryR\tabilities\x12#\n\rgoodwill_rule\x18\x05 \x01(\x05R\fgoodwillRule\x12*\n\x11can_be_invincible\x18\x06 \x01(\bR\x0fcanBeInvincible\x1a]\n\x0eAbilitiesEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x125\n\x05value\x18\x02 \x01(\v2\x1f.tragedylooper.v1.AbilityConfigR\x05value:\x028\x01"\xd8\x03\n\nPlotConfig\x12\x0e\n\x02id\x18\x01 \x01(\x05R\x02id\x12.\n\x04type\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.PlotTypeR\x04type\x12\x12\n\x04name\x18\x03 \x01(\tR\x04name\x12 \n\vdescription\x18\x04 \x01(\tR\vdescription\x12P\n\fincident_ids\x18\x05 \x03(\v2-.tragedylooper.v1.PlotConfig.IncidentIdsEntryR\vincidentIds\x12\\\n\x10role_assignments\x18\x06 \x03(\v21.tragedylooper.v1.PlotConfig.RoleAssignmentsEntryR\x0froleAssignments\x1a`\n\x10IncidentIdsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x126\n\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01\x1aB\n\x14RoleAssignmentsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01"\xb7\x01\n\x0fScriptConfigLib\x12H\n\ascripts\x18\x01 \x03(\v2..tragedylooper.v1.ScriptConfigLib.ScriptsEntryR\ascripts\x1aZ\n\fScriptsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x124\n\x05value\x18\x02 \x01(\v2\x1e.tragedylooper.v1.ScriptConfigR\x05value:\x028\x01B7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3'

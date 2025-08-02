@@ -4,6 +4,7 @@
 
 package v1
 
+// The operator to use when combining effects.
 #CompoundEffect_Operator: int32 // #enumCompoundEffect_Operator
 
 #enumCompoundEffect_Operator:
@@ -17,10 +18,16 @@ package v1
 	CompoundEffect_OPERATOR_CHOOSE_ONE:  #CompoundEffect_OPERATOR_CHOOSE_ONE
 }
 
+// Unspecified operator.
 #CompoundEffect_OPERATOR_UNSPECIFIED: #CompoundEffect_Operator & 0
-#CompoundEffect_OPERATOR_SEQUENCE:    #CompoundEffect_Operator & 1
-#CompoundEffect_OPERATOR_CHOOSE_ONE:  #CompoundEffect_Operator & 2
 
+// Executes all effects in sequence.
+#CompoundEffect_OPERATOR_SEQUENCE: #CompoundEffect_Operator & 1
+
+// The player chooses one effect to execute.
+#CompoundEffect_OPERATOR_CHOOSE_ONE: #CompoundEffect_Operator & 2
+
+// The type of action to forbid.
 #ForbidEffect_ForbidType: int32 // #enumForbidEffect_ForbidType
 
 #enumForbidEffect_ForbidType:
@@ -38,14 +45,25 @@ package v1
 	ForbidEffect_FORBID_TYPE_INTRIGUE_CHANGE: #ForbidEffect_FORBID_TYPE_INTRIGUE_CHANGE
 }
 
-#ForbidEffect_FORBID_TYPE_UNSPECIFIED:     #ForbidEffect_ForbidType & 0
-#ForbidEffect_FORBID_TYPE_MOVEMENT:        #ForbidEffect_ForbidType & 1
+// Unspecified forbid type.
+#ForbidEffect_FORBID_TYPE_UNSPECIFIED: #ForbidEffect_ForbidType & 0
+
+// Forbids movement.
+#ForbidEffect_FORBID_TYPE_MOVEMENT: #ForbidEffect_ForbidType & 1
+
+// Forbids paranoia changes.
 #ForbidEffect_FORBID_TYPE_PARANOIA_CHANGE: #ForbidEffect_ForbidType & 2
+
+// Forbids goodwill changes.
 #ForbidEffect_FORBID_TYPE_GOODWILL_CHANGE: #ForbidEffect_ForbidType & 3
+
+// Forbids intrigue changes.
 #ForbidEffect_FORBID_TYPE_INTRIGUE_CHANGE: #ForbidEffect_ForbidType & 4
 
-// 效果，定义了能力、卡牌或规则的具体作用
+// Effect defines the specific action of an ability, card, or rule.
 #Effect: {
+	// The type of the effect.
+	//
 	// Types that are valid to be assigned to EffectType:
 	//
 	//	*Effect_AdjustStat
@@ -65,113 +83,157 @@ package v1
 _#isEffect_EffectType: _
 
 #Effect_AdjustStat: {
+	// Adjusts a character's stat.
 	AdjustStat?: null | #AdjustStatEffect @go(,*AdjustStatEffect) @protobuf(1,bytes,opt,name=adjust_stat,json=adjustStat,proto3,oneof)
 }
 
 #Effect_MoveCharacter: {
+	// Moves a character to a different location.
 	MoveCharacter?: null | #MoveCharacterEffect @go(,*MoveCharacterEffect) @protobuf(2,bytes,opt,name=move_character,json=moveCharacter,proto3,oneof)
 }
 
 #Effect_Forbid: {
+	// Forbids a character from performing an action.
 	Forbid?: null | #ForbidEffect @go(,*ForbidEffect) @protobuf(3,bytes,opt,name=forbid,proto3,oneof)
 }
 
 #Effect_GrantAbility: {
+	// Grants an ability to a character.
 	GrantAbility?: null | #GrantAbilityEffect @go(,*GrantAbilityEffect) @protobuf(4,bytes,opt,name=grant_ability,json=grantAbility,proto3,oneof)
 }
 
 #Effect_RevealRole: {
+	// Reveals a character's role.
 	RevealRole?: null | #RevealRoleEffect @go(,*RevealRoleEffect) @protobuf(5,bytes,opt,name=reveal_role,json=revealRole,proto3,oneof)
 }
 
 #Effect_ChangeRole: {
+	// Changes a character's role.
 	ChangeRole?: null | #ChangeRoleEffect @go(,*ChangeRoleEffect) @protobuf(6,bytes,opt,name=change_role,json=changeRole,proto3,oneof)
 }
 
 #Effect_TriggerIncident: {
+	// Triggers an incident.
 	TriggerIncident?: null | #TriggerIncidentEffect @go(,*TriggerIncidentEffect) @protobuf(7,bytes,opt,name=trigger_incident,json=triggerIncident,proto3,oneof)
 }
 
 #Effect_EndGame: {
+	// Ends the game.
 	EndGame?: null | #EndGameEffect @go(,*EndGameEffect) @protobuf(8,bytes,opt,name=end_game,json=endGame,proto3,oneof)
 }
 
 #Effect_AddTrait: {
+	// Adds a trait to a character.
 	AddTrait?: null | #AddTraitEffect @go(,*AddTraitEffect) @protobuf(9,bytes,opt,name=add_trait,json=addTrait,proto3,oneof)
 }
 
 #Effect_RemoveTrait: {
+	// Removes a trait from a character.
 	RemoveTrait?: null | #RemoveTraitEffect @go(,*RemoveTraitEffect) @protobuf(10,bytes,opt,name=remove_trait,json=removeTrait,proto3,oneof)
 }
 
 #Effect_CompoundEffect: {
+	// A compound effect.
 	CompoundEffect?: null | #CompoundEffect @go(,*CompoundEffect) @protobuf(11,bytes,opt,name=compound_effect,json=compoundEffect,proto3,oneof)
 }
 
-// 复合效果，用于组合多个效果
+// CompoundEffect defines a combination of multiple effects.
 #CompoundEffect: {
+	// The operator for combining effects.
 	operator?: #CompoundEffect_Operator @go(Operator) @protobuf(1,varint,opt,proto3,enum=tragedylooper.v1.CompoundEffect_Operator)
+
+	// A list of sub-effects.
 	sub_effects?: [...null | #Effect] @go(SubEffects,[]*Effect) @protobuf(2,bytes,rep,json=subEffects,proto3)
 }
 
-// 调整属性效果
+// AdjustStatEffect defines an effect that adjusts a character's stat.
 #AdjustStatEffect: {
-	target?:    null | #TargetSelector  @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
+	// The target character.
+	target?: null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
+
+	// The type of stat to adjust.
 	stat_type?: #StatCondition_StatType @go(StatType) @protobuf(2,varint,opt,json=statType,proto3,enum=tragedylooper.v1.StatCondition_StatType)
-	amount?:    int32                   @go(Amount) @protobuf(3,varint,opt,proto3)
+
+	// The amount to adjust the stat by (positive for increase, negative for decrease).
+	amount?: int32 @go(Amount) @protobuf(3,varint,opt,proto3)
 }
 
-// 移动角色效果
+// MoveCharacterEffect defines an effect that moves a character.
 #MoveCharacterEffect: {
-	target?:      null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
-	destination?: #LocationType          @go(Destination) @protobuf(2,varint,opt,proto3,enum=tragedylooper.v1.LocationType)
+	// The target character.
+	target?: null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
+
+	// The destination location.
+	destination?: #LocationType @go(Destination) @protobuf(2,varint,opt,proto3,enum=tragedylooper.v1.LocationType)
 }
 
-// 禁止效果
+// ForbidEffect defines an effect that forbids an action.
 #ForbidEffect: {
-	target?:      null | #TargetSelector   @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
+	// The target character.
+	target?: null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
+
+	// The type of action to forbid.
 	forbid_type?: #ForbidEffect_ForbidType @go(ForbidType) @protobuf(2,varint,opt,json=forbidType,proto3,enum=tragedylooper.v1.ForbidEffect_ForbidType)
 }
 
-// 授予能力效果
+// GrantAbilityEffect defines an effect that grants an ability.
 #GrantAbilityEffect: {
-	target?:       null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
-	ability_id?:   int32                  @go(AbilityId) @protobuf(2,varint,opt,json=abilityId,proto3)
-	is_temporary?: bool                   @go(IsTemporary) @protobuf(3,varint,opt,json=isTemporary,proto3)
+	// The target character.
+	target?: null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
+
+	// The ID of the ability to grant.
+	ability_id?: int32 @go(AbilityId) @protobuf(2,varint,opt,json=abilityId,proto3)
+
+	// Whether the ability is temporary (e.g., lasts for one day or one loop).
+	is_temporary?: bool @go(IsTemporary) @protobuf(3,varint,opt,json=isTemporary,proto3)
 }
 
-// 揭示身份效果
+// RevealRoleEffect defines an effect that reveals a character's role.
 #RevealRoleEffect: {
+	// The target character.
 	target?: null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
 }
 
-// 改变身份效果
+// ChangeRoleEffect defines an effect that changes a character's role.
 #ChangeRoleEffect: {
-	target?:   null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
-	new_role?: #RoleType              @go(NewRole) @protobuf(2,varint,opt,json=newRole,proto3,enum=tragedylooper.v1.RoleType)
+	// The target character.
+	target?: null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
+
+	// The new role.
+	new_role?: int32 @go(NewRole) @protobuf(2,varint,opt,json=newRole,proto3)
 }
 
-// 触发事件效果
+// TriggerIncidentEffect defines an effect that triggers an incident.
 #TriggerIncidentEffect: {
+	// The ID of the incident to trigger (references an IncidentConfig in the ScriptConfig).
 	incident_id?: int32 @go(IncidentId) @protobuf(1,varint,opt,json=incidentId,proto3)
 }
 
-// 结束游戏效果
+// EndGameEffect defines an effect that ends the game.
 #EndGameEffect: {
+	// The winning player role.
 	winner?: #PlayerRole @go(Winner) @protobuf(1,varint,opt,proto3,enum=tragedylooper.v1.PlayerRole)
-	reason?: string      @go(Reason) @protobuf(2,bytes,opt,proto3)
+
+	// The reason for the game ending.
+	reason?: string @go(Reason) @protobuf(2,bytes,opt,proto3)
 }
 
-// 添加特征效果
+// AddTraitEffect defines an effect that adds a trait to a character.
 #AddTraitEffect: {
+	// The target character.
 	target?: null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
-	trait?:  string                 @go(Trait) @protobuf(2,bytes,opt,proto3)
+
+	// The trait to add.
+	trait?: string @go(Trait) @protobuf(2,bytes,opt,proto3)
 }
 
-// 移除特征效果
+// RemoveTraitEffect defines an effect that removes a trait from a character.
 #RemoveTraitEffect: {
+	// The target character.
 	target?: null | #TargetSelector @go(Target,*TargetSelector) @protobuf(1,bytes,opt,proto3)
-	trait?:  string                 @go(Trait) @protobuf(2,bytes,opt,proto3)
+
+	// The trait to remove.
+	trait?: string @go(Trait) @protobuf(2,bytes,opt,proto3)
 }
 
-_#file_tragedylooper_v1_effect_proto_rawDesc: '\n\x1dtragedylooper/v1/effect.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1ctragedylooper/v1/enums.proto"\xaf\x06\n\x06Effect\x12E\n\vadjust_stat\x18\x01 \x01(\v2".tragedylooper.v1.AdjustStatEffectH\x00R\nadjustStat\x12N\n\x0emove_character\x18\x02 \x01(\v2%.tragedylooper.v1.MoveCharacterEffectH\x00R\rmoveCharacter\x128\n\x06forbid\x18\x03 \x01(\v2\x1e.tragedylooper.v1.ForbidEffectH\x00R\x06forbid\x12K\n\rgrant_ability\x18\x04 \x01(\v2$.tragedylooper.v1.GrantAbilityEffectH\x00R\fgrantAbility\x12E\n\vreveal_role\x18\x05 \x01(\v2".tragedylooper.v1.RevealRoleEffectH\x00R\nrevealRole\x12E\n\vchange_role\x18\x06 \x01(\v2".tragedylooper.v1.ChangeRoleEffectH\x00R\nchangeRole\x12T\n\x10trigger_incident\x18\a \x01(\v2\'.tragedylooper.v1.TriggerIncidentEffectH\x00R\x0ftriggerIncident\x12<\n\bend_game\x18\b \x01(\v2\x1f.tragedylooper.v1.EndGameEffectH\x00R\aendGame\x12?\n\tadd_trait\x18\t \x01(\v2 .tragedylooper.v1.AddTraitEffectH\x00R\baddTrait\x12H\n\fremove_trait\x18\n \x01(\v2#.tragedylooper.v1.RemoveTraitEffectH\x00R\vremoveTrait\x12K\n\x0fcompound_effect\x18\v \x01(\v2 .tragedylooper.v1.CompoundEffectH\x00R\x0ecompoundEffectB\r\n\veffect_type"\xe8\x01\n\x0eCompoundEffect\x12E\n\boperator\x18\x01 \x01(\x0e2).tragedylooper.v1.CompoundEffect.OperatorR\boperator\x129\n\vsub_effects\x18\x02 \x03(\v2\x18.tragedylooper.v1.EffectR\nsubEffects"T\n\bOperator\x12\x18\n\x14OPERATOR_UNSPECIFIED\x10\x00\x12\x15\n\x11OPERATOR_SEQUENCE\x10\x01\x12\x17\n\x13OPERATOR_CHOOSE_ONE\x10\x02"\xab\x01\n\x10AdjustStatEffect\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12E\n\tstat_type\x18\x02 \x01(\x0e2(.tragedylooper.v1.StatCondition.StatTypeR\bstatType\x12\x16\n\x06amount\x18\x03 \x01(\x05R\x06amount"\x91\x01\n\x13MoveCharacterEffect\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12@\n\vdestination\x18\x02 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeR\vdestination"\xbd\x02\n\fForbidEffect\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12J\n\vforbid_type\x18\x02 \x01(\x0e2).tragedylooper.v1.ForbidEffect.ForbidTypeR\nforbidType"\xa6\x01\n\nForbidType\x12\x1b\n\x17FORBID_TYPE_UNSPECIFIED\x10\x00\x12\x18\n\x14FORBID_TYPE_MOVEMENT\x10\x01\x12\x1f\n\x1bFORBID_TYPE_PARANOIA_CHANGE\x10\x02\x12\x1f\n\x1bFORBID_TYPE_GOODWILL_CHANGE\x10\x03\x12\x1f\n\x1bFORBID_TYPE_INTRIGUE_CHANGE\x10\x04"\x90\x01\n\x12GrantAbilityEffect\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12\x1d\n\nability_id\x18\x02 \x01(\x05R\tabilityId\x12!\n\fis_temporary\x18\x03 \x01(\bR\visTemporary"L\n\x10RevealRoleEffect\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target"\x83\x01\n\x10ChangeRoleEffect\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x125\n\bnew_role\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.RoleTypeR\anewRole"8\n\x15TriggerIncidentEffect\x12\x1f\n\vincident_id\x18\x01 \x01(\x05R\nincidentId"]\n\rEndGameEffect\x124\n\x06winner\x18\x01 \x01(\x0e2\x1c.tragedylooper.v1.PlayerRoleR\x06winner\x12\x16\n\x06reason\x18\x02 \x01(\tR\x06reason"`\n\x0eAddTraitEffect\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12\x14\n\x05trait\x18\x02 \x01(\tR\x05trait"c\n\x11RemoveTraitEffect\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12\x14\n\x05trait\x18\x02 \x01(\tR\x05traitB7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3'
+_#file_tragedylooper_v1_effect_proto_rawDesc: '\n\x1dtragedylooper/v1/effect.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1ctragedylooper/v1/enums.proto"\xaf\x06\n\x06Effect\x12E\n\vadjust_stat\x18\x01 \x01(\v2".tragedylooper.v1.AdjustStatEffectH\x00R\nadjustStat\x12N\n\x0emove_character\x18\x02 \x01(\v2%.tragedylooper.v1.MoveCharacterEffectH\x00R\rmoveCharacter\x128\n\x06forbid\x18\x03 \x01(\v2\x1e.tragedylooper.v1.ForbidEffectH\x00R\x06forbid\x12K\n\rgrant_ability\x18\x04 \x01(\v2$.tragedylooper.v1.GrantAbilityEffectH\x00R\fgrantAbility\x12E\n\vreveal_role\x18\x05 \x01(\v2".tragedylooper.v1.RevealRoleEffectH\x00R\nrevealRole\x12E\n\vchange_role\x18\x06 \x01(\v2".tragedylooper.v1.ChangeRoleEffectH\x00R\nchangeRole\x12T\n\x10trigger_incident\x18\a \x01(\v2\'.tragedylooper.v1.TriggerIncidentEffectH\x00R\x0ftriggerIncident\x12<\n\bend_game\x18\b \x01(\v2\x1f.tragedylooper.v1.EndGameEffectH\x00R\aendGame\x12?\n\tadd_trait\x18\t \x01(\v2 .tragedylooper.v1.AddTraitEffectH\x00R\baddTrait\x12H\n\fremove_trait\x18\n \x01(\v2#.tragedylooper.v1.RemoveTraitEffectH\x00R\vremoveTrait\x12K\n\x0fcompound_effect\x18\v \x01(\v2 .tragedylooper.v1.CompoundEffectH\x00R\x0ecompoundEffectB\r\n\veffect_type"\xe8\x01\n\x0eCompoundEffect\x12E\n\boperator\x18\x01 \x01(\x0e2).tragedylooper.v1.CompoundEffect.OperatorR\boperator\x129\n\vsub_effects\x18\x02 \x03(\v2\x18.tragedylooper.v1.EffectR\nsubEffects"T\n\bOperator\x12\x18\n\x14OPERATOR_UNSPECIFIED\x10\x00\x12\x15\n\x11OPERATOR_SEQUENCE\x10\x01\x12\x17\n\x13OPERATOR_CHOOSE_ONE\x10\x02"\xab\x01\n\x10AdjustStatEffect\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12E\n\tstat_type\x18\x02 \x01(\x0e2(.tragedylooper.v1.StatCondition.StatTypeR\bstatType\x12\x16\n\x06amount\x18\x03 \x01(\x05R\x06amount"\x91\x01\n\x13MoveCharacterEffect\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12@\n\vdestination\x18\x02 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeR\vdestination"\xbd\x02\n\fForbidEffect\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12J\n\vforbid_type\x18\x02 \x01(\x0e2).tragedylooper.v1.ForbidEffect.ForbidTypeR\nforbidType"\xa6\x01\n\nForbidType\x12\x1b\n\x17FORBID_TYPE_UNSPECIFIED\x10\x00\x12\x18\n\x14FORBID_TYPE_MOVEMENT\x10\x01\x12\x1f\n\x1bFORBID_TYPE_PARANOIA_CHANGE\x10\x02\x12\x1f\n\x1bFORBID_TYPE_GOODWILL_CHANGE\x10\x03\x12\x1f\n\x1bFORBID_TYPE_INTRIGUE_CHANGE\x10\x04"\x90\x01\n\x12GrantAbilityEffect\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12\x1d\n\nability_id\x18\x02 \x01(\x05R\tabilityId\x12!\n\fis_temporary\x18\x03 \x01(\bR\visTemporary"L\n\x10RevealRoleEffect\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target"g\n\x10ChangeRoleEffect\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12\x19\n\bnew_role\x18\x02 \x01(\x05R\anewRole"8\n\x15TriggerIncidentEffect\x12\x1f\n\vincident_id\x18\x01 \x01(\x05R\nincidentId"]\n\rEndGameEffect\x124\n\x06winner\x18\x01 \x01(\x0e2\x1c.tragedylooper.v1.PlayerRoleR\x06winner\x12\x16\n\x06reason\x18\x02 \x01(\tR\x06reason"`\n\x0eAddTraitEffect\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12\x14\n\x05trait\x18\x02 \x01(\tR\x05trait"c\n\x11RemoveTraitEffect\x128\n\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12\x14\n\x05trait\x18\x02 \x01(\tR\x05traitB7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3'
