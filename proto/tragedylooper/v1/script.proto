@@ -21,8 +21,27 @@ message ScriptConfig {
   // A description of the script.
   string description = 3;
 
-  // A map of all script entities, keyed by a unique ID.
-  map<int32, ScriptEntity> entities = 4;
+  // Main plot configurations. ID range: 1000-1999
+  map<int32, PlotConfig> main_plots = 4;
+  // Sub plot configurations. ID range: 2000-2999
+  map<int32, PlotConfig> sub_plots = 5;
+
+  // Role configurations. ID range: 3000-3999
+  map<int32, RoleConfig> roles = 6;
+
+  // Incident configurations. ID range: 4000-4999
+  map<int32, IncidentConfig> incidents = 7;
+
+  // Character configurations. ID range: 5000-5999
+  map<int32, CharacterConfig> characters = 8;
+
+  // Mastermind card configurations. ID range: 6000-6999
+  map<int32, CardConfig> mastermind_cards = 9;
+  // Protagonist card configurations. ID range: 7000-7999
+  map<int32, CardConfig> protagonist_cards = 10;
+
+  // A map of script configurations. ID range: 8000-8999
+  map<int32, ScriptEntity> scripts = 11;
 }
 
 // ScriptEntity wraps all possible configuration objects that can be part of a script.
