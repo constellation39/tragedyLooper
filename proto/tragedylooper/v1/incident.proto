@@ -33,6 +33,7 @@ message IncidentConfig {
   int32 victim_character_id = 10; // 事件受害者角色ID（如适用）
   int32 location_id = 11; // 事件发生地点ID（如适用）
   bool is_main_plot_incident = 12; // 是否是主线剧情的事件
+  bool is_special_rule = 13; // 是否是特殊规则的事件
 }
 
 // 事件配置库

@@ -7,34 +7,49 @@ import "tragedylooper/v1/enums.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
-// 卡牌静态配置
+// CardConfig defines the configuration for a card.
 message CardConfig {
-  int32 id = 1; // 卡牌唯一ID
-  string name = 2; // 卡牌名称
-  string description = 3; // 卡牌描述
-  CardType type = 4; // 卡牌类型
-  PlayerRole owner_role = 5; // 卡牌所属玩家角色（主谋或主角）
-  CompoundEffect effect = 6; // 卡牌效果
-  bool once_per_loop = 7; // 是否每循环只能使用一次
-  int32 priority = 8; // 卡牌结算优先级（同类型卡牌的结算顺序）
+  // The unique identifier for the card.
+  int32 id = 1;
+  // The name of the card.
+  string name = 2;
+  // A description of the card.
+  string description = 3;
+  // The type of the card.
+  CardType type = 4;
+  // The player role that owns the card (Mastermind or Protagonist).
+  PlayerRole owner_role = 5;
+  // The effect of the card.
+  CompoundEffect effect = 6;
+  // Whether the card can only be used once per loop.
+  bool once_per_loop = 7;
+  // The priority of the card's resolution (for cards of the same type).
+  int32 priority = 8;
 }
 
-// 卡牌运行时实例
+// Card defines a card instance at runtime.
 message Card {
-  CardConfig config = 1; // 卡牌ID，关联到CardConfig
-  bool used_this_loop = 2; // 运行时状态：本循环是否已使用
+  // The configuration for the card.
+  CardConfig config = 1;
+  // Whether the card has been used in the current loop.
+  bool used_this_loop = 2;
+  // The target of the card's ability.
   oneof target {
-    int32 target_character_id = 3; // 如果能力有目标角色，指定其ID
-    LocationType target_location = 4; // 如果能力有目标地点，指定其地点
+    // The ID of the target character, if the ability has one.
+    int32 target_character_id = 3;
+    // The target location, if the ability has one.
+    LocationType target_location = 4;
   }
 }
 
-// 卡牌配置库
+// CardConfigLib is a library of card configurations.
 message CardConfigLib {
-  map<int32, CardConfig> cards = 1; // 卡牌ID到配置的映射
+  // A map of card configurations, keyed by their ID.
+  map<int32, CardConfig> cards = 1;
 }
 
-// 卡牌列表
+// CardList is a list of card instances.
 message CardList {
-  repeated Card cards = 1; // 卡牌实例列表
+  // A list of card instances.
+  repeated Card cards = 1;
 }

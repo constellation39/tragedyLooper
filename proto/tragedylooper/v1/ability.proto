@@ -8,38 +8,65 @@ import "tragedylooper/v1/enums.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
+// AbilityConfig defines the configuration for a character's ability.
 message AbilityConfig {
-  int32 id = 1; // 能力唯一ID
-  string name = 2; // 能力名称
-  string description = 3; // 能力描述
-  TriggerType trigger_type = 4; // 能力触发时机
-  repeated GameEventType event_filters = 5; // 可选：游戏事件触发时的过滤器
-  Effect effect = 6; // 能力效果
-  bool once_per_loop = 7; // 是否每循环只能使用一次
-  PlayerRole refusal_role = 8; // 可以拒绝此能力的玩家角色
-  bool is_passive = 9; // 是否为被动能力
-  bool is_mandatory = 10; // 是否为强制能力（不可拒绝）
-  int32 priority = 11; // 能力结算优先级
+  // The unique identifier for the ability.
+  int32 id = 1;
+  // The name of the ability.
+  string name = 2;
+  // A description of the ability.
+  string description = 3;
+  // The trigger type for the ability.
+  TriggerType trigger_type = 4;
+  // Optional: filters for game event triggers.
+  repeated GameEventType event_filters = 5;
+  // The effect of the ability.
+  Effect effect = 6;
+  // Whether the ability can only be used once per loop.
+  bool once_per_loop = 7;
+  // The player role that can refuse this ability.
+  PlayerRole refusal_role = 8;
+  // Whether the ability is passive.
+  bool is_passive = 9;
+  // Whether the ability is mandatory (cannot be refused).
+  bool is_mandatory = 10;
+  // The priority of the ability's resolution.
+  int32 priority = 11;
+  // A list of conditions that must be met to use the ability.
   repeated Condition conditions = 12;
+  // Whether the ability requires a choice to be made.
   bool requires_choice = 13;
 }
 
+// CompoundAbility defines a combination of multiple abilities.
 message CompoundAbility {
+  // The operator to use when combining abilities.
   enum Operator {
+    // Unspecified operator.
     OPERATOR_UNSPECIFIED = 0;
+    // The AND operator.
     OPERATOR_AND = 1;
+    // The OR operator.
     OPERATOR_OR = 2;
   }
+  // The operator to use when combining abilities.
   Operator operator = 1;
+  // The sub-abilities to combine.
   repeated AbilityConfig sub_abilities = 2;
 }
 
+// Ability defines a character's ability at runtime.
 message Ability {
-  AbilityConfig config = 1; // 能力ID，关联到AbilityConfig
-  bool used_this_loop = 2; // 运行时状态：本循环是否已使用
+  // The configuration for the ability.
+  AbilityConfig config = 1;
+  // Whether the ability has been used in the current loop.
+  bool used_this_loop = 2;
+  // The ID of the character that owns the ability.
   int32 owner_character_id = 3;
 }
 
+// AbilityConfigLib is a library of ability configurations.
 message AbilityConfigLib {
-  map<int32, AbilityConfig> abilities = 1; // 能力ID到配置的映射
+  // A map of ability configurations, keyed by their ID.
+  map<int32, AbilityConfig> abilities = 1;
 }

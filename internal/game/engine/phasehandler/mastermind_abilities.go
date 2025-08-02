@@ -107,11 +107,16 @@ func checkTriggers(ge GameEngine) {
 			continue
 		}
 
+		triggerConditions := incident.GetTriggerConditions()
+		if len(triggerConditions) == 0 {
+			continue
+		}
+
 		compoundCondition := &model.Condition{
 			ConditionType: &model.Condition_CompoundCondition{
 				CompoundCondition: &model.CompoundCondition{
 					Operator:      model.CompoundCondition_OPERATOR_AND,
-					SubConditions: incident.GetTriggerConditions(),
+					SubConditions: triggerConditions,
 				},
 			},
 		}

@@ -19,9 +19,28 @@ func Check(gs *model.GameState, condition *model.Condition) (bool, error) {
 		return checkLocationCondition(gs, c.LocationCondition)
 	case *model.Condition_CompoundCondition:
 		return checkCompoundCondition(gs, c.CompoundCondition)
+	case *model.Condition_TraitCondition:
+		return checkTraitCondition(gs, c.TraitCondition)
 	default:
 		return false, fmt.Errorf("unhandled condition type: %T", c)
 	}
+}
+
+func checkTraitCondition(gs *model.GameState, condition *model.TraitCondition) (bool, error) {
+	char, err := getCharacter(gs, condition.Target)
+	if err != nil {
+		return false, fmt.Errorf("failed to get character for trait condition: %w", err)
+	}
+
+	hasTrait := false
+	for _, trait := range char.Traits {
+		if trait == condition.GetTrait() {
+			hasTrait = true
+			break
+		}
+	}
+
+	return hasTrait == condition.GetHasTrait(), nil
 }
 
 func checkCompoundCondition(gs *model.GameState, condition *model.CompoundCondition) (bool, error) {

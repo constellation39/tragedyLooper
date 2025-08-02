@@ -6,77 +6,119 @@ import "tragedylooper/v1/condition.proto";
 import "tragedylooper/v1/effect.proto";
 import "tragedylooper/v1/enums.proto";
 import "tragedylooper/v1/incident.proto";
+import "tragedylooper/v1/character.proto";
+import "tragedylooper/v1/card.proto";
+import "tragedylooper/v1/ability.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
-// 剧本配置
+// Script defines the configuration for a tragedy looper script.
+message Script {
+  // The unique identifier for the script.
+  int32 id = 1;
+  // The name of the script.
+  string name = 2;
+  // A description of the script.
+  string description = 3;
+
+  // Main plot configurations.
+  map<int32, PlotConfig> main_plots = 4;
+  // Sub plot configurations.
+  map<int32, PlotConfig> sub_plots = 5;
+
+  // Role configurations.
+  map<int32, RoleConfig> roles = 6;
+
+  // Incident configurations.
+  map<int32, IncidentConfig> incidents = 7;
+
+  // Character configurations.
+  map<int32, CharacterConfig> characters = 8;
+
+  // Mastermind card configurations.
+  map<int32, CardConfig> mastermind_cards = 9;
+  // Protagonist card configurations.
+  map<int32, CardConfig> protagonist_cards = 10;
+
+  // A map of script configurations.
+  map<int32, ScriptConfig> scripts = 11;
+}
+
+// ScriptConfig defines the configuration for a specific script.
 message ScriptConfig {
-  int32 id = 1; // 剧本唯一ID
-  string name = 2; // 剧本名称
-  string description = 3; // 剧本描述
-  TragedySetType tragedy_set = 4; // 悲剧集合类型
-  ScriptDifficulty difficulty = 5; // 剧本难度
-
-  // 剧情配置
-  PlotConfig main_plot = 6; // 主线剧情配置
-  repeated PlotConfig sub_plots = 7; // 支线剧情配置列表
-
-  // 角色配置
-  repeated CharacterInScript characters = 8; // 剧本中的角色配置
-
-  // 事件配置
-  repeated IncidentConfig incidents = 9; // 剧本中的事件配置
-
-  // 游戏规则
-  int32 loop_count = 10; // 最大循环次数
-  int32 days_per_loop = 11; // 每循环天数
-  repeated SpecialRule special_rules = 12; // 特殊规则列表
-
-  // 卡牌配置
-  repeated int32 mastermind_card_ids = 13; // 主谋可用卡牌ID列表
-  repeated int32 protagonist_card_ids = 14; // 主角可用卡牌ID列表
-
-  // 胜负条件
-  repeated EndCondition win_conditions = 15; // 胜利条件列表
-  repeated EndCondition lose_conditions = 16; // 失败条件列表
+  // Private information for the script.
+  PrivateInfo private_info = 1;
+  // Public information for the script.
+  PublicInfo public_info = 2;
 }
 
-// 剧本中的角色配置
-message CharacterInScript {
-  int32 character_id = 1; // 角色ID（引用CharacterConfig）
-  RoleType hidden_role = 2; // 在此剧本中的隐藏身份
-  LocationType initial_location = 3; // 初始位置
-  int32 initial_paranoia = 4; // 初始妄想值
-  int32 initial_goodwill = 5; // 初始好感值
-  int32 initial_intrigue = 6; // 初始阴谋值
-  repeated int32 additional_ability_ids = 7; // 额外能力ID列表（剧本特定）
-  bool starts_in_game = 8; // 是否开局就在游戏中
+// PrivateInfo defines the private information for a script.
+message PrivateInfo {
+  // The main plot of the script.
+  PlotConfig main_plot = 1;
+  // A list of sub plots for the script.
+  repeated PlotConfig sub_plots = 2;
+  // A map of characters in the script.
+  map<int32, CharacterConfig> characters = 3;
+  // A map of incidents in the script.
+  map<int32, IncidentConfig> incidents = 4;
 }
 
-// 剧情配置
+// PublicInfo defines the public information for a script.
+message PublicInfo {
+  // The unique identifier for the script configuration.
+  int32 script_config_id = 1;
+
+  // Game rules.
+  // The number of loops in the game.
+  int32 loop_count = 2;
+  // The number of days per loop.
+  int32 days_per_loop = 3;
+  // Whether players can discuss information.
+  bool can_discuss = 4;
+
+  // Special rules.
+  // A map of special incidents.
+  map<int32, IncidentConfig> special_incidents = 5;
+  // A map of scheduled incidents.
+  map<int32, IncidentConfig> scheduled_incidents = 6;
+}
+
+// RoleConfig defines the configuration for a role.
+message RoleConfig {
+  // The unique identifier for the role.
+  int32 id = 1;
+  // The name of the role.
+  string name = 2;
+  // The limit of characters that can have this role.
+  int32 limit = 3;
+  // A map of abilities for this role.
+  map<int32, AbilityConfig> abilities = 4;
+  // Defines the character's goodwill status.
+  // 0: normal, 1: ignore goodwill, 2: always ignore goodwill.
+  int32 goodwill_rule = 5;
+  // Defines if the character can be made invincible.
+  bool can_be_invincible = 6;
+}
+
+// PlotConfig defines a story plot.
 message PlotConfig {
-  PlotType plot_type = 1; // 剧情类型
-  string name = 2; // 剧情名称
-  string description = 3; // 剧情描述
-  repeated int32 incident_ids = 4; // 相关事件ID列表
+  // The unique identifier for the plot.
+  int32 id = 1;
+  // The type of the plot.
+  PlotType type = 2;
+  // The name of the plot.
+  string name = 3;
+  // A description of the plot.
+  string description = 4;
+  // A map of incident identifiers for this plot.
+  map<int32, IncidentConfig> incident_ids = 5;
+  // A map of role assignments for this plot.
+  map<int32, RoleType> role_assignments = 6;
 }
 
-// 特殊规则
-message SpecialRule {
-  string name = 1; // 规则名称
-  string description = 2; // 规则描述
-  TriggerType trigger = 3; // 触发时机
-  Effect effect = 4; // 规则效果
-}
-
-// 游戏结束条件
-message EndCondition {
-  EndConditionType type = 1; // 条件类型
-  repeated Condition requirements = 2; // 具体要求
-  string description = 3; // 条件描述
-}
-
-// 剧本配置库
+// ScriptConfigLib is a library of script configurations.
 message ScriptConfigLib {
-  map<int32, ScriptConfig> scripts = 1; // 剧本ID到配置的映射
+  // A map of script configurations.
+  map<int32, ScriptConfig> scripts = 1;
 }
