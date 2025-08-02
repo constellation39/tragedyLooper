@@ -13,7 +13,7 @@ import "tragedylooper/v1/ability.proto";
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
 // Script defines the configuration for a tragedy looper script.
-message Script {
+message ScriptConfig {
   // The unique identifier for the script.
   int32 id = 1;
   // The name of the script.
@@ -21,31 +21,27 @@ message Script {
   // A description of the script.
   string description = 3;
 
-  // Main plot configurations.
-  map<int32, PlotConfig> main_plots = 4;
-  // Sub plot configurations.
-  map<int32, PlotConfig> sub_plots = 5;
+  // A map of all script entities, keyed by a unique ID.
+  map<int32, ScriptEntity> entities = 4;
+}
 
-  // Role configurations.
-  map<int32, RoleConfig> roles = 6;
-
-  // Incident configurations.
-  map<int32, IncidentConfig> incidents = 7;
-
-  // Character configurations.
-  map<int32, CharacterConfig> characters = 8;
-
-  // Mastermind card configurations.
-  map<int32, CardConfig> mastermind_cards = 9;
-  // Protagonist card configurations.
-  map<int32, CardConfig> protagonist_cards = 10;
-
-  // A map of script configurations.
-  map<int32, ScriptConfig> scripts = 11;
+// ScriptEntity wraps all possible configuration objects that can be part of a script.
+// This ensures that each entity has a unique ID within the script.
+message ScriptEntity {
+  oneof entity {
+    PlotConfig main_plot = 1;
+    PlotConfig sub_plot = 2;
+    RoleConfig role = 3;
+    IncidentConfig incident = 4;
+    CharacterConfig character = 5;
+    CardConfig mastermind_card = 6;
+    CardConfig protagonist_card = 7;
+    ScriptModel script_model = 8;
+  }
 }
 
 // ScriptConfig defines the configuration for a specific script.
-message ScriptConfig {
+message ScriptModel {
   // Private information for the script.
   PrivateInfo private_info = 1;
   // Public information for the script.

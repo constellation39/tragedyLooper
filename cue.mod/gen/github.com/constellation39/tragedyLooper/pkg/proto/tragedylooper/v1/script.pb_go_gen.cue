@@ -5,7 +5,7 @@
 package v1
 
 // Script defines the configuration for a tragedy looper script.
-#Script: {
+#ScriptConfig: {
 	// The unique identifier for the script.
 	id?: int32 @go(Id) @protobuf(1,varint,opt,proto3)
 
@@ -16,8 +16,58 @@ package v1
 	description?: string @go(Description) @protobuf(3,bytes,opt,proto3)
 }
 
+// ScriptEntity wraps all possible configuration objects that can be part of a script.
+// This ensures that each entity has a unique ID within the script.
+#ScriptEntity: {
+	// Types that are valid to be assigned to Entity:
+	//
+	//	*ScriptEntity_MainPlot
+	//	*ScriptEntity_SubPlot
+	//	*ScriptEntity_Role
+	//	*ScriptEntity_Incident
+	//	*ScriptEntity_Character
+	//	*ScriptEntity_MastermindCard
+	//	*ScriptEntity_ProtagonistCard
+	//	*ScriptEntity_ScriptModel
+	Entity: _#isScriptEntity_Entity
+}
+
+_#isScriptEntity_Entity: _
+
+#ScriptEntity_MainPlot: {
+	MainPlot?: null | #PlotConfig @go(,*PlotConfig) @protobuf(1,bytes,opt,name=main_plot,json=mainPlot,proto3,oneof)
+}
+
+#ScriptEntity_SubPlot: {
+	SubPlot?: null | #PlotConfig @go(,*PlotConfig) @protobuf(2,bytes,opt,name=sub_plot,json=subPlot,proto3,oneof)
+}
+
+#ScriptEntity_Role: {
+	Role?: null | #RoleConfig @go(,*RoleConfig) @protobuf(3,bytes,opt,name=role,proto3,oneof)
+}
+
+#ScriptEntity_Incident: {
+	Incident?: null | #IncidentConfig @go(,*IncidentConfig) @protobuf(4,bytes,opt,name=incident,proto3,oneof)
+}
+
+#ScriptEntity_Character: {
+	Character?: null | #CharacterConfig @go(,*CharacterConfig) @protobuf(5,bytes,opt,name=character,proto3,oneof)
+}
+
+#ScriptEntity_MastermindCard: {
+	MastermindCard?: null | #CardConfig @go(,*CardConfig) @protobuf(6,bytes,opt,name=mastermind_card,json=mastermindCard,proto3,oneof)
+}
+
+#ScriptEntity_ProtagonistCard: {
+	ProtagonistCard?: null | #CardConfig @go(,*CardConfig) @protobuf(7,bytes,opt,name=protagonist_card,json=protagonistCard,proto3,oneof)
+}
+
+#ScriptEntity_ScriptModel: {
+	ScriptModel?: null | #ScriptModel @go(,*ScriptModel) @protobuf(8,bytes,opt,name=script_model,json=scriptModel,proto3,oneof)
+}
+
 // ScriptConfig defines the configuration for a specific script.
-#ScriptConfig: {
+#ScriptModel: {
 	// Private information for the script.
 	private_info?: null | #PrivateInfo @go(PrivateInfo,*PrivateInfo) @protobuf(1,bytes,opt,json=privateInfo,proto3)
 
@@ -84,4 +134,4 @@ package v1
 	description?: string @go(Description) @protobuf(4,bytes,opt,proto3)
 }
 
-_#file_tragedylooper_v1_script_proto_rawDesc: '\n\x1dtragedylooper/v1/script.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1ftragedylooper/v1/incident.proto\x1a tragedylooper/v1/character.proto\x1a\x1btragedylooper/v1/card.proto\x1a\x1etragedylooper/v1/ability.proto"\x91\v\n\x06Script\x12\x0e\n\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12 \n\vdescription\x18\x03 \x01(\tR\vdescription\x12F\n\nmain_plots\x18\x04 \x03(\v2\'.tragedylooper.v1.Script.MainPlotsEntryR\tmainPlots\x12C\n\tsub_plots\x18\x05 \x03(\v2&.tragedylooper.v1.Script.SubPlotsEntryR\bsubPlots\x129\n\x05roles\x18\x06 \x03(\v2#.tragedylooper.v1.Script.RolesEntryR\x05roles\x12E\n\tincidents\x18\a \x03(\v2\'.tragedylooper.v1.Script.IncidentsEntryR\tincidents\x12H\n\ncharacters\x18\b \x03(\v2(.tragedylooper.v1.Script.CharactersEntryR\ncharacters\x12X\n\x10mastermind_cards\x18\t \x03(\v2-.tragedylooper.v1.Script.MastermindCardsEntryR\x0fmastermindCards\x12[\n\x11protagonist_cards\x18\n \x03(\v2..tragedylooper.v1.Script.ProtagonistCardsEntryR\x10protagonistCards\x12?\n\ascripts\x18\v \x03(\v2%.tragedylooper.v1.Script.ScriptsEntryR\ascripts\x1aZ\n\x0eMainPlotsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x122\n\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.PlotConfigR\x05value:\x028\x01\x1aY\n\rSubPlotsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x122\n\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.PlotConfigR\x05value:\x028\x01\x1aV\n\nRolesEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x122\n\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.RoleConfigR\x05value:\x028\x01\x1a^\n\x0eIncidentsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x126\n\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01\x1a`\n\x0fCharactersEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x127\n\x05value\x18\x02 \x01(\v2!.tragedylooper.v1.CharacterConfigR\x05value:\x028\x01\x1a`\n\x14MastermindCardsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x122\n\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.CardConfigR\x05value:\x028\x01\x1aa\n\x15ProtagonistCardsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x122\n\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.CardConfigR\x05value:\x028\x01\x1aZ\n\fScriptsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x124\n\x05value\x18\x02 \x01(\v2\x1e.tragedylooper.v1.ScriptConfigR\x05value:\x028\x01"\x8f\x01\n\fScriptConfig\x12@\n\fprivate_info\x18\x01 \x01(\v2\x1d.tragedylooper.v1.PrivateInfoR\vprivateInfo\x12=\n\vpublic_info\x18\x02 \x01(\v2\x1c.tragedylooper.v1.PublicInfoR\npublicInfo"\xe0\x03\n\vPrivateInfo\x129\n\tmain_plot\x18\x01 \x01(\v2\x1c.tragedylooper.v1.PlotConfigR\bmainPlot\x129\n\tsub_plots\x18\x02 \x03(\v2\x1c.tragedylooper.v1.PlotConfigR\bsubPlots\x12M\n\ncharacters\x18\x03 \x03(\v2-.tragedylooper.v1.PrivateInfo.CharactersEntryR\ncharacters\x12J\n\tincidents\x18\x04 \x03(\v2,.tragedylooper.v1.PrivateInfo.IncidentsEntryR\tincidents\x1a`\n\x0fCharactersEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x127\n\x05value\x18\x02 \x01(\v2!.tragedylooper.v1.CharacterConfigR\x05value:\x028\x01\x1a^\n\x0eIncidentsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x126\n\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01"\xb2\x04\n\nPublicInfo\x12(\n\x10script_config_id\x18\x01 \x01(\x05R\x0escriptConfigId\x12\x1d\n\nloop_count\x18\x02 \x01(\x05R\tloopCount\x12"\n\rdays_per_loop\x18\x03 \x01(\x05R\vdaysPerLoop\x12\x1f\n\vcan_discuss\x18\x04 \x01(\bR\ncanDiscuss\x12_\n\x11special_incidents\x18\x05 \x03(\v22.tragedylooper.v1.PublicInfo.SpecialIncidentsEntryR\x10specialIncidents\x12e\n\x13scheduled_incidents\x18\x06 \x03(\v24.tragedylooper.v1.PublicInfo.ScheduledIncidentsEntryR\x12scheduledIncidents\x1ae\n\x15SpecialIncidentsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x126\n\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01\x1ag\n\x17ScheduledIncidentsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x126\n\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01"\xc1\x02\n\nRoleConfig\x12\x0e\n\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n\x05limit\x18\x03 \x01(\x05R\x05limit\x12I\n\tabilities\x18\x04 \x03(\v2+.tragedylooper.v1.RoleConfig.AbilitiesEntryR\tabilities\x12#\n\rgoodwill_rule\x18\x05 \x01(\x05R\fgoodwillRule\x12*\n\x11can_be_invincible\x18\x06 \x01(\bR\x0fcanBeInvincible\x1a]\n\x0eAbilitiesEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x125\n\x05value\x18\x02 \x01(\v2\x1f.tragedylooper.v1.AbilityConfigR\x05value:\x028\x01"\xd8\x03\n\nPlotConfig\x12\x0e\n\x02id\x18\x01 \x01(\x05R\x02id\x12.\n\x04type\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.PlotTypeR\x04type\x12\x12\n\x04name\x18\x03 \x01(\tR\x04name\x12 \n\vdescription\x18\x04 \x01(\tR\vdescription\x12P\n\fincident_ids\x18\x05 \x03(\v2-.tragedylooper.v1.PlotConfig.IncidentIdsEntryR\vincidentIds\x12\\\n\x10role_assignments\x18\x06 \x03(\v21.tragedylooper.v1.PlotConfig.RoleAssignmentsEntryR\x0froleAssignments\x1a`\n\x10IncidentIdsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x126\n\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01\x1aB\n\x14RoleAssignmentsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01"\xb7\x01\n\x0fScriptConfigLib\x12H\n\ascripts\x18\x01 \x03(\v2..tragedylooper.v1.ScriptConfigLib.ScriptsEntryR\ascripts\x1aZ\n\fScriptsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x124\n\x05value\x18\x02 \x01(\v2\x1e.tragedylooper.v1.ScriptConfigR\x05value:\x028\x01B7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3'
+_#file_tragedylooper_v1_script_proto_rawDesc: '\n\x1dtragedylooper/v1/script.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1ftragedylooper/v1/incident.proto\x1a tragedylooper/v1/character.proto\x1a\x1btragedylooper/v1/card.proto\x1a\x1etragedylooper/v1/ability.proto"\xfb\x01\n\fScriptConfig\x12\x0e\n\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12 \n\vdescription\x18\x03 \x01(\tR\vdescription\x12H\n\bentities\x18\x04 \x03(\v2,.tragedylooper.v1.ScriptConfig.EntitiesEntryR\bentities\x1a[\n\rEntitiesEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x124\n\x05value\x18\x02 \x01(\v2\x1e.tragedylooper.v1.ScriptEntityR\x05value:\x028\x01"\x9f\x04\n\fScriptEntity\x12;\n\tmain_plot\x18\x01 \x01(\v2\x1c.tragedylooper.v1.PlotConfigH\x00R\bmainPlot\x129\n\bsub_plot\x18\x02 \x01(\v2\x1c.tragedylooper.v1.PlotConfigH\x00R\asubPlot\x122\n\x04role\x18\x03 \x01(\v2\x1c.tragedylooper.v1.RoleConfigH\x00R\x04role\x12>\n\bincident\x18\x04 \x01(\v2 .tragedylooper.v1.IncidentConfigH\x00R\bincident\x12A\n\tcharacter\x18\x05 \x01(\v2!.tragedylooper.v1.CharacterConfigH\x00R\tcharacter\x12G\n\x0fmastermind_card\x18\x06 \x01(\v2\x1c.tragedylooper.v1.CardConfigH\x00R\x0emastermindCard\x12I\n\x10protagonist_card\x18\a \x01(\v2\x1c.tragedylooper.v1.CardConfigH\x00R\x0fprotagonistCard\x12B\n\fscript_model\x18\b \x01(\v2\x1d.tragedylooper.v1.ScriptModelH\x00R\vscriptModelB\b\n\x06entity"\x8e\x01\n\vScriptModel\x12@\n\fprivate_info\x18\x01 \x01(\v2\x1d.tragedylooper.v1.PrivateInfoR\vprivateInfo\x12=\n\vpublic_info\x18\x02 \x01(\v2\x1c.tragedylooper.v1.PublicInfoR\npublicInfo"\xe0\x03\n\vPrivateInfo\x129\n\tmain_plot\x18\x01 \x01(\v2\x1c.tragedylooper.v1.PlotConfigR\bmainPlot\x129\n\tsub_plots\x18\x02 \x03(\v2\x1c.tragedylooper.v1.PlotConfigR\bsubPlots\x12M\n\ncharacters\x18\x03 \x03(\v2-.tragedylooper.v1.PrivateInfo.CharactersEntryR\ncharacters\x12J\n\tincidents\x18\x04 \x03(\v2,.tragedylooper.v1.PrivateInfo.IncidentsEntryR\tincidents\x1a`\n\x0fCharactersEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x127\n\x05value\x18\x02 \x01(\v2!.tragedylooper.v1.CharacterConfigR\x05value:\x028\x01\x1a^\n\x0eIncidentsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x126\n\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01"\xb2\x04\n\nPublicInfo\x12(\n\x10script_config_id\x18\x01 \x01(\x05R\x0escriptConfigId\x12\x1d\n\nloop_count\x18\x02 \x01(\x05R\tloopCount\x12"\n\rdays_per_loop\x18\x03 \x01(\x05R\vdaysPerLoop\x12\x1f\n\vcan_discuss\x18\x04 \x01(\bR\ncanDiscuss\x12_\n\x11special_incidents\x18\x05 \x03(\v22.tragedylooper.v1.PublicInfo.SpecialIncidentsEntryR\x10specialIncidents\x12e\n\x13scheduled_incidents\x18\x06 \x03(\v24.tragedylooper.v1.PublicInfo.ScheduledIncidentsEntryR\x12scheduledIncidents\x1ae\n\x15SpecialIncidentsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x126\n\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01\x1ag\n\x17ScheduledIncidentsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x126\n\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01"\xc1\x02\n\nRoleConfig\x12\x0e\n\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n\x05limit\x18\x03 \x01(\x05R\x05limit\x12I\n\tabilities\x18\x04 \x03(\v2+.tragedylooper.v1.RoleConfig.AbilitiesEntryR\tabilities\x12#\n\rgoodwill_rule\x18\x05 \x01(\x05R\fgoodwillRule\x12*\n\x11can_be_invincible\x18\x06 \x01(\bR\x0fcanBeInvincible\x1a]\n\x0eAbilitiesEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x125\n\x05value\x18\x02 \x01(\v2\x1f.tragedylooper.v1.AbilityConfigR\x05value:\x028\x01"\xd8\x03\n\nPlotConfig\x12\x0e\n\x02id\x18\x01 \x01(\x05R\x02id\x12.\n\x04type\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.PlotTypeR\x04type\x12\x12\n\x04name\x18\x03 \x01(\tR\x04name\x12 \n\vdescription\x18\x04 \x01(\tR\vdescription\x12P\n\fincident_ids\x18\x05 \x03(\v2-.tragedylooper.v1.PlotConfig.IncidentIdsEntryR\vincidentIds\x12\\\n\x10role_assignments\x18\x06 \x03(\v21.tragedylooper.v1.PlotConfig.RoleAssignmentsEntryR\x0froleAssignments\x1a`\n\x10IncidentIdsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x126\n\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01\x1aB\n\x14RoleAssignmentsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01"\xb7\x01\n\x0fScriptConfigLib\x12H\n\ascripts\x18\x01 \x03(\v2..tragedylooper.v1.ScriptConfigLib.ScriptsEntryR\ascripts\x1aZ\n\fScriptsEntry\x12\x10\n\x03key\x18\x01 \x01(\x05R\x03key\x124\n\x05value\x18\x02 \x01(\v2\x1e.tragedylooper.v1.ScriptConfigR\x05value:\x028\x01B7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3'
