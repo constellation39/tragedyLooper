@@ -38,9 +38,12 @@ var Flowchart = map[model.GamePhase][]Transition{
 		{Next: model.GamePhase_GAME_PHASE_CARD_RESOLVE},
 	},
 	model.GamePhase_GAME_PHASE_CARD_RESOLVE: {
-		{Next: model.GamePhase_GAME_PHASE_ABILITIES},
+		{Next: model.GamePhase_GAME_PHASE_MASTERMIND_ABILITIES},
 	},
-	model.GamePhase_GAME_PHASE_ABILITIES: {
+	model.GamePhase_GAME_PHASE_MASTERMIND_ABILITIES: {
+		{Next: model.GamePhase_GAME_PHASE_PROTAGONIST_ABILITIES},
+	},
+	model.GamePhase_GAME_PHASE_PROTAGONIST_ABILITIES: {
 		{Next: model.GamePhase_GAME_PHASE_INCIDENTS},
 	},
 	model.GamePhase_GAME_PHASE_INCIDENTS: {

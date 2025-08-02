@@ -85,7 +85,8 @@ const (
 	GamePhase_GAME_PHASE_CARD_REVEAL           GamePhase = 6  // 卡牌揭示阶段
 	GamePhase_GAME_PHASE_CARD_EFFECTS          GamePhase = 7  // 卡牌效果阶段
 	GamePhase_GAME_PHASE_CARD_RESOLVE          GamePhase = 15 // 卡牌结算阶段
-	GamePhase_GAME_PHASE_ABILITIES             GamePhase = 8  // 能力结算阶段
+	GamePhase_GAME_PHASE_MASTERMIND_ABILITIES  GamePhase = 8  // 主谋能力阶段
+	GamePhase_GAME_PHASE_PROTAGONIST_ABILITIES GamePhase = 16 // 主角能力阶段
 	GamePhase_GAME_PHASE_INCIDENTS             GamePhase = 9  // 事件结算阶段
 	GamePhase_GAME_PHASE_DAY_END               GamePhase = 10 // 日结束阶段
 	GamePhase_GAME_PHASE_LOOP_END              GamePhase = 11 // 循环结束阶段
@@ -106,7 +107,8 @@ var (
 		6:  "GAME_PHASE_CARD_REVEAL",
 		7:  "GAME_PHASE_CARD_EFFECTS",
 		15: "GAME_PHASE_CARD_RESOLVE",
-		8:  "GAME_PHASE_ABILITIES",
+		8:  "GAME_PHASE_MASTERMIND_ABILITIES",
+		16: "GAME_PHASE_PROTAGONIST_ABILITIES",
 		9:  "GAME_PHASE_INCIDENTS",
 		10: "GAME_PHASE_DAY_END",
 		11: "GAME_PHASE_LOOP_END",
@@ -124,7 +126,8 @@ var (
 		"GAME_PHASE_CARD_REVEAL":           6,
 		"GAME_PHASE_CARD_EFFECTS":          7,
 		"GAME_PHASE_CARD_RESOLVE":          15,
-		"GAME_PHASE_ABILITIES":             8,
+		"GAME_PHASE_MASTERMIND_ABILITIES":  8,
+		"GAME_PHASE_PROTAGONIST_ABILITIES": 16,
 		"GAME_PHASE_INCIDENTS":             9,
 		"GAME_PHASE_DAY_END":               10,
 		"GAME_PHASE_LOOP_END":              11,
@@ -934,7 +937,7 @@ const file_tragedylooper_v1_enums_proto_rawDesc = "" +
 	"PlayerRole\x12\x1b\n" +
 	"\x17PLAYER_ROLE_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16PLAYER_ROLE_MASTERMIND\x10\x01\x12\x1b\n" +
-	"\x17PLAYER_ROLE_PROTAGONIST\x10\x02*\xd5\x03\n" +
+	"\x17PLAYER_ROLE_PROTAGONIST\x10\x02*\x86\x04\n" +
 	"\tGamePhase\x12\x1a\n" +
 	"\x16GAME_PHASE_UNSPECIFIED\x10\x00\x12\x14\n" +
 	"\x10GAME_PHASE_SETUP\x10\x01\x12\x1f\n" +
@@ -945,8 +948,9 @@ const file_tragedylooper_v1_enums_proto_rawDesc = "" +
 	" GAME_PHASE_PROTAGONIST_CARD_PLAY\x10\x0e\x12\x1a\n" +
 	"\x16GAME_PHASE_CARD_REVEAL\x10\x06\x12\x1b\n" +
 	"\x17GAME_PHASE_CARD_EFFECTS\x10\a\x12\x1b\n" +
-	"\x17GAME_PHASE_CARD_RESOLVE\x10\x0f\x12\x18\n" +
-	"\x14GAME_PHASE_ABILITIES\x10\b\x12\x18\n" +
+	"\x17GAME_PHASE_CARD_RESOLVE\x10\x0f\x12#\n" +
+	"\x1fGAME_PHASE_MASTERMIND_ABILITIES\x10\b\x12$\n" +
+	" GAME_PHASE_PROTAGONIST_ABILITIES\x10\x10\x12\x18\n" +
 	"\x14GAME_PHASE_INCIDENTS\x10\t\x12\x16\n" +
 	"\x12GAME_PHASE_DAY_END\x10\n" +
 	"\x12\x17\n" +
