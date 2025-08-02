@@ -7,68 +7,101 @@ import "tragedylooper/v1/enums.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
-// 角色静态配置（全局角色库）
+// CharacterConfig defines the configuration for a character in the global character library.
 message CharacterConfig {
-  int32 id = 1; // 角色唯一ID
-  string name = 2; // 角色名称
-  repeated string traits = 3; // 角色特征标签（如"学生"、"记者"）
-  int32 paranoia_limit = 4; // 妄想值上限
-  int32 goodwill_limit = 5; // 好感值上限
-  int32 intrigue_limit = 6; // 阴谋值上限
-  repeated int32 ability_ids = 7; // 角色固有能力ID列表
-  repeated CharacterRule rules = 8; // 角色特殊规则列表
-  string description = 9; // 角色描述
-  // 初始位置
+  // The unique identifier for the character.
+  int32 id = 1;
+  // The name of the character.
+  string name = 2;
+  // A list of character traits (e.g., "Student", "Reporter").
+  repeated string traits = 3;
+  // The paranoia limit for the character.
+  int32 paranoia_limit = 4;
+  // The goodwill limit for the character.
+  int32 goodwill_limit = 5;
+  // The intrigue limit for the character.
+  int32 intrigue_limit = 6;
+  // A list of ability IDs that the character possesses.
+  repeated int32 ability_ids = 7;
+  // A list of special rules for the character.
+  repeated CharacterRule rules = 8;
+  // A description of the character.
+  string description = 9;
+  // The initial location of the character.
   LocationType initial_location = 10;
-  // 不能去的位置
+  // A list of locations that the character cannot go to.
   repeated LocationType blocked_locations = 11;
 }
 
-// 角色运行时实例
+// Character defines a character instance at runtime.
 message Character {
-  CharacterConfig config = 1; // 角色ID，关联到CharacterConfig
-  LocationType current_location = 2; // 当前所在地点
-  int32 paranoia = 3; // 当前妄想值
-  int32 goodwill = 4; // 当前好感值
-  int32 intrigue = 5; // 当前阴谋值
-  RoleType hidden_role = 6; // 隐藏身份（剧本分配）
-  repeated Ability abilities = 7; // 拥有的能力实例列表
-  bool is_alive = 8; // 是否存活
-  bool in_panic_mode = 9; // 是否处于恐慌模式
-  repeated string traits = 10; // 动态特征
+  // The configuration for the character.
+  CharacterConfig config = 1;
+  // The current location of the character.
+  LocationType current_location = 2;
+  // The current paranoia level of the character.
+  int32 paranoia = 3;
+  // The current goodwill level of the character.
+  int32 goodwill = 4;
+  // The current intrigue level of the character.
+  int32 intrigue = 5;
+  // The hidden role of the character (assigned by the script).
+  RoleType hidden_role = 6;
+  // A list of ability instances that the character possesses.
+  repeated Ability abilities = 7;
+  // Whether the character is alive.
+  bool is_alive = 8;
+  // Whether the character is in panic mode.
+  bool in_panic_mode = 9;
+  // A list of dynamic traits for the character.
+  repeated string traits = 10;
 }
 
-// 角色配置库
+// CharacterConfigLib is a library of character configurations.
 message CharacterConfigLib {
-  map<int32, CharacterConfig> characters = 1; // 角色ID到配置的映射
+  // A map of character configurations, keyed by their ID.
+  map<int32, CharacterConfig> characters = 1;
 }
 
-// 角色特殊规则
+// CharacterRule defines a special rule for a character.
 message CharacterRule {
-  string name = 1; // 规则名称
-  string description = 2; // 规则描述
-  TriggerType trigger = 3; // 规则触发时机
-  oneof effect { // 规则效果
-    TurfSelectionEffect turf_selection_effect = 4; // 地盘选择效果
-    DelayedEntryEffect delayed_entry_effect = 5; // 延迟登场效果
-    SpecialMovementRule special_movement_rule = 6; // 特殊移动规则
+  // The name of the rule.
+  string name = 1;
+  // A description of the rule.
+  string description = 2;
+  // The trigger for the rule.
+  TriggerType trigger = 3;
+  // The effect of the rule.
+  oneof effect {
+    // A turf selection effect.
+    TurfSelectionEffect turf_selection_effect = 4;
+    // A delayed entry effect.
+    DelayedEntryEffect delayed_entry_effect = 5;
+    // A special movement rule.
+    SpecialMovementRule special_movement_rule = 6;
   }
 }
 
-// 地盘选择效果
+// TurfSelectionEffect defines an effect for selecting a turf.
 message TurfSelectionEffect {
-  repeated LocationType possible_locations = 1; // 可选择的地点列表
-  string prompt = 2; // 给玩家的提示信息
+  // A list of possible locations to choose from.
+  repeated LocationType possible_locations = 1;
+  // The prompt to show to the player.
+  string prompt = 2;
 }
 
-// 延迟登场效果
+// DelayedEntryEffect defines an effect for a delayed entry.
 message DelayedEntryEffect {
-  int32 day_of_entry = 1; // 登场日期
-  LocationType entry_location = 2; // 登场地点
+  // The day of entry.
+  int32 day_of_entry = 1;
+  // The location of entry.
+  LocationType entry_location = 2;
 }
 
-// 特殊移动规则
+// SpecialMovementRule defines a special movement rule.
 message SpecialMovementRule {
-  repeated LocationType restricted_locations = 1; // 限制进入的地点
-  string description = 2; // 规则描述
+  // A list of restricted locations.
+  repeated LocationType restricted_locations = 1;
+  // A description of the rule.
+  string description = 2;
 }

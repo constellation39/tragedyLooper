@@ -26,7 +26,7 @@ message IncidentConfig {
   string description = 3; // 事件描述
   IncidentType incident_type = 4; // 事件类型
   int32 day = 5; // 预定发生日期
-  repeated Condition trigger_conditions = 6; // 触发条件列表
+  CompoundCondition compound_condition = 6; // 触发条件列表
   Effect effect = 7; // 事件触发时产生的效果
   bool is_mandatory = 8; // 是否为必发事件
   int32 culprit_character_id = 9; // 事件主谋角色ID（如适用）

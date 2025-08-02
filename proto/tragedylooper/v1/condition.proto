@@ -6,110 +6,175 @@ import "tragedylooper/v1/enums.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
-// 条件，用于规则、事件和效果的触发判断
+// Condition defines a condition for triggering rules, events, and effects.
 message Condition {
+  // The type of the condition.
   oneof condition_type {
-    StatCondition stat_condition = 1; // 属性条件
-    LocationCondition location_condition = 2; // 地点条件
-    RoleCondition role_condition = 3; // 身份条件
-    TraitCondition trait_condition = 4; // 特征条件
-    DayCondition day_condition = 5; // 日期条件
-    PlayerCondition player_condition = 6; // 玩家条件
-    CompoundCondition compound_condition = 7; // 复合条件 (AND/OR/NOT)
+    // A stat condition.
+    StatCondition stat_condition = 1;
+    // A location condition.
+    LocationCondition location_condition = 2;
+    // A role condition.
+    RoleCondition role_condition = 3;
+    // A trait condition.
+    TraitCondition trait_condition = 4;
+    // A day condition.
+    DayCondition day_condition = 5;
+    // A player condition.
+    PlayerCondition player_condition = 6;
+    // A compound condition (AND/OR/NOT).
+    CompoundCondition compound_condition = 7;
   }
 }
 
-// 复合条件，用于组合多个条件
+// CompoundCondition defines a combination of multiple conditions.
 message CompoundCondition {
+  // The operator to use when combining conditions.
   enum Operator {
-    OPERATOR_UNSPECIFIED = 0; // 未指定
-    OPERATOR_AND = 1; // 逻辑与
-    OPERATOR_OR = 2; // 逻辑或
-    OPERATOR_NOT = 3; // 逻辑非（作用于第一个条件）
+    // Unspecified operator.
+    OPERATOR_UNSPECIFIED = 0;
+    // The logical AND operator.
+    OPERATOR_AND = 1;
+    // The logical OR operator.
+    OPERATOR_OR = 2;
+    // The logical NOT operator (applies to the first condition).
+    OPERATOR_NOT = 3;
   }
-  Operator operator = 1; // 逻辑操作符
-  repeated Condition sub_conditions = 2; // 子条件列表
+  // The logical operator to use.
+  Operator operator = 1;
+  // A list of sub-conditions.
+  repeated Condition sub_conditions = 2;
 }
 
-// 属性条件
+// StatCondition defines a condition based on a character's stats.
 message StatCondition {
-  TargetSelector target = 1; // 目标角色选择器
+  // The target character selector.
+  TargetSelector target = 1;
+  // The type of stat to check.
   enum StatType {
-    STAT_TYPE_UNSPECIFIED = 0; // 未指定
-    STAT_TYPE_PARANOIA = 1; // 妄想
-    STAT_TYPE_GOODWILL = 2; // 好感
-    STAT_TYPE_INTRIGUE = 3; // 阴谋
+    // Unspecified stat type.
+    STAT_TYPE_UNSPECIFIED = 0;
+    // Paranoia stat.
+    STAT_TYPE_PARANOIA = 1;
+    // Goodwill stat.
+    STAT_TYPE_GOODWILL = 2;
+    // Intrigue stat.
+    STAT_TYPE_INTRIGUE = 3;
   }
-  StatType stat_type = 2; // 检查的属性类型
+  // The type of stat to check.
+  StatType stat_type = 2;
+  // The comparator to use.
   enum Comparator {
-    COMPARATOR_UNSPECIFIED = 0; // 未指定
-    COMPARATOR_GREATER_THAN = 1; // 大于
-    COMPARATOR_LESS_THAN = 2; // 小于
-    COMPARATOR_EQUAL_TO = 3; // 等于
-    COMPARATOR_GREATER_THAN_OR_EQUAL = 4; // 大于等于
-    COMPARATOR_LESS_THAN_OR_EQUAL = 5; // 小于等于
+    // Unspecified comparator.
+    COMPARATOR_UNSPECIFIED = 0;
+    // Greater than.
+    COMPARATOR_GREATER_THAN = 1;
+    // Less than.
+    COMPARATOR_LESS_THAN = 2;
+    // Equal to.
+    COMPARATOR_EQUAL_TO = 3;
+    // Greater than or equal to.
+    COMPARATOR_GREATER_THAN_OR_EQUAL = 4;
+    // Less than or equal to.
+    COMPARATOR_LESS_THAN_OR_EQUAL = 5;
   }
-  Comparator comparator = 3; // 比较符
-  int32 value = 4; // 比较的值
+  // The comparator to use.
+  Comparator comparator = 3;
+  // The value to compare against.
+  int32 value = 4;
 }
 
-// 地点条件
+// LocationCondition defines a condition based on a character's location.
 message LocationCondition {
-  TargetSelector target = 1; // 目标角色选择器
-  LocationType location = 2; // 目标地点
-  bool is_at_location = 3; // 是否在该地点 (默认为true)
-  bool is_alone = 4; // 是否在该地点独处
-  bool not_alone = 5; // 是否在该地点不独处
+  // The target character selector.
+  TargetSelector target = 1;
+  // The target location.
+  LocationType location = 2;
+  // Whether the character is at the location (defaults to true).
+  bool is_at_location = 3;
+  // Whether the character is alone at the location.
+  bool is_alone = 4;
+  // Whether the character is not alone at the location.
+  bool not_alone = 5;
 }
 
-// 身份条件
+// RoleCondition defines a condition based on a character's role.
 message RoleCondition {
-  TargetSelector target = 1; // 目标角色选择器
-  RoleType role = 2; // 目标身份
-  bool has_role = 3; // 是否拥有该身份 (默认为true)
+  // The target character selector.
+  TargetSelector target = 1;
+  // The target role.
+  RoleType role = 2;
+  // Whether the character has the role (defaults to true).
+  bool has_role = 3;
 }
 
-// 特征条件
+// TraitCondition defines a condition based on a character's traits.
 message TraitCondition {
-  TargetSelector target = 1; // 目标角色选择器
-  string trait = 2; // 目标特征
-  bool has_trait = 3; // 是否拥有该特征 (默认为true)
+  // The target character selector.
+  TargetSelector target = 1;
+  // The target trait.
+  string trait = 2;
+  // Whether the character has the trait (defaults to true).
+  bool has_trait = 3;
 }
 
-// 日期条件
+// DayCondition defines a condition based on the current day.
 message DayCondition {
+  // The comparator to use.
   enum Comparator {
-    COMPARATOR_UNSPECIFIED = 0; // 未指定
-    COMPARATOR_BEFORE = 1; // 在某天之前
-    COMPARATOR_ON = 2; // 在某天当天
-    COMPARATOR_AFTER = 3; // 在某天之后
+    // Unspecified comparator.
+    COMPARATOR_UNSPECIFIED = 0;
+    // Before a certain day.
+    COMPARATOR_BEFORE = 1;
+    // On a certain day.
+    COMPARATOR_ON = 2;
+    // After a certain day.
+    COMPARATOR_AFTER = 3;
   }
-  Comparator comparator = 1; // 比较符
-  int32 day = 2; // 目标天数
+  // The comparator to use.
+  Comparator comparator = 1;
+  // The target day.
+  int32 day = 2;
 }
 
-// 玩家条件
+// PlayerCondition defines a condition based on a player's state.
 message PlayerCondition {
-  PlayerRole player_role = 1; // 目标玩家角色
-  // 可扩展：例如检查玩家是否已使用某张牌
+  // The target player role.
+  PlayerRole player_role = 1;
+  // Extensible: e.g., check if the player has used a certain card.
 }
 
-// 目标选择器，用于动态指定条件或效果的目标
+// TargetSelector defines a dynamic target for conditions or effects.
 message TargetSelector {
+  // The type of the selector.
   enum SelectorType {
-    SELECTOR_TYPE_UNSPECIFIED = 0; // 未指定
-    SELECTOR_TYPE_SPECIFIC_CHARACTER = 1; // 指定的某个角色
-    SELECTOR_TYPE_TRIGGERING_CHARACTER = 2; // 触发事件的角色
-    SELECTOR_TYPE_CULPRIT = 3; // 事件的犯人
-    SELECTOR_TYPE_VICTIM = 4; // 事件的受害者
-    SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE = 5; // 任意一个有指定身份的角色
-    SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION = 6; // 在某地的所有角色
+    // Unspecified selector type.
+    SELECTOR_TYPE_UNSPECIFIED = 0;
+    // A specific character.
+    SELECTOR_TYPE_SPECIFIC_CHARACTER = 1;
+    // The character that triggered the event.
+    SELECTOR_TYPE_TRIGGERING_CHARACTER = 2;
+    // The culprit of the event.
+    SELECTOR_TYPE_CULPRIT = 3;
+    // The victim of the event.
+    SELECTOR_TYPE_VICTIM = 4;
+    // Any character with a specific role.
+    SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE = 5;
+    // All characters at a specific location.
+    SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION = 6;
+    // The user of the ability.
     SELECTOR_TYPE_ABILITY_USER = 7;
+    // The target of the ability.
     SELECTOR_TYPE_ABILITY_TARGET = 8;
+    // All characters.
     SELECTOR_TYPE_ALL_CHARACTERS = 9;
   }
-  SelectorType selector_type = 1; // 选择器类型
-  int32 character_id = 2; // 当类型为 SPECIFIC_CHARACTER 时使用
-  RoleType role_filter = 3; // 当类型为 ANY_CHARACTER_WITH_ROLE 时使用
-  LocationType location_filter = 4; // 当类型为 ALL_CHARACTERS_AT_LOCATION 时使用
+  // The type of the selector.
+  SelectorType selector_type = 1;
+  // The character ID to use when the type is SPECIFIC_CHARACTER.
+  int32 character_id = 2;
+  // The role filter to use when the type is ANY_CHARACTER_WITH_ROLE.
+  RoleType role_filter = 3;
+  // The location filter to use when the type is ALL_CHARACTERS_AT_LOCATION.
+  LocationType location_filter = 4;
 }
