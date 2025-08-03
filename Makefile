@@ -4,6 +4,9 @@
 BINARY_NAME=tragedylooper
 # Go command
 GO := go
+# Protobuf files
+PROTO_FILES := $(shell find proto -name *.proto)
+
 
 .PHONY: all build run test clean lint proto clean-proto install-tools format validate-cue
 
@@ -12,7 +15,6 @@ all: build
 # Format the code
 format:
 	@echo "Formatting..."
-	@$(GO) run github.com/bufbuild/buf/cmd/buf@latest format -w
 	@$(GO) fmt ./...
 	@$(GO) run golang.org/x/tools/cmd/goimports@latest -w cmd internal pkg tools
 
@@ -34,7 +36,7 @@ test:
 # Clean the binary
 clean:
 	@echo "Cleaning..."
-	@if exist bin ( rmdir /S /Q bin )
+	@$(GO) run ./tools/rmrf bin
 
 # Validate CUE files
 validate-cue:
@@ -45,7 +47,6 @@ validate-cue:
 lint: format validate-cue
 	@echo "Linting..."
 	@$(GO) run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run
-	@$(GO) run github.com/bufbuild/buf/cmd/buf@latest lint
 
 # Install tools
 install-tools:
@@ -53,16 +54,23 @@ install-tools:
 	@$(GO) install golang.org/x/tools/cmd/goimports@latest
 	@$(GO) install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	@$(GO) install cuelang.org/go/cmd/cue@latest
-	@$(GO) install github.com/bufbuild/buf/cmd/buf@latest
 	@$(GO) install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 # Protobuf generation
-gen:
+gen: gen-go gen-cue
+
+gen-go: clean-proto
 	@echo "Generating Go code from protobuf..."
-	@$(GO) run github.com/bufbuild/buf/cmd/buf@latest generate
-	@$(GO) run cuelang.org/go/cmd/cue@latest get go github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1
+	@mkdir -p pkg/proto
+	@protoc --proto_path=proto \
+		--go_out=pkg/proto --go_opt=paths=source_relative \
+		$(PROTO_FILES)
+
+gen-cue:
+	@echo "Generating CUE files from Go..."
+	@$(GO) run cuelang.org/go/cmd/cue@latest get go github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1/...
 
 # Clean generated protobuf files
 clean-proto:
 	@echo "Cleaning generated protobuf files..."
-	@if exist pkg\proto ( rmdir /S /Q pkg\proto )
+	@$(GO) run ./tools/rmrf pkg/proto cue.mod/gen

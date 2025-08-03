@@ -3,8 +3,6 @@ syntax = "proto3";
 package tragedylooper.v1;
 
 import "vendor/cue/cue.proto";
-import "tragedylooper/v1/condition.proto";
-import "tragedylooper/v1/effect.proto";
 import "tragedylooper/v1/enums.proto";
 import "tragedylooper/v1/incident.proto";
 import "tragedylooper/v1/character.proto";
