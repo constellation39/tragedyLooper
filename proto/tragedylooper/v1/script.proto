@@ -55,13 +55,13 @@ message ScriptModel {
 // PrivateInfo defines the private information for a script.
 message PrivateInfo {
   // The main plot of the script.
-  PlotConfig main_plot = 1;
+  int32 main_plot_id = 1;
   // A list of sub plots for the script.
-  repeated PlotConfig sub_plots = 2;
+  repeated int32 sub_plots_ids = 2;
   // A map of characters in the script.
-  map<int32, CharacterConfig> characters = 3;
+  repeated int32 characters_ids = 3;
   // A map of incidents in the script.
-  map<int32, IncidentConfig> incidents = 4;
+  repeated int32 incident_ids = 4;
 }
 
 // PublicInfo defines the public information for a script.
@@ -79,9 +79,9 @@ message PublicInfo {
 
   // Special rules.
   // A map of special incidents.
-  map<int32, IncidentConfig> special_incidents = 5;
+  repeated int32 special_incident_ids = 5;
   // A map of scheduled incidents.
-  map<int32, IncidentConfig> scheduled_incidents = 6;
+  repeated int32 scheduled_incident_ids = 6;
 }
 
 // RoleConfig defines the configuration for a role.

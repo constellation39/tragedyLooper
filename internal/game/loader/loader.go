@@ -13,32 +13,53 @@ import (
 // ScriptConfig defines the interface for accessing all loaded game configuration data.
 type ScriptConfig interface {
 	GetScript() *v1.ScriptConfig
-	GetPlotConfig() *v1.PlotConfig
-	GetModel(id int32) ScriptModel
-}
 
-type ScriptModel interface {
+	PrivateInfo() *v1.PrivateInfo
+	PublicInfo() *v1.PublicInfo
+
+	GetPlot(id int32) *v1.PlotConfig
+	GetPlotMap() map[int32]*v1.PlotConfig
+	GetRole(id int32) *v1.RoleConfig
+	GetRoleMap() map[int32]*v1.RoleConfig
+	GetCard(id int32) *v1.CardConfig
+	GetCardMap() map[int32]*v1.CardConfig
+	GetAbility(id int32) *v1.AbilityConfig
+	GetAbilityMap() map[int32]*v1.AbilityConfig
+
+	GetMainPlot() *v1.PlotConfig
+	GetSubPlot(id int32) *v1.PlotConfig
+	GetSubPlotMap() map[int32]*v1.PlotConfig
+	GetCharacter(id int32) *v1.CharacterConfig
+	GetCharacterMap() map[int32]*v1.CharacterConfig
+	GetIncident(id int32) *v1.IncidentConfig
+	GetIncidentMap() map[int32]*v1.IncidentConfig
+	GetLoopCount() int32
+	GetDaysPerLoop() int32
+	GetCanDiscuss() bool
 }
 
 // scriptConfig is the concrete implementation of the ScriptConfig interface.
 // It holds all the loaded script and library data.
 type scriptConfig struct {
-	script *v1.ScriptConfig
+	script  *v1.ScriptConfig
+	modelId int32
 }
 
 // newRepository creates a new, empty scriptConfig repository.
-func newRepository() *scriptConfig {
+func newRepository(modelId int32) *scriptConfig {
 	return &scriptConfig{
-		script: &v1.ScriptConfig{},
+		modelId: modelId,
+		script:  &v1.ScriptConfig{},
 	}
 }
 
 // LoadConfig loads all game data from the specified directory and script.
 // It uses a data-driven approach by iterating over a local map that points to the repository's fields.
-func LoadConfig(dataDir, scriptID string) (ScriptConfig, error) {
-	repo := newRepository()
+func LoadConfig(dataDir, scriptID string, modelId int32) (ScriptConfig, error) {
+	repo := newRepository(modelId)
 
 	// Load the main script file.
+	// CUE's loader will resolve and load all imported dependencies.
 	scriptPath := filepath.Join(dataDir, "scripts", scriptID+".cue")
 	if err := loadDataFromCUE(scriptPath, repo.script); err != nil {
 		return nil, fmt.Errorf("failed to load script '%s': %w", scriptID, err)
@@ -76,72 +97,168 @@ func loadDataFromCUE[T proto.Message](filePath string, data T) error {
 	return nil
 }
 
-// Getters for the loaded data from the default loader
-
-func (s *scriptConfig) GetScript() *v1.ScriptConfig { return s.script }
-
-func (s *scriptConfig) GetModel(id int32) ScriptModel {
-	if s.script == nil || s.script.ScriptModels == nil {
-		return nil
-	}
-	model, ok := s.script.ScriptModels[id]
-	if !ok {
-		return nil
-	}
-	return &model
+func (s *scriptConfig) GetScript() *v1.ScriptConfig {
+	return s.script
 }
 
-func (s *scriptConfig) GetCharacter(id int32) *v1.CharacterConfig {
-	if s.characters == nil || s.characters.Characters == nil {
-		return nil
-	}
-	char, ok := s.characters.Characters[id]
-	if !ok {
-		return nil
-	}
-	return &char
+func (s *scriptConfig) getModel() *v1.ScriptModel {
+	return s.script.GetScriptModels()[s.modelId]
 }
 
-func (s *scriptConfig) GetIncident(id int32) *v1.IncidentConfig {
-	if s.incidents == nil || s.incidents.Incidents == nil {
-		return nil
+func (s *scriptConfig) PrivateInfo() *v1.PrivateInfo {
+	if model := s.getModel(); model != nil {
+		return model.GetPrivateInfo()
 	}
-	incident, ok := s.incidents.Incidents[id]
-	if !ok {
-		return nil
+	return nil
+}
+
+func (s *scriptConfig) PublicInfo() *v1.PublicInfo {
+	if model := s.getModel(); model != nil {
+		return model.GetPublicInfo()
 	}
-	return &incident
+	return nil
+}
+
+func (s *scriptConfig) GetPlot(id int32) *v1.PlotConfig {
+	if plot, ok := s.script.GetMainPlots()[id]; ok {
+		return plot
+	}
+	if plot, ok := s.script.GetSubPlots()[id]; ok {
+		return plot
+	}
+	return nil
+}
+
+func (s *scriptConfig) GetPlotMap() map[int32]*v1.PlotConfig {
+	plots := make(map[int32]*v1.PlotConfig)
+	for id, plot := range s.script.GetMainPlots() {
+		plots[id] = plot
+	}
+	for id, plot := range s.script.GetSubPlots() {
+		plots[id] = plot
+	}
+	return plots
+}
+
+func (s *scriptConfig) GetRole(id int32) *v1.RoleConfig {
+	return s.script.GetRoles()[id]
+}
+
+func (s *scriptConfig) GetRoleMap() map[int32]*v1.RoleConfig {
+	return s.script.GetRoles()
 }
 
 func (s *scriptConfig) GetCard(id int32) *v1.CardConfig {
-	if s.cards == nil || s.cards.Cards == nil {
-		return nil
+	if card, ok := s.script.GetMastermindCards()[id]; ok {
+		return card
 	}
-	card, ok := s.cards.Cards[id]
-	if !ok {
-		return nil
+	if card, ok := s.script.GetProtagonistCards()[id]; ok {
+		return card
 	}
-	return &card
+	return nil
+}
+
+func (s *scriptConfig) GetCardMap() map[int32]*v1.CardConfig {
+	cards := make(map[int32]*v1.CardConfig)
+	for id, card := range s.script.GetMastermindCards() {
+		cards[id] = card
+	}
+	for id, card := range s.script.GetProtagonistCards() {
+		cards[id] = card
+	}
+	return cards
 }
 
 func (s *scriptConfig) GetAbility(id int32) *v1.AbilityConfig {
-	if s.abilities == nil || s.abilities.Abilities == nil {
+	for _, role := range s.script.GetRoles() {
+		if ability, ok := role.GetAbilities()[id]; ok {
+			return ability
+		}
+	}
+	return nil
+}
+
+func (s *scriptConfig) GetAbilityMap() map[int32]*v1.AbilityConfig {
+	abilities := make(map[int32]*v1.AbilityConfig)
+	for _, role := range s.script.GetRoles() {
+		for id, ability := range role.GetAbilities() {
+			abilities[id] = ability
+		}
+	}
+	return abilities
+}
+
+func (s *scriptConfig) GetMainPlot() *v1.PlotConfig {
+	if privateInfo := s.PrivateInfo(); privateInfo != nil {
+		return s.GetPlot(privateInfo.GetMainPlotId())
+	}
+	return nil
+}
+
+func (s *scriptConfig) GetSubPlot(id int32) *v1.PlotConfig {
+	return s.script.GetSubPlots()[id]
+}
+
+func (s *scriptConfig) GetSubPlotMap() map[int32]*v1.PlotConfig {
+	privateInfo := s.PrivateInfo()
+	if privateInfo == nil {
 		return nil
 	}
-	ability, ok := s.abilities.Abilities[id]
-	if !ok {
-		return nil
+	subplots := make(map[int32]*v1.PlotConfig)
+	for _, id := range privateInfo.GetSubPlotsIds() {
+		if plot, ok := s.script.GetSubPlots()[id]; ok {
+			subplots[id] = plot
+		}
 	}
-	return &ability
+	return subplots
+}
+
+func (s *scriptConfig) GetCharacter(id int32) *v1.CharacterConfig {
+	return s.script.GetCharacters()[id]
+}
+
+func (s *scriptConfig) GetCharacterMap() map[int32]*v1.CharacterConfig {
+	return s.script.GetCharacters()
+}
+
+func (s *scriptConfig) GetIncident(id int32) *v1.IncidentConfig {
+	return s.script.GetIncidents()[id]
+}
+
+func (s *scriptConfig) GetIncidentMap() map[int32]*v1.IncidentConfig {
+	return s.script.GetIncidents()
+}
+
+func (s *scriptConfig) GetLoopCount() int32 {
+	if publicInfo := s.PublicInfo(); publicInfo != nil {
+		return publicInfo.GetLoopCount()
+	}
+	return 0
+}
+
+func (s *scriptConfig) GetDaysPerLoop() int32 {
+	if publicInfo := s.PublicInfo(); publicInfo != nil {
+		return publicInfo.GetDaysPerLoop()
+	}
+	return 0
+}
+
+func (s *scriptConfig) GetCanDiscuss() bool {
+	if publicInfo := s.PublicInfo(); publicInfo != nil {
+		return publicInfo.GetCanDiscuss()
+	}
+	return false
 }
 
 // Global access functions
 
 type cfgPtr interface {
 	*v1.AbilityConfig |
-	*v1.CardConfig |
-	*v1.CharacterConfig |
-	*v1.IncidentConfig
+		*v1.CardConfig |
+		*v1.CharacterConfig |
+		*v1.IncidentConfig |
+		*v1.PlotConfig |
+		*v1.RoleConfig
 }
 
 func Get[T cfgPtr](r ScriptConfig, id int32) (T, error) {
@@ -166,14 +283,19 @@ func pickMap[T cfgPtr](r ScriptConfig) (map[int32]T, error) {
 	var zero T
 	switch any(zero).(type) {
 	case *v1.AbilityConfig:
-		return any(r.GetAbilities()).(map[int32]T), nil
+		return any(r.GetAbilityMap()).(map[int32]T), nil
 	case *v1.CardConfig:
-		return any(r.GetCards()).(map[int32]T), nil
+		return any(r.GetCardMap()).(map[int32]T), nil
 	case *v1.CharacterConfig:
-		return any(r.GetCharacters()).(map[int32]T), nil
+		return any(r.GetCharacterMap()).(map[int32]T), nil
 	case *v1.IncidentConfig:
-		return any(r.GetIncidents()).(map[int32]T), nil
+		return any(r.GetIncidentMap()).(map[int32]T), nil
+	case *v1.PlotConfig:
+		return any(r.GetPlotMap()).(map[int32]T), nil
+	case *v1.RoleConfig:
+		return any(r.GetRoleMap()).(map[int32]T), nil
 	default:
-		return nil, fmt.Errorf("unsupported config type")
+		var t T
+		return nil, fmt.Errorf("unsupported config type: %T", t)
 	}
 }
