@@ -7,8 +7,9 @@ option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 // 玩家角色
 enum PlayerRole {
   PLAYER_ROLE_UNSPECIFIED = 0; // 未指定
-  PLAYER_ROLE_MASTERMIND = 1; // 主谋
-  PLAYER_ROLE_PROTAGONIST = 2; // 主角
+  PLAYER_ROLE_UNKNOWN = 1; // 身份未知（用于玩家视角）
+  PLAYER_ROLE_MASTERMIND = 2; // 主谋
+  PLAYER_ROLE_PROTAGONIST = 3; // 主角
 }
 
 // 游戏阶段

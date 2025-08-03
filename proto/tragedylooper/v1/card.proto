@@ -8,38 +8,53 @@ import "tragedylooper/v1/common.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
-// CardConfig defines the configuration for a card.
+syntax = "proto3";
+
+package tragedylooper.v1;
+
+import "tragedylooper/v1/effect.proto";
+import "tragedylooper/v1/enums.proto";
+import "tragedylooper/v1/common.proto";
+
+option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
+
+// CardConfig defines the static, immutable properties of a card.
+// This represents a card as it is defined in the game's rulebook or script.
 message CardConfig {
-  // The unique identifier for the card.
+  // The unique identifier for this type of card.
   int32 id = 1;
   // The name of the card.
   string name = 2;
-  // A description of the card.
+  // A user-facing description of the card's effect.
   string description = 3;
-  // The type of the card.
+  // The type of the card, used for categorization and resolution order.
   CardType type = 4;
-  // The player role that owns the card (Mastermind or Protagonist).
+  // The role that is allowed to use this card.
   PlayerRole owner_role = 5;
-  // The effect of the card.
+  // The effect or chain of effects the card produces when played.
   CompoundEffect effect = 6;
-  // Whether the card can only be used once per loop.
+  // If true, this card can only be successfully played once per loop.
   bool once_per_loop = 7;
-  // The priority of the card's resolution (for cards of the same type).
+  // The priority of the card, used to determine resolution order among cards of the same type.
   int32 priority = 8;
 }
 
-// Card defines a card instance at runtime.
+// Card represents an instance of a card in a player's hand or in play.
+// It combines the static configuration with dynamic, mutable state.
 message Card {
-  // The configuration for the card.
-  CardConfig config = 1;
+  // The unique ID of the card, copied from its config for convenience.
+  int32 id = 1;
+  // The static configuration of the card.
+  CardConfig config = 2;
   // Whether the card has been used in the current loop.
-  bool used_this_loop = 2;
-  // The target of the card's ability.
-  Choice target = 3;
+  bool used_this_loop = 3;
+  // The final, confirmed target for the card's effect, set after any required player choices.
+  Choice resolved_target = 4;
 }
 
-// CardList is a list of card instances.
+// CardList is a collection of card instances, typically representing a player's hand.
 message CardList {
   // A list of card instances.
   repeated Card cards = 1;
 }
+
