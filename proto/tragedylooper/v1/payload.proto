@@ -2,52 +2,49 @@ syntax = "proto3";
 
 package tragedylooper.v1;
 
-import "tragedylooper/v1/common.proto";
 import "tragedylooper/v1/enums.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
 // 玩家打出卡牌的操作负载
 message PlayCardPayload {
-  int32 player_id = 1; // 执行操作的玩家ID
-  int32 card_id = 2; // 打出的卡牌ID
-  Target target = 3; // The target of the card.
+  int32 card_id = 1; // 打出的卡牌ID
+  // Optional: Pre-chosen options to streamline the interaction.
+  // Key: request_id from a potential ChoiceRequiredEvent
+  // Value: chosen_option_id from that event
+  map<string, string> pre_chosen_options = 2;
 }
 
 // 玩家使用能力的操作负载
 message UseAbilityPayload {
-  int32 player_id = 1; // 执行操作的玩家ID
-  int32 character_id = 2; // 哪个角色的能力被使用
-  int32 ability_id = 3; // 哪个能力被使用
-  Target target = 4; // The target of the ability.
+  int32 character_id = 1; // 哪个角色的能力被使用
+  int32 ability_id = 2; // 哪个能力被使用
+  map<string, string> pre_chosen_options = 3;
 }
 
 // 主角玩家进行猜测的操作负载
 message MakeGuessPayload {
-  int32 player_id = 1; // 执行操作的玩家ID
-  map<int32, int32> guessed_roles = 2; // 猜测的角色身份映射，键为 character_id
+  map<int32, int32> guessed_roles = 1; // 猜测的角色身份映射，键为 character_id
 }
 
 // 玩家进行选择的操作负载（例如，在需要选择地盘或目标时）
 message ChooseOptionPayload {
   string request_id = 1; // The ID from the event we are responding to
-  int32 player_id = 2; // 执行操作的玩家ID
-  int32 character_id = 3; // 做出选择的角色（如果选择与角色相关）
-  string chosen_option_id = 4; // 选择项的ID
+  optional int32 character_id = 2; // 做出选择的角色（如果选择与角色相关）
+  string chosen_option_id = 3; // 选择项的ID
 }
 
 // 玩家跳过回合的操作负载
-message PassTurnAction {
-  int32 player_id = 1;
-}
+message PassTurnAction {}
 
 // 通用的玩家操作负载
 message PlayerActionPayload {
+  int32 player_id = 1; // 执行操作的玩家ID
   oneof payload {
-    PlayCardPayload play_card = 1; // 打出卡牌的负载
-    UseAbilityPayload use_ability = 2; // 使用能力的负载
-    MakeGuessPayload make_guess = 3; // 进行猜测的负载
-    ChooseOptionPayload choose_option = 4; // 进行选择的负载
-    PassTurnAction pass_turn = 5; // 玩家跳过
+    PlayCardPayload play_card = 2; // 打出卡牌的负载
+    UseAbilityPayload use_ability = 3; // 使用能力的负载
+    MakeGuessPayload make_guess = 4; // 进行猜测的负载
+    ChooseOptionPayload choose_option = 5; // 进行选择的负载
+    PassTurnAction pass_turn = 6; // 玩家跳过
   }
 }

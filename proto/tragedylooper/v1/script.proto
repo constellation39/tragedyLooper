@@ -48,10 +48,11 @@ message ScriptConfig {
 
 // ScriptConfig defines the configuration for a specific script.
 message ScriptModel {
+  int32 id = 1 [ (validate.rules).int32.gt = 0 ];
   // Private information for the script.
-  PrivateInfo private_info = 1;
+  PrivateInfo private_info = 2;
   // Public information for the script.
-  PublicInfo public_info = 2;
+  PublicInfo public_info = 3;
 }
 
 // PrivateInfo defines the private information for a script.
@@ -98,8 +99,7 @@ message RoleConfig {
   // A map of abilities for this role.
   map<int32, AbilityConfig> abilities = 4;
   // Defines the character's goodwill status.
-  // 0: normal, 1: ignore goodwill, 2: always ignore goodwill.
-  int32 goodwill_rule = 5 [ (validate.rules).int32 = { gte: 0, lte: 2 } ];
+  GoodwillRuleType goodwill_rule = 5;
   // Defines if the character can be made invincible.
   bool can_be_invincible = 6;
 }
@@ -118,11 +118,4 @@ message PlotConfig {
   map<int32, IncidentConfig> incident_ids = 5;
   // A map of role assignments for this plot.
   map<int32, int32> role_assignments = 6;
-}
-
-
-// ScriptConfigLib is a library of script configurations.
-message ScriptConfigLib {
-  // A map of script configurations.
-  map<int32, ScriptConfig> scripts = 1;
 }

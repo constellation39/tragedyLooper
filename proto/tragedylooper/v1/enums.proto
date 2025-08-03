@@ -126,3 +126,13 @@ enum StatType {
   STAT_TYPE_GOODWILL = 2;
   STAT_TYPE_INTRIGUE = 3;
 }
+
+// GoodwillRuleType defines how goodwill is handled for a character.
+enum GoodwillRuleType {
+  // The default behavior.
+  GOODWILL_RULE_TYPE_UNSPECIFIED = 0;
+  // The character ignores goodwill checks.
+  GOODWILL_RULE_TYPE_IGNORE_CHECKS = 1;
+  // The character always ignores goodwill checks, and cannot be targeted by goodwill-related effects.
+  GOODWILL_RULE_TYPE_ALWAYS_IGNORE = 2;
+}

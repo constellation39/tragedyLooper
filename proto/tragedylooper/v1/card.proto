@@ -35,7 +35,7 @@ message Card {
   // Whether the card has been used in the current loop.
   bool used_this_loop = 2;
   // The target of the card's ability.
-  Target target = 3;
+  Choice target = 3;
 }
 
 // CardList is a list of card instances.
