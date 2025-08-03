@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/IntrigueAdjustedEvent",
+    "definitions": {
+        "IntrigueAdjustedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "角色ID"
+                },
+                "amount": {
+                    "type": "integer",
+                    "description": "调整量"
+                },
+                "new_intrigue": {
+                    "type": "integer",
+                    "description": "调整后的新阴谋值"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Intrigue Adjusted Event",
+            "description": "阴谋值调整事件"
+        }
+    }
+}

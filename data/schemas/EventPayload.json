@@ -1,0 +1,1546 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/EventPayload",
+    "definitions": {
+        "EventPayload": {
+            "properties": {
+                "character_moved": {
+                    "$ref": "#/definitions/tragedylooper.v1.CharacterMovedEvent",
+                    "additionalProperties": true
+                },
+                "paranoia_adjusted": {
+                    "$ref": "#/definitions/tragedylooper.v1.ParanoiaAdjustedEvent",
+                    "additionalProperties": true
+                },
+                "goodwill_adjusted": {
+                    "$ref": "#/definitions/tragedylooper.v1.GoodwillAdjustedEvent",
+                    "additionalProperties": true
+                },
+                "intrigue_adjusted": {
+                    "$ref": "#/definitions/tragedylooper.v1.IntrigueAdjustedEvent",
+                    "additionalProperties": true
+                },
+                "loop_loss": {
+                    "$ref": "#/definitions/tragedylooper.v1.LoopLossEvent",
+                    "additionalProperties": true
+                },
+                "loop_win": {
+                    "$ref": "#/definitions/tragedylooper.v1.LoopWinEvent",
+                    "additionalProperties": true
+                },
+                "ability_used": {
+                    "$ref": "#/definitions/tragedylooper.v1.AbilityUsedEvent",
+                    "additionalProperties": true
+                },
+                "day_advanced": {
+                    "$ref": "#/definitions/tragedylooper.v1.DayAdvancedEvent",
+                    "additionalProperties": true
+                },
+                "card_played": {
+                    "$ref": "#/definitions/tragedylooper.v1.CardPlayedEvent",
+                    "additionalProperties": true
+                },
+                "card_revealed": {
+                    "$ref": "#/definitions/tragedylooper.v1.CardRevealedEvent",
+                    "additionalProperties": true
+                },
+                "loop_reset": {
+                    "$ref": "#/definitions/tragedylooper.v1.LoopResetEvent",
+                    "additionalProperties": true
+                },
+                "game_ended": {
+                    "$ref": "#/definitions/tragedylooper.v1.GameEndedEvent",
+                    "additionalProperties": true
+                },
+                "choice_required": {
+                    "$ref": "#/definitions/tragedylooper.v1.ChoiceRequiredEvent",
+                    "additionalProperties": true
+                },
+                "incident_triggered": {
+                    "$ref": "#/definitions/tragedylooper.v1.IncidentTriggeredEvent",
+                    "additionalProperties": true
+                },
+                "tragedy_triggered": {
+                    "$ref": "#/definitions/tragedylooper.v1.TragedyTriggeredEvent",
+                    "additionalProperties": true
+                },
+                "trait_added": {
+                    "$ref": "#/definitions/tragedylooper.v1.TraitAddedEvent",
+                    "additionalProperties": true
+                },
+                "trait_removed": {
+                    "$ref": "#/definitions/tragedylooper.v1.TraitRemovedEvent",
+                    "additionalProperties": true
+                },
+                "player_action_taken": {
+                    "$ref": "#/definitions/tragedylooper.v1.PlayerActionTakenEvent",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Event Payload"
+        },
+        "tragedylooper.v1.AbilityUsedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "使用能力的角色ID"
+                },
+                "ability_name": {
+                    "type": "string",
+                    "description": "使用的能力名称"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Ability Used Event",
+            "description": "能力使用事件"
+        },
+        "tragedylooper.v1.AddTraitEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character."
+                },
+                "trait": {
+                    "type": "string",
+                    "description": "The trait to add."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Add Trait Effect",
+            "description": "AddTraitEffect defines an effect that adds a trait to a character."
+        },
+        "tragedylooper.v1.AdjustStatEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character."
+                },
+                "stat_type": {
+                    "enum": [
+                        "STAT_TYPE_UNSPECIFIED",
+                        0,
+                        "STAT_TYPE_PARANOIA",
+                        1,
+                        "STAT_TYPE_GOODWILL",
+                        2,
+                        "STAT_TYPE_INTRIGUE",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Stat Type",
+                    "description": "The type of stat to check."
+                },
+                "amount": {
+                    "type": "integer",
+                    "description": "The amount to adjust the stat by (positive for increase, negative for decrease)."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Adjust Stat Effect",
+            "description": "AdjustStatEffect defines an effect that adjusts a character's stat."
+        },
+        "tragedylooper.v1.Card": {
+            "properties": {
+                "config": {
+                    "$ref": "#/definitions/tragedylooper.v1.CardConfig",
+                    "additionalProperties": true,
+                    "description": "The configuration for the card."
+                },
+                "used_this_loop": {
+                    "type": "boolean",
+                    "description": "Whether the card has been used in the current loop."
+                },
+                "target_character_id": {
+                    "type": "integer",
+                    "description": "The ID of the target character, if the ability has one."
+                },
+                "target_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Card",
+            "description": "Card defines a card instance at runtime."
+        },
+        "tragedylooper.v1.CardConfig": {
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "The unique identifier for the card."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the card."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "A description of the card."
+                },
+                "type": {
+                    "enum": [
+                        "CARD_TYPE_UNSPECIFIED",
+                        0,
+                        "CARD_TYPE_MOVE_HORIZONTALLY",
+                        1,
+                        "CARD_TYPE_PARANOIA_PLUS",
+                        2,
+                        "CARD_TYPE_PARANOIA_MINUS",
+                        3,
+                        "CARD_TYPE_GOODWILL_PLUS",
+                        4,
+                        "CARD_TYPE_GOODWILL_MINUS",
+                        5,
+                        "CARD_TYPE_INTRIGUE_PLUS",
+                        6,
+                        "CARD_TYPE_FORBID_MOVEMENT",
+                        7,
+                        "CARD_TYPE_FORBID_PARANOIA_INCREASE",
+                        8,
+                        "CARD_TYPE_FORBID_GOODWILL_INCREASE",
+                        9,
+                        "CARD_TYPE_FORBID_INTRIGUE_INCREASE",
+                        10,
+                        "CARD_TYPE_MOVE_VERTICALLY",
+                        11,
+                        "CARD_TYPE_MOVE_DIAGONALLY",
+                        12
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Card Type",
+                    "description": "卡牌类型"
+                },
+                "owner_role": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "PLAYER_ROLE_MASTERMIND",
+                        1,
+                        "PLAYER_ROLE_PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色"
+                },
+                "effect": {
+                    "$ref": "#/definitions/tragedylooper.v1.CompoundEffect",
+                    "additionalProperties": true,
+                    "description": "The effect of the card."
+                },
+                "once_per_loop": {
+                    "type": "boolean",
+                    "description": "Whether the card can only be used once per loop."
+                },
+                "priority": {
+                    "type": "integer",
+                    "description": "The priority of the card's resolution (for cards of the same type)."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Card Config",
+            "description": "CardConfig defines the configuration for a card."
+        },
+        "tragedylooper.v1.CardList": {
+            "properties": {
+                "cards": {
+                    "items": {
+                        "$ref": "#/definitions/tragedylooper.v1.Card"
+                    },
+                    "type": "array",
+                    "description": "A list of card instances."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Card List",
+            "description": "CardList is a list of card instances."
+        },
+        "tragedylooper.v1.CardPlayedEvent": {
+            "properties": {
+                "player_id": {
+                    "type": "integer"
+                },
+                "card": {
+                    "$ref": "#/definitions/tragedylooper.v1.Card",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Card Played Event",
+            "description": "卡牌打出事件"
+        },
+        "tragedylooper.v1.CardRevealedEvent": {
+            "properties": {
+                "cards": {
+                    "additionalProperties": {
+                        "$ref": "#/definitions/tragedylooper.v1.CardList",
+                        "additionalProperties": true
+                    },
+                    "type": "object",
+                    "description": "player_id -\u003e card"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Card Revealed Event",
+            "description": "卡牌揭示事件"
+        },
+        "tragedylooper.v1.ChangeRoleEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character."
+                },
+                "new_role": {
+                    "type": "integer",
+                    "description": "The new role."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Change Role Effect",
+            "description": "ChangeRoleEffect defines an effect that changes a character's role."
+        },
+        "tragedylooper.v1.CharacterMovedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "移动的角色ID"
+                },
+                "new_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Character Moved Event",
+            "description": "角色移动事件"
+        },
+        "tragedylooper.v1.Choice": {
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "唯一ID，例如 \"target_char_5\" 或 \"effect_choice_0\""
+                },
+                "description": {
+                    "type": "string",
+                    "description": "选项的描述"
+                },
+                "target_character_id": {
+                    "type": "integer",
+                    "description": "用于目标选择"
+                },
+                "effect_option_index": {
+                    "type": "integer",
+                    "description": "用于复合效果中的效果选择"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Choice",
+            "description": "Choice 表示玩家可以做出的选择。"
+        },
+        "tragedylooper.v1.ChoiceRequiredEvent": {
+            "properties": {
+                "choices": {
+                    "items": {
+                        "$ref": "#/definitions/tragedylooper.v1.Choice"
+                    },
+                    "type": "array",
+                    "description": "这可能需要更复杂的结构，具体取决于选择  提供给玩家的选项列表"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Choice Required Event",
+            "description": "需要玩家做出选择的事件"
+        },
+        "tragedylooper.v1.ChooseOptionPayload": {
+            "properties": {
+                "player_id": {
+                    "type": "integer",
+                    "description": "执行操作的玩家ID"
+                },
+                "character_id": {
+                    "type": "integer",
+                    "description": "做出选择的角色（如果选择与角色相关）"
+                },
+                "chosen_option_id": {
+                    "type": "string",
+                    "description": "选择项的ID"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Choose Option Payload",
+            "description": "玩家进行选择的操作负载（例如，在需要选择地盘或目标时）"
+        },
+        "tragedylooper.v1.CompoundCondition": {
+            "properties": {
+                "operator": {
+                    "enum": [
+                        "OPERATOR_UNSPECIFIED",
+                        0,
+                        "OPERATOR_AND",
+                        1,
+                        "OPERATOR_OR",
+                        2,
+                        "OPERATOR_NOT",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Operator",
+                    "description": "The operator to use when combining conditions."
+                },
+                "sub_conditions": {
+                    "items": {
+                        "$ref": "#/definitions/tragedylooper.v1.Condition"
+                    },
+                    "type": "array",
+                    "description": "A list of sub-conditions."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Compound Condition",
+            "description": "CompoundCondition defines a combination of multiple conditions."
+        },
+        "tragedylooper.v1.CompoundEffect": {
+            "properties": {
+                "operator": {
+                    "enum": [
+                        "OPERATOR_UNSPECIFIED",
+                        0,
+                        "OPERATOR_SEQUENCE",
+                        1,
+                        "OPERATOR_CHOOSE_ONE",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Operator",
+                    "description": "The operator to use when combining effects."
+                },
+                "sub_effects": {
+                    "items": {
+                        "$ref": "#/definitions/tragedylooper.v1.Effect"
+                    },
+                    "type": "array",
+                    "description": "A list of sub-effects."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Compound Effect",
+            "description": "CompoundEffect defines a combination of multiple effects."
+        },
+        "tragedylooper.v1.Condition": {
+            "properties": {
+                "stat_condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.StatCondition",
+                    "additionalProperties": true,
+                    "description": "A stat condition."
+                },
+                "location_condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.LocationCondition",
+                    "additionalProperties": true,
+                    "description": "A location condition."
+                },
+                "role_condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.RoleCondition",
+                    "additionalProperties": true,
+                    "description": "A role condition."
+                },
+                "trait_condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.TraitCondition",
+                    "additionalProperties": true,
+                    "description": "A trait condition."
+                },
+                "day_condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.DayCondition",
+                    "additionalProperties": true,
+                    "description": "A day condition."
+                },
+                "player_condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.PlayerCondition",
+                    "additionalProperties": true,
+                    "description": "A player condition."
+                },
+                "compound_condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.CompoundCondition",
+                    "additionalProperties": true,
+                    "description": "A compound condition (AND/OR/NOT)."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Condition",
+            "description": "Condition defines a condition for triggering rules, events, and effects."
+        },
+        "tragedylooper.v1.DayAdvancedEvent": {
+            "properties": {
+                "day": {
+                    "type": "integer",
+                    "description": "新的天数"
+                },
+                "loop": {
+                    "type": "integer",
+                    "description": "当前的循环数"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Day Advanced Event",
+            "description": "天数推进事件"
+        },
+        "tragedylooper.v1.DayCondition": {
+            "properties": {
+                "comparator": {
+                    "enum": [
+                        "COMPARATOR_UNSPECIFIED",
+                        0,
+                        "COMPARATOR_BEFORE",
+                        1,
+                        "COMPARATOR_ON",
+                        2,
+                        "COMPARATOR_AFTER",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Comparator",
+                    "description": "The comparator to use."
+                },
+                "day": {
+                    "type": "integer",
+                    "description": "The target day."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Day Condition",
+            "description": "DayCondition defines a condition based on the current day."
+        },
+        "tragedylooper.v1.Effect": {
+            "properties": {
+                "adjust_stat": {
+                    "$ref": "#/definitions/tragedylooper.v1.AdjustStatEffect",
+                    "additionalProperties": true,
+                    "description": "Adjusts a character's stat."
+                },
+                "move_character": {
+                    "$ref": "#/definitions/tragedylooper.v1.MoveCharacterEffect",
+                    "additionalProperties": true,
+                    "description": "Moves a character to a different location."
+                },
+                "forbid": {
+                    "$ref": "#/definitions/tragedylooper.v1.ForbidEffect",
+                    "additionalProperties": true,
+                    "description": "Forbids a character from performing an action."
+                },
+                "grant_ability": {
+                    "$ref": "#/definitions/tragedylooper.v1.GrantAbilityEffect",
+                    "additionalProperties": true,
+                    "description": "Grants an ability to a character."
+                },
+                "reveal_role": {
+                    "$ref": "#/definitions/tragedylooper.v1.RevealRoleEffect",
+                    "additionalProperties": true,
+                    "description": "Reveals a character's role."
+                },
+                "change_role": {
+                    "$ref": "#/definitions/tragedylooper.v1.ChangeRoleEffect",
+                    "additionalProperties": true,
+                    "description": "Changes a character's role."
+                },
+                "trigger_incident": {
+                    "$ref": "#/definitions/tragedylooper.v1.TriggerIncidentEffect",
+                    "additionalProperties": true,
+                    "description": "Triggers an incident."
+                },
+                "end_game": {
+                    "$ref": "#/definitions/tragedylooper.v1.EndGameEffect",
+                    "additionalProperties": true,
+                    "description": "Ends the game."
+                },
+                "add_trait": {
+                    "$ref": "#/definitions/tragedylooper.v1.AddTraitEffect",
+                    "additionalProperties": true,
+                    "description": "Adds a trait to a character."
+                },
+                "remove_trait": {
+                    "$ref": "#/definitions/tragedylooper.v1.RemoveTraitEffect",
+                    "additionalProperties": true,
+                    "description": "Removes a trait from a character."
+                },
+                "compound_effect": {
+                    "$ref": "#/definitions/tragedylooper.v1.CompoundEffect",
+                    "additionalProperties": true,
+                    "description": "A compound effect."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Effect",
+            "description": "Effect defines the specific action of an ability, card, or rule."
+        },
+        "tragedylooper.v1.EndGameEffect": {
+            "properties": {
+                "winner": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "PLAYER_ROLE_MASTERMIND",
+                        1,
+                        "PLAYER_ROLE_PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色"
+                },
+                "reason": {
+                    "type": "string",
+                    "description": "The reason for the game ending."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "End Game Effect",
+            "description": "EndGameEffect defines an effect that ends the game."
+        },
+        "tragedylooper.v1.ForbidEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character."
+                },
+                "forbid_type": {
+                    "enum": [
+                        "FORBID_TYPE_UNSPECIFIED",
+                        0,
+                        "FORBID_TYPE_MOVEMENT",
+                        1,
+                        "FORBID_TYPE_PARANOIA_CHANGE",
+                        2,
+                        "FORBID_TYPE_GOODWILL_CHANGE",
+                        3,
+                        "FORBID_TYPE_INTRIGUE_CHANGE",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Forbid Type",
+                    "description": "The type of action to forbid."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Forbid Effect",
+            "description": "ForbidEffect defines an effect that forbids an action."
+        },
+        "tragedylooper.v1.GameEndedEvent": {
+            "properties": {
+                "winner": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "PLAYER_ROLE_MASTERMIND",
+                        1,
+                        "PLAYER_ROLE_PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色"
+                },
+                "reason": {
+                    "type": "string",
+                    "description": "游戏结束原因"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Game Ended Event",
+            "description": "游戏结束事件"
+        },
+        "tragedylooper.v1.GoodwillAdjustedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "角色ID"
+                },
+                "amount": {
+                    "type": "integer",
+                    "description": "调整量"
+                },
+                "new_goodwill": {
+                    "type": "integer",
+                    "description": "调整后的新好感值"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Goodwill Adjusted Event",
+            "description": "好感值调整事件"
+        },
+        "tragedylooper.v1.GrantAbilityEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character."
+                },
+                "ability_id": {
+                    "type": "integer",
+                    "description": "The ID of the ability to grant."
+                },
+                "is_temporary": {
+                    "type": "boolean",
+                    "description": "Whether the ability is temporary (e.g., lasts for one day or one loop)."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Grant Ability Effect",
+            "description": "GrantAbilityEffect defines an effect that grants an ability."
+        },
+        "tragedylooper.v1.Incident": {
+            "properties": {
+                "config": {
+                    "$ref": "#/definitions/tragedylooper.v1.IncidentConfig",
+                    "additionalProperties": true,
+                    "description": "事件唯一ID"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "事件名称"
+                },
+                "day": {
+                    "type": "integer",
+                    "description": "事件发生的日期"
+                },
+                "culprit": {
+                    "type": "string",
+                    "description": "犯人（角色名称或描述）"
+                },
+                "victim": {
+                    "type": "string",
+                    "description": "受害者（角色名称或描述）"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "事件描述"
+                },
+                "has_triggered_this_loop": {
+                    "type": "boolean"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Incident",
+            "description": "事件实例，在游戏运行时创建"
+        },
+        "tragedylooper.v1.IncidentConfig": {
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "事件唯一ID（剧本内）"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "事件名称"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "事件描述"
+                },
+                "incident_id": {
+                    "type": "integer",
+                    "description": "事件类型"
+                },
+                "day": {
+                    "type": "integer",
+                    "description": "预定发生日期"
+                },
+                "compound_condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.CompoundCondition",
+                    "additionalProperties": true,
+                    "description": "触发条件列表"
+                },
+                "effect": {
+                    "$ref": "#/definitions/tragedylooper.v1.Effect",
+                    "additionalProperties": true,
+                    "description": "事件触发时产生的效果"
+                },
+                "is_mandatory": {
+                    "type": "boolean",
+                    "description": "是否为必发事件"
+                },
+                "culprit_character_id": {
+                    "type": "integer",
+                    "description": "事件主谋角色ID（如适用）"
+                },
+                "victim_character_id": {
+                    "type": "integer",
+                    "description": "事件受害者角色ID（如适用）"
+                },
+                "location_id": {
+                    "type": "integer",
+                    "description": "事件发生地点ID（如适用）"
+                },
+                "is_main_plot_incident": {
+                    "type": "boolean",
+                    "description": "是否是主线剧情的事件"
+                },
+                "is_special_rule": {
+                    "type": "boolean",
+                    "description": "是否是特殊规则的事件"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Incident Config",
+            "description": "事件/悲剧在剧本中的配置"
+        },
+        "tragedylooper.v1.IncidentTriggeredEvent": {
+            "properties": {
+                "incident": {
+                    "$ref": "#/definitions/tragedylooper.v1.Incident",
+                    "additionalProperties": true,
+                    "description": "被触发的事件详情"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Incident Triggered Event",
+            "description": "事件触发事件"
+        },
+        "tragedylooper.v1.IntrigueAdjustedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "角色ID"
+                },
+                "amount": {
+                    "type": "integer",
+                    "description": "调整量"
+                },
+                "new_intrigue": {
+                    "type": "integer",
+                    "description": "调整后的新阴谋值"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Intrigue Adjusted Event",
+            "description": "阴谋值调整事件"
+        },
+        "tragedylooper.v1.LocationCondition": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character selector."
+                },
+                "location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                },
+                "is_at_location": {
+                    "type": "boolean",
+                    "description": "Whether the character is at the location (defaults to true)."
+                },
+                "is_alone": {
+                    "type": "boolean",
+                    "description": "Whether the character is alone at the location."
+                },
+                "not_alone": {
+                    "type": "boolean",
+                    "description": "Whether the character is not alone at the location."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Location Condition",
+            "description": "LocationCondition defines a condition based on a character's location."
+        },
+        "tragedylooper.v1.LoopLossEvent": {
+            "properties": {
+                "incident_id": {
+                    "type": "integer",
+                    "description": "导致失败的事件类型"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Loop Loss Event",
+            "description": "循环失败事件"
+        },
+        "tragedylooper.v1.LoopResetEvent": {
+            "properties": {
+                "loop_number": {
+                    "type": "integer",
+                    "description": "新的循环数"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Loop Reset Event",
+            "description": "循环重置事件"
+        },
+        "tragedylooper.v1.LoopWinEvent": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Loop Win Event",
+            "description": "循环胜利事件"
+        },
+        "tragedylooper.v1.MakeGuessPayload": {
+            "properties": {
+                "player_id": {
+                    "type": "integer",
+                    "description": "执行操作的玩家ID"
+                },
+                "guessed_roles": {
+                    "additionalProperties": {
+                        "type": "integer"
+                    },
+                    "type": "object",
+                    "description": "猜测的角色身份映射，键为 character_id"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Make Guess Payload",
+            "description": "主角玩家进行猜测的操作负载"
+        },
+        "tragedylooper.v1.MoveCharacterEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character."
+                },
+                "destination": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Move Character Effect",
+            "description": "MoveCharacterEffect defines an effect that moves a character."
+        },
+        "tragedylooper.v1.ParanoiaAdjustedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer",
+                    "description": "角色ID"
+                },
+                "amount": {
+                    "type": "integer",
+                    "description": "调整量"
+                },
+                "new_paranoia": {
+                    "type": "integer",
+                    "description": "调整后的新妄想值"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Paranoia Adjusted Event",
+            "description": "妄想值调整事件"
+        },
+        "tragedylooper.v1.PassTurnAction": {
+            "properties": {
+                "player_id": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Pass Turn Action",
+            "description": "玩家跳过回合的操作负载"
+        },
+        "tragedylooper.v1.PlayCardPayload": {
+            "properties": {
+                "player_id": {
+                    "type": "integer",
+                    "description": "执行操作的玩家ID"
+                },
+                "card_id": {
+                    "type": "integer",
+                    "description": "打出的卡牌ID"
+                },
+                "target_character_id": {
+                    "type": "integer",
+                    "description": "卡牌的目标角色ID"
+                },
+                "target_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Play Card Payload",
+            "description": "玩家打出卡牌的操作负载"
+        },
+        "tragedylooper.v1.PlayerActionPayload": {
+            "properties": {
+                "play_card": {
+                    "$ref": "#/definitions/tragedylooper.v1.PlayCardPayload",
+                    "additionalProperties": true,
+                    "description": "打出卡牌的负载"
+                },
+                "use_ability": {
+                    "$ref": "#/definitions/tragedylooper.v1.UseAbilityPayload",
+                    "additionalProperties": true,
+                    "description": "使用能力的负载"
+                },
+                "make_guess": {
+                    "$ref": "#/definitions/tragedylooper.v1.MakeGuessPayload",
+                    "additionalProperties": true,
+                    "description": "进行猜测的负载"
+                },
+                "choose_option": {
+                    "$ref": "#/definitions/tragedylooper.v1.ChooseOptionPayload",
+                    "additionalProperties": true,
+                    "description": "进行选择的负载"
+                },
+                "pass_turn": {
+                    "$ref": "#/definitions/tragedylooper.v1.PassTurnAction",
+                    "additionalProperties": true,
+                    "description": "玩家跳过"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Player Action Payload",
+            "description": "通用的玩家操作负载"
+        },
+        "tragedylooper.v1.PlayerActionTakenEvent": {
+            "properties": {
+                "player_id": {
+                    "type": "integer"
+                },
+                "action": {
+                    "$ref": "#/definitions/tragedylooper.v1.PlayerActionPayload",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Player Action Taken Event"
+        },
+        "tragedylooper.v1.PlayerCondition": {
+            "properties": {
+                "player_role": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "PLAYER_ROLE_MASTERMIND",
+                        1,
+                        "PLAYER_ROLE_PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Player Condition",
+            "description": "PlayerCondition defines a condition based on a player's state."
+        },
+        "tragedylooper.v1.RemoveTraitEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character."
+                },
+                "trait": {
+                    "type": "string",
+                    "description": "The trait to remove."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Remove Trait Effect",
+            "description": "RemoveTraitEffect defines an effect that removes a trait from a character."
+        },
+        "tragedylooper.v1.RevealRoleEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Reveal Role Effect",
+            "description": "RevealRoleEffect defines an effect that reveals a character's role."
+        },
+        "tragedylooper.v1.RoleCondition": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character selector."
+                },
+                "has_role": {
+                    "type": "boolean",
+                    "description": "Whether the character has the role (defaults to true)."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Role Condition",
+            "description": "RoleCondition defines a condition based on a character's role."
+        },
+        "tragedylooper.v1.StatCondition": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character selector."
+                },
+                "stat_type": {
+                    "enum": [
+                        "STAT_TYPE_UNSPECIFIED",
+                        0,
+                        "STAT_TYPE_PARANOIA",
+                        1,
+                        "STAT_TYPE_GOODWILL",
+                        2,
+                        "STAT_TYPE_INTRIGUE",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Stat Type",
+                    "description": "The type of stat to check."
+                },
+                "comparator": {
+                    "enum": [
+                        "COMPARATOR_UNSPECIFIED",
+                        0,
+                        "COMPARATOR_GREATER_THAN",
+                        1,
+                        "COMPARATOR_LESS_THAN",
+                        2,
+                        "COMPARATOR_EQUAL_TO",
+                        3,
+                        "COMPARATOR_GREATER_THAN_OR_EQUAL",
+                        4,
+                        "COMPARATOR_LESS_THAN_OR_EQUAL",
+                        5
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Comparator",
+                    "description": "The comparator to use."
+                },
+                "value": {
+                    "type": "integer",
+                    "description": "The value to compare against."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Stat Condition",
+            "description": "StatCondition defines a condition based on a character's stats."
+        },
+        "tragedylooper.v1.TargetSelector": {
+            "properties": {
+                "selector_type": {
+                    "enum": [
+                        "SELECTOR_TYPE_UNSPECIFIED",
+                        0,
+                        "SELECTOR_TYPE_SPECIFIC_CHARACTER",
+                        1,
+                        "SELECTOR_TYPE_TRIGGERING_CHARACTER",
+                        2,
+                        "SELECTOR_TYPE_CULPRIT",
+                        3,
+                        "SELECTOR_TYPE_VICTIM",
+                        4,
+                        "SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE",
+                        5,
+                        "SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION",
+                        6,
+                        "SELECTOR_TYPE_ABILITY_USER",
+                        7,
+                        "SELECTOR_TYPE_ABILITY_TARGET",
+                        8,
+                        "SELECTOR_TYPE_ALL_CHARACTERS",
+                        9
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Selector Type",
+                    "description": "The type of the selector."
+                },
+                "character_id": {
+                    "type": "integer",
+                    "description": "The character ID to use when the type is SPECIFIC_CHARACTER."
+                },
+                "location_filter": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Target Selector",
+            "description": "TargetSelector defines a dynamic target for conditions or effects."
+        },
+        "tragedylooper.v1.TragedyTriggeredEvent": {
+            "properties": {
+                "tragedy_id": {
+                    "type": "integer",
+                    "description": "被触发的悲剧类型"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Tragedy Triggered Event",
+            "description": "悲剧触发事件"
+        },
+        "tragedylooper.v1.TraitAddedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer"
+                },
+                "trait": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Trait Added Event",
+            "description": "特性添加事件"
+        },
+        "tragedylooper.v1.TraitCondition": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character selector."
+                },
+                "trait": {
+                    "type": "string",
+                    "description": "The target trait."
+                },
+                "has_trait": {
+                    "type": "boolean",
+                    "description": "Whether the character has the trait (defaults to true)."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Trait Condition",
+            "description": "TraitCondition defines a condition based on a character's traits."
+        },
+        "tragedylooper.v1.TraitRemovedEvent": {
+            "properties": {
+                "character_id": {
+                    "type": "integer"
+                },
+                "trait": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Trait Removed Event",
+            "description": "特性移除事件"
+        },
+        "tragedylooper.v1.TriggerIncidentEffect": {
+            "properties": {
+                "incident_id": {
+                    "type": "integer",
+                    "description": "The ID of the incident to trigger (references an IncidentConfig in the ScriptConfig)."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Trigger Incident Effect",
+            "description": "TriggerIncidentEffect defines an effect that triggers an incident."
+        },
+        "tragedylooper.v1.UseAbilityPayload": {
+            "properties": {
+                "player_id": {
+                    "type": "integer",
+                    "description": "执行操作的玩家ID"
+                },
+                "character_id": {
+                    "type": "integer",
+                    "description": "哪个角色的能力被使用"
+                },
+                "ability_id": {
+                    "type": "integer",
+                    "description": "哪个能力被使用"
+                },
+                "target_character_id": {
+                    "type": "integer",
+                    "description": "如果能力有目标角色，指定其ID"
+                },
+                "target_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                },
+                "target_incident_id": {
+                    "type": "integer",
+                    "description": "如果能力目标是悲剧，指定其类型"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Use Ability Payload",
+            "description": "玩家使用能力的操作负载"
+        }
+    }
+}

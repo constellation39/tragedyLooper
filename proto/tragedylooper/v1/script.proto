@@ -22,26 +22,26 @@ message ScriptConfig {
   string description = 3;
 
   // Main plot configurations. ID range: 1000-1999
-  map<int32, PlotConfig> main_plots = 4 [ (validate.rules).map.keys.int32 = {gte: 1000, lt: 2000} ];
+  map<int32, PlotConfig> main_plots = 4 [ (validate.rules).map.keys.int32 = { gte: 1000, lt: 2000 } ];
   // Sub plot configurations. ID range: 2000-2999
-  map<int32, PlotConfig> sub_plots = 5 [ (validate.rules).map.keys.int32 = {gte: 2000, lt: 3000} ];
+  map<int32, PlotConfig> sub_plots = 5 [ (validate.rules).map.keys.int32 = { gte: 2000, lt: 3000 } ];
 
   // Role configurations. ID range: 3000-3999
-  map<int32, RoleConfig> roles = 6 [ (validate.rules).map.keys.int32 = {gte: 3000, lt: 4000} ];
+  map<int32, RoleConfig> roles = 6 [ (validate.rules).map.keys.int32 = { gte: 3000, lt: 4000 } ];
 
   // Incident configurations. ID range: 4000-4999
-  map<int32, IncidentConfig> incidents = 7 [ (validate.rules).map.keys.int32 = {gte: 4000, lt: 5000} ];
+  map<int32, IncidentConfig> incidents = 7 [ (validate.rules).map.keys.int32 = { gte: 4000, lt: 5000 } ];
 
   // Character configurations. ID range: 5000-5999
-  map<int32, CharacterConfig> characters = 8 [ (validate.rules).map.keys.int32 = {gte: 5000, lt: 6000} ];
+  map<int32, CharacterConfig> characters = 8 [ (validate.rules).map.keys.int32 = { gte: 5000, lt: 6000 } ];
 
   // Mastermind card configurations. ID range: 6000-6999
-  map<int32, CardConfig> mastermind_cards = 9 [ (validate.rules).map.keys.int32 = {gte: 6000, lt: 7000} ];
+  map<int32, CardConfig> mastermind_cards = 9 [ (validate.rules).map.keys.int32 = { gte: 6000, lt: 7000 } ];
   // Protagonist card configurations. ID range: 7000-7999
-  map<int32, CardConfig> protagonist_cards = 10 [ (validate.rules).map.keys.int32 = {gte: 7000, lt: 8000} ];
+  map<int32, CardConfig> protagonist_cards = 10 [ (validate.rules).map.keys.int32 = { gte: 7000, lt: 8000 } ];
 
   // A map of script configurations. ID range: 8000-8999
-  map<int32, ScriptModel> script_models = 11 [ (validate.rules).map.keys.int32 = {gte: 8000, lt: 9000} ];
+  map<int32, ScriptModel> script_models = 11 [ (validate.rules).map.keys.int32 = { gte: 8000, lt: 9000 } ];
 }
 
 
@@ -99,7 +99,7 @@ message RoleConfig {
   map<int32, AbilityConfig> abilities = 4;
   // Defines the character's goodwill status.
   // 0: normal, 1: ignore goodwill, 2: always ignore goodwill.
-  int32 goodwill_rule = 5 [ (validate.rules).int32 = {gte: 0, lte: 2} ];
+  int32 goodwill_rule = 5 [ (validate.rules).int32 = { gte: 0, lte: 2 } ];
   // Defines if the character can be made invincible.
   bool can_be_invincible = 6;
 }

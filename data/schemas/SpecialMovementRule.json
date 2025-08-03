@@ -1,0 +1,37 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/SpecialMovementRule",
+    "definitions": {
+        "SpecialMovementRule": {
+            "properties": {
+                "restricted_locations": {
+                    "items": {
+                        "enum": [
+                            "LOCATION_TYPE_UNSPECIFIED",
+                            0,
+                            "LOCATION_TYPE_HOSPITAL",
+                            1,
+                            "LOCATION_TYPE_SHRINE",
+                            2,
+                            "LOCATION_TYPE_CITY",
+                            3,
+                            "LOCATION_TYPE_SCHOOL",
+                            4
+                        ]
+                    },
+                    "type": "array",
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "A description of the rule."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Special Movement Rule",
+            "description": "SpecialMovementRule defines a special movement rule."
+        }
+    }
+}

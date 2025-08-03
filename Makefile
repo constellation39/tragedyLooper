@@ -4,6 +4,8 @@
 BINARY_NAME=tragedylooper
 # Go command
 GO := go
+# Schema directory
+SCHEMA_DIR=schemas
 
 .PHONY: all build run test clean lint proto clean-proto install-tools format
 
@@ -46,13 +48,15 @@ install-tools:
 	@$(GO) install golang.org/x/tools/cmd/goimports@latest
 	@$(GO) install github.com/bufbuild/buf-cli/cmd/buf@latest
 	@$(GO) install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	@$(GO) install github.com/chrusty/protoc-gen-jsonschema/cmd/protoc-gen-jsonschema@latest
 
 # Protobuf generation
-gen: clean-proto
-	@echo "Generating Go code from protobuf..."
+gen:
+	@echo "Generating Go code and JSON schema from protobuf..."
 	@buf generate
 
 # Clean generated protobuf files
 clean-proto:
 	@echo "Cleaning generated protobuf files..."
 	@$(GO) run ./tools/rmrf pkg/proto
+	@$(GO) run ./tools/rmrf $(SCHEMA_DIR)

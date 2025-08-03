@@ -1,0 +1,39 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/PrivateInfo",
+    "definitions": {
+        "PrivateInfo": {
+            "properties": {
+                "main_plot_id": {
+                    "type": "integer",
+                    "description": "The main plot of the script."
+                },
+                "sub_plots_ids": {
+                    "items": {
+                        "type": "integer"
+                    },
+                    "type": "array",
+                    "description": "A list of sub plots for the script."
+                },
+                "characters_ids": {
+                    "items": {
+                        "type": "integer"
+                    },
+                    "type": "array",
+                    "description": "A map of characters in the script."
+                },
+                "incident_ids": {
+                    "items": {
+                        "type": "integer"
+                    },
+                    "type": "array",
+                    "description": "A map of incidents in the script."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Private Info",
+            "description": "PrivateInfo defines the private information for a script."
+        }
+    }
+}

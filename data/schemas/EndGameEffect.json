@@ -1,0 +1,38 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/EndGameEffect",
+    "definitions": {
+        "EndGameEffect": {
+            "properties": {
+                "winner": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "PLAYER_ROLE_MASTERMIND",
+                        1,
+                        "PLAYER_ROLE_PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色"
+                },
+                "reason": {
+                    "type": "string",
+                    "description": "The reason for the game ending."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "End Game Effect",
+            "description": "EndGameEffect defines an effect that ends the game."
+        }
+    }
+}

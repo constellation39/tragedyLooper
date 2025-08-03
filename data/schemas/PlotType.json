@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [
+        "PLOT_TYPE_UNSPECIFIED",
+        0,
+        "PLOT_TYPE_MAIN_PLOT",
+        1,
+        "PLOT_TYPE_SUB_PLOT",
+        2
+    ],
+    "oneOf": [
+        {
+            "type": "string"
+        },
+        {
+            "type": "integer"
+        }
+    ],
+    "title": "Plot Type",
+    "description": "剧情类型"
+}

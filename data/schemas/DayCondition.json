@@ -1,0 +1,40 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/DayCondition",
+    "definitions": {
+        "DayCondition": {
+            "properties": {
+                "comparator": {
+                    "enum": [
+                        "COMPARATOR_UNSPECIFIED",
+                        0,
+                        "COMPARATOR_BEFORE",
+                        1,
+                        "COMPARATOR_ON",
+                        2,
+                        "COMPARATOR_AFTER",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Comparator",
+                    "description": "The comparator to use."
+                },
+                "day": {
+                    "type": "integer",
+                    "description": "The target day."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Day Condition",
+            "description": "DayCondition defines a condition based on the current day."
+        }
+    }
+}

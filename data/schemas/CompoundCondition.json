@@ -1,0 +1,370 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/CompoundCondition",
+    "definitions": {
+        "CompoundCondition": {
+            "properties": {
+                "operator": {
+                    "enum": [
+                        "OPERATOR_UNSPECIFIED",
+                        0,
+                        "OPERATOR_AND",
+                        1,
+                        "OPERATOR_OR",
+                        2,
+                        "OPERATOR_NOT",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Operator",
+                    "description": "The operator to use when combining conditions."
+                },
+                "sub_conditions": {
+                    "items": {
+                        "$ref": "#/definitions/tragedylooper.v1.Condition"
+                    },
+                    "type": "array",
+                    "description": "A list of sub-conditions."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Compound Condition",
+            "description": "CompoundCondition defines a combination of multiple conditions."
+        },
+        "tragedylooper.v1.Condition": {
+            "properties": {
+                "stat_condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.StatCondition",
+                    "additionalProperties": true,
+                    "description": "A stat condition."
+                },
+                "location_condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.LocationCondition",
+                    "additionalProperties": true,
+                    "description": "A location condition."
+                },
+                "role_condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.RoleCondition",
+                    "additionalProperties": true,
+                    "description": "A role condition."
+                },
+                "trait_condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.TraitCondition",
+                    "additionalProperties": true,
+                    "description": "A trait condition."
+                },
+                "day_condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.DayCondition",
+                    "additionalProperties": true,
+                    "description": "A day condition."
+                },
+                "player_condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.PlayerCondition",
+                    "additionalProperties": true,
+                    "description": "A player condition."
+                },
+                "compound_condition": {
+                    "$ref": "#/definitions/CompoundCondition",
+                    "additionalProperties": true,
+                    "description": "A compound condition (AND/OR/NOT)."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Condition",
+            "description": "Condition defines a condition for triggering rules, events, and effects."
+        },
+        "tragedylooper.v1.DayCondition": {
+            "properties": {
+                "comparator": {
+                    "enum": [
+                        "COMPARATOR_UNSPECIFIED",
+                        0,
+                        "COMPARATOR_BEFORE",
+                        1,
+                        "COMPARATOR_ON",
+                        2,
+                        "COMPARATOR_AFTER",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Comparator",
+                    "description": "The comparator to use."
+                },
+                "day": {
+                    "type": "integer",
+                    "description": "The target day."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Day Condition",
+            "description": "DayCondition defines a condition based on the current day."
+        },
+        "tragedylooper.v1.LocationCondition": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character selector."
+                },
+                "location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                },
+                "is_at_location": {
+                    "type": "boolean",
+                    "description": "Whether the character is at the location (defaults to true)."
+                },
+                "is_alone": {
+                    "type": "boolean",
+                    "description": "Whether the character is alone at the location."
+                },
+                "not_alone": {
+                    "type": "boolean",
+                    "description": "Whether the character is not alone at the location."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Location Condition",
+            "description": "LocationCondition defines a condition based on a character's location."
+        },
+        "tragedylooper.v1.PlayerCondition": {
+            "properties": {
+                "player_role": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "PLAYER_ROLE_MASTERMIND",
+                        1,
+                        "PLAYER_ROLE_PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Player Condition",
+            "description": "PlayerCondition defines a condition based on a player's state."
+        },
+        "tragedylooper.v1.RoleCondition": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character selector."
+                },
+                "has_role": {
+                    "type": "boolean",
+                    "description": "Whether the character has the role (defaults to true)."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Role Condition",
+            "description": "RoleCondition defines a condition based on a character's role."
+        },
+        "tragedylooper.v1.StatCondition": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character selector."
+                },
+                "stat_type": {
+                    "enum": [
+                        "STAT_TYPE_UNSPECIFIED",
+                        0,
+                        "STAT_TYPE_PARANOIA",
+                        1,
+                        "STAT_TYPE_GOODWILL",
+                        2,
+                        "STAT_TYPE_INTRIGUE",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Stat Type",
+                    "description": "The type of stat to check."
+                },
+                "comparator": {
+                    "enum": [
+                        "COMPARATOR_UNSPECIFIED",
+                        0,
+                        "COMPARATOR_GREATER_THAN",
+                        1,
+                        "COMPARATOR_LESS_THAN",
+                        2,
+                        "COMPARATOR_EQUAL_TO",
+                        3,
+                        "COMPARATOR_GREATER_THAN_OR_EQUAL",
+                        4,
+                        "COMPARATOR_LESS_THAN_OR_EQUAL",
+                        5
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Comparator",
+                    "description": "The comparator to use."
+                },
+                "value": {
+                    "type": "integer",
+                    "description": "The value to compare against."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Stat Condition",
+            "description": "StatCondition defines a condition based on a character's stats."
+        },
+        "tragedylooper.v1.TargetSelector": {
+            "properties": {
+                "selector_type": {
+                    "enum": [
+                        "SELECTOR_TYPE_UNSPECIFIED",
+                        0,
+                        "SELECTOR_TYPE_SPECIFIC_CHARACTER",
+                        1,
+                        "SELECTOR_TYPE_TRIGGERING_CHARACTER",
+                        2,
+                        "SELECTOR_TYPE_CULPRIT",
+                        3,
+                        "SELECTOR_TYPE_VICTIM",
+                        4,
+                        "SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE",
+                        5,
+                        "SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION",
+                        6,
+                        "SELECTOR_TYPE_ABILITY_USER",
+                        7,
+                        "SELECTOR_TYPE_ABILITY_TARGET",
+                        8,
+                        "SELECTOR_TYPE_ALL_CHARACTERS",
+                        9
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Selector Type",
+                    "description": "The type of the selector."
+                },
+                "character_id": {
+                    "type": "integer",
+                    "description": "The character ID to use when the type is SPECIFIC_CHARACTER."
+                },
+                "location_filter": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Target Selector",
+            "description": "TargetSelector defines a dynamic target for conditions or effects."
+        },
+        "tragedylooper.v1.TraitCondition": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character selector."
+                },
+                "trait": {
+                    "type": "string",
+                    "description": "The target trait."
+                },
+                "has_trait": {
+                    "type": "boolean",
+                    "description": "Whether the character has the trait (defaults to true)."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Trait Condition",
+            "description": "TraitCondition defines a condition based on a character's traits."
+        }
+    }
+}

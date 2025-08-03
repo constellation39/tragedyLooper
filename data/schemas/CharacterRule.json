@@ -1,0 +1,173 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/CharacterRule",
+    "definitions": {
+        "CharacterRule": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the rule."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "A description of the rule."
+                },
+                "trigger": {
+                    "enum": [
+                        "TRIGGER_TYPE_UNSPECIFIED",
+                        0,
+                        "TRIGGER_TYPE_ON_GAME_SETUP",
+                        1,
+                        "TRIGGER_TYPE_ON_LOOP_START",
+                        2,
+                        "TRIGGER_TYPE_ON_DAY_START",
+                        3,
+                        "TRIGGER_TYPE_ON_PHASE_START",
+                        4,
+                        "TRIGGER_TYPE_ON_PHASE_END",
+                        5,
+                        "TRIGGER_TYPE_ON_GAME_EVENT",
+                        6,
+                        "TRIGGER_TYPE_ON_PASSIVE",
+                        7,
+                        "TRIGGER_TYPE_ON_GUESS_MADE",
+                        8,
+                        "TRIGGER_TYPE_ON_GAME_END",
+                        9,
+                        "TRIGGER_TYPE_ON_DAY_END",
+                        10,
+                        "TRIGGER_TYPE_ON_LOOP_END",
+                        11
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Trigger Type",
+                    "description": "触发器类型（能力或规则何时触发）"
+                },
+                "turf_selection_effect": {
+                    "$ref": "#/definitions/tragedylooper.v1.TurfSelectionEffect",
+                    "additionalProperties": true,
+                    "description": "A turf selection effect."
+                },
+                "delayed_entry_effect": {
+                    "$ref": "#/definitions/tragedylooper.v1.DelayedEntryEffect",
+                    "additionalProperties": true,
+                    "description": "A delayed entry effect."
+                },
+                "special_movement_rule": {
+                    "$ref": "#/definitions/tragedylooper.v1.SpecialMovementRule",
+                    "additionalProperties": true,
+                    "description": "A special movement rule."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Character Rule",
+            "description": "CharacterRule defines a special rule for a character."
+        },
+        "tragedylooper.v1.DelayedEntryEffect": {
+            "properties": {
+                "day_of_entry": {
+                    "type": "integer",
+                    "description": "The day of entry."
+                },
+                "entry_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Delayed Entry Effect",
+            "description": "DelayedEntryEffect defines an effect for a delayed entry."
+        },
+        "tragedylooper.v1.SpecialMovementRule": {
+            "properties": {
+                "restricted_locations": {
+                    "items": {
+                        "enum": [
+                            "LOCATION_TYPE_UNSPECIFIED",
+                            0,
+                            "LOCATION_TYPE_HOSPITAL",
+                            1,
+                            "LOCATION_TYPE_SHRINE",
+                            2,
+                            "LOCATION_TYPE_CITY",
+                            3,
+                            "LOCATION_TYPE_SCHOOL",
+                            4
+                        ]
+                    },
+                    "type": "array",
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "A description of the rule."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Special Movement Rule",
+            "description": "SpecialMovementRule defines a special movement rule."
+        },
+        "tragedylooper.v1.TurfSelectionEffect": {
+            "properties": {
+                "possible_locations": {
+                    "items": {
+                        "enum": [
+                            "LOCATION_TYPE_UNSPECIFIED",
+                            0,
+                            "LOCATION_TYPE_HOSPITAL",
+                            1,
+                            "LOCATION_TYPE_SHRINE",
+                            2,
+                            "LOCATION_TYPE_CITY",
+                            3,
+                            "LOCATION_TYPE_SCHOOL",
+                            4
+                        ]
+                    },
+                    "type": "array",
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                },
+                "prompt": {
+                    "type": "string",
+                    "description": "The prompt to show to the player."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Turf Selection Effect",
+            "description": "TurfSelectionEffect defines an effect for selecting a turf."
+        }
+    }
+}

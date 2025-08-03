@@ -1,0 +1,554 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/Card",
+    "definitions": {
+        "Card": {
+            "properties": {
+                "config": {
+                    "$ref": "#/definitions/tragedylooper.v1.CardConfig",
+                    "additionalProperties": true,
+                    "description": "The configuration for the card."
+                },
+                "used_this_loop": {
+                    "type": "boolean",
+                    "description": "Whether the card has been used in the current loop."
+                },
+                "target_character_id": {
+                    "type": "integer",
+                    "description": "The ID of the target character, if the ability has one."
+                },
+                "target_location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Card",
+            "description": "Card defines a card instance at runtime."
+        },
+        "tragedylooper.v1.AddTraitEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character."
+                },
+                "trait": {
+                    "type": "string",
+                    "description": "The trait to add."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Add Trait Effect",
+            "description": "AddTraitEffect defines an effect that adds a trait to a character."
+        },
+        "tragedylooper.v1.AdjustStatEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character."
+                },
+                "stat_type": {
+                    "enum": [
+                        "STAT_TYPE_UNSPECIFIED",
+                        0,
+                        "STAT_TYPE_PARANOIA",
+                        1,
+                        "STAT_TYPE_GOODWILL",
+                        2,
+                        "STAT_TYPE_INTRIGUE",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Stat Type",
+                    "description": "The type of stat to check."
+                },
+                "amount": {
+                    "type": "integer",
+                    "description": "The amount to adjust the stat by (positive for increase, negative for decrease)."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Adjust Stat Effect",
+            "description": "AdjustStatEffect defines an effect that adjusts a character's stat."
+        },
+        "tragedylooper.v1.CardConfig": {
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "The unique identifier for the card."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the card."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "A description of the card."
+                },
+                "type": {
+                    "enum": [
+                        "CARD_TYPE_UNSPECIFIED",
+                        0,
+                        "CARD_TYPE_MOVE_HORIZONTALLY",
+                        1,
+                        "CARD_TYPE_PARANOIA_PLUS",
+                        2,
+                        "CARD_TYPE_PARANOIA_MINUS",
+                        3,
+                        "CARD_TYPE_GOODWILL_PLUS",
+                        4,
+                        "CARD_TYPE_GOODWILL_MINUS",
+                        5,
+                        "CARD_TYPE_INTRIGUE_PLUS",
+                        6,
+                        "CARD_TYPE_FORBID_MOVEMENT",
+                        7,
+                        "CARD_TYPE_FORBID_PARANOIA_INCREASE",
+                        8,
+                        "CARD_TYPE_FORBID_GOODWILL_INCREASE",
+                        9,
+                        "CARD_TYPE_FORBID_INTRIGUE_INCREASE",
+                        10,
+                        "CARD_TYPE_MOVE_VERTICALLY",
+                        11,
+                        "CARD_TYPE_MOVE_DIAGONALLY",
+                        12
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Card Type",
+                    "description": "卡牌类型"
+                },
+                "owner_role": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "PLAYER_ROLE_MASTERMIND",
+                        1,
+                        "PLAYER_ROLE_PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色"
+                },
+                "effect": {
+                    "$ref": "#/definitions/tragedylooper.v1.CompoundEffect",
+                    "additionalProperties": true,
+                    "description": "The effect of the card."
+                },
+                "once_per_loop": {
+                    "type": "boolean",
+                    "description": "Whether the card can only be used once per loop."
+                },
+                "priority": {
+                    "type": "integer",
+                    "description": "The priority of the card's resolution (for cards of the same type)."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Card Config",
+            "description": "CardConfig defines the configuration for a card."
+        },
+        "tragedylooper.v1.ChangeRoleEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character."
+                },
+                "new_role": {
+                    "type": "integer",
+                    "description": "The new role."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Change Role Effect",
+            "description": "ChangeRoleEffect defines an effect that changes a character's role."
+        },
+        "tragedylooper.v1.CompoundEffect": {
+            "properties": {
+                "operator": {
+                    "enum": [
+                        "OPERATOR_UNSPECIFIED",
+                        0,
+                        "OPERATOR_SEQUENCE",
+                        1,
+                        "OPERATOR_CHOOSE_ONE",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Operator",
+                    "description": "The operator to use when combining effects."
+                },
+                "sub_effects": {
+                    "items": {
+                        "$ref": "#/definitions/tragedylooper.v1.Effect"
+                    },
+                    "type": "array",
+                    "description": "A list of sub-effects."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Compound Effect",
+            "description": "CompoundEffect defines a combination of multiple effects."
+        },
+        "tragedylooper.v1.Effect": {
+            "properties": {
+                "adjust_stat": {
+                    "$ref": "#/definitions/tragedylooper.v1.AdjustStatEffect",
+                    "additionalProperties": true,
+                    "description": "Adjusts a character's stat."
+                },
+                "move_character": {
+                    "$ref": "#/definitions/tragedylooper.v1.MoveCharacterEffect",
+                    "additionalProperties": true,
+                    "description": "Moves a character to a different location."
+                },
+                "forbid": {
+                    "$ref": "#/definitions/tragedylooper.v1.ForbidEffect",
+                    "additionalProperties": true,
+                    "description": "Forbids a character from performing an action."
+                },
+                "grant_ability": {
+                    "$ref": "#/definitions/tragedylooper.v1.GrantAbilityEffect",
+                    "additionalProperties": true,
+                    "description": "Grants an ability to a character."
+                },
+                "reveal_role": {
+                    "$ref": "#/definitions/tragedylooper.v1.RevealRoleEffect",
+                    "additionalProperties": true,
+                    "description": "Reveals a character's role."
+                },
+                "change_role": {
+                    "$ref": "#/definitions/tragedylooper.v1.ChangeRoleEffect",
+                    "additionalProperties": true,
+                    "description": "Changes a character's role."
+                },
+                "trigger_incident": {
+                    "$ref": "#/definitions/tragedylooper.v1.TriggerIncidentEffect",
+                    "additionalProperties": true,
+                    "description": "Triggers an incident."
+                },
+                "end_game": {
+                    "$ref": "#/definitions/tragedylooper.v1.EndGameEffect",
+                    "additionalProperties": true,
+                    "description": "Ends the game."
+                },
+                "add_trait": {
+                    "$ref": "#/definitions/tragedylooper.v1.AddTraitEffect",
+                    "additionalProperties": true,
+                    "description": "Adds a trait to a character."
+                },
+                "remove_trait": {
+                    "$ref": "#/definitions/tragedylooper.v1.RemoveTraitEffect",
+                    "additionalProperties": true,
+                    "description": "Removes a trait from a character."
+                },
+                "compound_effect": {
+                    "$ref": "#/definitions/tragedylooper.v1.CompoundEffect",
+                    "additionalProperties": true,
+                    "description": "A compound effect."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Effect",
+            "description": "Effect defines the specific action of an ability, card, or rule."
+        },
+        "tragedylooper.v1.EndGameEffect": {
+            "properties": {
+                "winner": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "PLAYER_ROLE_MASTERMIND",
+                        1,
+                        "PLAYER_ROLE_PROTAGONIST",
+                        2
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色"
+                },
+                "reason": {
+                    "type": "string",
+                    "description": "The reason for the game ending."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "End Game Effect",
+            "description": "EndGameEffect defines an effect that ends the game."
+        },
+        "tragedylooper.v1.ForbidEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character."
+                },
+                "forbid_type": {
+                    "enum": [
+                        "FORBID_TYPE_UNSPECIFIED",
+                        0,
+                        "FORBID_TYPE_MOVEMENT",
+                        1,
+                        "FORBID_TYPE_PARANOIA_CHANGE",
+                        2,
+                        "FORBID_TYPE_GOODWILL_CHANGE",
+                        3,
+                        "FORBID_TYPE_INTRIGUE_CHANGE",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Forbid Type",
+                    "description": "The type of action to forbid."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Forbid Effect",
+            "description": "ForbidEffect defines an effect that forbids an action."
+        },
+        "tragedylooper.v1.GrantAbilityEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character."
+                },
+                "ability_id": {
+                    "type": "integer",
+                    "description": "The ID of the ability to grant."
+                },
+                "is_temporary": {
+                    "type": "boolean",
+                    "description": "Whether the ability is temporary (e.g., lasts for one day or one loop)."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Grant Ability Effect",
+            "description": "GrantAbilityEffect defines an effect that grants an ability."
+        },
+        "tragedylooper.v1.MoveCharacterEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character."
+                },
+                "destination": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Move Character Effect",
+            "description": "MoveCharacterEffect defines an effect that moves a character."
+        },
+        "tragedylooper.v1.RemoveTraitEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character."
+                },
+                "trait": {
+                    "type": "string",
+                    "description": "The trait to remove."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Remove Trait Effect",
+            "description": "RemoveTraitEffect defines an effect that removes a trait from a character."
+        },
+        "tragedylooper.v1.RevealRoleEffect": {
+            "properties": {
+                "target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "The target character."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Reveal Role Effect",
+            "description": "RevealRoleEffect defines an effect that reveals a character's role."
+        },
+        "tragedylooper.v1.TargetSelector": {
+            "properties": {
+                "selector_type": {
+                    "enum": [
+                        "SELECTOR_TYPE_UNSPECIFIED",
+                        0,
+                        "SELECTOR_TYPE_SPECIFIC_CHARACTER",
+                        1,
+                        "SELECTOR_TYPE_TRIGGERING_CHARACTER",
+                        2,
+                        "SELECTOR_TYPE_CULPRIT",
+                        3,
+                        "SELECTOR_TYPE_VICTIM",
+                        4,
+                        "SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE",
+                        5,
+                        "SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION",
+                        6,
+                        "SELECTOR_TYPE_ABILITY_USER",
+                        7,
+                        "SELECTOR_TYPE_ABILITY_TARGET",
+                        8,
+                        "SELECTOR_TYPE_ALL_CHARACTERS",
+                        9
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Selector Type",
+                    "description": "The type of the selector."
+                },
+                "character_id": {
+                    "type": "integer",
+                    "description": "The character ID to use when the type is SPECIFIC_CHARACTER."
+                },
+                "location_filter": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Target Selector",
+            "description": "TargetSelector defines a dynamic target for conditions or effects."
+        },
+        "tragedylooper.v1.TriggerIncidentEffect": {
+            "properties": {
+                "incident_id": {
+                    "type": "integer",
+                    "description": "The ID of the incident to trigger (references an IncidentConfig in the ScriptConfig)."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Trigger Incident Effect",
+            "description": "TriggerIncidentEffect defines an effect that triggers an incident."
+        }
+    }
+}

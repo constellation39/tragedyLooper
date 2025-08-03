@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/TriggerIncidentEffect",
+    "definitions": {
+        "TriggerIncidentEffect": {
+            "properties": {
+                "incident_id": {
+                    "type": "integer",
+                    "description": "The ID of the incident to trigger (references an IncidentConfig in the ScriptConfig)."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Trigger Incident Effect",
+            "description": "TriggerIncidentEffect defines an effect that triggers an incident."
+        }
+    }
+}

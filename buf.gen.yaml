@@ -11,3 +11,7 @@ plugins:
     out: pkg/proto
     opt:
       - paths=source_relative
+  - local: protoc-gen-jsonschema
+    out: schemas
+    opt:
+      - "indent=  "

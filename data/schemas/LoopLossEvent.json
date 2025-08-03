@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/LoopLossEvent",
+    "definitions": {
+        "LoopLossEvent": {
+            "properties": {
+                "incident_id": {
+                    "type": "integer",
+                    "description": "导致失败的事件类型"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Loop Loss Event",
+            "description": "循环失败事件"
+        }
+    }
+}

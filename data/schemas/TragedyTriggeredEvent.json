@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/TragedyTriggeredEvent",
+    "definitions": {
+        "TragedyTriggeredEvent": {
+            "properties": {
+                "tragedy_id": {
+                    "type": "integer",
+                    "description": "被触发的悲剧类型"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Tragedy Triggered Event",
+            "description": "悲剧触发事件"
+        }
+    }
+}

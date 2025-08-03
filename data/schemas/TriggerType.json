@@ -1,0 +1,39 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [
+        "TRIGGER_TYPE_UNSPECIFIED",
+        0,
+        "TRIGGER_TYPE_ON_GAME_SETUP",
+        1,
+        "TRIGGER_TYPE_ON_LOOP_START",
+        2,
+        "TRIGGER_TYPE_ON_DAY_START",
+        3,
+        "TRIGGER_TYPE_ON_PHASE_START",
+        4,
+        "TRIGGER_TYPE_ON_PHASE_END",
+        5,
+        "TRIGGER_TYPE_ON_GAME_EVENT",
+        6,
+        "TRIGGER_TYPE_ON_PASSIVE",
+        7,
+        "TRIGGER_TYPE_ON_GUESS_MADE",
+        8,
+        "TRIGGER_TYPE_ON_GAME_END",
+        9,
+        "TRIGGER_TYPE_ON_DAY_END",
+        10,
+        "TRIGGER_TYPE_ON_LOOP_END",
+        11
+    ],
+    "oneOf": [
+        {
+            "type": "string"
+        },
+        {
+            "type": "integer"
+        }
+    ],
+    "title": "Trigger Type",
+    "description": "触发器类型（能力或规则何时触发）"
+}

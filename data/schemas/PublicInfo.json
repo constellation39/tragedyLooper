@@ -1,0 +1,44 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/PublicInfo",
+    "definitions": {
+        "PublicInfo": {
+            "properties": {
+                "script_config_id": {
+                    "type": "integer",
+                    "description": "The unique identifier for the script configuration."
+                },
+                "loop_count": {
+                    "type": "integer",
+                    "description": "Game rules. The number of loops in the game."
+                },
+                "days_per_loop": {
+                    "type": "integer",
+                    "description": "The number of days per loop."
+                },
+                "can_discuss": {
+                    "type": "boolean",
+                    "description": "Whether players can discuss information."
+                },
+                "special_incident_ids": {
+                    "items": {
+                        "type": "integer"
+                    },
+                    "type": "array",
+                    "description": "Special rules. A map of special incidents."
+                },
+                "scheduled_incident_ids": {
+                    "items": {
+                        "type": "integer"
+                    },
+                    "type": "array",
+                    "description": "A map of scheduled incidents."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Public Info",
+            "description": "PublicInfo defines the public information for a script."
+        }
+    }
+}
