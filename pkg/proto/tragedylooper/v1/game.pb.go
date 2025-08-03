@@ -21,30 +21,22 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 游戏当前状态
+// GameState represents the complete, authoritative state of a game at a specific moment.
+// It is the single source of truth, intended for server-side use and persistence.
+// It should not contain historical data like event logs, which should be handled separately.
 type GameState struct {
-	state                   protoimpl.MessageState `protogen:"open.v1"`
-	GameId                  string                 `protobuf:"bytes,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`                                                                                                                                   // 游戏唯一ID
-	Characters              map[int32]*Character   `protobuf:"bytes,3,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                              // 所有角色当前状态的映射，键为 character_id
-	Players                 map[int32]*Player      `protobuf:"bytes,4,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                                    // 所有玩家的映射，键为 player_id
-	CurrentDay              int32                  `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                                                                                      // 当前天数
-	CurrentLoop             int32                  `protobuf:"varint,6,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                                                                                   // 当前循环数
-	DaysPerLoop             int32                  `protobuf:"varint,19,opt,name=days_per_loop,json=daysPerLoop,proto3" json:"days_per_loop,omitempty"`                                                                                                                // 每循环天数
-	CurrentPhase            GamePhase              `protobuf:"varint,7,opt,name=current_phase,json=currentPhase,proto3,enum=tragedylooper.v1.GamePhase" json:"current_phase,omitempty"`                                                                                // 当前游戏阶段
-	ActiveTragedies         map[int32]bool         `protobuf:"bytes,8,rep,name=active_tragedies,json=activeTragedies,proto3" json:"active_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                            // 当前循环中已激活（满足条件）的悲剧，键为 TragedyType
-	PreventedTragedies      map[int32]bool         `protobuf:"bytes,9,rep,name=prevented_tragedies,json=preventedTragedies,proto3" json:"prevented_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                   // 当前循环中已被阻止的悲剧，键为 TragedyType
-	PlayedCardsThisDay      map[int32]*CardList    `protobuf:"bytes,10,rep,name=played_cards_this_day,json=playedCardsThisDay,proto3" json:"played_cards_this_day,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`               // 今天打出的牌，键为 player_id
-	PlayedCardsThisLoop     map[int32]bool         `protobuf:"bytes,11,rep,name=played_cards_this_loop,json=playedCardsThisLoop,proto3" json:"played_cards_this_loop,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`           // 本循环中已打出的牌的ID
-	TriggeredIncidents      map[string]bool        `protobuf:"bytes,12,rep,name=triggered_incidents,json=triggeredIncidents,proto3" json:"triggered_incidents,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                   // Key is the incident name
-	LastUpdateTime          int64                  `protobuf:"varint,13,opt,name=last_update_time,json=lastUpdateTime,proto3" json:"last_update_time,omitempty"`                                                                                                       // 最后更新时间戳 (Unix timestamp)
-	Tick                    int64                  `protobuf:"varint,20,opt,name=tick,proto3" json:"tick,omitempty"`                                                                                                                                                   // 游戏时间
-	DayEvents               []*GameEvent           `protobuf:"bytes,14,rep,name=day_events,json=dayEvents,proto3" json:"day_events,omitempty"`                                                                                                                         // 本日发生的事件日志
-	LoopEvents              []*GameEvent           `protobuf:"bytes,15,rep,name=loop_events,json=loopEvents,proto3" json:"loop_events,omitempty"`                                                                                                                      // 本循环发生的事件日志
-	CharacterParanoiaLimits map[int32]int32        `protobuf:"bytes,16,rep,name=character_paranoia_limits,json=characterParanoiaLimits,proto3" json:"character_paranoia_limits,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 每个角色的妄想上限映射
-	CharacterGoodwillLimits map[int32]int32        `protobuf:"bytes,17,rep,name=character_goodwill_limits,json=characterGoodwillLimits,proto3" json:"character_goodwill_limits,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 每个角色的好感度上限映射
-	CharacterIntrigueLimits map[int32]int32        `protobuf:"bytes,18,rep,name=character_intrigue_limits,json=characterIntrigueLimits,proto3" json:"character_intrigue_limits,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 每个角色的阴谋上限映射
-	unknownFields           protoimpl.UnknownFields
-	sizeCache               protoimpl.SizeCache
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	GameId             string                 `protobuf:"bytes,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`                                                                                                                 // Unique identifier for the game session.
+	Tick               int64                  `protobuf:"varint,2,opt,name=tick,proto3" json:"tick,omitempty"`                                                                                                                                  // A monotonic clock representing the finest-grained unit of game time.
+	CurrentLoop        int32                  `protobuf:"varint,3,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                                                                 // The current loop number.
+	DaysPerLoop        int32                  `protobuf:"varint,4,opt,name=days_per_loop,json=daysPerLoop,proto3" json:"days_per_loop,omitempty"`                                                                                               // The total number of days in a single loop.
+	CurrentDay         int32                  `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                                                                    // The current day within the loop.
+	CurrentPhase       GamePhase              `protobuf:"varint,6,opt,name=current_phase,json=currentPhase,proto3,enum=tragedylooper.v1.GamePhase" json:"current_phase,omitempty"`                                                              // The current phase within the day.
+	Characters         map[int32]*Character   `protobuf:"bytes,7,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                            // Map of all characters, keyed by character_id.
+	Players            map[int32]*Player      `protobuf:"bytes,8,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                  // Map of all players, keyed by player_id.
+	TriggeredIncidents map[int32]bool         `protobuf:"bytes,9,rep,name=triggered_incidents,json=triggeredIncidents,proto3" json:"triggered_incidents,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // Set of incidents that have been triggered this loop, keyed by incident name.
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *GameState) Reset() {
@@ -84,23 +76,9 @@ func (x *GameState) GetGameId() string {
 	return ""
 }
 
-func (x *GameState) GetCharacters() map[int32]*Character {
+func (x *GameState) GetTick() int64 {
 	if x != nil {
-		return x.Characters
-	}
-	return nil
-}
-
-func (x *GameState) GetPlayers() map[int32]*Player {
-	if x != nil {
-		return x.Players
-	}
-	return nil
-}
-
-func (x *GameState) GetCurrentDay() int32 {
-	if x != nil {
-		return x.CurrentDay
+		return x.Tick
 	}
 	return 0
 }
@@ -119,6 +97,13 @@ func (x *GameState) GetDaysPerLoop() int32 {
 	return 0
 }
 
+func (x *GameState) GetCurrentDay() int32 {
+	if x != nil {
+		return x.CurrentDay
+	}
+	return 0
+}
+
 func (x *GameState) GetCurrentPhase() GamePhase {
 	if x != nil {
 		return x.CurrentPhase
@@ -126,103 +111,39 @@ func (x *GameState) GetCurrentPhase() GamePhase {
 	return GamePhase_GAME_PHASE_UNSPECIFIED
 }
 
-func (x *GameState) GetActiveTragedies() map[int32]bool {
+func (x *GameState) GetCharacters() map[int32]*Character {
 	if x != nil {
-		return x.ActiveTragedies
+		return x.Characters
 	}
 	return nil
 }
 
-func (x *GameState) GetPreventedTragedies() map[int32]bool {
+func (x *GameState) GetPlayers() map[int32]*Player {
 	if x != nil {
-		return x.PreventedTragedies
+		return x.Players
 	}
 	return nil
 }
 
-func (x *GameState) GetPlayedCardsThisDay() map[int32]*CardList {
-	if x != nil {
-		return x.PlayedCardsThisDay
-	}
-	return nil
-}
-
-func (x *GameState) GetPlayedCardsThisLoop() map[int32]bool {
-	if x != nil {
-		return x.PlayedCardsThisLoop
-	}
-	return nil
-}
-
-func (x *GameState) GetTriggeredIncidents() map[string]bool {
+func (x *GameState) GetTriggeredIncidents() map[int32]bool {
 	if x != nil {
 		return x.TriggeredIncidents
 	}
 	return nil
 }
 
-func (x *GameState) GetLastUpdateTime() int64 {
-	if x != nil {
-		return x.LastUpdateTime
-	}
-	return 0
-}
-
-func (x *GameState) GetTick() int64 {
-	if x != nil {
-		return x.Tick
-	}
-	return 0
-}
-
-func (x *GameState) GetDayEvents() []*GameEvent {
-	if x != nil {
-		return x.DayEvents
-	}
-	return nil
-}
-
-func (x *GameState) GetLoopEvents() []*GameEvent {
-	if x != nil {
-		return x.LoopEvents
-	}
-	return nil
-}
-
-func (x *GameState) GetCharacterParanoiaLimits() map[int32]int32 {
-	if x != nil {
-		return x.CharacterParanoiaLimits
-	}
-	return nil
-}
-
-func (x *GameState) GetCharacterGoodwillLimits() map[int32]int32 {
-	if x != nil {
-		return x.CharacterGoodwillLimits
-	}
-	return nil
-}
-
-func (x *GameState) GetCharacterIntrigueLimits() map[int32]int32 {
-	if x != nil {
-		return x.CharacterIntrigueLimits
-	}
-	return nil
-}
-
-// 玩家信息
+// Player represents a participant in the game.
 type Player struct {
-	state                           protoimpl.MessageState    `protogen:"open.v1"`
-	Id                              int32                     `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                                           // 玩家唯一ID
-	Name                            string                    `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                                                        // 玩家名称
-	Role                            PlayerRole                `protobuf:"varint,3,opt,name=role,proto3,enum=tragedylooper.v1.PlayerRole" json:"role,omitempty"`                                                                      // 玩家角色 (主谋或主角)
-	IsLlm                           bool                      `protobuf:"varint,4,opt,name=is_llm,json=isLlm,proto3" json:"is_llm,omitempty"`                                                                                        // 是否由LLM（大语言模型）控制
-	Hand                            *CardList                 `protobuf:"bytes,5,opt,name=hand,proto3" json:"hand,omitempty"`                                                                                                        // 玩家手牌列表
-	LlmSessionId                    string                    `protobuf:"bytes,6,opt,name=llm_session_id,json=llmSessionId,proto3" json:"llm_session_id,omitempty"`                                                                  // 如果是LLM，对应的会话ID
-	DeductionKnowledge              *PlayerDeductionKnowledge `protobuf:"bytes,7,opt,name=deduction_knowledge,json=deductionKnowledge,proto3" json:"deduction_knowledge,omitempty"`                                                  // 主角的推理知识（仅主角玩家拥有）
-	ProtagonistCharactersControlled []int32                   `protobuf:"varint,8,rep,packed,name=protagonist_characters_controlled,json=protagonistCharactersControlled,proto3" json:"protagonist_characters_controlled,omitempty"` // 如果一个主角玩家控制多个角色牌组，这里列出他们的ID
-	unknownFields                   protoimpl.UnknownFields
-	sizeCache                       protoimpl.SizeCache
+	state              protoimpl.MessageState    `protogen:"open.v1"`
+	Id                 int32                     `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                          // Unique identifier for the player.
+	Name               string                    `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                       // Player's display name.
+	Role               PlayerRole                `protobuf:"varint,3,opt,name=role,proto3,enum=tragedylooper.v1.PlayerRole" json:"role,omitempty"`                     // The player's role (Mastermind or Protagonist).
+	IsLlm              bool                      `protobuf:"varint,4,opt,name=is_llm,json=isLlm,proto3" json:"is_llm,omitempty"`                                       // True if the player is controlled by an AI.
+	Hand               *CardList                 `protobuf:"bytes,5,opt,name=hand,proto3" json:"hand,omitempty"`                                                       // The player's current hand of cards.
+	LlmSessionId       string                    `protobuf:"bytes,6,opt,name=llm_session_id,json=llmSessionId,proto3" json:"llm_session_id,omitempty"`                 // Session ID for the LLM, if applicable.
+	DeductionKnowledge *PlayerDeductionKnowledge `protobuf:"bytes,7,opt,name=deduction_knowledge,json=deductionKnowledge,proto3" json:"deduction_knowledge,omitempty"` // Deduction state for Protagonists.
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *Player) Reset() {
@@ -304,19 +225,12 @@ func (x *Player) GetDeductionKnowledge() *PlayerDeductionKnowledge {
 	return nil
 }
 
-func (x *Player) GetProtagonistCharactersControlled() []int32 {
-	if x != nil {
-		return x.ProtagonistCharactersControlled
-	}
-	return nil
-}
-
-// 主角的推理知识
+// PlayerDeductionKnowledge holds the information and guesses a Protagonist player has made.
 type PlayerDeductionKnowledge struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	GuessedRoles  map[int32]int32        `protobuf:"bytes,1,rep,name=guessed_roles,json=guessedRoles,proto3" json:"guessed_roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 对角色身份的猜测，键为 character_id
-	Clues         []string               `protobuf:"bytes,2,rep,name=clues,proto3" json:"clues,omitempty"`                                                                                                               // 收集到的线索列表
-	Theories      []string               `protobuf:"bytes,3,rep,name=theories,proto3" json:"theories,omitempty"`                                                                                                         // 推理出的理论列表
+	GuessedRoles  map[int32]int32        `protobuf:"bytes,1,rep,name=guessed_roles,json=guessedRoles,proto3" json:"guessed_roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // Guesses about character roles, keyed by character_id.
+	Clues         []string               `protobuf:"bytes,2,rep,name=clues,proto3" json:"clues,omitempty"`                                                                                                               // List of collected clues.
+	Theories      []string               `protobuf:"bytes,3,rep,name=theories,proto3" json:"theories,omitempty"`                                                                                                         // List of formulated theories.
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -372,24 +286,21 @@ func (x *PlayerDeductionKnowledge) GetTheories() []string {
 	return nil
 }
 
-// 玩家视角下的游戏状态（用于向特定玩家展示信息，隐藏其他玩家的秘密信息）
+// PlayerView is a tailored, client-facing representation of the game state for a specific player.
+// It includes only the information that the player is permitted to see, hiding sensitive data.
 type PlayerView struct {
-	state              protoimpl.MessageState         `protogen:"open.v1"`
-	GameId             string                         `protobuf:"bytes,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`                                                                                                                 // 游戏唯一ID
-	ScriptId           int32                          `protobuf:"varint,2,opt,name=script_id,json=scriptId,proto3" json:"script_id,omitempty"`                                                                                                          // 剧本ID
-	Characters         map[int32]*PlayerViewCharacter `protobuf:"bytes,3,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                            // 玩家视角下的角色状态映射 (隐藏身份已移除)
-	Players            map[int32]*PlayerViewPlayer    `protobuf:"bytes,4,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                  // 玩家视角下的其他玩家信息 (手牌等可能隐藏)
-	CurrentDay         int32                          `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                                                                    // 当前天数
-	CurrentLoop        int32                          `protobuf:"varint,6,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                                                                 // 当前循环数
-	CurrentPhase       GamePhase                      `protobuf:"varint,7,opt,name=current_phase,json=currentPhase,proto3,enum=tragedylooper.v1.GamePhase" json:"current_phase,omitempty"`                                                              // 当前游戏阶段
-	ActiveTragedies    map[int32]bool                 `protobuf:"bytes,8,rep,name=active_tragedies,json=activeTragedies,proto3" json:"active_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`          // 已触发的悲剧
-	PreventedTragedies map[int32]bool                 `protobuf:"bytes,9,rep,name=prevented_tragedies,json=preventedTragedies,proto3" json:"prevented_tragedies,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 已阻止的悲剧
-	YourHand           []*Card                        `protobuf:"bytes,10,rep,name=your_hand,json=yourHand,proto3" json:"your_hand,omitempty"`                                                                                                          // 当前玩家的手牌列表
-	YourDeductions     *PlayerDeductionKnowledge      `protobuf:"bytes,11,opt,name=your_deductions,json=yourDeductions,proto3" json:"your_deductions,omitempty"`                                                                                        // 当前玩家的推理知识
-	PublicEvents       []*GameEvent                   `protobuf:"bytes,12,rep,name=public_events,json=publicEvents,proto3" json:"public_events,omitempty"`                                                                                              // 对所有玩家公开的事件日志
-	Tick               int64                          `protobuf:"varint,13,opt,name=tick,proto3" json:"tick,omitempty"`                                                                                                                                 // 游戏时间
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	state          protoimpl.MessageState         `protogen:"open.v1"`
+	GameId         string                         `protobuf:"bytes,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`                                                                      // Unique identifier for the game session.
+	Tick           int64                          `protobuf:"varint,2,opt,name=tick,proto3" json:"tick,omitempty"`                                                                                       // The current game time tick.
+	CurrentLoop    int32                          `protobuf:"varint,3,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                      // The current loop number.
+	CurrentDay     int32                          `protobuf:"varint,4,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                         // The current day within the loop.
+	CurrentPhase   GamePhase                      `protobuf:"varint,5,opt,name=current_phase,json=currentPhase,proto3,enum=tragedylooper.v1.GamePhase" json:"current_phase,omitempty"`                   // The current phase within the day.
+	Characters     map[int32]*PlayerViewCharacter `protobuf:"bytes,6,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // Visible state of all characters.
+	Players        map[int32]*PlayerViewPlayer    `protobuf:"bytes,7,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`       // Visible state of all players.
+	YourHand       []*Card                        `protobuf:"bytes,8,rep,name=your_hand,json=yourHand,proto3" json:"your_hand,omitempty"`                                                                // The hand of the player receiving this view.
+	YourDeductions *PlayerDeductionKnowledge      `protobuf:"bytes,9,opt,name=your_deductions,json=yourDeductions,proto3" json:"your_deductions,omitempty"`                                              // The deduction state of the player receiving this view.
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *PlayerView) Reset() {
@@ -429,11 +340,32 @@ func (x *PlayerView) GetGameId() string {
 	return ""
 }
 
-func (x *PlayerView) GetScriptId() int32 {
+func (x *PlayerView) GetTick() int64 {
 	if x != nil {
-		return x.ScriptId
+		return x.Tick
 	}
 	return 0
+}
+
+func (x *PlayerView) GetCurrentLoop() int32 {
+	if x != nil {
+		return x.CurrentLoop
+	}
+	return 0
+}
+
+func (x *PlayerView) GetCurrentDay() int32 {
+	if x != nil {
+		return x.CurrentDay
+	}
+	return 0
+}
+
+func (x *PlayerView) GetCurrentPhase() GamePhase {
+	if x != nil {
+		return x.CurrentPhase
+	}
+	return GamePhase_GAME_PHASE_UNSPECIFIED
 }
 
 func (x *PlayerView) GetCharacters() map[int32]*PlayerViewCharacter {
@@ -446,41 +378,6 @@ func (x *PlayerView) GetCharacters() map[int32]*PlayerViewCharacter {
 func (x *PlayerView) GetPlayers() map[int32]*PlayerViewPlayer {
 	if x != nil {
 		return x.Players
-	}
-	return nil
-}
-
-func (x *PlayerView) GetCurrentDay() int32 {
-	if x != nil {
-		return x.CurrentDay
-	}
-	return 0
-}
-
-func (x *PlayerView) GetCurrentLoop() int32 {
-	if x != nil {
-		return x.CurrentLoop
-	}
-	return 0
-}
-
-func (x *PlayerView) GetCurrentPhase() GamePhase {
-	if x != nil {
-		return x.CurrentPhase
-	}
-	return GamePhase_GAME_PHASE_UNSPECIFIED
-}
-
-func (x *PlayerView) GetActiveTragedies() map[int32]bool {
-	if x != nil {
-		return x.ActiveTragedies
-	}
-	return nil
-}
-
-func (x *PlayerView) GetPreventedTragedies() map[int32]bool {
-	if x != nil {
-		return x.PreventedTragedies
 	}
 	return nil
 }
@@ -499,35 +396,22 @@ func (x *PlayerView) GetYourDeductions() *PlayerDeductionKnowledge {
 	return nil
 }
 
-func (x *PlayerView) GetPublicEvents() []*GameEvent {
-	if x != nil {
-		return x.PublicEvents
-	}
-	return nil
-}
-
-func (x *PlayerView) GetTick() int64 {
-	if x != nil {
-		return x.Tick
-	}
-	return 0
-}
-
-// 玩家视角下的角色信息（不包含隐藏身份）
+// PlayerViewCharacter is a sanitized version of a Character for client display.
+// It omits hidden information like the true role (for opponents).
 type PlayerViewCharacter struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	Id              int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                     // 角色唯一ID
-	Name            string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                                  // 角色名称
-	Traits          []string               `protobuf:"bytes,3,rep,name=traits,proto3" json:"traits,omitempty"`                                                                              // 角色特征
-	CurrentLocation LocationType           `protobuf:"varint,4,opt,name=current_location,json=currentLocation,proto3,enum=tragedylooper.v1.LocationType" json:"current_location,omitempty"` // 角色当前所在地点
-	Paranoia        int32                  `protobuf:"varint,5,opt,name=paranoia,proto3" json:"paranoia,omitempty"`                                                                         // 妄想值
-	Goodwill        int32                  `protobuf:"varint,6,opt,name=goodwill,proto3" json:"goodwill,omitempty"`                                                                         // 好感值
-	Intrigue        int32                  `protobuf:"varint,7,opt,name=intrigue,proto3" json:"intrigue,omitempty"`                                                                         // 阴谋值
-	Abilities       []*Ability             `protobuf:"bytes,8,rep,name=abilities,proto3" json:"abilities,omitempty"`                                                                        // 角色拥有的能力列表
-	IsAlive         bool                   `protobuf:"varint,9,opt,name=is_alive,json=isAlive,proto3" json:"is_alive,omitempty"`                                                            // 角色是否存活
-	InPanicMode     bool                   `protobuf:"varint,10,opt,name=in_panic_mode,json=inPanicMode,proto3" json:"in_panic_mode,omitempty"`                                             // 是否处于恐慌模式
-	Rules           []*CharacterRule       `protobuf:"bytes,11,rep,name=rules,proto3" json:"rules,omitempty"`                                                                               // 角色特有规则
-	Role            int32                  `protobuf:"varint,12,opt,name=role,proto3" json:"role,omitempty"`                                                                                // 角色身份（对主角可能为UNKNOWN）
+	Id              int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                     // Character's unique ID.
+	Name            string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                                  // Character's name.
+	Traits          []string               `protobuf:"bytes,3,rep,name=traits,proto3" json:"traits,omitempty"`                                                                              // Character's current traits.
+	CurrentLocation LocationType           `protobuf:"varint,4,opt,name=current_location,json=currentLocation,proto3,enum=tragedylooper.v1.LocationType" json:"current_location,omitempty"` // Character's current location.
+	Paranoia        int32                  `protobuf:"varint,5,opt,name=paranoia,proto3" json:"paranoia,omitempty"`                                                                         // Current paranoia stat.
+	Goodwill        int32                  `protobuf:"varint,6,opt,name=goodwill,proto3" json:"goodwill,omitempty"`                                                                         // Current goodwill stat.
+	Intrigue        int32                  `protobuf:"varint,7,opt,name=intrigue,proto3" json:"intrigue,omitempty"`                                                                         // Current intrigue stat.
+	Abilities       []*Ability             `protobuf:"bytes,8,rep,name=abilities,proto3" json:"abilities,omitempty"`                                                                        // List of abilities.
+	IsAlive         bool                   `protobuf:"varint,9,opt,name=is_alive,json=isAlive,proto3" json:"is_alive,omitempty"`                                                            // Whether the character is alive.
+	InPanicMode     bool                   `protobuf:"varint,10,opt,name=in_panic_mode,json=inPanicMode,proto3" json:"in_panic_mode,omitempty"`                                             // Whether the character is in panic.
+	Rules           []*CharacterRule       `protobuf:"bytes,11,rep,name=rules,proto3" json:"rules,omitempty"`                                                                               // List of special rules.
+	RevealedRole    PlayerRole             `protobuf:"varint,12,opt,name=revealed_role,json=revealedRole,proto3,enum=tragedylooper.v1.PlayerRole" json:"revealed_role,omitempty"`           // The character's role if it has been revealed, otherwise UNKNOWN.
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -639,19 +523,20 @@ func (x *PlayerViewCharacter) GetRules() []*CharacterRule {
 	return nil
 }
 
-func (x *PlayerViewCharacter) GetRole() int32 {
+func (x *PlayerViewCharacter) GetRevealedRole() PlayerRole {
 	if x != nil {
-		return x.Role
+		return x.RevealedRole
 	}
-	return 0
+	return PlayerRole_PLAYER_ROLE_UNSPECIFIED
 }
 
-// 玩家视角下的其他玩家信息（不包含私密数据）
+// PlayerViewPlayer is a sanitized version of a Player for client display.
+// It omits private information like the other player's hand.
 type PlayerViewPlayer struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                      // 玩家唯一ID
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                   // 玩家名称
-	Role          PlayerRole             `protobuf:"varint,3,opt,name=role,proto3,enum=tragedylooper.v1.PlayerRole" json:"role,omitempty"` // 玩家角色
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                      // Player's unique ID.
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                   // Player's name.
+	Role          PlayerRole             `protobuf:"varint,3,opt,name=role,proto3,enum=tragedylooper.v1.PlayerRole" json:"role,omitempty"` // Player's role.
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -711,63 +596,29 @@ var File_tragedylooper_v1_game_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_game_proto_rawDesc = "" +
 	"\n" +
-	"\x1btragedylooper/v1/game.proto\x12\x10tragedylooper.v1\x1a\x1etragedylooper/v1/ability.proto\x1a\x1btragedylooper/v1/card.proto\x1a tragedylooper/v1/character.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1ctragedylooper/v1/event.proto\"\x88\x11\n" +
+	"\x1btragedylooper/v1/game.proto\x12\x10tragedylooper.v1\x1a\x1etragedylooper/v1/ability.proto\x1a\x1btragedylooper/v1/card.proto\x1a tragedylooper/v1/character.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1ctragedylooper/v1/event.proto\"\xd2\x05\n" +
 	"\tGameState\x12\x17\n" +
-	"\agame_id\x18\x01 \x01(\tR\x06gameId\x12K\n" +
-	"\n" +
-	"characters\x18\x03 \x03(\v2+.tragedylooper.v1.GameState.CharactersEntryR\n" +
-	"characters\x12B\n" +
-	"\aplayers\x18\x04 \x03(\v2(.tragedylooper.v1.GameState.PlayersEntryR\aplayers\x12\x1f\n" +
+	"\agame_id\x18\x01 \x01(\tR\x06gameId\x12\x12\n" +
+	"\x04tick\x18\x02 \x01(\x03R\x04tick\x12!\n" +
+	"\fcurrent_loop\x18\x03 \x01(\x05R\vcurrentLoop\x12\"\n" +
+	"\rdays_per_loop\x18\x04 \x01(\x05R\vdaysPerLoop\x12\x1f\n" +
 	"\vcurrent_day\x18\x05 \x01(\x05R\n" +
-	"currentDay\x12!\n" +
-	"\fcurrent_loop\x18\x06 \x01(\x05R\vcurrentLoop\x12\"\n" +
-	"\rdays_per_loop\x18\x13 \x01(\x05R\vdaysPerLoop\x12@\n" +
-	"\rcurrent_phase\x18\a \x01(\x0e2\x1b.tragedylooper.v1.GamePhaseR\fcurrentPhase\x12[\n" +
-	"\x10active_tragedies\x18\b \x03(\v20.tragedylooper.v1.GameState.ActiveTragediesEntryR\x0factiveTragedies\x12d\n" +
-	"\x13prevented_tragedies\x18\t \x03(\v23.tragedylooper.v1.GameState.PreventedTragediesEntryR\x12preventedTragedies\x12f\n" +
-	"\x15played_cards_this_day\x18\n" +
-	" \x03(\v23.tragedylooper.v1.GameState.PlayedCardsThisDayEntryR\x12playedCardsThisDay\x12i\n" +
-	"\x16played_cards_this_loop\x18\v \x03(\v24.tragedylooper.v1.GameState.PlayedCardsThisLoopEntryR\x13playedCardsThisLoop\x12d\n" +
-	"\x13triggered_incidents\x18\f \x03(\v23.tragedylooper.v1.GameState.TriggeredIncidentsEntryR\x12triggeredIncidents\x12(\n" +
-	"\x10last_update_time\x18\r \x01(\x03R\x0elastUpdateTime\x12\x12\n" +
-	"\x04tick\x18\x14 \x01(\x03R\x04tick\x12:\n" +
+	"currentDay\x12@\n" +
+	"\rcurrent_phase\x18\x06 \x01(\x0e2\x1b.tragedylooper.v1.GamePhaseR\fcurrentPhase\x12K\n" +
 	"\n" +
-	"day_events\x18\x0e \x03(\v2\x1b.tragedylooper.v1.GameEventR\tdayEvents\x12<\n" +
-	"\vloop_events\x18\x0f \x03(\v2\x1b.tragedylooper.v1.GameEventR\n" +
-	"loopEvents\x12t\n" +
-	"\x19character_paranoia_limits\x18\x10 \x03(\v28.tragedylooper.v1.GameState.CharacterParanoiaLimitsEntryR\x17characterParanoiaLimits\x12t\n" +
-	"\x19character_goodwill_limits\x18\x11 \x03(\v28.tragedylooper.v1.GameState.CharacterGoodwillLimitsEntryR\x17characterGoodwillLimits\x12t\n" +
-	"\x19character_intrigue_limits\x18\x12 \x03(\v28.tragedylooper.v1.GameState.CharacterIntrigueLimitsEntryR\x17characterIntrigueLimits\x1aZ\n" +
+	"characters\x18\a \x03(\v2+.tragedylooper.v1.GameState.CharactersEntryR\n" +
+	"characters\x12B\n" +
+	"\aplayers\x18\b \x03(\v2(.tragedylooper.v1.GameState.PlayersEntryR\aplayers\x12d\n" +
+	"\x13triggered_incidents\x18\t \x03(\v23.tragedylooper.v1.GameState.TriggeredIncidentsEntryR\x12triggeredIncidents\x1aZ\n" +
 	"\x0fCharactersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x121\n" +
 	"\x05value\x18\x02 \x01(\v2\x1b.tragedylooper.v1.CharacterR\x05value:\x028\x01\x1aT\n" +
 	"\fPlayersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12.\n" +
-	"\x05value\x18\x02 \x01(\v2\x18.tragedylooper.v1.PlayerR\x05value:\x028\x01\x1aB\n" +
-	"\x14ActiveTragediesEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aE\n" +
-	"\x17PreventedTragediesEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aa\n" +
-	"\x17PlayedCardsThisDayEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x120\n" +
-	"\x05value\x18\x02 \x01(\v2\x1a.tragedylooper.v1.CardListR\x05value:\x028\x01\x1aF\n" +
-	"\x18PlayedCardsThisLoopEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aE\n" +
+	"\x05value\x18\x02 \x01(\v2\x18.tragedylooper.v1.PlayerR\x05value:\x028\x01\x1aE\n" +
 	"\x17TriggeredIncidentsEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aJ\n" +
-	"\x1cCharacterParanoiaLimitsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\x1aJ\n" +
-	"\x1cCharacterGoodwillLimitsEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\x1aJ\n" +
-	"\x1cCharacterIntrigueLimitsEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\xf4\x02\n" +
+	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\"\xa8\x02\n" +
 	"\x06Player\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x120\n" +
@@ -775,46 +626,34 @@ const file_tragedylooper_v1_game_proto_rawDesc = "" +
 	"\x06is_llm\x18\x04 \x01(\bR\x05isLlm\x12.\n" +
 	"\x04hand\x18\x05 \x01(\v2\x1a.tragedylooper.v1.CardListR\x04hand\x12$\n" +
 	"\x0ellm_session_id\x18\x06 \x01(\tR\fllmSessionId\x12[\n" +
-	"\x13deduction_knowledge\x18\a \x01(\v2*.tragedylooper.v1.PlayerDeductionKnowledgeR\x12deductionKnowledge\x12J\n" +
-	"!protagonist_characters_controlled\x18\b \x03(\x05R\x1fprotagonistCharactersControlled\"\xf0\x01\n" +
+	"\x13deduction_knowledge\x18\a \x01(\v2*.tragedylooper.v1.PlayerDeductionKnowledgeR\x12deductionKnowledge\"\xf0\x01\n" +
 	"\x18PlayerDeductionKnowledge\x12a\n" +
 	"\rguessed_roles\x18\x01 \x03(\v2<.tragedylooper.v1.PlayerDeductionKnowledge.GuessedRolesEntryR\fguessedRoles\x12\x14\n" +
 	"\x05clues\x18\x02 \x03(\tR\x05clues\x12\x1a\n" +
 	"\btheories\x18\x03 \x03(\tR\btheories\x1a?\n" +
 	"\x11GuessedRolesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\xd1\b\n" +
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\xa2\x05\n" +
 	"\n" +
 	"PlayerView\x12\x17\n" +
-	"\agame_id\x18\x01 \x01(\tR\x06gameId\x12\x1b\n" +
-	"\tscript_id\x18\x02 \x01(\x05R\bscriptId\x12L\n" +
+	"\agame_id\x18\x01 \x01(\tR\x06gameId\x12\x12\n" +
+	"\x04tick\x18\x02 \x01(\x03R\x04tick\x12!\n" +
+	"\fcurrent_loop\x18\x03 \x01(\x05R\vcurrentLoop\x12\x1f\n" +
+	"\vcurrent_day\x18\x04 \x01(\x05R\n" +
+	"currentDay\x12@\n" +
+	"\rcurrent_phase\x18\x05 \x01(\x0e2\x1b.tragedylooper.v1.GamePhaseR\fcurrentPhase\x12L\n" +
 	"\n" +
-	"characters\x18\x03 \x03(\v2,.tragedylooper.v1.PlayerView.CharactersEntryR\n" +
+	"characters\x18\x06 \x03(\v2,.tragedylooper.v1.PlayerView.CharactersEntryR\n" +
 	"characters\x12C\n" +
-	"\aplayers\x18\x04 \x03(\v2).tragedylooper.v1.PlayerView.PlayersEntryR\aplayers\x12\x1f\n" +
-	"\vcurrent_day\x18\x05 \x01(\x05R\n" +
-	"currentDay\x12!\n" +
-	"\fcurrent_loop\x18\x06 \x01(\x05R\vcurrentLoop\x12@\n" +
-	"\rcurrent_phase\x18\a \x01(\x0e2\x1b.tragedylooper.v1.GamePhaseR\fcurrentPhase\x12\\\n" +
-	"\x10active_tragedies\x18\b \x03(\v21.tragedylooper.v1.PlayerView.ActiveTragediesEntryR\x0factiveTragedies\x12e\n" +
-	"\x13prevented_tragedies\x18\t \x03(\v24.tragedylooper.v1.PlayerView.PreventedTragediesEntryR\x12preventedTragedies\x123\n" +
-	"\tyour_hand\x18\n" +
-	" \x03(\v2\x16.tragedylooper.v1.CardR\byourHand\x12S\n" +
-	"\x0fyour_deductions\x18\v \x01(\v2*.tragedylooper.v1.PlayerDeductionKnowledgeR\x0eyourDeductions\x12@\n" +
-	"\rpublic_events\x18\f \x03(\v2\x1b.tragedylooper.v1.GameEventR\fpublicEvents\x12\x12\n" +
-	"\x04tick\x18\r \x01(\x03R\x04tick\x1ad\n" +
+	"\aplayers\x18\a \x03(\v2).tragedylooper.v1.PlayerView.PlayersEntryR\aplayers\x123\n" +
+	"\tyour_hand\x18\b \x03(\v2\x16.tragedylooper.v1.CardR\byourHand\x12S\n" +
+	"\x0fyour_deductions\x18\t \x01(\v2*.tragedylooper.v1.PlayerDeductionKnowledgeR\x0eyourDeductions\x1ad\n" +
 	"\x0fCharactersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12;\n" +
 	"\x05value\x18\x02 \x01(\v2%.tragedylooper.v1.PlayerViewCharacterR\x05value:\x028\x01\x1a^\n" +
 	"\fPlayersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x128\n" +
-	"\x05value\x18\x02 \x01(\v2\".tragedylooper.v1.PlayerViewPlayerR\x05value:\x028\x01\x1aB\n" +
-	"\x14ActiveTragediesEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1aE\n" +
-	"\x17PreventedTragediesEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\"\xb3\x03\n" +
+	"\x05value\x18\x02 \x01(\v2\".tragedylooper.v1.PlayerViewPlayerR\x05value:\x028\x01\"\xe2\x03\n" +
 	"\x13PlayerViewCharacter\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
@@ -827,8 +666,8 @@ const file_tragedylooper_v1_game_proto_rawDesc = "" +
 	"\bis_alive\x18\t \x01(\bR\aisAlive\x12\"\n" +
 	"\rin_panic_mode\x18\n" +
 	" \x01(\bR\vinPanicMode\x125\n" +
-	"\x05rules\x18\v \x03(\v2\x1f.tragedylooper.v1.CharacterRuleR\x05rules\x12\x12\n" +
-	"\x04role\x18\f \x01(\x05R\x04role\"h\n" +
+	"\x05rules\x18\v \x03(\v2\x1f.tragedylooper.v1.CharacterRuleR\x05rules\x12A\n" +
+	"\rrevealed_role\x18\f \x01(\x0e2\x1c.tragedylooper.v1.PlayerRoleR\frevealedRole\"h\n" +
 	"\x10PlayerViewPlayer\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x120\n" +
@@ -847,7 +686,7 @@ func file_tragedylooper_v1_game_proto_rawDescGZIP() []byte {
 	return file_tragedylooper_v1_game_proto_rawDescData
 }
 
-var file_tragedylooper_v1_game_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_tragedylooper_v1_game_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_tragedylooper_v1_game_proto_goTypes = []any{
 	(*GameState)(nil),                // 0: tragedylooper.v1.GameState
 	(*Player)(nil),                   // 1: tragedylooper.v1.Player
@@ -857,69 +696,47 @@ var file_tragedylooper_v1_game_proto_goTypes = []any{
 	(*PlayerViewPlayer)(nil),         // 5: tragedylooper.v1.PlayerViewPlayer
 	nil,                              // 6: tragedylooper.v1.GameState.CharactersEntry
 	nil,                              // 7: tragedylooper.v1.GameState.PlayersEntry
-	nil,                              // 8: tragedylooper.v1.GameState.ActiveTragediesEntry
-	nil,                              // 9: tragedylooper.v1.GameState.PreventedTragediesEntry
-	nil,                              // 10: tragedylooper.v1.GameState.PlayedCardsThisDayEntry
-	nil,                              // 11: tragedylooper.v1.GameState.PlayedCardsThisLoopEntry
-	nil,                              // 12: tragedylooper.v1.GameState.TriggeredIncidentsEntry
-	nil,                              // 13: tragedylooper.v1.GameState.CharacterParanoiaLimitsEntry
-	nil,                              // 14: tragedylooper.v1.GameState.CharacterGoodwillLimitsEntry
-	nil,                              // 15: tragedylooper.v1.GameState.CharacterIntrigueLimitsEntry
-	nil,                              // 16: tragedylooper.v1.PlayerDeductionKnowledge.GuessedRolesEntry
-	nil,                              // 17: tragedylooper.v1.PlayerView.CharactersEntry
-	nil,                              // 18: tragedylooper.v1.PlayerView.PlayersEntry
-	nil,                              // 19: tragedylooper.v1.PlayerView.ActiveTragediesEntry
-	nil,                              // 20: tragedylooper.v1.PlayerView.PreventedTragediesEntry
-	(GamePhase)(0),                   // 21: tragedylooper.v1.GamePhase
-	(*GameEvent)(nil),                // 22: tragedylooper.v1.GameEvent
-	(PlayerRole)(0),                  // 23: tragedylooper.v1.PlayerRole
-	(*CardList)(nil),                 // 24: tragedylooper.v1.CardList
-	(*Card)(nil),                     // 25: tragedylooper.v1.Card
-	(LocationType)(0),                // 26: tragedylooper.v1.LocationType
-	(*Ability)(nil),                  // 27: tragedylooper.v1.Ability
-	(*CharacterRule)(nil),            // 28: tragedylooper.v1.CharacterRule
-	(*Character)(nil),                // 29: tragedylooper.v1.Character
+	nil,                              // 8: tragedylooper.v1.GameState.TriggeredIncidentsEntry
+	nil,                              // 9: tragedylooper.v1.PlayerDeductionKnowledge.GuessedRolesEntry
+	nil,                              // 10: tragedylooper.v1.PlayerView.CharactersEntry
+	nil,                              // 11: tragedylooper.v1.PlayerView.PlayersEntry
+	(GamePhase)(0),                   // 12: tragedylooper.v1.GamePhase
+	(PlayerRole)(0),                  // 13: tragedylooper.v1.PlayerRole
+	(*CardList)(nil),                 // 14: tragedylooper.v1.CardList
+	(*Card)(nil),                     // 15: tragedylooper.v1.Card
+	(LocationType)(0),                // 16: tragedylooper.v1.LocationType
+	(*Ability)(nil),                  // 17: tragedylooper.v1.Ability
+	(*CharacterRule)(nil),            // 18: tragedylooper.v1.CharacterRule
+	(*Character)(nil),                // 19: tragedylooper.v1.Character
 }
 var file_tragedylooper_v1_game_proto_depIdxs = []int32{
-	6,  // 0: tragedylooper.v1.GameState.characters:type_name -> tragedylooper.v1.GameState.CharactersEntry
-	7,  // 1: tragedylooper.v1.GameState.players:type_name -> tragedylooper.v1.GameState.PlayersEntry
-	21, // 2: tragedylooper.v1.GameState.current_phase:type_name -> tragedylooper.v1.GamePhase
-	8,  // 3: tragedylooper.v1.GameState.active_tragedies:type_name -> tragedylooper.v1.GameState.ActiveTragediesEntry
-	9,  // 4: tragedylooper.v1.GameState.prevented_tragedies:type_name -> tragedylooper.v1.GameState.PreventedTragediesEntry
-	10, // 5: tragedylooper.v1.GameState.played_cards_this_day:type_name -> tragedylooper.v1.GameState.PlayedCardsThisDayEntry
-	11, // 6: tragedylooper.v1.GameState.played_cards_this_loop:type_name -> tragedylooper.v1.GameState.PlayedCardsThisLoopEntry
-	12, // 7: tragedylooper.v1.GameState.triggered_incidents:type_name -> tragedylooper.v1.GameState.TriggeredIncidentsEntry
-	22, // 8: tragedylooper.v1.GameState.day_events:type_name -> tragedylooper.v1.GameEvent
-	22, // 9: tragedylooper.v1.GameState.loop_events:type_name -> tragedylooper.v1.GameEvent
-	13, // 10: tragedylooper.v1.GameState.character_paranoia_limits:type_name -> tragedylooper.v1.GameState.CharacterParanoiaLimitsEntry
-	14, // 11: tragedylooper.v1.GameState.character_goodwill_limits:type_name -> tragedylooper.v1.GameState.CharacterGoodwillLimitsEntry
-	15, // 12: tragedylooper.v1.GameState.character_intrigue_limits:type_name -> tragedylooper.v1.GameState.CharacterIntrigueLimitsEntry
-	23, // 13: tragedylooper.v1.Player.role:type_name -> tragedylooper.v1.PlayerRole
-	24, // 14: tragedylooper.v1.Player.hand:type_name -> tragedylooper.v1.CardList
-	2,  // 15: tragedylooper.v1.Player.deduction_knowledge:type_name -> tragedylooper.v1.PlayerDeductionKnowledge
-	16, // 16: tragedylooper.v1.PlayerDeductionKnowledge.guessed_roles:type_name -> tragedylooper.v1.PlayerDeductionKnowledge.GuessedRolesEntry
-	17, // 17: tragedylooper.v1.PlayerView.characters:type_name -> tragedylooper.v1.PlayerView.CharactersEntry
-	18, // 18: tragedylooper.v1.PlayerView.players:type_name -> tragedylooper.v1.PlayerView.PlayersEntry
-	21, // 19: tragedylooper.v1.PlayerView.current_phase:type_name -> tragedylooper.v1.GamePhase
-	19, // 20: tragedylooper.v1.PlayerView.active_tragedies:type_name -> tragedylooper.v1.PlayerView.ActiveTragediesEntry
-	20, // 21: tragedylooper.v1.PlayerView.prevented_tragedies:type_name -> tragedylooper.v1.PlayerView.PreventedTragediesEntry
-	25, // 22: tragedylooper.v1.PlayerView.your_hand:type_name -> tragedylooper.v1.Card
-	2,  // 23: tragedylooper.v1.PlayerView.your_deductions:type_name -> tragedylooper.v1.PlayerDeductionKnowledge
-	22, // 24: tragedylooper.v1.PlayerView.public_events:type_name -> tragedylooper.v1.GameEvent
-	26, // 25: tragedylooper.v1.PlayerViewCharacter.current_location:type_name -> tragedylooper.v1.LocationType
-	27, // 26: tragedylooper.v1.PlayerViewCharacter.abilities:type_name -> tragedylooper.v1.Ability
-	28, // 27: tragedylooper.v1.PlayerViewCharacter.rules:type_name -> tragedylooper.v1.CharacterRule
-	23, // 28: tragedylooper.v1.PlayerViewPlayer.role:type_name -> tragedylooper.v1.PlayerRole
-	29, // 29: tragedylooper.v1.GameState.CharactersEntry.value:type_name -> tragedylooper.v1.Character
-	1,  // 30: tragedylooper.v1.GameState.PlayersEntry.value:type_name -> tragedylooper.v1.Player
-	24, // 31: tragedylooper.v1.GameState.PlayedCardsThisDayEntry.value:type_name -> tragedylooper.v1.CardList
-	4,  // 32: tragedylooper.v1.PlayerView.CharactersEntry.value:type_name -> tragedylooper.v1.PlayerViewCharacter
-	5,  // 33: tragedylooper.v1.PlayerView.PlayersEntry.value:type_name -> tragedylooper.v1.PlayerViewPlayer
-	34, // [34:34] is the sub-list for method output_type
-	34, // [34:34] is the sub-list for method input_type
-	34, // [34:34] is the sub-list for extension type_name
-	34, // [34:34] is the sub-list for extension extendee
-	0,  // [0:34] is the sub-list for field type_name
+	12, // 0: tragedylooper.v1.GameState.current_phase:type_name -> tragedylooper.v1.GamePhase
+	6,  // 1: tragedylooper.v1.GameState.characters:type_name -> tragedylooper.v1.GameState.CharactersEntry
+	7,  // 2: tragedylooper.v1.GameState.players:type_name -> tragedylooper.v1.GameState.PlayersEntry
+	8,  // 3: tragedylooper.v1.GameState.triggered_incidents:type_name -> tragedylooper.v1.GameState.TriggeredIncidentsEntry
+	13, // 4: tragedylooper.v1.Player.role:type_name -> tragedylooper.v1.PlayerRole
+	14, // 5: tragedylooper.v1.Player.hand:type_name -> tragedylooper.v1.CardList
+	2,  // 6: tragedylooper.v1.Player.deduction_knowledge:type_name -> tragedylooper.v1.PlayerDeductionKnowledge
+	9,  // 7: tragedylooper.v1.PlayerDeductionKnowledge.guessed_roles:type_name -> tragedylooper.v1.PlayerDeductionKnowledge.GuessedRolesEntry
+	12, // 8: tragedylooper.v1.PlayerView.current_phase:type_name -> tragedylooper.v1.GamePhase
+	10, // 9: tragedylooper.v1.PlayerView.characters:type_name -> tragedylooper.v1.PlayerView.CharactersEntry
+	11, // 10: tragedylooper.v1.PlayerView.players:type_name -> tragedylooper.v1.PlayerView.PlayersEntry
+	15, // 11: tragedylooper.v1.PlayerView.your_hand:type_name -> tragedylooper.v1.Card
+	2,  // 12: tragedylooper.v1.PlayerView.your_deductions:type_name -> tragedylooper.v1.PlayerDeductionKnowledge
+	16, // 13: tragedylooper.v1.PlayerViewCharacter.current_location:type_name -> tragedylooper.v1.LocationType
+	17, // 14: tragedylooper.v1.PlayerViewCharacter.abilities:type_name -> tragedylooper.v1.Ability
+	18, // 15: tragedylooper.v1.PlayerViewCharacter.rules:type_name -> tragedylooper.v1.CharacterRule
+	13, // 16: tragedylooper.v1.PlayerViewCharacter.revealed_role:type_name -> tragedylooper.v1.PlayerRole
+	13, // 17: tragedylooper.v1.PlayerViewPlayer.role:type_name -> tragedylooper.v1.PlayerRole
+	19, // 18: tragedylooper.v1.GameState.CharactersEntry.value:type_name -> tragedylooper.v1.Character
+	1,  // 19: tragedylooper.v1.GameState.PlayersEntry.value:type_name -> tragedylooper.v1.Player
+	4,  // 20: tragedylooper.v1.PlayerView.CharactersEntry.value:type_name -> tragedylooper.v1.PlayerViewCharacter
+	5,  // 21: tragedylooper.v1.PlayerView.PlayersEntry.value:type_name -> tragedylooper.v1.PlayerViewPlayer
+	22, // [22:22] is the sub-list for method output_type
+	22, // [22:22] is the sub-list for method input_type
+	22, // [22:22] is the sub-list for extension type_name
+	22, // [22:22] is the sub-list for extension extendee
+	0,  // [0:22] is the sub-list for field type_name
 }
 
 func init() { file_tragedylooper_v1_game_proto_init() }
@@ -938,7 +755,7 @@ func file_tragedylooper_v1_game_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_game_proto_rawDesc), len(file_tragedylooper_v1_game_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   21,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

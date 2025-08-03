@@ -33,50 +33,18 @@
                     "title": "Location Type",
                     "description": "地点类型（也可通过LocationConfig扩展）"
                 },
-                "is_at_location": {
-                    "type": "boolean",
-                    "description": "Whether the character is at the location (defaults to true)."
-                },
-                "is_alone": {
-                    "type": "boolean",
-                    "description": "Whether the character is alone at the location."
-                },
-                "not_alone": {
-                    "type": "boolean",
-                    "description": "Whether the character is not alone at the location."
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Location Condition",
-            "description": "LocationCondition defines a condition based on a character's location."
-        },
-        "tragedylooper.v1.TargetSelector": {
-            "properties": {
-                "specific_character": {
-                    "type": "integer",
-                    "description": "A specific character by ID."
-                },
-                "triggering_character": {
-                    "type": "boolean",
-                    "description": "The character that triggered the event. A boolean marker."
-                },
-                "culprit": {
-                    "type": "boolean",
-                    "description": "The culprit of the event. A boolean marker."
-                },
-                "victim": {
-                    "type": "boolean",
-                    "description": "The victim of the event. A boolean marker."
-                },
-                "character_with_role": {
+                "state": {
                     "enum": [
-                        "PLAYER_ROLE_UNSPECIFIED",
+                        "LOCATION_STATE_UNSPECIFIED",
                         0,
-                        "PLAYER_ROLE_MASTERMIND",
+                        "IS_AT",
                         1,
-                        "PLAYER_ROLE_PROTAGONIST",
-                        2
+                        "IS_NOT_AT",
+                        2,
+                        "IS_ALONE_AT",
+                        3,
+                        "IS_NOT_ALONE_AT",
+                        4
                     ],
                     "oneOf": [
                         {
@@ -86,8 +54,45 @@
                             "type": "integer"
                         }
                     ],
-                    "title": "Player Role",
-                    "description": "玩家角色"
+                    "title": "Location State",
+                    "description": "The state to check for the character at the location."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Location Condition",
+            "description": "LocationCondition defines a condition based on a character's location."
+        },
+        "tragedylooper.v1.Empty": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Empty",
+            "description": "Empty is a placeholder for messages that have no data."
+        },
+        "tragedylooper.v1.TargetSelector": {
+            "properties": {
+                "specific_character": {
+                    "type": "integer",
+                    "description": "A specific character by ID."
+                },
+                "triggering_character": {
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "The character that triggered the event."
+                },
+                "culprit": {
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "The culprit of the event."
+                },
+                "victim": {
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "The victim of the event."
+                },
+                "character_with_role_id": {
+                    "type": "integer",
+                    "description": "Any character with a specific role."
                 },
                 "all_characters_at_location": {
                     "enum": [
@@ -113,17 +118,20 @@
                     "title": "Location Type",
                     "description": "地点类型（也可通过LocationConfig扩展）"
                 },
-                "ability_user": {
-                    "type": "boolean",
-                    "description": "The user of the ability. A boolean marker."
+                "action_user": {
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "The user of the action (card or ability)."
                 },
-                "ability_target": {
-                    "type": "boolean",
-                    "description": "The target of the ability. A boolean marker."
+                "action_target": {
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "The target of the action (card or ability)."
                 },
                 "all_characters": {
-                    "type": "boolean",
-                    "description": "All characters. A boolean marker."
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "All characters."
                 }
             },
             "additionalProperties": true,

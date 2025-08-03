@@ -1,13 +1,13 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "enum": [
-        "PLAYER_ROLE_UNSPECIFIED",
+        "STAT_TYPE_UNSPECIFIED",
         0,
-        "PLAYER_ROLE_UNKNOWN",
+        "STAT_TYPE_PARANOIA",
         1,
-        "PLAYER_ROLE_MASTERMIND",
+        "STAT_TYPE_GOODWILL",
         2,
-        "PLAYER_ROLE_PROTAGONIST",
+        "STAT_TYPE_INTRIGUE",
         3
     ],
     "oneOf": [
@@ -18,6 +18,6 @@
             "type": "integer"
         }
     ],
-    "title": "Player Role",
-    "description": "玩家角色"
+    "title": "Stat Type",
+    "description": "StatType defines the type of character stat."
 }

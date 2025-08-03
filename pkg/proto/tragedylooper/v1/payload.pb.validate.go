@@ -57,38 +57,9 @@ func (m *PlayCardPayload) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for PlayerId
-
 	// no validation rules for CardId
 
-	switch v := m.Target.(type) {
-	case *PlayCardPayload_TargetCharacterId:
-		if v == nil {
-			err := PlayCardPayloadValidationError{
-				field:  "Target",
-				reason: "oneof value cannot be a typed-nil",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-		// no validation rules for TargetCharacterId
-	case *PlayCardPayload_TargetLocation:
-		if v == nil {
-			err := PlayCardPayloadValidationError{
-				field:  "Target",
-				reason: "oneof value cannot be a typed-nil",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-		// no validation rules for TargetLocation
-	default:
-		_ = v // ensures v is used
-	}
+	// no validation rules for PreChosenOptions
 
 	if len(errors) > 0 {
 		return PlayCardPayloadMultiError(errors)
@@ -190,52 +161,11 @@ func (m *UseAbilityPayload) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for PlayerId
-
 	// no validation rules for CharacterId
 
 	// no validation rules for AbilityId
 
-	switch v := m.Target.(type) {
-	case *UseAbilityPayload_TargetCharacterId:
-		if v == nil {
-			err := UseAbilityPayloadValidationError{
-				field:  "Target",
-				reason: "oneof value cannot be a typed-nil",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-		// no validation rules for TargetCharacterId
-	case *UseAbilityPayload_TargetLocation:
-		if v == nil {
-			err := UseAbilityPayloadValidationError{
-				field:  "Target",
-				reason: "oneof value cannot be a typed-nil",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-		// no validation rules for TargetLocation
-	case *UseAbilityPayload_TargetIncidentId:
-		if v == nil {
-			err := UseAbilityPayloadValidationError{
-				field:  "Target",
-				reason: "oneof value cannot be a typed-nil",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-		// no validation rules for TargetIncidentId
-	default:
-		_ = v // ensures v is used
-	}
+	// no validation rules for PreChosenOptions
 
 	if len(errors) > 0 {
 		return UseAbilityPayloadMultiError(errors)
@@ -339,8 +269,6 @@ func (m *MakeGuessPayload) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for PlayerId
-
 	// no validation rules for GuessedRoles
 
 	if len(errors) > 0 {
@@ -443,11 +371,13 @@ func (m *ChooseOptionPayload) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for PlayerId
-
-	// no validation rules for CharacterId
+	// no validation rules for RequestId
 
 	// no validation rules for ChosenOptionId
+
+	if m.CharacterId != nil {
+		// no validation rules for CharacterId
+	}
 
 	if len(errors) > 0 {
 		return ChooseOptionPayloadMultiError(errors)
@@ -551,8 +481,6 @@ func (m *PassTurnAction) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for PlayerId
-
 	if len(errors) > 0 {
 		return PassTurnActionMultiError(errors)
 	}
@@ -652,6 +580,8 @@ func (m *PlayerActionPayload) validate(all bool) error {
 	}
 
 	var errors []error
+
+	// no validation rules for PlayerId
 
 	switch v := m.Payload.(type) {
 	case *PlayerActionPayload_PlayCard:

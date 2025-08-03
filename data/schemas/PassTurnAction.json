@@ -3,11 +3,6 @@
     "$ref": "#/definitions/PassTurnAction",
     "definitions": {
         "PassTurnAction": {
-            "properties": {
-                "player_id": {
-                    "type": "integer"
-                }
-            },
             "additionalProperties": true,
             "type": "object",
             "title": "Pass Turn Action",

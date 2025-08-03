@@ -198,6 +198,8 @@ func (m *Card) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Id
+
 	if all {
 		switch v := interface{}(m.GetConfig()).(type) {
 		case interface{ ValidateAll() error }:
@@ -229,33 +231,33 @@ func (m *Card) validate(all bool) error {
 
 	// no validation rules for UsedThisLoop
 
-	switch v := m.Target.(type) {
-	case *Card_TargetCharacterId:
-		if v == nil {
-			err := CardValidationError{
-				field:  "Target",
-				reason: "oneof value cannot be a typed-nil",
+	if all {
+		switch v := interface{}(m.GetResolvedTarget()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CardValidationError{
+					field:  "ResolvedTarget",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
 			}
-			if !all {
-				return err
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CardValidationError{
+					field:  "ResolvedTarget",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
 			}
-			errors = append(errors, err)
 		}
-		// no validation rules for TargetCharacterId
-	case *Card_TargetLocation:
-		if v == nil {
-			err := CardValidationError{
-				field:  "Target",
-				reason: "oneof value cannot be a typed-nil",
+	} else if v, ok := interface{}(m.GetResolvedTarget()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CardValidationError{
+				field:  "ResolvedTarget",
+				reason: "embedded message failed validation",
+				cause:  err,
 			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
 		}
-		// no validation rules for TargetLocation
-	default:
-		_ = v // ensures v is used
 	}
 
 	if len(errors) > 0 {

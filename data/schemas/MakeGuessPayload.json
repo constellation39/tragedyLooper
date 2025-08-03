@@ -4,10 +4,6 @@
     "definitions": {
         "MakeGuessPayload": {
             "properties": {
-                "player_id": {
-                    "type": "integer",
-                    "description": "执行操作的玩家ID"
-                },
                 "guessed_roles": {
                     "additionalProperties": {
                         "type": "integer"

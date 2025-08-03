@@ -6,20 +6,22 @@
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "玩家唯一ID"
+                    "description": "Player's unique ID."
                 },
                 "name": {
                     "type": "string",
-                    "description": "玩家名称"
+                    "description": "Player's name."
                 },
                 "role": {
                     "enum": [
                         "PLAYER_ROLE_UNSPECIFIED",
                         0,
-                        "PLAYER_ROLE_MASTERMIND",
+                        "PLAYER_ROLE_UNKNOWN",
                         1,
+                        "PLAYER_ROLE_MASTERMIND",
+                        2,
                         "PLAYER_ROLE_PROTAGONIST",
-                        2
+                        3
                     ],
                     "oneOf": [
                         {
@@ -36,7 +38,7 @@
             "additionalProperties": true,
             "type": "object",
             "title": "Player View Player",
-            "description": "玩家视角下的其他玩家信息（不包含私密数据）"
+            "description": "PlayerViewPlayer is a sanitized version of a Player for client display. It omits private information like the other player's hand."
         }
     }
 }

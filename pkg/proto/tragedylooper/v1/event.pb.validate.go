@@ -117,6 +117,39 @@ func (m *GameEvent) validate(all bool) error {
 		}
 	}
 
+	if m.Cause != nil {
+
+		if all {
+			switch v := interface{}(m.GetCause()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GameEventValidationError{
+						field:  "Cause",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GameEventValidationError{
+						field:  "Cause",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetCause()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GameEventValidationError{
+					field:  "Cause",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return GameEventMultiError(errors)
 	}
@@ -194,6 +227,145 @@ var _ interface {
 	ErrorName() string
 } = GameEventValidationError{}
 
+// Validate checks the field values on Cause with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *Cause) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Cause with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in CauseMultiError, or nil if none found.
+func (m *Cause) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Cause) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	switch v := m.CauseType.(type) {
+	case *Cause_CardId:
+		if v == nil {
+			err := CauseValidationError{
+				field:  "CauseType",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for CardId
+	case *Cause_AbilityId:
+		if v == nil {
+			err := CauseValidationError{
+				field:  "CauseType",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for AbilityId
+	case *Cause_IncidentId:
+		if v == nil {
+			err := CauseValidationError{
+				field:  "CauseType",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for IncidentId
+	default:
+		_ = v // ensures v is used
+	}
+
+	if len(errors) > 0 {
+		return CauseMultiError(errors)
+	}
+
+	return nil
+}
+
+// CauseMultiError is an error wrapping multiple validation errors returned by
+// Cause.ValidateAll() if the designated constraints aren't met.
+type CauseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CauseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CauseMultiError) AllErrors() []error { return m }
+
+// CauseValidationError is the validation error returned by Cause.Validate if
+// the designated constraints aren't met.
+type CauseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CauseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CauseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CauseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CauseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CauseValidationError) ErrorName() string { return "CauseValidationError" }
+
+// Error satisfies the builtin error interface
+func (e CauseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCause.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CauseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CauseValidationError{}
+
 // Validate checks the field values on EventPayload with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -258,7 +430,7 @@ func (m *EventPayload) validate(all bool) error {
 			}
 		}
 
-	case *EventPayload_ParanoiaAdjusted:
+	case *EventPayload_StatAdjusted:
 		if v == nil {
 			err := EventPayloadValidationError{
 				field:  "Payload",
@@ -271,11 +443,11 @@ func (m *EventPayload) validate(all bool) error {
 		}
 
 		if all {
-			switch v := interface{}(m.GetParanoiaAdjusted()).(type) {
+			switch v := interface{}(m.GetStatAdjusted()).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, EventPayloadValidationError{
-						field:  "ParanoiaAdjusted",
+						field:  "StatAdjusted",
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -283,98 +455,16 @@ func (m *EventPayload) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, EventPayloadValidationError{
-						field:  "ParanoiaAdjusted",
+						field:  "StatAdjusted",
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
 				}
 			}
-		} else if v, ok := interface{}(m.GetParanoiaAdjusted()).(interface{ Validate() error }); ok {
+		} else if v, ok := interface{}(m.GetStatAdjusted()).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return EventPayloadValidationError{
-					field:  "ParanoiaAdjusted",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	case *EventPayload_GoodwillAdjusted:
-		if v == nil {
-			err := EventPayloadValidationError{
-				field:  "Payload",
-				reason: "oneof value cannot be a typed-nil",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-		if all {
-			switch v := interface{}(m.GetGoodwillAdjusted()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, EventPayloadValidationError{
-						field:  "GoodwillAdjusted",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, EventPayloadValidationError{
-						field:  "GoodwillAdjusted",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetGoodwillAdjusted()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return EventPayloadValidationError{
-					field:  "GoodwillAdjusted",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	case *EventPayload_IntrigueAdjusted:
-		if v == nil {
-			err := EventPayloadValidationError{
-				field:  "Payload",
-				reason: "oneof value cannot be a typed-nil",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-		if all {
-			switch v := interface{}(m.GetIntrigueAdjusted()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, EventPayloadValidationError{
-						field:  "IntrigueAdjusted",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, EventPayloadValidationError{
-						field:  "IntrigueAdjusted",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetIntrigueAdjusted()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return EventPayloadValidationError{
-					field:  "IntrigueAdjusted",
+					field:  "StatAdjusted",
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -832,7 +922,7 @@ func (m *EventPayload) validate(all bool) error {
 			}
 		}
 
-	case *EventPayload_TraitAdded:
+	case *EventPayload_TraitAdjusted:
 		if v == nil {
 			err := EventPayloadValidationError{
 				field:  "Payload",
@@ -845,11 +935,11 @@ func (m *EventPayload) validate(all bool) error {
 		}
 
 		if all {
-			switch v := interface{}(m.GetTraitAdded()).(type) {
+			switch v := interface{}(m.GetTraitAdjusted()).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, EventPayloadValidationError{
-						field:  "TraitAdded",
+						field:  "TraitAdjusted",
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -857,57 +947,16 @@ func (m *EventPayload) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, EventPayloadValidationError{
-						field:  "TraitAdded",
+						field:  "TraitAdjusted",
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
 				}
 			}
-		} else if v, ok := interface{}(m.GetTraitAdded()).(interface{ Validate() error }); ok {
+		} else if v, ok := interface{}(m.GetTraitAdjusted()).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return EventPayloadValidationError{
-					field:  "TraitAdded",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	case *EventPayload_TraitRemoved:
-		if v == nil {
-			err := EventPayloadValidationError{
-				field:  "Payload",
-				reason: "oneof value cannot be a typed-nil",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-		if all {
-			switch v := interface{}(m.GetTraitRemoved()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, EventPayloadValidationError{
-						field:  "TraitRemoved",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, EventPayloadValidationError{
-						field:  "TraitRemoved",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetTraitRemoved()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return EventPayloadValidationError{
-					field:  "TraitRemoved",
+					field:  "TraitAdjusted",
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -1142,22 +1191,22 @@ var _ interface {
 	ErrorName() string
 } = CharacterMovedEventValidationError{}
 
-// Validate checks the field values on ParanoiaAdjustedEvent with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ParanoiaAdjustedEvent) Validate() error {
+// Validate checks the field values on StatAdjustedEvent with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *StatAdjustedEvent) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ParanoiaAdjustedEvent with the rules
+// ValidateAll checks the field values on StatAdjustedEvent with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ParanoiaAdjustedEventMultiError, or nil if none found.
-func (m *ParanoiaAdjustedEvent) ValidateAll() error {
+// StatAdjustedEventMultiError, or nil if none found.
+func (m *StatAdjustedEvent) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ParanoiaAdjustedEvent) validate(all bool) error {
+func (m *StatAdjustedEvent) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1166,24 +1215,26 @@ func (m *ParanoiaAdjustedEvent) validate(all bool) error {
 
 	// no validation rules for CharacterId
 
+	// no validation rules for StatType
+
 	// no validation rules for Amount
 
-	// no validation rules for NewParanoia
+	// no validation rules for NewValue
 
 	if len(errors) > 0 {
-		return ParanoiaAdjustedEventMultiError(errors)
+		return StatAdjustedEventMultiError(errors)
 	}
 
 	return nil
 }
 
-// ParanoiaAdjustedEventMultiError is an error wrapping multiple validation
-// errors returned by ParanoiaAdjustedEvent.ValidateAll() if the designated
-// constraints aren't met.
-type ParanoiaAdjustedEventMultiError []error
+// StatAdjustedEventMultiError is an error wrapping multiple validation errors
+// returned by StatAdjustedEvent.ValidateAll() if the designated constraints
+// aren't met.
+type StatAdjustedEventMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ParanoiaAdjustedEventMultiError) Error() string {
+func (m StatAdjustedEventMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1192,11 +1243,11 @@ func (m ParanoiaAdjustedEventMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ParanoiaAdjustedEventMultiError) AllErrors() []error { return m }
+func (m StatAdjustedEventMultiError) AllErrors() []error { return m }
 
-// ParanoiaAdjustedEventValidationError is the validation error returned by
-// ParanoiaAdjustedEvent.Validate if the designated constraints aren't met.
-type ParanoiaAdjustedEventValidationError struct {
+// StatAdjustedEventValidationError is the validation error returned by
+// StatAdjustedEvent.Validate if the designated constraints aren't met.
+type StatAdjustedEventValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1204,24 +1255,24 @@ type ParanoiaAdjustedEventValidationError struct {
 }
 
 // Field function returns field value.
-func (e ParanoiaAdjustedEventValidationError) Field() string { return e.field }
+func (e StatAdjustedEventValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ParanoiaAdjustedEventValidationError) Reason() string { return e.reason }
+func (e StatAdjustedEventValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ParanoiaAdjustedEventValidationError) Cause() error { return e.cause }
+func (e StatAdjustedEventValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ParanoiaAdjustedEventValidationError) Key() bool { return e.key }
+func (e StatAdjustedEventValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ParanoiaAdjustedEventValidationError) ErrorName() string {
-	return "ParanoiaAdjustedEventValidationError"
+func (e StatAdjustedEventValidationError) ErrorName() string {
+	return "StatAdjustedEventValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ParanoiaAdjustedEventValidationError) Error() string {
+func (e StatAdjustedEventValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1233,14 +1284,14 @@ func (e ParanoiaAdjustedEventValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sParanoiaAdjustedEvent.%s: %s%s",
+		"invalid %sStatAdjustedEvent.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ParanoiaAdjustedEventValidationError{}
+var _ error = StatAdjustedEventValidationError{}
 
 var _ interface {
 	Field() string
@@ -1248,24 +1299,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ParanoiaAdjustedEventValidationError{}
+} = StatAdjustedEventValidationError{}
 
-// Validate checks the field values on GoodwillAdjustedEvent with the rules
+// Validate checks the field values on TraitAdjustedEvent with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GoodwillAdjustedEvent) Validate() error {
+func (m *TraitAdjustedEvent) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on GoodwillAdjustedEvent with the rules
+// ValidateAll checks the field values on TraitAdjustedEvent with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// GoodwillAdjustedEventMultiError, or nil if none found.
-func (m *GoodwillAdjustedEvent) ValidateAll() error {
+// TraitAdjustedEventMultiError, or nil if none found.
+func (m *TraitAdjustedEvent) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *GoodwillAdjustedEvent) validate(all bool) error {
+func (m *TraitAdjustedEvent) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1274,24 +1325,24 @@ func (m *GoodwillAdjustedEvent) validate(all bool) error {
 
 	// no validation rules for CharacterId
 
-	// no validation rules for Amount
+	// no validation rules for Trait
 
-	// no validation rules for NewGoodwill
+	// no validation rules for WasAdded
 
 	if len(errors) > 0 {
-		return GoodwillAdjustedEventMultiError(errors)
+		return TraitAdjustedEventMultiError(errors)
 	}
 
 	return nil
 }
 
-// GoodwillAdjustedEventMultiError is an error wrapping multiple validation
-// errors returned by GoodwillAdjustedEvent.ValidateAll() if the designated
-// constraints aren't met.
-type GoodwillAdjustedEventMultiError []error
+// TraitAdjustedEventMultiError is an error wrapping multiple validation errors
+// returned by TraitAdjustedEvent.ValidateAll() if the designated constraints
+// aren't met.
+type TraitAdjustedEventMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m GoodwillAdjustedEventMultiError) Error() string {
+func (m TraitAdjustedEventMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1300,11 +1351,11 @@ func (m GoodwillAdjustedEventMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m GoodwillAdjustedEventMultiError) AllErrors() []error { return m }
+func (m TraitAdjustedEventMultiError) AllErrors() []error { return m }
 
-// GoodwillAdjustedEventValidationError is the validation error returned by
-// GoodwillAdjustedEvent.Validate if the designated constraints aren't met.
-type GoodwillAdjustedEventValidationError struct {
+// TraitAdjustedEventValidationError is the validation error returned by
+// TraitAdjustedEvent.Validate if the designated constraints aren't met.
+type TraitAdjustedEventValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1312,24 +1363,24 @@ type GoodwillAdjustedEventValidationError struct {
 }
 
 // Field function returns field value.
-func (e GoodwillAdjustedEventValidationError) Field() string { return e.field }
+func (e TraitAdjustedEventValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e GoodwillAdjustedEventValidationError) Reason() string { return e.reason }
+func (e TraitAdjustedEventValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e GoodwillAdjustedEventValidationError) Cause() error { return e.cause }
+func (e TraitAdjustedEventValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e GoodwillAdjustedEventValidationError) Key() bool { return e.key }
+func (e TraitAdjustedEventValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e GoodwillAdjustedEventValidationError) ErrorName() string {
-	return "GoodwillAdjustedEventValidationError"
+func (e TraitAdjustedEventValidationError) ErrorName() string {
+	return "TraitAdjustedEventValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e GoodwillAdjustedEventValidationError) Error() string {
+func (e TraitAdjustedEventValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1341,14 +1392,14 @@ func (e GoodwillAdjustedEventValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sGoodwillAdjustedEvent.%s: %s%s",
+		"invalid %sTraitAdjustedEvent.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = GoodwillAdjustedEventValidationError{}
+var _ error = TraitAdjustedEventValidationError{}
 
 var _ interface {
 	Field() string
@@ -1356,115 +1407,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = GoodwillAdjustedEventValidationError{}
-
-// Validate checks the field values on IntrigueAdjustedEvent with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *IntrigueAdjustedEvent) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on IntrigueAdjustedEvent with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// IntrigueAdjustedEventMultiError, or nil if none found.
-func (m *IntrigueAdjustedEvent) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *IntrigueAdjustedEvent) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for CharacterId
-
-	// no validation rules for Amount
-
-	// no validation rules for NewIntrigue
-
-	if len(errors) > 0 {
-		return IntrigueAdjustedEventMultiError(errors)
-	}
-
-	return nil
-}
-
-// IntrigueAdjustedEventMultiError is an error wrapping multiple validation
-// errors returned by IntrigueAdjustedEvent.ValidateAll() if the designated
-// constraints aren't met.
-type IntrigueAdjustedEventMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m IntrigueAdjustedEventMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m IntrigueAdjustedEventMultiError) AllErrors() []error { return m }
-
-// IntrigueAdjustedEventValidationError is the validation error returned by
-// IntrigueAdjustedEvent.Validate if the designated constraints aren't met.
-type IntrigueAdjustedEventValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e IntrigueAdjustedEventValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e IntrigueAdjustedEventValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e IntrigueAdjustedEventValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e IntrigueAdjustedEventValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e IntrigueAdjustedEventValidationError) ErrorName() string {
-	return "IntrigueAdjustedEventValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e IntrigueAdjustedEventValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sIntrigueAdjustedEvent.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = IntrigueAdjustedEventValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = IntrigueAdjustedEventValidationError{}
+} = TraitAdjustedEventValidationError{}
 
 // Validate checks the field values on LoopLossEvent with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -2360,137 +2303,6 @@ var _ interface {
 	ErrorName() string
 } = GameEndedEventValidationError{}
 
-// Validate checks the field values on Choice with the rules defined in the
-// proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *Choice) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on Choice with the rules defined in the
-// proto definition for this message. If any rules are violated, the result is
-// a list of violation errors wrapped in ChoiceMultiError, or nil if none found.
-func (m *Choice) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *Choice) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for Description
-
-	switch v := m.ChoiceType.(type) {
-	case *Choice_TargetCharacterId:
-		if v == nil {
-			err := ChoiceValidationError{
-				field:  "ChoiceType",
-				reason: "oneof value cannot be a typed-nil",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-		// no validation rules for TargetCharacterId
-	case *Choice_EffectOptionIndex:
-		if v == nil {
-			err := ChoiceValidationError{
-				field:  "ChoiceType",
-				reason: "oneof value cannot be a typed-nil",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-		// no validation rules for EffectOptionIndex
-	default:
-		_ = v // ensures v is used
-	}
-
-	if len(errors) > 0 {
-		return ChoiceMultiError(errors)
-	}
-
-	return nil
-}
-
-// ChoiceMultiError is an error wrapping multiple validation errors returned by
-// Choice.ValidateAll() if the designated constraints aren't met.
-type ChoiceMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ChoiceMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ChoiceMultiError) AllErrors() []error { return m }
-
-// ChoiceValidationError is the validation error returned by Choice.Validate if
-// the designated constraints aren't met.
-type ChoiceValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ChoiceValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ChoiceValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ChoiceValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ChoiceValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ChoiceValidationError) ErrorName() string { return "ChoiceValidationError" }
-
-// Error satisfies the builtin error interface
-func (e ChoiceValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sChoice.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ChoiceValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ChoiceValidationError{}
-
 // Validate checks the field values on ChoiceRequiredEvent with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2512,6 +2324,10 @@ func (m *ChoiceRequiredEvent) validate(all bool) error {
 	}
 
 	var errors []error
+
+	// no validation rules for RequestId
+
+	// no validation rules for PlayerId
 
 	for idx, item := range m.GetChoices() {
 		_, _ = idx, item
@@ -2861,216 +2677,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = TragedyTriggeredEventValidationError{}
-
-// Validate checks the field values on TraitAddedEvent with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *TraitAddedEvent) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on TraitAddedEvent with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// TraitAddedEventMultiError, or nil if none found.
-func (m *TraitAddedEvent) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *TraitAddedEvent) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for CharacterId
-
-	// no validation rules for Trait
-
-	if len(errors) > 0 {
-		return TraitAddedEventMultiError(errors)
-	}
-
-	return nil
-}
-
-// TraitAddedEventMultiError is an error wrapping multiple validation errors
-// returned by TraitAddedEvent.ValidateAll() if the designated constraints
-// aren't met.
-type TraitAddedEventMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m TraitAddedEventMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m TraitAddedEventMultiError) AllErrors() []error { return m }
-
-// TraitAddedEventValidationError is the validation error returned by
-// TraitAddedEvent.Validate if the designated constraints aren't met.
-type TraitAddedEventValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e TraitAddedEventValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e TraitAddedEventValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e TraitAddedEventValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e TraitAddedEventValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e TraitAddedEventValidationError) ErrorName() string { return "TraitAddedEventValidationError" }
-
-// Error satisfies the builtin error interface
-func (e TraitAddedEventValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sTraitAddedEvent.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = TraitAddedEventValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = TraitAddedEventValidationError{}
-
-// Validate checks the field values on TraitRemovedEvent with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *TraitRemovedEvent) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on TraitRemovedEvent with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// TraitRemovedEventMultiError, or nil if none found.
-func (m *TraitRemovedEvent) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *TraitRemovedEvent) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for CharacterId
-
-	// no validation rules for Trait
-
-	if len(errors) > 0 {
-		return TraitRemovedEventMultiError(errors)
-	}
-
-	return nil
-}
-
-// TraitRemovedEventMultiError is an error wrapping multiple validation errors
-// returned by TraitRemovedEvent.ValidateAll() if the designated constraints
-// aren't met.
-type TraitRemovedEventMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m TraitRemovedEventMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m TraitRemovedEventMultiError) AllErrors() []error { return m }
-
-// TraitRemovedEventValidationError is the validation error returned by
-// TraitRemovedEvent.Validate if the designated constraints aren't met.
-type TraitRemovedEventValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e TraitRemovedEventValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e TraitRemovedEventValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e TraitRemovedEventValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e TraitRemovedEventValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e TraitRemovedEventValidationError) ErrorName() string {
-	return "TraitRemovedEventValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e TraitRemovedEventValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sTraitRemovedEvent.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = TraitRemovedEventValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = TraitRemovedEventValidationError{}
 
 // Validate checks the field values on PlayerActionTakenEvent with the rules
 // defined in the proto definition for this message. If any rules are

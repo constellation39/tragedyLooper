@@ -1,23 +1,95 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/AdjustStatEffect",
+    "$ref": "#/definitions/EventHistoryCondition",
     "definitions": {
-        "AdjustStatEffect": {
+        "EventHistoryCondition": {
             "properties": {
-                "target": {
+                "event_type": {
+                    "enum": [
+                        "GAME_EVENT_TYPE_UNSPECIFIED",
+                        0,
+                        "GAME_EVENT_TYPE_CHARACTER_MOVED",
+                        1,
+                        "GAME_EVENT_TYPE_PARANOIA_ADJUSTED",
+                        2,
+                        "GAME_EVENT_TYPE_GOODWILL_ADJUSTED",
+                        3,
+                        "GAME_EVENT_TYPE_INTRIGUE_ADJUSTED",
+                        4,
+                        "GAME_EVENT_TYPE_INCIDENT_TRIGGERED",
+                        5,
+                        "GAME_EVENT_TYPE_INCIDENT_PREVENTED",
+                        6,
+                        "GAME_EVENT_TYPE_ROLE_REVEALED",
+                        7,
+                        "GAME_EVENT_TYPE_ABILITY_GRANTED",
+                        8,
+                        "GAME_EVENT_TYPE_CHOICE_REQUIRED",
+                        9,
+                        "GAME_EVENT_TYPE_LOOP_WIN",
+                        10,
+                        "GAME_EVENT_TYPE_LOOP_LOSS",
+                        11,
+                        "GAME_EVENT_TYPE_FIRST_GUESS_MADE",
+                        12,
+                        "GAME_EVENT_TYPE_FINAL_GUESS_MADE",
+                        13,
+                        "GAME_EVENT_TYPE_GOODWILL_REFUSAL_TEST",
+                        14,
+                        "GAME_EVENT_TYPE_LOOP_OVER",
+                        15,
+                        "GAME_EVENT_TYPE_DAY_ADVANCED",
+                        16,
+                        "GAME_EVENT_TYPE_TRAGEDY_TRIGGERED",
+                        17,
+                        "GAME_EVENT_TYPE_LOOP_RESET",
+                        18,
+                        "GAME_EVENT_TYPE_TRAIT_ADDED",
+                        19,
+                        "GAME_EVENT_TYPE_TRAIT_REMOVED",
+                        20,
+                        "GAME_EVENT_TYPE_CARD_PLAYED",
+                        21,
+                        "GAME_EVENT_TYPE_CARD_REVEALED",
+                        22,
+                        "GAME_EVENT_TYPE_GAME_ENDED",
+                        23,
+                        "GAME_EVENT_TYPE_PLAYER_ACTION",
+                        24
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Game Event Type",
+                    "description": "游戏事件类型（用于能力触发器过滤）"
+                },
+                "lookback_days": {
+                    "type": "integer",
+                    "description": "How many days into the past to look. 0 means today, 1 means today and yesterday, etc."
+                },
+                "event_target": {
                     "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
                     "additionalProperties": true,
-                    "description": "The target character."
+                    "description": "Optional: Further filter by the character involved in the event."
                 },
-                "stat_type": {
+                "count": {
+                    "type": "integer",
+                    "description": "The number of times the event must have occurred."
+                },
+                "comparator": {
                     "enum": [
-                        "STAT_TYPE_UNSPECIFIED",
+                        "COMPARATOR_UNSPECIFIED",
                         0,
-                        "STAT_TYPE_PARANOIA",
+                        "EQUAL_TO",
                         1,
-                        "STAT_TYPE_GOODWILL",
+                        "GREATER_THAN_OR_EQUAL_TO",
                         2,
-                        "STAT_TYPE_INTRIGUE",
+                        "LESS_THAN_OR_EQUAL_TO",
                         3
                     ],
                     "oneOf": [
@@ -28,18 +100,14 @@
                             "type": "integer"
                         }
                     ],
-                    "title": "Stat Type",
-                    "description": "StatType defines the type of character stat."
-                },
-                "amount": {
-                    "type": "integer",
-                    "description": "The amount to adjust the stat by (positive for increase, negative for decrease)."
+                    "title": "Comparator",
+                    "description": "The comparator for the count."
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Adjust Stat Effect",
-            "description": "AdjustStatEffect defines an effect that adjusts a character's stat."
+            "title": "Event History Condition",
+            "description": "EventHistoryCondition defines a condition based on past game events."
         },
         "tragedylooper.v1.Empty": {
             "additionalProperties": true,

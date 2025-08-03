@@ -4,41 +4,16 @@
     "definitions": {
         "PlayCardPayload": {
             "properties": {
-                "player_id": {
-                    "type": "integer",
-                    "description": "执行操作的玩家ID"
-                },
                 "card_id": {
                     "type": "integer",
                     "description": "打出的卡牌ID"
                 },
-                "target_character_id": {
-                    "type": "integer",
-                    "description": "卡牌的目标角色ID"
-                },
-                "target_location": {
-                    "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
-                        0,
-                        "LOCATION_TYPE_HOSPITAL",
-                        1,
-                        "LOCATION_TYPE_SHRINE",
-                        2,
-                        "LOCATION_TYPE_CITY",
-                        3,
-                        "LOCATION_TYPE_SCHOOL",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Location Type",
-                    "description": "地点类型（也可通过LocationConfig扩展）"
+                "pre_chosen_options": {
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "type": "object",
+                    "description": "Optional: Pre-chosen options to streamline the interaction. Key: request_id from a potential ChoiceRequiredEvent Value: chosen_option_id from that event"
                 }
             },
             "additionalProperties": true,

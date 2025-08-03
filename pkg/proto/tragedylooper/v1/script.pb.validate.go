@@ -620,6 +620,17 @@ func (m *ScriptModel) validate(all bool) error {
 
 	var errors []error
 
+	if m.GetId() <= 0 {
+		err := ScriptModelValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if all {
 		switch v := interface{}(m.GetPrivateInfo()).(type) {
 		case interface{ ValidateAll() error }:
@@ -1091,16 +1102,7 @@ func (m *RoleConfig) validate(all bool) error {
 		}
 	}
 
-	if val := m.GetGoodwillRule(); val < 0 || val > 2 {
-		err := RoleConfigValidationError{
-			field:  "GoodwillRule",
-			reason: "value must be inside range [0, 2]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for GoodwillRule
 
 	// no validation rules for CanBeInvincible
 
@@ -1353,149 +1355,3 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = PlotConfigValidationError{}
-
-// Validate checks the field values on ScriptConfigLib with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *ScriptConfigLib) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ScriptConfigLib with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ScriptConfigLibMultiError, or nil if none found.
-func (m *ScriptConfigLib) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ScriptConfigLib) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	{
-		sorted_keys := make([]int32, len(m.GetScripts()))
-		i := 0
-		for key := range m.GetScripts() {
-			sorted_keys[i] = key
-			i++
-		}
-		sort.Slice(sorted_keys, func(i, j int) bool { return sorted_keys[i] < sorted_keys[j] })
-		for _, key := range sorted_keys {
-			val := m.GetScripts()[key]
-			_ = val
-
-			// no validation rules for Scripts[key]
-
-			if all {
-				switch v := interface{}(val).(type) {
-				case interface{ ValidateAll() error }:
-					if err := v.ValidateAll(); err != nil {
-						errors = append(errors, ScriptConfigLibValidationError{
-							field:  fmt.Sprintf("Scripts[%v]", key),
-							reason: "embedded message failed validation",
-							cause:  err,
-						})
-					}
-				case interface{ Validate() error }:
-					if err := v.Validate(); err != nil {
-						errors = append(errors, ScriptConfigLibValidationError{
-							field:  fmt.Sprintf("Scripts[%v]", key),
-							reason: "embedded message failed validation",
-							cause:  err,
-						})
-					}
-				}
-			} else if v, ok := interface{}(val).(interface{ Validate() error }); ok {
-				if err := v.Validate(); err != nil {
-					return ScriptConfigLibValidationError{
-						field:  fmt.Sprintf("Scripts[%v]", key),
-						reason: "embedded message failed validation",
-						cause:  err,
-					}
-				}
-			}
-
-		}
-	}
-
-	if len(errors) > 0 {
-		return ScriptConfigLibMultiError(errors)
-	}
-
-	return nil
-}
-
-// ScriptConfigLibMultiError is an error wrapping multiple validation errors
-// returned by ScriptConfigLib.ValidateAll() if the designated constraints
-// aren't met.
-type ScriptConfigLibMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ScriptConfigLibMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ScriptConfigLibMultiError) AllErrors() []error { return m }
-
-// ScriptConfigLibValidationError is the validation error returned by
-// ScriptConfigLib.Validate if the designated constraints aren't met.
-type ScriptConfigLibValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ScriptConfigLibValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ScriptConfigLibValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ScriptConfigLibValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ScriptConfigLibValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ScriptConfigLibValidationError) ErrorName() string { return "ScriptConfigLibValidationError" }
-
-// Error satisfies the builtin error interface
-func (e ScriptConfigLibValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sScriptConfigLib.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ScriptConfigLibValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ScriptConfigLibValidationError{}

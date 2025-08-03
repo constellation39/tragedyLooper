@@ -29,7 +29,7 @@
                         }
                     ],
                     "title": "Stat Type",
-                    "description": "The type of stat to check."
+                    "description": "StatType defines the type of character stat."
                 },
                 "comparator": {
                     "enum": [
@@ -60,12 +60,23 @@
                 "value": {
                     "type": "integer",
                     "description": "The value to compare against."
+                },
+                "target_to_compare": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "Optional: A second target to compare against. If set, the condition compares the stat of 'target' with the stat of 'target_to_compare'."
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Stat Condition",
             "description": "StatCondition defines a condition based on a character's stats."
+        },
+        "tragedylooper.v1.Empty": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Empty",
+            "description": "Empty is a placeholder for messages that have no data."
         },
         "tragedylooper.v1.TargetSelector": {
             "properties": {
@@ -74,36 +85,23 @@
                     "description": "A specific character by ID."
                 },
                 "triggering_character": {
-                    "type": "boolean",
-                    "description": "The character that triggered the event. A boolean marker."
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "The character that triggered the event."
                 },
                 "culprit": {
-                    "type": "boolean",
-                    "description": "The culprit of the event. A boolean marker."
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "The culprit of the event."
                 },
                 "victim": {
-                    "type": "boolean",
-                    "description": "The victim of the event. A boolean marker."
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "The victim of the event."
                 },
-                "character_with_role": {
-                    "enum": [
-                        "PLAYER_ROLE_UNSPECIFIED",
-                        0,
-                        "PLAYER_ROLE_MASTERMIND",
-                        1,
-                        "PLAYER_ROLE_PROTAGONIST",
-                        2
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Player Role",
-                    "description": "玩家角色"
+                "character_with_role_id": {
+                    "type": "integer",
+                    "description": "Any character with a specific role."
                 },
                 "all_characters_at_location": {
                     "enum": [
@@ -129,17 +127,20 @@
                     "title": "Location Type",
                     "description": "地点类型（也可通过LocationConfig扩展）"
                 },
-                "ability_user": {
-                    "type": "boolean",
-                    "description": "The user of the ability. A boolean marker."
+                "action_user": {
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "The user of the action (card or ability)."
                 },
-                "ability_target": {
-                    "type": "boolean",
-                    "description": "The target of the ability. A boolean marker."
+                "action_target": {
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "The target of the action (card or ability)."
                 },
                 "all_characters": {
-                    "type": "boolean",
-                    "description": "All characters. A boolean marker."
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "All characters."
                 }
             },
             "additionalProperties": true,

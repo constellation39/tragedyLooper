@@ -1,42 +1,29 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/Incident",
+    "$ref": "#/definitions/ConditionalEffect",
     "definitions": {
-        "Incident": {
+        "ConditionalEffect": {
             "properties": {
-                "config": {
-                    "$ref": "#/definitions/tragedylooper.v1.IncidentConfig",
+                "condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.Condition",
                     "additionalProperties": true,
-                    "description": "事件唯一ID"
+                    "description": "The condition to check."
                 },
-                "name": {
-                    "type": "string",
-                    "description": "事件名称"
+                "then_effect": {
+                    "$ref": "#/definitions/tragedylooper.v1.Effect",
+                    "additionalProperties": true,
+                    "description": "The effect to execute if the condition is true."
                 },
-                "day": {
-                    "type": "integer",
-                    "description": "事件发生的日期"
-                },
-                "culprit": {
-                    "type": "string",
-                    "description": "犯人（角色名称或描述）"
-                },
-                "victim": {
-                    "type": "string",
-                    "description": "受害者（角色名称或描述）"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "事件描述"
-                },
-                "has_triggered_this_loop": {
-                    "type": "boolean"
+                "else_effect": {
+                    "$ref": "#/definitions/tragedylooper.v1.Effect",
+                    "additionalProperties": true,
+                    "description": "Optional: The effect to execute if the condition is false."
                 }
             },
             "additionalProperties": true,
             "type": "object",
-            "title": "Incident",
-            "description": "事件实例，在游戏运行时创建"
+            "title": "Conditional Effect",
+            "description": "ConditionalEffect defines an effect that only runs if a condition is met."
         },
         "tragedylooper.v1.AddTraitEffect": {
             "properties": {
@@ -238,29 +225,6 @@
             "title": "Condition",
             "description": "Condition defines a condition for triggering rules, events, and effects."
         },
-        "tragedylooper.v1.ConditionalEffect": {
-            "properties": {
-                "condition": {
-                    "$ref": "#/definitions/tragedylooper.v1.Condition",
-                    "additionalProperties": true,
-                    "description": "The condition to check."
-                },
-                "then_effect": {
-                    "$ref": "#/definitions/tragedylooper.v1.Effect",
-                    "additionalProperties": true,
-                    "description": "The effect to execute if the condition is true."
-                },
-                "else_effect": {
-                    "$ref": "#/definitions/tragedylooper.v1.Effect",
-                    "additionalProperties": true,
-                    "description": "Optional: The effect to execute if the condition is false."
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Conditional Effect",
-            "description": "ConditionalEffect defines an effect that only runs if a condition is met."
-        },
         "tragedylooper.v1.DayCondition": {
             "properties": {
                 "comparator": {
@@ -353,7 +317,7 @@
                     "description": "A compound effect."
                 },
                 "conditional_effect": {
-                    "$ref": "#/definitions/tragedylooper.v1.ConditionalEffect",
+                    "$ref": "#/definitions/ConditionalEffect",
                     "additionalProperties": true,
                     "description": "A conditional effect."
                 }
@@ -567,68 +531,6 @@
             "type": "object",
             "title": "Grant Ability Effect",
             "description": "GrantAbilityEffect defines an effect that grants an ability."
-        },
-        "tragedylooper.v1.IncidentConfig": {
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "事件唯一ID（剧本内）"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "事件名称"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "事件描述"
-                },
-                "incident_id": {
-                    "type": "integer",
-                    "description": "事件类型"
-                },
-                "day": {
-                    "type": "integer",
-                    "description": "预定发生日期"
-                },
-                "condition": {
-                    "$ref": "#/definitions/tragedylooper.v1.Condition",
-                    "additionalProperties": true,
-                    "description": "触发条件列表"
-                },
-                "effect": {
-                    "$ref": "#/definitions/tragedylooper.v1.Effect",
-                    "additionalProperties": true,
-                    "description": "事件触发时产生的效果"
-                },
-                "is_mandatory": {
-                    "type": "boolean",
-                    "description": "是否为必发事件"
-                },
-                "culprit_character_id": {
-                    "type": "integer",
-                    "description": "事件主谋角色ID（如适用）"
-                },
-                "victim_character_id": {
-                    "type": "integer",
-                    "description": "事件受害者角色ID（如适用）"
-                },
-                "location_id": {
-                    "type": "integer",
-                    "description": "事件发生地点ID（如适用）"
-                },
-                "is_main_plot_incident": {
-                    "type": "boolean",
-                    "description": "是否是主线剧情的事件"
-                },
-                "is_special_rule": {
-                    "type": "boolean",
-                    "description": "是否是特殊规则的事件"
-                }
-            },
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Incident Config",
-            "description": "事件/悲剧在剧本中的配置"
         },
         "tragedylooper.v1.LocationCondition": {
             "properties": {

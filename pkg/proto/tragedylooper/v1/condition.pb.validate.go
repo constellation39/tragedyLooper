@@ -57,6 +57,8 @@ func (m *Condition) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Negated
+
 	switch v := m.ConditionType.(type) {
 	case *Condition_StatCondition:
 		if v == nil {
@@ -386,6 +388,47 @@ func (m *Condition) validate(all bool) error {
 			}
 		}
 
+	case *Condition_EventHistoryCondition:
+		if v == nil {
+			err := ConditionValidationError{
+				field:  "ConditionType",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if all {
+			switch v := interface{}(m.GetEventHistoryCondition()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ConditionValidationError{
+						field:  "EventHistoryCondition",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ConditionValidationError{
+						field:  "EventHistoryCondition",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetEventHistoryCondition()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ConditionValidationError{
+					field:  "EventHistoryCondition",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
 	default:
 		_ = v // ensures v is used
 	}
@@ -466,6 +509,145 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ConditionValidationError{}
+
+// Validate checks the field values on EventHistoryCondition with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *EventHistoryCondition) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on EventHistoryCondition with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// EventHistoryConditionMultiError, or nil if none found.
+func (m *EventHistoryCondition) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *EventHistoryCondition) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for EventType
+
+	// no validation rules for LookbackDays
+
+	if all {
+		switch v := interface{}(m.GetEventTarget()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, EventHistoryConditionValidationError{
+					field:  "EventTarget",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, EventHistoryConditionValidationError{
+					field:  "EventTarget",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetEventTarget()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return EventHistoryConditionValidationError{
+				field:  "EventTarget",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for Count
+
+	// no validation rules for Comparator
+
+	if len(errors) > 0 {
+		return EventHistoryConditionMultiError(errors)
+	}
+
+	return nil
+}
+
+// EventHistoryConditionMultiError is an error wrapping multiple validation
+// errors returned by EventHistoryCondition.ValidateAll() if the designated
+// constraints aren't met.
+type EventHistoryConditionMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m EventHistoryConditionMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m EventHistoryConditionMultiError) AllErrors() []error { return m }
+
+// EventHistoryConditionValidationError is the validation error returned by
+// EventHistoryCondition.Validate if the designated constraints aren't met.
+type EventHistoryConditionValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e EventHistoryConditionValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e EventHistoryConditionValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e EventHistoryConditionValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e EventHistoryConditionValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e EventHistoryConditionValidationError) ErrorName() string {
+	return "EventHistoryConditionValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e EventHistoryConditionValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sEventHistoryCondition.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = EventHistoryConditionValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = EventHistoryConditionValidationError{}
 
 // Validate checks the field values on PhaseCondition with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -766,6 +948,35 @@ func (m *StatCondition) validate(all bool) error {
 
 	// no validation rules for Value
 
+	if all {
+		switch v := interface{}(m.GetTargetToCompare()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, StatConditionValidationError{
+					field:  "TargetToCompare",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, StatConditionValidationError{
+					field:  "TargetToCompare",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTargetToCompare()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return StatConditionValidationError{
+				field:  "TargetToCompare",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return StatConditionMultiError(errors)
 	}
@@ -897,11 +1108,7 @@ func (m *LocationCondition) validate(all bool) error {
 
 	// no validation rules for Location
 
-	// no validation rules for IsAtLocation
-
-	// no validation rules for IsAlone
-
-	// no validation rules for NotAlone
+	// no validation rules for State
 
 	if len(errors) > 0 {
 		return LocationConditionMultiError(errors)
@@ -1033,6 +1240,8 @@ func (m *RoleCondition) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for RoleId
 
 	// no validation rules for HasRole
 
@@ -1498,7 +1707,36 @@ func (m *TargetSelector) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
-		// no validation rules for TriggeringCharacter
+
+		if all {
+			switch v := interface{}(m.GetTriggeringCharacter()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, TargetSelectorValidationError{
+						field:  "TriggeringCharacter",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, TargetSelectorValidationError{
+						field:  "TriggeringCharacter",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetTriggeringCharacter()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return TargetSelectorValidationError{
+					field:  "TriggeringCharacter",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
 	case *TargetSelector_Culprit:
 		if v == nil {
 			err := TargetSelectorValidationError{
@@ -1510,7 +1748,36 @@ func (m *TargetSelector) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
-		// no validation rules for Culprit
+
+		if all {
+			switch v := interface{}(m.GetCulprit()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, TargetSelectorValidationError{
+						field:  "Culprit",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, TargetSelectorValidationError{
+						field:  "Culprit",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetCulprit()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return TargetSelectorValidationError{
+					field:  "Culprit",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
 	case *TargetSelector_Victim:
 		if v == nil {
 			err := TargetSelectorValidationError{
@@ -1522,8 +1789,37 @@ func (m *TargetSelector) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
-		// no validation rules for Victim
-	case *TargetSelector_CharacterWithRole:
+
+		if all {
+			switch v := interface{}(m.GetVictim()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, TargetSelectorValidationError{
+						field:  "Victim",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, TargetSelectorValidationError{
+						field:  "Victim",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetVictim()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return TargetSelectorValidationError{
+					field:  "Victim",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	case *TargetSelector_CharacterWithRoleId:
 		if v == nil {
 			err := TargetSelectorValidationError{
 				field:  "Selector",
@@ -1534,7 +1830,7 @@ func (m *TargetSelector) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
-		// no validation rules for CharacterWithRole
+		// no validation rules for CharacterWithRoleId
 	case *TargetSelector_AllCharactersAtLocation:
 		if v == nil {
 			err := TargetSelectorValidationError{
@@ -1547,7 +1843,7 @@ func (m *TargetSelector) validate(all bool) error {
 			errors = append(errors, err)
 		}
 		// no validation rules for AllCharactersAtLocation
-	case *TargetSelector_AbilityUser:
+	case *TargetSelector_ActionUser:
 		if v == nil {
 			err := TargetSelectorValidationError{
 				field:  "Selector",
@@ -1558,8 +1854,37 @@ func (m *TargetSelector) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
-		// no validation rules for AbilityUser
-	case *TargetSelector_AbilityTarget:
+
+		if all {
+			switch v := interface{}(m.GetActionUser()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, TargetSelectorValidationError{
+						field:  "ActionUser",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, TargetSelectorValidationError{
+						field:  "ActionUser",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetActionUser()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return TargetSelectorValidationError{
+					field:  "ActionUser",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	case *TargetSelector_ActionTarget:
 		if v == nil {
 			err := TargetSelectorValidationError{
 				field:  "Selector",
@@ -1570,7 +1895,36 @@ func (m *TargetSelector) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
-		// no validation rules for AbilityTarget
+
+		if all {
+			switch v := interface{}(m.GetActionTarget()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, TargetSelectorValidationError{
+						field:  "ActionTarget",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, TargetSelectorValidationError{
+						field:  "ActionTarget",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetActionTarget()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return TargetSelectorValidationError{
+					field:  "ActionTarget",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
 	case *TargetSelector_AllCharacters:
 		if v == nil {
 			err := TargetSelectorValidationError{
@@ -1582,7 +1936,36 @@ func (m *TargetSelector) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
-		// no validation rules for AllCharacters
+
+		if all {
+			switch v := interface{}(m.GetAllCharacters()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, TargetSelectorValidationError{
+						field:  "AllCharacters",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, TargetSelectorValidationError{
+						field:  "AllCharacters",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetAllCharacters()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return TargetSelectorValidationError{
+					field:  "AllCharacters",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
 	default:
 		_ = v // ensures v is used
 	}

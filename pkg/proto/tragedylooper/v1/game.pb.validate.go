@@ -59,6 +59,16 @@ func (m *GameState) validate(all bool) error {
 
 	// no validation rules for GameId
 
+	// no validation rules for Tick
+
+	// no validation rules for CurrentLoop
+
+	// no validation rules for DaysPerLoop
+
+	// no validation rules for CurrentDay
+
+	// no validation rules for CurrentPhase
+
 	{
 		sorted_keys := make([]int32, len(m.GetCharacters()))
 		i := 0
@@ -151,145 +161,7 @@ func (m *GameState) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for CurrentDay
-
-	// no validation rules for CurrentLoop
-
-	// no validation rules for DaysPerLoop
-
-	// no validation rules for CurrentPhase
-
-	// no validation rules for ActiveTragedies
-
-	// no validation rules for PreventedTragedies
-
-	{
-		sorted_keys := make([]int32, len(m.GetPlayedCardsThisDay()))
-		i := 0
-		for key := range m.GetPlayedCardsThisDay() {
-			sorted_keys[i] = key
-			i++
-		}
-		sort.Slice(sorted_keys, func(i, j int) bool { return sorted_keys[i] < sorted_keys[j] })
-		for _, key := range sorted_keys {
-			val := m.GetPlayedCardsThisDay()[key]
-			_ = val
-
-			// no validation rules for PlayedCardsThisDay[key]
-
-			if all {
-				switch v := interface{}(val).(type) {
-				case interface{ ValidateAll() error }:
-					if err := v.ValidateAll(); err != nil {
-						errors = append(errors, GameStateValidationError{
-							field:  fmt.Sprintf("PlayedCardsThisDay[%v]", key),
-							reason: "embedded message failed validation",
-							cause:  err,
-						})
-					}
-				case interface{ Validate() error }:
-					if err := v.Validate(); err != nil {
-						errors = append(errors, GameStateValidationError{
-							field:  fmt.Sprintf("PlayedCardsThisDay[%v]", key),
-							reason: "embedded message failed validation",
-							cause:  err,
-						})
-					}
-				}
-			} else if v, ok := interface{}(val).(interface{ Validate() error }); ok {
-				if err := v.Validate(); err != nil {
-					return GameStateValidationError{
-						field:  fmt.Sprintf("PlayedCardsThisDay[%v]", key),
-						reason: "embedded message failed validation",
-						cause:  err,
-					}
-				}
-			}
-
-		}
-	}
-
-	// no validation rules for PlayedCardsThisLoop
-
 	// no validation rules for TriggeredIncidents
-
-	// no validation rules for LastUpdateTime
-
-	// no validation rules for Tick
-
-	for idx, item := range m.GetDayEvents() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, GameStateValidationError{
-						field:  fmt.Sprintf("DayEvents[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, GameStateValidationError{
-						field:  fmt.Sprintf("DayEvents[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return GameStateValidationError{
-					field:  fmt.Sprintf("DayEvents[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	for idx, item := range m.GetLoopEvents() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, GameStateValidationError{
-						field:  fmt.Sprintf("LoopEvents[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, GameStateValidationError{
-						field:  fmt.Sprintf("LoopEvents[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return GameStateValidationError{
-					field:  fmt.Sprintf("LoopEvents[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	// no validation rules for CharacterParanoiaLimits
-
-	// no validation rules for CharacterGoodwillLimits
-
-	// no validation rules for CharacterIntrigueLimits
 
 	if len(errors) > 0 {
 		return GameStateMultiError(errors)
@@ -662,7 +534,13 @@ func (m *PlayerView) validate(all bool) error {
 
 	// no validation rules for GameId
 
-	// no validation rules for ScriptId
+	// no validation rules for Tick
+
+	// no validation rules for CurrentLoop
+
+	// no validation rules for CurrentDay
+
+	// no validation rules for CurrentPhase
 
 	{
 		sorted_keys := make([]int32, len(m.GetCharacters()))
@@ -756,16 +634,6 @@ func (m *PlayerView) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for CurrentDay
-
-	// no validation rules for CurrentLoop
-
-	// no validation rules for CurrentPhase
-
-	// no validation rules for ActiveTragedies
-
-	// no validation rules for PreventedTragedies
-
 	for idx, item := range m.GetYourHand() {
 		_, _ = idx, item
 
@@ -828,42 +696,6 @@ func (m *PlayerView) validate(all bool) error {
 			}
 		}
 	}
-
-	for idx, item := range m.GetPublicEvents() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, PlayerViewValidationError{
-						field:  fmt.Sprintf("PublicEvents[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, PlayerViewValidationError{
-						field:  fmt.Sprintf("PublicEvents[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return PlayerViewValidationError{
-					field:  fmt.Sprintf("PublicEvents[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	// no validation rules for Tick
 
 	if len(errors) > 0 {
 		return PlayerViewMultiError(errors)
@@ -1048,7 +880,7 @@ func (m *PlayerViewCharacter) validate(all bool) error {
 
 	}
 
-	// no validation rules for Role
+	// no validation rules for RevealedRole
 
 	if len(errors) > 0 {
 		return PlayerViewCharacterMultiError(errors)

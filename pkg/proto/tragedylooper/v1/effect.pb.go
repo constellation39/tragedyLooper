@@ -71,7 +71,7 @@ func (x CompoundEffect_Operator) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use CompoundEffect_Operator.Descriptor instead.
 func (CompoundEffect_Operator) EnumDescriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{1, 0}
+	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{2, 0}
 }
 
 // The type of action to forbid.
@@ -132,7 +132,7 @@ func (x ForbidEffect_ForbidType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ForbidEffect_ForbidType.Descriptor instead.
 func (ForbidEffect_ForbidType) EnumDescriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{4, 0}
+	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{5, 0}
 }
 
 // Effect defines the specific action of an ability, card, or rule.
@@ -153,6 +153,7 @@ type Effect struct {
 	//	*Effect_AddTrait
 	//	*Effect_RemoveTrait
 	//	*Effect_CompoundEffect
+	//	*Effect_ConditionalEffect
 	EffectType    isEffect_EffectType `protobuf_oneof:"effect_type"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -294,6 +295,15 @@ func (x *Effect) GetCompoundEffect() *CompoundEffect {
 	return nil
 }
 
+func (x *Effect) GetConditionalEffect() *ConditionalEffect {
+	if x != nil {
+		if x, ok := x.EffectType.(*Effect_ConditionalEffect); ok {
+			return x.ConditionalEffect
+		}
+	}
+	return nil
+}
+
 type isEffect_EffectType interface {
 	isEffect_EffectType()
 }
@@ -353,6 +363,11 @@ type Effect_CompoundEffect struct {
 	CompoundEffect *CompoundEffect `protobuf:"bytes,11,opt,name=compound_effect,json=compoundEffect,proto3,oneof"`
 }
 
+type Effect_ConditionalEffect struct {
+	// A conditional effect.
+	ConditionalEffect *ConditionalEffect `protobuf:"bytes,12,opt,name=conditional_effect,json=conditionalEffect,proto3,oneof"`
+}
+
 func (*Effect_AdjustStat) isEffect_EffectType() {}
 
 func (*Effect_MoveCharacter) isEffect_EffectType() {}
@@ -375,6 +390,72 @@ func (*Effect_RemoveTrait) isEffect_EffectType() {}
 
 func (*Effect_CompoundEffect) isEffect_EffectType() {}
 
+func (*Effect_ConditionalEffect) isEffect_EffectType() {}
+
+// ConditionalEffect defines an effect that only runs if a condition is met.
+type ConditionalEffect struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The condition to check.
+	Condition *Condition `protobuf:"bytes,1,opt,name=condition,proto3" json:"condition,omitempty"`
+	// The effect to execute if the condition is true.
+	ThenEffect *Effect `protobuf:"bytes,2,opt,name=then_effect,json=thenEffect,proto3" json:"then_effect,omitempty"`
+	// Optional: The effect to execute if the condition is false.
+	ElseEffect    *Effect `protobuf:"bytes,3,opt,name=else_effect,json=elseEffect,proto3,oneof" json:"else_effect,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ConditionalEffect) Reset() {
+	*x = ConditionalEffect{}
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ConditionalEffect) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConditionalEffect) ProtoMessage() {}
+
+func (x *ConditionalEffect) ProtoReflect() protoreflect.Message {
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConditionalEffect.ProtoReflect.Descriptor instead.
+func (*ConditionalEffect) Descriptor() ([]byte, []int) {
+	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ConditionalEffect) GetCondition() *Condition {
+	if x != nil {
+		return x.Condition
+	}
+	return nil
+}
+
+func (x *ConditionalEffect) GetThenEffect() *Effect {
+	if x != nil {
+		return x.ThenEffect
+	}
+	return nil
+}
+
+func (x *ConditionalEffect) GetElseEffect() *Effect {
+	if x != nil {
+		return x.ElseEffect
+	}
+	return nil
+}
+
 // CompoundEffect defines a combination of multiple effects.
 type CompoundEffect struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -388,7 +469,7 @@ type CompoundEffect struct {
 
 func (x *CompoundEffect) Reset() {
 	*x = CompoundEffect{}
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[1]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -400,7 +481,7 @@ func (x *CompoundEffect) String() string {
 func (*CompoundEffect) ProtoMessage() {}
 
 func (x *CompoundEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[1]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -413,7 +494,7 @@ func (x *CompoundEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CompoundEffect.ProtoReflect.Descriptor instead.
 func (*CompoundEffect) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{1}
+	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CompoundEffect) GetOperator() CompoundEffect_Operator {
@@ -436,7 +517,7 @@ type AdjustStatEffect struct {
 	// The target character.
 	Target *TargetSelector `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
 	// The type of stat to adjust.
-	StatType StatCondition_StatType `protobuf:"varint,2,opt,name=stat_type,json=statType,proto3,enum=tragedylooper.v1.StatCondition_StatType" json:"stat_type,omitempty"`
+	StatType StatType `protobuf:"varint,2,opt,name=stat_type,json=statType,proto3,enum=tragedylooper.v1.StatType" json:"stat_type,omitempty"`
 	// The amount to adjust the stat by (positive for increase, negative for decrease).
 	Amount        int32 `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -445,7 +526,7 @@ type AdjustStatEffect struct {
 
 func (x *AdjustStatEffect) Reset() {
 	*x = AdjustStatEffect{}
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[2]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -457,7 +538,7 @@ func (x *AdjustStatEffect) String() string {
 func (*AdjustStatEffect) ProtoMessage() {}
 
 func (x *AdjustStatEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[2]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -470,7 +551,7 @@ func (x *AdjustStatEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdjustStatEffect.ProtoReflect.Descriptor instead.
 func (*AdjustStatEffect) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{2}
+	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *AdjustStatEffect) GetTarget() *TargetSelector {
@@ -480,11 +561,11 @@ func (x *AdjustStatEffect) GetTarget() *TargetSelector {
 	return nil
 }
 
-func (x *AdjustStatEffect) GetStatType() StatCondition_StatType {
+func (x *AdjustStatEffect) GetStatType() StatType {
 	if x != nil {
 		return x.StatType
 	}
-	return StatCondition_STAT_TYPE_UNSPECIFIED
+	return StatType_STAT_TYPE_UNSPECIFIED
 }
 
 func (x *AdjustStatEffect) GetAmount() int32 {
@@ -507,7 +588,7 @@ type MoveCharacterEffect struct {
 
 func (x *MoveCharacterEffect) Reset() {
 	*x = MoveCharacterEffect{}
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -519,7 +600,7 @@ func (x *MoveCharacterEffect) String() string {
 func (*MoveCharacterEffect) ProtoMessage() {}
 
 func (x *MoveCharacterEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -532,7 +613,7 @@ func (x *MoveCharacterEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MoveCharacterEffect.ProtoReflect.Descriptor instead.
 func (*MoveCharacterEffect) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{3}
+	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *MoveCharacterEffect) GetTarget() *TargetSelector {
@@ -562,7 +643,7 @@ type ForbidEffect struct {
 
 func (x *ForbidEffect) Reset() {
 	*x = ForbidEffect{}
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[4]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -574,7 +655,7 @@ func (x *ForbidEffect) String() string {
 func (*ForbidEffect) ProtoMessage() {}
 
 func (x *ForbidEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[4]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -587,7 +668,7 @@ func (x *ForbidEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ForbidEffect.ProtoReflect.Descriptor instead.
 func (*ForbidEffect) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{4}
+	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ForbidEffect) GetTarget() *TargetSelector {
@@ -619,7 +700,7 @@ type GrantAbilityEffect struct {
 
 func (x *GrantAbilityEffect) Reset() {
 	*x = GrantAbilityEffect{}
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[5]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -631,7 +712,7 @@ func (x *GrantAbilityEffect) String() string {
 func (*GrantAbilityEffect) ProtoMessage() {}
 
 func (x *GrantAbilityEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[5]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -644,7 +725,7 @@ func (x *GrantAbilityEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GrantAbilityEffect.ProtoReflect.Descriptor instead.
 func (*GrantAbilityEffect) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{5}
+	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GrantAbilityEffect) GetTarget() *TargetSelector {
@@ -679,7 +760,7 @@ type RevealRoleEffect struct {
 
 func (x *RevealRoleEffect) Reset() {
 	*x = RevealRoleEffect{}
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[6]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -691,7 +772,7 @@ func (x *RevealRoleEffect) String() string {
 func (*RevealRoleEffect) ProtoMessage() {}
 
 func (x *RevealRoleEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[6]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -704,7 +785,7 @@ func (x *RevealRoleEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RevealRoleEffect.ProtoReflect.Descriptor instead.
 func (*RevealRoleEffect) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{6}
+	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *RevealRoleEffect) GetTarget() *TargetSelector {
@@ -727,7 +808,7 @@ type ChangeRoleEffect struct {
 
 func (x *ChangeRoleEffect) Reset() {
 	*x = ChangeRoleEffect{}
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[7]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -739,7 +820,7 @@ func (x *ChangeRoleEffect) String() string {
 func (*ChangeRoleEffect) ProtoMessage() {}
 
 func (x *ChangeRoleEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[7]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -752,7 +833,7 @@ func (x *ChangeRoleEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangeRoleEffect.ProtoReflect.Descriptor instead.
 func (*ChangeRoleEffect) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{7}
+	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ChangeRoleEffect) GetTarget() *TargetSelector {
@@ -780,7 +861,7 @@ type TriggerIncidentEffect struct {
 
 func (x *TriggerIncidentEffect) Reset() {
 	*x = TriggerIncidentEffect{}
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[8]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -792,7 +873,7 @@ func (x *TriggerIncidentEffect) String() string {
 func (*TriggerIncidentEffect) ProtoMessage() {}
 
 func (x *TriggerIncidentEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[8]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -805,7 +886,7 @@ func (x *TriggerIncidentEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TriggerIncidentEffect.ProtoReflect.Descriptor instead.
 func (*TriggerIncidentEffect) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{8}
+	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *TriggerIncidentEffect) GetIncidentId() int32 {
@@ -828,7 +909,7 @@ type EndGameEffect struct {
 
 func (x *EndGameEffect) Reset() {
 	*x = EndGameEffect{}
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[9]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -840,7 +921,7 @@ func (x *EndGameEffect) String() string {
 func (*EndGameEffect) ProtoMessage() {}
 
 func (x *EndGameEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[9]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -853,7 +934,7 @@ func (x *EndGameEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EndGameEffect.ProtoReflect.Descriptor instead.
 func (*EndGameEffect) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{9}
+	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *EndGameEffect) GetWinner() PlayerRole {
@@ -883,7 +964,7 @@ type AddTraitEffect struct {
 
 func (x *AddTraitEffect) Reset() {
 	*x = AddTraitEffect{}
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[10]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -895,7 +976,7 @@ func (x *AddTraitEffect) String() string {
 func (*AddTraitEffect) ProtoMessage() {}
 
 func (x *AddTraitEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[10]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -908,7 +989,7 @@ func (x *AddTraitEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddTraitEffect.ProtoReflect.Descriptor instead.
 func (*AddTraitEffect) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{10}
+	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *AddTraitEffect) GetTarget() *TargetSelector {
@@ -938,7 +1019,7 @@ type RemoveTraitEffect struct {
 
 func (x *RemoveTraitEffect) Reset() {
 	*x = RemoveTraitEffect{}
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[11]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -950,7 +1031,7 @@ func (x *RemoveTraitEffect) String() string {
 func (*RemoveTraitEffect) ProtoMessage() {}
 
 func (x *RemoveTraitEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_effect_proto_msgTypes[11]
+	mi := &file_tragedylooper_v1_effect_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -963,7 +1044,7 @@ func (x *RemoveTraitEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveTraitEffect.ProtoReflect.Descriptor instead.
 func (*RemoveTraitEffect) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{11}
+	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *RemoveTraitEffect) GetTarget() *TargetSelector {
@@ -984,7 +1065,7 @@ var File_tragedylooper_v1_effect_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_effect_proto_rawDesc = "" +
 	"\n" +
-	"\x1dtragedylooper/v1/effect.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1ctragedylooper/v1/enums.proto\"\xaf\x06\n" +
+	"\x1dtragedylooper/v1/effect.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1ctragedylooper/v1/enums.proto\"\x85\a\n" +
 	"\x06Effect\x12E\n" +
 	"\vadjust_stat\x18\x01 \x01(\v2\".tragedylooper.v1.AdjustStatEffectH\x00R\n" +
 	"adjustStat\x12N\n" +
@@ -1000,8 +1081,16 @@ const file_tragedylooper_v1_effect_proto_rawDesc = "" +
 	"\tadd_trait\x18\t \x01(\v2 .tragedylooper.v1.AddTraitEffectH\x00R\baddTrait\x12H\n" +
 	"\fremove_trait\x18\n" +
 	" \x01(\v2#.tragedylooper.v1.RemoveTraitEffectH\x00R\vremoveTrait\x12K\n" +
-	"\x0fcompound_effect\x18\v \x01(\v2 .tragedylooper.v1.CompoundEffectH\x00R\x0ecompoundEffectB\r\n" +
-	"\veffect_type\"\xe8\x01\n" +
+	"\x0fcompound_effect\x18\v \x01(\v2 .tragedylooper.v1.CompoundEffectH\x00R\x0ecompoundEffect\x12T\n" +
+	"\x12conditional_effect\x18\f \x01(\v2#.tragedylooper.v1.ConditionalEffectH\x00R\x11conditionalEffectB\r\n" +
+	"\veffect_type\"\xd9\x01\n" +
+	"\x11ConditionalEffect\x129\n" +
+	"\tcondition\x18\x01 \x01(\v2\x1b.tragedylooper.v1.ConditionR\tcondition\x129\n" +
+	"\vthen_effect\x18\x02 \x01(\v2\x18.tragedylooper.v1.EffectR\n" +
+	"thenEffect\x12>\n" +
+	"\velse_effect\x18\x03 \x01(\v2\x18.tragedylooper.v1.EffectH\x00R\n" +
+	"elseEffect\x88\x01\x01B\x0e\n" +
+	"\f_else_effect\"\xe8\x01\n" +
 	"\x0eCompoundEffect\x12E\n" +
 	"\boperator\x18\x01 \x01(\x0e2).tragedylooper.v1.CompoundEffect.OperatorR\boperator\x129\n" +
 	"\vsub_effects\x18\x02 \x03(\v2\x18.tragedylooper.v1.EffectR\n" +
@@ -1009,10 +1098,10 @@ const file_tragedylooper_v1_effect_proto_rawDesc = "" +
 	"\bOperator\x12\x18\n" +
 	"\x14OPERATOR_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11OPERATOR_SEQUENCE\x10\x01\x12\x17\n" +
-	"\x13OPERATOR_CHOOSE_ONE\x10\x02\"\xab\x01\n" +
+	"\x13OPERATOR_CHOOSE_ONE\x10\x02\"\x9d\x01\n" +
 	"\x10AdjustStatEffect\x128\n" +
-	"\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12E\n" +
-	"\tstat_type\x18\x02 \x01(\x0e2(.tragedylooper.v1.StatCondition.StatTypeR\bstatType\x12\x16\n" +
+	"\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x127\n" +
+	"\tstat_type\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.StatTypeR\bstatType\x12\x16\n" +
 	"\x06amount\x18\x03 \x01(\x05R\x06amount\"\x91\x01\n" +
 	"\x13MoveCharacterEffect\x128\n" +
 	"\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12@\n" +
@@ -1065,58 +1154,64 @@ func file_tragedylooper_v1_effect_proto_rawDescGZIP() []byte {
 }
 
 var file_tragedylooper_v1_effect_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_tragedylooper_v1_effect_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_tragedylooper_v1_effect_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_tragedylooper_v1_effect_proto_goTypes = []any{
 	(CompoundEffect_Operator)(0),  // 0: tragedylooper.v1.CompoundEffect.Operator
 	(ForbidEffect_ForbidType)(0),  // 1: tragedylooper.v1.ForbidEffect.ForbidType
 	(*Effect)(nil),                // 2: tragedylooper.v1.Effect
-	(*CompoundEffect)(nil),        // 3: tragedylooper.v1.CompoundEffect
-	(*AdjustStatEffect)(nil),      // 4: tragedylooper.v1.AdjustStatEffect
-	(*MoveCharacterEffect)(nil),   // 5: tragedylooper.v1.MoveCharacterEffect
-	(*ForbidEffect)(nil),          // 6: tragedylooper.v1.ForbidEffect
-	(*GrantAbilityEffect)(nil),    // 7: tragedylooper.v1.GrantAbilityEffect
-	(*RevealRoleEffect)(nil),      // 8: tragedylooper.v1.RevealRoleEffect
-	(*ChangeRoleEffect)(nil),      // 9: tragedylooper.v1.ChangeRoleEffect
-	(*TriggerIncidentEffect)(nil), // 10: tragedylooper.v1.TriggerIncidentEffect
-	(*EndGameEffect)(nil),         // 11: tragedylooper.v1.EndGameEffect
-	(*AddTraitEffect)(nil),        // 12: tragedylooper.v1.AddTraitEffect
-	(*RemoveTraitEffect)(nil),     // 13: tragedylooper.v1.RemoveTraitEffect
-	(*TargetSelector)(nil),        // 14: tragedylooper.v1.TargetSelector
-	(StatCondition_StatType)(0),   // 15: tragedylooper.v1.StatCondition.StatType
-	(LocationType)(0),             // 16: tragedylooper.v1.LocationType
-	(PlayerRole)(0),               // 17: tragedylooper.v1.PlayerRole
+	(*ConditionalEffect)(nil),     // 3: tragedylooper.v1.ConditionalEffect
+	(*CompoundEffect)(nil),        // 4: tragedylooper.v1.CompoundEffect
+	(*AdjustStatEffect)(nil),      // 5: tragedylooper.v1.AdjustStatEffect
+	(*MoveCharacterEffect)(nil),   // 6: tragedylooper.v1.MoveCharacterEffect
+	(*ForbidEffect)(nil),          // 7: tragedylooper.v1.ForbidEffect
+	(*GrantAbilityEffect)(nil),    // 8: tragedylooper.v1.GrantAbilityEffect
+	(*RevealRoleEffect)(nil),      // 9: tragedylooper.v1.RevealRoleEffect
+	(*ChangeRoleEffect)(nil),      // 10: tragedylooper.v1.ChangeRoleEffect
+	(*TriggerIncidentEffect)(nil), // 11: tragedylooper.v1.TriggerIncidentEffect
+	(*EndGameEffect)(nil),         // 12: tragedylooper.v1.EndGameEffect
+	(*AddTraitEffect)(nil),        // 13: tragedylooper.v1.AddTraitEffect
+	(*RemoveTraitEffect)(nil),     // 14: tragedylooper.v1.RemoveTraitEffect
+	(*Condition)(nil),             // 15: tragedylooper.v1.Condition
+	(*TargetSelector)(nil),        // 16: tragedylooper.v1.TargetSelector
+	(StatType)(0),                 // 17: tragedylooper.v1.StatType
+	(LocationType)(0),             // 18: tragedylooper.v1.LocationType
+	(PlayerRole)(0),               // 19: tragedylooper.v1.PlayerRole
 }
 var file_tragedylooper_v1_effect_proto_depIdxs = []int32{
-	4,  // 0: tragedylooper.v1.Effect.adjust_stat:type_name -> tragedylooper.v1.AdjustStatEffect
-	5,  // 1: tragedylooper.v1.Effect.move_character:type_name -> tragedylooper.v1.MoveCharacterEffect
-	6,  // 2: tragedylooper.v1.Effect.forbid:type_name -> tragedylooper.v1.ForbidEffect
-	7,  // 3: tragedylooper.v1.Effect.grant_ability:type_name -> tragedylooper.v1.GrantAbilityEffect
-	8,  // 4: tragedylooper.v1.Effect.reveal_role:type_name -> tragedylooper.v1.RevealRoleEffect
-	9,  // 5: tragedylooper.v1.Effect.change_role:type_name -> tragedylooper.v1.ChangeRoleEffect
-	10, // 6: tragedylooper.v1.Effect.trigger_incident:type_name -> tragedylooper.v1.TriggerIncidentEffect
-	11, // 7: tragedylooper.v1.Effect.end_game:type_name -> tragedylooper.v1.EndGameEffect
-	12, // 8: tragedylooper.v1.Effect.add_trait:type_name -> tragedylooper.v1.AddTraitEffect
-	13, // 9: tragedylooper.v1.Effect.remove_trait:type_name -> tragedylooper.v1.RemoveTraitEffect
-	3,  // 10: tragedylooper.v1.Effect.compound_effect:type_name -> tragedylooper.v1.CompoundEffect
-	0,  // 11: tragedylooper.v1.CompoundEffect.operator:type_name -> tragedylooper.v1.CompoundEffect.Operator
-	2,  // 12: tragedylooper.v1.CompoundEffect.sub_effects:type_name -> tragedylooper.v1.Effect
-	14, // 13: tragedylooper.v1.AdjustStatEffect.target:type_name -> tragedylooper.v1.TargetSelector
-	15, // 14: tragedylooper.v1.AdjustStatEffect.stat_type:type_name -> tragedylooper.v1.StatCondition.StatType
-	14, // 15: tragedylooper.v1.MoveCharacterEffect.target:type_name -> tragedylooper.v1.TargetSelector
-	16, // 16: tragedylooper.v1.MoveCharacterEffect.destination:type_name -> tragedylooper.v1.LocationType
-	14, // 17: tragedylooper.v1.ForbidEffect.target:type_name -> tragedylooper.v1.TargetSelector
-	1,  // 18: tragedylooper.v1.ForbidEffect.forbid_type:type_name -> tragedylooper.v1.ForbidEffect.ForbidType
-	14, // 19: tragedylooper.v1.GrantAbilityEffect.target:type_name -> tragedylooper.v1.TargetSelector
-	14, // 20: tragedylooper.v1.RevealRoleEffect.target:type_name -> tragedylooper.v1.TargetSelector
-	14, // 21: tragedylooper.v1.ChangeRoleEffect.target:type_name -> tragedylooper.v1.TargetSelector
-	17, // 22: tragedylooper.v1.EndGameEffect.winner:type_name -> tragedylooper.v1.PlayerRole
-	14, // 23: tragedylooper.v1.AddTraitEffect.target:type_name -> tragedylooper.v1.TargetSelector
-	14, // 24: tragedylooper.v1.RemoveTraitEffect.target:type_name -> tragedylooper.v1.TargetSelector
-	25, // [25:25] is the sub-list for method output_type
-	25, // [25:25] is the sub-list for method input_type
-	25, // [25:25] is the sub-list for extension type_name
-	25, // [25:25] is the sub-list for extension extendee
-	0,  // [0:25] is the sub-list for field type_name
+	5,  // 0: tragedylooper.v1.Effect.adjust_stat:type_name -> tragedylooper.v1.AdjustStatEffect
+	6,  // 1: tragedylooper.v1.Effect.move_character:type_name -> tragedylooper.v1.MoveCharacterEffect
+	7,  // 2: tragedylooper.v1.Effect.forbid:type_name -> tragedylooper.v1.ForbidEffect
+	8,  // 3: tragedylooper.v1.Effect.grant_ability:type_name -> tragedylooper.v1.GrantAbilityEffect
+	9,  // 4: tragedylooper.v1.Effect.reveal_role:type_name -> tragedylooper.v1.RevealRoleEffect
+	10, // 5: tragedylooper.v1.Effect.change_role:type_name -> tragedylooper.v1.ChangeRoleEffect
+	11, // 6: tragedylooper.v1.Effect.trigger_incident:type_name -> tragedylooper.v1.TriggerIncidentEffect
+	12, // 7: tragedylooper.v1.Effect.end_game:type_name -> tragedylooper.v1.EndGameEffect
+	13, // 8: tragedylooper.v1.Effect.add_trait:type_name -> tragedylooper.v1.AddTraitEffect
+	14, // 9: tragedylooper.v1.Effect.remove_trait:type_name -> tragedylooper.v1.RemoveTraitEffect
+	4,  // 10: tragedylooper.v1.Effect.compound_effect:type_name -> tragedylooper.v1.CompoundEffect
+	3,  // 11: tragedylooper.v1.Effect.conditional_effect:type_name -> tragedylooper.v1.ConditionalEffect
+	15, // 12: tragedylooper.v1.ConditionalEffect.condition:type_name -> tragedylooper.v1.Condition
+	2,  // 13: tragedylooper.v1.ConditionalEffect.then_effect:type_name -> tragedylooper.v1.Effect
+	2,  // 14: tragedylooper.v1.ConditionalEffect.else_effect:type_name -> tragedylooper.v1.Effect
+	0,  // 15: tragedylooper.v1.CompoundEffect.operator:type_name -> tragedylooper.v1.CompoundEffect.Operator
+	2,  // 16: tragedylooper.v1.CompoundEffect.sub_effects:type_name -> tragedylooper.v1.Effect
+	16, // 17: tragedylooper.v1.AdjustStatEffect.target:type_name -> tragedylooper.v1.TargetSelector
+	17, // 18: tragedylooper.v1.AdjustStatEffect.stat_type:type_name -> tragedylooper.v1.StatType
+	16, // 19: tragedylooper.v1.MoveCharacterEffect.target:type_name -> tragedylooper.v1.TargetSelector
+	18, // 20: tragedylooper.v1.MoveCharacterEffect.destination:type_name -> tragedylooper.v1.LocationType
+	16, // 21: tragedylooper.v1.ForbidEffect.target:type_name -> tragedylooper.v1.TargetSelector
+	1,  // 22: tragedylooper.v1.ForbidEffect.forbid_type:type_name -> tragedylooper.v1.ForbidEffect.ForbidType
+	16, // 23: tragedylooper.v1.GrantAbilityEffect.target:type_name -> tragedylooper.v1.TargetSelector
+	16, // 24: tragedylooper.v1.RevealRoleEffect.target:type_name -> tragedylooper.v1.TargetSelector
+	16, // 25: tragedylooper.v1.ChangeRoleEffect.target:type_name -> tragedylooper.v1.TargetSelector
+	19, // 26: tragedylooper.v1.EndGameEffect.winner:type_name -> tragedylooper.v1.PlayerRole
+	16, // 27: tragedylooper.v1.AddTraitEffect.target:type_name -> tragedylooper.v1.TargetSelector
+	16, // 28: tragedylooper.v1.RemoveTraitEffect.target:type_name -> tragedylooper.v1.TargetSelector
+	29, // [29:29] is the sub-list for method output_type
+	29, // [29:29] is the sub-list for method input_type
+	29, // [29:29] is the sub-list for extension type_name
+	29, // [29:29] is the sub-list for extension extendee
+	0,  // [0:29] is the sub-list for field type_name
 }
 
 func init() { file_tragedylooper_v1_effect_proto_init() }
@@ -1138,14 +1233,16 @@ func file_tragedylooper_v1_effect_proto_init() {
 		(*Effect_AddTrait)(nil),
 		(*Effect_RemoveTrait)(nil),
 		(*Effect_CompoundEffect)(nil),
+		(*Effect_ConditionalEffect)(nil),
 	}
+	file_tragedylooper_v1_effect_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_effect_proto_rawDesc), len(file_tragedylooper_v1_effect_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   12,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -508,6 +508,47 @@ func (m *Effect) validate(all bool) error {
 			}
 		}
 
+	case *Effect_ConditionalEffect:
+		if v == nil {
+			err := EffectValidationError{
+				field:  "EffectType",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if all {
+			switch v := interface{}(m.GetConditionalEffect()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, EffectValidationError{
+						field:  "ConditionalEffect",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, EffectValidationError{
+						field:  "ConditionalEffect",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetConditionalEffect()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return EffectValidationError{
+					field:  "ConditionalEffect",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
 	default:
 		_ = v // ensures v is used
 	}
@@ -588,6 +629,199 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = EffectValidationError{}
+
+// Validate checks the field values on ConditionalEffect with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ConditionalEffect) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ConditionalEffect with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ConditionalEffectMultiError, or nil if none found.
+func (m *ConditionalEffect) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ConditionalEffect) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetCondition()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ConditionalEffectValidationError{
+					field:  "Condition",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ConditionalEffectValidationError{
+					field:  "Condition",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetCondition()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ConditionalEffectValidationError{
+				field:  "Condition",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetThenEffect()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ConditionalEffectValidationError{
+					field:  "ThenEffect",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ConditionalEffectValidationError{
+					field:  "ThenEffect",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetThenEffect()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ConditionalEffectValidationError{
+				field:  "ThenEffect",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if m.ElseEffect != nil {
+
+		if all {
+			switch v := interface{}(m.GetElseEffect()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ConditionalEffectValidationError{
+						field:  "ElseEffect",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ConditionalEffectValidationError{
+						field:  "ElseEffect",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetElseEffect()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ConditionalEffectValidationError{
+					field:  "ElseEffect",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ConditionalEffectMultiError(errors)
+	}
+
+	return nil
+}
+
+// ConditionalEffectMultiError is an error wrapping multiple validation errors
+// returned by ConditionalEffect.ValidateAll() if the designated constraints
+// aren't met.
+type ConditionalEffectMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ConditionalEffectMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ConditionalEffectMultiError) AllErrors() []error { return m }
+
+// ConditionalEffectValidationError is the validation error returned by
+// ConditionalEffect.Validate if the designated constraints aren't met.
+type ConditionalEffectValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ConditionalEffectValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ConditionalEffectValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ConditionalEffectValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ConditionalEffectValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ConditionalEffectValidationError) ErrorName() string {
+	return "ConditionalEffectValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ConditionalEffectValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sConditionalEffect.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ConditionalEffectValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ConditionalEffectValidationError{}
 
 // Validate checks the field values on CompoundEffect with the rules defined in
 // the proto definition for this message. If any rules are violated, the first

@@ -21,24 +21,25 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// CardConfig defines the configuration for a card.
+// CardConfig defines the static, immutable properties of a card.
+// This represents a card as it is defined in the game's rulebook or script.
 type CardConfig struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The unique identifier for the card.
+	// The unique identifier for this type of card.
 	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// The name of the card.
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// A description of the card.
+	// A user-facing description of the card's effect.
 	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	// The type of the card.
+	// The type of the card, used for categorization and resolution order.
 	Type CardType `protobuf:"varint,4,opt,name=type,proto3,enum=tragedylooper.v1.CardType" json:"type,omitempty"`
-	// The player role that owns the card (Mastermind or Protagonist).
+	// The role that is allowed to use this card.
 	OwnerRole PlayerRole `protobuf:"varint,5,opt,name=owner_role,json=ownerRole,proto3,enum=tragedylooper.v1.PlayerRole" json:"owner_role,omitempty"`
-	// The effect of the card.
+	// The effect or chain of effects the card produces when played.
 	Effect *CompoundEffect `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`
-	// Whether the card can only be used once per loop.
+	// If true, this card can only be successfully played once per loop.
 	OncePerLoop bool `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`
-	// The priority of the card's resolution (for cards of the same type).
+	// The priority of the card, used to determine resolution order among cards of the same type.
 	Priority      int32 `protobuf:"varint,8,opt,name=priority,proto3" json:"priority,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -130,22 +131,20 @@ func (x *CardConfig) GetPriority() int32 {
 	return 0
 }
 
-// Card defines a card instance at runtime.
+// Card represents an instance of a card in a player's hand or in play.
+// It combines the static configuration with dynamic, mutable state.
 type Card struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The configuration for the card.
-	Config *CardConfig `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
+	// The unique ID of the card, copied from its config for convenience.
+	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The static configuration of the card.
+	Config *CardConfig `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"`
 	// Whether the card has been used in the current loop.
-	UsedThisLoop bool `protobuf:"varint,2,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"`
-	// The target of the card's ability.
-	//
-	// Types that are valid to be assigned to Target:
-	//
-	//	*Card_TargetCharacterId
-	//	*Card_TargetLocation
-	Target        isCard_Target `protobuf_oneof:"target"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	UsedThisLoop bool `protobuf:"varint,3,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"`
+	// The final, confirmed target for the card's effect, set after any required player choices.
+	ResolvedTarget *Choice `protobuf:"bytes,4,opt,name=resolved_target,json=resolvedTarget,proto3" json:"resolved_target,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *Card) Reset() {
@@ -178,6 +177,13 @@ func (*Card) Descriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_card_proto_rawDescGZIP(), []int{1}
 }
 
+func (x *Card) GetId() int32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
 func (x *Card) GetConfig() *CardConfig {
 	if x != nil {
 		return x.Config
@@ -192,50 +198,14 @@ func (x *Card) GetUsedThisLoop() bool {
 	return false
 }
 
-func (x *Card) GetTarget() isCard_Target {
+func (x *Card) GetResolvedTarget() *Choice {
 	if x != nil {
-		return x.Target
+		return x.ResolvedTarget
 	}
 	return nil
 }
 
-func (x *Card) GetTargetCharacterId() int32 {
-	if x != nil {
-		if x, ok := x.Target.(*Card_TargetCharacterId); ok {
-			return x.TargetCharacterId
-		}
-	}
-	return 0
-}
-
-func (x *Card) GetTargetLocation() LocationType {
-	if x != nil {
-		if x, ok := x.Target.(*Card_TargetLocation); ok {
-			return x.TargetLocation
-		}
-	}
-	return LocationType_LOCATION_TYPE_UNSPECIFIED
-}
-
-type isCard_Target interface {
-	isCard_Target()
-}
-
-type Card_TargetCharacterId struct {
-	// The ID of the target character, if the ability has one.
-	TargetCharacterId int32 `protobuf:"varint,3,opt,name=target_character_id,json=targetCharacterId,proto3,oneof"`
-}
-
-type Card_TargetLocation struct {
-	// The target location, if the ability has one.
-	TargetLocation LocationType `protobuf:"varint,4,opt,name=target_location,json=targetLocation,proto3,enum=tragedylooper.v1.LocationType,oneof"`
-}
-
-func (*Card_TargetCharacterId) isCard_Target() {}
-
-func (*Card_TargetLocation) isCard_Target() {}
-
-// CardList is a list of card instances.
+// CardList is a collection of card instances, typically representing a player's hand.
 type CardList struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// A list of card instances.
@@ -285,7 +255,7 @@ var File_tragedylooper_v1_card_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_card_proto_rawDesc = "" +
 	"\n" +
-	"\x1btragedylooper/v1/card.proto\x12\x10tragedylooper.v1\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\"\xb9\x02\n" +
+	"\x1btragedylooper/v1/card.proto\x12\x10tragedylooper.v1\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1dtragedylooper/v1/common.proto\"\xb9\x02\n" +
 	"\n" +
 	"CardConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
@@ -296,13 +266,12 @@ const file_tragedylooper_v1_card_proto_rawDesc = "" +
 	"owner_role\x18\x05 \x01(\x0e2\x1c.tragedylooper.v1.PlayerRoleR\townerRole\x128\n" +
 	"\x06effect\x18\x06 \x01(\v2 .tragedylooper.v1.CompoundEffectR\x06effect\x12\"\n" +
 	"\ronce_per_loop\x18\a \x01(\bR\voncePerLoop\x12\x1a\n" +
-	"\bpriority\x18\b \x01(\x05R\bpriority\"\xe9\x01\n" +
-	"\x04Card\x124\n" +
-	"\x06config\x18\x01 \x01(\v2\x1c.tragedylooper.v1.CardConfigR\x06config\x12$\n" +
-	"\x0eused_this_loop\x18\x02 \x01(\bR\fusedThisLoop\x120\n" +
-	"\x13target_character_id\x18\x03 \x01(\x05H\x00R\x11targetCharacterId\x12I\n" +
-	"\x0ftarget_location\x18\x04 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeH\x00R\x0etargetLocationB\b\n" +
-	"\x06target\"8\n" +
+	"\bpriority\x18\b \x01(\x05R\bpriority\"\xb5\x01\n" +
+	"\x04Card\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x124\n" +
+	"\x06config\x18\x02 \x01(\v2\x1c.tragedylooper.v1.CardConfigR\x06config\x12$\n" +
+	"\x0eused_this_loop\x18\x03 \x01(\bR\fusedThisLoop\x12A\n" +
+	"\x0fresolved_target\x18\x04 \x01(\v2\x18.tragedylooper.v1.ChoiceR\x0eresolvedTarget\"8\n" +
 	"\bCardList\x12,\n" +
 	"\x05cards\x18\x01 \x03(\v2\x16.tragedylooper.v1.CardR\x05cardsB\xb9\x01\n" +
 	"\x14com.tragedylooper.v1B\tCardProtoP\x01Z5github.com/constellation39/tragedyLooper/pkg/proto/v1\xa2\x02\x03TXX\xaa\x02\x10Tragedylooper.V1\xca\x02\x10Tragedylooper\\V1\xe2\x02\x1cTragedylooper\\V1\\GPBMetadata\xea\x02\x11Tragedylooper::V1b\x06proto3"
@@ -327,14 +296,14 @@ var file_tragedylooper_v1_card_proto_goTypes = []any{
 	(CardType)(0),          // 3: tragedylooper.v1.CardType
 	(PlayerRole)(0),        // 4: tragedylooper.v1.PlayerRole
 	(*CompoundEffect)(nil), // 5: tragedylooper.v1.CompoundEffect
-	(LocationType)(0),      // 6: tragedylooper.v1.LocationType
+	(*Choice)(nil),         // 6: tragedylooper.v1.Choice
 }
 var file_tragedylooper_v1_card_proto_depIdxs = []int32{
 	3, // 0: tragedylooper.v1.CardConfig.type:type_name -> tragedylooper.v1.CardType
 	4, // 1: tragedylooper.v1.CardConfig.owner_role:type_name -> tragedylooper.v1.PlayerRole
 	5, // 2: tragedylooper.v1.CardConfig.effect:type_name -> tragedylooper.v1.CompoundEffect
 	0, // 3: tragedylooper.v1.Card.config:type_name -> tragedylooper.v1.CardConfig
-	6, // 4: tragedylooper.v1.Card.target_location:type_name -> tragedylooper.v1.LocationType
+	6, // 4: tragedylooper.v1.Card.resolved_target:type_name -> tragedylooper.v1.Choice
 	1, // 5: tragedylooper.v1.CardList.cards:type_name -> tragedylooper.v1.Card
 	6, // [6:6] is the sub-list for method output_type
 	6, // [6:6] is the sub-list for method input_type
@@ -350,10 +319,7 @@ func file_tragedylooper_v1_card_proto_init() {
 	}
 	file_tragedylooper_v1_effect_proto_init()
 	file_tragedylooper_v1_enums_proto_init()
-	file_tragedylooper_v1_card_proto_msgTypes[1].OneofWrappers = []any{
-		(*Card_TargetCharacterId)(nil),
-		(*Card_TargetLocation)(nil),
-	}
+	file_tragedylooper_v1_common_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

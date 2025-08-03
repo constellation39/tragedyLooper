@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "enum": [
+        "GOODWILL_RULE_TYPE_UNSPECIFIED",
+        0,
+        "GOODWILL_RULE_TYPE_IGNORE_CHECKS",
+        1,
+        "GOODWILL_RULE_TYPE_ALWAYS_IGNORE",
+        2
+    ],
+    "oneOf": [
+        {
+            "type": "string"
+        },
+        {
+            "type": "integer"
+        }
+    ],
+    "title": "Goodwill Rule Type",
+    "description": "GoodwillRuleType defines how goodwill is handled for a character."
+}

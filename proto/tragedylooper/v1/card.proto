@@ -8,16 +8,6 @@ import "tragedylooper/v1/common.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
-syntax = "proto3";
-
-package tragedylooper.v1;
-
-import "tragedylooper/v1/effect.proto";
-import "tragedylooper/v1/enums.proto";
-import "tragedylooper/v1/common.proto";
-
-option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
-
 // CardConfig defines the static, immutable properties of a card.
 // This represents a card as it is defined in the game's rulebook or script.
 message CardConfig {

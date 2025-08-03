@@ -9,27 +9,27 @@
                         "type": "integer"
                     },
                     "type": "object",
-                    "description": "对角色身份的猜测，键为 character_id"
+                    "description": "Guesses about character roles, keyed by character_id."
                 },
                 "clues": {
                     "items": {
                         "type": "string"
                     },
                     "type": "array",
-                    "description": "收集到的线索列表"
+                    "description": "List of collected clues."
                 },
                 "theories": {
                     "items": {
                         "type": "string"
                     },
                     "type": "array",
-                    "description": "推理出的理论列表"
+                    "description": "List of formulated theories."
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Player Deduction Knowledge",
-            "description": "主角的推理知识"
+            "description": "PlayerDeductionKnowledge holds the information and guesses a Protagonist player has made."
         }
     }
 }

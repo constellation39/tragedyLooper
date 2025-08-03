@@ -23,16 +23,14 @@ const (
 
 // 玩家打出卡牌的操作负载
 type PlayCardPayload struct {
-	state    protoimpl.MessageState `protogen:"open.v1"`
-	PlayerId int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"` // 执行操作的玩家ID
-	CardId   int32                  `protobuf:"varint,2,opt,name=card_id,json=cardId,proto3" json:"card_id,omitempty"`       // 打出的卡牌ID
-	// Types that are valid to be assigned to Target:
-	//
-	//	*PlayCardPayload_TargetCharacterId
-	//	*PlayCardPayload_TargetLocation
-	Target        isPlayCardPayload_Target `protobuf_oneof:"target"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	CardId int32                  `protobuf:"varint,1,opt,name=card_id,json=cardId,proto3" json:"card_id,omitempty"` // 打出的卡牌ID
+	// Optional: Pre-chosen options to streamline the interaction.
+	// Key: request_id from a potential ChoiceRequiredEvent
+	// Value: chosen_option_id from that event
+	PreChosenOptions map[string]string `protobuf:"bytes,2,rep,name=pre_chosen_options,json=preChosenOptions,proto3" json:"pre_chosen_options,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *PlayCardPayload) Reset() {
@@ -65,13 +63,6 @@ func (*PlayCardPayload) Descriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_payload_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PlayCardPayload) GetPlayerId() int32 {
-	if x != nil {
-		return x.PlayerId
-	}
-	return 0
-}
-
 func (x *PlayCardPayload) GetCardId() int32 {
 	if x != nil {
 		return x.CardId
@@ -79,61 +70,21 @@ func (x *PlayCardPayload) GetCardId() int32 {
 	return 0
 }
 
-func (x *PlayCardPayload) GetTarget() isPlayCardPayload_Target {
+func (x *PlayCardPayload) GetPreChosenOptions() map[string]string {
 	if x != nil {
-		return x.Target
+		return x.PreChosenOptions
 	}
 	return nil
 }
 
-func (x *PlayCardPayload) GetTargetCharacterId() int32 {
-	if x != nil {
-		if x, ok := x.Target.(*PlayCardPayload_TargetCharacterId); ok {
-			return x.TargetCharacterId
-		}
-	}
-	return 0
-}
-
-func (x *PlayCardPayload) GetTargetLocation() LocationType {
-	if x != nil {
-		if x, ok := x.Target.(*PlayCardPayload_TargetLocation); ok {
-			return x.TargetLocation
-		}
-	}
-	return LocationType_LOCATION_TYPE_UNSPECIFIED
-}
-
-type isPlayCardPayload_Target interface {
-	isPlayCardPayload_Target()
-}
-
-type PlayCardPayload_TargetCharacterId struct {
-	TargetCharacterId int32 `protobuf:"varint,3,opt,name=target_character_id,json=targetCharacterId,proto3,oneof"` // 卡牌的目标角色ID
-}
-
-type PlayCardPayload_TargetLocation struct {
-	TargetLocation LocationType `protobuf:"varint,4,opt,name=target_location,json=targetLocation,proto3,enum=tragedylooper.v1.LocationType,oneof"` // 如果是移动卡，指定目标地点
-}
-
-func (*PlayCardPayload_TargetCharacterId) isPlayCardPayload_Target() {}
-
-func (*PlayCardPayload_TargetLocation) isPlayCardPayload_Target() {}
-
 // 玩家使用能力的操作负载
 type UseAbilityPayload struct {
-	state       protoimpl.MessageState `protogen:"open.v1"`
-	PlayerId    int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`          // 执行操作的玩家ID
-	CharacterId int32                  `protobuf:"varint,2,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"` // 哪个角色的能力被使用
-	AbilityId   int32                  `protobuf:"varint,3,opt,name=ability_id,json=abilityId,proto3" json:"ability_id,omitempty"`       // 哪个能力被使用
-	// Types that are valid to be assigned to Target:
-	//
-	//	*UseAbilityPayload_TargetCharacterId
-	//	*UseAbilityPayload_TargetLocation
-	//	*UseAbilityPayload_TargetIncidentId
-	Target        isUseAbilityPayload_Target `protobuf_oneof:"target"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	CharacterId      int32                  `protobuf:"varint,1,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"` // 哪个角色的能力被使用
+	AbilityId        int32                  `protobuf:"varint,2,opt,name=ability_id,json=abilityId,proto3" json:"ability_id,omitempty"`       // 哪个能力被使用
+	PreChosenOptions map[string]string      `protobuf:"bytes,3,rep,name=pre_chosen_options,json=preChosenOptions,proto3" json:"pre_chosen_options,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *UseAbilityPayload) Reset() {
@@ -166,13 +117,6 @@ func (*UseAbilityPayload) Descriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_payload_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *UseAbilityPayload) GetPlayerId() int32 {
-	if x != nil {
-		return x.PlayerId
-	}
-	return 0
-}
-
 func (x *UseAbilityPayload) GetCharacterId() int32 {
 	if x != nil {
 		return x.CharacterId
@@ -187,67 +131,17 @@ func (x *UseAbilityPayload) GetAbilityId() int32 {
 	return 0
 }
 
-func (x *UseAbilityPayload) GetTarget() isUseAbilityPayload_Target {
+func (x *UseAbilityPayload) GetPreChosenOptions() map[string]string {
 	if x != nil {
-		return x.Target
+		return x.PreChosenOptions
 	}
 	return nil
 }
 
-func (x *UseAbilityPayload) GetTargetCharacterId() int32 {
-	if x != nil {
-		if x, ok := x.Target.(*UseAbilityPayload_TargetCharacterId); ok {
-			return x.TargetCharacterId
-		}
-	}
-	return 0
-}
-
-func (x *UseAbilityPayload) GetTargetLocation() LocationType {
-	if x != nil {
-		if x, ok := x.Target.(*UseAbilityPayload_TargetLocation); ok {
-			return x.TargetLocation
-		}
-	}
-	return LocationType_LOCATION_TYPE_UNSPECIFIED
-}
-
-func (x *UseAbilityPayload) GetTargetIncidentId() int32 {
-	if x != nil {
-		if x, ok := x.Target.(*UseAbilityPayload_TargetIncidentId); ok {
-			return x.TargetIncidentId
-		}
-	}
-	return 0
-}
-
-type isUseAbilityPayload_Target interface {
-	isUseAbilityPayload_Target()
-}
-
-type UseAbilityPayload_TargetCharacterId struct {
-	TargetCharacterId int32 `protobuf:"varint,4,opt,name=target_character_id,json=targetCharacterId,proto3,oneof"` // 如果能力有目标角色，指定其ID
-}
-
-type UseAbilityPayload_TargetLocation struct {
-	TargetLocation LocationType `protobuf:"varint,5,opt,name=target_location,json=targetLocation,proto3,enum=tragedylooper.v1.LocationType,oneof"` // 如果能力有目标地点，指定其地点
-}
-
-type UseAbilityPayload_TargetIncidentId struct {
-	TargetIncidentId int32 `protobuf:"varint,6,opt,name=target_incident_id,json=targetIncidentId,proto3,oneof"` // 如果能力目标是悲剧，指定其类型
-}
-
-func (*UseAbilityPayload_TargetCharacterId) isUseAbilityPayload_Target() {}
-
-func (*UseAbilityPayload_TargetLocation) isUseAbilityPayload_Target() {}
-
-func (*UseAbilityPayload_TargetIncidentId) isUseAbilityPayload_Target() {}
-
 // 主角玩家进行猜测的操作负载
 type MakeGuessPayload struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PlayerId      int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`                                                                                        // 执行操作的玩家ID
-	GuessedRoles  map[int32]int32        `protobuf:"bytes,2,rep,name=guessed_roles,json=guessedRoles,proto3" json:"guessed_roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 猜测的角色身份映射，键为 character_id
+	GuessedRoles  map[int32]int32        `protobuf:"bytes,1,rep,name=guessed_roles,json=guessedRoles,proto3" json:"guessed_roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 猜测的角色身份映射，键为 character_id
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -282,13 +176,6 @@ func (*MakeGuessPayload) Descriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_payload_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *MakeGuessPayload) GetPlayerId() int32 {
-	if x != nil {
-		return x.PlayerId
-	}
-	return 0
-}
-
 func (x *MakeGuessPayload) GetGuessedRoles() map[int32]int32 {
 	if x != nil {
 		return x.GuessedRoles
@@ -299,8 +186,8 @@ func (x *MakeGuessPayload) GetGuessedRoles() map[int32]int32 {
 // 玩家进行选择的操作负载（例如，在需要选择地盘或目标时）
 type ChooseOptionPayload struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	PlayerId       int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`                    // 执行操作的玩家ID
-	CharacterId    int32                  `protobuf:"varint,2,opt,name=character_id,json=characterId,proto3" json:"character_id,omitempty"`           // 做出选择的角色（如果选择与角色相关）
+	RequestId      string                 `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`                  // The ID from the event we are responding to
+	CharacterId    *int32                 `protobuf:"varint,2,opt,name=character_id,json=characterId,proto3,oneof" json:"character_id,omitempty"`     // 做出选择的角色（如果选择与角色相关）
 	ChosenOptionId string                 `protobuf:"bytes,3,opt,name=chosen_option_id,json=chosenOptionId,proto3" json:"chosen_option_id,omitempty"` // 选择项的ID
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
@@ -336,16 +223,16 @@ func (*ChooseOptionPayload) Descriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_payload_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ChooseOptionPayload) GetPlayerId() int32 {
+func (x *ChooseOptionPayload) GetRequestId() string {
 	if x != nil {
-		return x.PlayerId
+		return x.RequestId
 	}
-	return 0
+	return ""
 }
 
 func (x *ChooseOptionPayload) GetCharacterId() int32 {
-	if x != nil {
-		return x.CharacterId
+	if x != nil && x.CharacterId != nil {
+		return *x.CharacterId
 	}
 	return 0
 }
@@ -360,7 +247,6 @@ func (x *ChooseOptionPayload) GetChosenOptionId() string {
 // 玩家跳过回合的操作负载
 type PassTurnAction struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PlayerId      int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -395,16 +281,10 @@ func (*PassTurnAction) Descriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_payload_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *PassTurnAction) GetPlayerId() int32 {
-	if x != nil {
-		return x.PlayerId
-	}
-	return 0
-}
-
 // 通用的玩家操作负载
 type PlayerActionPayload struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	PlayerId int32                  `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"` // 执行操作的玩家ID
 	// Types that are valid to be assigned to Payload:
 	//
 	//	*PlayerActionPayload_PlayCard
@@ -445,6 +325,13 @@ func (x *PlayerActionPayload) ProtoReflect() protoreflect.Message {
 // Deprecated: Use PlayerActionPayload.ProtoReflect.Descriptor instead.
 func (*PlayerActionPayload) Descriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_payload_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *PlayerActionPayload) GetPlayerId() int32 {
+	if x != nil {
+		return x.PlayerId
+	}
+	return 0
 }
 
 func (x *PlayerActionPayload) GetPayload() isPlayerActionPayload_Payload {
@@ -504,23 +391,23 @@ type isPlayerActionPayload_Payload interface {
 }
 
 type PlayerActionPayload_PlayCard struct {
-	PlayCard *PlayCardPayload `protobuf:"bytes,1,opt,name=play_card,json=playCard,proto3,oneof"` // 打出卡牌的负载
+	PlayCard *PlayCardPayload `protobuf:"bytes,2,opt,name=play_card,json=playCard,proto3,oneof"` // 打出卡牌的负载
 }
 
 type PlayerActionPayload_UseAbility struct {
-	UseAbility *UseAbilityPayload `protobuf:"bytes,2,opt,name=use_ability,json=useAbility,proto3,oneof"` // 使用能力的负载
+	UseAbility *UseAbilityPayload `protobuf:"bytes,3,opt,name=use_ability,json=useAbility,proto3,oneof"` // 使用能力的负载
 }
 
 type PlayerActionPayload_MakeGuess struct {
-	MakeGuess *MakeGuessPayload `protobuf:"bytes,3,opt,name=make_guess,json=makeGuess,proto3,oneof"` // 进行猜测的负载
+	MakeGuess *MakeGuessPayload `protobuf:"bytes,4,opt,name=make_guess,json=makeGuess,proto3,oneof"` // 进行猜测的负载
 }
 
 type PlayerActionPayload_ChooseOption struct {
-	ChooseOption *ChooseOptionPayload `protobuf:"bytes,4,opt,name=choose_option,json=chooseOption,proto3,oneof"` // 进行选择的负载
+	ChooseOption *ChooseOptionPayload `protobuf:"bytes,5,opt,name=choose_option,json=chooseOption,proto3,oneof"` // 进行选择的负载
 }
 
 type PlayerActionPayload_PassTurn struct {
-	PassTurn *PassTurnAction `protobuf:"bytes,5,opt,name=pass_turn,json=passTurn,proto3,oneof"` // 玩家跳过
+	PassTurn *PassTurnAction `protobuf:"bytes,6,opt,name=pass_turn,json=passTurn,proto3,oneof"` // 玩家跳过
 }
 
 func (*PlayerActionPayload_PlayCard) isPlayerActionPayload_Payload() {}
@@ -537,42 +424,42 @@ var File_tragedylooper_v1_payload_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_payload_proto_rawDesc = "" +
 	"\n" +
-	"\x1etragedylooper/v1/payload.proto\x12\x10tragedylooper.v1\x1a\x1ctragedylooper/v1/enums.proto\"\xce\x01\n" +
-	"\x0fPlayCardPayload\x12\x1b\n" +
-	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12\x17\n" +
-	"\acard_id\x18\x02 \x01(\x05R\x06cardId\x120\n" +
-	"\x13target_character_id\x18\x03 \x01(\x05H\x00R\x11targetCharacterId\x12I\n" +
-	"\x0ftarget_location\x18\x04 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeH\x00R\x0etargetLocationB\b\n" +
-	"\x06target\"\xa9\x02\n" +
-	"\x11UseAbilityPayload\x12\x1b\n" +
-	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12!\n" +
-	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\x12\x1d\n" +
+	"\x1etragedylooper/v1/payload.proto\x12\x10tragedylooper.v1\x1a\x1ctragedylooper/v1/enums.proto\"\xd6\x01\n" +
+	"\x0fPlayCardPayload\x12\x17\n" +
+	"\acard_id\x18\x01 \x01(\x05R\x06cardId\x12e\n" +
+	"\x12pre_chosen_options\x18\x02 \x03(\v27.tragedylooper.v1.PlayCardPayload.PreChosenOptionsEntryR\x10preChosenOptions\x1aC\n" +
+	"\x15PreChosenOptionsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x83\x02\n" +
+	"\x11UseAbilityPayload\x12!\n" +
+	"\fcharacter_id\x18\x01 \x01(\x05R\vcharacterId\x12\x1d\n" +
 	"\n" +
-	"ability_id\x18\x03 \x01(\x05R\tabilityId\x120\n" +
-	"\x13target_character_id\x18\x04 \x01(\x05H\x00R\x11targetCharacterId\x12I\n" +
-	"\x0ftarget_location\x18\x05 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeH\x00R\x0etargetLocation\x12.\n" +
-	"\x12target_incident_id\x18\x06 \x01(\x05H\x00R\x10targetIncidentIdB\b\n" +
-	"\x06target\"\xcb\x01\n" +
-	"\x10MakeGuessPayload\x12\x1b\n" +
-	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12Y\n" +
-	"\rguessed_roles\x18\x02 \x03(\v24.tragedylooper.v1.MakeGuessPayload.GuessedRolesEntryR\fguessedRoles\x1a?\n" +
+	"ability_id\x18\x02 \x01(\x05R\tabilityId\x12g\n" +
+	"\x12pre_chosen_options\x18\x03 \x03(\v29.tragedylooper.v1.UseAbilityPayload.PreChosenOptionsEntryR\x10preChosenOptions\x1aC\n" +
+	"\x15PreChosenOptionsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xae\x01\n" +
+	"\x10MakeGuessPayload\x12Y\n" +
+	"\rguessed_roles\x18\x01 \x03(\v24.tragedylooper.v1.MakeGuessPayload.GuessedRolesEntryR\fguessedRoles\x1a?\n" +
 	"\x11GuessedRolesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\x7f\n" +
-	"\x13ChooseOptionPayload\x12\x1b\n" +
-	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12!\n" +
-	"\fcharacter_id\x18\x02 \x01(\x05R\vcharacterId\x12(\n" +
-	"\x10chosen_option_id\x18\x03 \x01(\tR\x0echosenOptionId\"-\n" +
-	"\x0ePassTurnAction\x12\x1b\n" +
-	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\"\xfe\x02\n" +
-	"\x13PlayerActionPayload\x12@\n" +
-	"\tplay_card\x18\x01 \x01(\v2!.tragedylooper.v1.PlayCardPayloadH\x00R\bplayCard\x12F\n" +
-	"\vuse_ability\x18\x02 \x01(\v2#.tragedylooper.v1.UseAbilityPayloadH\x00R\n" +
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\x97\x01\n" +
+	"\x13ChooseOptionPayload\x12\x1d\n" +
+	"\n" +
+	"request_id\x18\x01 \x01(\tR\trequestId\x12&\n" +
+	"\fcharacter_id\x18\x02 \x01(\x05H\x00R\vcharacterId\x88\x01\x01\x12(\n" +
+	"\x10chosen_option_id\x18\x03 \x01(\tR\x0echosenOptionIdB\x0f\n" +
+	"\r_character_id\"\x10\n" +
+	"\x0ePassTurnAction\"\x9b\x03\n" +
+	"\x13PlayerActionPayload\x12\x1b\n" +
+	"\tplayer_id\x18\x01 \x01(\x05R\bplayerId\x12@\n" +
+	"\tplay_card\x18\x02 \x01(\v2!.tragedylooper.v1.PlayCardPayloadH\x00R\bplayCard\x12F\n" +
+	"\vuse_ability\x18\x03 \x01(\v2#.tragedylooper.v1.UseAbilityPayloadH\x00R\n" +
 	"useAbility\x12C\n" +
 	"\n" +
-	"make_guess\x18\x03 \x01(\v2\".tragedylooper.v1.MakeGuessPayloadH\x00R\tmakeGuess\x12L\n" +
-	"\rchoose_option\x18\x04 \x01(\v2%.tragedylooper.v1.ChooseOptionPayloadH\x00R\fchooseOption\x12?\n" +
-	"\tpass_turn\x18\x05 \x01(\v2 .tragedylooper.v1.PassTurnActionH\x00R\bpassTurnB\t\n" +
+	"make_guess\x18\x04 \x01(\v2\".tragedylooper.v1.MakeGuessPayloadH\x00R\tmakeGuess\x12L\n" +
+	"\rchoose_option\x18\x05 \x01(\v2%.tragedylooper.v1.ChooseOptionPayloadH\x00R\fchooseOption\x12?\n" +
+	"\tpass_turn\x18\x06 \x01(\v2 .tragedylooper.v1.PassTurnActionH\x00R\bpassTurnB\t\n" +
 	"\apayloadB\xbc\x01\n" +
 	"\x14com.tragedylooper.v1B\fPayloadProtoP\x01Z5github.com/constellation39/tragedyLooper/pkg/proto/v1\xa2\x02\x03TXX\xaa\x02\x10Tragedylooper.V1\xca\x02\x10Tragedylooper\\V1\xe2\x02\x1cTragedylooper\\V1\\GPBMetadata\xea\x02\x11Tragedylooper::V1b\x06proto3"
 
@@ -588,7 +475,7 @@ func file_tragedylooper_v1_payload_proto_rawDescGZIP() []byte {
 	return file_tragedylooper_v1_payload_proto_rawDescData
 }
 
-var file_tragedylooper_v1_payload_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_tragedylooper_v1_payload_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_tragedylooper_v1_payload_proto_goTypes = []any{
 	(*PlayCardPayload)(nil),     // 0: tragedylooper.v1.PlayCardPayload
 	(*UseAbilityPayload)(nil),   // 1: tragedylooper.v1.UseAbilityPayload
@@ -596,13 +483,14 @@ var file_tragedylooper_v1_payload_proto_goTypes = []any{
 	(*ChooseOptionPayload)(nil), // 3: tragedylooper.v1.ChooseOptionPayload
 	(*PassTurnAction)(nil),      // 4: tragedylooper.v1.PassTurnAction
 	(*PlayerActionPayload)(nil), // 5: tragedylooper.v1.PlayerActionPayload
-	nil,                         // 6: tragedylooper.v1.MakeGuessPayload.GuessedRolesEntry
-	(LocationType)(0),           // 7: tragedylooper.v1.LocationType
+	nil,                         // 6: tragedylooper.v1.PlayCardPayload.PreChosenOptionsEntry
+	nil,                         // 7: tragedylooper.v1.UseAbilityPayload.PreChosenOptionsEntry
+	nil,                         // 8: tragedylooper.v1.MakeGuessPayload.GuessedRolesEntry
 }
 var file_tragedylooper_v1_payload_proto_depIdxs = []int32{
-	7, // 0: tragedylooper.v1.PlayCardPayload.target_location:type_name -> tragedylooper.v1.LocationType
-	7, // 1: tragedylooper.v1.UseAbilityPayload.target_location:type_name -> tragedylooper.v1.LocationType
-	6, // 2: tragedylooper.v1.MakeGuessPayload.guessed_roles:type_name -> tragedylooper.v1.MakeGuessPayload.GuessedRolesEntry
+	6, // 0: tragedylooper.v1.PlayCardPayload.pre_chosen_options:type_name -> tragedylooper.v1.PlayCardPayload.PreChosenOptionsEntry
+	7, // 1: tragedylooper.v1.UseAbilityPayload.pre_chosen_options:type_name -> tragedylooper.v1.UseAbilityPayload.PreChosenOptionsEntry
+	8, // 2: tragedylooper.v1.MakeGuessPayload.guessed_roles:type_name -> tragedylooper.v1.MakeGuessPayload.GuessedRolesEntry
 	0, // 3: tragedylooper.v1.PlayerActionPayload.play_card:type_name -> tragedylooper.v1.PlayCardPayload
 	1, // 4: tragedylooper.v1.PlayerActionPayload.use_ability:type_name -> tragedylooper.v1.UseAbilityPayload
 	2, // 5: tragedylooper.v1.PlayerActionPayload.make_guess:type_name -> tragedylooper.v1.MakeGuessPayload
@@ -621,15 +509,7 @@ func file_tragedylooper_v1_payload_proto_init() {
 		return
 	}
 	file_tragedylooper_v1_enums_proto_init()
-	file_tragedylooper_v1_payload_proto_msgTypes[0].OneofWrappers = []any{
-		(*PlayCardPayload_TargetCharacterId)(nil),
-		(*PlayCardPayload_TargetLocation)(nil),
-	}
-	file_tragedylooper_v1_payload_proto_msgTypes[1].OneofWrappers = []any{
-		(*UseAbilityPayload_TargetCharacterId)(nil),
-		(*UseAbilityPayload_TargetLocation)(nil),
-		(*UseAbilityPayload_TargetIncidentId)(nil),
-	}
+	file_tragedylooper_v1_payload_proto_msgTypes[3].OneofWrappers = []any{}
 	file_tragedylooper_v1_payload_proto_msgTypes[5].OneofWrappers = []any{
 		(*PlayerActionPayload_PlayCard)(nil),
 		(*PlayerActionPayload_UseAbility)(nil),
@@ -643,7 +523,7 @@ func file_tragedylooper_v1_payload_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_payload_proto_rawDesc), len(file_tragedylooper_v1_payload_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

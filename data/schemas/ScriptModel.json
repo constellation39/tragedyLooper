@@ -4,6 +4,9 @@
     "definitions": {
         "ScriptModel": {
             "properties": {
+                "id": {
+                    "type": "integer"
+                },
                 "private_info": {
                     "$ref": "#/definitions/tragedylooper.v1.PrivateInfo",
                     "additionalProperties": true,

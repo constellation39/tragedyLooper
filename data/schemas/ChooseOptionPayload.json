@@ -4,9 +4,9 @@
     "definitions": {
         "ChooseOptionPayload": {
             "properties": {
-                "player_id": {
-                    "type": "integer",
-                    "description": "执行操作的玩家ID"
+                "request_id": {
+                    "type": "string",
+                    "description": "The ID from the event we are responding to"
                 },
                 "character_id": {
                     "type": "integer",

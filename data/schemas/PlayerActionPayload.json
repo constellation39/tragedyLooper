@@ -4,6 +4,10 @@
     "definitions": {
         "PlayerActionPayload": {
             "properties": {
+                "player_id": {
+                    "type": "integer",
+                    "description": "执行操作的玩家ID"
+                },
                 "play_card": {
                     "$ref": "#/definitions/tragedylooper.v1.PlayCardPayload",
                     "additionalProperties": true,
@@ -37,9 +41,9 @@
         },
         "tragedylooper.v1.ChooseOptionPayload": {
             "properties": {
-                "player_id": {
-                    "type": "integer",
-                    "description": "执行操作的玩家ID"
+                "request_id": {
+                    "type": "string",
+                    "description": "The ID from the event we are responding to"
                 },
                 "character_id": {
                     "type": "integer",
@@ -57,10 +61,6 @@
         },
         "tragedylooper.v1.MakeGuessPayload": {
             "properties": {
-                "player_id": {
-                    "type": "integer",
-                    "description": "执行操作的玩家ID"
-                },
                 "guessed_roles": {
                     "additionalProperties": {
                         "type": "integer"
@@ -75,11 +75,6 @@
             "description": "主角玩家进行猜测的操作负载"
         },
         "tragedylooper.v1.PassTurnAction": {
-            "properties": {
-                "player_id": {
-                    "type": "integer"
-                }
-            },
             "additionalProperties": true,
             "type": "object",
             "title": "Pass Turn Action",
@@ -87,41 +82,16 @@
         },
         "tragedylooper.v1.PlayCardPayload": {
             "properties": {
-                "player_id": {
-                    "type": "integer",
-                    "description": "执行操作的玩家ID"
-                },
                 "card_id": {
                     "type": "integer",
                     "description": "打出的卡牌ID"
                 },
-                "target_character_id": {
-                    "type": "integer",
-                    "description": "卡牌的目标角色ID"
-                },
-                "target_location": {
-                    "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
-                        0,
-                        "LOCATION_TYPE_HOSPITAL",
-                        1,
-                        "LOCATION_TYPE_SHRINE",
-                        2,
-                        "LOCATION_TYPE_CITY",
-                        3,
-                        "LOCATION_TYPE_SCHOOL",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Location Type",
-                    "description": "地点类型（也可通过LocationConfig扩展）"
+                "pre_chosen_options": {
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "type": "object",
+                    "description": "Optional: Pre-chosen options to streamline the interaction. Key: request_id from a potential ChoiceRequiredEvent Value: chosen_option_id from that event"
                 }
             },
             "additionalProperties": true,
@@ -131,10 +101,6 @@
         },
         "tragedylooper.v1.UseAbilityPayload": {
             "properties": {
-                "player_id": {
-                    "type": "integer",
-                    "description": "执行操作的玩家ID"
-                },
                 "character_id": {
                     "type": "integer",
                     "description": "哪个角色的能力被使用"
@@ -143,37 +109,11 @@
                     "type": "integer",
                     "description": "哪个能力被使用"
                 },
-                "target_character_id": {
-                    "type": "integer",
-                    "description": "如果能力有目标角色，指定其ID"
-                },
-                "target_location": {
-                    "enum": [
-                        "LOCATION_TYPE_UNSPECIFIED",
-                        0,
-                        "LOCATION_TYPE_HOSPITAL",
-                        1,
-                        "LOCATION_TYPE_SHRINE",
-                        2,
-                        "LOCATION_TYPE_CITY",
-                        3,
-                        "LOCATION_TYPE_SCHOOL",
-                        4
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Location Type",
-                    "description": "地点类型（也可通过LocationConfig扩展）"
-                },
-                "target_incident_id": {
-                    "type": "integer",
-                    "description": "如果能力目标是悲剧，指定其类型"
+                "pre_chosen_options": {
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "type": "object"
                 }
             },
             "additionalProperties": true,

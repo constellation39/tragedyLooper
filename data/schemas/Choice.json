@@ -6,15 +6,41 @@
             "properties": {
                 "id": {
                     "type": "string",
-                    "description": "唯一ID，例如 \"target_char_5\" 或 \"effect_choice_0\""
+                    "description": "唯一ID，例如 \"option_char_5\" 或 \"option_loc_shrine\""
                 },
                 "description": {
                     "type": "string",
                     "description": "选项的描述"
                 },
-                "target_character_id": {
-                    "type": "integer",
-                    "description": "用于目标选择"
+                "character_id": {
+                    "type": "integer"
+                },
+                "location": {
+                    "enum": [
+                        "LOCATION_TYPE_UNSPECIFIED",
+                        0,
+                        "LOCATION_TYPE_HOSPITAL",
+                        1,
+                        "LOCATION_TYPE_SHRINE",
+                        2,
+                        "LOCATION_TYPE_CITY",
+                        3,
+                        "LOCATION_TYPE_SCHOOL",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location Type",
+                    "description": "地点类型（也可通过LocationConfig扩展）"
+                },
+                "player_id": {
+                    "type": "integer"
                 },
                 "effect_option_index": {
                     "type": "integer",

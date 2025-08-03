@@ -6,18 +6,18 @@
             "properties": {
                 "id": {
                     "type": "integer",
-                    "description": "角色唯一ID"
+                    "description": "Character's unique ID."
                 },
                 "name": {
                     "type": "string",
-                    "description": "角色名称"
+                    "description": "Character's name."
                 },
                 "traits": {
                     "items": {
                         "type": "string"
                     },
                     "type": "array",
-                    "description": "角色特征"
+                    "description": "Character's current traits."
                 },
                 "current_location": {
                     "enum": [
@@ -45,47 +45,65 @@
                 },
                 "paranoia": {
                     "type": "integer",
-                    "description": "妄想值"
+                    "description": "Current paranoia stat."
                 },
                 "goodwill": {
                     "type": "integer",
-                    "description": "好感值"
+                    "description": "Current goodwill stat."
                 },
                 "intrigue": {
                     "type": "integer",
-                    "description": "阴谋值"
+                    "description": "Current intrigue stat."
                 },
                 "abilities": {
                     "items": {
                         "$ref": "#/definitions/tragedylooper.v1.Ability"
                     },
                     "type": "array",
-                    "description": "角色拥有的能力列表"
+                    "description": "List of abilities."
                 },
                 "is_alive": {
                     "type": "boolean",
-                    "description": "角色是否存活"
+                    "description": "Whether the character is alive."
                 },
                 "in_panic_mode": {
                     "type": "boolean",
-                    "description": "是否处于恐慌模式"
+                    "description": "Whether the character is in panic."
                 },
                 "rules": {
                     "items": {
                         "$ref": "#/definitions/tragedylooper.v1.CharacterRule"
                     },
                     "type": "array",
-                    "description": "角色特有规则"
+                    "description": "List of special rules."
                 },
-                "role": {
-                    "type": "integer",
-                    "description": "角色身份（对主角可能为UNKNOWN）"
+                "revealed_role": {
+                    "enum": [
+                        "PLAYER_ROLE_UNSPECIFIED",
+                        0,
+                        "PLAYER_ROLE_UNKNOWN",
+                        1,
+                        "PLAYER_ROLE_MASTERMIND",
+                        2,
+                        "PLAYER_ROLE_PROTAGONIST",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Player Role",
+                    "description": "玩家角色"
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Player View Character",
-            "description": "玩家视角下的角色信息（不包含隐藏身份）"
+            "description": "PlayerViewCharacter is a sanitized version of a Character for client display. It omits hidden information like the true role (for opponents)."
         },
         "tragedylooper.v1.Ability": {
             "properties": {
@@ -232,10 +250,12 @@
                     "enum": [
                         "PLAYER_ROLE_UNSPECIFIED",
                         0,
-                        "PLAYER_ROLE_MASTERMIND",
+                        "PLAYER_ROLE_UNKNOWN",
                         1,
+                        "PLAYER_ROLE_MASTERMIND",
+                        2,
                         "PLAYER_ROLE_PROTAGONIST",
-                        2
+                        3
                     ],
                     "oneOf": [
                         {
@@ -321,7 +341,7 @@
                         }
                     ],
                     "title": "Stat Type",
-                    "description": "The type of stat to check."
+                    "description": "StatType defines the type of character stat."
                 },
                 "amount": {
                     "type": "integer",
@@ -428,9 +448,7 @@
                         "OPERATOR_AND",
                         1,
                         "OPERATOR_OR",
-                        2,
-                        "OPERATOR_NOT",
-                        3
+                        2
                     ],
                     "oneOf": [
                         {
@@ -493,6 +511,10 @@
         },
         "tragedylooper.v1.Condition": {
             "properties": {
+                "negated": {
+                    "type": "boolean",
+                    "description": "Whether this condition is negated."
+                },
                 "stat_condition": {
                     "$ref": "#/definitions/tragedylooper.v1.StatCondition",
                     "additionalProperties": true,
@@ -532,12 +554,40 @@
                     "$ref": "#/definitions/tragedylooper.v1.PhaseCondition",
                     "additionalProperties": true,
                     "description": "A phase condition."
+                },
+                "event_history_condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.EventHistoryCondition",
+                    "additionalProperties": true,
+                    "description": "An event history condition."
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Condition",
             "description": "Condition defines a condition for triggering rules, events, and effects."
+        },
+        "tragedylooper.v1.ConditionalEffect": {
+            "properties": {
+                "condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.Condition",
+                    "additionalProperties": true,
+                    "description": "The condition to check."
+                },
+                "then_effect": {
+                    "$ref": "#/definitions/tragedylooper.v1.Effect",
+                    "additionalProperties": true,
+                    "description": "The effect to execute if the condition is true."
+                },
+                "else_effect": {
+                    "$ref": "#/definitions/tragedylooper.v1.Effect",
+                    "additionalProperties": true,
+                    "description": "Optional: The effect to execute if the condition is false."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Conditional Effect",
+            "description": "ConditionalEffect defines an effect that only runs if a condition is met."
         },
         "tragedylooper.v1.DayCondition": {
             "properties": {
@@ -665,6 +715,11 @@
                     "$ref": "#/definitions/tragedylooper.v1.CompoundEffect",
                     "additionalProperties": true,
                     "description": "A compound effect."
+                },
+                "conditional_effect": {
+                    "$ref": "#/definitions/tragedylooper.v1.ConditionalEffect",
+                    "additionalProperties": true,
+                    "description": "A conditional effect."
                 }
             },
             "additionalProperties": true,
@@ -672,16 +727,24 @@
             "title": "Effect",
             "description": "Effect defines the specific action of an ability, card, or rule."
         },
+        "tragedylooper.v1.Empty": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Empty",
+            "description": "Empty is a placeholder for messages that have no data."
+        },
         "tragedylooper.v1.EndGameEffect": {
             "properties": {
                 "winner": {
                     "enum": [
                         "PLAYER_ROLE_UNSPECIFIED",
                         0,
-                        "PLAYER_ROLE_MASTERMIND",
+                        "PLAYER_ROLE_UNKNOWN",
                         1,
+                        "PLAYER_ROLE_MASTERMIND",
+                        2,
                         "PLAYER_ROLE_PROTAGONIST",
-                        2
+                        3
                     ],
                     "oneOf": [
                         {
@@ -703,6 +766,113 @@
             "type": "object",
             "title": "End Game Effect",
             "description": "EndGameEffect defines an effect that ends the game."
+        },
+        "tragedylooper.v1.EventHistoryCondition": {
+            "properties": {
+                "event_type": {
+                    "enum": [
+                        "GAME_EVENT_TYPE_UNSPECIFIED",
+                        0,
+                        "GAME_EVENT_TYPE_CHARACTER_MOVED",
+                        1,
+                        "GAME_EVENT_TYPE_PARANOIA_ADJUSTED",
+                        2,
+                        "GAME_EVENT_TYPE_GOODWILL_ADJUSTED",
+                        3,
+                        "GAME_EVENT_TYPE_INTRIGUE_ADJUSTED",
+                        4,
+                        "GAME_EVENT_TYPE_INCIDENT_TRIGGERED",
+                        5,
+                        "GAME_EVENT_TYPE_INCIDENT_PREVENTED",
+                        6,
+                        "GAME_EVENT_TYPE_ROLE_REVEALED",
+                        7,
+                        "GAME_EVENT_TYPE_ABILITY_GRANTED",
+                        8,
+                        "GAME_EVENT_TYPE_CHOICE_REQUIRED",
+                        9,
+                        "GAME_EVENT_TYPE_LOOP_WIN",
+                        10,
+                        "GAME_EVENT_TYPE_LOOP_LOSS",
+                        11,
+                        "GAME_EVENT_TYPE_FIRST_GUESS_MADE",
+                        12,
+                        "GAME_EVENT_TYPE_FINAL_GUESS_MADE",
+                        13,
+                        "GAME_EVENT_TYPE_GOODWILL_REFUSAL_TEST",
+                        14,
+                        "GAME_EVENT_TYPE_LOOP_OVER",
+                        15,
+                        "GAME_EVENT_TYPE_DAY_ADVANCED",
+                        16,
+                        "GAME_EVENT_TYPE_TRAGEDY_TRIGGERED",
+                        17,
+                        "GAME_EVENT_TYPE_LOOP_RESET",
+                        18,
+                        "GAME_EVENT_TYPE_TRAIT_ADDED",
+                        19,
+                        "GAME_EVENT_TYPE_TRAIT_REMOVED",
+                        20,
+                        "GAME_EVENT_TYPE_CARD_PLAYED",
+                        21,
+                        "GAME_EVENT_TYPE_CARD_REVEALED",
+                        22,
+                        "GAME_EVENT_TYPE_GAME_ENDED",
+                        23,
+                        "GAME_EVENT_TYPE_PLAYER_ACTION",
+                        24
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Game Event Type",
+                    "description": "游戏事件类型（用于能力触发器过滤）"
+                },
+                "lookback_days": {
+                    "type": "integer",
+                    "description": "How many days into the past to look. 0 means today, 1 means today and yesterday, etc."
+                },
+                "event_target": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "Optional: Further filter by the character involved in the event."
+                },
+                "count": {
+                    "type": "integer",
+                    "description": "The number of times the event must have occurred."
+                },
+                "comparator": {
+                    "enum": [
+                        "COMPARATOR_UNSPECIFIED",
+                        0,
+                        "EQUAL_TO",
+                        1,
+                        "GREATER_THAN_OR_EQUAL_TO",
+                        2,
+                        "LESS_THAN_OR_EQUAL_TO",
+                        3
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Comparator",
+                    "description": "The comparator for the count."
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Event History Condition",
+            "description": "EventHistoryCondition defines a condition based on past game events."
         },
         "tragedylooper.v1.ForbidEffect": {
             "properties": {
@@ -793,17 +963,29 @@
                     "title": "Location Type",
                     "description": "地点类型（也可通过LocationConfig扩展）"
                 },
-                "is_at_location": {
-                    "type": "boolean",
-                    "description": "Whether the character is at the location (defaults to true)."
-                },
-                "is_alone": {
-                    "type": "boolean",
-                    "description": "Whether the character is alone at the location."
-                },
-                "not_alone": {
-                    "type": "boolean",
-                    "description": "Whether the character is not alone at the location."
+                "state": {
+                    "enum": [
+                        "LOCATION_STATE_UNSPECIFIED",
+                        0,
+                        "IS_AT",
+                        1,
+                        "IS_NOT_AT",
+                        2,
+                        "IS_ALONE_AT",
+                        3,
+                        "IS_NOT_ALONE_AT",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Location State",
+                    "description": "The state to check for the character at the location."
                 }
             },
             "additionalProperties": true,
@@ -932,10 +1114,12 @@
                     "enum": [
                         "PLAYER_ROLE_UNSPECIFIED",
                         0,
-                        "PLAYER_ROLE_MASTERMIND",
+                        "PLAYER_ROLE_UNKNOWN",
                         1,
+                        "PLAYER_ROLE_MASTERMIND",
+                        2,
                         "PLAYER_ROLE_PROTAGONIST",
-                        2
+                        3
                     ],
                     "oneOf": [
                         {
@@ -990,6 +1174,10 @@
                     "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
                     "additionalProperties": true,
                     "description": "The target character selector."
+                },
+                "role_id": {
+                    "type": "integer",
+                    "description": "The role to check."
                 },
                 "has_role": {
                     "type": "boolean",
@@ -1059,7 +1247,7 @@
                         }
                     ],
                     "title": "Stat Type",
-                    "description": "The type of stat to check."
+                    "description": "StatType defines the type of character stat."
                 },
                 "comparator": {
                     "enum": [
@@ -1090,6 +1278,11 @@
                 "value": {
                     "type": "integer",
                     "description": "The value to compare against."
+                },
+                "target_to_compare": {
+                    "$ref": "#/definitions/tragedylooper.v1.TargetSelector",
+                    "additionalProperties": true,
+                    "description": "Optional: A second target to compare against. If set, the condition compares the stat of 'target' with the stat of 'target_to_compare'."
                 }
             },
             "additionalProperties": true,
@@ -1104,36 +1297,23 @@
                     "description": "A specific character by ID."
                 },
                 "triggering_character": {
-                    "type": "boolean",
-                    "description": "The character that triggered the event. A boolean marker."
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "The character that triggered the event."
                 },
                 "culprit": {
-                    "type": "boolean",
-                    "description": "The culprit of the event. A boolean marker."
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "The culprit of the event."
                 },
                 "victim": {
-                    "type": "boolean",
-                    "description": "The victim of the event. A boolean marker."
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "The victim of the event."
                 },
-                "character_with_role": {
-                    "enum": [
-                        "PLAYER_ROLE_UNSPECIFIED",
-                        0,
-                        "PLAYER_ROLE_MASTERMIND",
-                        1,
-                        "PLAYER_ROLE_PROTAGONIST",
-                        2
-                    ],
-                    "oneOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "integer"
-                        }
-                    ],
-                    "title": "Player Role",
-                    "description": "玩家角色"
+                "character_with_role_id": {
+                    "type": "integer",
+                    "description": "Any character with a specific role."
                 },
                 "all_characters_at_location": {
                     "enum": [
@@ -1159,17 +1339,20 @@
                     "title": "Location Type",
                     "description": "地点类型（也可通过LocationConfig扩展）"
                 },
-                "ability_user": {
-                    "type": "boolean",
-                    "description": "The user of the ability. A boolean marker."
+                "action_user": {
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "The user of the action (card or ability)."
                 },
-                "ability_target": {
-                    "type": "boolean",
-                    "description": "The target of the ability. A boolean marker."
+                "action_target": {
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "The target of the action (card or ability)."
                 },
                 "all_characters": {
-                    "type": "boolean",
-                    "description": "All characters. A boolean marker."
+                    "$ref": "#/definitions/tragedylooper.v1.Empty",
+                    "additionalProperties": true,
+                    "description": "All characters."
                 }
             },
             "additionalProperties": true,

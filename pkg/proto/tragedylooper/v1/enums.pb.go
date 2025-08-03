@@ -26,21 +26,24 @@ type PlayerRole int32
 
 const (
 	PlayerRole_PLAYER_ROLE_UNSPECIFIED PlayerRole = 0 // 未指定
-	PlayerRole_PLAYER_ROLE_MASTERMIND  PlayerRole = 1 // 主谋
-	PlayerRole_PLAYER_ROLE_PROTAGONIST PlayerRole = 2 // 主角
+	PlayerRole_PLAYER_ROLE_UNKNOWN     PlayerRole = 1 // 身份未知（用于玩家视角）
+	PlayerRole_PLAYER_ROLE_MASTERMIND  PlayerRole = 2 // 主谋
+	PlayerRole_PLAYER_ROLE_PROTAGONIST PlayerRole = 3 // 主角
 )
 
 // Enum value maps for PlayerRole.
 var (
 	PlayerRole_name = map[int32]string{
 		0: "PLAYER_ROLE_UNSPECIFIED",
-		1: "PLAYER_ROLE_MASTERMIND",
-		2: "PLAYER_ROLE_PROTAGONIST",
+		1: "PLAYER_ROLE_UNKNOWN",
+		2: "PLAYER_ROLE_MASTERMIND",
+		3: "PLAYER_ROLE_PROTAGONIST",
 	}
 	PlayerRole_value = map[string]int32{
 		"PLAYER_ROLE_UNSPECIFIED": 0,
-		"PLAYER_ROLE_MASTERMIND":  1,
-		"PLAYER_ROLE_PROTAGONIST": 2,
+		"PLAYER_ROLE_UNKNOWN":     1,
+		"PLAYER_ROLE_MASTERMIND":  2,
+		"PLAYER_ROLE_PROTAGONIST": 3,
 	}
 )
 
@@ -595,16 +598,123 @@ func (GameEventType) EnumDescriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_enums_proto_rawDescGZIP(), []int{7}
 }
 
+// StatType defines the type of character stat.
+type StatType int32
+
+const (
+	StatType_STAT_TYPE_UNSPECIFIED StatType = 0
+	StatType_STAT_TYPE_PARANOIA    StatType = 1
+	StatType_STAT_TYPE_GOODWILL    StatType = 2
+	StatType_STAT_TYPE_INTRIGUE    StatType = 3
+)
+
+// Enum value maps for StatType.
+var (
+	StatType_name = map[int32]string{
+		0: "STAT_TYPE_UNSPECIFIED",
+		1: "STAT_TYPE_PARANOIA",
+		2: "STAT_TYPE_GOODWILL",
+		3: "STAT_TYPE_INTRIGUE",
+	}
+	StatType_value = map[string]int32{
+		"STAT_TYPE_UNSPECIFIED": 0,
+		"STAT_TYPE_PARANOIA":    1,
+		"STAT_TYPE_GOODWILL":    2,
+		"STAT_TYPE_INTRIGUE":    3,
+	}
+)
+
+func (x StatType) Enum() *StatType {
+	p := new(StatType)
+	*p = x
+	return p
+}
+
+func (x StatType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (StatType) Descriptor() protoreflect.EnumDescriptor {
+	return file_tragedylooper_v1_enums_proto_enumTypes[8].Descriptor()
+}
+
+func (StatType) Type() protoreflect.EnumType {
+	return &file_tragedylooper_v1_enums_proto_enumTypes[8]
+}
+
+func (x StatType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use StatType.Descriptor instead.
+func (StatType) EnumDescriptor() ([]byte, []int) {
+	return file_tragedylooper_v1_enums_proto_rawDescGZIP(), []int{8}
+}
+
+// GoodwillRuleType defines how goodwill is handled for a character.
+type GoodwillRuleType int32
+
+const (
+	// The default behavior.
+	GoodwillRuleType_GOODWILL_RULE_TYPE_UNSPECIFIED GoodwillRuleType = 0
+	// The character ignores goodwill checks.
+	GoodwillRuleType_GOODWILL_RULE_TYPE_IGNORE_CHECKS GoodwillRuleType = 1
+	// The character always ignores goodwill checks, and cannot be targeted by goodwill-related effects.
+	GoodwillRuleType_GOODWILL_RULE_TYPE_ALWAYS_IGNORE GoodwillRuleType = 2
+)
+
+// Enum value maps for GoodwillRuleType.
+var (
+	GoodwillRuleType_name = map[int32]string{
+		0: "GOODWILL_RULE_TYPE_UNSPECIFIED",
+		1: "GOODWILL_RULE_TYPE_IGNORE_CHECKS",
+		2: "GOODWILL_RULE_TYPE_ALWAYS_IGNORE",
+	}
+	GoodwillRuleType_value = map[string]int32{
+		"GOODWILL_RULE_TYPE_UNSPECIFIED":   0,
+		"GOODWILL_RULE_TYPE_IGNORE_CHECKS": 1,
+		"GOODWILL_RULE_TYPE_ALWAYS_IGNORE": 2,
+	}
+)
+
+func (x GoodwillRuleType) Enum() *GoodwillRuleType {
+	p := new(GoodwillRuleType)
+	*p = x
+	return p
+}
+
+func (x GoodwillRuleType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (GoodwillRuleType) Descriptor() protoreflect.EnumDescriptor {
+	return file_tragedylooper_v1_enums_proto_enumTypes[9].Descriptor()
+}
+
+func (GoodwillRuleType) Type() protoreflect.EnumType {
+	return &file_tragedylooper_v1_enums_proto_enumTypes[9]
+}
+
+func (x GoodwillRuleType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use GoodwillRuleType.Descriptor instead.
+func (GoodwillRuleType) EnumDescriptor() ([]byte, []int) {
+	return file_tragedylooper_v1_enums_proto_rawDescGZIP(), []int{9}
+}
+
 var File_tragedylooper_v1_enums_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_enums_proto_rawDesc = "" +
 	"\n" +
-	"\x1ctragedylooper/v1/enums.proto\x12\x10tragedylooper.v1*b\n" +
+	"\x1ctragedylooper/v1/enums.proto\x12\x10tragedylooper.v1*{\n" +
 	"\n" +
 	"PlayerRole\x12\x1b\n" +
-	"\x17PLAYER_ROLE_UNSPECIFIED\x10\x00\x12\x1a\n" +
-	"\x16PLAYER_ROLE_MASTERMIND\x10\x01\x12\x1b\n" +
-	"\x17PLAYER_ROLE_PROTAGONIST\x10\x02*\xe9\x03\n" +
+	"\x17PLAYER_ROLE_UNSPECIFIED\x10\x00\x12\x17\n" +
+	"\x13PLAYER_ROLE_UNKNOWN\x10\x01\x12\x1a\n" +
+	"\x16PLAYER_ROLE_MASTERMIND\x10\x02\x12\x1b\n" +
+	"\x17PLAYER_ROLE_PROTAGONIST\x10\x03*\xe9\x03\n" +
 	"\tGamePhase\x12\x1a\n" +
 	"\x16GAME_PHASE_UNSPECIFIED\x10\x00\x12\x14\n" +
 	"\x10GAME_PHASE_SETUP\x10\x01\x12\x1f\n" +
@@ -694,7 +804,16 @@ const file_tragedylooper_v1_enums_proto_rawDesc = "" +
 	"\x1bGAME_EVENT_TYPE_CARD_PLAYED\x10\x15\x12!\n" +
 	"\x1dGAME_EVENT_TYPE_CARD_REVEALED\x10\x16\x12\x1e\n" +
 	"\x1aGAME_EVENT_TYPE_GAME_ENDED\x10\x17\x12!\n" +
-	"\x1dGAME_EVENT_TYPE_PLAYER_ACTION\x10\x18B\xba\x01\n" +
+	"\x1dGAME_EVENT_TYPE_PLAYER_ACTION\x10\x18*m\n" +
+	"\bStatType\x12\x19\n" +
+	"\x15STAT_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
+	"\x12STAT_TYPE_PARANOIA\x10\x01\x12\x16\n" +
+	"\x12STAT_TYPE_GOODWILL\x10\x02\x12\x16\n" +
+	"\x12STAT_TYPE_INTRIGUE\x10\x03*\x82\x01\n" +
+	"\x10GoodwillRuleType\x12\"\n" +
+	"\x1eGOODWILL_RULE_TYPE_UNSPECIFIED\x10\x00\x12$\n" +
+	" GOODWILL_RULE_TYPE_IGNORE_CHECKS\x10\x01\x12$\n" +
+	" GOODWILL_RULE_TYPE_ALWAYS_IGNORE\x10\x02B\xba\x01\n" +
 	"\x14com.tragedylooper.v1B\n" +
 	"EnumsProtoP\x01Z5github.com/constellation39/tragedyLooper/pkg/proto/v1\xa2\x02\x03TXX\xaa\x02\x10Tragedylooper.V1\xca\x02\x10Tragedylooper\\V1\xe2\x02\x1cTragedylooper\\V1\\GPBMetadata\xea\x02\x11Tragedylooper::V1b\x06proto3"
 
@@ -710,7 +829,7 @@ func file_tragedylooper_v1_enums_proto_rawDescGZIP() []byte {
 	return file_tragedylooper_v1_enums_proto_rawDescData
 }
 
-var file_tragedylooper_v1_enums_proto_enumTypes = make([]protoimpl.EnumInfo, 8)
+var file_tragedylooper_v1_enums_proto_enumTypes = make([]protoimpl.EnumInfo, 10)
 var file_tragedylooper_v1_enums_proto_goTypes = []any{
 	(PlayerRole)(0),       // 0: tragedylooper.v1.PlayerRole
 	(GamePhase)(0),        // 1: tragedylooper.v1.GamePhase
@@ -720,6 +839,8 @@ var file_tragedylooper_v1_enums_proto_goTypes = []any{
 	(LocationType)(0),     // 5: tragedylooper.v1.LocationType
 	(TriggerType)(0),      // 6: tragedylooper.v1.TriggerType
 	(GameEventType)(0),    // 7: tragedylooper.v1.GameEventType
+	(StatType)(0),         // 8: tragedylooper.v1.StatType
+	(GoodwillRuleType)(0), // 9: tragedylooper.v1.GoodwillRuleType
 }
 var file_tragedylooper_v1_enums_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -739,7 +860,7 @@ func file_tragedylooper_v1_enums_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_enums_proto_rawDesc), len(file_tragedylooper_v1_enums_proto_rawDesc)),
-			NumEnums:      8,
+			NumEnums:      10,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,
