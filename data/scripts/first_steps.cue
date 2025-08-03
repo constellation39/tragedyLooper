@@ -1,7 +1,7 @@
 package data
 
 import (
-	"github.com/constellation39/tragedylooper/data"
+	"github.com/constellation39/tragedylooper/data/schemas"
 	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
