@@ -5,7 +5,7 @@ BINARY_NAME=tragedylooper
 # Go command
 GO := go
 
-.PHONY: all build run test clean lint proto clean-proto install-tools format
+.PHONY: all build run test clean lint proto clean-proto install-tools format validate-cue
 
 all: build
 
@@ -36,8 +36,13 @@ clean:
 	@echo "Cleaning..."
 	@if exist bin ( rmdir /S /Q bin )
 
+# Validate CUE files
+validate-cue:
+	@echo "Validating CUE files..."
+	@$(GO) run cuelang.org/go/cmd/cue@latest vet ./data/...
+
 # Lint the code
-lint: format
+lint: format validate-cue
 	@echo "Linting..."
 	@$(GO) run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run
 	@$(GO) run github.com/bufbuild/buf/cmd/buf@latest lint
@@ -52,7 +57,7 @@ install-tools:
 	@$(GO) install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 # Protobuf generation
-proto:
+gen:
 	@echo "Generating Go code from protobuf..."
 	@$(GO) run github.com/bufbuild/buf/cmd/buf@latest generate
 	@$(GO) run cuelang.org/go/cmd/cue@latest get go github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1
