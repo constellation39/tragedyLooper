@@ -235,52 +235,6 @@ func (*Card_TargetCharacterId) isCard_Target() {}
 
 func (*Card_TargetLocation) isCard_Target() {}
 
-// CardConfigLib is a library of card configurations.
-type CardConfigLib struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// A map of card configurations, keyed by their ID.
-	Cards         map[int32]*CardConfig `protobuf:"bytes,1,rep,name=cards,proto3" json:"cards,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CardConfigLib) Reset() {
-	*x = CardConfigLib{}
-	mi := &file_tragedylooper_v1_card_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CardConfigLib) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CardConfigLib) ProtoMessage() {}
-
-func (x *CardConfigLib) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_card_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CardConfigLib.ProtoReflect.Descriptor instead.
-func (*CardConfigLib) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_card_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *CardConfigLib) GetCards() map[int32]*CardConfig {
-	if x != nil {
-		return x.Cards
-	}
-	return nil
-}
-
 // CardList is a list of card instances.
 type CardList struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -292,7 +246,7 @@ type CardList struct {
 
 func (x *CardList) Reset() {
 	*x = CardList{}
-	mi := &file_tragedylooper_v1_card_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_card_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -304,7 +258,7 @@ func (x *CardList) String() string {
 func (*CardList) ProtoMessage() {}
 
 func (x *CardList) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_card_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_card_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -317,7 +271,7 @@ func (x *CardList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CardList.ProtoReflect.Descriptor instead.
 func (*CardList) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_card_proto_rawDescGZIP(), []int{3}
+	return file_tragedylooper_v1_card_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CardList) GetCards() []*Card {
@@ -348,13 +302,7 @@ const file_tragedylooper_v1_card_proto_rawDesc = "" +
 	"\x0eused_this_loop\x18\x02 \x01(\bR\fusedThisLoop\x120\n" +
 	"\x13target_character_id\x18\x03 \x01(\x05H\x00R\x11targetCharacterId\x12I\n" +
 	"\x0ftarget_location\x18\x04 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeH\x00R\x0etargetLocationB\b\n" +
-	"\x06target\"\xa9\x01\n" +
-	"\rCardConfigLib\x12@\n" +
-	"\x05cards\x18\x01 \x03(\v2*.tragedylooper.v1.CardConfigLib.CardsEntryR\x05cards\x1aV\n" +
-	"\n" +
-	"CardsEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x122\n" +
-	"\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.CardConfigR\x05value:\x028\x01\"8\n" +
+	"\x06target\"8\n" +
 	"\bCardList\x12,\n" +
 	"\x05cards\x18\x01 \x03(\v2\x16.tragedylooper.v1.CardR\x05cardsB7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3"
 
@@ -370,32 +318,28 @@ func file_tragedylooper_v1_card_proto_rawDescGZIP() []byte {
 	return file_tragedylooper_v1_card_proto_rawDescData
 }
 
-var file_tragedylooper_v1_card_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_tragedylooper_v1_card_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_tragedylooper_v1_card_proto_goTypes = []any{
 	(*CardConfig)(nil),     // 0: tragedylooper.v1.CardConfig
 	(*Card)(nil),           // 1: tragedylooper.v1.Card
-	(*CardConfigLib)(nil),  // 2: tragedylooper.v1.CardConfigLib
-	(*CardList)(nil),       // 3: tragedylooper.v1.CardList
-	nil,                    // 4: tragedylooper.v1.CardConfigLib.CardsEntry
-	(CardType)(0),          // 5: tragedylooper.v1.CardType
-	(PlayerRole)(0),        // 6: tragedylooper.v1.PlayerRole
-	(*CompoundEffect)(nil), // 7: tragedylooper.v1.CompoundEffect
-	(LocationType)(0),      // 8: tragedylooper.v1.LocationType
+	(*CardList)(nil),       // 2: tragedylooper.v1.CardList
+	(CardType)(0),          // 3: tragedylooper.v1.CardType
+	(PlayerRole)(0),        // 4: tragedylooper.v1.PlayerRole
+	(*CompoundEffect)(nil), // 5: tragedylooper.v1.CompoundEffect
+	(LocationType)(0),      // 6: tragedylooper.v1.LocationType
 }
 var file_tragedylooper_v1_card_proto_depIdxs = []int32{
-	5, // 0: tragedylooper.v1.CardConfig.type:type_name -> tragedylooper.v1.CardType
-	6, // 1: tragedylooper.v1.CardConfig.owner_role:type_name -> tragedylooper.v1.PlayerRole
-	7, // 2: tragedylooper.v1.CardConfig.effect:type_name -> tragedylooper.v1.CompoundEffect
+	3, // 0: tragedylooper.v1.CardConfig.type:type_name -> tragedylooper.v1.CardType
+	4, // 1: tragedylooper.v1.CardConfig.owner_role:type_name -> tragedylooper.v1.PlayerRole
+	5, // 2: tragedylooper.v1.CardConfig.effect:type_name -> tragedylooper.v1.CompoundEffect
 	0, // 3: tragedylooper.v1.Card.config:type_name -> tragedylooper.v1.CardConfig
-	8, // 4: tragedylooper.v1.Card.target_location:type_name -> tragedylooper.v1.LocationType
-	4, // 5: tragedylooper.v1.CardConfigLib.cards:type_name -> tragedylooper.v1.CardConfigLib.CardsEntry
-	1, // 6: tragedylooper.v1.CardList.cards:type_name -> tragedylooper.v1.Card
-	0, // 7: tragedylooper.v1.CardConfigLib.CardsEntry.value:type_name -> tragedylooper.v1.CardConfig
-	8, // [8:8] is the sub-list for method output_type
-	8, // [8:8] is the sub-list for method input_type
-	8, // [8:8] is the sub-list for extension type_name
-	8, // [8:8] is the sub-list for extension extendee
-	0, // [0:8] is the sub-list for field type_name
+	6, // 4: tragedylooper.v1.Card.target_location:type_name -> tragedylooper.v1.LocationType
+	1, // 5: tragedylooper.v1.CardList.cards:type_name -> tragedylooper.v1.Card
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_tragedylooper_v1_card_proto_init() }
@@ -415,7 +359,7 @@ func file_tragedylooper_v1_card_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_card_proto_rawDesc), len(file_tragedylooper_v1_card_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

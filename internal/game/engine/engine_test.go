@@ -54,7 +54,7 @@ func TestEngine_Integration_CardPlayAndIncidentTrigger(t *testing.T) {
 	assert.NotNil(t, doctor)
 
 	// Manually give the mastermind three "Increase Paranoia" cards (ID 4)
-	card4Config, err := loader.Get[*v1.CardConfig](engine.gameConfig, 4)
+	card4Config, err := loader.Get[*v1.CardConfig](engine.scriptConfig, 4)
 	assert.NoError(t, err)
 	mastermind.Hand = &v1.CardList{Cards: []*v1.Card{
 		{Config: card4Config},
@@ -181,7 +181,7 @@ func TestEngine_GameOverOnMaxLoops(t *testing.T) {
 	// Manually set the loop to the max.
 	// The game logic should detect this at the beginning of the loop
 	// and transition directly to GAME_OVER.
-	engine.GameState.CurrentLoop = engine.gameConfig.GetScript().GetLoopCount()
+	engine.GameState.CurrentLoop = engine.scriptConfig.GetScript().GetLoopCount()
 
 	// We expect a GAME_ENDED event because the loop count has been exceeded.
 	waitForEvent(t, engine, v1.GameEventType_GAME_EVENT_TYPE_GAME_ENDED)

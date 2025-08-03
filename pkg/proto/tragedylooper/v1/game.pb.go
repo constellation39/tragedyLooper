@@ -311,50 +311,6 @@ func (x *Player) GetProtagonistCharactersControlled() []int32 {
 	return nil
 }
 
-type PlayerLib struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Players       map[int32]*Player      `protobuf:"bytes,1,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 玩家ID到玩家信息的映射
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PlayerLib) Reset() {
-	*x = PlayerLib{}
-	mi := &file_tragedylooper_v1_game_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PlayerLib) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PlayerLib) ProtoMessage() {}
-
-func (x *PlayerLib) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_game_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PlayerLib.ProtoReflect.Descriptor instead.
-func (*PlayerLib) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_game_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *PlayerLib) GetPlayers() map[int32]*Player {
-	if x != nil {
-		return x.Players
-	}
-	return nil
-}
-
 // 主角的推理知识
 type PlayerDeductionKnowledge struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -367,7 +323,7 @@ type PlayerDeductionKnowledge struct {
 
 func (x *PlayerDeductionKnowledge) Reset() {
 	*x = PlayerDeductionKnowledge{}
-	mi := &file_tragedylooper_v1_game_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_game_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -379,7 +335,7 @@ func (x *PlayerDeductionKnowledge) String() string {
 func (*PlayerDeductionKnowledge) ProtoMessage() {}
 
 func (x *PlayerDeductionKnowledge) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_game_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_game_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -392,7 +348,7 @@ func (x *PlayerDeductionKnowledge) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlayerDeductionKnowledge.ProtoReflect.Descriptor instead.
 func (*PlayerDeductionKnowledge) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_game_proto_rawDescGZIP(), []int{3}
+	return file_tragedylooper_v1_game_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *PlayerDeductionKnowledge) GetGuessedRoles() map[int32]int32 {
@@ -438,7 +394,7 @@ type PlayerView struct {
 
 func (x *PlayerView) Reset() {
 	*x = PlayerView{}
-	mi := &file_tragedylooper_v1_game_proto_msgTypes[4]
+	mi := &file_tragedylooper_v1_game_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -450,7 +406,7 @@ func (x *PlayerView) String() string {
 func (*PlayerView) ProtoMessage() {}
 
 func (x *PlayerView) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_game_proto_msgTypes[4]
+	mi := &file_tragedylooper_v1_game_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -463,7 +419,7 @@ func (x *PlayerView) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlayerView.ProtoReflect.Descriptor instead.
 func (*PlayerView) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_game_proto_rawDescGZIP(), []int{4}
+	return file_tragedylooper_v1_game_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *PlayerView) GetGameId() string {
@@ -578,7 +534,7 @@ type PlayerViewCharacter struct {
 
 func (x *PlayerViewCharacter) Reset() {
 	*x = PlayerViewCharacter{}
-	mi := &file_tragedylooper_v1_game_proto_msgTypes[5]
+	mi := &file_tragedylooper_v1_game_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -590,7 +546,7 @@ func (x *PlayerViewCharacter) String() string {
 func (*PlayerViewCharacter) ProtoMessage() {}
 
 func (x *PlayerViewCharacter) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_game_proto_msgTypes[5]
+	mi := &file_tragedylooper_v1_game_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -603,7 +559,7 @@ func (x *PlayerViewCharacter) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlayerViewCharacter.ProtoReflect.Descriptor instead.
 func (*PlayerViewCharacter) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_game_proto_rawDescGZIP(), []int{5}
+	return file_tragedylooper_v1_game_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *PlayerViewCharacter) GetId() int32 {
@@ -702,7 +658,7 @@ type PlayerViewPlayer struct {
 
 func (x *PlayerViewPlayer) Reset() {
 	*x = PlayerViewPlayer{}
-	mi := &file_tragedylooper_v1_game_proto_msgTypes[6]
+	mi := &file_tragedylooper_v1_game_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -714,7 +670,7 @@ func (x *PlayerViewPlayer) String() string {
 func (*PlayerViewPlayer) ProtoMessage() {}
 
 func (x *PlayerViewPlayer) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_game_proto_msgTypes[6]
+	mi := &file_tragedylooper_v1_game_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -727,7 +683,7 @@ func (x *PlayerViewPlayer) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlayerViewPlayer.ProtoReflect.Descriptor instead.
 func (*PlayerViewPlayer) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_game_proto_rawDescGZIP(), []int{6}
+	return file_tragedylooper_v1_game_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *PlayerViewPlayer) GetId() int32 {
@@ -820,12 +776,7 @@ const file_tragedylooper_v1_game_proto_rawDesc = "" +
 	"\x04hand\x18\x05 \x01(\v2\x1a.tragedylooper.v1.CardListR\x04hand\x12$\n" +
 	"\x0ellm_session_id\x18\x06 \x01(\tR\fllmSessionId\x12[\n" +
 	"\x13deduction_knowledge\x18\a \x01(\v2*.tragedylooper.v1.PlayerDeductionKnowledgeR\x12deductionKnowledge\x12J\n" +
-	"!protagonist_characters_controlled\x18\b \x03(\x05R\x1fprotagonistCharactersControlled\"\xa5\x01\n" +
-	"\tPlayerLib\x12B\n" +
-	"\aplayers\x18\x01 \x03(\v2(.tragedylooper.v1.PlayerLib.PlayersEntryR\aplayers\x1aT\n" +
-	"\fPlayersEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12.\n" +
-	"\x05value\x18\x02 \x01(\v2\x18.tragedylooper.v1.PlayerR\x05value:\x028\x01\"\xf0\x01\n" +
+	"!protagonist_characters_controlled\x18\b \x03(\x05R\x1fprotagonistCharactersControlled\"\xf0\x01\n" +
 	"\x18PlayerDeductionKnowledge\x12a\n" +
 	"\rguessed_roles\x18\x01 \x03(\v2<.tragedylooper.v1.PlayerDeductionKnowledge.GuessedRolesEntryR\fguessedRoles\x12\x14\n" +
 	"\x05clues\x18\x02 \x03(\tR\x05clues\x12\x1a\n" +
@@ -895,83 +846,79 @@ func file_tragedylooper_v1_game_proto_rawDescGZIP() []byte {
 	return file_tragedylooper_v1_game_proto_rawDescData
 }
 
-var file_tragedylooper_v1_game_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
+var file_tragedylooper_v1_game_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_tragedylooper_v1_game_proto_goTypes = []any{
 	(*GameState)(nil),                // 0: tragedylooper.v1.GameState
 	(*Player)(nil),                   // 1: tragedylooper.v1.Player
-	(*PlayerLib)(nil),                // 2: tragedylooper.v1.PlayerLib
-	(*PlayerDeductionKnowledge)(nil), // 3: tragedylooper.v1.PlayerDeductionKnowledge
-	(*PlayerView)(nil),               // 4: tragedylooper.v1.PlayerView
-	(*PlayerViewCharacter)(nil),      // 5: tragedylooper.v1.PlayerViewCharacter
-	(*PlayerViewPlayer)(nil),         // 6: tragedylooper.v1.PlayerViewPlayer
-	nil,                              // 7: tragedylooper.v1.GameState.CharactersEntry
-	nil,                              // 8: tragedylooper.v1.GameState.PlayersEntry
-	nil,                              // 9: tragedylooper.v1.GameState.ActiveTragediesEntry
-	nil,                              // 10: tragedylooper.v1.GameState.PreventedTragediesEntry
-	nil,                              // 11: tragedylooper.v1.GameState.PlayedCardsThisDayEntry
-	nil,                              // 12: tragedylooper.v1.GameState.PlayedCardsThisLoopEntry
-	nil,                              // 13: tragedylooper.v1.GameState.TriggeredIncidentsEntry
-	nil,                              // 14: tragedylooper.v1.GameState.CharacterParanoiaLimitsEntry
-	nil,                              // 15: tragedylooper.v1.GameState.CharacterGoodwillLimitsEntry
-	nil,                              // 16: tragedylooper.v1.GameState.CharacterIntrigueLimitsEntry
-	nil,                              // 17: tragedylooper.v1.PlayerLib.PlayersEntry
-	nil,                              // 18: tragedylooper.v1.PlayerDeductionKnowledge.GuessedRolesEntry
-	nil,                              // 19: tragedylooper.v1.PlayerView.CharactersEntry
-	nil,                              // 20: tragedylooper.v1.PlayerView.PlayersEntry
-	nil,                              // 21: tragedylooper.v1.PlayerView.ActiveTragediesEntry
-	nil,                              // 22: tragedylooper.v1.PlayerView.PreventedTragediesEntry
-	(GamePhase)(0),                   // 23: tragedylooper.v1.GamePhase
-	(*GameEvent)(nil),                // 24: tragedylooper.v1.GameEvent
-	(PlayerRole)(0),                  // 25: tragedylooper.v1.PlayerRole
-	(*CardList)(nil),                 // 26: tragedylooper.v1.CardList
-	(*Card)(nil),                     // 27: tragedylooper.v1.Card
-	(LocationType)(0),                // 28: tragedylooper.v1.LocationType
-	(*Ability)(nil),                  // 29: tragedylooper.v1.Ability
-	(*CharacterRule)(nil),            // 30: tragedylooper.v1.CharacterRule
-	(*Character)(nil),                // 31: tragedylooper.v1.Character
+	(*PlayerDeductionKnowledge)(nil), // 2: tragedylooper.v1.PlayerDeductionKnowledge
+	(*PlayerView)(nil),               // 3: tragedylooper.v1.PlayerView
+	(*PlayerViewCharacter)(nil),      // 4: tragedylooper.v1.PlayerViewCharacter
+	(*PlayerViewPlayer)(nil),         // 5: tragedylooper.v1.PlayerViewPlayer
+	nil,                              // 6: tragedylooper.v1.GameState.CharactersEntry
+	nil,                              // 7: tragedylooper.v1.GameState.PlayersEntry
+	nil,                              // 8: tragedylooper.v1.GameState.ActiveTragediesEntry
+	nil,                              // 9: tragedylooper.v1.GameState.PreventedTragediesEntry
+	nil,                              // 10: tragedylooper.v1.GameState.PlayedCardsThisDayEntry
+	nil,                              // 11: tragedylooper.v1.GameState.PlayedCardsThisLoopEntry
+	nil,                              // 12: tragedylooper.v1.GameState.TriggeredIncidentsEntry
+	nil,                              // 13: tragedylooper.v1.GameState.CharacterParanoiaLimitsEntry
+	nil,                              // 14: tragedylooper.v1.GameState.CharacterGoodwillLimitsEntry
+	nil,                              // 15: tragedylooper.v1.GameState.CharacterIntrigueLimitsEntry
+	nil,                              // 16: tragedylooper.v1.PlayerDeductionKnowledge.GuessedRolesEntry
+	nil,                              // 17: tragedylooper.v1.PlayerView.CharactersEntry
+	nil,                              // 18: tragedylooper.v1.PlayerView.PlayersEntry
+	nil,                              // 19: tragedylooper.v1.PlayerView.ActiveTragediesEntry
+	nil,                              // 20: tragedylooper.v1.PlayerView.PreventedTragediesEntry
+	(GamePhase)(0),                   // 21: tragedylooper.v1.GamePhase
+	(*GameEvent)(nil),                // 22: tragedylooper.v1.GameEvent
+	(PlayerRole)(0),                  // 23: tragedylooper.v1.PlayerRole
+	(*CardList)(nil),                 // 24: tragedylooper.v1.CardList
+	(*Card)(nil),                     // 25: tragedylooper.v1.Card
+	(LocationType)(0),                // 26: tragedylooper.v1.LocationType
+	(*Ability)(nil),                  // 27: tragedylooper.v1.Ability
+	(*CharacterRule)(nil),            // 28: tragedylooper.v1.CharacterRule
+	(*Character)(nil),                // 29: tragedylooper.v1.Character
 }
 var file_tragedylooper_v1_game_proto_depIdxs = []int32{
-	7,  // 0: tragedylooper.v1.GameState.characters:type_name -> tragedylooper.v1.GameState.CharactersEntry
-	8,  // 1: tragedylooper.v1.GameState.players:type_name -> tragedylooper.v1.GameState.PlayersEntry
-	23, // 2: tragedylooper.v1.GameState.current_phase:type_name -> tragedylooper.v1.GamePhase
-	9,  // 3: tragedylooper.v1.GameState.active_tragedies:type_name -> tragedylooper.v1.GameState.ActiveTragediesEntry
-	10, // 4: tragedylooper.v1.GameState.prevented_tragedies:type_name -> tragedylooper.v1.GameState.PreventedTragediesEntry
-	11, // 5: tragedylooper.v1.GameState.played_cards_this_day:type_name -> tragedylooper.v1.GameState.PlayedCardsThisDayEntry
-	12, // 6: tragedylooper.v1.GameState.played_cards_this_loop:type_name -> tragedylooper.v1.GameState.PlayedCardsThisLoopEntry
-	13, // 7: tragedylooper.v1.GameState.triggered_incidents:type_name -> tragedylooper.v1.GameState.TriggeredIncidentsEntry
-	24, // 8: tragedylooper.v1.GameState.day_events:type_name -> tragedylooper.v1.GameEvent
-	24, // 9: tragedylooper.v1.GameState.loop_events:type_name -> tragedylooper.v1.GameEvent
-	14, // 10: tragedylooper.v1.GameState.character_paranoia_limits:type_name -> tragedylooper.v1.GameState.CharacterParanoiaLimitsEntry
-	15, // 11: tragedylooper.v1.GameState.character_goodwill_limits:type_name -> tragedylooper.v1.GameState.CharacterGoodwillLimitsEntry
-	16, // 12: tragedylooper.v1.GameState.character_intrigue_limits:type_name -> tragedylooper.v1.GameState.CharacterIntrigueLimitsEntry
-	25, // 13: tragedylooper.v1.Player.role:type_name -> tragedylooper.v1.PlayerRole
-	26, // 14: tragedylooper.v1.Player.hand:type_name -> tragedylooper.v1.CardList
-	3,  // 15: tragedylooper.v1.Player.deduction_knowledge:type_name -> tragedylooper.v1.PlayerDeductionKnowledge
-	17, // 16: tragedylooper.v1.PlayerLib.players:type_name -> tragedylooper.v1.PlayerLib.PlayersEntry
-	18, // 17: tragedylooper.v1.PlayerDeductionKnowledge.guessed_roles:type_name -> tragedylooper.v1.PlayerDeductionKnowledge.GuessedRolesEntry
-	19, // 18: tragedylooper.v1.PlayerView.characters:type_name -> tragedylooper.v1.PlayerView.CharactersEntry
-	20, // 19: tragedylooper.v1.PlayerView.players:type_name -> tragedylooper.v1.PlayerView.PlayersEntry
-	23, // 20: tragedylooper.v1.PlayerView.current_phase:type_name -> tragedylooper.v1.GamePhase
-	21, // 21: tragedylooper.v1.PlayerView.active_tragedies:type_name -> tragedylooper.v1.PlayerView.ActiveTragediesEntry
-	22, // 22: tragedylooper.v1.PlayerView.prevented_tragedies:type_name -> tragedylooper.v1.PlayerView.PreventedTragediesEntry
-	27, // 23: tragedylooper.v1.PlayerView.your_hand:type_name -> tragedylooper.v1.Card
-	3,  // 24: tragedylooper.v1.PlayerView.your_deductions:type_name -> tragedylooper.v1.PlayerDeductionKnowledge
-	24, // 25: tragedylooper.v1.PlayerView.public_events:type_name -> tragedylooper.v1.GameEvent
-	28, // 26: tragedylooper.v1.PlayerViewCharacter.current_location:type_name -> tragedylooper.v1.LocationType
-	29, // 27: tragedylooper.v1.PlayerViewCharacter.abilities:type_name -> tragedylooper.v1.Ability
-	30, // 28: tragedylooper.v1.PlayerViewCharacter.rules:type_name -> tragedylooper.v1.CharacterRule
-	25, // 29: tragedylooper.v1.PlayerViewPlayer.role:type_name -> tragedylooper.v1.PlayerRole
-	31, // 30: tragedylooper.v1.GameState.CharactersEntry.value:type_name -> tragedylooper.v1.Character
-	1,  // 31: tragedylooper.v1.GameState.PlayersEntry.value:type_name -> tragedylooper.v1.Player
-	26, // 32: tragedylooper.v1.GameState.PlayedCardsThisDayEntry.value:type_name -> tragedylooper.v1.CardList
-	1,  // 33: tragedylooper.v1.PlayerLib.PlayersEntry.value:type_name -> tragedylooper.v1.Player
-	5,  // 34: tragedylooper.v1.PlayerView.CharactersEntry.value:type_name -> tragedylooper.v1.PlayerViewCharacter
-	6,  // 35: tragedylooper.v1.PlayerView.PlayersEntry.value:type_name -> tragedylooper.v1.PlayerViewPlayer
-	36, // [36:36] is the sub-list for method output_type
-	36, // [36:36] is the sub-list for method input_type
-	36, // [36:36] is the sub-list for extension type_name
-	36, // [36:36] is the sub-list for extension extendee
-	0,  // [0:36] is the sub-list for field type_name
+	6,  // 0: tragedylooper.v1.GameState.characters:type_name -> tragedylooper.v1.GameState.CharactersEntry
+	7,  // 1: tragedylooper.v1.GameState.players:type_name -> tragedylooper.v1.GameState.PlayersEntry
+	21, // 2: tragedylooper.v1.GameState.current_phase:type_name -> tragedylooper.v1.GamePhase
+	8,  // 3: tragedylooper.v1.GameState.active_tragedies:type_name -> tragedylooper.v1.GameState.ActiveTragediesEntry
+	9,  // 4: tragedylooper.v1.GameState.prevented_tragedies:type_name -> tragedylooper.v1.GameState.PreventedTragediesEntry
+	10, // 5: tragedylooper.v1.GameState.played_cards_this_day:type_name -> tragedylooper.v1.GameState.PlayedCardsThisDayEntry
+	11, // 6: tragedylooper.v1.GameState.played_cards_this_loop:type_name -> tragedylooper.v1.GameState.PlayedCardsThisLoopEntry
+	12, // 7: tragedylooper.v1.GameState.triggered_incidents:type_name -> tragedylooper.v1.GameState.TriggeredIncidentsEntry
+	22, // 8: tragedylooper.v1.GameState.day_events:type_name -> tragedylooper.v1.GameEvent
+	22, // 9: tragedylooper.v1.GameState.loop_events:type_name -> tragedylooper.v1.GameEvent
+	13, // 10: tragedylooper.v1.GameState.character_paranoia_limits:type_name -> tragedylooper.v1.GameState.CharacterParanoiaLimitsEntry
+	14, // 11: tragedylooper.v1.GameState.character_goodwill_limits:type_name -> tragedylooper.v1.GameState.CharacterGoodwillLimitsEntry
+	15, // 12: tragedylooper.v1.GameState.character_intrigue_limits:type_name -> tragedylooper.v1.GameState.CharacterIntrigueLimitsEntry
+	23, // 13: tragedylooper.v1.Player.role:type_name -> tragedylooper.v1.PlayerRole
+	24, // 14: tragedylooper.v1.Player.hand:type_name -> tragedylooper.v1.CardList
+	2,  // 15: tragedylooper.v1.Player.deduction_knowledge:type_name -> tragedylooper.v1.PlayerDeductionKnowledge
+	16, // 16: tragedylooper.v1.PlayerDeductionKnowledge.guessed_roles:type_name -> tragedylooper.v1.PlayerDeductionKnowledge.GuessedRolesEntry
+	17, // 17: tragedylooper.v1.PlayerView.characters:type_name -> tragedylooper.v1.PlayerView.CharactersEntry
+	18, // 18: tragedylooper.v1.PlayerView.players:type_name -> tragedylooper.v1.PlayerView.PlayersEntry
+	21, // 19: tragedylooper.v1.PlayerView.current_phase:type_name -> tragedylooper.v1.GamePhase
+	19, // 20: tragedylooper.v1.PlayerView.active_tragedies:type_name -> tragedylooper.v1.PlayerView.ActiveTragediesEntry
+	20, // 21: tragedylooper.v1.PlayerView.prevented_tragedies:type_name -> tragedylooper.v1.PlayerView.PreventedTragediesEntry
+	25, // 22: tragedylooper.v1.PlayerView.your_hand:type_name -> tragedylooper.v1.Card
+	2,  // 23: tragedylooper.v1.PlayerView.your_deductions:type_name -> tragedylooper.v1.PlayerDeductionKnowledge
+	22, // 24: tragedylooper.v1.PlayerView.public_events:type_name -> tragedylooper.v1.GameEvent
+	26, // 25: tragedylooper.v1.PlayerViewCharacter.current_location:type_name -> tragedylooper.v1.LocationType
+	27, // 26: tragedylooper.v1.PlayerViewCharacter.abilities:type_name -> tragedylooper.v1.Ability
+	28, // 27: tragedylooper.v1.PlayerViewCharacter.rules:type_name -> tragedylooper.v1.CharacterRule
+	23, // 28: tragedylooper.v1.PlayerViewPlayer.role:type_name -> tragedylooper.v1.PlayerRole
+	29, // 29: tragedylooper.v1.GameState.CharactersEntry.value:type_name -> tragedylooper.v1.Character
+	1,  // 30: tragedylooper.v1.GameState.PlayersEntry.value:type_name -> tragedylooper.v1.Player
+	24, // 31: tragedylooper.v1.GameState.PlayedCardsThisDayEntry.value:type_name -> tragedylooper.v1.CardList
+	4,  // 32: tragedylooper.v1.PlayerView.CharactersEntry.value:type_name -> tragedylooper.v1.PlayerViewCharacter
+	5,  // 33: tragedylooper.v1.PlayerView.PlayersEntry.value:type_name -> tragedylooper.v1.PlayerViewPlayer
+	34, // [34:34] is the sub-list for method output_type
+	34, // [34:34] is the sub-list for method input_type
+	34, // [34:34] is the sub-list for extension type_name
+	34, // [34:34] is the sub-list for extension extendee
+	0,  // [0:34] is the sub-list for field type_name
 }
 
 func init() { file_tragedylooper_v1_game_proto_init() }
@@ -990,7 +937,7 @@ func file_tragedylooper_v1_game_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_game_proto_rawDesc), len(file_tragedylooper_v1_game_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   23,
+			NumMessages:   21,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

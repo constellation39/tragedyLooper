@@ -255,51 +255,6 @@ func (x *IncidentConfig) GetIsSpecialRule() bool {
 	return false
 }
 
-// 事件配置库
-type IncidentConfigLib struct {
-	state         protoimpl.MessageState    `protogen:"open.v1"`
-	Incidents     map[int32]*IncidentConfig `protobuf:"bytes,1,rep,name=incidents,proto3" json:"incidents,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 事件ID到配置的映射
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *IncidentConfigLib) Reset() {
-	*x = IncidentConfigLib{}
-	mi := &file_tragedylooper_v1_incident_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *IncidentConfigLib) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*IncidentConfigLib) ProtoMessage() {}
-
-func (x *IncidentConfigLib) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_incident_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use IncidentConfigLib.ProtoReflect.Descriptor instead.
-func (*IncidentConfigLib) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_incident_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *IncidentConfigLib) GetIncidents() map[int32]*IncidentConfig {
-	if x != nil {
-		return x.Incidents
-	}
-	return nil
-}
-
 var File_tragedylooper_v1_incident_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_incident_proto_rawDesc = "" +
@@ -329,12 +284,7 @@ const file_tragedylooper_v1_incident_proto_rawDesc = "" +
 	"\vlocation_id\x18\v \x01(\x05R\n" +
 	"locationId\x121\n" +
 	"\x15is_main_plot_incident\x18\f \x01(\bR\x12isMainPlotIncident\x12&\n" +
-	"\x0fis_special_rule\x18\r \x01(\bR\risSpecialRule\"\xc5\x01\n" +
-	"\x11IncidentConfigLib\x12P\n" +
-	"\tincidents\x18\x01 \x03(\v22.tragedylooper.v1.IncidentConfigLib.IncidentsEntryR\tincidents\x1a^\n" +
-	"\x0eIncidentsEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x126\n" +
-	"\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x05value:\x028\x01B7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3"
+	"\x0fis_special_rule\x18\r \x01(\bR\risSpecialRuleB7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3"
 
 var (
 	file_tragedylooper_v1_incident_proto_rawDescOnce sync.Once
@@ -348,26 +298,22 @@ func file_tragedylooper_v1_incident_proto_rawDescGZIP() []byte {
 	return file_tragedylooper_v1_incident_proto_rawDescData
 }
 
-var file_tragedylooper_v1_incident_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_tragedylooper_v1_incident_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_tragedylooper_v1_incident_proto_goTypes = []any{
 	(*Incident)(nil),          // 0: tragedylooper.v1.Incident
 	(*IncidentConfig)(nil),    // 1: tragedylooper.v1.IncidentConfig
-	(*IncidentConfigLib)(nil), // 2: tragedylooper.v1.IncidentConfigLib
-	nil,                       // 3: tragedylooper.v1.IncidentConfigLib.IncidentsEntry
-	(*CompoundCondition)(nil), // 4: tragedylooper.v1.CompoundCondition
-	(*Effect)(nil),            // 5: tragedylooper.v1.Effect
+	(*CompoundCondition)(nil), // 2: tragedylooper.v1.CompoundCondition
+	(*Effect)(nil),            // 3: tragedylooper.v1.Effect
 }
 var file_tragedylooper_v1_incident_proto_depIdxs = []int32{
 	1, // 0: tragedylooper.v1.Incident.config:type_name -> tragedylooper.v1.IncidentConfig
-	4, // 1: tragedylooper.v1.IncidentConfig.compound_condition:type_name -> tragedylooper.v1.CompoundCondition
-	5, // 2: tragedylooper.v1.IncidentConfig.effect:type_name -> tragedylooper.v1.Effect
-	3, // 3: tragedylooper.v1.IncidentConfigLib.incidents:type_name -> tragedylooper.v1.IncidentConfigLib.IncidentsEntry
-	1, // 4: tragedylooper.v1.IncidentConfigLib.IncidentsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	2, // 1: tragedylooper.v1.IncidentConfig.compound_condition:type_name -> tragedylooper.v1.CompoundCondition
+	3, // 2: tragedylooper.v1.IncidentConfig.effect:type_name -> tragedylooper.v1.Effect
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_tragedylooper_v1_incident_proto_init() }
@@ -383,7 +329,7 @@ func file_tragedylooper_v1_incident_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_incident_proto_rawDesc), len(file_tragedylooper_v1_incident_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

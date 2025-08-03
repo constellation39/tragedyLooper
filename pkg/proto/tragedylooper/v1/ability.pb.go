@@ -347,52 +347,6 @@ func (x *Ability) GetOwnerCharacterId() int32 {
 	return 0
 }
 
-// AbilityConfigLib is a library of ability configurations.
-type AbilityConfigLib struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// A map of ability configurations, keyed by their ID.
-	Abilities     map[int32]*AbilityConfig `protobuf:"bytes,1,rep,name=abilities,proto3" json:"abilities,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *AbilityConfigLib) Reset() {
-	*x = AbilityConfigLib{}
-	mi := &file_tragedylooper_v1_ability_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AbilityConfigLib) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AbilityConfigLib) ProtoMessage() {}
-
-func (x *AbilityConfigLib) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_ability_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use AbilityConfigLib.ProtoReflect.Descriptor instead.
-func (*AbilityConfigLib) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_ability_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *AbilityConfigLib) GetAbilities() map[int32]*AbilityConfig {
-	if x != nil {
-		return x.Abilities
-	}
-	return nil
-}
-
 var File_tragedylooper_v1_ability_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_ability_proto_rawDesc = "" +
@@ -426,12 +380,7 @@ const file_tragedylooper_v1_ability_proto_rawDesc = "" +
 	"\aAbility\x127\n" +
 	"\x06config\x18\x01 \x01(\v2\x1f.tragedylooper.v1.AbilityConfigR\x06config\x12$\n" +
 	"\x0eused_this_loop\x18\x02 \x01(\bR\fusedThisLoop\x12,\n" +
-	"\x12owner_character_id\x18\x03 \x01(\x05R\x10ownerCharacterId\"\xc2\x01\n" +
-	"\x10AbilityConfigLib\x12O\n" +
-	"\tabilities\x18\x01 \x03(\v21.tragedylooper.v1.AbilityConfigLib.AbilitiesEntryR\tabilities\x1a]\n" +
-	"\x0eAbilitiesEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x125\n" +
-	"\x05value\x18\x02 \x01(\v2\x1f.tragedylooper.v1.AbilityConfigR\x05value:\x028\x01B7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3"
+	"\x12owner_character_id\x18\x03 \x01(\x05R\x10ownerCharacterIdB7Z5github.com/constellation39/tragedyLooper/pkg/proto/v1b\x06proto3"
 
 var (
 	file_tragedylooper_v1_ability_proto_rawDescOnce sync.Once
@@ -446,36 +395,32 @@ func file_tragedylooper_v1_ability_proto_rawDescGZIP() []byte {
 }
 
 var file_tragedylooper_v1_ability_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_tragedylooper_v1_ability_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_tragedylooper_v1_ability_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_tragedylooper_v1_ability_proto_goTypes = []any{
 	(CompoundAbility_Operator)(0), // 0: tragedylooper.v1.CompoundAbility.Operator
 	(*AbilityConfig)(nil),         // 1: tragedylooper.v1.AbilityConfig
 	(*CompoundAbility)(nil),       // 2: tragedylooper.v1.CompoundAbility
 	(*Ability)(nil),               // 3: tragedylooper.v1.Ability
-	(*AbilityConfigLib)(nil),      // 4: tragedylooper.v1.AbilityConfigLib
-	nil,                           // 5: tragedylooper.v1.AbilityConfigLib.AbilitiesEntry
-	(TriggerType)(0),              // 6: tragedylooper.v1.TriggerType
-	(GameEventType)(0),            // 7: tragedylooper.v1.GameEventType
-	(*Effect)(nil),                // 8: tragedylooper.v1.Effect
-	(PlayerRole)(0),               // 9: tragedylooper.v1.PlayerRole
-	(*Condition)(nil),             // 10: tragedylooper.v1.Condition
+	(TriggerType)(0),              // 4: tragedylooper.v1.TriggerType
+	(GameEventType)(0),            // 5: tragedylooper.v1.GameEventType
+	(*Effect)(nil),                // 6: tragedylooper.v1.Effect
+	(PlayerRole)(0),               // 7: tragedylooper.v1.PlayerRole
+	(*Condition)(nil),             // 8: tragedylooper.v1.Condition
 }
 var file_tragedylooper_v1_ability_proto_depIdxs = []int32{
-	6,  // 0: tragedylooper.v1.AbilityConfig.trigger_type:type_name -> tragedylooper.v1.TriggerType
-	7,  // 1: tragedylooper.v1.AbilityConfig.event_filters:type_name -> tragedylooper.v1.GameEventType
-	8,  // 2: tragedylooper.v1.AbilityConfig.effect:type_name -> tragedylooper.v1.Effect
-	9,  // 3: tragedylooper.v1.AbilityConfig.refusal_role:type_name -> tragedylooper.v1.PlayerRole
-	10, // 4: tragedylooper.v1.AbilityConfig.conditions:type_name -> tragedylooper.v1.Condition
-	0,  // 5: tragedylooper.v1.CompoundAbility.operator:type_name -> tragedylooper.v1.CompoundAbility.Operator
-	1,  // 6: tragedylooper.v1.CompoundAbility.sub_abilities:type_name -> tragedylooper.v1.AbilityConfig
-	1,  // 7: tragedylooper.v1.Ability.config:type_name -> tragedylooper.v1.AbilityConfig
-	5,  // 8: tragedylooper.v1.AbilityConfigLib.abilities:type_name -> tragedylooper.v1.AbilityConfigLib.AbilitiesEntry
-	1,  // 9: tragedylooper.v1.AbilityConfigLib.AbilitiesEntry.value:type_name -> tragedylooper.v1.AbilityConfig
-	10, // [10:10] is the sub-list for method output_type
-	10, // [10:10] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	4, // 0: tragedylooper.v1.AbilityConfig.trigger_type:type_name -> tragedylooper.v1.TriggerType
+	5, // 1: tragedylooper.v1.AbilityConfig.event_filters:type_name -> tragedylooper.v1.GameEventType
+	6, // 2: tragedylooper.v1.AbilityConfig.effect:type_name -> tragedylooper.v1.Effect
+	7, // 3: tragedylooper.v1.AbilityConfig.refusal_role:type_name -> tragedylooper.v1.PlayerRole
+	8, // 4: tragedylooper.v1.AbilityConfig.conditions:type_name -> tragedylooper.v1.Condition
+	0, // 5: tragedylooper.v1.CompoundAbility.operator:type_name -> tragedylooper.v1.CompoundAbility.Operator
+	1, // 6: tragedylooper.v1.CompoundAbility.sub_abilities:type_name -> tragedylooper.v1.AbilityConfig
+	1, // 7: tragedylooper.v1.Ability.config:type_name -> tragedylooper.v1.AbilityConfig
+	8, // [8:8] is the sub-list for method output_type
+	8, // [8:8] is the sub-list for method input_type
+	8, // [8:8] is the sub-list for extension type_name
+	8, // [8:8] is the sub-list for extension extendee
+	0, // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_tragedylooper_v1_ability_proto_init() }
@@ -492,7 +437,7 @@ func file_tragedylooper_v1_ability_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_ability_proto_rawDesc), len(file_tragedylooper_v1_ability_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   5,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

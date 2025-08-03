@@ -133,6 +133,7 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 
 	var req struct {
 		ScriptID   string           `json:"script_id"`
+		ModelID    int32            `json:"model_id"`
 		PlayerID   int32            `json:"player_id"`
 		PlayerName string           `json:"player_name"`
 		PlayerRole model.PlayerRole `json:"player_role"`
@@ -163,7 +164,7 @@ func (s *Server) HandleCreateRoom(w http.ResponseWriter, r *http.Request) {
 		LlmSessionId:       "",
 	})
 
-	gameConfig, err := loader.LoadConfig(s.gameDataDir, req.ScriptID)
+	gameConfig, err := loader.LoadConfig(s.gameDataDir, req.ScriptID, req.ModelID)
 	if err != nil {
 		ctxLogger.Error("Failed to load game data", zap.Error(err))
 		http.Error(w, "Error loading game data", http.StatusInternalServerError)

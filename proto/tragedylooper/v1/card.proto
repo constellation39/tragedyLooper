@@ -42,12 +42,6 @@ message Card {
   }
 }
 
-// CardConfigLib is a library of card configurations.
-message CardConfigLib {
-  // A map of card configurations, keyed by their ID.
-  map<int32, CardConfig> cards = 1;
-}
-
 // CardList is a list of card instances.
 message CardList {
   // A list of card instances.

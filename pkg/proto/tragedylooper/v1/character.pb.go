@@ -284,52 +284,6 @@ func (x *Character) GetTraits() []string {
 	return nil
 }
 
-// CharacterConfigLib is a library of character configurations.
-type CharacterConfigLib struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// A map of character configurations, keyed by their ID.
-	Characters    map[int32]*CharacterConfig `protobuf:"bytes,1,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CharacterConfigLib) Reset() {
-	*x = CharacterConfigLib{}
-	mi := &file_tragedylooper_v1_character_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CharacterConfigLib) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CharacterConfigLib) ProtoMessage() {}
-
-func (x *CharacterConfigLib) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_character_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CharacterConfigLib.ProtoReflect.Descriptor instead.
-func (*CharacterConfigLib) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_character_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *CharacterConfigLib) GetCharacters() map[int32]*CharacterConfig {
-	if x != nil {
-		return x.Characters
-	}
-	return nil
-}
-
 // CharacterRule defines a special rule for a character.
 type CharacterRule struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -353,7 +307,7 @@ type CharacterRule struct {
 
 func (x *CharacterRule) Reset() {
 	*x = CharacterRule{}
-	mi := &file_tragedylooper_v1_character_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_character_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -365,7 +319,7 @@ func (x *CharacterRule) String() string {
 func (*CharacterRule) ProtoMessage() {}
 
 func (x *CharacterRule) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_character_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_character_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -378,7 +332,7 @@ func (x *CharacterRule) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CharacterRule.ProtoReflect.Descriptor instead.
 func (*CharacterRule) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_character_proto_rawDescGZIP(), []int{3}
+	return file_tragedylooper_v1_character_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CharacterRule) GetName() string {
@@ -474,7 +428,7 @@ type TurfSelectionEffect struct {
 
 func (x *TurfSelectionEffect) Reset() {
 	*x = TurfSelectionEffect{}
-	mi := &file_tragedylooper_v1_character_proto_msgTypes[4]
+	mi := &file_tragedylooper_v1_character_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -486,7 +440,7 @@ func (x *TurfSelectionEffect) String() string {
 func (*TurfSelectionEffect) ProtoMessage() {}
 
 func (x *TurfSelectionEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_character_proto_msgTypes[4]
+	mi := &file_tragedylooper_v1_character_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -499,7 +453,7 @@ func (x *TurfSelectionEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TurfSelectionEffect.ProtoReflect.Descriptor instead.
 func (*TurfSelectionEffect) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_character_proto_rawDescGZIP(), []int{4}
+	return file_tragedylooper_v1_character_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *TurfSelectionEffect) GetPossibleLocations() []LocationType {
@@ -529,7 +483,7 @@ type DelayedEntryEffect struct {
 
 func (x *DelayedEntryEffect) Reset() {
 	*x = DelayedEntryEffect{}
-	mi := &file_tragedylooper_v1_character_proto_msgTypes[5]
+	mi := &file_tragedylooper_v1_character_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -541,7 +495,7 @@ func (x *DelayedEntryEffect) String() string {
 func (*DelayedEntryEffect) ProtoMessage() {}
 
 func (x *DelayedEntryEffect) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_character_proto_msgTypes[5]
+	mi := &file_tragedylooper_v1_character_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -554,7 +508,7 @@ func (x *DelayedEntryEffect) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DelayedEntryEffect.ProtoReflect.Descriptor instead.
 func (*DelayedEntryEffect) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_character_proto_rawDescGZIP(), []int{5}
+	return file_tragedylooper_v1_character_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *DelayedEntryEffect) GetDayOfEntry() int32 {
@@ -584,7 +538,7 @@ type SpecialMovementRule struct {
 
 func (x *SpecialMovementRule) Reset() {
 	*x = SpecialMovementRule{}
-	mi := &file_tragedylooper_v1_character_proto_msgTypes[6]
+	mi := &file_tragedylooper_v1_character_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -596,7 +550,7 @@ func (x *SpecialMovementRule) String() string {
 func (*SpecialMovementRule) ProtoMessage() {}
 
 func (x *SpecialMovementRule) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_character_proto_msgTypes[6]
+	mi := &file_tragedylooper_v1_character_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -609,7 +563,7 @@ func (x *SpecialMovementRule) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SpecialMovementRule.ProtoReflect.Descriptor instead.
 func (*SpecialMovementRule) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_character_proto_rawDescGZIP(), []int{6}
+	return file_tragedylooper_v1_character_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *SpecialMovementRule) GetRestrictedLocations() []LocationType {
@@ -656,14 +610,7 @@ const file_tragedylooper_v1_character_proto_rawDesc = "" +
 	"\bis_alive\x18\b \x01(\bR\aisAlive\x12\"\n" +
 	"\rin_panic_mode\x18\t \x01(\bR\vinPanicMode\x12\x16\n" +
 	"\x06traits\x18\n" +
-	" \x03(\tR\x06traits\"\xcc\x01\n" +
-	"\x12CharacterConfigLib\x12T\n" +
-	"\n" +
-	"characters\x18\x01 \x03(\v24.tragedylooper.v1.CharacterConfigLib.CharactersEntryR\n" +
-	"characters\x1a`\n" +
-	"\x0fCharactersEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x127\n" +
-	"\x05value\x18\x02 \x01(\v2!.tragedylooper.v1.CharacterConfigR\x05value:\x028\x01\"\x9c\x03\n" +
+	" \x03(\tR\x06traits\"\x9c\x03\n" +
 	"\rCharacterRule\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x127\n" +
@@ -695,41 +642,37 @@ func file_tragedylooper_v1_character_proto_rawDescGZIP() []byte {
 	return file_tragedylooper_v1_character_proto_rawDescData
 }
 
-var file_tragedylooper_v1_character_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_tragedylooper_v1_character_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_tragedylooper_v1_character_proto_goTypes = []any{
 	(*CharacterConfig)(nil),     // 0: tragedylooper.v1.CharacterConfig
 	(*Character)(nil),           // 1: tragedylooper.v1.Character
-	(*CharacterConfigLib)(nil),  // 2: tragedylooper.v1.CharacterConfigLib
-	(*CharacterRule)(nil),       // 3: tragedylooper.v1.CharacterRule
-	(*TurfSelectionEffect)(nil), // 4: tragedylooper.v1.TurfSelectionEffect
-	(*DelayedEntryEffect)(nil),  // 5: tragedylooper.v1.DelayedEntryEffect
-	(*SpecialMovementRule)(nil), // 6: tragedylooper.v1.SpecialMovementRule
-	nil,                         // 7: tragedylooper.v1.CharacterConfigLib.CharactersEntry
-	(LocationType)(0),           // 8: tragedylooper.v1.LocationType
-	(*Ability)(nil),             // 9: tragedylooper.v1.Ability
-	(TriggerType)(0),            // 10: tragedylooper.v1.TriggerType
+	(*CharacterRule)(nil),       // 2: tragedylooper.v1.CharacterRule
+	(*TurfSelectionEffect)(nil), // 3: tragedylooper.v1.TurfSelectionEffect
+	(*DelayedEntryEffect)(nil),  // 4: tragedylooper.v1.DelayedEntryEffect
+	(*SpecialMovementRule)(nil), // 5: tragedylooper.v1.SpecialMovementRule
+	(LocationType)(0),           // 6: tragedylooper.v1.LocationType
+	(*Ability)(nil),             // 7: tragedylooper.v1.Ability
+	(TriggerType)(0),            // 8: tragedylooper.v1.TriggerType
 }
 var file_tragedylooper_v1_character_proto_depIdxs = []int32{
-	3,  // 0: tragedylooper.v1.CharacterConfig.rules:type_name -> tragedylooper.v1.CharacterRule
-	8,  // 1: tragedylooper.v1.CharacterConfig.initial_location:type_name -> tragedylooper.v1.LocationType
-	8,  // 2: tragedylooper.v1.CharacterConfig.blocked_locations:type_name -> tragedylooper.v1.LocationType
+	2,  // 0: tragedylooper.v1.CharacterConfig.rules:type_name -> tragedylooper.v1.CharacterRule
+	6,  // 1: tragedylooper.v1.CharacterConfig.initial_location:type_name -> tragedylooper.v1.LocationType
+	6,  // 2: tragedylooper.v1.CharacterConfig.blocked_locations:type_name -> tragedylooper.v1.LocationType
 	0,  // 3: tragedylooper.v1.Character.config:type_name -> tragedylooper.v1.CharacterConfig
-	8,  // 4: tragedylooper.v1.Character.current_location:type_name -> tragedylooper.v1.LocationType
-	9,  // 5: tragedylooper.v1.Character.abilities:type_name -> tragedylooper.v1.Ability
-	7,  // 6: tragedylooper.v1.CharacterConfigLib.characters:type_name -> tragedylooper.v1.CharacterConfigLib.CharactersEntry
-	10, // 7: tragedylooper.v1.CharacterRule.trigger:type_name -> tragedylooper.v1.TriggerType
-	4,  // 8: tragedylooper.v1.CharacterRule.turf_selection_effect:type_name -> tragedylooper.v1.TurfSelectionEffect
-	5,  // 9: tragedylooper.v1.CharacterRule.delayed_entry_effect:type_name -> tragedylooper.v1.DelayedEntryEffect
-	6,  // 10: tragedylooper.v1.CharacterRule.special_movement_rule:type_name -> tragedylooper.v1.SpecialMovementRule
-	8,  // 11: tragedylooper.v1.TurfSelectionEffect.possible_locations:type_name -> tragedylooper.v1.LocationType
-	8,  // 12: tragedylooper.v1.DelayedEntryEffect.entry_location:type_name -> tragedylooper.v1.LocationType
-	8,  // 13: tragedylooper.v1.SpecialMovementRule.restricted_locations:type_name -> tragedylooper.v1.LocationType
-	0,  // 14: tragedylooper.v1.CharacterConfigLib.CharactersEntry.value:type_name -> tragedylooper.v1.CharacterConfig
-	15, // [15:15] is the sub-list for method output_type
-	15, // [15:15] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	6,  // 4: tragedylooper.v1.Character.current_location:type_name -> tragedylooper.v1.LocationType
+	7,  // 5: tragedylooper.v1.Character.abilities:type_name -> tragedylooper.v1.Ability
+	8,  // 6: tragedylooper.v1.CharacterRule.trigger:type_name -> tragedylooper.v1.TriggerType
+	3,  // 7: tragedylooper.v1.CharacterRule.turf_selection_effect:type_name -> tragedylooper.v1.TurfSelectionEffect
+	4,  // 8: tragedylooper.v1.CharacterRule.delayed_entry_effect:type_name -> tragedylooper.v1.DelayedEntryEffect
+	5,  // 9: tragedylooper.v1.CharacterRule.special_movement_rule:type_name -> tragedylooper.v1.SpecialMovementRule
+	6,  // 10: tragedylooper.v1.TurfSelectionEffect.possible_locations:type_name -> tragedylooper.v1.LocationType
+	6,  // 11: tragedylooper.v1.DelayedEntryEffect.entry_location:type_name -> tragedylooper.v1.LocationType
+	6,  // 12: tragedylooper.v1.SpecialMovementRule.restricted_locations:type_name -> tragedylooper.v1.LocationType
+	13, // [13:13] is the sub-list for method output_type
+	13, // [13:13] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_tragedylooper_v1_character_proto_init() }
@@ -739,7 +682,7 @@ func file_tragedylooper_v1_character_proto_init() {
 	}
 	file_tragedylooper_v1_ability_proto_init()
 	file_tragedylooper_v1_enums_proto_init()
-	file_tragedylooper_v1_character_proto_msgTypes[3].OneofWrappers = []any{
+	file_tragedylooper_v1_character_proto_msgTypes[2].OneofWrappers = []any{
 		(*CharacterRule_TurfSelectionEffect)(nil),
 		(*CharacterRule_DelayedEntryEffect)(nil),
 		(*CharacterRule_SpecialMovementRule)(nil),
@@ -750,7 +693,7 @@ func file_tragedylooper_v1_character_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_character_proto_rawDesc), len(file_tragedylooper_v1_character_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

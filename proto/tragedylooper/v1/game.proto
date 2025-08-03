@@ -45,10 +45,6 @@ message Player {
   repeated int32 protagonist_characters_controlled = 8; // 如果一个主角玩家控制多个角色牌组，这里列出他们的ID
 }
 
-message PlayerLib {
-  map<int32, Player> players = 1; // 玩家ID到玩家信息的映射
-}
-
 // 主角的推理知识
 message PlayerDeductionKnowledge {
   map<int32, int32> guessed_roles = 1; // 对角色身份的猜测，键为 character_id

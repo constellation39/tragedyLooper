@@ -57,12 +57,6 @@ message Character {
   repeated string traits = 10;
 }
 
-// CharacterConfigLib is a library of character configurations.
-message CharacterConfigLib {
-  // A map of character configurations, keyed by their ID.
-  map<int32, CharacterConfig> characters = 1;
-}
-
 // CharacterRule defines a special rule for a character.
 message CharacterRule {
   // The name of the rule.

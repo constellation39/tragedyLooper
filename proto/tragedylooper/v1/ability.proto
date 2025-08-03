@@ -65,8 +65,3 @@ message Ability {
   int32 owner_character_id = 3;
 }
 
-// AbilityConfigLib is a library of ability configurations.
-message AbilityConfigLib {
-  // A map of ability configurations, keyed by their ID.
-  map<int32, AbilityConfig> abilities = 1;
-}

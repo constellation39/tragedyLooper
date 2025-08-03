@@ -45,7 +45,7 @@ type GameEngine struct {
 	logger    *zap.Logger
 
 	actionGenerator ai.ActionGenerator
-	gameConfig      loader.ScriptConfig
+	scriptConfig    loader.ScriptConfig
 	pm              *phasehandler.Manager
 	em              *eventhandler.Manager
 
@@ -63,7 +63,7 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator 
 	ge := &GameEngine{
 		logger:               logger,
 		actionGenerator:      actionGenerator,
-		gameConfig:           gameConfig,
+		scriptConfig:         gameConfig,
 		engineChan:           make(chan engineAction, 100),
 		stopChan:             make(chan struct{}),
 		playerReady:          make(map[int32]bool),
@@ -101,9 +101,18 @@ func (ge *GameEngine) initializePlayers(players []*model.Player) map[int32]*mode
 func (ge *GameEngine) initializeGameStateFromScript(players []*model.Player) {
 	playerMap := ge.initializePlayers(players)
 
-	script := ge.gameConfig.GetScript()
-	characterConfigs := ge.gameConfig.GetCharacters()
-	incidentConfigs := ge.gameConfig.GetIncidents()
+	characterConfigs, err := loader.All[*model.CharacterConfig](ge.scriptConfig)
+	if err != nil {
+		return
+	}
+
+	all, err := loader.All[*model.IncidentConfig](ge.scriptConfig)
+	if err != nil {
+		return
+	}
+
+	characterConfigs := ge.scriptConfig.GetCharacters()
+	incidentConfigs := ge.scriptConfig.GetIncidents()
 
 	// 将脚本事件合并到主事件配置列表中
 	for _, incident := range script.Incidents {
@@ -136,7 +145,7 @@ func (ge *GameEngine) initializeGameStateFromScript(players []*model.Player) {
 }
 
 func (ge *GameEngine) dealInitialCards() {
-	cardConfigs := ge.gameConfig.GetCards()
+	cardConfigs := ge.scriptConfig.GetCards()
 
 	for _, player := range ge.GameState.Players {
 		player.Hand = &model.CardList{Cards: make([]*model.Card, 0, len(cardConfigs))}
@@ -330,7 +339,7 @@ func (ge *GameEngine) GetGameState() *model.GameState {
 }
 
 func (ge *GameEngine) GetGameRepo() loader.ScriptConfig {
-	return ge.gameConfig
+	return ge.scriptConfig
 }
 
 func (ge *GameEngine) AreAllPlayersReady() bool {
