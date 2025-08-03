@@ -30,9 +30,10 @@ message MakeGuessPayload {
 
 // 玩家进行选择的操作负载（例如，在需要选择地盘或目标时）
 message ChooseOptionPayload {
-  int32 player_id = 1; // 执行操作的玩家ID
-  int32 character_id = 2; // 做出选择的角色（如果选择与角色相关）
-  string chosen_option_id = 3; // 选择项的ID
+  string request_id = 1; // The ID from the event we are responding to
+  int32 player_id = 2; // 执行操作的玩家ID
+  int32 character_id = 3; // 做出选择的角色（如果选择与角色相关）
+  string chosen_option_id = 4; // 选择项的ID
 }
 
 // 玩家跳过回合的操作负载

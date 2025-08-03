@@ -4,6 +4,7 @@ package tragedylooper.v1;
 
 import "tragedylooper/v1/effect.proto";
 import "tragedylooper/v1/enums.proto";
+import "tragedylooper/v1/common.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 

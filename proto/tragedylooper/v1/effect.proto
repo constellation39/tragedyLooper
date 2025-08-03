@@ -33,7 +33,19 @@ message Effect {
     RemoveTraitEffect remove_trait = 10;
     // A compound effect.
     CompoundEffect compound_effect = 11;
+    // A conditional effect.
+    ConditionalEffect conditional_effect = 12;
   }
+}
+
+// ConditionalEffect defines an effect that only runs if a condition is met.
+message ConditionalEffect {
+  // The condition to check.
+  Condition condition = 1;
+  // The effect to execute if the condition is true.
+  Effect then_effect = 2;
+  // Optional: The effect to execute if the condition is false.
+  optional Effect else_effect = 3;
 }
 
 // CompoundEffect defines a combination of multiple effects.

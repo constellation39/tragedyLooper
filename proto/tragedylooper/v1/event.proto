@@ -15,14 +15,23 @@ message GameEvent {
   GameEventType type = 1; // 事件类型
   google.protobuf.Timestamp timestamp = 2; // 事件发生的时间戳
   EventPayload payload = 3;
+  optional Cause cause = 4; // The cause of the event
+}
+
+// Cause defines the source of an event.
+message Cause {
+  oneof cause_type {
+    int32 card_id = 1;
+    int32 ability_id = 2;
+    int32 incident_id = 3;
+    // Could also add GameEngineTick, PlayerChoice, etc.
+  }
 }
 
 message EventPayload {
   oneof payload {
     CharacterMovedEvent character_moved = 1;
-    ParanoiaAdjustedEvent paranoia_adjusted = 2;
-    GoodwillAdjustedEvent goodwill_adjusted = 3;
-    IntrigueAdjustedEvent intrigue_adjusted = 4;
+    StatAdjustedEvent stat_adjusted = 2; // Replaces Paranoia, Goodwill, Intrigue events
     LoopLossEvent loop_loss = 5;
     LoopWinEvent loop_win = 6;
     AbilityUsedEvent ability_used = 7;
@@ -34,8 +43,7 @@ message EventPayload {
     ChoiceRequiredEvent choice_required = 13;
     IncidentTriggeredEvent incident_triggered = 14;
     TragedyTriggeredEvent tragedy_triggered = 15;
-    TraitAddedEvent trait_added = 16;
-    TraitRemovedEvent trait_removed = 17;
+    TraitAdjustedEvent trait_adjusted = 16; // Replaces TraitAdded, TraitRemoved events
     PlayerActionTakenEvent player_action_taken = 18;
   }
 }
@@ -46,25 +54,19 @@ message CharacterMovedEvent {
   LocationType new_location = 2; // 移动到的新地点
 }
 
-// 妄想值调整事件
-message ParanoiaAdjustedEvent {
-  int32 character_id = 1; // 角色ID
-  int32 amount = 2; // 调整量
-  int32 new_paranoia = 3; // 调整后的新妄想值
+// 属性调整事件 (替代 Paranoia/Goodwill/IntrigueAdjustedEvent)
+message StatAdjustedEvent {
+  int32 character_id = 1;
+  StatType stat_type = 2; // 被改变的属性
+  int32 amount = 3;       // 调整量
+  int32 new_value = 4;    // 调整后的新值
 }
 
-// 好感值调整事件
-message GoodwillAdjustedEvent {
-  int32 character_id = 1; // 角色ID
-  int32 amount = 2; // 调整量
-  int32 new_goodwill = 3; // 调整后的新好感值
-}
-
-// 阴谋值调整事件
-message IntrigueAdjustedEvent {
-  int32 character_id = 1; // 角色ID
-  int32 amount = 2; // 调整量
-  int32 new_intrigue = 3; // 调整后的新阴谋值
+// 特性调整事件 (替代 TraitAdded/RemovedEvent)
+message TraitAdjustedEvent {
+  int32 character_id = 1;
+  string trait = 2;
+  bool was_added = 3; // true for added, false for removed
 }
 
 // 循环失败事件
@@ -122,8 +124,8 @@ message Choice {
 
 // 需要玩家做出选择的事件
 message ChoiceRequiredEvent {
-  // 这可能需要更复杂的结构，具体取决于选择
-  repeated Choice choices = 1; // 提供给玩家的选项列表
+  string request_id = 1; // A unique ID for this choice request
+  repeated Choice choices = 2; // 提供给玩家的选项列表
 }
 
 // 事件触发事件
@@ -136,19 +138,8 @@ message TragedyTriggeredEvent {
   int32 tragedy_id = 1; // 被触发的悲剧类型
 }
 
-// 特性添加事件
-message TraitAddedEvent {
-  int32 character_id = 1;
-  string trait = 2;
-}
-
-// 特性移除事件
-message TraitRemovedEvent {
-  int32 character_id = 1;
-  string trait = 2;
-}
-
 message PlayerActionTakenEvent {
   int32 player_id = 1;
   PlayerActionPayload action = 2;
 }
+
