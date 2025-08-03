@@ -2,7 +2,7 @@ package loader
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
@@ -80,7 +80,7 @@ func loadDataFromYAML(filePath string, data proto.Message) error {
 		return fmt.Errorf("failed to get absolute path for %s: %w", filePath, err)
 	}
 
-	yamlBytes, err := ioutil.ReadFile(absPath)
+	yamlBytes, err := os.ReadFile(absPath)
 	if err != nil {
 		return fmt.Errorf("failed to read YAML file %s: %w", absPath, err)
 	}

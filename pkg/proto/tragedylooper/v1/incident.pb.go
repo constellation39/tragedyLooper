@@ -122,7 +122,7 @@ type IncidentConfig struct {
 	Description        string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                               // 事件描述
 	IncidentId         int32                  `protobuf:"varint,4,opt,name=incident_id,json=incidentId,proto3" json:"incident_id,omitempty"`                              // 事件类型
 	Day                int32                  `protobuf:"varint,5,opt,name=day,proto3" json:"day,omitempty"`                                                              // 预定发生日期
-	CompoundCondition  *CompoundCondition     `protobuf:"bytes,6,opt,name=compound_condition,json=compoundCondition,proto3" json:"compound_condition,omitempty"`          // 触发条件列表
+	Condition          *Condition             `protobuf:"bytes,6,opt,name=condition,proto3" json:"condition,omitempty"`                                                   // 触发条件列表
 	Effect             *Effect                `protobuf:"bytes,7,opt,name=effect,proto3" json:"effect,omitempty"`                                                         // 事件触发时产生的效果
 	IsMandatory        bool                   `protobuf:"varint,8,opt,name=is_mandatory,json=isMandatory,proto3" json:"is_mandatory,omitempty"`                           // 是否为必发事件
 	CulpritCharacterId int32                  `protobuf:"varint,9,opt,name=culprit_character_id,json=culpritCharacterId,proto3" json:"culprit_character_id,omitempty"`    // 事件主谋角色ID（如适用）
@@ -199,9 +199,9 @@ func (x *IncidentConfig) GetDay() int32 {
 	return 0
 }
 
-func (x *IncidentConfig) GetCompoundCondition() *CompoundCondition {
+func (x *IncidentConfig) GetCondition() *Condition {
 	if x != nil {
-		return x.CompoundCondition
+		return x.Condition
 	}
 	return nil
 }
@@ -267,15 +267,15 @@ const file_tragedylooper_v1_incident_proto_rawDesc = "" +
 	"\aculprit\x18\x04 \x01(\tR\aculprit\x12\x16\n" +
 	"\x06victim\x18\x05 \x01(\tR\x06victim\x12 \n" +
 	"\vdescription\x18\x06 \x01(\tR\vdescription\x125\n" +
-	"\x17has_triggered_this_loop\x18\a \x01(\bR\x14hasTriggeredThisLoop\"\x90\x04\n" +
+	"\x17has_triggered_this_loop\x18\a \x01(\bR\x14hasTriggeredThisLoop\"\xf7\x03\n" +
 	"\x0eIncidentConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1f\n" +
 	"\vincident_id\x18\x04 \x01(\x05R\n" +
 	"incidentId\x12\x10\n" +
-	"\x03day\x18\x05 \x01(\x05R\x03day\x12R\n" +
-	"\x12compound_condition\x18\x06 \x01(\v2#.tragedylooper.v1.CompoundConditionR\x11compoundCondition\x120\n" +
+	"\x03day\x18\x05 \x01(\x05R\x03day\x129\n" +
+	"\tcondition\x18\x06 \x01(\v2\x1b.tragedylooper.v1.ConditionR\tcondition\x120\n" +
 	"\x06effect\x18\a \x01(\v2\x18.tragedylooper.v1.EffectR\x06effect\x12!\n" +
 	"\fis_mandatory\x18\b \x01(\bR\visMandatory\x120\n" +
 	"\x14culprit_character_id\x18\t \x01(\x05R\x12culpritCharacterId\x12.\n" +
@@ -301,14 +301,14 @@ func file_tragedylooper_v1_incident_proto_rawDescGZIP() []byte {
 
 var file_tragedylooper_v1_incident_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_tragedylooper_v1_incident_proto_goTypes = []any{
-	(*Incident)(nil),          // 0: tragedylooper.v1.Incident
-	(*IncidentConfig)(nil),    // 1: tragedylooper.v1.IncidentConfig
-	(*CompoundCondition)(nil), // 2: tragedylooper.v1.CompoundCondition
-	(*Effect)(nil),            // 3: tragedylooper.v1.Effect
+	(*Incident)(nil),       // 0: tragedylooper.v1.Incident
+	(*IncidentConfig)(nil), // 1: tragedylooper.v1.IncidentConfig
+	(*Condition)(nil),      // 2: tragedylooper.v1.Condition
+	(*Effect)(nil),         // 3: tragedylooper.v1.Effect
 }
 var file_tragedylooper_v1_incident_proto_depIdxs = []int32{
 	1, // 0: tragedylooper.v1.Incident.config:type_name -> tragedylooper.v1.IncidentConfig
-	2, // 1: tragedylooper.v1.IncidentConfig.compound_condition:type_name -> tragedylooper.v1.CompoundCondition
+	2, // 1: tragedylooper.v1.IncidentConfig.condition:type_name -> tragedylooper.v1.Condition
 	3, // 2: tragedylooper.v1.IncidentConfig.effect:type_name -> tragedylooper.v1.Effect
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type

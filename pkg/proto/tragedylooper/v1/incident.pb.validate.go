@@ -208,11 +208,11 @@ func (m *IncidentConfig) validate(all bool) error {
 	// no validation rules for Day
 
 	if all {
-		switch v := interface{}(m.GetCompoundCondition()).(type) {
+		switch v := interface{}(m.GetCondition()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, IncidentConfigValidationError{
-					field:  "CompoundCondition",
+					field:  "Condition",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -220,16 +220,16 @@ func (m *IncidentConfig) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, IncidentConfigValidationError{
-					field:  "CompoundCondition",
+					field:  "Condition",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetCompoundCondition()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetCondition()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return IncidentConfigValidationError{
-				field:  "CompoundCondition",
+				field:  "Condition",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}

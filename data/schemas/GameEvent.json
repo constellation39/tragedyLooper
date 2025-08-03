@@ -559,6 +559,11 @@
                     "$ref": "#/definitions/tragedylooper.v1.CompoundCondition",
                     "additionalProperties": true,
                     "description": "A compound condition (AND/OR/NOT)."
+                },
+                "phase_condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.PhaseCondition",
+                    "additionalProperties": true,
+                    "description": "A phase condition."
                 }
             },
             "additionalProperties": true,
@@ -958,8 +963,8 @@
                     "type": "integer",
                     "description": "预定发生日期"
                 },
-                "compound_condition": {
-                    "$ref": "#/definitions/tragedylooper.v1.CompoundCondition",
+                "condition": {
+                    "$ref": "#/definitions/tragedylooper.v1.Condition",
                     "additionalProperties": true,
                     "description": "触发条件列表"
                 },
@@ -1197,6 +1202,84 @@
             "title": "Pass Turn Action",
             "description": "玩家跳过回合的操作负载"
         },
+        "tragedylooper.v1.PhaseCondition": {
+            "properties": {
+                "comparator": {
+                    "enum": [
+                        "COMPARATOR_UNSPECIFIED",
+                        0,
+                        "COMPARATOR_IS",
+                        1,
+                        "COMPARATOR_IS_NOT",
+                        2,
+                        "COMPARATOR_BEFORE",
+                        3,
+                        "COMPARATOR_AFTER",
+                        4
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Comparator",
+                    "description": "The comparator to use."
+                },
+                "phase": {
+                    "enum": [
+                        "GAME_PHASE_UNSPECIFIED",
+                        0,
+                        "GAME_PHASE_SETUP",
+                        1,
+                        "GAME_PHASE_MASTERMIND_SETUP",
+                        2,
+                        "GAME_PHASE_LOOP_START",
+                        3,
+                        "GAME_PHASE_DAY_START",
+                        4,
+                        "GAME_PHASE_MASTERMIND_CARD_PLAY",
+                        5,
+                        "GAME_PHASE_PROTAGONIST_CARD_PLAY",
+                        6,
+                        "GAME_PHASE_CARD_REVEAL",
+                        7,
+                        "GAME_PHASE_CARD_RESOLVE",
+                        8,
+                        "GAME_PHASE_MASTERMIND_ABILITIES",
+                        9,
+                        "GAME_PHASE_PROTAGONIST_ABILITIES",
+                        10,
+                        "GAME_PHASE_INCIDENTS",
+                        11,
+                        "GAME_PHASE_DAY_END",
+                        12,
+                        "GAME_PHASE_LOOP_END",
+                        13,
+                        "GAME_PHASE_PROTAGONIST_GUESS",
+                        14,
+                        "GAME_PHASE_GAME_OVER",
+                        15
+                    ],
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "title": "Game Phase",
+                    "description": "游戏阶段"
+                }
+            },
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Phase Condition",
+            "description": "PhaseCondition defines a condition based on the current game phase."
+        },
         "tragedylooper.v1.PlayCardPayload": {
             "properties": {
                 "player_id": {
@@ -1430,28 +1513,30 @@
         },
         "tragedylooper.v1.TargetSelector": {
             "properties": {
-                "selector_type": {
+                "specific_character": {
+                    "type": "integer",
+                    "description": "A specific character by ID."
+                },
+                "triggering_character": {
+                    "type": "boolean",
+                    "description": "The character that triggered the event. A boolean marker."
+                },
+                "culprit": {
+                    "type": "boolean",
+                    "description": "The culprit of the event. A boolean marker."
+                },
+                "victim": {
+                    "type": "boolean",
+                    "description": "The victim of the event. A boolean marker."
+                },
+                "character_with_role": {
                     "enum": [
-                        "SELECTOR_TYPE_UNSPECIFIED",
+                        "PLAYER_ROLE_UNSPECIFIED",
                         0,
-                        "SELECTOR_TYPE_SPECIFIC_CHARACTER",
+                        "PLAYER_ROLE_MASTERMIND",
                         1,
-                        "SELECTOR_TYPE_TRIGGERING_CHARACTER",
-                        2,
-                        "SELECTOR_TYPE_CULPRIT",
-                        3,
-                        "SELECTOR_TYPE_VICTIM",
-                        4,
-                        "SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE",
-                        5,
-                        "SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION",
-                        6,
-                        "SELECTOR_TYPE_ABILITY_USER",
-                        7,
-                        "SELECTOR_TYPE_ABILITY_TARGET",
-                        8,
-                        "SELECTOR_TYPE_ALL_CHARACTERS",
-                        9
+                        "PLAYER_ROLE_PROTAGONIST",
+                        2
                     ],
                     "oneOf": [
                         {
@@ -1461,14 +1546,10 @@
                             "type": "integer"
                         }
                     ],
-                    "title": "Selector Type",
-                    "description": "The type of the selector."
+                    "title": "Player Role",
+                    "description": "玩家角色"
                 },
-                "character_id": {
-                    "type": "integer",
-                    "description": "The character ID to use when the type is SPECIFIC_CHARACTER."
-                },
-                "location_filter": {
+                "all_characters_at_location": {
                     "enum": [
                         "LOCATION_TYPE_UNSPECIFIED",
                         0,
@@ -1491,12 +1572,24 @@
                     ],
                     "title": "Location Type",
                     "description": "地点类型（也可通过LocationConfig扩展）"
+                },
+                "ability_user": {
+                    "type": "boolean",
+                    "description": "The user of the ability. A boolean marker."
+                },
+                "ability_target": {
+                    "type": "boolean",
+                    "description": "The target of the ability. A boolean marker."
+                },
+                "all_characters": {
+                    "type": "boolean",
+                    "description": "All characters. A boolean marker."
                 }
             },
             "additionalProperties": true,
             "type": "object",
             "title": "Target Selector",
-            "description": "TargetSelector defines a dynamic target for conditions or effects."
+            "description": "TargetSelector defines a dynamic target for conditions or effects. It uses a oneof to ensure that only one type of selector can be set at a time."
         },
         "tragedylooper.v1.TragedyTriggeredEvent": {
             "properties": {

@@ -1,0 +1,5 @@
+{
+  "yaml.schemas": {
+    "E:/Workspace/tragedyLooper/schemas/ScriptConfig.json": "/data/scripts/*.yaml"
+  }
+}

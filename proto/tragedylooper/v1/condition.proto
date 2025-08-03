@@ -24,7 +24,30 @@ message Condition {
     PlayerCondition player_condition = 6;
     // A compound condition (AND/OR/NOT).
     CompoundCondition compound_condition = 7;
+    // A phase condition.
+    PhaseCondition phase_condition = 8;
   }
+}
+
+// PhaseCondition defines a condition based on the current game phase.
+message PhaseCondition {
+  // The comparator to use.
+  enum Comparator {
+    // Unspecified comparator.
+    COMPARATOR_UNSPECIFIED = 0;
+    // The current phase is the specified one.
+    COMPARATOR_IS = 1;
+    // The current phase is not the specified one.
+    COMPARATOR_IS_NOT = 2;
+    // The current phase is before the specified one.
+    COMPARATOR_BEFORE = 3;
+    // The current phase is after the specified one.
+    COMPARATOR_AFTER = 4;
+  }
+  // The comparator to use.
+  Comparator comparator = 1;
+  // The target game phase.
+  GamePhase phase = 2;
 }
 
 // CompoundCondition defines a combination of multiple conditions.
@@ -143,34 +166,26 @@ message PlayerCondition {
 }
 
 // TargetSelector defines a dynamic target for conditions or effects.
+// It uses a oneof to ensure that only one type of selector can be set at a time.
 message TargetSelector {
-  // The type of the selector.
-  enum SelectorType {
-    // Unspecified selector type.
-    SELECTOR_TYPE_UNSPECIFIED = 0;
-    // A specific character.
-    SELECTOR_TYPE_SPECIFIC_CHARACTER = 1;
-    // The character that triggered the event.
-    SELECTOR_TYPE_TRIGGERING_CHARACTER = 2;
-    // The culprit of the event.
-    SELECTOR_TYPE_CULPRIT = 3;
-    // The victim of the event.
-    SELECTOR_TYPE_VICTIM = 4;
+  oneof selector {
+    // A specific character by ID.
+    int32 specific_character = 1;
+    // The character that triggered the event. A boolean marker.
+    bool triggering_character = 2;
+    // The culprit of the event. A boolean marker.
+    bool culprit = 3;
+    // The victim of the event. A boolean marker.
+    bool victim = 4;
     // Any character with a specific role.
-    SELECTOR_TYPE_ANY_CHARACTER_WITH_ROLE = 5;
+    PlayerRole character_with_role = 5;
     // All characters at a specific location.
-    SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION = 6;
-    // The user of the ability.
-    SELECTOR_TYPE_ABILITY_USER = 7;
-    // The target of the ability.
-    SELECTOR_TYPE_ABILITY_TARGET = 8;
-    // All characters.
-    SELECTOR_TYPE_ALL_CHARACTERS = 9;
+    LocationType all_characters_at_location = 6;
+    // The user of the ability. A boolean marker.
+    bool ability_user = 7;
+    // The target of the ability. A boolean marker.
+    bool ability_target = 8;
+    // All characters. A boolean marker.
+    bool all_characters = 9;
   }
-  // The type of the selector.
-  SelectorType selector_type = 1;
-  // The character ID to use when the type is SPECIFIC_CHARACTER.
-  int32 character_id = 2;
-  // The location filter to use when the type is ALL_CHARACTERS_AT_LOCATION.
-  LocationType location_filter = 3;
 }

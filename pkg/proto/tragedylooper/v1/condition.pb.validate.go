@@ -345,6 +345,47 @@ func (m *Condition) validate(all bool) error {
 			}
 		}
 
+	case *Condition_PhaseCondition:
+		if v == nil {
+			err := ConditionValidationError{
+				field:  "ConditionType",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if all {
+			switch v := interface{}(m.GetPhaseCondition()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ConditionValidationError{
+						field:  "PhaseCondition",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ConditionValidationError{
+						field:  "PhaseCondition",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetPhaseCondition()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ConditionValidationError{
+					field:  "PhaseCondition",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
 	default:
 		_ = v // ensures v is used
 	}
@@ -425,6 +466,110 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ConditionValidationError{}
+
+// Validate checks the field values on PhaseCondition with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *PhaseCondition) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on PhaseCondition with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in PhaseConditionMultiError,
+// or nil if none found.
+func (m *PhaseCondition) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *PhaseCondition) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Comparator
+
+	// no validation rules for Phase
+
+	if len(errors) > 0 {
+		return PhaseConditionMultiError(errors)
+	}
+
+	return nil
+}
+
+// PhaseConditionMultiError is an error wrapping multiple validation errors
+// returned by PhaseCondition.ValidateAll() if the designated constraints
+// aren't met.
+type PhaseConditionMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m PhaseConditionMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m PhaseConditionMultiError) AllErrors() []error { return m }
+
+// PhaseConditionValidationError is the validation error returned by
+// PhaseCondition.Validate if the designated constraints aren't met.
+type PhaseConditionValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PhaseConditionValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PhaseConditionValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PhaseConditionValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PhaseConditionValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PhaseConditionValidationError) ErrorName() string { return "PhaseConditionValidationError" }
+
+// Error satisfies the builtin error interface
+func (e PhaseConditionValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPhaseCondition.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PhaseConditionValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PhaseConditionValidationError{}
 
 // Validate checks the field values on CompoundCondition with the rules defined
 // in the proto definition for this message. If any rules are violated, the
@@ -1329,11 +1474,118 @@ func (m *TargetSelector) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for SelectorType
-
-	// no validation rules for CharacterId
-
-	// no validation rules for LocationFilter
+	switch v := m.Selector.(type) {
+	case *TargetSelector_SpecificCharacter:
+		if v == nil {
+			err := TargetSelectorValidationError{
+				field:  "Selector",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for SpecificCharacter
+	case *TargetSelector_TriggeringCharacter:
+		if v == nil {
+			err := TargetSelectorValidationError{
+				field:  "Selector",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for TriggeringCharacter
+	case *TargetSelector_Culprit:
+		if v == nil {
+			err := TargetSelectorValidationError{
+				field:  "Selector",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Culprit
+	case *TargetSelector_Victim:
+		if v == nil {
+			err := TargetSelectorValidationError{
+				field:  "Selector",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Victim
+	case *TargetSelector_CharacterWithRole:
+		if v == nil {
+			err := TargetSelectorValidationError{
+				field:  "Selector",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for CharacterWithRole
+	case *TargetSelector_AllCharactersAtLocation:
+		if v == nil {
+			err := TargetSelectorValidationError{
+				field:  "Selector",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for AllCharactersAtLocation
+	case *TargetSelector_AbilityUser:
+		if v == nil {
+			err := TargetSelectorValidationError{
+				field:  "Selector",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for AbilityUser
+	case *TargetSelector_AbilityTarget:
+		if v == nil {
+			err := TargetSelectorValidationError{
+				field:  "Selector",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for AbilityTarget
+	case *TargetSelector_AllCharacters:
+		if v == nil {
+			err := TargetSelectorValidationError{
+				field:  "Selector",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for AllCharacters
+	default:
+		_ = v // ensures v is used
+	}
 
 	if len(errors) > 0 {
 		return TargetSelectorMultiError(errors)

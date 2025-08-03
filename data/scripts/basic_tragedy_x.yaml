@@ -1,0 +1,121 @@
+id: 1
+name: Basic Tragedy X
+description: |
+  A beginner script designed to teach the core mechanics of Tragedy Looper.
+  The Mastermind is the Key Figure, and their goal is to cause a tragedy by manipulating the characters.
+  The Protagonists must uncover the truth and prevent the tragedy from occurring.
+main_plots:
+  1000:
+    id: 1000
+    type: PLOT_TYPE_MAIN_PLOT
+    name: "谋杀计划"
+    description: "The Mastermind plans to commit a series of murders."
+    incident_ids: { }
+    role_assignments: { }
+    # 关键人物 1 / 杀手 1 / 主谋 1
+  1001:
+    id: 1001
+    type: PLOT_TYPE_MAIN_PLOT
+    name: "被封印的邪灵"
+    description: "The Mastermind plans to commit a series of murders."
+    incident_ids: {
+
+    }
+    role_assignments: { }
+    # 主谋 1 / 邪教徒 1
+
+sub_plots: { }
+roles:
+  3001:
+    id: 3001
+    name: "Culprit"
+    limit: 1
+incidents:
+  4001:
+    id: 4001
+    name: "被封印的邪灵"
+    description: "A character is murdered."
+    condition:
+      compound_condition:
+        operator: OPERATOR_AND
+        sub_conditions:
+          - phase_condition:
+              comparator: COMPARATOR_IS
+              phase: GAME_PHASE_LOOP_END
+          - location_condition:
+              comparator: COMPARATOR_IS
+              location: LOCATION_TYPE_SHRINE
+          - stat_condition:
+
+
+
+  4002:
+    id: 4002
+    name: "Missing Person"
+    description: "A character goes missing."
+    triggers:
+      - type: "Goodwill"
+        goodwill:
+          character_id: 5002
+          threshold: 0
+characters:
+  5001:
+    id: 5001
+    name: "Key Figure"
+    initial_stats:
+      paranoia: 2
+      intrigue: 0
+      goodwill:
+        5002: 1
+        5003: 1
+        5004: 1
+  5002:
+    id: 5002
+    name: "Shrine Maiden"
+    initial_stats:
+      paranoia: 0
+      intrigue: 1
+      goodwill:
+        5001: 2
+        5003: 2
+        5004: 2
+  5003:
+    id: 5003
+    name: "Office Worker"
+    initial_stats:
+      paranoia: 1
+      intrigue: 2
+      goodwill:
+        5001: 1
+        5002: 1
+        5004: 1
+  5004:
+    id: 5004
+    name: "Student"
+    initial_stats:
+      paranoia: 0
+      intrigue: 0
+      goodwill:
+        5001: 2
+        5002: 2
+        5003: 2
+mastermind_cards: { }
+protagonist_cards: { }
+script_models:
+  8001:
+    private_info:
+      main_plot_id: 1000
+      sub_plots_ids: [ ]
+      characters_ids:
+        - 5001
+        - 5002
+        - 5003
+        - 5004
+      incident_ids:
+        - 4001
+        - 4002
+    public_info:
+      script_config_id: 1
+      loop_count: 4
+      days_per_loop: 2
+      can_discuss: true
