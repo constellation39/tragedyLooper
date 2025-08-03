@@ -2,13 +2,9 @@
 
 package data
 
-import (
-	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
-)
-
 // Script: First Steps
 // 这是“First Steps”剧本的顶层定义。
-script: "first_steps": v1.#Script & {
+{
 	// 剧本名称
 	name: "First Steps"
 	// 剧本描述

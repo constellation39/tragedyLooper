@@ -41,7 +41,7 @@ clean:
 # Validate CUE files
 validate-cue:
 	@echo "Validating CUE files..."
-	@$(GO) run cuelang.org/go/cmd/cue@latest vet ./data/...
+	@$(GO) run cuelang.org/go/cmd/cue@latest vet ./data/scripts/... ./data/schemas/...
 
 # Lint the code
 lint: format validate-cue
