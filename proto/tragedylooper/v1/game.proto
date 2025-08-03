@@ -25,19 +25,6 @@ message GameState {
   map<int32, Player> players = 8; // Map of all players, keyed by player_id.
 
   map<int32, bool> triggered_incidents = 9; // Set of incidents that have been triggered this loop, keyed by incident name.
-
-  // Deprecated: Event logs are no longer stored in GameState.
-  // repeated GameEvent day_events = 14;
-  // repeated GameEvent loop_events = 15;
-
-  // Deprecated: Character stat limits are defined in CharacterConfig.
-  // map<int32, int32> character_paranoia_limits = 16;
-  // map<int32, int32> character_goodwill_limits = 17;
-  // map<int32, int32> character_intrigue_limits = 18;
-
-  // Deprecated: This information is now derived from the state of individual cards.
-  // map<int32, CardList> played_cards_this_day = 10;
-  // map<int32, bool> played_cards_this_loop = 11;
 }
 
 // Player represents a participant in the game.
