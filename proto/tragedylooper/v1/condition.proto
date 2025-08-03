@@ -9,6 +9,9 @@ option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
 // Condition defines a condition for triggering rules, events, and effects.
 message Condition {
+  // Whether this condition is negated.
+  bool negated = 10;
+
   // The type of the condition.
   oneof condition_type {
     // A stat condition.
@@ -27,7 +30,29 @@ message Condition {
     CompoundCondition compound_condition = 7;
     // A phase condition.
     PhaseCondition phase_condition = 8;
+    // An event history condition.
+    EventHistoryCondition event_history_condition = 9;
   }
+}
+
+// EventHistoryCondition defines a condition based on past game events.
+message EventHistoryCondition {
+  // The type of event to look for.
+  GameEventType event_type = 1;
+  // How many days into the past to look. 0 means today, 1 means today and yesterday, etc.
+  int32 lookback_days = 2;
+  // Optional: Further filter by the character involved in the event.
+  TargetSelector event_target = 3;
+  // The number of times the event must have occurred.
+  int32 count = 4;
+  // The comparator for the count.
+  enum Comparator {
+    COMPARATOR_UNSPECIFIED = 0;
+    EQUAL_TO = 1;
+    GREATER_THAN_OR_EQUAL_TO = 2;
+    LESS_THAN_OR_EQUAL_TO = 3;
+  }
+  Comparator comparator = 5;
 }
 
 // PhaseCondition defines a condition based on the current game phase.
@@ -61,8 +86,6 @@ message CompoundCondition {
     OPERATOR_AND = 1;
     // The logical OR operator.
     OPERATOR_OR = 2;
-    // The logical NOT operator (applies to the first condition).
-    OPERATOR_NOT = 3;
   }
   // The logical operator to use.
   Operator operator = 1;
@@ -95,6 +118,9 @@ message StatCondition {
   Comparator comparator = 3;
   // The value to compare against.
   int32 value = 4;
+  // Optional: A second target to compare against.
+  // If set, the condition compares the stat of 'target' with the stat of 'target_to_compare'.
+  TargetSelector target_to_compare = 5;
 }
 
 // LocationCondition defines a condition based on a character's location.
@@ -103,20 +129,32 @@ message LocationCondition {
   TargetSelector target = 1;
   // The target location.
   LocationType location = 2;
-  // Whether the character is at the location (defaults to true).
-  bool is_at_location = 3;
-  // Whether the character is alone at the location.
-  bool is_alone = 4;
-  // Whether the character is not alone at the location.
-  bool not_alone = 5;
+
+  // The state to check for the character at the location.
+  enum LocationState {
+    // Unspecified state.
+    LOCATION_STATE_UNSPECIFIED = 0;
+    // The character is at the specified location.
+    IS_AT = 1;
+    // The character is NOT at the specified location.
+    IS_NOT_AT = 2;
+    // The character is at the specified location and is alone.
+    IS_ALONE_AT = 3;
+    // The character is at the specified location and is NOT alone.
+    IS_NOT_ALONE_AT = 4;
+  }
+  // The state to check.
+  LocationState state = 3;
 }
 
 // RoleCondition defines a condition based on a character's role.
 message RoleCondition {
   // The target character selector.
   TargetSelector target = 1;
+  // The role to check.
+  int32 role_id = 2;
   // Whether the character has the role (defaults to true).
-  bool has_role = 2;
+  bool has_role = 3;
 }
 
 // TraitCondition defines a condition based on a character's traits.
@@ -168,13 +206,13 @@ message TargetSelector {
     // The victim of the event.
     Empty victim = 4;
     // Any character with a specific role.
-    PlayerRole character_with_role = 5;
+    int32 character_with_role_id = 5;
     // All characters at a specific location.
     LocationType all_characters_at_location = 6;
-    // The user of the ability.
-    Empty ability_user = 7;
-    // The target of the ability.
-    Empty ability_target = 8;
+    // The user of the action (card or ability).
+    Empty action_user = 7;
+    // The target of the action (card or ability).
+    Empty action_target = 8;
     // All characters.
     Empty all_characters = 9;
   }
