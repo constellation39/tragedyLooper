@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package tragedylooper.v1;
 
+import "tragedylooper/v1/common.proto";
 import "tragedylooper/v1/enums.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
@@ -73,17 +74,6 @@ message CompoundCondition {
 message StatCondition {
   // The target character selector.
   TargetSelector target = 1;
-  // The type of stat to check.
-  enum StatType {
-    // Unspecified stat type.
-    STAT_TYPE_UNSPECIFIED = 0;
-    // Paranoia stat.
-    STAT_TYPE_PARANOIA = 1;
-    // Goodwill stat.
-    STAT_TYPE_GOODWILL = 2;
-    // Intrigue stat.
-    STAT_TYPE_INTRIGUE = 3;
-  }
   // The type of stat to check.
   StatType stat_type = 2;
   // The comparator to use.
@@ -171,21 +161,21 @@ message TargetSelector {
   oneof selector {
     // A specific character by ID.
     int32 specific_character = 1;
-    // The character that triggered the event. A boolean marker.
-    bool triggering_character = 2;
-    // The culprit of the event. A boolean marker.
-    bool culprit = 3;
-    // The victim of the event. A boolean marker.
-    bool victim = 4;
+    // The character that triggered the event.
+    Empty triggering_character = 2;
+    // The culprit of the event.
+    Empty culprit = 3;
+    // The victim of the event.
+    Empty victim = 4;
     // Any character with a specific role.
     PlayerRole character_with_role = 5;
     // All characters at a specific location.
     LocationType all_characters_at_location = 6;
-    // The user of the ability. A boolean marker.
-    bool ability_user = 7;
-    // The target of the ability. A boolean marker.
-    bool ability_target = 8;
-    // All characters. A boolean marker.
-    bool all_characters = 9;
+    // The user of the ability.
+    Empty ability_user = 7;
+    // The target of the ability.
+    Empty ability_target = 8;
+    // All characters.
+    Empty all_characters = 9;
   }
 }

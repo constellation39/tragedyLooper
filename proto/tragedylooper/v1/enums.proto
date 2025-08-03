@@ -118,3 +118,11 @@ enum GameEventType {
   GAME_EVENT_TYPE_GAME_ENDED = 23; // 游戏结束事件
   GAME_EVENT_TYPE_PLAYER_ACTION = 24; // 玩家行动事件
 }
+
+// StatType defines the type of character stat.
+enum StatType {
+  STAT_TYPE_UNSPECIFIED = 0;
+  STAT_TYPE_PARANOIA = 1;
+  STAT_TYPE_GOODWILL = 2;
+  STAT_TYPE_INTRIGUE = 3;
+}

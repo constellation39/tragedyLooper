@@ -34,12 +34,7 @@ message Card {
   // Whether the card has been used in the current loop.
   bool used_this_loop = 2;
   // The target of the card's ability.
-  oneof target {
-    // The ID of the target character, if the ability has one.
-    int32 target_character_id = 3;
-    // The target location, if the ability has one.
-    LocationType target_location = 4;
-  }
+  Target target = 3;
 }
 
 // CardList is a list of card instances.

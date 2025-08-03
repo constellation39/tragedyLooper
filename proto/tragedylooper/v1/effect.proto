@@ -58,7 +58,7 @@ message AdjustStatEffect {
   // The target character.
   TargetSelector target = 1;
   // The type of stat to adjust.
-  StatCondition.StatType stat_type = 2;
+  StatType stat_type = 2;
   // The amount to adjust the stat by (positive for increase, negative for decrease).
   int32 amount = 3;
 }

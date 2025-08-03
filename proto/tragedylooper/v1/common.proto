@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package tragedylooper.v1;
+
+import "tragedylooper/v1/enums.proto";
+
+option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
+
+// Target represents a target for a card or ability.
+message Target {
+  oneof target {
+    // The ID of the target character, if the ability has one.
+    int32 target_character_id = 1;
+    // The target location, if the ability has one.
+    LocationType target_location = 2;
+  }
+}
+
+// Empty is a placeholder for messages that have no data.
+message Empty {}
