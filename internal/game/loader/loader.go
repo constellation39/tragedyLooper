@@ -2,11 +2,11 @@ package loader
 
 import (
 	"fmt"
+	"io/ioutil"
 	"path/filepath"
 
-	"cuelang.org/go/cue/cuecontext"
-	"cuelang.org/go/cue/load"
 	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
+	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -53,49 +53,49 @@ func newRepository(modelId int32) *scriptConfig {
 	}
 }
 
+
 // LoadConfig loads all game data from the specified directory and script.
-// It uses a data-driven approach by iterating over a local map that points to the repository's fields.
 func LoadConfig(dataDir, scriptID string, modelId int32) (ScriptConfig, error) {
 	repo := newRepository(modelId)
 
 	// Load the main script file.
-	// CUE's loader will resolve and load all imported dependencies.
-	scriptPath := filepath.Join(dataDir, "scripts", scriptID+".cue")
-	if err := loadDataFromCUE(scriptPath, repo.script); err != nil {
+	scriptPath := filepath.Join(dataDir, "scripts", scriptID+".json")
+	if err := loadDataFromJSON(scriptPath, repo.script); err != nil {
 		return nil, fmt.Errorf("failed to load script '%s': %w", scriptID, err)
 	}
+
+	// After loading, validation would be performed here.
+	// if err := repo.script.Validate(); err != nil {
+	// 	return nil, fmt.Errorf("script validation failed: %w", err)
+	// }
 
 	return repo, nil
 }
 
-// loadDataFromCUE is a generic function that loads and decodes data from a CUE file
+// loadDataFromJSON is a generic function that loads and decodes data from a JSON file
 // into a given protocol buffer message.
-func loadDataFromCUE[T proto.Message](filePath string, data T) error {
+func loadDataFromJSON(filePath string, data proto.Message) error {
 	absPath, err := filepath.Abs(filePath)
 	if err != nil {
 		return fmt.Errorf("failed to get absolute path for %s: %w", filePath, err)
 	}
 
-	c := cuecontext.New()
-	bis := load.Instances([]string{absPath}, nil)
-	if len(bis) == 0 {
-		return fmt.Errorf("no CUE instances found for %s", absPath)
-	}
-	b := bis[0]
-	if err := b.Err; err != nil {
-		return fmt.Errorf("failed to load CUE instance for %s: %w", absPath, err)
-	}
-	v := c.BuildInstance(b)
-	if err := v.Err(); err != nil {
-		return fmt.Errorf("failed to build CUE instance for %s: %w", absPath, err)
+	jsonBytes, err := ioutil.ReadFile(absPath)
+	if err != nil {
+		return fmt.Errorf("failed to read JSON file %s: %w", absPath, err)
 	}
 
-	if err := v.Decode(data); err != nil {
-		return fmt.Errorf("failed to decode CUE from %s: %w", absPath, err)
+	// Using protojson to unmarshal is safer for protobuf messages.
+	// We need to create a new unmarshaler with the option to discard unknown fields,
+	// because the script file may contain extra metadata not defined in the proto.
+	// unmarshaler := protojson.UnmarshalOptions{DiscardUnknown: true}
+	if err := protojson.Unmarshal(jsonBytes, data); err != nil {
+		return fmt.Errorf("failed to unmarshal JSON from %s: %w", absPath, err)
 	}
 
 	return nil
 }
+
 
 func (s *scriptConfig) GetScript() *v1.ScriptConfig {
 	return s.script
