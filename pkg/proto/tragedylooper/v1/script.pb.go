@@ -612,7 +612,7 @@ var File_tragedylooper_v1_script_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_script_proto_rawDesc = "" +
 	"\n" +
-	"\x1dtragedylooper/v1/script.proto\x12\x10tragedylooper.v1\x1a\x14vendor/cue/cue.proto\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1ftragedylooper/v1/incident.proto\x1a tragedylooper/v1/character.proto\x1a\x1btragedylooper/v1/card.proto\x1a\x1etragedylooper/v1/ability.proto\"\xbe\x0f\n" +
+	"\x1dtragedylooper/v1/script.proto\x12\x10tragedylooper.v1\x1a\x14vendor/cue/cue.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1ftragedylooper/v1/incident.proto\x1a tragedylooper/v1/character.proto\x1a\x1btragedylooper/v1/card.proto\x1a\x1etragedylooper/v1/ability.proto\"\xbe\x0f\n" +
 	"\fScriptConfig\x12\x18\n" +
 	"\x02id\x18\x01 \x01(\x05B\b\x82\xa4<\x04{>0}R\x02id\x12!\n" +
 	"\x04name\x18\x02 \x01(\tB\r\x82\xa4<\t{len > 0}R\x04name\x12 \n" +
@@ -810,7 +810,6 @@ func file_tragedylooper_v1_script_proto_init() {
 	if File_tragedylooper_v1_script_proto != nil {
 		return
 	}
-	file_tragedylooper_v1_effect_proto_init()
 	file_tragedylooper_v1_enums_proto_init()
 	file_tragedylooper_v1_incident_proto_init()
 	file_tragedylooper_v1_character_proto_init()

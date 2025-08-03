@@ -48,7 +48,7 @@ type GameEngine interface {
 	// GetGameState returns the current game state.
 	GetGameState() *model.GameState
 	// GetGameRepo returns the game configuration.
-	GetGameRepo() loader.GameConfig
+	GetGameRepo() loader.ScriptConfig
 	// GetCharacterByID retrieves a character by their ID.
 	GetCharacterByID(id int32) *model.Character
 	// MoveCharacter moves a character.

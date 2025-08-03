@@ -1,89 +1,55 @@
+// data/scripts/first_steps.cue
+
 package data
 
 import (
-	"github.com/constellation39/tragedylooper/data/schemas"
 	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
-first_steps: data.#ConstrainedScript & {
-	name:          "First Steps"
-	loop_count:    3
-	days_per_loop: 4
-	win_conditions: [{
-		type: v1.#EndConditionType_END_CONDITION_TYPE_ALL_INCIDENTS_PREVENTED
-	}]
-	lose_conditions: [{
-		type: v1.#EndConditionType_END_CONDITION_TYPE_SPECIFIC_INCIDENT_TRIGGERED
-	}]
-	mastermind_card_ids: [3, 4, 7, 8, 11, 13, 15]
-	protagonist_card_ids: [1, 2, 5, 6, 9, 10, 12, 14]
-	main_plot: {
-		plot_type:   v1.#PlotType_PLOT_TYPE_MAIN_PLOT
-		name:        "MURDER_MYSTERY"
-		description: "The Killer, who is the Doctor, will murder the Target, who is the High School Girl, if they are in the same location and the Killer's paranoia is high enough."
-		incident_ids: []
+// Script: First Steps
+// 这是“First Steps”剧本的顶层定义。
+script: "first_steps": v1.#Script & {
+	// 剧本名称
+	name: "First Steps"
+	// 剧本描述
+	description: """
+		A beginner script designed to teach the core mechanics of Tragedy Looper.
+		The Mastermind is the Key Figure, and their goal is to cause a tragedy by manipulating the characters.
+		The Protagonists must uncover the truth and prevent the tragedy from occurring.
+		"""
+	// 主谋（Mastermind）的定义
+	mastermind: {
+		// 角色名称
+		character: "Key Figure"
+		// 阴谋（plots）列表
+		plots: ["Serial Murder Plan"]
+		// 该剧本中主谋可用的能力
+		abilities: []
 	}
-	sub_plots: [{
-		plot_type:   v1.#PlotType_PLOT_TYPE_SUB_PLOT
-		name:        "HOSPITAL_CONSPIRACY"
-		description: "The Hospital Director, who is the Politician, is covering up a medical error. If their intrigue reaches a certain level, they will cause a scandal."
-		incident_ids: []
-	}]
-	characters: [{
-		character_id:     1
-		hidden_role:      v1.#RoleType_ROLE_TYPE_PERSON
-		initial_location: v1.#LocationType_LOCATION_TYPE_SCHOOL
-	}, {
-		character_id:     2
-		hidden_role:      v1.#RoleType_ROLE_TYPE_KILLER
-		initial_location: v1.#LocationType_LOCATION_TYPE_HOSPITAL
-	}, {
-		character_id:     3
-		hidden_role:      v1.#RoleType_ROLE_TYPE_PERSON
-		initial_location: v1.#LocationType_LOCATION_TYPE_CITY
-	}, {
-		character_id:     35
-		hidden_role:      v1.#RoleType_ROLE_TYPE_CONSPIRACY_THEORIST
-		initial_location: v1.#LocationType_LOCATION_TYPE_CITY
-	}, {
-		character_id:     4
-		hidden_role:      v1.#RoleType_ROLE_TYPE_FRIEND
-		initial_location: v1.#LocationType_LOCATION_TYPE_CITY
-	}, {
-		character_id:     5
-		hidden_role:      v1.#RoleType_ROLE_TYPE_PERSON
-		initial_location: v1.#LocationType_LOCATION_TYPE_CITY
-	}]
-	incidents: [{
-		day:                  2
-		name:                 "Murder"
-		culprit_character_id: 2
-		victim_character_id:  1
-		description:          "A murder occurs at the hospital."
-	}, {
-		day:                  3
-		name:                 "Suicide"
-		culprit_character_id: 35
-		description:          "A key witness commits suicide."
-	}, {
-		name: "Culprit"
-		trigger_conditions: [{
-			stat_condition: {
-				target: {
-					selector_type: "SELECTOR_TYPE_SPECIFIC_CHARACTER"
-					character_id:  2
-				}
-				stat_type:  "STAT_TYPE_PARANOIA"
-				comparator: "COMPARATOR_GREATER_THAN_OR_EQUAL"
-				value:      3
-			}
-		}]
-		effect: add_trait: {
-			target: {
-				selector_type: "SELECTOR_TYPE_SPECIFIC_CHARACTER"
-				character_id:  2
-			}
-			trait: "Culprit"
-		}
-	}]
+	// 剧本中的所有角色列表
+	characters: [
+		"Key Figure",
+		"Shrine Maiden",
+		"Office Worker",
+		"Student",
+	]
+	// 初始事件列表
+	incidents: [
+		"Foul Murder",
+		"Missing Person",
+	]
+	// 最终需要猜测的角色
+	culprits: [
+		"Key Figure",
+	]
+	// 循环（Loops）的总数
+	loops: 4
+	// 每一次循环的天数
+	days: 2
+	// 初始的 불안（Paranoia）值
+	paranoia: 2
+	// 初始的好感（Goodwill）值
+	goodwill: 4
+	// 该剧本中可用的卡牌
+	cards: []
 }

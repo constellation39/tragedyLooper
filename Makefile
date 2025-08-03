@@ -62,7 +62,7 @@ gen: gen-go gen-cue
 gen-go: clean-proto
 	@echo "Generating Go code from protobuf..."
 	@mkdir -p pkg/proto
-	@protoc --proto_path=proto \
+	@protoc --proto_path=proto --proto_path=proto/vendor \
 		--go_out=pkg/proto --go_opt=paths=source_relative \
 		$(PROTO_FILES)
 

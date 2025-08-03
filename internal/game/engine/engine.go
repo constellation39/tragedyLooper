@@ -45,7 +45,7 @@ type GameEngine struct {
 	logger    *zap.Logger
 
 	actionGenerator ai.ActionGenerator
-	gameConfig      loader.GameConfig
+	gameConfig      loader.ScriptConfig
 	pm              *phasehandler.Manager
 	em              *eventhandler.Manager
 
@@ -59,7 +59,7 @@ type GameEngine struct {
 }
 
 // NewGameEngine creates a new game engine instance.
-func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator ai.ActionGenerator, gameConfig loader.GameConfig) (*GameEngine, error) {
+func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator ai.ActionGenerator, gameConfig loader.ScriptConfig) (*GameEngine, error) {
 	ge := &GameEngine{
 		logger:               logger,
 		actionGenerator:      actionGenerator,
@@ -121,15 +121,15 @@ func (ge *GameEngine) initializeGameStateFromScript(players []*model.Player) {
 	}
 
 	for _, charInScript := range script.Characters {
-		charConfig, ok := characterConfigs[charInScript.CharacterId]
+		charConfig, ok := characterConfigs[charInScript.Id]
 		if !ok {
-			ge.logger.Warn("Character in script not found in character config", zap.Int32("charID", charInScript.CharacterId))
+			ge.logger.Warn("Character in script not found in character config", zap.Int32("charID", charInScript.Id))
 			continue
 		}
 
-		ge.GameState.Characters[charInScript.CharacterId] = &model.Character{
+		ge.GameState.Characters[charInScript.Id] = &model.Character{
 			Config:          charConfig,
-			HiddenRole:      charInScript.HiddenRole,
+			HiddenRoleId:    charInScript.Id,
 			CurrentLocation: charInScript.InitialLocation,
 		}
 	}
@@ -329,7 +329,7 @@ func (ge *GameEngine) GetGameState() *model.GameState {
 	return ge.GameState
 }
 
-func (ge *GameEngine) GetGameRepo() loader.GameConfig {
+func (ge *GameEngine) GetGameRepo() loader.ScriptConfig {
 	return ge.gameConfig
 }
 

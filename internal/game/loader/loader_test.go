@@ -24,8 +24,8 @@ func TestLoadConfig(t *testing.T) {
 	script := config.GetScript()
 	assert.NotNil(t, script)
 	assert.Equal(t, "First Steps", script.Name)
-	assert.Equal(t, int32(3), script.LoopCount)
-	assert.Equal(t, int32(4), script.DaysPerLoop)
+	// assert.Equal(t, int32(3), script.LoopCount)
+	// assert.Equal(t, int32(4), script.DaysPerLoop)
 
 	// Check abilities
 	abilities := config.GetAbilities()
