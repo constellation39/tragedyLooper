@@ -8,10 +8,9 @@ import "tragedylooper/v1/enums.proto";
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
 // Condition defines a condition for triggering rules, events, and effects.
+// It uses a oneof to ensure that only one type of condition can be set at a time.
+// For logical negation, use a CompoundCondition with the NOT operator.
 message Condition {
-  // Whether this condition is negated.
-  bool negated = 10;
-
   // The type of the condition.
   oneof condition_type {
     // A stat condition.
@@ -32,6 +31,8 @@ message Condition {
     PhaseCondition phase_condition = 8;
     // An event history condition.
     EventHistoryCondition event_history_condition = 9;
+    // A location character count condition.
+    LocationCharacterCountCondition location_character_count_condition = 11;
   }
 }
 
@@ -46,30 +47,26 @@ message EventHistoryCondition {
   // The number of times the event must have occurred.
   int32 count = 4;
   // The comparator for the count.
-  enum Comparator {
-    COMPARATOR_UNSPECIFIED = 0;
-    EQUAL_TO = 1;
-    GREATER_THAN_OR_EQUAL_TO = 2;
-    LESS_THAN_OR_EQUAL_TO = 3;
-  }
   Comparator comparator = 5;
+
+  // Optional: A filter for the event payload.
+  oneof event_filter {
+    StatAdjustedEventFilter stat_adjusted_event_filter = 6;
+  }
+}
+
+// StatAdjustedEventFilter provides a filter for StatAdjustedEvent.
+message StatAdjustedEventFilter {
+  // Optional: The stat type to match.
+  optional StatType stat_type = 1;
+  // Optional: The amount to compare against.
+  optional int32 amount = 2;
+  // Optional: The comparator for the amount.
+  optional Comparator amount_comparator = 3;
 }
 
 // PhaseCondition defines a condition based on the current game phase.
 message PhaseCondition {
-  // The comparator to use.
-  enum Comparator {
-    // Unspecified comparator.
-    COMPARATOR_UNSPECIFIED = 0;
-    // The current phase is the specified one.
-    COMPARATOR_IS = 1;
-    // The current phase is not the specified one.
-    COMPARATOR_IS_NOT = 2;
-    // The current phase is before the specified one.
-    COMPARATOR_BEFORE = 3;
-    // The current phase is after the specified one.
-    COMPARATOR_AFTER = 4;
-  }
   // The comparator to use.
   Comparator comparator = 1;
   // The target game phase.
@@ -77,6 +74,7 @@ message PhaseCondition {
 }
 
 // CompoundCondition defines a combination of multiple conditions.
+// For NOT, provide exactly one sub-condition.
 message CompoundCondition {
   // The operator to use when combining conditions.
   enum Operator {
@@ -86,6 +84,8 @@ message CompoundCondition {
     OPERATOR_AND = 1;
     // The logical OR operator.
     OPERATOR_OR = 2;
+    // The logical NOT operator.
+    OPERATOR_NOT = 3;
   }
   // The logical operator to use.
   Operator operator = 1;
@@ -100,21 +100,6 @@ message StatCondition {
   // The type of stat to check.
   StatType stat_type = 2;
   // The comparator to use.
-  enum Comparator {
-    // Unspecified comparator.
-    COMPARATOR_UNSPECIFIED = 0;
-    // Greater than.
-    COMPARATOR_GREATER_THAN = 1;
-    // Less than.
-    COMPARATOR_LESS_THAN = 2;
-    // Equal to.
-    COMPARATOR_EQUAL_TO = 3;
-    // Greater than or equal to.
-    COMPARATOR_GREATER_THAN_OR_EQUAL = 4;
-    // Less than or equal to.
-    COMPARATOR_LESS_THAN_OR_EQUAL = 5;
-  }
-  // The comparator to use.
   Comparator comparator = 3;
   // The value to compare against.
   int32 value = 4;
@@ -123,63 +108,45 @@ message StatCondition {
   TargetSelector target_to_compare = 5;
 }
 
-// LocationCondition defines a condition based on a character's location.
+// LocationCondition defines a condition that checks if a character is at a specific location.
+// To check if a character is NOT at a location, use a CompoundCondition with the NOT operator.
 message LocationCondition {
   // The target character selector.
   TargetSelector target = 1;
   // The target location.
   LocationType location = 2;
+}
 
-  // The state to check for the character at the location.
-  enum LocationState {
-    // Unspecified state.
-    LOCATION_STATE_UNSPECIFIED = 0;
-    // The character is at the specified location.
-    IS_AT = 1;
-    // The character is NOT at the specified location.
-    IS_NOT_AT = 2;
-    // The character is at the specified location and is alone.
-    IS_ALONE_AT = 3;
-    // The character is at the specified location and is NOT alone.
-    IS_NOT_ALONE_AT = 4;
-  }
-  // The state to check.
-  LocationState state = 3;
+// LocationCharacterCountCondition defines a condition based on the number of characters at a location.
+message LocationCharacterCountCondition {
+  // The target location.
+  LocationType location = 1;
+  // The comparator to use.
+  Comparator comparator = 2;
+  // The number of characters to compare against.
+  int32 count = 3;
 }
 
 // RoleCondition defines a condition based on a character's role.
+// To check if a character does NOT have a role, use a CompoundCondition with the NOT operator.
 message RoleCondition {
   // The target character selector.
   TargetSelector target = 1;
   // The role to check.
   int32 role_id = 2;
-  // Whether the character has the role (defaults to true).
-  bool has_role = 3;
 }
 
 // TraitCondition defines a condition based on a character's traits.
+// To check if a character does NOT have a trait, use a CompoundCondition with the NOT operator.
 message TraitCondition {
   // The target character selector.
   TargetSelector target = 1;
   // The target trait.
   string trait = 2;
-  // Whether the character has the trait (defaults to true).
-  bool has_trait = 3;
 }
 
 // DayCondition defines a condition based on the current day.
 message DayCondition {
-  // The comparator to use.
-  enum Comparator {
-    // Unspecified comparator.
-    COMPARATOR_UNSPECIFIED = 0;
-    // Before a certain day.
-    COMPARATOR_BEFORE = 1;
-    // On a certain day.
-    COMPARATOR_ON = 2;
-    // After a certain day.
-    COMPARATOR_AFTER = 3;
-  }
   // The comparator to use.
   Comparator comparator = 1;
   // The target day.
@@ -195,6 +162,9 @@ message PlayerCondition {
 
 // TargetSelector defines a dynamic target for conditions or effects.
 // It uses a oneof to ensure that only one type of selector can be set at a time.
+// When a selector can potentially match multiple characters (e.g., all_characters_at_location),
+// and it is used in a context that evaluates a condition (like StatCondition),
+// the condition is considered true if *any* of the matched characters satisfy the condition.
 message TargetSelector {
   oneof selector {
     // A specific character by ID.

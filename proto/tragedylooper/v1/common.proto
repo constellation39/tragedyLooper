@@ -21,3 +21,22 @@ message Choice {
     int32 effect_option_index = 6; // 用于复合效果中的效果选择
   }
 }
+
+// Comparator defines a universal set of comparison operators.
+// This is used across various condition types to ensure consistency.
+enum Comparator {
+  // Unspecified comparator.
+  COMPARATOR_UNSPECIFIED = 0;
+  // Equal to.
+  EQUAL_TO = 1;
+  // Not equal to.
+  NOT_EQUAL_TO = 2;
+  // Greater than.
+  GREATER_THAN = 3;
+  // Less than.
+  LESS_THAN = 4;
+  // Greater than or equal to.
+  GREATER_THAN_OR_EQUAL_TO = 5;
+  // Less than or equal to.
+  LESS_THAN_OR_EQUAL_TO = 6;
+}

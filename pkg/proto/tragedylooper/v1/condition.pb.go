@@ -21,120 +21,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// The comparator for the count.
-type EventHistoryCondition_Comparator int32
-
-const (
-	EventHistoryCondition_COMPARATOR_UNSPECIFIED   EventHistoryCondition_Comparator = 0
-	EventHistoryCondition_EQUAL_TO                 EventHistoryCondition_Comparator = 1
-	EventHistoryCondition_GREATER_THAN_OR_EQUAL_TO EventHistoryCondition_Comparator = 2
-	EventHistoryCondition_LESS_THAN_OR_EQUAL_TO    EventHistoryCondition_Comparator = 3
-)
-
-// Enum value maps for EventHistoryCondition_Comparator.
-var (
-	EventHistoryCondition_Comparator_name = map[int32]string{
-		0: "COMPARATOR_UNSPECIFIED",
-		1: "EQUAL_TO",
-		2: "GREATER_THAN_OR_EQUAL_TO",
-		3: "LESS_THAN_OR_EQUAL_TO",
-	}
-	EventHistoryCondition_Comparator_value = map[string]int32{
-		"COMPARATOR_UNSPECIFIED":   0,
-		"EQUAL_TO":                 1,
-		"GREATER_THAN_OR_EQUAL_TO": 2,
-		"LESS_THAN_OR_EQUAL_TO":    3,
-	}
-)
-
-func (x EventHistoryCondition_Comparator) Enum() *EventHistoryCondition_Comparator {
-	p := new(EventHistoryCondition_Comparator)
-	*p = x
-	return p
-}
-
-func (x EventHistoryCondition_Comparator) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (EventHistoryCondition_Comparator) Descriptor() protoreflect.EnumDescriptor {
-	return file_tragedylooper_v1_condition_proto_enumTypes[0].Descriptor()
-}
-
-func (EventHistoryCondition_Comparator) Type() protoreflect.EnumType {
-	return &file_tragedylooper_v1_condition_proto_enumTypes[0]
-}
-
-func (x EventHistoryCondition_Comparator) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use EventHistoryCondition_Comparator.Descriptor instead.
-func (EventHistoryCondition_Comparator) EnumDescriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{1, 0}
-}
-
-// The comparator to use.
-type PhaseCondition_Comparator int32
-
-const (
-	// Unspecified comparator.
-	PhaseCondition_COMPARATOR_UNSPECIFIED PhaseCondition_Comparator = 0
-	// The current phase is the specified one.
-	PhaseCondition_COMPARATOR_IS PhaseCondition_Comparator = 1
-	// The current phase is not the specified one.
-	PhaseCondition_COMPARATOR_IS_NOT PhaseCondition_Comparator = 2
-	// The current phase is before the specified one.
-	PhaseCondition_COMPARATOR_BEFORE PhaseCondition_Comparator = 3
-	// The current phase is after the specified one.
-	PhaseCondition_COMPARATOR_AFTER PhaseCondition_Comparator = 4
-)
-
-// Enum value maps for PhaseCondition_Comparator.
-var (
-	PhaseCondition_Comparator_name = map[int32]string{
-		0: "COMPARATOR_UNSPECIFIED",
-		1: "COMPARATOR_IS",
-		2: "COMPARATOR_IS_NOT",
-		3: "COMPARATOR_BEFORE",
-		4: "COMPARATOR_AFTER",
-	}
-	PhaseCondition_Comparator_value = map[string]int32{
-		"COMPARATOR_UNSPECIFIED": 0,
-		"COMPARATOR_IS":          1,
-		"COMPARATOR_IS_NOT":      2,
-		"COMPARATOR_BEFORE":      3,
-		"COMPARATOR_AFTER":       4,
-	}
-)
-
-func (x PhaseCondition_Comparator) Enum() *PhaseCondition_Comparator {
-	p := new(PhaseCondition_Comparator)
-	*p = x
-	return p
-}
-
-func (x PhaseCondition_Comparator) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (PhaseCondition_Comparator) Descriptor() protoreflect.EnumDescriptor {
-	return file_tragedylooper_v1_condition_proto_enumTypes[1].Descriptor()
-}
-
-func (PhaseCondition_Comparator) Type() protoreflect.EnumType {
-	return &file_tragedylooper_v1_condition_proto_enumTypes[1]
-}
-
-func (x PhaseCondition_Comparator) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use PhaseCondition_Comparator.Descriptor instead.
-func (PhaseCondition_Comparator) EnumDescriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{2, 0}
-}
-
 // The operator to use when combining conditions.
 type CompoundCondition_Operator int32
 
@@ -145,6 +31,8 @@ const (
 	CompoundCondition_OPERATOR_AND CompoundCondition_Operator = 1
 	// The logical OR operator.
 	CompoundCondition_OPERATOR_OR CompoundCondition_Operator = 2
+	// The logical NOT operator.
+	CompoundCondition_OPERATOR_NOT CompoundCondition_Operator = 3
 )
 
 // Enum value maps for CompoundCondition_Operator.
@@ -153,11 +41,13 @@ var (
 		0: "OPERATOR_UNSPECIFIED",
 		1: "OPERATOR_AND",
 		2: "OPERATOR_OR",
+		3: "OPERATOR_NOT",
 	}
 	CompoundCondition_Operator_value = map[string]int32{
 		"OPERATOR_UNSPECIFIED": 0,
 		"OPERATOR_AND":         1,
 		"OPERATOR_OR":          2,
+		"OPERATOR_NOT":         3,
 	}
 )
 
@@ -172,11 +62,11 @@ func (x CompoundCondition_Operator) String() string {
 }
 
 func (CompoundCondition_Operator) Descriptor() protoreflect.EnumDescriptor {
-	return file_tragedylooper_v1_condition_proto_enumTypes[2].Descriptor()
+	return file_tragedylooper_v1_condition_proto_enumTypes[0].Descriptor()
 }
 
 func (CompoundCondition_Operator) Type() protoreflect.EnumType {
-	return &file_tragedylooper_v1_condition_proto_enumTypes[2]
+	return &file_tragedylooper_v1_condition_proto_enumTypes[0]
 }
 
 func (x CompoundCondition_Operator) Number() protoreflect.EnumNumber {
@@ -185,197 +75,14 @@ func (x CompoundCondition_Operator) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use CompoundCondition_Operator.Descriptor instead.
 func (CompoundCondition_Operator) EnumDescriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{3, 0}
-}
-
-// The comparator to use.
-type StatCondition_Comparator int32
-
-const (
-	// Unspecified comparator.
-	StatCondition_COMPARATOR_UNSPECIFIED StatCondition_Comparator = 0
-	// Greater than.
-	StatCondition_COMPARATOR_GREATER_THAN StatCondition_Comparator = 1
-	// Less than.
-	StatCondition_COMPARATOR_LESS_THAN StatCondition_Comparator = 2
-	// Equal to.
-	StatCondition_COMPARATOR_EQUAL_TO StatCondition_Comparator = 3
-	// Greater than or equal to.
-	StatCondition_COMPARATOR_GREATER_THAN_OR_EQUAL StatCondition_Comparator = 4
-	// Less than or equal to.
-	StatCondition_COMPARATOR_LESS_THAN_OR_EQUAL StatCondition_Comparator = 5
-)
-
-// Enum value maps for StatCondition_Comparator.
-var (
-	StatCondition_Comparator_name = map[int32]string{
-		0: "COMPARATOR_UNSPECIFIED",
-		1: "COMPARATOR_GREATER_THAN",
-		2: "COMPARATOR_LESS_THAN",
-		3: "COMPARATOR_EQUAL_TO",
-		4: "COMPARATOR_GREATER_THAN_OR_EQUAL",
-		5: "COMPARATOR_LESS_THAN_OR_EQUAL",
-	}
-	StatCondition_Comparator_value = map[string]int32{
-		"COMPARATOR_UNSPECIFIED":           0,
-		"COMPARATOR_GREATER_THAN":          1,
-		"COMPARATOR_LESS_THAN":             2,
-		"COMPARATOR_EQUAL_TO":              3,
-		"COMPARATOR_GREATER_THAN_OR_EQUAL": 4,
-		"COMPARATOR_LESS_THAN_OR_EQUAL":    5,
-	}
-)
-
-func (x StatCondition_Comparator) Enum() *StatCondition_Comparator {
-	p := new(StatCondition_Comparator)
-	*p = x
-	return p
-}
-
-func (x StatCondition_Comparator) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (StatCondition_Comparator) Descriptor() protoreflect.EnumDescriptor {
-	return file_tragedylooper_v1_condition_proto_enumTypes[3].Descriptor()
-}
-
-func (StatCondition_Comparator) Type() protoreflect.EnumType {
-	return &file_tragedylooper_v1_condition_proto_enumTypes[3]
-}
-
-func (x StatCondition_Comparator) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use StatCondition_Comparator.Descriptor instead.
-func (StatCondition_Comparator) EnumDescriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{4, 0}
 }
 
-// The state to check for the character at the location.
-type LocationCondition_LocationState int32
-
-const (
-	// Unspecified state.
-	LocationCondition_LOCATION_STATE_UNSPECIFIED LocationCondition_LocationState = 0
-	// The character is at the specified location.
-	LocationCondition_IS_AT LocationCondition_LocationState = 1
-	// The character is NOT at the specified location.
-	LocationCondition_IS_NOT_AT LocationCondition_LocationState = 2
-	// The character is at the specified location and is alone.
-	LocationCondition_IS_ALONE_AT LocationCondition_LocationState = 3
-	// The character is at the specified location and is NOT alone.
-	LocationCondition_IS_NOT_ALONE_AT LocationCondition_LocationState = 4
-)
-
-// Enum value maps for LocationCondition_LocationState.
-var (
-	LocationCondition_LocationState_name = map[int32]string{
-		0: "LOCATION_STATE_UNSPECIFIED",
-		1: "IS_AT",
-		2: "IS_NOT_AT",
-		3: "IS_ALONE_AT",
-		4: "IS_NOT_ALONE_AT",
-	}
-	LocationCondition_LocationState_value = map[string]int32{
-		"LOCATION_STATE_UNSPECIFIED": 0,
-		"IS_AT":                      1,
-		"IS_NOT_AT":                  2,
-		"IS_ALONE_AT":                3,
-		"IS_NOT_ALONE_AT":            4,
-	}
-)
-
-func (x LocationCondition_LocationState) Enum() *LocationCondition_LocationState {
-	p := new(LocationCondition_LocationState)
-	*p = x
-	return p
-}
-
-func (x LocationCondition_LocationState) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (LocationCondition_LocationState) Descriptor() protoreflect.EnumDescriptor {
-	return file_tragedylooper_v1_condition_proto_enumTypes[4].Descriptor()
-}
-
-func (LocationCondition_LocationState) Type() protoreflect.EnumType {
-	return &file_tragedylooper_v1_condition_proto_enumTypes[4]
-}
-
-func (x LocationCondition_LocationState) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use LocationCondition_LocationState.Descriptor instead.
-func (LocationCondition_LocationState) EnumDescriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{5, 0}
-}
-
-// The comparator to use.
-type DayCondition_Comparator int32
-
-const (
-	// Unspecified comparator.
-	DayCondition_COMPARATOR_UNSPECIFIED DayCondition_Comparator = 0
-	// Before a certain day.
-	DayCondition_COMPARATOR_BEFORE DayCondition_Comparator = 1
-	// On a certain day.
-	DayCondition_COMPARATOR_ON DayCondition_Comparator = 2
-	// After a certain day.
-	DayCondition_COMPARATOR_AFTER DayCondition_Comparator = 3
-)
-
-// Enum value maps for DayCondition_Comparator.
-var (
-	DayCondition_Comparator_name = map[int32]string{
-		0: "COMPARATOR_UNSPECIFIED",
-		1: "COMPARATOR_BEFORE",
-		2: "COMPARATOR_ON",
-		3: "COMPARATOR_AFTER",
-	}
-	DayCondition_Comparator_value = map[string]int32{
-		"COMPARATOR_UNSPECIFIED": 0,
-		"COMPARATOR_BEFORE":      1,
-		"COMPARATOR_ON":          2,
-		"COMPARATOR_AFTER":       3,
-	}
-)
-
-func (x DayCondition_Comparator) Enum() *DayCondition_Comparator {
-	p := new(DayCondition_Comparator)
-	*p = x
-	return p
-}
-
-func (x DayCondition_Comparator) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (DayCondition_Comparator) Descriptor() protoreflect.EnumDescriptor {
-	return file_tragedylooper_v1_condition_proto_enumTypes[5].Descriptor()
-}
-
-func (DayCondition_Comparator) Type() protoreflect.EnumType {
-	return &file_tragedylooper_v1_condition_proto_enumTypes[5]
-}
-
-func (x DayCondition_Comparator) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use DayCondition_Comparator.Descriptor instead.
-func (DayCondition_Comparator) EnumDescriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{8, 0}
-}
-
 // Condition defines a condition for triggering rules, events, and effects.
+// It uses a oneof to ensure that only one type of condition can be set at a time.
+// For logical negation, use a CompoundCondition with the NOT operator.
 type Condition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Whether this condition is negated.
-	Negated bool `protobuf:"varint,10,opt,name=negated,proto3" json:"negated,omitempty"`
 	// The type of the condition.
 	//
 	// Types that are valid to be assigned to ConditionType:
@@ -389,6 +96,7 @@ type Condition struct {
 	//	*Condition_CompoundCondition
 	//	*Condition_PhaseCondition
 	//	*Condition_EventHistoryCondition
+	//	*Condition_LocationCharacterCountCondition
 	ConditionType isCondition_ConditionType `protobuf_oneof:"condition_type"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -422,13 +130,6 @@ func (x *Condition) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Condition.ProtoReflect.Descriptor instead.
 func (*Condition) Descriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *Condition) GetNegated() bool {
-	if x != nil {
-		return x.Negated
-	}
-	return false
 }
 
 func (x *Condition) GetConditionType() isCondition_ConditionType {
@@ -519,6 +220,15 @@ func (x *Condition) GetEventHistoryCondition() *EventHistoryCondition {
 	return nil
 }
 
+func (x *Condition) GetLocationCharacterCountCondition() *LocationCharacterCountCondition {
+	if x != nil {
+		if x, ok := x.ConditionType.(*Condition_LocationCharacterCountCondition); ok {
+			return x.LocationCharacterCountCondition
+		}
+	}
+	return nil
+}
+
 type isCondition_ConditionType interface {
 	isCondition_ConditionType()
 }
@@ -568,6 +278,11 @@ type Condition_EventHistoryCondition struct {
 	EventHistoryCondition *EventHistoryCondition `protobuf:"bytes,9,opt,name=event_history_condition,json=eventHistoryCondition,proto3,oneof"`
 }
 
+type Condition_LocationCharacterCountCondition struct {
+	// A location character count condition.
+	LocationCharacterCountCondition *LocationCharacterCountCondition `protobuf:"bytes,11,opt,name=location_character_count_condition,json=locationCharacterCountCondition,proto3,oneof"`
+}
+
 func (*Condition_StatCondition) isCondition_ConditionType() {}
 
 func (*Condition_LocationCondition) isCondition_ConditionType() {}
@@ -586,6 +301,8 @@ func (*Condition_PhaseCondition) isCondition_ConditionType() {}
 
 func (*Condition_EventHistoryCondition) isCondition_ConditionType() {}
 
+func (*Condition_LocationCharacterCountCondition) isCondition_ConditionType() {}
+
 // EventHistoryCondition defines a condition based on past game events.
 type EventHistoryCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -596,8 +313,15 @@ type EventHistoryCondition struct {
 	// Optional: Further filter by the character involved in the event.
 	EventTarget *TargetSelector `protobuf:"bytes,3,opt,name=event_target,json=eventTarget,proto3" json:"event_target,omitempty"`
 	// The number of times the event must have occurred.
-	Count         int32                            `protobuf:"varint,4,opt,name=count,proto3" json:"count,omitempty"`
-	Comparator    EventHistoryCondition_Comparator `protobuf:"varint,5,opt,name=comparator,proto3,enum=tragedylooper.v1.EventHistoryCondition_Comparator" json:"comparator,omitempty"`
+	Count int32 `protobuf:"varint,4,opt,name=count,proto3" json:"count,omitempty"`
+	// The comparator for the count.
+	Comparator Comparator `protobuf:"varint,5,opt,name=comparator,proto3,enum=tragedylooper.v1.Comparator" json:"comparator,omitempty"`
+	// Optional: A filter for the event payload.
+	//
+	// Types that are valid to be assigned to EventFilter:
+	//
+	//	*EventHistoryCondition_StatAdjustedEventFilter
+	EventFilter   isEventHistoryCondition_EventFilter `protobuf_oneof:"event_filter"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -660,18 +384,108 @@ func (x *EventHistoryCondition) GetCount() int32 {
 	return 0
 }
 
-func (x *EventHistoryCondition) GetComparator() EventHistoryCondition_Comparator {
+func (x *EventHistoryCondition) GetComparator() Comparator {
 	if x != nil {
 		return x.Comparator
 	}
-	return EventHistoryCondition_COMPARATOR_UNSPECIFIED
+	return Comparator_COMPARATOR_UNSPECIFIED
+}
+
+func (x *EventHistoryCondition) GetEventFilter() isEventHistoryCondition_EventFilter {
+	if x != nil {
+		return x.EventFilter
+	}
+	return nil
+}
+
+func (x *EventHistoryCondition) GetStatAdjustedEventFilter() *StatAdjustedEventFilter {
+	if x != nil {
+		if x, ok := x.EventFilter.(*EventHistoryCondition_StatAdjustedEventFilter); ok {
+			return x.StatAdjustedEventFilter
+		}
+	}
+	return nil
+}
+
+type isEventHistoryCondition_EventFilter interface {
+	isEventHistoryCondition_EventFilter()
+}
+
+type EventHistoryCondition_StatAdjustedEventFilter struct {
+	StatAdjustedEventFilter *StatAdjustedEventFilter `protobuf:"bytes,6,opt,name=stat_adjusted_event_filter,json=statAdjustedEventFilter,proto3,oneof"`
+}
+
+func (*EventHistoryCondition_StatAdjustedEventFilter) isEventHistoryCondition_EventFilter() {}
+
+// StatAdjustedEventFilter provides a filter for StatAdjustedEvent.
+type StatAdjustedEventFilter struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Optional: The stat type to match.
+	StatType *StatType `protobuf:"varint,1,opt,name=stat_type,json=statType,proto3,enum=tragedylooper.v1.StatType,oneof" json:"stat_type,omitempty"`
+	// Optional: The amount to compare against.
+	Amount *int32 `protobuf:"varint,2,opt,name=amount,proto3,oneof" json:"amount,omitempty"`
+	// Optional: The comparator for the amount.
+	AmountComparator *Comparator `protobuf:"varint,3,opt,name=amount_comparator,json=amountComparator,proto3,enum=tragedylooper.v1.Comparator,oneof" json:"amount_comparator,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *StatAdjustedEventFilter) Reset() {
+	*x = StatAdjustedEventFilter{}
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StatAdjustedEventFilter) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StatAdjustedEventFilter) ProtoMessage() {}
+
+func (x *StatAdjustedEventFilter) ProtoReflect() protoreflect.Message {
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StatAdjustedEventFilter.ProtoReflect.Descriptor instead.
+func (*StatAdjustedEventFilter) Descriptor() ([]byte, []int) {
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *StatAdjustedEventFilter) GetStatType() StatType {
+	if x != nil && x.StatType != nil {
+		return *x.StatType
+	}
+	return StatType_STAT_TYPE_UNSPECIFIED
+}
+
+func (x *StatAdjustedEventFilter) GetAmount() int32 {
+	if x != nil && x.Amount != nil {
+		return *x.Amount
+	}
+	return 0
+}
+
+func (x *StatAdjustedEventFilter) GetAmountComparator() Comparator {
+	if x != nil && x.AmountComparator != nil {
+		return *x.AmountComparator
+	}
+	return Comparator_COMPARATOR_UNSPECIFIED
 }
 
 // PhaseCondition defines a condition based on the current game phase.
 type PhaseCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The comparator to use.
-	Comparator PhaseCondition_Comparator `protobuf:"varint,1,opt,name=comparator,proto3,enum=tragedylooper.v1.PhaseCondition_Comparator" json:"comparator,omitempty"`
+	Comparator Comparator `protobuf:"varint,1,opt,name=comparator,proto3,enum=tragedylooper.v1.Comparator" json:"comparator,omitempty"`
 	// The target game phase.
 	Phase         GamePhase `protobuf:"varint,2,opt,name=phase,proto3,enum=tragedylooper.v1.GamePhase" json:"phase,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -680,7 +494,7 @@ type PhaseCondition struct {
 
 func (x *PhaseCondition) Reset() {
 	*x = PhaseCondition{}
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[2]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -692,7 +506,7 @@ func (x *PhaseCondition) String() string {
 func (*PhaseCondition) ProtoMessage() {}
 
 func (x *PhaseCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[2]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -705,14 +519,14 @@ func (x *PhaseCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PhaseCondition.ProtoReflect.Descriptor instead.
 func (*PhaseCondition) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{2}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *PhaseCondition) GetComparator() PhaseCondition_Comparator {
+func (x *PhaseCondition) GetComparator() Comparator {
 	if x != nil {
 		return x.Comparator
 	}
-	return PhaseCondition_COMPARATOR_UNSPECIFIED
+	return Comparator_COMPARATOR_UNSPECIFIED
 }
 
 func (x *PhaseCondition) GetPhase() GamePhase {
@@ -723,6 +537,7 @@ func (x *PhaseCondition) GetPhase() GamePhase {
 }
 
 // CompoundCondition defines a combination of multiple conditions.
+// For NOT, provide exactly one sub-condition.
 type CompoundCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The logical operator to use.
@@ -735,7 +550,7 @@ type CompoundCondition struct {
 
 func (x *CompoundCondition) Reset() {
 	*x = CompoundCondition{}
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -747,7 +562,7 @@ func (x *CompoundCondition) String() string {
 func (*CompoundCondition) ProtoMessage() {}
 
 func (x *CompoundCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -760,7 +575,7 @@ func (x *CompoundCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CompoundCondition.ProtoReflect.Descriptor instead.
 func (*CompoundCondition) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{3}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *CompoundCondition) GetOperator() CompoundCondition_Operator {
@@ -785,7 +600,7 @@ type StatCondition struct {
 	// The type of stat to check.
 	StatType StatType `protobuf:"varint,2,opt,name=stat_type,json=statType,proto3,enum=tragedylooper.v1.StatType" json:"stat_type,omitempty"`
 	// The comparator to use.
-	Comparator StatCondition_Comparator `protobuf:"varint,3,opt,name=comparator,proto3,enum=tragedylooper.v1.StatCondition_Comparator" json:"comparator,omitempty"`
+	Comparator Comparator `protobuf:"varint,3,opt,name=comparator,proto3,enum=tragedylooper.v1.Comparator" json:"comparator,omitempty"`
 	// The value to compare against.
 	Value int32 `protobuf:"varint,4,opt,name=value,proto3" json:"value,omitempty"`
 	// Optional: A second target to compare against.
@@ -797,7 +612,7 @@ type StatCondition struct {
 
 func (x *StatCondition) Reset() {
 	*x = StatCondition{}
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[4]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -809,7 +624,7 @@ func (x *StatCondition) String() string {
 func (*StatCondition) ProtoMessage() {}
 
 func (x *StatCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[4]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -822,7 +637,7 @@ func (x *StatCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatCondition.ProtoReflect.Descriptor instead.
 func (*StatCondition) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{4}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *StatCondition) GetTarget() *TargetSelector {
@@ -839,11 +654,11 @@ func (x *StatCondition) GetStatType() StatType {
 	return StatType_STAT_TYPE_UNSPECIFIED
 }
 
-func (x *StatCondition) GetComparator() StatCondition_Comparator {
+func (x *StatCondition) GetComparator() Comparator {
 	if x != nil {
 		return x.Comparator
 	}
-	return StatCondition_COMPARATOR_UNSPECIFIED
+	return Comparator_COMPARATOR_UNSPECIFIED
 }
 
 func (x *StatCondition) GetValue() int32 {
@@ -860,22 +675,21 @@ func (x *StatCondition) GetTargetToCompare() *TargetSelector {
 	return nil
 }
 
-// LocationCondition defines a condition based on a character's location.
+// LocationCondition defines a condition that checks if a character is at a specific location.
+// To check if a character is NOT at a location, use a CompoundCondition with the NOT operator.
 type LocationCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The target character selector.
 	Target *TargetSelector `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
 	// The target location.
-	Location LocationType `protobuf:"varint,2,opt,name=location,proto3,enum=tragedylooper.v1.LocationType" json:"location,omitempty"`
-	// The state to check.
-	State         LocationCondition_LocationState `protobuf:"varint,3,opt,name=state,proto3,enum=tragedylooper.v1.LocationCondition_LocationState" json:"state,omitempty"`
+	Location      LocationType `protobuf:"varint,2,opt,name=location,proto3,enum=tragedylooper.v1.LocationType" json:"location,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *LocationCondition) Reset() {
 	*x = LocationCondition{}
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[5]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -887,7 +701,7 @@ func (x *LocationCondition) String() string {
 func (*LocationCondition) ProtoMessage() {}
 
 func (x *LocationCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[5]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -900,7 +714,7 @@ func (x *LocationCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LocationCondition.ProtoReflect.Descriptor instead.
 func (*LocationCondition) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{5}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *LocationCondition) GetTarget() *TargetSelector {
@@ -917,29 +731,85 @@ func (x *LocationCondition) GetLocation() LocationType {
 	return LocationType_LOCATION_TYPE_UNSPECIFIED
 }
 
-func (x *LocationCondition) GetState() LocationCondition_LocationState {
+// LocationCharacterCountCondition defines a condition based on the number of characters at a location.
+type LocationCharacterCountCondition struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The target location.
+	Location LocationType `protobuf:"varint,1,opt,name=location,proto3,enum=tragedylooper.v1.LocationType" json:"location,omitempty"`
+	// The comparator to use.
+	Comparator Comparator `protobuf:"varint,2,opt,name=comparator,proto3,enum=tragedylooper.v1.Comparator" json:"comparator,omitempty"`
+	// The number of characters to compare against.
+	Count         int32 `protobuf:"varint,3,opt,name=count,proto3" json:"count,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LocationCharacterCountCondition) Reset() {
+	*x = LocationCharacterCountCondition{}
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LocationCharacterCountCondition) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LocationCharacterCountCondition) ProtoMessage() {}
+
+func (x *LocationCharacterCountCondition) ProtoReflect() protoreflect.Message {
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[7]
 	if x != nil {
-		return x.State
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
 	}
-	return LocationCondition_LOCATION_STATE_UNSPECIFIED
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LocationCharacterCountCondition.ProtoReflect.Descriptor instead.
+func (*LocationCharacterCountCondition) Descriptor() ([]byte, []int) {
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *LocationCharacterCountCondition) GetLocation() LocationType {
+	if x != nil {
+		return x.Location
+	}
+	return LocationType_LOCATION_TYPE_UNSPECIFIED
+}
+
+func (x *LocationCharacterCountCondition) GetComparator() Comparator {
+	if x != nil {
+		return x.Comparator
+	}
+	return Comparator_COMPARATOR_UNSPECIFIED
+}
+
+func (x *LocationCharacterCountCondition) GetCount() int32 {
+	if x != nil {
+		return x.Count
+	}
+	return 0
 }
 
 // RoleCondition defines a condition based on a character's role.
+// To check if a character does NOT have a role, use a CompoundCondition with the NOT operator.
 type RoleCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The target character selector.
 	Target *TargetSelector `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
 	// The role to check.
-	RoleId int32 `protobuf:"varint,2,opt,name=role_id,json=roleId,proto3" json:"role_id,omitempty"`
-	// Whether the character has the role (defaults to true).
-	HasRole       bool `protobuf:"varint,3,opt,name=has_role,json=hasRole,proto3" json:"has_role,omitempty"`
+	RoleId        int32 `protobuf:"varint,2,opt,name=role_id,json=roleId,proto3" json:"role_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RoleCondition) Reset() {
 	*x = RoleCondition{}
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[6]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -951,7 +821,7 @@ func (x *RoleCondition) String() string {
 func (*RoleCondition) ProtoMessage() {}
 
 func (x *RoleCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[6]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -964,7 +834,7 @@ func (x *RoleCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleCondition.ProtoReflect.Descriptor instead.
 func (*RoleCondition) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{6}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *RoleCondition) GetTarget() *TargetSelector {
@@ -981,29 +851,21 @@ func (x *RoleCondition) GetRoleId() int32 {
 	return 0
 }
 
-func (x *RoleCondition) GetHasRole() bool {
-	if x != nil {
-		return x.HasRole
-	}
-	return false
-}
-
 // TraitCondition defines a condition based on a character's traits.
+// To check if a character does NOT have a trait, use a CompoundCondition with the NOT operator.
 type TraitCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The target character selector.
 	Target *TargetSelector `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
 	// The target trait.
-	Trait string `protobuf:"bytes,2,opt,name=trait,proto3" json:"trait,omitempty"`
-	// Whether the character has the trait (defaults to true).
-	HasTrait      bool `protobuf:"varint,3,opt,name=has_trait,json=hasTrait,proto3" json:"has_trait,omitempty"`
+	Trait         string `protobuf:"bytes,2,opt,name=trait,proto3" json:"trait,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TraitCondition) Reset() {
 	*x = TraitCondition{}
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[7]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1015,7 +877,7 @@ func (x *TraitCondition) String() string {
 func (*TraitCondition) ProtoMessage() {}
 
 func (x *TraitCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[7]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1028,7 +890,7 @@ func (x *TraitCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TraitCondition.ProtoReflect.Descriptor instead.
 func (*TraitCondition) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{7}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *TraitCondition) GetTarget() *TargetSelector {
@@ -1045,18 +907,11 @@ func (x *TraitCondition) GetTrait() string {
 	return ""
 }
 
-func (x *TraitCondition) GetHasTrait() bool {
-	if x != nil {
-		return x.HasTrait
-	}
-	return false
-}
-
 // DayCondition defines a condition based on the current day.
 type DayCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The comparator to use.
-	Comparator DayCondition_Comparator `protobuf:"varint,1,opt,name=comparator,proto3,enum=tragedylooper.v1.DayCondition_Comparator" json:"comparator,omitempty"`
+	Comparator Comparator `protobuf:"varint,1,opt,name=comparator,proto3,enum=tragedylooper.v1.Comparator" json:"comparator,omitempty"`
 	// The target day.
 	Day           int32 `protobuf:"varint,2,opt,name=day,proto3" json:"day,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1065,7 +920,7 @@ type DayCondition struct {
 
 func (x *DayCondition) Reset() {
 	*x = DayCondition{}
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[8]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1077,7 +932,7 @@ func (x *DayCondition) String() string {
 func (*DayCondition) ProtoMessage() {}
 
 func (x *DayCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[8]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1090,14 +945,14 @@ func (x *DayCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DayCondition.ProtoReflect.Descriptor instead.
 func (*DayCondition) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{8}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *DayCondition) GetComparator() DayCondition_Comparator {
+func (x *DayCondition) GetComparator() Comparator {
 	if x != nil {
 		return x.Comparator
 	}
-	return DayCondition_COMPARATOR_UNSPECIFIED
+	return Comparator_COMPARATOR_UNSPECIFIED
 }
 
 func (x *DayCondition) GetDay() int32 {
@@ -1118,7 +973,7 @@ type PlayerCondition struct {
 
 func (x *PlayerCondition) Reset() {
 	*x = PlayerCondition{}
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[9]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1130,7 +985,7 @@ func (x *PlayerCondition) String() string {
 func (*PlayerCondition) ProtoMessage() {}
 
 func (x *PlayerCondition) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[9]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1143,7 +998,7 @@ func (x *PlayerCondition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlayerCondition.ProtoReflect.Descriptor instead.
 func (*PlayerCondition) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{9}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *PlayerCondition) GetPlayerRole() PlayerRole {
@@ -1155,6 +1010,9 @@ func (x *PlayerCondition) GetPlayerRole() PlayerRole {
 
 // TargetSelector defines a dynamic target for conditions or effects.
 // It uses a oneof to ensure that only one type of selector can be set at a time.
+// When a selector can potentially match multiple characters (e.g., all_characters_at_location),
+// and it is used in a context that evaluates a condition (like StatCondition),
+// the condition is considered true if *any* of the matched characters satisfy the condition.
 type TargetSelector struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Types that are valid to be assigned to Selector:
@@ -1175,7 +1033,7 @@ type TargetSelector struct {
 
 func (x *TargetSelector) Reset() {
 	*x = TargetSelector{}
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[10]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1187,7 +1045,7 @@ func (x *TargetSelector) String() string {
 func (*TargetSelector) ProtoMessage() {}
 
 func (x *TargetSelector) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_condition_proto_msgTypes[10]
+	mi := &file_tragedylooper_v1_condition_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1200,7 +1058,7 @@ func (x *TargetSelector) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TargetSelector.ProtoReflect.Descriptor instead.
 func (*TargetSelector) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{10}
+	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *TargetSelector) GetSelector() isTargetSelector_Selector {
@@ -1362,10 +1220,8 @@ var File_tragedylooper_v1_condition_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_condition_proto_rawDesc = "" +
 	"\n" +
-	" tragedylooper/v1/condition.proto\x12\x10tragedylooper.v1\x1a\x1dtragedylooper/v1/common.proto\x1a\x1ctragedylooper/v1/enums.proto\"\x8b\x06\n" +
-	"\tCondition\x12\x18\n" +
-	"\anegated\x18\n" +
-	" \x01(\bR\anegated\x12H\n" +
+	" tragedylooper/v1/condition.proto\x12\x10tragedylooper.v1\x1a\x1dtragedylooper/v1/common.proto\x1a\x1ctragedylooper/v1/enums.proto\"\xf4\x06\n" +
+	"\tCondition\x12H\n" +
 	"\x0estat_condition\x18\x01 \x01(\v2\x1f.tragedylooper.v1.StatConditionH\x00R\rstatCondition\x12T\n" +
 	"\x12location_condition\x18\x02 \x01(\v2#.tragedylooper.v1.LocationConditionH\x00R\x11locationCondition\x12H\n" +
 	"\x0erole_condition\x18\x03 \x01(\v2\x1f.tragedylooper.v1.RoleConditionH\x00R\rroleCondition\x12K\n" +
@@ -1374,87 +1230,69 @@ const file_tragedylooper_v1_condition_proto_rawDesc = "" +
 	"\x10player_condition\x18\x06 \x01(\v2!.tragedylooper.v1.PlayerConditionH\x00R\x0fplayerCondition\x12T\n" +
 	"\x12compound_condition\x18\a \x01(\v2#.tragedylooper.v1.CompoundConditionH\x00R\x11compoundCondition\x12K\n" +
 	"\x0fphase_condition\x18\b \x01(\v2 .tragedylooper.v1.PhaseConditionH\x00R\x0ephaseCondition\x12a\n" +
-	"\x17event_history_condition\x18\t \x01(\v2'.tragedylooper.v1.EventHistoryConditionH\x00R\x15eventHistoryConditionB\x10\n" +
-	"\x0econdition_type\"\x9c\x03\n" +
+	"\x17event_history_condition\x18\t \x01(\v2'.tragedylooper.v1.EventHistoryConditionH\x00R\x15eventHistoryCondition\x12\x80\x01\n" +
+	"\"location_character_count_condition\x18\v \x01(\v21.tragedylooper.v1.LocationCharacterCountConditionH\x00R\x1flocationCharacterCountConditionB\x10\n" +
+	"\x0econdition_type\"\x8f\x03\n" +
 	"\x15EventHistoryCondition\x12>\n" +
 	"\n" +
 	"event_type\x18\x01 \x01(\x0e2\x1f.tragedylooper.v1.GameEventTypeR\teventType\x12#\n" +
 	"\rlookback_days\x18\x02 \x01(\x05R\flookbackDays\x12C\n" +
 	"\fevent_target\x18\x03 \x01(\v2 .tragedylooper.v1.TargetSelectorR\veventTarget\x12\x14\n" +
-	"\x05count\x18\x04 \x01(\x05R\x05count\x12R\n" +
+	"\x05count\x18\x04 \x01(\x05R\x05count\x12<\n" +
 	"\n" +
-	"comparator\x18\x05 \x01(\x0e22.tragedylooper.v1.EventHistoryCondition.ComparatorR\n" +
-	"comparator\"o\n" +
+	"comparator\x18\x05 \x01(\x0e2\x1c.tragedylooper.v1.ComparatorR\n" +
+	"comparator\x12h\n" +
+	"\x1astat_adjusted_event_filter\x18\x06 \x01(\v2).tragedylooper.v1.StatAdjustedEventFilterH\x00R\x17statAdjustedEventFilterB\x0e\n" +
+	"\fevent_filter\"\xf3\x01\n" +
+	"\x17StatAdjustedEventFilter\x12<\n" +
+	"\tstat_type\x18\x01 \x01(\x0e2\x1a.tragedylooper.v1.StatTypeH\x00R\bstatType\x88\x01\x01\x12\x1b\n" +
+	"\x06amount\x18\x02 \x01(\x05H\x01R\x06amount\x88\x01\x01\x12N\n" +
+	"\x11amount_comparator\x18\x03 \x01(\x0e2\x1c.tragedylooper.v1.ComparatorH\x02R\x10amountComparator\x88\x01\x01B\f\n" +
 	"\n" +
-	"Comparator\x12\x1a\n" +
-	"\x16COMPARATOR_UNSPECIFIED\x10\x00\x12\f\n" +
-	"\bEQUAL_TO\x10\x01\x12\x1c\n" +
-	"\x18GREATER_THAN_OR_EQUAL_TO\x10\x02\x12\x19\n" +
-	"\x15LESS_THAN_OR_EQUAL_TO\x10\x03\"\x91\x02\n" +
-	"\x0ePhaseCondition\x12K\n" +
+	"_stat_typeB\t\n" +
+	"\a_amountB\x14\n" +
+	"\x12_amount_comparator\"\x81\x01\n" +
+	"\x0ePhaseCondition\x12<\n" +
 	"\n" +
-	"comparator\x18\x01 \x01(\x0e2+.tragedylooper.v1.PhaseCondition.ComparatorR\n" +
+	"comparator\x18\x01 \x01(\x0e2\x1c.tragedylooper.v1.ComparatorR\n" +
 	"comparator\x121\n" +
-	"\x05phase\x18\x02 \x01(\x0e2\x1b.tragedylooper.v1.GamePhaseR\x05phase\"\x7f\n" +
-	"\n" +
-	"Comparator\x12\x1a\n" +
-	"\x16COMPARATOR_UNSPECIFIED\x10\x00\x12\x11\n" +
-	"\rCOMPARATOR_IS\x10\x01\x12\x15\n" +
-	"\x11COMPARATOR_IS_NOT\x10\x02\x12\x15\n" +
-	"\x11COMPARATOR_BEFORE\x10\x03\x12\x14\n" +
-	"\x10COMPARATOR_AFTER\x10\x04\"\xea\x01\n" +
+	"\x05phase\x18\x02 \x01(\x0e2\x1b.tragedylooper.v1.GamePhaseR\x05phase\"\xfc\x01\n" +
 	"\x11CompoundCondition\x12H\n" +
 	"\boperator\x18\x01 \x01(\x0e2,.tragedylooper.v1.CompoundCondition.OperatorR\boperator\x12B\n" +
-	"\x0esub_conditions\x18\x02 \x03(\v2\x1b.tragedylooper.v1.ConditionR\rsubConditions\"G\n" +
+	"\x0esub_conditions\x18\x02 \x03(\v2\x1b.tragedylooper.v1.ConditionR\rsubConditions\"Y\n" +
 	"\bOperator\x12\x18\n" +
 	"\x14OPERATOR_UNSPECIFIED\x10\x00\x12\x10\n" +
 	"\fOPERATOR_AND\x10\x01\x12\x0f\n" +
-	"\vOPERATOR_OR\x10\x02\"\xf6\x03\n" +
+	"\vOPERATOR_OR\x10\x02\x12\x10\n" +
+	"\fOPERATOR_NOT\x10\x03\"\xa4\x02\n" +
 	"\rStatCondition\x128\n" +
 	"\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x127\n" +
-	"\tstat_type\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.StatTypeR\bstatType\x12J\n" +
+	"\tstat_type\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.StatTypeR\bstatType\x12<\n" +
 	"\n" +
-	"comparator\x18\x03 \x01(\x0e2*.tragedylooper.v1.StatCondition.ComparatorR\n" +
+	"comparator\x18\x03 \x01(\x0e2\x1c.tragedylooper.v1.ComparatorR\n" +
 	"comparator\x12\x14\n" +
 	"\x05value\x18\x04 \x01(\x05R\x05value\x12L\n" +
-	"\x11target_to_compare\x18\x05 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x0ftargetToCompare\"\xc1\x01\n" +
-	"\n" +
-	"Comparator\x12\x1a\n" +
-	"\x16COMPARATOR_UNSPECIFIED\x10\x00\x12\x1b\n" +
-	"\x17COMPARATOR_GREATER_THAN\x10\x01\x12\x18\n" +
-	"\x14COMPARATOR_LESS_THAN\x10\x02\x12\x17\n" +
-	"\x13COMPARATOR_EQUAL_TO\x10\x03\x12$\n" +
-	" COMPARATOR_GREATER_THAN_OR_EQUAL\x10\x04\x12!\n" +
-	"\x1dCOMPARATOR_LESS_THAN_OR_EQUAL\x10\x05\"\xc3\x02\n" +
+	"\x11target_to_compare\x18\x05 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x0ftargetToCompare\"\x89\x01\n" +
 	"\x11LocationCondition\x128\n" +
 	"\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12:\n" +
-	"\blocation\x18\x02 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeR\blocation\x12G\n" +
-	"\x05state\x18\x03 \x01(\x0e21.tragedylooper.v1.LocationCondition.LocationStateR\x05state\"o\n" +
-	"\rLocationState\x12\x1e\n" +
-	"\x1aLOCATION_STATE_UNSPECIFIED\x10\x00\x12\t\n" +
-	"\x05IS_AT\x10\x01\x12\r\n" +
-	"\tIS_NOT_AT\x10\x02\x12\x0f\n" +
-	"\vIS_ALONE_AT\x10\x03\x12\x13\n" +
-	"\x0fIS_NOT_ALONE_AT\x10\x04\"}\n" +
+	"\blocation\x18\x02 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeR\blocation\"\xb1\x01\n" +
+	"\x1fLocationCharacterCountCondition\x12:\n" +
+	"\blocation\x18\x01 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeR\blocation\x12<\n" +
+	"\n" +
+	"comparator\x18\x02 \x01(\x0e2\x1c.tragedylooper.v1.ComparatorR\n" +
+	"comparator\x12\x14\n" +
+	"\x05count\x18\x03 \x01(\x05R\x05count\"b\n" +
 	"\rRoleCondition\x128\n" +
 	"\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12\x17\n" +
-	"\arole_id\x18\x02 \x01(\x05R\x06roleId\x12\x19\n" +
-	"\bhas_role\x18\x03 \x01(\bR\ahasRole\"}\n" +
+	"\arole_id\x18\x02 \x01(\x05R\x06roleId\"`\n" +
 	"\x0eTraitCondition\x128\n" +
 	"\x06target\x18\x01 \x01(\v2 .tragedylooper.v1.TargetSelectorR\x06target\x12\x14\n" +
-	"\x05trait\x18\x02 \x01(\tR\x05trait\x12\x1b\n" +
-	"\thas_trait\x18\x03 \x01(\bR\bhasTrait\"\xd5\x01\n" +
-	"\fDayCondition\x12I\n" +
+	"\x05trait\x18\x02 \x01(\tR\x05trait\"^\n" +
+	"\fDayCondition\x12<\n" +
 	"\n" +
-	"comparator\x18\x01 \x01(\x0e2).tragedylooper.v1.DayCondition.ComparatorR\n" +
+	"comparator\x18\x01 \x01(\x0e2\x1c.tragedylooper.v1.ComparatorR\n" +
 	"comparator\x12\x10\n" +
-	"\x03day\x18\x02 \x01(\x05R\x03day\"h\n" +
-	"\n" +
-	"Comparator\x12\x1a\n" +
-	"\x16COMPARATOR_UNSPECIFIED\x10\x00\x12\x15\n" +
-	"\x11COMPARATOR_BEFORE\x10\x01\x12\x11\n" +
-	"\rCOMPARATOR_ON\x10\x02\x12\x14\n" +
-	"\x10COMPARATOR_AFTER\x10\x03\"P\n" +
+	"\x03day\x18\x02 \x01(\x05R\x03day\"P\n" +
 	"\x0fPlayerCondition\x12=\n" +
 	"\vplayer_role\x18\x01 \x01(\x0e2\x1c.tragedylooper.v1.PlayerRoleR\n" +
 	"playerRole\"\xd7\x04\n" +
@@ -1485,73 +1323,76 @@ func file_tragedylooper_v1_condition_proto_rawDescGZIP() []byte {
 	return file_tragedylooper_v1_condition_proto_rawDescData
 }
 
-var file_tragedylooper_v1_condition_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
-var file_tragedylooper_v1_condition_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_tragedylooper_v1_condition_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_tragedylooper_v1_condition_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_tragedylooper_v1_condition_proto_goTypes = []any{
-	(EventHistoryCondition_Comparator)(0), // 0: tragedylooper.v1.EventHistoryCondition.Comparator
-	(PhaseCondition_Comparator)(0),        // 1: tragedylooper.v1.PhaseCondition.Comparator
-	(CompoundCondition_Operator)(0),       // 2: tragedylooper.v1.CompoundCondition.Operator
-	(StatCondition_Comparator)(0),         // 3: tragedylooper.v1.StatCondition.Comparator
-	(LocationCondition_LocationState)(0),  // 4: tragedylooper.v1.LocationCondition.LocationState
-	(DayCondition_Comparator)(0),          // 5: tragedylooper.v1.DayCondition.Comparator
-	(*Condition)(nil),                     // 6: tragedylooper.v1.Condition
-	(*EventHistoryCondition)(nil),         // 7: tragedylooper.v1.EventHistoryCondition
-	(*PhaseCondition)(nil),                // 8: tragedylooper.v1.PhaseCondition
-	(*CompoundCondition)(nil),             // 9: tragedylooper.v1.CompoundCondition
-	(*StatCondition)(nil),                 // 10: tragedylooper.v1.StatCondition
-	(*LocationCondition)(nil),             // 11: tragedylooper.v1.LocationCondition
-	(*RoleCondition)(nil),                 // 12: tragedylooper.v1.RoleCondition
-	(*TraitCondition)(nil),                // 13: tragedylooper.v1.TraitCondition
-	(*DayCondition)(nil),                  // 14: tragedylooper.v1.DayCondition
-	(*PlayerCondition)(nil),               // 15: tragedylooper.v1.PlayerCondition
-	(*TargetSelector)(nil),                // 16: tragedylooper.v1.TargetSelector
-	(GameEventType)(0),                    // 17: tragedylooper.v1.GameEventType
-	(GamePhase)(0),                        // 18: tragedylooper.v1.GamePhase
-	(StatType)(0),                         // 19: tragedylooper.v1.StatType
-	(LocationType)(0),                     // 20: tragedylooper.v1.LocationType
-	(PlayerRole)(0),                       // 21: tragedylooper.v1.PlayerRole
-	(*Empty)(nil),                         // 22: tragedylooper.v1.Empty
+	(CompoundCondition_Operator)(0),         // 0: tragedylooper.v1.CompoundCondition.Operator
+	(*Condition)(nil),                       // 1: tragedylooper.v1.Condition
+	(*EventHistoryCondition)(nil),           // 2: tragedylooper.v1.EventHistoryCondition
+	(*StatAdjustedEventFilter)(nil),         // 3: tragedylooper.v1.StatAdjustedEventFilter
+	(*PhaseCondition)(nil),                  // 4: tragedylooper.v1.PhaseCondition
+	(*CompoundCondition)(nil),               // 5: tragedylooper.v1.CompoundCondition
+	(*StatCondition)(nil),                   // 6: tragedylooper.v1.StatCondition
+	(*LocationCondition)(nil),               // 7: tragedylooper.v1.LocationCondition
+	(*LocationCharacterCountCondition)(nil), // 8: tragedylooper.v1.LocationCharacterCountCondition
+	(*RoleCondition)(nil),                   // 9: tragedylooper.v1.RoleCondition
+	(*TraitCondition)(nil),                  // 10: tragedylooper.v1.TraitCondition
+	(*DayCondition)(nil),                    // 11: tragedylooper.v1.DayCondition
+	(*PlayerCondition)(nil),                 // 12: tragedylooper.v1.PlayerCondition
+	(*TargetSelector)(nil),                  // 13: tragedylooper.v1.TargetSelector
+	(GameEventType)(0),                      // 14: tragedylooper.v1.GameEventType
+	(Comparator)(0),                         // 15: tragedylooper.v1.Comparator
+	(StatType)(0),                           // 16: tragedylooper.v1.StatType
+	(GamePhase)(0),                          // 17: tragedylooper.v1.GamePhase
+	(LocationType)(0),                       // 18: tragedylooper.v1.LocationType
+	(PlayerRole)(0),                         // 19: tragedylooper.v1.PlayerRole
+	(*Empty)(nil),                           // 20: tragedylooper.v1.Empty
 }
 var file_tragedylooper_v1_condition_proto_depIdxs = []int32{
-	10, // 0: tragedylooper.v1.Condition.stat_condition:type_name -> tragedylooper.v1.StatCondition
-	11, // 1: tragedylooper.v1.Condition.location_condition:type_name -> tragedylooper.v1.LocationCondition
-	12, // 2: tragedylooper.v1.Condition.role_condition:type_name -> tragedylooper.v1.RoleCondition
-	13, // 3: tragedylooper.v1.Condition.trait_condition:type_name -> tragedylooper.v1.TraitCondition
-	14, // 4: tragedylooper.v1.Condition.day_condition:type_name -> tragedylooper.v1.DayCondition
-	15, // 5: tragedylooper.v1.Condition.player_condition:type_name -> tragedylooper.v1.PlayerCondition
-	9,  // 6: tragedylooper.v1.Condition.compound_condition:type_name -> tragedylooper.v1.CompoundCondition
-	8,  // 7: tragedylooper.v1.Condition.phase_condition:type_name -> tragedylooper.v1.PhaseCondition
-	7,  // 8: tragedylooper.v1.Condition.event_history_condition:type_name -> tragedylooper.v1.EventHistoryCondition
-	17, // 9: tragedylooper.v1.EventHistoryCondition.event_type:type_name -> tragedylooper.v1.GameEventType
-	16, // 10: tragedylooper.v1.EventHistoryCondition.event_target:type_name -> tragedylooper.v1.TargetSelector
-	0,  // 11: tragedylooper.v1.EventHistoryCondition.comparator:type_name -> tragedylooper.v1.EventHistoryCondition.Comparator
-	1,  // 12: tragedylooper.v1.PhaseCondition.comparator:type_name -> tragedylooper.v1.PhaseCondition.Comparator
-	18, // 13: tragedylooper.v1.PhaseCondition.phase:type_name -> tragedylooper.v1.GamePhase
-	2,  // 14: tragedylooper.v1.CompoundCondition.operator:type_name -> tragedylooper.v1.CompoundCondition.Operator
-	6,  // 15: tragedylooper.v1.CompoundCondition.sub_conditions:type_name -> tragedylooper.v1.Condition
-	16, // 16: tragedylooper.v1.StatCondition.target:type_name -> tragedylooper.v1.TargetSelector
-	19, // 17: tragedylooper.v1.StatCondition.stat_type:type_name -> tragedylooper.v1.StatType
-	3,  // 18: tragedylooper.v1.StatCondition.comparator:type_name -> tragedylooper.v1.StatCondition.Comparator
-	16, // 19: tragedylooper.v1.StatCondition.target_to_compare:type_name -> tragedylooper.v1.TargetSelector
-	16, // 20: tragedylooper.v1.LocationCondition.target:type_name -> tragedylooper.v1.TargetSelector
-	20, // 21: tragedylooper.v1.LocationCondition.location:type_name -> tragedylooper.v1.LocationType
-	4,  // 22: tragedylooper.v1.LocationCondition.state:type_name -> tragedylooper.v1.LocationCondition.LocationState
-	16, // 23: tragedylooper.v1.RoleCondition.target:type_name -> tragedylooper.v1.TargetSelector
-	16, // 24: tragedylooper.v1.TraitCondition.target:type_name -> tragedylooper.v1.TargetSelector
-	5,  // 25: tragedylooper.v1.DayCondition.comparator:type_name -> tragedylooper.v1.DayCondition.Comparator
-	21, // 26: tragedylooper.v1.PlayerCondition.player_role:type_name -> tragedylooper.v1.PlayerRole
-	22, // 27: tragedylooper.v1.TargetSelector.triggering_character:type_name -> tragedylooper.v1.Empty
-	22, // 28: tragedylooper.v1.TargetSelector.culprit:type_name -> tragedylooper.v1.Empty
-	22, // 29: tragedylooper.v1.TargetSelector.victim:type_name -> tragedylooper.v1.Empty
-	20, // 30: tragedylooper.v1.TargetSelector.all_characters_at_location:type_name -> tragedylooper.v1.LocationType
-	22, // 31: tragedylooper.v1.TargetSelector.action_user:type_name -> tragedylooper.v1.Empty
-	22, // 32: tragedylooper.v1.TargetSelector.action_target:type_name -> tragedylooper.v1.Empty
-	22, // 33: tragedylooper.v1.TargetSelector.all_characters:type_name -> tragedylooper.v1.Empty
-	34, // [34:34] is the sub-list for method output_type
-	34, // [34:34] is the sub-list for method input_type
-	34, // [34:34] is the sub-list for extension type_name
-	34, // [34:34] is the sub-list for extension extendee
-	0,  // [0:34] is the sub-list for field type_name
+	6,  // 0: tragedylooper.v1.Condition.stat_condition:type_name -> tragedylooper.v1.StatCondition
+	7,  // 1: tragedylooper.v1.Condition.location_condition:type_name -> tragedylooper.v1.LocationCondition
+	9,  // 2: tragedylooper.v1.Condition.role_condition:type_name -> tragedylooper.v1.RoleCondition
+	10, // 3: tragedylooper.v1.Condition.trait_condition:type_name -> tragedylooper.v1.TraitCondition
+	11, // 4: tragedylooper.v1.Condition.day_condition:type_name -> tragedylooper.v1.DayCondition
+	12, // 5: tragedylooper.v1.Condition.player_condition:type_name -> tragedylooper.v1.PlayerCondition
+	5,  // 6: tragedylooper.v1.Condition.compound_condition:type_name -> tragedylooper.v1.CompoundCondition
+	4,  // 7: tragedylooper.v1.Condition.phase_condition:type_name -> tragedylooper.v1.PhaseCondition
+	2,  // 8: tragedylooper.v1.Condition.event_history_condition:type_name -> tragedylooper.v1.EventHistoryCondition
+	8,  // 9: tragedylooper.v1.Condition.location_character_count_condition:type_name -> tragedylooper.v1.LocationCharacterCountCondition
+	14, // 10: tragedylooper.v1.EventHistoryCondition.event_type:type_name -> tragedylooper.v1.GameEventType
+	13, // 11: tragedylooper.v1.EventHistoryCondition.event_target:type_name -> tragedylooper.v1.TargetSelector
+	15, // 12: tragedylooper.v1.EventHistoryCondition.comparator:type_name -> tragedylooper.v1.Comparator
+	3,  // 13: tragedylooper.v1.EventHistoryCondition.stat_adjusted_event_filter:type_name -> tragedylooper.v1.StatAdjustedEventFilter
+	16, // 14: tragedylooper.v1.StatAdjustedEventFilter.stat_type:type_name -> tragedylooper.v1.StatType
+	15, // 15: tragedylooper.v1.StatAdjustedEventFilter.amount_comparator:type_name -> tragedylooper.v1.Comparator
+	15, // 16: tragedylooper.v1.PhaseCondition.comparator:type_name -> tragedylooper.v1.Comparator
+	17, // 17: tragedylooper.v1.PhaseCondition.phase:type_name -> tragedylooper.v1.GamePhase
+	0,  // 18: tragedylooper.v1.CompoundCondition.operator:type_name -> tragedylooper.v1.CompoundCondition.Operator
+	1,  // 19: tragedylooper.v1.CompoundCondition.sub_conditions:type_name -> tragedylooper.v1.Condition
+	13, // 20: tragedylooper.v1.StatCondition.target:type_name -> tragedylooper.v1.TargetSelector
+	16, // 21: tragedylooper.v1.StatCondition.stat_type:type_name -> tragedylooper.v1.StatType
+	15, // 22: tragedylooper.v1.StatCondition.comparator:type_name -> tragedylooper.v1.Comparator
+	13, // 23: tragedylooper.v1.StatCondition.target_to_compare:type_name -> tragedylooper.v1.TargetSelector
+	13, // 24: tragedylooper.v1.LocationCondition.target:type_name -> tragedylooper.v1.TargetSelector
+	18, // 25: tragedylooper.v1.LocationCondition.location:type_name -> tragedylooper.v1.LocationType
+	18, // 26: tragedylooper.v1.LocationCharacterCountCondition.location:type_name -> tragedylooper.v1.LocationType
+	15, // 27: tragedylooper.v1.LocationCharacterCountCondition.comparator:type_name -> tragedylooper.v1.Comparator
+	13, // 28: tragedylooper.v1.RoleCondition.target:type_name -> tragedylooper.v1.TargetSelector
+	13, // 29: tragedylooper.v1.TraitCondition.target:type_name -> tragedylooper.v1.TargetSelector
+	15, // 30: tragedylooper.v1.DayCondition.comparator:type_name -> tragedylooper.v1.Comparator
+	19, // 31: tragedylooper.v1.PlayerCondition.player_role:type_name -> tragedylooper.v1.PlayerRole
+	20, // 32: tragedylooper.v1.TargetSelector.triggering_character:type_name -> tragedylooper.v1.Empty
+	20, // 33: tragedylooper.v1.TargetSelector.culprit:type_name -> tragedylooper.v1.Empty
+	20, // 34: tragedylooper.v1.TargetSelector.victim:type_name -> tragedylooper.v1.Empty
+	18, // 35: tragedylooper.v1.TargetSelector.all_characters_at_location:type_name -> tragedylooper.v1.LocationType
+	20, // 36: tragedylooper.v1.TargetSelector.action_user:type_name -> tragedylooper.v1.Empty
+	20, // 37: tragedylooper.v1.TargetSelector.action_target:type_name -> tragedylooper.v1.Empty
+	20, // 38: tragedylooper.v1.TargetSelector.all_characters:type_name -> tragedylooper.v1.Empty
+	39, // [39:39] is the sub-list for method output_type
+	39, // [39:39] is the sub-list for method input_type
+	39, // [39:39] is the sub-list for extension type_name
+	39, // [39:39] is the sub-list for extension extendee
+	0,  // [0:39] is the sub-list for field type_name
 }
 
 func init() { file_tragedylooper_v1_condition_proto_init() }
@@ -1571,8 +1412,13 @@ func file_tragedylooper_v1_condition_proto_init() {
 		(*Condition_CompoundCondition)(nil),
 		(*Condition_PhaseCondition)(nil),
 		(*Condition_EventHistoryCondition)(nil),
+		(*Condition_LocationCharacterCountCondition)(nil),
 	}
-	file_tragedylooper_v1_condition_proto_msgTypes[10].OneofWrappers = []any{
+	file_tragedylooper_v1_condition_proto_msgTypes[1].OneofWrappers = []any{
+		(*EventHistoryCondition_StatAdjustedEventFilter)(nil),
+	}
+	file_tragedylooper_v1_condition_proto_msgTypes[2].OneofWrappers = []any{}
+	file_tragedylooper_v1_condition_proto_msgTypes[12].OneofWrappers = []any{
 		(*TargetSelector_SpecificCharacter)(nil),
 		(*TargetSelector_TriggeringCharacter)(nil),
 		(*TargetSelector_Culprit)(nil),
@@ -1588,8 +1434,8 @@ func file_tragedylooper_v1_condition_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_condition_proto_rawDesc), len(file_tragedylooper_v1_condition_proto_rawDesc)),
-			NumEnums:      6,
-			NumMessages:   11,
+			NumEnums:      1,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

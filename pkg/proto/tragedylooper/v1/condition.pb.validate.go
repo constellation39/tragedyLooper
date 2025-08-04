@@ -57,8 +57,6 @@ func (m *Condition) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Negated
-
 	switch v := m.ConditionType.(type) {
 	case *Condition_StatCondition:
 		if v == nil {
@@ -429,6 +427,47 @@ func (m *Condition) validate(all bool) error {
 			}
 		}
 
+	case *Condition_LocationCharacterCountCondition:
+		if v == nil {
+			err := ConditionValidationError{
+				field:  "ConditionType",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if all {
+			switch v := interface{}(m.GetLocationCharacterCountCondition()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ConditionValidationError{
+						field:  "LocationCharacterCountCondition",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ConditionValidationError{
+						field:  "LocationCharacterCountCondition",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetLocationCharacterCountCondition()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ConditionValidationError{
+					field:  "LocationCharacterCountCondition",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
 	default:
 		_ = v // ensures v is used
 	}
@@ -569,6 +608,52 @@ func (m *EventHistoryCondition) validate(all bool) error {
 
 	// no validation rules for Comparator
 
+	switch v := m.EventFilter.(type) {
+	case *EventHistoryCondition_StatAdjustedEventFilter:
+		if v == nil {
+			err := EventHistoryConditionValidationError{
+				field:  "EventFilter",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if all {
+			switch v := interface{}(m.GetStatAdjustedEventFilter()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, EventHistoryConditionValidationError{
+						field:  "StatAdjustedEventFilter",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, EventHistoryConditionValidationError{
+						field:  "StatAdjustedEventFilter",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetStatAdjustedEventFilter()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return EventHistoryConditionValidationError{
+					field:  "StatAdjustedEventFilter",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	default:
+		_ = v // ensures v is used
+	}
+
 	if len(errors) > 0 {
 		return EventHistoryConditionMultiError(errors)
 	}
@@ -648,6 +733,120 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = EventHistoryConditionValidationError{}
+
+// Validate checks the field values on StatAdjustedEventFilter with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *StatAdjustedEventFilter) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on StatAdjustedEventFilter with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// StatAdjustedEventFilterMultiError, or nil if none found.
+func (m *StatAdjustedEventFilter) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *StatAdjustedEventFilter) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.StatType != nil {
+		// no validation rules for StatType
+	}
+
+	if m.Amount != nil {
+		// no validation rules for Amount
+	}
+
+	if m.AmountComparator != nil {
+		// no validation rules for AmountComparator
+	}
+
+	if len(errors) > 0 {
+		return StatAdjustedEventFilterMultiError(errors)
+	}
+
+	return nil
+}
+
+// StatAdjustedEventFilterMultiError is an error wrapping multiple validation
+// errors returned by StatAdjustedEventFilter.ValidateAll() if the designated
+// constraints aren't met.
+type StatAdjustedEventFilterMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m StatAdjustedEventFilterMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m StatAdjustedEventFilterMultiError) AllErrors() []error { return m }
+
+// StatAdjustedEventFilterValidationError is the validation error returned by
+// StatAdjustedEventFilter.Validate if the designated constraints aren't met.
+type StatAdjustedEventFilterValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e StatAdjustedEventFilterValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e StatAdjustedEventFilterValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e StatAdjustedEventFilterValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e StatAdjustedEventFilterValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e StatAdjustedEventFilterValidationError) ErrorName() string {
+	return "StatAdjustedEventFilterValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e StatAdjustedEventFilterValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sStatAdjustedEventFilter.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = StatAdjustedEventFilterValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = StatAdjustedEventFilterValidationError{}
 
 // Validate checks the field values on PhaseCondition with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -1108,8 +1307,6 @@ func (m *LocationCondition) validate(all bool) error {
 
 	// no validation rules for Location
 
-	// no validation rules for State
-
 	if len(errors) > 0 {
 		return LocationConditionMultiError(errors)
 	}
@@ -1190,6 +1387,115 @@ var _ interface {
 	ErrorName() string
 } = LocationConditionValidationError{}
 
+// Validate checks the field values on LocationCharacterCountCondition with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *LocationCharacterCountCondition) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on LocationCharacterCountCondition with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// LocationCharacterCountConditionMultiError, or nil if none found.
+func (m *LocationCharacterCountCondition) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *LocationCharacterCountCondition) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Location
+
+	// no validation rules for Comparator
+
+	// no validation rules for Count
+
+	if len(errors) > 0 {
+		return LocationCharacterCountConditionMultiError(errors)
+	}
+
+	return nil
+}
+
+// LocationCharacterCountConditionMultiError is an error wrapping multiple
+// validation errors returned by LocationCharacterCountCondition.ValidateAll()
+// if the designated constraints aren't met.
+type LocationCharacterCountConditionMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m LocationCharacterCountConditionMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m LocationCharacterCountConditionMultiError) AllErrors() []error { return m }
+
+// LocationCharacterCountConditionValidationError is the validation error
+// returned by LocationCharacterCountCondition.Validate if the designated
+// constraints aren't met.
+type LocationCharacterCountConditionValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e LocationCharacterCountConditionValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e LocationCharacterCountConditionValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e LocationCharacterCountConditionValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e LocationCharacterCountConditionValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e LocationCharacterCountConditionValidationError) ErrorName() string {
+	return "LocationCharacterCountConditionValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e LocationCharacterCountConditionValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sLocationCharacterCountCondition.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = LocationCharacterCountConditionValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = LocationCharacterCountConditionValidationError{}
+
 // Validate checks the field values on RoleCondition with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -1242,8 +1548,6 @@ func (m *RoleCondition) validate(all bool) error {
 	}
 
 	// no validation rules for RoleId
-
-	// no validation rules for HasRole
 
 	if len(errors) > 0 {
 		return RoleConditionMultiError(errors)
@@ -1375,8 +1679,6 @@ func (m *TraitCondition) validate(all bool) error {
 	}
 
 	// no validation rules for Trait
-
-	// no validation rules for HasTrait
 
 	if len(errors) > 0 {
 		return TraitConditionMultiError(errors)

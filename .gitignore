@@ -22,3 +22,4 @@ shrimp-rules.md
 .shrimp
 flowchart.dot
 bin
+/data/schemas/

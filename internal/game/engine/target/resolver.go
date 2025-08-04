@@ -3,57 +3,72 @@ package target
 import (
 	"fmt"
 
-	"github.com/constellation39/tragedyLooper/internal/game/engine/effecthandler"
-	model "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
+	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
-// ResolveSelectorToCharacters resolves a target selector to a list of character IDs.
-func ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, ctx *effecthandler.EffectContext) ([]int32, error) {
-	if sel == nil {
+// Resolver is responsible for resolving TargetSelectors into concrete game entities.
+type Resolver struct {
+	// Dependencies can be added here, e.g., a logger.
+}
+
+// NewResolver creates a new target resolver.
+func NewResolver() *Resolver {
+	return &Resolver{}
+}
+
+// ResolveCharacters resolves a TargetSelector to a list of characters.
+func (r *Resolver) ResolveCharacters(gs *v1.GameState, selector *v1.TargetSelector) ([]*v1.Character, error) {
+	if selector == nil {
 		return nil, fmt.Errorf("target selector is nil")
 	}
 
-	var characterIDs []int32
-
-	switch sel.SelectorType {
-	case model.TargetSelector_SELECTOR_TYPE_SPECIFIC_CHARACTER:
-		characterIDs = append(characterIDs, sel.CharacterId)
-	case model.TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS_AT_LOCATION:
-		characterIDs = getCharactersInLocation(gs, sel.LocationFilter)
-	case model.TargetSelector_SELECTOR_TYPE_ALL_CHARACTERS:
-		characterIDs = getAllCharacterIDs(gs)
-	case model.TargetSelector_SELECTOR_TYPE_ABILITY_USER:
-		if ctx != nil && ctx.Payload != nil {
-			characterIDs = append(characterIDs, ctx.Payload.PlayerId)
+	switch s := selector.Selector.(type) {
+	case *v1.TargetSelector_SpecificCharacter:
+		char, ok := gs.Characters[s.SpecificCharacter]
+		if !ok {
+			return nil, fmt.Errorf("character with id %d not found", s.SpecificCharacter)
 		}
-	case model.TargetSelector_SELECTOR_TYPE_ABILITY_TARGET:
-		if ctx != nil && ctx.Payload != nil {
-			if t, ok := ctx.Payload.Target.(*model.UseAbilityPayload_TargetCharacterId); ok {
-				characterIDs = append(characterIDs, t.TargetCharacterId)
+		return []*v1.Character{char}, nil
+
+	case *v1.TargetSelector_CharacterWithRoleId:
+		var matched []*v1.Character
+		for _, char := range gs.Characters {
+			if char.Role.Id == s.CharacterWithRoleId {
+				matched = append(matched, char)
 			}
 		}
-	default:
-		return nil, fmt.Errorf("unsupported target selector type: %v", sel.SelectorType)
-	}
+		return matched, nil
 
-	// TODO: Apply filters from the selector
-	return characterIDs, nil
-}
-
-func getCharactersInLocation(gs *model.GameState, location model.LocationType) []int32 {
-	var charIDs []int32
-	for id, char := range gs.Characters {
-		if char.CurrentLocation == location {
-			charIDs = append(charIDs, id)
+	case *v1.TargetSelector_AllCharactersAtLocation:
+		var matched []*v1.Character
+		for _, char := range gs.Characters {
+			if char.Location == s.AllCharactersAtLocation {
+				matched = append(matched, char)
+			}
 		}
-	}
-	return charIDs
-}
+		return matched, nil
 
-func getAllCharacterIDs(gs *model.GameState) []int32 {
-	charIDs := make([]int32, 0, len(gs.Characters))
-	for id := range gs.Characters {
-		charIDs = append(charIDs, id)
+	case *v1.TargetSelector_AllCharacters:
+		var all []*v1.Character
+		for _, char := range gs.Characters {
+			all = append(all, char)
+		}
+		return all, nil
+
+	// --- Placeholders for event-based targets ---
+	// These require an Event context to be passed into the resolver.
+	case *v1.TargetSelector_TriggeringCharacter:
+		return nil, fmt.Errorf("resolving triggering_character not yet implemented")
+	case *v1.TargetSelector_Culprit:
+		return nil, fmt.Errorf("resolving culprit not yet implemented")
+	case *v1.TargetSelector_Victim:
+		return nil, fmt.Errorf("resolving victim not yet implemented")
+	case *v1.TargetSelector_ActionUser:
+		return nil, fmt.Errorf("resolving action_user not yet implemented")
+	case *v1.TargetSelector_ActionTarget:
+		return nil, fmt.Errorf("resolving action_target not yet implemented")
+
+	default:
+		return nil, fmt.Errorf("unhandled target selector type: %T", s)
 	}
-	return charIDs
 }

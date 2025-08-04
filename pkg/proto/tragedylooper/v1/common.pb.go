@@ -21,6 +21,76 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// Comparator defines a universal set of comparison operators.
+// This is used across various condition types to ensure consistency.
+type Comparator int32
+
+const (
+	// Unspecified comparator.
+	Comparator_COMPARATOR_UNSPECIFIED Comparator = 0
+	// Equal to.
+	Comparator_EQUAL_TO Comparator = 1
+	// Not equal to.
+	Comparator_NOT_EQUAL_TO Comparator = 2
+	// Greater than.
+	Comparator_GREATER_THAN Comparator = 3
+	// Less than.
+	Comparator_LESS_THAN Comparator = 4
+	// Greater than or equal to.
+	Comparator_GREATER_THAN_OR_EQUAL_TO Comparator = 5
+	// Less than or equal to.
+	Comparator_LESS_THAN_OR_EQUAL_TO Comparator = 6
+)
+
+// Enum value maps for Comparator.
+var (
+	Comparator_name = map[int32]string{
+		0: "COMPARATOR_UNSPECIFIED",
+		1: "EQUAL_TO",
+		2: "NOT_EQUAL_TO",
+		3: "GREATER_THAN",
+		4: "LESS_THAN",
+		5: "GREATER_THAN_OR_EQUAL_TO",
+		6: "LESS_THAN_OR_EQUAL_TO",
+	}
+	Comparator_value = map[string]int32{
+		"COMPARATOR_UNSPECIFIED":   0,
+		"EQUAL_TO":                 1,
+		"NOT_EQUAL_TO":             2,
+		"GREATER_THAN":             3,
+		"LESS_THAN":                4,
+		"GREATER_THAN_OR_EQUAL_TO": 5,
+		"LESS_THAN_OR_EQUAL_TO":    6,
+	}
+)
+
+func (x Comparator) Enum() *Comparator {
+	p := new(Comparator)
+	*p = x
+	return p
+}
+
+func (x Comparator) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (Comparator) Descriptor() protoreflect.EnumDescriptor {
+	return file_tragedylooper_v1_common_proto_enumTypes[0].Descriptor()
+}
+
+func (Comparator) Type() protoreflect.EnumType {
+	return &file_tragedylooper_v1_common_proto_enumTypes[0]
+}
+
+func (x Comparator) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use Comparator.Descriptor instead.
+func (Comparator) EnumDescriptor() ([]byte, []int) {
+	return file_tragedylooper_v1_common_proto_rawDescGZIP(), []int{0}
+}
+
 // Empty is a placeholder for messages that have no data.
 type Empty struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -202,7 +272,16 @@ const file_tragedylooper_v1_common_proto_rawDesc = "" +
 	"\blocation\x18\x04 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeH\x00R\blocation\x12\x1d\n" +
 	"\tplayer_id\x18\x05 \x01(\x05H\x00R\bplayerId\x120\n" +
 	"\x13effect_option_index\x18\x06 \x01(\x05H\x00R\x11effectOptionIndexB\a\n" +
-	"\x05valueB\xbb\x01\n" +
+	"\x05value*\xa2\x01\n" +
+	"\n" +
+	"Comparator\x12\x1a\n" +
+	"\x16COMPARATOR_UNSPECIFIED\x10\x00\x12\f\n" +
+	"\bEQUAL_TO\x10\x01\x12\x10\n" +
+	"\fNOT_EQUAL_TO\x10\x02\x12\x10\n" +
+	"\fGREATER_THAN\x10\x03\x12\r\n" +
+	"\tLESS_THAN\x10\x04\x12\x1c\n" +
+	"\x18GREATER_THAN_OR_EQUAL_TO\x10\x05\x12\x19\n" +
+	"\x15LESS_THAN_OR_EQUAL_TO\x10\x06B\xbb\x01\n" +
 	"\x14com.tragedylooper.v1B\vCommonProtoP\x01Z5github.com/constellation39/tragedyLooper/pkg/proto/v1\xa2\x02\x03TXX\xaa\x02\x10Tragedylooper.V1\xca\x02\x10Tragedylooper\\V1\xe2\x02\x1cTragedylooper\\V1\\GPBMetadata\xea\x02\x11Tragedylooper::V1b\x06proto3"
 
 var (
@@ -217,14 +296,16 @@ func file_tragedylooper_v1_common_proto_rawDescGZIP() []byte {
 	return file_tragedylooper_v1_common_proto_rawDescData
 }
 
+var file_tragedylooper_v1_common_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_tragedylooper_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_tragedylooper_v1_common_proto_goTypes = []any{
-	(*Empty)(nil),     // 0: tragedylooper.v1.Empty
-	(*Choice)(nil),    // 1: tragedylooper.v1.Choice
-	(LocationType)(0), // 2: tragedylooper.v1.LocationType
+	(Comparator)(0),   // 0: tragedylooper.v1.Comparator
+	(*Empty)(nil),     // 1: tragedylooper.v1.Empty
+	(*Choice)(nil),    // 2: tragedylooper.v1.Choice
+	(LocationType)(0), // 3: tragedylooper.v1.LocationType
 }
 var file_tragedylooper_v1_common_proto_depIdxs = []int32{
-	2, // 0: tragedylooper.v1.Choice.location:type_name -> tragedylooper.v1.LocationType
+	3, // 0: tragedylooper.v1.Choice.location:type_name -> tragedylooper.v1.LocationType
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -249,13 +330,14 @@ func file_tragedylooper_v1_common_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_common_proto_rawDesc), len(file_tragedylooper_v1_common_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_tragedylooper_v1_common_proto_goTypes,
 		DependencyIndexes: file_tragedylooper_v1_common_proto_depIdxs,
+		EnumInfos:         file_tragedylooper_v1_common_proto_enumTypes,
 		MessageInfos:      file_tragedylooper_v1_common_proto_msgTypes,
 	}.Build()
 	File_tragedylooper_v1_common_proto = out.File
