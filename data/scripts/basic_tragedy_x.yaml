@@ -3,10 +3,100 @@ name: "Basic Tragedy Set X"
 description: "A starter script focusing on core mechanics and roles. Includes a variety of role abilities and loss conditions."
 
 # Main plot configurations. (IDs 1000-1999)
-main_plots: {}
+main_plots:
+  1001:
+    id: 1001
+    name: "Murder Plan"
+    type: PLOT_TYPE_MAIN_PLOT
+    role_assignments:
+      3001: 1
+      3002: 1
+      3003: 1
+    description: ""
+  1002:
+    id: 1002
+    name: "The Sealed Item"
+    type: PLOT_TYPE_MAIN_PLOT
+    role_assignments:
+      3003: 1
+      3004: 1
+    description: "Loss condition: Tragedy at Loop End if there is 2 intrigue on the Shrine."
+  1003:
+    id: 1003
+    name: "Sign with me"
+    type: PLOT_TYPE_MAIN_PLOT
+    role_assignments:
+      3001: 1
+    description: "Script creation rule: Key Person must be a girl. Loss condition: Tragedy at Loop End if there is 2 intrigue on the Key Person."
+  1004:
+    id: 1004
+    name: "Change of Future"
+    type: PLOT_TYPE_MAIN_PLOT
+    role_assignments:
+      3004: 1
+      3005: 1
+    description: "Loss condition: Tragedy at Loop End if 'Butterfly Effect' has occurred this loop."
+  1005:
+    id: 1005
+    name: "Giant Time Bomb"
+    type: PLOT_TYPE_MAIN_PLOT
+    role_assignments:
+      3013: 1
+    description: "Loss condition: Tragedy at Loop End if there is 2 intrigue on the Witch's starting location."
 
 # Sub plot configurations. (IDs 2000-2999)
-sub_plots: {}
+sub_plots:
+  2004:
+    id: 2004
+    name: "An Unsettling Rumor"
+    type: PLOT_TYPE_SUB_PLOT
+    role_assignments:
+      3007: 1
+    description: "Optional Mastermind Ability (1/loop): You may place 1 intrigue on any location."
+  2011:
+    id: 2011
+    name: "Circle of Friends"
+    type: PLOT_TYPE_SUB_PLOT
+    role_assignments:
+      3006: 2
+      3007: 1
+    description: ""
+  2012:
+    id: 2012
+    name: "A Love Affair"
+    type: PLOT_TYPE_SUB_PLOT
+    role_assignments:
+      3008: 1
+      3009: 1
+    description: ""
+  2013:
+    id: 2013
+    name: "The Hidden Freak"
+    type: PLOT_TYPE_SUB_PLOT
+    role_assignments:
+      3010: 1
+      3006: 1
+    description: ""
+  2014:
+    id: 2014
+    name: "Paranoia Virus"
+    type: PLOT_TYPE_SUB_PLOT
+    role_assignments:
+      3007: 1
+    description: "Mandatory Always: All persons with at least 3 paranoia turn into Serial Killers."
+  2015:
+    id: 2015
+    name: "Threads of Fate"
+    type: PLOT_TYPE_SUB_PLOT
+    role_assignments: {}
+    description: "Mandatory Loop Start: Place 2 paranoia on all characters who had goodwill last loop."
+  2016:
+    id: 2016
+    name: "Unknown Factor X"
+    type: PLOT_TYPE_SUB_PLOT
+    role_assignments:
+      3011: 1
+    description: ""
 
 # Role configurations. (IDs 3000-3999)
 # Assumption: Character death is represented by adding a "Dead" trait.
@@ -394,11 +484,351 @@ roles:
             target: { action_user: {} }
             ability_id: 300101 # Key Person's ability ID
 
+  # Curmudgeon (ID: 3012)
+  3012:
+    id: 3012
+    name: "Curmudgeon"
+    limit: 2
+    abilities:
+      # [Mandatory Always] [This character has 2 or more Goodwill] ⇒ They lose all Goodwill and gain 1 Paranoia.
+      301201:
+        id: 301201
+        name: "Always: Grumpy Demeanor"
+        description: "If this character has 2 or more Goodwill, they lose all Goodwill and gain 1 Paranoia."
+        trigger_type: TRIGGER_TYPE_ON_PASSIVE
+        is_mandatory: true
+        conditions:
+          - stat_condition:
+              target: { action_user: {} }
+              stat_type: STAT_TYPE_GOODWILL
+              comparator: GREATER_THAN_OR_EQUAL_TO
+              value: 2
+        effect:
+          compound_effect:
+            operator: OPERATOR_AND
+            sub_effects:
+              - adjust_stat:
+                  target: { action_user: {} }
+                  stat_type: STAT_TYPE_GOODWILL
+                  amount: -100 # Effectively remove all goodwill
+              - adjust_stat:
+                  target: { action_user: {} }
+                  stat_type: STAT_TYPE_PARANOIA
+                  amount: 1
+
+  # Witch (ID: 3013)
+  3013:
+    id: 3013
+    name: "Witch"
+    limit: 1
+    abilities:
+      # [Optional Mastermind Ability] You may place 1 Intrigue on this location.
+      301301:
+        id: 301301
+        name: "Mastermind Ability: Curse"
+        description: "You may place 1 Intrigue on this location."
+        trigger_type: TRIGGER_TYPE_ON_PHASE_START
+
+        refusal_role: PLAYER_ROLE_MASTERMIND
+        effect:
+          adjust_stat:
+            # ENGINE-SIDE LOGIC: The engine must interpret this as adding intrigue to the location itself.
+            target: { action_user: {} }
+            stat_type: STAT_TYPE_INTRIGUE
+            amount: 1
+
 # Incident configurations. (IDs 4000-4999)
-incidents: {}
+incidents:
+  4001:
+    id: "murder"
+    name: "Murder"
+    effect:
+      - description: "One (1) other character in culprit’s Location dies"
+  4002:
+    id: "increasingUnease"
+    name: "Increasing Unease"
+    effect:
+      - description: "Place 2 :paranoia: on any character, then 1 :intrigue: on any other character."
+  4003:
+    id: "foulEvil"
+    name: "Foul Evil"
+    effect:
+      - description: "Place 2 :intrigue: on the Shrine."
+  4004:
+    id: "suicide"
+    name: "Suicide"
+    effect:
+      - description: "The culprit dies."
+  4005:
+    id: "hospitalIncident"
+    name: "Hospital Incident"
+    effect:
+      - prerequisite: "1 :intrigue: on the Hospital"
+        description: "Everyone in the Hospital dies."
+      - type: "Mandatory Loss condition: Protagonists Death"
+        prerequisite: "2 :intrigue: on the Hospital"
+  4006:
+    id: "farawayMurder"
+    name: "Faraway Murder"
+    effect:
+      - description: "One character with at least 2 :intrigue: dies."
+  4007:
+    id: "missingPerson"
+    name: "Missing Person"
+    effect:
+      - description: "Move culprit to any Location. Put 1 :intrigue: on that Location."
+  4008:
+    id: "spreading"
+    name: "Spreading"
+    effect:
+      - description: "Remove 2 :goodwill: (or 1 if they only have that) from a character, and then add 2 :goodwill: to another character."
+  4009:
+    id: "butterflyEffect"
+    name: "Butterfly Effect"
+    effect:
+      - description: "Put any counter on any character in culprit’s Location."
 
 # Character configurations. (IDs 5000-5999)
-characters: {}
+characters:
+  5001:
+    id: 5001
+    name: "Boy Student"
+    traits: ["student", "boy"]
+    paranoia_limit: 2
+    initial_location: LOCATION_TYPE_SCHOOL
+    abilities:
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 2
+        description: "-1 paranoia on student in same location."
+  5002:
+    id: 5002
+    name: "Girl Student"
+    traits: ["student", "girl"]
+    paranoia_limit: 3
+    initial_location: LOCATION_TYPE_SCHOOL
+    abilities:
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 2
+        description: "-1 paranoia on student in same location."
+  5003:
+    id: 5003
+    name: "Rich Man’s Daughter"
+    traits: ["student", "girl"]
+    paranoia_limit: 1
+    initial_location: LOCATION_TYPE_SCHOOL
+    abilities:
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 3
+        restricted_to_location: [LOCATION_TYPE_SCHOOL, LOCATION_TYPE_CITY]
+        description: "+1 goodwill on character in same location."
+  5004:
+    id: 5004
+    name: "Class Rep"
+    traits: ["student", "girl"]
+    paranoia_limit: 2
+    initial_location: LOCATION_TYPE_SCHOOL
+    abilities:
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 2
+        times_per_loop: 1
+        description: "Leader gets one (1×∞) card back."
+  5005:
+    id: 5005
+    name: "Mystery Boy"
+    traits: ["student", "boy"]
+    paranoia_limit: 3
+    initial_location: LOCATION_TYPE_SCHOOL
+    rules:
+      - name: "Not in Plots"
+        description: "Always has a role not associated with current plot."
+    abilities:
+      - type: ABILITY_TYPE_PASSIVE
+        description: "Always has a role not associated with current plot."
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 3
+        immune_to_goodwill_refusal: true
+        description: "Reveal own role."
+  5006:
+    id: 5006
+    name: "Shrine Maiden"
+    traits: ["student", "girl"]
+    paranoia_limit: 2
+    initial_location: LOCATION_TYPE_SHRINE
+    blocked_locations: [LOCATION_TYPE_CITY]
+    abilities:
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 3
+        restricted_to_location: [LOCATION_TYPE_SHRINE]
+        description: "-1 intrigue on Shrine."
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 5
+        times_per_loop: 1
+        description: "Reveal role of character in same location"
+  5007:
+    id: 5007
+    name: "Alien"
+    traits: ["girl"]
+    paranoia_limit: 2
+    initial_location: LOCATION_TYPE_SHRINE
+    blocked_locations: [LOCATION_TYPE_HOSPITAL]
+    abilities:
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 4
+        times_per_loop: 1
+        description: "Kill one character in same location."
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 5
+        times_per_loop: 1
+        description: "Revive one corpse in same location."
+  5008:
+    id: 5008
+    name: "Godly Being"
+    traits: ["man", "woman"]
+    paranoia_limit: 3
+    initial_location: LOCATION_TYPE_SHRINE
+    rules:
+      - name: "Enters on Loop"
+        delayed_entry_effect:
+          day_of_entry: 1 # Placeholder, should be script-specified
+    abilities:
+      - type: ABILITY_TYPE_PASSIVE
+        description: "Enters game on predefined loop"
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 3
+        times_per_loop: 1
+        description: "Reveal culprit for 1 incident."
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 5
+        description: "-1 intrigue on same location or Character in same location."
+  5009:
+    id: 5009
+    name: "Police Officer"
+    traits: ["man", "adult"]
+    paranoia_limit: 3
+    initial_location: LOCATION_TYPE_CITY
+    abilities:
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 4
+        times_per_loop: 1
+        description: "Reveal culprit for former incident."
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 5
+        times_per_loop: 1
+        description: "Put an Extra marker on another character in same location. Remove that marker to prevent that character from dying."
+  5010:
+    id: 5010
+    name: "Office Worker"
+    traits: ["man", "adult"]
+    paranoia_limit: 2
+    initial_location: LOCATION_TYPE_CITY
+    blocked_locations: [LOCATION_TYPE_SCHOOL]
+    abilities:
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 3
+        description: "Reveal own role."
+  5011:
+    id: 5011
+    name: "Informer"
+    traits: ["woman", "adult"]
+    paranoia_limit: 3
+    initial_location: LOCATION_TYPE_CITY
+    abilities:
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 5
+        times_per_loop: 1
+        description: "Leader names the title of any Subplot. Then, the Mastermind must name the title of any other active subplot."
+  5012:
+    id: 5012
+    name: "Pop Idol"
+    traits: ["girl", "student"]
+    paranoia_limit: 2
+    initial_location: LOCATION_TYPE_CITY
+    abilities:
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 3
+        description: "-1 paranoia on character in same location."
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 4
+        description: "+1 goodwill on character in same location."
+  5013:
+    id: 5013
+    name: "Journalist"
+    traits: ["adult", "man"]
+    paranoia_limit: 2
+    initial_location: LOCATION_TYPE_CITY
+    abilities:
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 2
+        description: "+1 paranoia on character in same location."
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 2
+        description: "+1 goodwill on character in same location."
+  5014:
+    id: 5014
+    name: "Boss"
+    traits: ["adult", "man"]
+    paranoia_limit: 4
+    initial_location: LOCATION_TYPE_CITY
+    rules:
+      - name: "Turf"
+        turf_selection_effect:
+          possible_locations: [LOCATION_TYPE_CITY, LOCATION_TYPE_SCHOOL, LOCATION_TYPE_SHRINE, LOCATION_TYPE_HOSPITAL]
+    abilities:
+      - type: ABILITY_TYPE_PASSIVE
+        description: "May be regarded as in his turf."
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 5
+        times_per_loop: 1
+        description: "Reveal role of character in his turf."
+  5015:
+    id: 5015
+    name: "Doctor"
+    traits: ["adult", "man"]
+    paranoia_limit: 2
+    initial_location: LOCATION_TYPE_HOSPITAL
+    abilities:
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 2
+        description: "+/-1 paranoia on character in same location."
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 3
+        description: "revoke location restirction for patient."
+  5016:
+    id: 5016
+    name: "Patient"
+    traits: ["boy"]
+    paranoia_limit: 2
+    initial_location: LOCATION_TYPE_HOSPITAL
+    blocked_locations: [LOCATION_TYPE_CITY, LOCATION_TYPE_SCHOOL, LOCATION_TYPE_SHRINE]
+    abilities: []
+  5017:
+    id: 5017
+    name: "Nurse"
+    traits: ["adult", "woman"]
+    paranoia_limit: 3
+    initial_location: LOCATION_TYPE_HOSPITAL
+    abilities:
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 2
+        immune_to_goodwill_refusal: true
+        description: "-1 paranoia on panicked character in same location. This ability cannot be refused by goodwill Refusel."
+  5018:
+    id: 5018
+    name: "Henchman"
+    traits: ["adult", "man"]
+    paranoia_limit: 1
+    initial_location: LOCATION_TYPE_CITY
+    rules:
+      - name: "Mastermind Chooses Start"
+        special_movement_rule:
+          description: "Mastermind chooses start location each loop"
+    abilities:
+      - type: ABILITY_TYPE_PASSIVE
+        description: "Mastermind chooses start location each loop"
+      - type: ABILITY_TYPE_ACTIVE
+        goodwill_rank: 3
+        description: "Dose not trigger incidents."
+
 
 # Mastermind card configurations. (IDs 6000-6999)
 mastermind_cards: {}
