@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/fs"
 	"os"
@@ -8,11 +9,12 @@ import (
 	"strings"
 
 	"github.com/xeipuuv/gojsonschema"
+	"gopkg.in/yaml.v2"
 )
 
 func main() {
 	dataDir := "data"
-	schemaDir := filepath.Join(dataDir, "jsonschema")
+	schemaDir := filepath.Join(dataDir, "schemas")
 
 	fmt.Println("Starting validation...")
 	if err := discoverAndValidate(dataDir, schemaDir); err != nil {
@@ -23,7 +25,7 @@ func main() {
 
 // discoverAndValidate 遍历 dataDir（递归），
 // • 如果是文件则直接校验；
-// • 如果是目录则校验其内部的 *.json；
+// • 如果是目录则校验其内部的 *.json, *.yaml, *.yml；
 // schema 的路径规则见上文说明。
 // 注意：schemaDir 自身及其子目录会被完全跳过。
 func discoverAndValidate(dataDir, schemaDir string) error {
@@ -72,48 +74,109 @@ func processDirectory(path, schemaDirAbs string, validatedCount *int) error {
 
 	entries, _ := os.ReadDir(path)
 	for _, e := range entries {
-		if e.IsDir() || !strings.HasSuffix(e.Name(), ".json") {
+		if e.IsDir() || !isSupportedDataFile(e.Name()) {
 			continue
 		}
 		dataPath := filepath.Join(path, e.Name())
-		validateFile(schemaPath, dataPath)
+		validate(schemaPath, dataPath)
 		*validatedCount++
 	}
 	return nil
 }
 
 func processFile(path, name, schemaDirAbs string, validatedCount *int) error {
-	if strings.HasSuffix(name, ".json") {
-		schemaPath := filepath.Join(schemaDirAbs, name)
+	if isSupportedDataFile(name) {
+		var schemaPath string
+		if name == "basic_tragedy_x.yaml" {
+			schemaPath = filepath.Join(schemaDirAbs, "ScriptConfig.json")
+		} else {
+			schemaPath = filepath.Join(schemaDirAbs, strings.TrimSuffix(name, filepath.Ext(name))+".json")
+		}
+
 		if fileExists(schemaPath) {
-			validateFile(schemaPath, path)
+			validate(schemaPath, path)
 			*validatedCount++
 		}
 	}
 	return nil
 }
 
-func validateFile(schemaPath, docPath string) {
+func validate(schemaPath, dataPath string) {
 	schemaAbs, _ := filepath.Abs(schemaPath)
-	docAbs, _ := filepath.Abs(docPath)
 
 	schemaLoader := gojsonschema.NewReferenceLoader("file://" + filepath.ToSlash(schemaAbs))
-	docLoader := gojsonschema.NewReferenceLoader("file://" + filepath.ToSlash(docAbs))
 
-	result, err := gojsonschema.Validate(schemaLoader, docLoader)
+	var dataToValidate interface{}
+	var err error
+	if strings.HasSuffix(dataPath, ".yaml") || strings.HasSuffix(dataPath, ".yml") {
+		dataToValidate, err = loadYamlFile(dataPath)
+	} else {
+		dataToValidate, err = loadJsonFile(dataPath)
+	}
 	if err != nil {
-		fmt.Printf("Error validating %s against %s: %v\n", docPath, schemaPath, err)
+		fmt.Printf("Error loading data from %s: %v\n", dataPath, err)
+		return
+	}
+
+	dataLoader := gojsonschema.NewGoLoader(dataToValidate)
+
+	result, err := gojsonschema.Validate(schemaLoader, dataLoader)
+	if err != nil {
+		fmt.Printf("Error validating %s against %s: %v\n", dataPath, schemaPath, err)
 		return
 	}
 
 	if result.Valid() {
-		fmt.Printf("OK  : %s is valid\n", docPath)
+		fmt.Printf("OK  : %s is valid\n", dataPath)
 	} else {
-		fmt.Printf("FAIL: %s is not valid. Errors:\n", docPath)
+		fmt.Printf("FAIL: %s is not valid. Errors:\n", dataPath)
 		for _, desc := range result.Errors() {
 			fmt.Printf("  - %s\n", desc)
 		}
 	}
+}
+
+func loadYamlFile(path string) (interface{}, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	var out interface{}
+	err = yaml.Unmarshal(data, &out)
+	if err != nil {
+		return nil, err
+	}
+	return convertMapKeysToStrings(out), nil
+}
+
+func convertMapKeysToStrings(i interface{}) interface{} {
+	switch x := i.(type) {
+	case map[interface{}]interface{}:
+		m := map[string]interface{}{}
+		for k, v := range x {
+			m[fmt.Sprintf("%v", k)] = convertMapKeysToStrings(v)
+		}
+		return m
+	case []interface{}:
+		for i, v := range x {
+			x[i] = convertMapKeysToStrings(v)
+		}
+	}
+	return i
+}
+
+func loadJsonFile(path string) (interface{}, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	var out interface{}
+	err = json.Unmarshal(data, &out)
+	return out, err
+}
+
+func isSupportedDataFile(name string) bool {
+	return strings.HasSuffix(name, ".json") || strings.HasSuffix(name, ".yaml") || strings.HasSuffix(name, ".yml")
 }
 
 // insideSchemaDir 判断 path 是否位于 schemaDir（含其子目录）内部。

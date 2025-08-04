@@ -42,6 +42,11 @@ lint: format
 	@echo "Linting..."
 	@$(GO) run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run
 
+# Validate the project
+validate:
+	@echo "Validating..."
+	@$(GO) run ./tools/autovalidator/main.go
+
 # Install tools
 install-tools:
 	@echo "Installing tools..."

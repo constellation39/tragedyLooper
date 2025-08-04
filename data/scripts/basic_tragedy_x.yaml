@@ -25,7 +25,7 @@ roles:
         id: 300101
         name: "Tragedy Always: Death of the Key Person"
         description: "If this character dies, the loop ends immediately."
-        trigger_type: ON_GAME_EVENT
+        trigger_type: TRIGGER_TYPE_ON_GAME_EVENT
         event_filters: [GAME_EVENT_TYPE_TRAIT_ADDED]
         is_mandatory: true
         conditions:
@@ -54,7 +54,7 @@ roles:
         id: 300201
         name: "Optional Day End: Assassinate"
         description: "At the end of the day, if the Key Person has 2+ Intrigue and is at your location, you may kill them."
-        trigger_type: ON_DAY_END
+        trigger_type: TRIGGER_TYPE_ON_DAY_END
         refusal_role: PLAYER_ROLE_MASTERMIND
         conditions:
           - stat_condition:
@@ -76,7 +76,7 @@ roles:
         id: 300202
         name: "Loss Condition: Uncontrollable Urges"
         description: "If this character has 4 or more Intrigue at the end of the day, the Protagonists lose."
-        trigger_type: ON_DAY_END
+        trigger_type: TRIGGER_TYPE_ON_DAY_END
         is_mandatory: true
         conditions:
           - stat_condition:
@@ -100,8 +100,8 @@ roles:
         id: 300301
         name: "Mastermind Ability: Scheme"
         description: "You may place 1 Intrigue on this location or on any character in this location."
-        trigger_type: ON_PHASE_START
-        event_filters: [GAME_PHASE_MASTERMIND_ABILITIES]
+        trigger_type: TRIGGER_TYPE_ON_PHASE_START
+
         refusal_role: PLAYER_ROLE_MASTERMIND
         requires_choice: true
         effect:
@@ -110,12 +110,12 @@ roles:
             sub_effects:
               - adjust_stat: # On location
                   # ENGINE-SIDE LOGIC: The engine must interpret this as adding intrigue to the location itself.
-                  target: { all_characters_at_location: {} } # Placeholder
+                  target: { action_user: {} }
                   stat_type: STAT_TYPE_INTRIGUE
                   amount: 1
               - adjust_stat: # On character at location
                   # ENGINE-SIDE LOGIC: The engine will present a choice of characters at the user's location.
-                  target: { all_characters_at_location: {} }
+                  target: { action_user: {} }
                   stat_type: STAT_TYPE_INTRIGUE
                   amount: 1
 
@@ -130,8 +130,8 @@ roles:
         id: 300401
         name: "Card Resolve: Fanatical Devotion"
         description: "You may ignore all Forbid Intrigue effects on this location and on all characters in this location."
-        trigger_type: ON_PHASE_START
-        event_filters: [GAME_PHASE_CARD_RESOLVE]
+        trigger_type: TRIGGER_TYPE_ON_PHASE_START
+        
         refusal_role: PLAYER_ROLE_PROTAGONIST
         # ENGINE-SIDE LOGIC: This is a rule-modifying ability. The engine must recognize this trait.
         effect:
@@ -150,7 +150,7 @@ roles:
         id: 300501
         name: "Mandatory Card Resolve: Paradox Shield"
         description: "Ignore Forbid Goodwill on this character."
-        trigger_type: ON_PASSIVE
+        trigger_type: TRIGGER_TYPE_ON_PASSIVE
         is_mandatory: true
         is_passive: true
         # ENGINE-SIDE LOGIC: This is a rule-modifying ability. The engine must recognize this trait.
@@ -163,7 +163,7 @@ roles:
         id: 300502
         name: "Loss Condition: Fading Existence"
         description: "On the last day, if this character has 2 or less Goodwill, the loop ends."
-        trigger_type: ON_DAY_END
+        trigger_type: TRIGGER_TYPE_ON_DAY_END
         is_mandatory: true
         conditions:
           - day_condition:
@@ -190,7 +190,7 @@ roles:
         id: 300601
         name: "Tragedy Loop End: A Friend's Truth"
         description: "If this character is dead at the end of the loop, their role is revealed."
-        trigger_type: ON_LOOP_END
+        trigger_type: TRIGGER_TYPE_ON_LOOP_END
         is_mandatory: true
         conditions:
           - trait_condition:
@@ -204,7 +204,7 @@ roles:
         id: 300602
         name: "Loop Start: Revealed Friendship"
         description: "If this character's role has been revealed, they start the loop with 1 extra Goodwill."
-        trigger_type: ON_LOOP_START
+        trigger_type: TRIGGER_TYPE_ON_LOOP_START
         is_mandatory: true
         conditions:
           - event_history_condition:
@@ -230,14 +230,14 @@ roles:
         id: 300701
         name: "Mastermind Ability: Spread Paranoia"
         description: "You may place 1 Paranoia on any character in this location."
-        trigger_type: ON_PHASE_START
-        event_filters: [GAME_PHASE_MASTERMIND_ABILITIES]
+        trigger_type: TRIGGER_TYPE_ON_PHASE_START
+
         refusal_role: PLAYER_ROLE_MASTERMIND
         requires_choice: true
         effect:
           adjust_stat:
             # ENGINE-SIDE LOGIC: The engine will present a choice of characters at the user's location.
-            target: { all_characters_at_location: {} }
+            target: { action_user: {} }
             stat_type: STAT_TYPE_PARANOIA
             amount: 1
 
@@ -252,7 +252,7 @@ roles:
         id: 300801
         name: "Mandatory Always: Heartbreak"
         description: "If the Loved One dies, this character gains 6 Paranoia."
-        trigger_type: ON_GAME_EVENT
+        trigger_type: TRIGGER_TYPE_ON_GAME_EVENT
         event_filters: [GAME_EVENT_TYPE_TRAIT_ADDED]
         is_mandatory: true
         conditions:
@@ -282,7 +282,7 @@ roles:
         id: 300901
         name: "Mandatory Always: Grief"
         description: "If the Lover dies, this character gains 6 Paranoia."
-        trigger_type: ON_GAME_EVENT
+        trigger_type: TRIGGER_TYPE_ON_GAME_EVENT
         event_filters: [GAME_EVENT_TYPE_TRAIT_ADDED]
         is_mandatory: true
         conditions:
@@ -305,7 +305,7 @@ roles:
         id: 300902
         name: "Loss Condition: Despair"
         description: "If this character has 3+ Paranoia and 1+ Intrigue at the end of the day, the Protagonists lose."
-        trigger_type: ON_DAY_END
+        trigger_type: TRIGGER_TYPE_ON_DAY_END
         is_mandatory: true
         conditions:
           - compound_condition:
@@ -337,7 +337,7 @@ roles:
         id: 301001
         name: "Mandatory Day End: Hunt"
         description: "If there is exactly one other living character at your location at the end of the day, that character dies."
-        trigger_type: ON_DAY_END
+        trigger_type: TRIGGER_TYPE_ON_DAY_END
         is_mandatory: true
         conditions:
           - location_character_count_condition:
@@ -348,7 +348,7 @@ roles:
         effect:
           add_trait:
             # ENGINE-SIDE LOGIC: The engine must resolve who the "other" character is (not the action_user).
-            target: { all_characters_at_location: {} } # Placeholder
+            target: { action_user: {} } # Placeholder
             trait: "Dead"
 
   # Factor (ID: 3011)
@@ -362,12 +362,12 @@ roles:
         id: 301101
         name: "Always: Absorb Conspiracy"
         description: "If there is 2+ Intrigue on the School, this character gains the Conspiracy Theorist's ability."
-        trigger_type: ON_PASSIVE
+        trigger_type: TRIGGER_TYPE_ON_PASSIVE
         is_mandatory: true
         conditions:
           - stat_condition:
               # ENGINE-SIDE LOGIC: This requires checking a stat on a location, not a character.
-              target: { location_stat: LOCATION_TYPE_SCHOOL } # Placeholder
+              target: { all_characters_at_location: "LOCATION_TYPE_SCHOOL" }
               stat_type: STAT_TYPE_INTRIGUE
               comparator: GREATER_THAN_OR_EQUAL_TO
               value: 2
@@ -380,12 +380,12 @@ roles:
         id: 301102
         name: "Always: Absorb Importance"
         description: "If there is 2+ Intrigue on the City, this character gains the Key Person's ability."
-        trigger_type: ON_PASSIVE
+        trigger_type: TRIGGER_TYPE_ON_PASSIVE
         is_mandatory: true
         conditions:
           - stat_condition:
               # ENGINE-SIDE LOGIC: This requires checking a stat on a location.
-              target: { location_stat: LOCATION_TYPE_CITY } # Placeholder
+              target: { all_characters_at_location: "LOCATION_TYPE_CITY" }
               stat_type: STAT_TYPE_INTRIGUE
               comparator: GREATER_THAN_OR_EQUAL_TO
               value: 2
