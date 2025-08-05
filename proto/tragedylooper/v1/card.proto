@@ -18,7 +18,7 @@ message CardConfig {
   // A user-facing description of the card's effect.
   string description = 3;
   // The type of the card, used for categorization and resolution order.
-  CardType type = 4;
+  CardType card_type = 4 [json_name = "type"];
   // The role that is allowed to use this card.
   PlayerRole owner_role = 5;
   // The effect or chain of effects the card produces when played.

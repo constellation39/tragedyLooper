@@ -32,7 +32,7 @@ type CardConfig struct {
 	// A user-facing description of the card's effect.
 	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	// The type of the card, used for categorization and resolution order.
-	Type CardType `protobuf:"varint,4,opt,name=type,proto3,enum=tragedylooper.v1.CardType" json:"type,omitempty"`
+	CardType CardType `protobuf:"varint,4,opt,name=card_type,json=type,proto3,enum=tragedylooper.v1.CardType" json:"card_type,omitempty"`
 	// The role that is allowed to use this card.
 	OwnerRole PlayerRole `protobuf:"varint,5,opt,name=owner_role,json=ownerRole,proto3,enum=tragedylooper.v1.PlayerRole" json:"owner_role,omitempty"`
 	// The effect or chain of effects the card produces when played.
@@ -96,9 +96,9 @@ func (x *CardConfig) GetDescription() string {
 	return ""
 }
 
-func (x *CardConfig) GetType() CardType {
+func (x *CardConfig) GetCardType() CardType {
 	if x != nil {
-		return x.Type
+		return x.CardType
 	}
 	return CardType_CARD_TYPE_UNSPECIFIED
 }
@@ -255,13 +255,13 @@ var File_tragedylooper_v1_card_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_card_proto_rawDesc = "" +
 	"\n" +
-	"\x1btragedylooper/v1/card.proto\x12\x10tragedylooper.v1\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1dtragedylooper/v1/common.proto\"\xb9\x02\n" +
+	"\x1btragedylooper/v1/card.proto\x12\x10tragedylooper.v1\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1dtragedylooper/v1/common.proto\"\xbe\x02\n" +
 	"\n" +
 	"CardConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12.\n" +
-	"\x04type\x18\x04 \x01(\x0e2\x1a.tragedylooper.v1.CardTypeR\x04type\x12;\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x123\n" +
+	"\tcard_type\x18\x04 \x01(\x0e2\x1a.tragedylooper.v1.CardTypeR\x04type\x12;\n" +
 	"\n" +
 	"owner_role\x18\x05 \x01(\x0e2\x1c.tragedylooper.v1.PlayerRoleR\townerRole\x128\n" +
 	"\x06effect\x18\x06 \x01(\v2 .tragedylooper.v1.CompoundEffectR\x06effect\x12\"\n" +
@@ -299,7 +299,7 @@ var file_tragedylooper_v1_card_proto_goTypes = []any{
 	(*Choice)(nil),         // 6: tragedylooper.v1.Choice
 }
 var file_tragedylooper_v1_card_proto_depIdxs = []int32{
-	3, // 0: tragedylooper.v1.CardConfig.type:type_name -> tragedylooper.v1.CardType
+	3, // 0: tragedylooper.v1.CardConfig.card_type:type_name -> tragedylooper.v1.CardType
 	4, // 1: tragedylooper.v1.CardConfig.owner_role:type_name -> tragedylooper.v1.PlayerRole
 	5, // 2: tragedylooper.v1.CardConfig.effect:type_name -> tragedylooper.v1.CompoundEffect
 	0, // 3: tragedylooper.v1.Card.config:type_name -> tragedylooper.v1.CardConfig

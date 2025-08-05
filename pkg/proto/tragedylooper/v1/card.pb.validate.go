@@ -63,7 +63,7 @@ func (m *CardConfig) validate(all bool) error {
 
 	// no validation rules for Description
 
-	// no validation rules for Type
+	// no validation rules for CardType
 
 	// no validation rules for OwnerRole
 

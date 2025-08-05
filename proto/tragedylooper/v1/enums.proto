@@ -90,6 +90,7 @@ enum TriggerType {
   TRIGGER_TYPE_ON_DAY_END = 10; // 每日结束时
   TRIGGER_TYPE_ON_LOOP_END = 11; // 循环结束时
   ABILITY_TYPE_ACTIVE = 12; // 主动能力
+  ABILITY_TYPE_PASSIVE = 13; // 被动能力
 }
 
 // 游戏事件类型（用于能力触发器过滤）

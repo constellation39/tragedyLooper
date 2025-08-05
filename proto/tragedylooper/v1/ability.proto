@@ -17,7 +17,7 @@ message AbilityConfig {
   // A description of the ability.
   string description = 3;
   // The trigger type for the ability.
-  TriggerType type = 4;
+  TriggerType ability_type = 4 [json_name = "type"];
   // Optional: filters for game event triggers.
   repeated GameEventType event_filters = 5;
   // The effect of the ability.
@@ -38,6 +38,12 @@ message AbilityConfig {
   bool requires_choice = 13;
   // The goodwill rank required to use the ability.
   int32 goodwill_rank = 14;
+  // A list of locations that the ability is restricted to.
+  repeated LocationType restricted_to_locations = 15 [json_name = "restricted_to_location"];
+  // The number of times the ability can be used per loop.
+  int32 times_per_loop = 16 [json_name = "times_per_loop"];
+  // Whether the ability is immune to goodwill refusal.
+  bool immune_to_goodwill_refusal = 17 [json_name = "immune_to_goodwill_refusal"];
 }
 
 // CompoundAbility defines a combination of multiple abilities.

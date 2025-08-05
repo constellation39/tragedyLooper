@@ -1,6 +1,7 @@
 package loader
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -83,6 +84,11 @@ func loadDataFromJSON(filePath string, data proto.Message) error {
 	if err != nil {
 		return fmt.Errorf("failed to read JSON file %s: %w", absPath, err)
 	}
+
+	// HACK: The source data is inconsistent. The ability trigger type is sometimes
+	// called "type" and sometimes "trigger_type". We replace all instances of
+	// "trigger_type" with "type" to make it consistent.
+	jsonBytes = bytes.ReplaceAll(jsonBytes, []byte(`"trigger_type"`), []byte(`"type"`))
 
 	// Using protojson to unmarshal is safer for protobuf messages.
 	if err := protojson.Unmarshal(jsonBytes, data); err != nil {

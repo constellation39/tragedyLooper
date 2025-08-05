@@ -964,7 +964,7 @@ type PlotConfig struct {
 	// The unique identifier for the plot.
 	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// The type of the plot.
-	Type PlotType `protobuf:"varint,2,opt,name=type,proto3,enum=tragedylooper.v1.PlotType" json:"type,omitempty"`
+	PlotType PlotType `protobuf:"varint,2,opt,name=plot_type,json=type,proto3,enum=tragedylooper.v1.PlotType" json:"plot_type,omitempty"`
 	// The name of the plot.
 	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	// A description of the plot.
@@ -1014,9 +1014,9 @@ func (x *PlotConfig) GetId() int32 {
 	return 0
 }
 
-func (x *PlotConfig) GetType() PlotType {
+func (x *PlotConfig) GetPlotType() PlotType {
 	if x != nil {
-		return x.Type
+		return x.PlotType
 	}
 	return PlotType_PLOT_TYPE_UNSPECIFIED
 }
@@ -1185,11 +1185,11 @@ const file_tragedylooper_v1_script_proto_rawDesc = "" +
 	"\x11can_be_invincible\x18\x06 \x01(\bR\x0fcanBeInvincible\x1a]\n" +
 	"\x0eAbilitiesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x125\n" +
-	"\x05value\x18\x02 \x01(\v2\x1f.tragedylooper.v1.AbilityConfigR\x05value:\x028\x01\"\xea\x03\n" +
+	"\x05value\x18\x02 \x01(\v2\x1f.tragedylooper.v1.AbilityConfigR\x05value:\x028\x01\"\xef\x03\n" +
 	"\n" +
 	"PlotConfig\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x02id\x12.\n" +
-	"\x04type\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.PlotTypeR\x04type\x12\x1b\n" +
+	"\x02id\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x02id\x123\n" +
+	"\tplot_type\x18\x02 \x01(\x0e2\x1a.tragedylooper.v1.PlotTypeR\x04type\x12\x1b\n" +
 	"\x04name\x18\x03 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04name\x12 \n" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12P\n" +
 	"\fincident_ids\x18\x05 \x03(\v2-.tragedylooper.v1.PlotConfig.IncidentIdsEntryR\vincidentIds\x12\\\n" +
@@ -1270,7 +1270,7 @@ var file_tragedylooper_v1_script_proto_depIdxs = []int32{
 	22, // 17: tragedylooper.v1.PrivateInfo.role_assignments:type_name -> tragedylooper.v1.PrivateInfo.RoleAssignmentsEntry
 	23, // 18: tragedylooper.v1.RoleConfig.abilities:type_name -> tragedylooper.v1.RoleConfig.AbilitiesEntry
 	26, // 19: tragedylooper.v1.RoleConfig.goodwill_rule:type_name -> tragedylooper.v1.GoodwillRuleType
-	27, // 20: tragedylooper.v1.PlotConfig.type:type_name -> tragedylooper.v1.PlotType
+	27, // 20: tragedylooper.v1.PlotConfig.plot_type:type_name -> tragedylooper.v1.PlotType
 	24, // 21: tragedylooper.v1.PlotConfig.incident_ids:type_name -> tragedylooper.v1.PlotConfig.IncidentIdsEntry
 	25, // 22: tragedylooper.v1.PlotConfig.role_assignments:type_name -> tragedylooper.v1.PlotConfig.RoleAssignmentsEntry
 	11, // 23: tragedylooper.v1.ScriptConfig.MainPlotsEntry.value:type_name -> tragedylooper.v1.PlotConfig

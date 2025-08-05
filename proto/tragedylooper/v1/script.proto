@@ -158,7 +158,7 @@ message PlotConfig {
   // The unique identifier for the plot.
   int32 id = 1 [ (validate.rules).int32.gt = 0 ];
   // The type of the plot.
-  PlotType type = 2;
+  PlotType plot_type = 2 [json_name = "type"];
   // The name of the plot.
   string name = 3 [ (validate.rules).string.min_len = 1 ];
   // A description of the plot.

@@ -84,7 +84,7 @@ type AbilityConfig struct {
 	// A description of the ability.
 	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	// The trigger type for the ability.
-	TriggerType TriggerType `protobuf:"varint,4,opt,name=trigger_type,json=triggerType,proto3,enum=tragedylooper.v1.TriggerType" json:"trigger_type,omitempty"`
+	AbilityType TriggerType `protobuf:"varint,4,opt,name=ability_type,json=type,proto3,enum=tragedylooper.v1.TriggerType" json:"ability_type,omitempty"`
 	// Optional: filters for game event triggers.
 	EventFilters []GameEventType `protobuf:"varint,5,rep,packed,name=event_filters,json=eventFilters,proto3,enum=tragedylooper.v1.GameEventType" json:"event_filters,omitempty"`
 	// The effect of the ability.
@@ -104,9 +104,15 @@ type AbilityConfig struct {
 	// Whether the ability requires a choice to be made.
 	RequiresChoice bool `protobuf:"varint,13,opt,name=requires_choice,json=requiresChoice,proto3" json:"requires_choice,omitempty"`
 	// The goodwill rank required to use the ability.
-	GoodwillRank  int32 `protobuf:"varint,14,opt,name=goodwill_rank,json=goodwillRank,proto3" json:"goodwill_rank,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	GoodwillRank int32 `protobuf:"varint,14,opt,name=goodwill_rank,json=goodwillRank,proto3" json:"goodwill_rank,omitempty"`
+	// A list of locations that the ability is restricted to.
+	RestrictedToLocations []LocationType `protobuf:"varint,15,rep,packed,name=restricted_to_locations,json=restricted_to_location,proto3,enum=tragedylooper.v1.LocationType" json:"restricted_to_locations,omitempty"`
+	// The number of times the ability can be used per loop.
+	TimesPerLoop int32 `protobuf:"varint,16,opt,name=times_per_loop,proto3" json:"times_per_loop,omitempty"`
+	// Whether the ability is immune to goodwill refusal.
+	ImmuneToGoodwillRefusal bool `protobuf:"varint,17,opt,name=immune_to_goodwill_refusal,proto3" json:"immune_to_goodwill_refusal,omitempty"`
+	unknownFields           protoimpl.UnknownFields
+	sizeCache               protoimpl.SizeCache
 }
 
 func (x *AbilityConfig) Reset() {
@@ -160,9 +166,9 @@ func (x *AbilityConfig) GetDescription() string {
 	return ""
 }
 
-func (x *AbilityConfig) GetTriggerType() TriggerType {
+func (x *AbilityConfig) GetAbilityType() TriggerType {
 	if x != nil {
-		return x.TriggerType
+		return x.AbilityType
 	}
 	return TriggerType_TRIGGER_TYPE_UNSPECIFIED
 }
@@ -235,6 +241,27 @@ func (x *AbilityConfig) GetGoodwillRank() int32 {
 		return x.GoodwillRank
 	}
 	return 0
+}
+
+func (x *AbilityConfig) GetRestrictedToLocations() []LocationType {
+	if x != nil {
+		return x.RestrictedToLocations
+	}
+	return nil
+}
+
+func (x *AbilityConfig) GetTimesPerLoop() int32 {
+	if x != nil {
+		return x.TimesPerLoop
+	}
+	return 0
+}
+
+func (x *AbilityConfig) GetImmuneToGoodwillRefusal() bool {
+	if x != nil {
+		return x.ImmuneToGoodwillRefusal
+	}
+	return false
 }
 
 // CompoundAbility defines a combination of multiple abilities.
@@ -360,12 +387,12 @@ var File_tragedylooper_v1_ability_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_ability_proto_rawDesc = "" +
 	"\n" +
-	"\x1etragedylooper/v1/ability.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\"\xdd\x04\n" +
+	"\x1etragedylooper/v1/ability.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\"\x97\x06\n" +
 	"\rAbilityConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12@\n" +
-	"\ftrigger_type\x18\x04 \x01(\x0e2\x1d.tragedylooper.v1.TriggerTypeR\vtriggerType\x12D\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x129\n" +
+	"\fability_type\x18\x04 \x01(\x0e2\x1d.tragedylooper.v1.TriggerTypeR\x04type\x12D\n" +
 	"\revent_filters\x18\x05 \x03(\x0e2\x1f.tragedylooper.v1.GameEventTypeR\feventFilters\x120\n" +
 	"\x06effect\x18\x06 \x01(\v2\x18.tragedylooper.v1.EffectR\x06effect\x12\"\n" +
 	"\ronce_per_loop\x18\a \x01(\bR\voncePerLoop\x12?\n" +
@@ -379,7 +406,10 @@ const file_tragedylooper_v1_ability_proto_rawDesc = "" +
 	"conditions\x18\f \x03(\v2\x1b.tragedylooper.v1.ConditionR\n" +
 	"conditions\x12'\n" +
 	"\x0frequires_choice\x18\r \x01(\bR\x0erequiresChoice\x12#\n" +
-	"\rgoodwill_rank\x18\x0e \x01(\x05R\fgoodwillRank\"\xe8\x01\n" +
+	"\rgoodwill_rank\x18\x0e \x01(\x05R\fgoodwillRank\x12W\n" +
+	"\x17restricted_to_locations\x18\x0f \x03(\x0e2\x1e.tragedylooper.v1.LocationTypeR\x16restricted_to_location\x12&\n" +
+	"\x0etimes_per_loop\x18\x10 \x01(\x05R\x0etimes_per_loop\x12>\n" +
+	"\x1aimmune_to_goodwill_refusal\x18\x11 \x01(\bR\x1aimmune_to_goodwill_refusal\"\xe8\x01\n" +
 	"\x0fCompoundAbility\x12F\n" +
 	"\boperator\x18\x01 \x01(\x0e2*.tragedylooper.v1.CompoundAbility.OperatorR\boperator\x12D\n" +
 	"\rsub_abilities\x18\x02 \x03(\v2\x1f.tragedylooper.v1.AbilityConfigR\fsubAbilities\"G\n" +
@@ -417,21 +447,23 @@ var file_tragedylooper_v1_ability_proto_goTypes = []any{
 	(*Effect)(nil),                // 6: tragedylooper.v1.Effect
 	(PlayerRole)(0),               // 7: tragedylooper.v1.PlayerRole
 	(*Condition)(nil),             // 8: tragedylooper.v1.Condition
+	(LocationType)(0),             // 9: tragedylooper.v1.LocationType
 }
 var file_tragedylooper_v1_ability_proto_depIdxs = []int32{
-	4, // 0: tragedylooper.v1.AbilityConfig.trigger_type:type_name -> tragedylooper.v1.TriggerType
+	4, // 0: tragedylooper.v1.AbilityConfig.ability_type:type_name -> tragedylooper.v1.TriggerType
 	5, // 1: tragedylooper.v1.AbilityConfig.event_filters:type_name -> tragedylooper.v1.GameEventType
 	6, // 2: tragedylooper.v1.AbilityConfig.effect:type_name -> tragedylooper.v1.Effect
 	7, // 3: tragedylooper.v1.AbilityConfig.refusal_role:type_name -> tragedylooper.v1.PlayerRole
 	8, // 4: tragedylooper.v1.AbilityConfig.conditions:type_name -> tragedylooper.v1.Condition
-	0, // 5: tragedylooper.v1.CompoundAbility.operator:type_name -> tragedylooper.v1.CompoundAbility.Operator
-	1, // 6: tragedylooper.v1.CompoundAbility.sub_abilities:type_name -> tragedylooper.v1.AbilityConfig
-	1, // 7: tragedylooper.v1.Ability.config:type_name -> tragedylooper.v1.AbilityConfig
-	8, // [8:8] is the sub-list for method output_type
-	8, // [8:8] is the sub-list for method input_type
-	8, // [8:8] is the sub-list for extension type_name
-	8, // [8:8] is the sub-list for extension extendee
-	0, // [0:8] is the sub-list for field type_name
+	9, // 5: tragedylooper.v1.AbilityConfig.restricted_to_locations:type_name -> tragedylooper.v1.LocationType
+	0, // 6: tragedylooper.v1.CompoundAbility.operator:type_name -> tragedylooper.v1.CompoundAbility.Operator
+	1, // 7: tragedylooper.v1.CompoundAbility.sub_abilities:type_name -> tragedylooper.v1.AbilityConfig
+	1, // 8: tragedylooper.v1.Ability.config:type_name -> tragedylooper.v1.AbilityConfig
+	9, // [9:9] is the sub-list for method output_type
+	9, // [9:9] is the sub-list for method input_type
+	9, // [9:9] is the sub-list for extension type_name
+	9, // [9:9] is the sub-list for extension extendee
+	0, // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_tragedylooper_v1_ability_proto_init() }

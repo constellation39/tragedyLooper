@@ -23,7 +23,7 @@ func TestLoadConfig(t *testing.T) {
 	// Check script
 	script := config.GetScript()
 	assert.NotNil(t, script)
-	assert.Equal(t, "First Steps", script.Name)
+	assert.Equal(t, "Basic Tragedy Set X", script.Name)
 	// assert.Equal(t, int32(3), script.LoopCount)
 	// assert.Equal(t, int32(4), script.DaysPerLoop)
 
@@ -34,10 +34,10 @@ func TestLoadConfig(t *testing.T) {
 	// Check cards
 	cards := config.GetCardMap()
 	assert.Len(t, cards, 15)
-	card1 := cards[1]
+	card1 := cards[6001]
 	assert.Equal(t, "Move", card1.Name)
-	assert.Equal(t, v1.CardType_CARD_TYPE_FORBID_MOVEMENT, card1.Type)
-	assert.Equal(t, v1.PlayerRole_PLAYER_ROLE_PROTAGONIST, card1.OwnerRole)
+	assert.Equal(t, v1.CardType_CARD_TYPE_MOVE_HORIZONTALLY, card1.GetCardType())
+	assert.Equal(t, v1.PlayerRole_PLAYER_ROLE_MASTERMIND, card1.OwnerRole)
 
 	// Check characters
 	characters := config.GetCharacterMap()

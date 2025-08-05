@@ -422,6 +422,7 @@ const (
 	TriggerType_TRIGGER_TYPE_ON_DAY_END     TriggerType = 10 // 每日结束时
 	TriggerType_TRIGGER_TYPE_ON_LOOP_END    TriggerType = 11 // 循环结束时
 	TriggerType_ABILITY_TYPE_ACTIVE         TriggerType = 12 // 主动能力
+	TriggerType_ABILITY_TYPE_PASSIVE        TriggerType = 13 // 被动能力
 )
 
 // Enum value maps for TriggerType.
@@ -440,6 +441,7 @@ var (
 		10: "TRIGGER_TYPE_ON_DAY_END",
 		11: "TRIGGER_TYPE_ON_LOOP_END",
 		12: "ABILITY_TYPE_ACTIVE",
+		13: "ABILITY_TYPE_PASSIVE",
 	}
 	TriggerType_value = map[string]int32{
 		"TRIGGER_TYPE_UNSPECIFIED":    0,
@@ -455,6 +457,7 @@ var (
 		"TRIGGER_TYPE_ON_DAY_END":     10,
 		"TRIGGER_TYPE_ON_LOOP_END":    11,
 		"ABILITY_TYPE_ACTIVE":         12,
+		"ABILITY_TYPE_PASSIVE":        13,
 	}
 )
 
@@ -766,7 +769,7 @@ const file_tragedylooper_v1_enums_proto_rawDesc = "" +
 	"\x16LOCATION_TYPE_HOSPITAL\x10\x01\x12\x18\n" +
 	"\x14LOCATION_TYPE_SHRINE\x10\x02\x12\x16\n" +
 	"\x12LOCATION_TYPE_CITY\x10\x03\x12\x18\n" +
-	"\x14LOCATION_TYPE_SCHOOL\x10\x04*\x99\x03\n" +
+	"\x14LOCATION_TYPE_SCHOOL\x10\x04*\xb3\x03\n" +
 	"\vTriggerType\x12\x1c\n" +
 	"\x18TRIGGER_TYPE_UNSPECIFIED\x10\x00\x12\x1e\n" +
 	"\x1aTRIGGER_TYPE_ON_GAME_SETUP\x10\x01\x12\x1e\n" +
@@ -781,7 +784,8 @@ const file_tragedylooper_v1_enums_proto_rawDesc = "" +
 	"\x17TRIGGER_TYPE_ON_DAY_END\x10\n" +
 	"\x12\x1c\n" +
 	"\x18TRIGGER_TYPE_ON_LOOP_END\x10\v\x12\x17\n" +
-	"\x13ABILITY_TYPE_ACTIVE\x10\f*\x8e\a\n" +
+	"\x13ABILITY_TYPE_ACTIVE\x10\f\x12\x18\n" +
+	"\x14ABILITY_TYPE_PASSIVE\x10\r*\x8e\a\n" +
 	"\rGameEventType\x12\x1f\n" +
 	"\x1bGAME_EVENT_TYPE_UNSPECIFIED\x10\x00\x12#\n" +
 	"\x1fGAME_EVENT_TYPE_CHARACTER_MOVED\x10\x01\x12%\n" +

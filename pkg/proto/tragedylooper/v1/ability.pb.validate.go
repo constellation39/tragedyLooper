@@ -63,7 +63,7 @@ func (m *AbilityConfig) validate(all bool) error {
 
 	// no validation rules for Description
 
-	// no validation rules for TriggerType
+	// no validation rules for AbilityType
 
 	if all {
 		switch v := interface{}(m.GetEffect()).(type) {
@@ -141,6 +141,10 @@ func (m *AbilityConfig) validate(all bool) error {
 	// no validation rules for RequiresChoice
 
 	// no validation rules for GoodwillRank
+
+	// no validation rules for TimesPerLoop
+
+	// no validation rules for ImmuneToGoodwillRefusal
 
 	if len(errors) > 0 {
 		return AbilityConfigMultiError(errors)
