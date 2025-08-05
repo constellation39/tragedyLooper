@@ -231,9 +231,11 @@ type PrivateInfo struct {
 	// A map of characters in the script.
 	CharactersIds []int32 `protobuf:"varint,3,rep,packed,name=characters_ids,json=charactersIds,proto3" json:"characters_ids,omitempty"`
 	// A map of incidents in the script.
-	IncidentIds   []int32 `protobuf:"varint,4,rep,packed,name=incident_ids,json=incidentIds,proto3" json:"incident_ids,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	IncidentIds []int32 `protobuf:"varint,4,rep,packed,name=incident_ids,json=incidentIds,proto3" json:"incident_ids,omitempty"`
+	// A map of character to role assignments, derived from the selected plots.
+	RoleAssignments map[int32]int32 `protobuf:"bytes,5,rep,name=role_assignments,json=roleAssignments,proto3" json:"role_assignments,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *PrivateInfo) Reset() {
@@ -290,6 +292,13 @@ func (x *PrivateInfo) GetCharactersIds() []int32 {
 func (x *PrivateInfo) GetIncidentIds() []int32 {
 	if x != nil {
 		return x.IncidentIds
+	}
+	return nil
+}
+
+func (x *PrivateInfo) GetRoleAssignments() map[int32]int32 {
+	if x != nil {
+		return x.RoleAssignments
 	}
 	return nil
 }
@@ -627,13 +636,17 @@ const file_tragedylooper_v1_script_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x02id\x12@\n" +
 	"\fprivate_info\x18\x02 \x01(\v2\x1d.tragedylooper.v1.PrivateInfoR\vprivateInfo\x12=\n" +
 	"\vpublic_info\x18\x03 \x01(\v2\x1c.tragedylooper.v1.PublicInfoR\n" +
-	"publicInfo\"\x9d\x01\n" +
+	"publicInfo\"\xc0\x02\n" +
 	"\vPrivateInfo\x12 \n" +
 	"\fmain_plot_id\x18\x01 \x01(\x05R\n" +
 	"mainPlotId\x12\"\n" +
 	"\rsub_plots_ids\x18\x02 \x03(\x05R\vsubPlotsIds\x12%\n" +
 	"\x0echaracters_ids\x18\x03 \x03(\x05R\rcharactersIds\x12!\n" +
-	"\fincident_ids\x18\x04 \x03(\x05R\vincidentIds\"\x9d\x02\n" +
+	"\fincident_ids\x18\x04 \x03(\x05R\vincidentIds\x12]\n" +
+	"\x10role_assignments\x18\x05 \x03(\v22.tragedylooper.v1.PrivateInfo.RoleAssignmentsEntryR\x0froleAssignments\x1aB\n" +
+	"\x14RoleAssignmentsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\x9d\x02\n" +
 	"\n" +
 	"PublicInfo\x121\n" +
 	"\x10script_config_id\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x0escriptConfigId\x12&\n" +
@@ -683,7 +696,7 @@ func file_tragedylooper_v1_script_proto_rawDescGZIP() []byte {
 	return file_tragedylooper_v1_script_proto_rawDescData
 }
 
-var file_tragedylooper_v1_script_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_tragedylooper_v1_script_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_tragedylooper_v1_script_proto_goTypes = []any{
 	(*ScriptConfig)(nil),    // 0: tragedylooper.v1.ScriptConfig
 	(*ScriptModel)(nil),     // 1: tragedylooper.v1.ScriptModel
@@ -699,15 +712,16 @@ var file_tragedylooper_v1_script_proto_goTypes = []any{
 	nil,                     // 11: tragedylooper.v1.ScriptConfig.MastermindCardsEntry
 	nil,                     // 12: tragedylooper.v1.ScriptConfig.ProtagonistCardsEntry
 	nil,                     // 13: tragedylooper.v1.ScriptConfig.ScriptModelsEntry
-	nil,                     // 14: tragedylooper.v1.RoleConfig.AbilitiesEntry
-	nil,                     // 15: tragedylooper.v1.PlotConfig.IncidentIdsEntry
-	nil,                     // 16: tragedylooper.v1.PlotConfig.RoleAssignmentsEntry
-	(GoodwillRuleType)(0),   // 17: tragedylooper.v1.GoodwillRuleType
-	(PlotType)(0),           // 18: tragedylooper.v1.PlotType
-	(*IncidentConfig)(nil),  // 19: tragedylooper.v1.IncidentConfig
-	(*CharacterConfig)(nil), // 20: tragedylooper.v1.CharacterConfig
-	(*CardConfig)(nil),      // 21: tragedylooper.v1.CardConfig
-	(*AbilityConfig)(nil),   // 22: tragedylooper.v1.AbilityConfig
+	nil,                     // 14: tragedylooper.v1.PrivateInfo.RoleAssignmentsEntry
+	nil,                     // 15: tragedylooper.v1.RoleConfig.AbilitiesEntry
+	nil,                     // 16: tragedylooper.v1.PlotConfig.IncidentIdsEntry
+	nil,                     // 17: tragedylooper.v1.PlotConfig.RoleAssignmentsEntry
+	(GoodwillRuleType)(0),   // 18: tragedylooper.v1.GoodwillRuleType
+	(PlotType)(0),           // 19: tragedylooper.v1.PlotType
+	(*IncidentConfig)(nil),  // 20: tragedylooper.v1.IncidentConfig
+	(*CharacterConfig)(nil), // 21: tragedylooper.v1.CharacterConfig
+	(*CardConfig)(nil),      // 22: tragedylooper.v1.CardConfig
+	(*AbilityConfig)(nil),   // 23: tragedylooper.v1.AbilityConfig
 }
 var file_tragedylooper_v1_script_proto_depIdxs = []int32{
 	6,  // 0: tragedylooper.v1.ScriptConfig.main_plots:type_name -> tragedylooper.v1.ScriptConfig.MainPlotsEntry
@@ -720,26 +734,27 @@ var file_tragedylooper_v1_script_proto_depIdxs = []int32{
 	13, // 7: tragedylooper.v1.ScriptConfig.script_models:type_name -> tragedylooper.v1.ScriptConfig.ScriptModelsEntry
 	2,  // 8: tragedylooper.v1.ScriptModel.private_info:type_name -> tragedylooper.v1.PrivateInfo
 	3,  // 9: tragedylooper.v1.ScriptModel.public_info:type_name -> tragedylooper.v1.PublicInfo
-	14, // 10: tragedylooper.v1.RoleConfig.abilities:type_name -> tragedylooper.v1.RoleConfig.AbilitiesEntry
-	17, // 11: tragedylooper.v1.RoleConfig.goodwill_rule:type_name -> tragedylooper.v1.GoodwillRuleType
-	18, // 12: tragedylooper.v1.PlotConfig.type:type_name -> tragedylooper.v1.PlotType
-	15, // 13: tragedylooper.v1.PlotConfig.incident_ids:type_name -> tragedylooper.v1.PlotConfig.IncidentIdsEntry
-	16, // 14: tragedylooper.v1.PlotConfig.role_assignments:type_name -> tragedylooper.v1.PlotConfig.RoleAssignmentsEntry
-	5,  // 15: tragedylooper.v1.ScriptConfig.MainPlotsEntry.value:type_name -> tragedylooper.v1.PlotConfig
-	5,  // 16: tragedylooper.v1.ScriptConfig.SubPlotsEntry.value:type_name -> tragedylooper.v1.PlotConfig
-	4,  // 17: tragedylooper.v1.ScriptConfig.RolesEntry.value:type_name -> tragedylooper.v1.RoleConfig
-	19, // 18: tragedylooper.v1.ScriptConfig.IncidentsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
-	20, // 19: tragedylooper.v1.ScriptConfig.CharactersEntry.value:type_name -> tragedylooper.v1.CharacterConfig
-	21, // 20: tragedylooper.v1.ScriptConfig.MastermindCardsEntry.value:type_name -> tragedylooper.v1.CardConfig
-	21, // 21: tragedylooper.v1.ScriptConfig.ProtagonistCardsEntry.value:type_name -> tragedylooper.v1.CardConfig
-	1,  // 22: tragedylooper.v1.ScriptConfig.ScriptModelsEntry.value:type_name -> tragedylooper.v1.ScriptModel
-	22, // 23: tragedylooper.v1.RoleConfig.AbilitiesEntry.value:type_name -> tragedylooper.v1.AbilityConfig
-	19, // 24: tragedylooper.v1.PlotConfig.IncidentIdsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
-	25, // [25:25] is the sub-list for method output_type
-	25, // [25:25] is the sub-list for method input_type
-	25, // [25:25] is the sub-list for extension type_name
-	25, // [25:25] is the sub-list for extension extendee
-	0,  // [0:25] is the sub-list for field type_name
+	14, // 10: tragedylooper.v1.PrivateInfo.role_assignments:type_name -> tragedylooper.v1.PrivateInfo.RoleAssignmentsEntry
+	15, // 11: tragedylooper.v1.RoleConfig.abilities:type_name -> tragedylooper.v1.RoleConfig.AbilitiesEntry
+	18, // 12: tragedylooper.v1.RoleConfig.goodwill_rule:type_name -> tragedylooper.v1.GoodwillRuleType
+	19, // 13: tragedylooper.v1.PlotConfig.type:type_name -> tragedylooper.v1.PlotType
+	16, // 14: tragedylooper.v1.PlotConfig.incident_ids:type_name -> tragedylooper.v1.PlotConfig.IncidentIdsEntry
+	17, // 15: tragedylooper.v1.PlotConfig.role_assignments:type_name -> tragedylooper.v1.PlotConfig.RoleAssignmentsEntry
+	5,  // 16: tragedylooper.v1.ScriptConfig.MainPlotsEntry.value:type_name -> tragedylooper.v1.PlotConfig
+	5,  // 17: tragedylooper.v1.ScriptConfig.SubPlotsEntry.value:type_name -> tragedylooper.v1.PlotConfig
+	4,  // 18: tragedylooper.v1.ScriptConfig.RolesEntry.value:type_name -> tragedylooper.v1.RoleConfig
+	20, // 19: tragedylooper.v1.ScriptConfig.IncidentsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
+	21, // 20: tragedylooper.v1.ScriptConfig.CharactersEntry.value:type_name -> tragedylooper.v1.CharacterConfig
+	22, // 21: tragedylooper.v1.ScriptConfig.MastermindCardsEntry.value:type_name -> tragedylooper.v1.CardConfig
+	22, // 22: tragedylooper.v1.ScriptConfig.ProtagonistCardsEntry.value:type_name -> tragedylooper.v1.CardConfig
+	1,  // 23: tragedylooper.v1.ScriptConfig.ScriptModelsEntry.value:type_name -> tragedylooper.v1.ScriptModel
+	23, // 24: tragedylooper.v1.RoleConfig.AbilitiesEntry.value:type_name -> tragedylooper.v1.AbilityConfig
+	20, // 25: tragedylooper.v1.PlotConfig.IncidentIdsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
+	26, // [26:26] is the sub-list for method output_type
+	26, // [26:26] is the sub-list for method input_type
+	26, // [26:26] is the sub-list for extension type_name
+	26, // [26:26] is the sub-list for extension extendee
+	0,  // [0:26] is the sub-list for field type_name
 }
 
 func init() { file_tragedylooper_v1_script_proto_init() }
@@ -758,7 +773,7 @@ func file_tragedylooper_v1_script_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_script_proto_rawDesc), len(file_tragedylooper_v1_script_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   17,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

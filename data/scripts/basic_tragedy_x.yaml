@@ -831,10 +831,334 @@ characters:
 
 
 # Mastermind card configurations. (IDs 6000-6999)
-mastermind_cards: {}
+mastermind_cards:
+  6001:
+    id: 6001
+    name: "Move"
+    type: CARD_TYPE_MOVEMENT
+    owner_role: PLAYER_ROLE_MASTERMIND
+    effect:
+      sub_effects:
+        - move_character: {}
+  6002:
+    id: 6002
+    name: "Add Paranoia"
+    type: CARD_TYPE_PARANOIA_PLUS
+    owner_role: PLAYER_ROLE_MASTERMIND
+    effect:
+      sub_effects:
+        - adjust_stat:
+            stat_type: STAT_TYPE_PARANOIA
+            amount: 1
+  6003:
+    id: 6003
+    name: "Add Goodwill"
+    type: CARD_TYPE_GOODWILL_PLUS
+    owner_role: PLAYER_ROLE_MASTERMIND
+    effect:
+      sub_effects:
+        - adjust_stat:
+            stat_type: STAT_TYPE_GOODWILL
+            amount: 1
+  6004:
+    id: 6004
+    name: "Add Intrigue"
+    type: CARD_TYPE_INTRIGUE_PLUS
+    owner_role: PLAYER_ROLE_MASTERMIND
+    effect:
+      sub_effects:
+        - adjust_stat:
+            stat_type: STAT_TYPE_INTRIGUE
+            amount: 1
+  6005:
+    id: 6005
+    name: "Forbid Goodwill"
+    type: CARD_TYPE_FORBID_GOODWILL_INCREASE
+    owner_role: PLAYER_ROLE_MASTERMIND
+    effect:
+      sub_effects:
+        - forbid:
+            forbid_type: FORBID_TYPE_GOODWILL_CHANGE
+  6006:
+    id: 6006
+    name: "Forbid Paranoia"
+    type: CARD_TYPE_FORBID_PARANOIA_INCREASE
+    owner_role: PLAYER_ROLE_MASTERMIND
+    effect:
+      sub_effects:
+        - forbid:
+            forbid_type: FORBID_TYPE_PARANOIA_CHANGE
+  6007:
+    id: 6007
+    name: "Add Intrigue +2"
+    type: CARD_TYPE_INTRIGUE_PLUS
+    owner_role: PLAYER_ROLE_MASTERMIND
+    effect:
+      sub_effects:
+        - adjust_stat:
+            stat_type: STAT_TYPE_INTRIGUE
+            amount: 2
+    once_per_loop: true
 
 # Protagonist card configurations. (IDs 7000-7999)
-protagonist_cards: {}
+protagonist_cards:
+  7001:
+    id: 7001
+    name: "Move"
+    type: CARD_TYPE_MOVEMENT
+    owner_role: PLAYER_ROLE_PROTAGONIST
+    effect:
+      sub_effects:
+        - move_character: {}
+  7002:
+    id: 7002
+    name: "Add Paranoia"
+    type: CARD_TYPE_PARANOIA_MINUS
+    owner_role: PLAYER_ROLE_PROTAGONIST
+    effect:
+      sub_effects:
+        - adjust_stat:
+            stat_type: STAT_TYPE_PARANOIA
+            amount: -1
+  7003:
+    id: 7003
+    name: "Add Goodwill"
+    type: CARD_TYPE_GOODWILL_PLUS
+    owner_role: PLAYER_ROLE_PROTAGONIST
+    effect:
+      sub_effects:
+        - adjust_stat:
+            stat_type: STAT_TYPE_GOODWILL
+            amount: 1
+  7004:
+    id: 7004
+    name: "Add Intrigue"
+    type: CARD_TYPE_INTRIGUE_PLUS
+    owner_role: PLAYER_ROLE_PROTAGONIST
+    effect:
+      sub_effects:
+        - adjust_stat:
+            stat_type: STAT_TYPE_INTRIGUE
+            amount: 1
+  7005:
+    id: 7005
+    name: "Forbid MOVEMENT"
+    type: CARD_TYPE_FORBID_MOVEMENT
+    owner_role: PLAYER_ROLE_PROTAGONIST
+    effect:
+      sub_effects:
+        - forbid:
+            forbid_type: FORBID_TYPE_MOVEMENT
+  7006:
+    id: 7006
+    name: "Forbid Paranoia"
+    type: CARD_TYPE_FORBID_PARANOIA_INCREASE
+    owner_role: PLAYER_ROLE_PROTAGONIST
+    effect:
+      sub_effects:
+        - forbid:
+            forbid_type: FORBID_TYPE_PARANOIA_CHANGE
+  7007:
+    id: 7007
+    name: "Forbid Intrigue"
+    type: CARD_TYPE_FORBID_INTRIGUE_INCREASE
+    owner_role: PLAYER_ROLE_PROTAGONIST
+    effect:
+      sub_effects:
+        - forbid:
+            forbid_type: FORBID_TYPE_INTRIGUE_CHANGE
+  7008:
+    id: 7008
+    name: "Add Goodwill +2"
+    type: CARD_TYPE_GOODWILL_PLUS
+    owner_role: PLAYER_ROLE_PROTAGONIST
+    effect:
+      sub_effects:
+        - adjust_stat:
+            stat_type: STAT_TYPE_GOODWILL
+            amount: 2
+    once_per_loop: true
 
 # Script models (specific scenarios using this script config). (IDs 8000-8999)
-script_models: {}
+script_models:
+  8001:
+    id: 8001
+    metadata:
+      title: "Young Women’s Battlefield"
+      set:
+        - name: "Tragedy Looper"
+          number: 3
+      tragedy_set: "basicTragedy"
+      days_per_loop: 6
+      difficulty_sets:
+        - number_of_loops: 4
+          difficulty: 2
+        - number_of_loops: 3
+          difficulty: 4
+      main_plot:
+        - "signWithMe"
+      sub_plots:
+        - "loveAffair"
+        - "hiddenFreak"
+      cast:
+        boyStudent: { role_name: "person" }
+        girlStudent: { role_name: "friend" }
+        classRep: { role_name: "lovedOne" }
+        shrineMaiden: { role_name: "keyPerson" }
+        policeOfficer: { role_name: "person" }
+        officeWorker: { role_name: "lover" }
+        informer: { role_name: "serialKiller" }
+        patient: { role_name: "person" }
+        nurse: { role_name: "person" }
+      incidents:
+        - day: 3
+          incident: "foulEvil"
+          culprit: "officeWorker"
+        - day: 4
+          incident: "increasingUnease"
+          culprit: "classRep"
+        - day: 6
+          incident: "suicide"
+          culprit: "girlStudent"
+      victory_conditions: "See Tragedy Looper Mastermind Handbook"
+      story: "See Tragedy Looper Mastermind Handbook"
+      mastermind_hints: "See Tragedy Looper Mastermind Handbook"
+  8002:
+    id: 8002
+    metadata:
+      title: "Magical Girls' Superiority"
+      creator: "M.Hydrome"
+      set:
+        - name: "New Tragedies"
+          number: 3
+      difficulty_sets:
+        - number_of_loops: 4
+          difficulty: 2
+        - number_of_loops: 3
+          difficulty: 3
+      tragedy_set: "basicTragedy"
+      main_plot:
+        - "signWithMe"
+      sub_plots:
+        - "unsettlingRumor"
+        - "hiddenFreak"
+      days_per_loop: 5
+      cast:
+        popIdol: { role_name: "keyPerson" }
+        doctor: { role_name: "conspiracyTheorist" }
+        boyStudent: { role_name: "serialKiller" }
+        patient: { role_name: "person" }
+        teacher: { role_name: "person" }
+        richStudent: { role_name: "person" }
+        shrineMaiden: { role_name: "friend" }
+      incidents:
+        - day: 2
+          incident: "increasingUnease"
+          culprit: "patient"
+        - day: 3
+          incident: "hospitalIncident"
+          culprit: "shrineMaiden"
+        - day: 5
+          incident: "missingPerson"
+          culprit: "boyStudent"
+      special_rules:
+        - ""
+      victory_conditions: |
+        This is a script recommended for those who are playing :basicTragedy: for the first time. This is where it begins for real. Now you have 2 Subplots and seven people in the cast. Also, there are 5 days each loop
+
+        That said, the difficulty is still set to very low. Protagonists who come from :firstSteps: won’t feel super confused and will be able to enjoy the extra additions well enough. It’s not difficult to play as Mastermind either. But beware of the Final Guess. If all roles are clear, then you will lose, and that is more stressful than it may seem.
+      story: |
+        For boys and girls, the world is a constant battlefield. Each tiny little disturbance will shake their inexperienced souls. Especially in this town, where seductors lure with the promise of magic powers – without explaining the consequences
+
+        The school was bubbling with talk. “Spells” and “magic”, and everyone knows that you CAN become a magical girl, if you just sign the contract. Eventually, the :popIdol: will sign, and she will die. Can the Protagonists stop this tragedy from happening?
+      mastermind_hints: |
+        The best way to win is through the Hospital :horror: and to place :intrigue: on the Idol. This reveals the least information.
+
+        Start day 1 and 2 with :paranoia: +1 on the :patient:, and a bluff and :intrigue: +1 on the Shrine and Hospital respectively.
+
+        Also from day 1, use the :conspiracyTheorist: and trigger :spreading: :paranoia:. If you get some :intrigue: on the Hospital, put 2 :paranoia: on the :shrineMaiden:, and trigger the Hospital :horror:.
+
+        On day 3, you can use the Unsettling Rumor effect to put the second :intrigue: on the Hospital and kill the Protagonists.
+
+        If you can’t seem to get any :intrigue: on the Hospital, put instead 2 :intrigue: on the Idol and if possible, also on the Shrine, :richStudent:, and shrineMaiden. For this, :spreading: :paranoia: and :unsettlingRumor: will help you.
+
+        Hide the :serialKiller: as long as you can and use him to kill the :keyPerson: as your last resort. Killing the :friend: will make the Final Guess easy for the Protagonists, so avoid that as much as possible.
+
+        The Final Guess can easily become your downfall. Either you hide the :conspiracyTheorist: or the :friend:. Try to make it look like a :murder:er or a :brain: instead.
+
+        Victory conditions
+        1. At any day end, have the popIdol and the :boyStudent: alone in a location, triggering the :serialKiller: effect and thus the :keyPerson:’s loss condition immediately.
+
+        2. At end of day 3, have at least 1 :intrigue: on the Hospital, at least 2 :paranoia: on the shrineMaiden, and the popIdol in the Hospital, triggering Hospital :horror:, killing the popIdol and triggering the :keyPerson:’s loss condition immediately.
+
+        3. At loop end, have 2 :intrigue: on the popIdol, triggering the loss condition for “Sign with Me”.
+
+        4. At any day end, have the shrineMaiden and the :boyStudent: alone in a location, triggering the :serialKiller: effect and thus the :friend:’s loss condition at loop end.
+
+        5. At end of day 3, have at least 1 :intrigue: on the Hospital, at least 2 :paranoia: on the shrineMaiden who should be in the Hospital, triggering the Hospital :horror:, killing the shrineMaiden, and triggering the :friend:’s loss condition at loop end.
+
+        6. At the end of day 3, have at least 2 :intrigue: on the Hospital, at least 2 :paranoia: on the shrineMaiden, triggering the Hospital :horror: killing the Protagonists.
+  8003:
+    id: 8003
+    metadata:
+      title: "The Cat Box"
+      creator: "GEnd"
+      set:
+        - name: "New Tragedies"
+          number: 4
+      difficulty_sets:
+        - number_of_loops: 3
+          difficulty: 5
+        - number_of_loops: 4
+          difficulty: 3
+      tragedy_set: "basicTragedy"
+      main_plot:
+        - "giantTimeBomb"
+      sub_plots:
+        - "loveAffair"
+        - "unknownFactor"
+      days_per_loop: 5
+      cast:
+        nurse: { role_name: "witch" }
+        alien: { role_name: "lover" }
+        officeWorker: { role_name: "lovedOne" }
+        blackCat: { role_name: "factor" }
+        richStudent: { role_name: "person" }
+        popIdol: { role_name: "person" }
+        soldier: { role_name: "person" }
+      incidents:
+        - day: 1
+          incident: "suicide"
+          culprit: "richStudent"
+        - day: 4
+          incident: "missingPerson"
+          culprit: "officeWorker"
+        - day: 5
+          incident: "missingPerson"
+          culprit: "alien"
+      description: |
+        The Cat Box is a perfect script to play as your second :basicTragedy: script. The complexity is slightly higher, and there are now 8 characters in the cast. The idea of this script is to introduce two new things. 
+        
+        The first is the :mysteryBoy: and the :blackCat:; both a bit strange. It’s a good chance to get to know rather complicated characters. But don’t fret; neither of them will mess up things too badly. 
+        
+        The second is the trick to find the :witch:, who has mandatory :goodwill: Refusel. This will have the Protagonists learn how to use this technique.
+      special_rules:
+        - ""
+      victory_conditions: |
+        1. At loop end, have 2 :intrigue: on the Hospital, triggering the loss condition of “:giantTimeBomb:.”
+
+        2. At any day end, have 3 or more :paranoia: and 1 or more :intrigue: on the :officeWorker:, triggering the :lovedOne:'’s Protagonist kill.
+      story: |
+        The witch laughs and the cat familiar meows. A mistake in a ritual has summoned a strange existence from another world. And to make matters worse, it fell in love with a human. 
+        
+        The witch decides to burn the entire town to hide the evidence. But to do that, she needs to stay hidden. Time is of the essence: kill the witch and shut the lid on this box forever.
+      mastermind_hints: |
+        You can win with either 2 :intrigue: on the Hospital or the ability of the :lovedOne:. Your first choice should be the former, but the latter hides more information. 
+        
+        First day on loop 1 should be an :intrigue: +2 on the School, an :intrigue: +1 on the Hospital, and a bluff card on the Shrine. Then put an :paranoia: on the :richStudent: using the :conspiracyTheorist: and kill her with :suicide:. This is to give the impression that she might be the :witch: 
+        
+        After that, try triggering both :missingPerson: Incidents by putting out :paranoia:. Use the :conspiracyTheorist:’s and :factor:’s abilities (Subplot “Unknown :factor:”: Putting 2 :intrigue: on the School makes the :blackCat: able to act as a :conspiracyTheorist:) when you need. Putting :paranoia: on the :officeWorker: is effective both for :missingPerson: and for the :lovedOne: ability. 
+        
+        Finally, if you can get 2 :intrigue: on the School, Shrine, and Hospital, the first loop is perfected. You can try to get that result in future loops too, but it’ll be hard with Forbid :intrigue: and trying to prevent the Protagonists from finding the :witch: with :goodwill: Refusel. 
+        
+        It’s super easy to hide the :factor:, so you don’t need to worry about the Final Guess.

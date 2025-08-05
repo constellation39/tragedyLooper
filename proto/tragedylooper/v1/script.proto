@@ -46,13 +46,62 @@ message ScriptConfig {
 
 
 
-// ScriptConfig defines the configuration for a specific script.
+message ScriptSet {
+  string name = 1;
+  int32 number = 2;
+}
+
+message DifficultySet {
+  int32 number_of_loops = 1;
+  int32 difficulty = 2;
+}
+
+message IncidentInstance {
+  int32 day = 1;
+  string incident = 2;
+  string culprit = 3;
+}
+
+message CastRole {
+    string role = 1;
+    map<string, string> extra_info = 2;
+}
+
+message CastAssignment {
+    oneof assignment {
+        string role_name = 1;
+        CastRole role_with_extra = 2;
+    }
+}
+
+message ScriptMetadata {
+  string title = 1;
+  string creator = 2;
+  repeated ScriptSet set = 3;
+  string tragedy_set = 4;
+  int32 days_per_loop = 5;
+  repeated DifficultySet difficulty_sets = 6;
+  repeated string main_plot = 7;
+  repeated string sub_plots = 8;
+  map<string, CastAssignment> cast = 9;
+  repeated IncidentInstance incidents = 10;
+  string victory_conditions = 11;
+  string story = 12;
+  string mastermind_hints = 13;
+  string description = 14;
+  repeated string special_rules = 15;
+  string source = 16;
+}
+
+// ScriptModel defines the configuration for a specific script.
 message ScriptModel {
   int32 id = 1 [ (validate.rules).int32.gt = 0 ];
   // Private information for the script.
   PrivateInfo private_info = 2;
   // Public information for the script.
   PublicInfo public_info = 3;
+  // Descriptive metadata for the script.
+  ScriptMetadata metadata = 4;
 }
 
 // PrivateInfo defines the private information for a script.
@@ -65,6 +114,8 @@ message PrivateInfo {
   repeated int32 characters_ids = 3;
   // A map of incidents in the script.
   repeated int32 incident_ids = 4;
+  // A map of character to role assignments, derived from the selected plots.
+  map<int32, int32> role_assignments = 5;
 }
 
 

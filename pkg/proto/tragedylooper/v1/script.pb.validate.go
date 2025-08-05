@@ -790,6 +790,8 @@ func (m *PrivateInfo) validate(all bool) error {
 
 	// no validation rules for MainPlotId
 
+	// no validation rules for RoleAssignments
+
 	if len(errors) > 0 {
 		return PrivateInfoMultiError(errors)
 	}
