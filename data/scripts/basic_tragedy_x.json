@@ -1,0 +1,1901 @@
+{
+  "characters": {
+    "characters": {
+      "5001": {
+        "abilities": [
+          {
+            "description": "-1 paranoia on student in same location.",
+            "goodwill_rank": 2,
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "id": 5001,
+        "initial_location": "LOCATION_TYPE_SCHOOL",
+        "name": "Boy Student",
+        "paranoia_limit": 2,
+        "traits": [
+          "student",
+          "boy"
+        ]
+      },
+      "5002": {
+        "abilities": [
+          {
+            "description": "-1 paranoia on student in same location.",
+            "goodwill_rank": 2,
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "id": 5002,
+        "initial_location": "LOCATION_TYPE_SCHOOL",
+        "name": "Girl Student",
+        "paranoia_limit": 3,
+        "traits": [
+          "student",
+          "girl"
+        ]
+      },
+      "5003": {
+        "abilities": [
+          {
+            "description": "+1 goodwill on character in same location.",
+            "goodwill_rank": 3,
+            "restricted_to_location": [
+              "LOCATION_TYPE_SCHOOL",
+              "LOCATION_TYPE_CITY"
+            ],
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "id": 5003,
+        "initial_location": "LOCATION_TYPE_SCHOOL",
+        "name": "Rich Man’s Daughter",
+        "paranoia_limit": 1,
+        "traits": [
+          "student",
+          "girl"
+        ]
+      },
+      "5004": {
+        "abilities": [
+          {
+            "description": "Leader gets one (1×∞) card back.",
+            "goodwill_rank": 2,
+            "times_per_loop": 1,
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "id": 5004,
+        "initial_location": "LOCATION_TYPE_SCHOOL",
+        "name": "Class Rep",
+        "paranoia_limit": 2,
+        "traits": [
+          "student",
+          "girl"
+        ]
+      },
+      "5005": {
+        "abilities": [
+          {
+            "description": "Always has a role not associated with current plot.",
+            "type": "ABILITY_TYPE_PASSIVE"
+          },
+          {
+            "description": "Reveal own role.",
+            "goodwill_rank": 3,
+            "immune_to_goodwill_refusal": true,
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "id": 5005,
+        "initial_location": "LOCATION_TYPE_SCHOOL",
+        "name": "Mystery Boy",
+        "paranoia_limit": 3,
+        "rules": [
+          {
+            "description": "Always has a role not associated with current plot.",
+            "name": "Not in Plots"
+          }
+        ],
+        "traits": [
+          "student",
+          "boy"
+        ]
+      },
+      "5006": {
+        "abilities": [
+          {
+            "description": "-1 intrigue on Shrine.",
+            "goodwill_rank": 3,
+            "restricted_to_location": [
+              "LOCATION_TYPE_SHRINE"
+            ],
+            "type": "ABILITY_TYPE_ACTIVE"
+          },
+          {
+            "description": "Reveal role of character in same location",
+            "goodwill_rank": 5,
+            "times_per_loop": 1,
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "blocked_locations": [
+          "LOCATION_TYPE_CITY"
+        ],
+        "id": 5006,
+        "initial_location": "LOCATION_TYPE_SHRINE",
+        "name": "Shrine Maiden",
+        "paranoia_limit": 2,
+        "traits": [
+          "student",
+          "girl"
+        ]
+      },
+      "5007": {
+        "abilities": [
+          {
+            "description": "Kill one character in same location.",
+            "goodwill_rank": 4,
+            "times_per_loop": 1,
+            "type": "ABILITY_TYPE_ACTIVE"
+          },
+          {
+            "description": "Revive one corpse in same location.",
+            "goodwill_rank": 5,
+            "times_per_loop": 1,
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "blocked_locations": [
+          "LOCATION_TYPE_HOSPITAL"
+        ],
+        "id": 5007,
+        "initial_location": "LOCATION_TYPE_SHRINE",
+        "name": "Alien",
+        "paranoia_limit": 2,
+        "traits": [
+          "girl"
+        ]
+      },
+      "5008": {
+        "abilities": [
+          {
+            "description": "Enters game on predefined loop",
+            "type": "ABILITY_TYPE_PASSIVE"
+          },
+          {
+            "description": "Reveal culprit for 1 incident.",
+            "goodwill_rank": 3,
+            "times_per_loop": 1,
+            "type": "ABILITY_TYPE_ACTIVE"
+          },
+          {
+            "description": "-1 intrigue on same location or Character in same location.",
+            "goodwill_rank": 5,
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "id": 5008,
+        "initial_location": "LOCATION_TYPE_SHRINE",
+        "name": "Godly Being",
+        "paranoia_limit": 3,
+        "rules": [
+          {
+            "delayed_entry_effect": {
+              "day_of_entry": 1
+            },
+            "name": "Enters on Loop"
+          }
+        ],
+        "traits": [
+          "man",
+          "woman"
+        ]
+      },
+      "5009": {
+        "abilities": [
+          {
+            "description": "Reveal culprit for former incident.",
+            "goodwill_rank": 4,
+            "times_per_loop": 1,
+            "type": "ABILITY_TYPE_ACTIVE"
+          },
+          {
+            "description": "Put an Extra marker on another character in same location. Remove that marker to prevent that character from dying.",
+            "goodwill_rank": 5,
+            "times_per_loop": 1,
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "id": 5009,
+        "initial_location": "LOCATION_TYPE_CITY",
+        "name": "Police Officer",
+        "paranoia_limit": 3,
+        "traits": [
+          "man",
+          "adult"
+        ]
+      },
+      "5010": {
+        "abilities": [
+          {
+            "description": "Reveal own role.",
+            "goodwill_rank": 3,
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "blocked_locations": [
+          "LOCATION_TYPE_SCHOOL"
+        ],
+        "id": 5010,
+        "initial_location": "LOCATION_TYPE_CITY",
+        "name": "Office Worker",
+        "paranoia_limit": 2,
+        "traits": [
+          "man",
+          "adult"
+        ]
+      },
+      "5011": {
+        "abilities": [
+          {
+            "description": "Leader names the title of any Subplot. Then, the Mastermind must name the title of any other active subplot.",
+            "goodwill_rank": 5,
+            "times_per_loop": 1,
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "id": 5011,
+        "initial_location": "LOCATION_TYPE_CITY",
+        "name": "Informer",
+        "paranoia_limit": 3,
+        "traits": [
+          "woman",
+          "adult"
+        ]
+      },
+      "5012": {
+        "abilities": [
+          {
+            "description": "-1 paranoia on character in same location.",
+            "goodwill_rank": 3,
+            "type": "ABILITY_TYPE_ACTIVE"
+          },
+          {
+            "description": "+1 goodwill on character in same location.",
+            "goodwill_rank": 4,
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "id": 5012,
+        "initial_location": "LOCATION_TYPE_CITY",
+        "name": "Pop Idol",
+        "paranoia_limit": 2,
+        "traits": [
+          "girl",
+          "student"
+        ]
+      },
+      "5013": {
+        "abilities": [
+          {
+            "description": "+1 paranoia on character in same location.",
+            "goodwill_rank": 2,
+            "type": "ABILITY_TYPE_ACTIVE"
+          },
+          {
+            "description": "+1 goodwill on character in same location.",
+            "goodwill_rank": 2,
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "id": 5013,
+        "initial_location": "LOCATION_TYPE_CITY",
+        "name": "Journalist",
+        "paranoia_limit": 2,
+        "traits": [
+          "adult",
+          "man"
+        ]
+      },
+      "5014": {
+        "abilities": [
+          {
+            "description": "May be regarded as in his turf.",
+            "type": "ABILITY_TYPE_PASSIVE"
+          },
+          {
+            "description": "Reveal role of character in his turf.",
+            "goodwill_rank": 5,
+            "times_per_loop": 1,
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "id": 5014,
+        "initial_location": "LOCATION_TYPE_CITY",
+        "name": "Boss",
+        "paranoia_limit": 4,
+        "rules": [
+          {
+            "name": "Turf",
+            "turf_selection_effect": {
+              "possible_locations": [
+                "LOCATION_TYPE_CITY",
+                "LOCATION_TYPE_SCHOOL",
+                "LOCATION_TYPE_SHRINE",
+                "LOCATION_TYPE_HOSPITAL"
+              ]
+            }
+          }
+        ],
+        "traits": [
+          "adult",
+          "man"
+        ]
+      },
+      "5015": {
+        "abilities": [
+          {
+            "description": "+/-1 paranoia on character in same location.",
+            "goodwill_rank": 2,
+            "type": "ABILITY_TYPE_ACTIVE"
+          },
+          {
+            "description": "revoke location restirction for patient.",
+            "goodwill_rank": 3,
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "id": 5015,
+        "initial_location": "LOCATION_TYPE_HOSPITAL",
+        "name": "Doctor",
+        "paranoia_limit": 2,
+        "traits": [
+          "adult",
+          "man"
+        ]
+      },
+      "5016": {
+        "abilities": [],
+        "blocked_locations": [
+          "LOCATION_TYPE_CITY",
+          "LOCATION_TYPE_SCHOOL",
+          "LOCATION_TYPE_SHRINE"
+        ],
+        "id": 5016,
+        "initial_location": "LOCATION_TYPE_HOSPITAL",
+        "name": "Patient",
+        "paranoia_limit": 2,
+        "traits": [
+          "boy"
+        ]
+      },
+      "5017": {
+        "abilities": [
+          {
+            "description": "-1 paranoia on panicked character in same location. This ability cannot be refused by goodwill Refusel.",
+            "goodwill_rank": 2,
+            "immune_to_goodwill_refusal": true,
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "id": 5017,
+        "initial_location": "LOCATION_TYPE_HOSPITAL",
+        "name": "Nurse",
+        "paranoia_limit": 3,
+        "traits": [
+          "adult",
+          "woman"
+        ]
+      },
+      "5018": {
+        "abilities": [
+          {
+            "description": "Mastermind chooses start location each loop",
+            "type": "ABILITY_TYPE_PASSIVE"
+          },
+          {
+            "description": "Dose not trigger incidents.",
+            "goodwill_rank": 3,
+            "type": "ABILITY_TYPE_ACTIVE"
+          }
+        ],
+        "id": 5018,
+        "initial_location": "LOCATION_TYPE_CITY",
+        "name": "Henchman",
+        "paranoia_limit": 1,
+        "rules": [
+          {
+            "name": "Mastermind Chooses Start",
+            "special_movement_rule": {
+              "description": "Mastermind chooses start location each loop"
+            }
+          }
+        ],
+        "traits": [
+          "adult",
+          "man"
+        ]
+      }
+    }
+  },
+  "description": "A starter script focusing on core mechanics and roles. Includes a variety of role abilities and loss conditions.",
+  "id": 101,
+  "incidents": {
+    "incidents": {
+      "4001": {
+        "description": "One (1) other character in the culprit's location dies.",
+        "effect": {
+          "add_trait": {
+            "target": {
+              "all_characters_at_location": "LOCATION_TYPE_UNSPECIFIED"
+            },
+            "trait": "Dead"
+          }
+        },
+        "id": 4001,
+        "name": "Murder"
+      },
+      "4002": {
+        "description": "Place 2 paranoia on any character, then 1 intrigue on any other character.",
+        "effect": {
+          "compound_effect": {
+            "operator": "OPERATOR_SEQUENCE",
+            "sub_effects": [
+              {
+                "adjust_stat": {
+                  "amount": 2,
+                  "stat_type": "STAT_TYPE_PARANOIA",
+                  "target": {
+                    "action_target": {}
+                  }
+                }
+              },
+              {
+                "adjust_stat": {
+                  "amount": 1,
+                  "stat_type": "STAT_TYPE_INTRIGUE",
+                  "target": {
+                    "action_target": {}
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "id": 4002,
+        "name": "Increasing Unease"
+      },
+      "4003": {
+        "description": "Place 2 intrigue on the Shrine.",
+        "effect": {
+          "adjust_stat": {
+            "amount": 2,
+            "stat_type": "STAT_TYPE_INTRIGUE",
+            "target": {
+              "all_characters_at_location": "LOCATION_TYPE_SHRINE"
+            }
+          }
+        },
+        "id": 4003,
+        "name": "Foul Evil"
+      },
+      "4004": {
+        "description": "The culprit dies.",
+        "effect": {
+          "add_trait": {
+            "target": {
+              "culprit": {}
+            },
+            "trait": "Dead"
+          }
+        },
+        "id": 4004,
+        "name": "Suicide"
+      },
+      "4005": {
+        "description": "Prerequisite: 1 intrigue on the Hospital, Everyone in the Hospital dies. Prerequisite: 2 intrigue on the Hospital, Mandatory Loss condition: Protagonists Death.",
+        "effect": {
+          "conditional_effect": {
+            "condition": {
+              "stat_condition": {
+                "comparator": "GREATER_THAN_OR_EQUAL_TO",
+                "stat_type": "STAT_TYPE_INTRIGUE",
+                "target": {
+                  "all_characters_at_location": "LOCATION_TYPE_HOSPITAL"
+                },
+                "value": 2
+              }
+            },
+            "else_effect": {
+              "conditional_effect": {
+                "condition": {
+                  "stat_condition": {
+                    "comparator": "GREATER_THAN_OR_EQUAL_TO",
+                    "stat_type": "STAT_TYPE_INTRIGUE",
+                    "target": {
+                      "all_characters_at_location": "LOCATION_TYPE_HOSPITAL"
+                    },
+                    "value": 1
+                  }
+                },
+                "then_effect": {
+                  "add_trait": {
+                    "target": {
+                      "all_characters_at_location": "LOCATION_TYPE_HOSPITAL"
+                    },
+                    "trait": "Dead"
+                  }
+                }
+              }
+            },
+            "then_effect": {
+              "end_game": {
+                "reason": "Hospital Incident escalated.",
+                "winner": "PLAYER_ROLE_MASTERMIND"
+              }
+            }
+          }
+        },
+        "id": 4005,
+        "name": "Hospital Incident"
+      },
+      "4006": {
+        "description": "One character with at least 2 intrigue dies.",
+        "effect": {
+          "add_trait": {
+            "target": {
+              "action_target": {}
+            },
+            "trait": "Dead"
+          }
+        },
+        "id": 4006,
+        "name": "Faraway Murder"
+      },
+      "4007": {
+        "description": "Move culprit to any Location. Put 1 intrigue on that Location.",
+        "effect": {
+          "compound_effect": {
+            "operator": "OPERATOR_SEQUENCE",
+            "sub_effects": [
+              {
+                "move_character": {
+                  "destination": "LOCATION_TYPE_UNSPECIFIED",
+                  "target": {
+                    "culprit": {}
+                  }
+                }
+              },
+              {
+                "adjust_stat": {
+                  "amount": 1,
+                  "stat_type": "STAT_TYPE_INTRIGUE",
+                  "target": {
+                    "all_characters_at_location": "LOCATION_TYPE_UNSPECIFIED"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "id": 4007,
+        "name": "Missing Person"
+      },
+      "4008": {
+        "description": "Remove 2 goodwill (or 1 if they only have that) from a character, and then add 2 goodwill to another character.",
+        "effect": {
+          "compound_effect": {
+            "operator": "OPERATOR_SEQUENCE",
+            "sub_effects": [
+              {
+                "adjust_stat": {
+                  "amount": -2,
+                  "stat_type": "STAT_TYPE_GOODWILL",
+                  "target": {
+                    "action_target": {}
+                  }
+                }
+              },
+              {
+                "adjust_stat": {
+                  "amount": 2,
+                  "stat_type": "STAT_TYPE_GOODWILL",
+                  "target": {
+                    "action_target": {}
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "id": 4008,
+        "name": "Spreading"
+      },
+      "4009": {
+        "description": "Put any counter on any character in culprit’s Location.",
+        "effect": {
+          "compound_effect": {
+            "operator": "OPERATOR_CHOOSE_ONE",
+            "sub_effects": [
+              {
+                "adjust_stat": {
+                  "amount": 1,
+                  "stat_type": "STAT_TYPE_PARANOIA",
+                  "target": {
+                    "all_characters_at_location": "LOCATION_TYPE_UNSPECIFIED"
+                  }
+                }
+              },
+              {
+                "adjust_stat": {
+                  "amount": 1,
+                  "stat_type": "STAT_TYPE_INTRIGUE",
+                  "target": {
+                    "all_characters_at_location": "LOCATION_TYPE_UNSPECIFIED"
+                  }
+                }
+              },
+              {
+                "adjust_stat": {
+                  "amount": 1,
+                  "stat_type": "STAT_TYPE_GOODWILL",
+                  "target": {
+                    "all_characters_at_location": "LOCATION_TYPE_UNSPECIFIED"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "id": 4009,
+        "name": "Butterfly Effect"
+      }
+    }
+  },
+  "main_plots": {
+    "main_plots": {
+      "1001": {
+        "description": "",
+        "id": 1001,
+        "name": "Murder Plan",
+        "role_assignments": {
+          "3001": 1,
+          "3002": 1,
+          "3003": 1
+        },
+        "type": "PLOT_TYPE_MAIN_PLOT"
+      },
+      "1002": {
+        "description": "Loss condition: Tragedy at Loop End if there is 2 intrigue on the Shrine.",
+        "id": 1002,
+        "name": "The Sealed Item",
+        "role_assignments": {
+          "3003": 1,
+          "3004": 1
+        },
+        "type": "PLOT_TYPE_MAIN_PLOT"
+      },
+      "1003": {
+        "description": "Script creation rule: Key Person must be a girl. Loss condition: Tragedy at Loop End if there is 2 intrigue on the Key Person.",
+        "id": 1003,
+        "name": "Sign with me",
+        "role_assignments": {
+          "3001": 1
+        },
+        "type": "PLOT_TYPE_MAIN_PLOT"
+      },
+      "1004": {
+        "description": "Loss condition: Tragedy at Loop End if 'Butterfly Effect' has occurred this loop.",
+        "id": 1004,
+        "name": "Change of Future",
+        "role_assignments": {
+          "3004": 1,
+          "3005": 1
+        },
+        "type": "PLOT_TYPE_MAIN_PLOT"
+      },
+      "1005": {
+        "description": "Loss condition: Tragedy at Loop End if there is 2 intrigue on the Witch's starting location.",
+        "id": 1005,
+        "name": "Giant Time Bomb",
+        "role_assignments": {
+          "3013": 1
+        },
+        "type": "PLOT_TYPE_MAIN_PLOT"
+      }
+    }
+  },
+  "mastermind_cards": {
+    "mastermind_cards": {
+      "6001": {
+        "effect": {
+          "sub_effects": [
+            {
+              "move_character": {}
+            }
+          ]
+        },
+        "id": 6001,
+        "name": "Move",
+        "owner_role": "PLAYER_ROLE_MASTERMIND",
+        "type": "CARD_TYPE_MOVE_HORIZONTALLY"
+      },
+      "6002": {
+        "effect": {
+          "sub_effects": [
+            {
+              "adjust_stat": {
+                "amount": 1,
+                "stat_type": "STAT_TYPE_PARANOIA"
+              }
+            }
+          ]
+        },
+        "id": 6002,
+        "name": "Add Paranoia",
+        "owner_role": "PLAYER_ROLE_MASTERMIND",
+        "type": "CARD_TYPE_PARANOIA_PLUS"
+      },
+      "6003": {
+        "effect": {
+          "sub_effects": [
+            {
+              "adjust_stat": {
+                "amount": 1,
+                "stat_type": "STAT_TYPE_GOODWILL"
+              }
+            }
+          ]
+        },
+        "id": 6003,
+        "name": "Add Goodwill",
+        "owner_role": "PLAYER_ROLE_MASTERMIND",
+        "type": "CARD_TYPE_GOODWILL_PLUS"
+      },
+      "6004": {
+        "effect": {
+          "sub_effects": [
+            {
+              "adjust_stat": {
+                "amount": 1,
+                "stat_type": "STAT_TYPE_INTRIGUE"
+              }
+            }
+          ]
+        },
+        "id": 6004,
+        "name": "Add Intrigue",
+        "owner_role": "PLAYER_ROLE_MASTERMIND",
+        "type": "CARD_TYPE_INTRIGUE_PLUS"
+      },
+      "6005": {
+        "effect": {
+          "sub_effects": [
+            {
+              "forbid": {
+                "forbid_type": "FORBID_TYPE_GOODWILL_CHANGE"
+              }
+            }
+          ]
+        },
+        "id": 6005,
+        "name": "Forbid Goodwill",
+        "owner_role": "PLAYER_ROLE_MASTERMIND",
+        "type": "CARD_TYPE_FORBID_GOODWILL_INCREASE"
+      },
+      "6006": {
+        "effect": {
+          "sub_effects": [
+            {
+              "forbid": {
+                "forbid_type": "FORBID_TYPE_PARANOIA_CHANGE"
+              }
+            }
+          ]
+        },
+        "id": 6006,
+        "name": "Forbid Paranoia",
+        "owner_role": "PLAYER_ROLE_MASTERMIND",
+        "type": "CARD_TYPE_FORBID_PARANOIA_INCREASE"
+      },
+      "6007": {
+        "effect": {
+          "sub_effects": [
+            {
+              "adjust_stat": {
+                "amount": 2,
+                "stat_type": "STAT_TYPE_INTRIGUE"
+              }
+            }
+          ]
+        },
+        "id": 6007,
+        "name": "Add Intrigue +2",
+        "once_per_loop": true,
+        "owner_role": "PLAYER_ROLE_MASTERMIND",
+        "type": "CARD_TYPE_INTRIGUE_PLUS"
+      }
+    }
+  },
+  "name": "Basic Tragedy Set X",
+  "protagonist_cards": {
+    "protagonist_cards": {
+      "7001": {
+        "effect": {
+          "sub_effects": [
+            {
+              "move_character": {}
+            }
+          ]
+        },
+        "id": 7001,
+        "name": "Move",
+        "owner_role": "PLAYER_ROLE_PROTAGONIST",
+        "type": "CARD_TYPE_MOVE_HORIZONTALLY"
+      },
+      "7002": {
+        "effect": {
+          "sub_effects": [
+            {
+              "adjust_stat": {
+                "amount": -1,
+                "stat_type": "STAT_TYPE_PARANOIA"
+              }
+            }
+          ]
+        },
+        "id": 7002,
+        "name": "Add Paranoia",
+        "owner_role": "PLAYER_ROLE_PROTAGONIST",
+        "type": "CARD_TYPE_PARANOIA_MINUS"
+      },
+      "7003": {
+        "effect": {
+          "sub_effects": [
+            {
+              "adjust_stat": {
+                "amount": 1,
+                "stat_type": "STAT_TYPE_GOODWILL"
+              }
+            }
+          ]
+        },
+        "id": 7003,
+        "name": "Add Goodwill",
+        "owner_role": "PLAYER_ROLE_PROTAGONIST",
+        "type": "CARD_TYPE_GOODWILL_PLUS"
+      },
+      "7004": {
+        "effect": {
+          "sub_effects": [
+            {
+              "adjust_stat": {
+                "amount": 1,
+                "stat_type": "STAT_TYPE_INTRIGUE"
+              }
+            }
+          ]
+        },
+        "id": 7004,
+        "name": "Add Intrigue",
+        "owner_role": "PLAYER_ROLE_PROTAGONIST",
+        "type": "CARD_TYPE_INTRIGUE_PLUS"
+      },
+      "7005": {
+        "effect": {
+          "sub_effects": [
+            {
+              "forbid": {
+                "forbid_type": "FORBID_TYPE_MOVEMENT"
+              }
+            }
+          ]
+        },
+        "id": 7005,
+        "name": "Forbid MOVEMENT",
+        "owner_role": "PLAYER_ROLE_PROTAGONIST",
+        "type": "CARD_TYPE_FORBID_MOVEMENT"
+      },
+      "7006": {
+        "effect": {
+          "sub_effects": [
+            {
+              "forbid": {
+                "forbid_type": "FORBID_TYPE_PARANOIA_CHANGE"
+              }
+            }
+          ]
+        },
+        "id": 7006,
+        "name": "Forbid Paranoia",
+        "owner_role": "PLAYER_ROLE_PROTAGONIST",
+        "type": "CARD_TYPE_FORBID_PARANOIA_INCREASE"
+      },
+      "7007": {
+        "effect": {
+          "sub_effects": [
+            {
+              "forbid": {
+                "forbid_type": "FORBID_TYPE_INTRIGUE_CHANGE"
+              }
+            }
+          ]
+        },
+        "id": 7007,
+        "name": "Forbid Intrigue",
+        "owner_role": "PLAYER_ROLE_PROTAGONIST",
+        "type": "CARD_TYPE_FORBID_INTRIGUE_INCREASE"
+      },
+      "7008": {
+        "effect": {
+          "sub_effects": [
+            {
+              "adjust_stat": {
+                "amount": 2,
+                "stat_type": "STAT_TYPE_GOODWILL"
+              }
+            }
+          ]
+        },
+        "id": 7008,
+        "name": "Add Goodwill +2",
+        "once_per_loop": true,
+        "owner_role": "PLAYER_ROLE_PROTAGONIST",
+        "type": "CARD_TYPE_GOODWILL_PLUS"
+      }
+    }
+  },
+  "roles": {
+    "roles": {
+      "3001": {
+        "abilities": {
+          "300101": {
+            "conditions": [
+              {
+                "compound_condition": {
+                  "operator": "OPERATOR_AND",
+                  "sub_conditions": [
+                    {
+                      "trait_condition": {
+                        "target": {
+                          "triggering_character": {}
+                        },
+                        "trait": "Dead"
+                      }
+                    },
+                    {
+                      "role_condition": {
+                        "role_id": 3001,
+                        "target": {
+                          "triggering_character": {}
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "description": "If this character dies, the loop ends immediately.",
+            "effect": {
+              "end_game": {
+                "reason": "The Key Person has died.",
+                "winner": "PLAYER_ROLE_MASTERMIND"
+              }
+            },
+            "event_filters": [
+              "GAME_EVENT_TYPE_TRAIT_ADDED"
+            ],
+            "id": 300101,
+            "is_mandatory": true,
+            "name": "Tragedy Always: Death of the Key Person",
+            "trigger_type": "TRIGGER_TYPE_ON_GAME_EVENT"
+          }
+        },
+        "id": 3001,
+        "limit": 1,
+        "name": "Key Person"
+      },
+      "3002": {
+        "abilities": {
+          "300201": {
+            "conditions": [
+              {
+                "stat_condition": {
+                  "comparator": "GREATER_THAN_OR_EQUAL_TO",
+                  "stat_type": "STAT_TYPE_INTRIGUE",
+                  "target": {
+                    "character_with_role_id": 3001
+                  },
+                  "value": 2
+                }
+              },
+              {
+                "location_condition": {
+                  "target": {
+                    "character_with_role_id": 3001
+                  }
+                }
+              }
+            ],
+            "description": "At the end of the day, if the Key Person has 2+ Intrigue and is at your location, you may kill them.",
+            "effect": {
+              "add_trait": {
+                "target": {
+                  "character_with_role_id": 3001
+                },
+                "trait": "Dead"
+              }
+            },
+            "id": 300201,
+            "name": "Optional Day End: Assassinate",
+            "refusal_role": "PLAYER_ROLE_MASTERMIND",
+            "trigger_type": "TRIGGER_TYPE_ON_DAY_END"
+          },
+          "300202": {
+            "conditions": [
+              {
+                "stat_condition": {
+                  "comparator": "GREATER_THAN_OR_EQUAL_TO",
+                  "stat_type": "STAT_TYPE_INTRIGUE",
+                  "target": {
+                    "action_user": {}
+                  },
+                  "value": 4
+                }
+              }
+            ],
+            "description": "If this character has 4 or more Intrigue at the end of the day, the Protagonists lose.",
+            "effect": {
+              "end_game": {
+                "reason": "The Killer was consumed by their urges.",
+                "winner": "PLAYER_ROLE_MASTERMIND"
+              }
+            },
+            "id": 300202,
+            "is_mandatory": true,
+            "name": "Loss Condition: Uncontrollable Urges",
+            "trigger_type": "TRIGGER_TYPE_ON_DAY_END"
+          }
+        },
+        "id": 3002,
+        "limit": 1,
+        "name": "Killer"
+      },
+      "3003": {
+        "abilities": {
+          "300301": {
+            "description": "You may place 1 Intrigue on this location or on any character in this location.",
+            "effect": {
+              "compound_effect": {
+                "operator": "OPERATOR_CHOOSE_ONE",
+                "sub_effects": [
+                  {
+                    "adjust_stat": {
+                      "amount": 1,
+                      "stat_type": "STAT_TYPE_INTRIGUE",
+                      "target": {
+                        "action_user": {}
+                      }
+                    }
+                  },
+                  {
+                    "adjust_stat": {
+                      "amount": 1,
+                      "stat_type": "STAT_TYPE_INTRIGUE",
+                      "target": {
+                        "action_user": {}
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "id": 300301,
+            "name": "Mastermind Ability: Scheme",
+            "refusal_role": "PLAYER_ROLE_MASTERMIND",
+            "requires_choice": true,
+            "trigger_type": "TRIGGER_TYPE_ON_PHASE_START"
+          }
+        },
+        "id": 3003,
+        "limit": 1,
+        "name": "Brain"
+      },
+      "3004": {
+        "abilities": {
+          "300401": {
+            "description": "You may ignore all Forbid Intrigue effects on this location and on all characters in this location.",
+            "effect": {
+              "add_trait": {
+                "target": {
+                  "action_user": {}
+                },
+                "trait": "IgnoresForbidIntrigueThisTurn"
+              }
+            },
+            "id": 300401,
+            "name": "Card Resolve: Fanatical Devotion",
+            "refusal_role": "PLAYER_ROLE_PROTAGONIST",
+            "trigger_type": "TRIGGER_TYPE_ON_PHASE_START"
+          }
+        },
+        "id": 3004,
+        "limit": 1,
+        "name": "Cultist"
+      },
+      "3005": {
+        "abilities": {
+          "300501": {
+            "description": "Ignore Forbid Goodwill on this character.",
+            "effect": {
+              "add_trait": {
+                "target": {
+                  "action_user": {}
+                },
+                "trait": "IgnoresForbidGoodwill"
+              }
+            },
+            "id": 300501,
+            "is_mandatory": true,
+            "is_passive": true,
+            "name": "Mandatory Card Resolve: Paradox Shield",
+            "trigger_type": "TRIGGER_TYPE_ON_PASSIVE"
+          },
+          "300502": {
+            "conditions": [
+              {
+                "day_condition": {
+                  "comparator": "EQUAL_TO",
+                  "day": -1
+                }
+              },
+              {
+                "stat_condition": {
+                  "comparator": "LESS_THAN_OR_EQUAL_TO",
+                  "stat_type": "STAT_TYPE_GOODWILL",
+                  "target": {
+                    "action_user": {}
+                  },
+                  "value": 2
+                }
+              }
+            ],
+            "description": "On the last day, if this character has 2 or less Goodwill, the loop ends.",
+            "effect": {
+              "end_game": {
+                "reason": "The Time Traveler faded from existence.",
+                "winner": "PLAYER_ROLE_MASTERMIND"
+              }
+            },
+            "id": 300502,
+            "is_mandatory": true,
+            "name": "Loss Condition: Fading Existence",
+            "trigger_type": "TRIGGER_TYPE_ON_DAY_END"
+          }
+        },
+        "id": 3005,
+        "limit": 1,
+        "name": "Time Traveler"
+      },
+      "3006": {
+        "abilities": {
+          "300601": {
+            "conditions": [
+              {
+                "trait_condition": {
+                  "target": {
+                    "action_user": {}
+                  },
+                  "trait": "Dead"
+                }
+              }
+            ],
+            "description": "If this character is dead at the end of the loop, their role is revealed.",
+            "effect": {
+              "reveal_role": {
+                "target": {
+                  "action_user": {}
+                }
+              }
+            },
+            "id": 300601,
+            "is_mandatory": true,
+            "name": "Tragedy Loop End: A Friend's Truth",
+            "trigger_type": "TRIGGER_TYPE_ON_LOOP_END"
+          },
+          "300602": {
+            "conditions": [
+              {
+                "event_history_condition": {
+                  "comparator": "GREATER_THAN_OR_EQUAL_TO",
+                  "count": 1,
+                  "event_target": {
+                    "action_user": {}
+                  },
+                  "event_type": "GAME_EVENT_TYPE_ROLE_REVEALED",
+                  "lookback_days": 100
+                }
+              }
+            ],
+            "description": "If this character's role has been revealed, they start the loop with 1 extra Goodwill.",
+            "effect": {
+              "adjust_stat": {
+                "amount": 1,
+                "stat_type": "STAT_TYPE_GOODWILL",
+                "target": {
+                  "action_user": {}
+                }
+              }
+            },
+            "id": 300602,
+            "is_mandatory": true,
+            "name": "Loop Start: Revealed Friendship",
+            "trigger_type": "TRIGGER_TYPE_ON_LOOP_START"
+          }
+        },
+        "id": 3006,
+        "limit": 1,
+        "name": "Friend"
+      },
+      "3007": {
+        "abilities": {
+          "300701": {
+            "description": "You may place 1 Paranoia on any character in this location.",
+            "effect": {
+              "adjust_stat": {
+                "amount": 1,
+                "stat_type": "STAT_TYPE_PARANOIA",
+                "target": {
+                  "action_user": {}
+                }
+              }
+            },
+            "id": 300701,
+            "name": "Mastermind Ability: Spread Paranoia",
+            "refusal_role": "PLAYER_ROLE_MASTERMIND",
+            "requires_choice": true,
+            "trigger_type": "TRIGGER_TYPE_ON_PHASE_START"
+          }
+        },
+        "id": 3007,
+        "limit": 1,
+        "name": "Conspiracy Theorist"
+      },
+      "3008": {
+        "abilities": {
+          "300801": {
+            "conditions": [
+              {
+                "compound_condition": {
+                  "operator": "OPERATOR_AND",
+                  "sub_conditions": [
+                    {
+                      "trait_condition": {
+                        "target": {
+                          "triggering_character": {}
+                        },
+                        "trait": "Dead"
+                      }
+                    },
+                    {
+                      "role_condition": {
+                        "role_id": 3009,
+                        "target": {
+                          "triggering_character": {}
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "description": "If the Loved One dies, this character gains 6 Paranoia.",
+            "effect": {
+              "adjust_stat": {
+                "amount": 6,
+                "stat_type": "STAT_TYPE_PARANOIA",
+                "target": {
+                  "character_with_role_id": 3008
+                }
+              }
+            },
+            "event_filters": [
+              "GAME_EVENT_TYPE_TRAIT_ADDED"
+            ],
+            "id": 300801,
+            "is_mandatory": true,
+            "name": "Mandatory Always: Heartbreak",
+            "trigger_type": "TRIGGER_TYPE_ON_GAME_EVENT"
+          }
+        },
+        "id": 3008,
+        "limit": 1,
+        "name": "Lover"
+      },
+      "3009": {
+        "abilities": {
+          "300901": {
+            "conditions": [
+              {
+                "compound_condition": {
+                  "operator": "OPERATOR_AND",
+                  "sub_conditions": [
+                    {
+                      "trait_condition": {
+                        "target": {
+                          "triggering_character": {}
+                        },
+                        "trait": "Dead"
+                      }
+                    },
+                    {
+                      "role_condition": {
+                        "role_id": 3008,
+                        "target": {
+                          "triggering_character": {}
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "description": "If the Lover dies, this character gains 6 Paranoia.",
+            "effect": {
+              "adjust_stat": {
+                "amount": 6,
+                "stat_type": "STAT_TYPE_PARANOIA",
+                "target": {
+                  "character_with_role_id": 3009
+                }
+              }
+            },
+            "event_filters": [
+              "GAME_EVENT_TYPE_TRAIT_ADDED"
+            ],
+            "id": 300901,
+            "is_mandatory": true,
+            "name": "Mandatory Always: Grief",
+            "trigger_type": "TRIGGER_TYPE_ON_GAME_EVENT"
+          },
+          "300902": {
+            "conditions": [
+              {
+                "compound_condition": {
+                  "operator": "OPERATOR_AND",
+                  "sub_conditions": [
+                    {
+                      "stat_condition": {
+                        "comparator": "GREATER_THAN_OR_EQUAL_TO",
+                        "stat_type": "STAT_TYPE_PARANOIA",
+                        "target": {
+                          "action_user": {}
+                        },
+                        "value": 3
+                      }
+                    },
+                    {
+                      "stat_condition": {
+                        "comparator": "GREATER_THAN_OR_EQUAL_TO",
+                        "stat_type": "STAT_TYPE_INTRIGUE",
+                        "target": {
+                          "action_user": {}
+                        },
+                        "value": 1
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "description": "If this character has 3+ Paranoia and 1+ Intrigue at the end of the day, the Protagonists lose.",
+            "effect": {
+              "end_game": {
+                "reason": "The Loved One fell into despair.",
+                "winner": "PLAYER_ROLE_MASTERMIND"
+              }
+            },
+            "id": 300902,
+            "is_mandatory": true,
+            "name": "Loss Condition: Despair",
+            "trigger_type": "TRIGGER_TYPE_ON_DAY_END"
+          }
+        },
+        "id": 3009,
+        "limit": 1,
+        "name": "Loved One"
+      },
+      "3010": {
+        "abilities": {
+          "301001": {
+            "conditions": [
+              {
+                "location_character_count_condition": {
+                  "comparator": "EQUAL_TO",
+                  "count": 2,
+                  "location": "LOCATION_TYPE_UNSPECIFIED"
+                }
+              }
+            ],
+            "description": "If there is exactly one other living character at your location at the end of the day, that character dies.",
+            "effect": {
+              "add_trait": {
+                "target": {
+                  "action_user": {}
+                },
+                "trait": "Dead"
+              }
+            },
+            "id": 301001,
+            "is_mandatory": true,
+            "name": "Mandatory Day End: Hunt",
+            "trigger_type": "TRIGGER_TYPE_ON_DAY_END"
+          }
+        },
+        "id": 3010,
+        "limit": 1,
+        "name": "Serial Killer"
+      },
+      "3011": {
+        "abilities": {
+          "301101": {
+            "conditions": [
+              {
+                "stat_condition": {
+                  "comparator": "GREATER_THAN_OR_EQUAL_TO",
+                  "stat_type": "STAT_TYPE_INTRIGUE",
+                  "target": {
+                    "all_characters_at_location": "LOCATION_TYPE_SCHOOL"
+                  },
+                  "value": 2
+                }
+              }
+            ],
+            "description": "If there is 2+ Intrigue on the School, this character gains the Conspiracy Theorist's ability.",
+            "effect": {
+              "grant_ability": {
+                "ability_id": 300701,
+                "target": {
+                  "action_user": {}
+                }
+              }
+            },
+            "id": 301101,
+            "is_mandatory": true,
+            "name": "Always: Absorb Conspiracy",
+            "trigger_type": "TRIGGER_TYPE_ON_PASSIVE"
+          },
+          "301102": {
+            "conditions": [
+              {
+                "stat_condition": {
+                  "comparator": "GREATER_THAN_OR_EQUAL_TO",
+                  "stat_type": "STAT_TYPE_INTRIGUE",
+                  "target": {
+                    "all_characters_at_location": "LOCATION_TYPE_CITY"
+                  },
+                  "value": 2
+                }
+              }
+            ],
+            "description": "If there is 2+ Intrigue on the City, this character gains the Key Person's ability.",
+            "effect": {
+              "grant_ability": {
+                "ability_id": 300101,
+                "target": {
+                  "action_user": {}
+                }
+              }
+            },
+            "id": 301102,
+            "is_mandatory": true,
+            "name": "Always: Absorb Importance",
+            "trigger_type": "TRIGGER_TYPE_ON_PASSIVE"
+          }
+        },
+        "id": 3011,
+        "limit": 1,
+        "name": "Factor"
+      },
+      "3012": {
+        "abilities": {
+          "301201": {
+            "conditions": [
+              {
+                "stat_condition": {
+                  "comparator": "GREATER_THAN_OR_EQUAL_TO",
+                  "stat_type": "STAT_TYPE_GOODWILL",
+                  "target": {
+                    "action_user": {}
+                  },
+                  "value": 2
+                }
+              }
+            ],
+            "description": "If this character has 2 or more Goodwill, they lose all Goodwill and gain 1 Paranoia.",
+            "effect": {
+              "compound_effect": {
+                "operator": "OPERATOR_SEQUENCE",
+                "sub_effects": [
+                  {
+                    "adjust_stat": {
+                      "amount": -100,
+                      "stat_type": "STAT_TYPE_GOODWILL",
+                      "target": {
+                        "action_user": {}
+                      }
+                    }
+                  },
+                  {
+                    "adjust_stat": {
+                      "amount": 1,
+                      "stat_type": "STAT_TYPE_PARANOIA",
+                      "target": {
+                        "action_user": {}
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "id": 301201,
+            "is_mandatory": true,
+            "name": "Always: Grumpy Demeanor",
+            "trigger_type": "TRIGGER_TYPE_ON_PASSIVE"
+          }
+        },
+        "id": 3012,
+        "limit": 2,
+        "name": "Curmudgeon"
+      },
+      "3013": {
+        "abilities": {
+          "301301": {
+            "description": "You may place 1 Intrigue on this location.",
+            "effect": {
+              "adjust_stat": {
+                "amount": 1,
+                "stat_type": "STAT_TYPE_INTRIGUE",
+                "target": {
+                  "action_user": {}
+                }
+              }
+            },
+            "id": 301301,
+            "name": "Mastermind Ability: Curse",
+            "refusal_role": "PLAYER_ROLE_MASTERMIND",
+            "trigger_type": "TRIGGER_TYPE_ON_PHASE_START"
+          }
+        },
+        "id": 3013,
+        "limit": 1,
+        "name": "Witch"
+      }
+    }
+  },
+  "script_models": {
+    "script_models": {
+      "8001": {
+        "id": 8001,
+        "metadata": {
+          "cast": {
+            "boyStudent": {
+              "role_name": "person"
+            },
+            "classRep": {
+              "role_name": "lovedOne"
+            },
+            "girlStudent": {
+              "role_name": "friend"
+            },
+            "informer": {
+              "role_name": "serialKiller"
+            },
+            "nurse": {
+              "role_name": "person"
+            },
+            "officeWorker": {
+              "role_name": "lover"
+            },
+            "patient": {
+              "role_name": "person"
+            },
+            "policeOfficer": {
+              "role_name": "person"
+            },
+            "shrineMaiden": {
+              "role_name": "keyPerson"
+            }
+          },
+          "days_per_loop": 6,
+          "difficulty_sets": [
+            {
+              "difficulty": 2,
+              "number_of_loops": 4
+            },
+            {
+              "difficulty": 4,
+              "number_of_loops": 3
+            }
+          ],
+          "incidents": [
+            {
+              "culprit": "officeWorker",
+              "day": 3,
+              "incident": "foulEvil"
+            },
+            {
+              "culprit": "classRep",
+              "day": 4,
+              "incident": "increasingUnease"
+            },
+            {
+              "culprit": "girlStudent",
+              "day": 6,
+              "incident": "suicide"
+            }
+          ],
+          "main_plot": [
+            "signWithMe"
+          ],
+          "mastermind_hints": "See Tragedy Looper Mastermind Handbook",
+          "set": [
+            {
+              "name": "Tragedy Looper",
+              "number": 3
+            }
+          ],
+          "story": "See Tragedy Looper Mastermind Handbook",
+          "sub_plots": [
+            "loveAffair",
+            "hiddenFreak"
+          ],
+          "title": "Young Women’s Battlefield",
+          "tragedy_set": "basicTragedy",
+          "victory_conditions": "See Tragedy Looper Mastermind Handbook"
+        }
+      },
+      "8002": {
+        "id": 8002,
+        "metadata": {
+          "cast": {
+            "boyStudent": {
+              "role_name": "serialKiller"
+            },
+            "doctor": {
+              "role_name": "conspiracyTheorist"
+            },
+            "patient": {
+              "role_name": "person"
+            },
+            "popIdol": {
+              "role_name": "keyPerson"
+            },
+            "richStudent": {
+              "role_name": "person"
+            },
+            "shrineMaiden": {
+              "role_name": "friend"
+            },
+            "teacher": {
+              "role_name": "person"
+            }
+          },
+          "creator": "M.Hydrome",
+          "days_per_loop": 5,
+          "difficulty_sets": [
+            {
+              "difficulty": 2,
+              "number_of_loops": 4
+            },
+            {
+              "difficulty": 3,
+              "number_of_loops": 3
+            }
+          ],
+          "incidents": [
+            {
+              "culprit": "patient",
+              "day": 2,
+              "incident": "increasingUnease"
+            },
+            {
+              "culprit": "shrineMaiden",
+              "day": 3,
+              "incident": "hospitalIncident"
+            },
+            {
+              "culprit": "boyStudent",
+              "day": 5,
+              "incident": "missingPerson"
+            }
+          ],
+          "main_plot": [
+            "signWithMe"
+          ],
+          "mastermind_hints": "The best way to win is through the Hospital :horror: and to place :intrigue: on the Idol. This reveals the least information.\n\nStart day 1 and 2 with :paranoia: +1 on the :patient:, and a bluff and :intrigue: +1 on the Shrine and Hospital respectively.\n\nAlso from day 1, use the :conspiracyTheorist: and trigger :spreading: :paranoia:. If you get some :intrigue: on the Hospital, put 2 :paranoia: on the :shrineMaiden:, and trigger the Hospital :horror:.\n\nOn day 3, you can use the Unsettling Rumor effect to put the second :intrigue: on the Hospital and kill the Protagonists.\n\nIf you can’t seem to get any :intrigue: on the Hospital, put instead 2 :intrigue: on the Idol and if possible, also on the Shrine, :richStudent:, and shrineMaiden. For this, :spreading: :paranoia: and :unsettlingRumor: will help you.\n\nHide the :serialKiller: as long as you can and use him to kill the :keyPerson: as your last resort. Killing the :friend: will make the Final Guess easy for the Protagonists, so avoid that as much as possible.\n\nThe Final Guess can easily become your downfall. Either you hide the :conspiracyTheorist: or the :friend:. Try to make it look like a :murder:er or a :brain: instead.\n\nVictory conditions\n1. At any day end, have the popIdol and the :boyStudent: alone in a location, triggering the :serialKiller: effect and thus the :keyPerson:’s loss condition immediately.\n\n2. At end of day 3, have at least 1 :intrigue: on the Hospital, at least 2 :paranoia: on the shrineMaiden, and the popIdol in the Hospital, triggering Hospital :horror:, killing the popIdol and triggering the :keyPerson:’s loss condition immediately.\n\n3. At loop end, have 2 :intrigue: on the popIdol, triggering the loss condition for “Sign with Me”.\n\n4. At any day end, have the shrineMaiden and the :boyStudent: alone in a location, triggering the :serialKiller: effect and thus the :friend:’s loss condition at loop end.\n\n5. At end of day 3, have at least 1 :intrigue: on the Hospital, at least 2 :paranoia: on the shrineMaiden who should be in the Hospital, triggering the Hospital :horror:, killing the shrineMaiden, and triggering the :friend:’s loss condition at loop end.\n\n6. At the end of day 3, have at least 2 :intrigue: on the Hospital, at least 2 :paranoia: on the shrineMaiden, triggering the Hospital :horror: killing the Protagonists.\n",
+          "set": [
+            {
+              "name": "New Tragedies",
+              "number": 3
+            }
+          ],
+          "special_rules": [
+            ""
+          ],
+          "story": "For boys and girls, the world is a constant battlefield. Each tiny little disturbance will shake their inexperienced souls. Especially in this town, where seductors lure with the promise of magic powers – without explaining the consequences\n\nThe school was bubbling with talk. “Spells” and “magic”, and everyone knows that you CAN become a magical girl, if you just sign the contract. Eventually, the :popIdol: will sign, and she will die. Can the Protagonists stop this tragedy from happening?\n",
+          "sub_plots": [
+            "unsettlingRumor",
+            "hiddenFreak"
+          ],
+          "title": "Magical Girls' Superiority",
+          "tragedy_set": "basicTragedy",
+          "victory_conditions": "This is a script recommended for those who are playing :basicTragedy: for the first time. This is where it begins for real. Now you have 2 Subplots and seven people in the cast. Also, there are 5 days each loop\n\nThat said, the difficulty is still set to very low. Protagonists who come from :firstSteps: won’t feel super confused and will be able to enjoy the extra additions well enough. It’s not difficult to play as Mastermind either. But beware of the Final Guess. If all roles are clear, then you will lose, and that is more stressful than it may seem.\n"
+        },
+        "private_info": {
+          "characters_ids": [
+            5012
+          ],
+          "incident_ids": [],
+          "main_plot_id": 1003,
+          "role_assignments": {
+            "5012": 3001
+          },
+          "sub_plots_ids": [
+            2004,
+            2013
+          ]
+        },
+        "public_info": {}
+      },
+      "8003": {
+        "id": 8003,
+        "metadata": {
+          "cast": {
+            "alien": {
+              "role_name": "lover"
+            },
+            "blackCat": {
+              "role_name": "factor"
+            },
+            "nurse": {
+              "role_name": "witch"
+            },
+            "officeWorker": {
+              "role_name": "lovedOne"
+            },
+            "popIdol": {
+              "role_name": "person"
+            },
+            "richStudent": {
+              "role_name": "person"
+            },
+            "soldier": {
+              "role_name": "person"
+            }
+          },
+          "creator": "GEnd",
+          "days_per_loop": 5,
+          "description": "The Cat Box is a perfect script to play as your second :basicTragedy: script. The complexity is slightly higher, and there are now 8 characters in the cast. The idea of this script is to introduce two new things. \n\nThe first is the :mysteryBoy: and the :blackCat:; both a bit strange. It’s a good chance to get to know rather complicated characters. But don’t fret; neither of them will mess up things too badly. \n\nThe second is the trick to find the :witch:, who has mandatory :goodwill: Refusel. This will have the Protagonists learn how to use this technique.\n",
+          "difficulty_sets": [
+            {
+              "difficulty": 5,
+              "number_of_loops": 3
+            },
+            {
+              "difficulty": 3,
+              "number_of_loops": 4
+            }
+          ],
+          "incidents": [
+            {
+              "culprit": "richStudent",
+              "day": 1,
+              "incident": "suicide"
+            },
+            {
+              "culprit": "officeWorker",
+              "day": 4,
+              "incident": "missingPerson"
+            },
+            {
+              "culprit": "alien",
+              "day": 5,
+              "incident": "missingPerson"
+            }
+          ],
+          "main_plot": [
+            "giantTimeBomb"
+          ],
+          "mastermind_hints": "You can win with either 2 :intrigue: on the Hospital or the ability of the :lovedOne:. Your first choice should be the former, but the latter hides more information. \n\nFirst day on loop 1 should be an :intrigue: +2 on the School, an :intrigue: +1 on the Hospital, and a bluff card on the Shrine. Then put an :paranoia: on the :richStudent: using the :conspiracyTheorist: and kill her with :suicide:. This is to give the impression that she might be the :witch: \n\nAfter that, try triggering both :missingPerson: Incidents by putting out :paranoia:. Use the :conspiracyTheorist:’s and :factor:’s abilities (Subplot “Unknown :factor:”: Putting 2 :intrigue: on the School makes the :blackCat: able to act as a :conspiracyTheorist:) when you need. Putting :paranoia: on the :officeWorker: is effective both for :missingPerson: and for the :lovedOne: ability. \n\nFinally, if you can get 2 :intrigue: on the School, Shrine, and Hospital, the first loop is perfected. You can try to get that result in future loops too, but it’ll be hard with Forbid :intrigue: and trying to prevent the Protagonists from finding the :witch: with :goodwill: Refusel. \n\nIt’s super easy to hide the :factor:, so you don’t need to worry about the Final Guess.",
+          "set": [
+            {
+              "name": "New Tragedies",
+              "number": 4
+            }
+          ],
+          "special_rules": [
+            ""
+          ],
+          "story": "The witch laughs and the cat familiar meows. A mistake in a ritual has summoned a strange existence from another world. And to make matters worse, it fell in love with a human. \n\nThe witch decides to burn the entire town to hide the evidence. But to do that, she needs to stay hidden. Time is of the essence: kill the witch and shut the lid on this box forever.\n",
+          "sub_plots": [
+            "loveAffair",
+            "unknownFactor"
+          ],
+          "title": "The Cat Box",
+          "tragedy_set": "basicTragedy",
+          "victory_conditions": "1. At loop end, have 2 :intrigue: on the Hospital, triggering the loss condition of “:giantTimeBomb:.”\n\n2. At any day end, have 3 or more :paranoia: and 1 or more :intrigue: on the :officeWorker:, triggering the :lovedOne:'’s Protagonist kill.\n"
+        }
+      }
+    }
+  },
+  "sub_plots": {
+    "sub_plots": {
+      "2004": {
+        "description": "Optional Mastermind Ability (1/loop): You may place 1 intrigue on any location.",
+        "id": 2004,
+        "name": "An Unsettling Rumor",
+        "role_assignments": {
+          "3007": 1
+        },
+        "type": "PLOT_TYPE_SUB_PLOT"
+      },
+      "2011": {
+        "description": "",
+        "id": 2011,
+        "name": "Circle of Friends",
+        "role_assignments": {
+          "3006": 2,
+          "3007": 1
+        },
+        "type": "PLOT_TYPE_SUB_PLOT"
+      },
+      "2012": {
+        "description": "",
+        "id": 2012,
+        "name": "A Love Affair",
+        "role_assignments": {
+          "3008": 1,
+          "3009": 1
+        },
+        "type": "PLOT_TYPE_SUB_PLOT"
+      },
+      "2013": {
+        "description": "",
+        "id": 2013,
+        "name": "The Hidden Freak",
+        "role_assignments": {
+          "3006": 1,
+          "3010": 1
+        },
+        "type": "PLOT_TYPE_SUB_PLOT"
+      },
+      "2014": {
+        "description": "Mandatory Always: All persons with at least 3 paranoia turn into Serial Killers.",
+        "id": 2014,
+        "name": "Paranoia Virus",
+        "role_assignments": {
+          "3007": 1
+        },
+        "type": "PLOT_TYPE_SUB_PLOT"
+      },
+      "2015": {
+        "description": "Mandatory Loop Start: Place 2 paranoia on all characters who had goodwill last loop.",
+        "id": 2015,
+        "name": "Threads of Fate",
+        "role_assignments": {},
+        "type": "PLOT_TYPE_SUB_PLOT"
+      },
+      "2016": {
+        "description": "",
+        "id": 2016,
+        "name": "Unknown Factor X",
+        "role_assignments": {
+          "3011": 1
+        },
+        "type": "PLOT_TYPE_SUB_PLOT"
+      }
+    }
+  }
+}

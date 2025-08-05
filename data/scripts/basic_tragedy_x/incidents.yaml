@@ -1,0 +1,141 @@
+incidents:
+  4001:
+    id: 4001
+    name: "Murder"
+    description: "One (1) other character in the culprit's location dies."
+    effect:
+      add_trait:
+        # ENGINE-SIDE LOGIC: The engine must resolve the culprit's location and then present a choice of characters at that location, excluding the culprit.
+        target: { all_characters_at_location: "LOCATION_TYPE_UNSPECIFIED" }
+        trait: "Dead"
+  4002:
+    id: 4002
+    name: "Increasing Unease"
+    description: "Place 2 paranoia on any character, then 1 intrigue on any other character."
+    effect:
+      compound_effect:
+        operator: OPERATOR_SEQUENCE
+        sub_effects:
+          - adjust_stat:
+              target: { action_target: { } } # Player chooses target
+              stat_type: STAT_TYPE_PARANOIA
+              amount: 2
+          - adjust_stat:
+              target: { action_target: { } } # Player chooses another target
+              stat_type: STAT_TYPE_INTRIGUE
+              amount: 1
+  4003:
+    id: 4003
+    name: "Foul Evil"
+    description: "Place 2 intrigue on the Shrine."
+    effect:
+      adjust_stat:
+        target: { all_characters_at_location: "LOCATION_TYPE_SHRINE" } # This should target the location itself
+        stat_type: STAT_TYPE_INTRIGUE
+        amount: 2
+  4004:
+    id: 4004
+    name: "Suicide"
+    description: "The culprit dies."
+    effect:
+      add_trait:
+        target: { culprit: { } }
+        trait: "Dead"
+  4005:
+    id: 4005
+    name: "Hospital Incident"
+    description: "Prerequisite: 1 intrigue on the Hospital, Everyone in the Hospital dies. Prerequisite: 2 intrigue on the Hospital, Mandatory Loss condition: Protagonists Death."
+    effect:
+      conditional_effect:
+        condition:
+          stat_condition:
+            target: { all_characters_at_location: "LOCATION_TYPE_HOSPITAL" } # Location stat
+            stat_type: STAT_TYPE_INTRIGUE
+            comparator: GREATER_THAN_OR_EQUAL_TO
+            value: 2
+        then_effect:
+          end_game:
+            winner: PLAYER_ROLE_MASTERMIND
+            reason: "Hospital Incident escalated."
+        else_effect:
+          conditional_effect:
+            condition:
+              stat_condition:
+                target: { all_characters_at_location: "LOCATION_TYPE_HOSPITAL" } # Location stat
+                stat_type: STAT_TYPE_INTRIGUE
+                comparator: GREATER_THAN_OR_EQUAL_TO
+                value: 1
+            then_effect:
+              add_trait:
+                target: { all_characters_at_location: "LOCATION_TYPE_HOSPITAL" }
+                trait: "Dead"
+  4006:
+    id: 4006
+    name: "Faraway Murder"
+    description: "One character with at least 2 intrigue dies."
+    effect:
+      add_trait:
+        target: { action_target: { } } # Player chooses from valid targets
+        trait: "Dead"
+    # Engine must pre-filter targets for the player choice
+    # condition_for_target_selection:
+    #   stat_condition:
+    #     target: { action_target: {} }
+    #     stat_type: STAT_TYPE_INTRIGUE
+    #     comparator: GREATER_THAN_OR_EQUAL_TO
+    #     value: 2
+  4007:
+    id: 4007
+    name: "Missing Person"
+    description: "Move culprit to any Location. Put 1 intrigue on that Location."
+    effect:
+      compound_effect:
+        operator: OPERATOR_SEQUENCE
+        sub_effects:
+          - move_character:
+              target: { culprit: { } }
+              destination: LOCATION_TYPE_UNSPECIFIED # Player chooses destination
+          - adjust_stat:
+              # ENGINE-SIDE LOGIC: This should target the location the character was moved to.
+              target: { all_characters_at_location: "LOCATION_TYPE_UNSPECIFIED" }
+              stat_type: STAT_TYPE_INTRIGUE
+              amount: 1
+  4008:
+    id: 4008
+    name: "Spreading"
+    description: "Remove 2 goodwill (or 1 if they only have that) from a character, and then add 2 goodwill to another character."
+    effect:
+      compound_effect:
+        operator: OPERATOR_SEQUENCE
+        sub_effects:
+          - adjust_stat:
+              target: { action_target: { } } # Player chooses target
+              stat_type: STAT_TYPE_GOODWILL
+              amount: -2 # Engine should handle the "only 1" case
+          - adjust_stat:
+              target: { action_target: { } } # Player chooses another target
+              stat_type: STAT_TYPE_GOODWILL
+              amount: 2
+  4009:
+    id: 4009
+    name: "Butterfly Effect"
+    description: "Put any counter on any character in culprit’s Location."
+    effect:
+      compound_effect:
+        operator: OPERATOR_CHOOSE_ONE
+        sub_effects:
+          - adjust_stat:
+              # ENGINE-SIDE LOGIC: The engine must resolve the culprit's location and then present a choice of characters at that location.
+              target: { all_characters_at_location: "LOCATION_TYPE_UNSPECIFIED" } # Player chooses
+              stat_type: STAT_TYPE_PARANOIA
+              amount: 1
+          - adjust_stat:
+              # ENGINE-SIDE LOGIC: The engine must resolve the culprit's location and then present a choice of characters at that location.
+              target: { all_characters_at_location: "LOCATION_TYPE_UNSPECIFIED" } # Player chooses
+              stat_type: STAT_TYPE_INTRIGUE
+              amount: 1
+          - adjust_stat:
+              # ENGINE-SIDE LOGIC: The engine must resolve the culprit's location and then present a choice of characters at that location.
+              target: { all_characters_at_location: "LOCATION_TYPE_UNSPECIFIED" } # Player chooses
+              stat_type: STAT_TYPE_GOODWILL
+              amount: 1

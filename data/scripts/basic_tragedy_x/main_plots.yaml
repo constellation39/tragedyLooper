@@ -1,0 +1,40 @@
+main_plots:
+  1001:
+    id: 1001
+    name: "Murder Plan"
+    type: PLOT_TYPE_MAIN_PLOT
+    role_assignments:
+      3001: 1
+      3002: 1
+      3003: 1
+    description: ""
+  1002:
+    id: 1002
+    name: "The Sealed Item"
+    type: PLOT_TYPE_MAIN_PLOT
+    role_assignments:
+      3003: 1
+      3004: 1
+    description: "Loss condition: Tragedy at Loop End if there is 2 intrigue on the Shrine."
+  1003:
+    id: 1003
+    name: "Sign with me"
+    type: PLOT_TYPE_MAIN_PLOT
+    role_assignments:
+      3001: 1
+    description: "Script creation rule: Key Person must be a girl. Loss condition: Tragedy at Loop End if there is 2 intrigue on the Key Person."
+  1004:
+    id: 1004
+    name: "Change of Future"
+    type: PLOT_TYPE_MAIN_PLOT
+    role_assignments:
+      3004: 1
+      3005: 1
+    description: "Loss condition: Tragedy at Loop End if 'Butterfly Effect' has occurred this loop."
+  1005:
+    id: 1005
+    name: "Giant Time Bomb"
+    type: PLOT_TYPE_MAIN_PLOT
+    role_assignments:
+      3013: 1
+    description: "Loss condition: Tragedy at Loop End if there is 2 intrigue on the Witch's starting location."

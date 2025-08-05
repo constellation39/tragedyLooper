@@ -1,16 +1,5 @@
 package loader
 
-import (
-	"fmt"
-	"os"
-	"path/filepath"
-
-	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
-	"google.golang.org/protobuf/encoding/protojson"
-	"google.golang.org/protobuf/proto"
-	"sigs.k8s.io/yaml"
-)
-
 // ScriptConfig defines the interface for accessing all loaded game configuration data.
 type ScriptConfig interface {
 	GetScript() *v1.ScriptConfig
@@ -59,8 +48,8 @@ func LoadConfig(dataDir, scriptID string, modelId int32) (ScriptConfig, error) {
 	repo := newRepository(modelId)
 
 	// Load the main script file.
-	scriptPath := filepath.Join(dataDir, "scripts", scriptID+".yaml")
-	if err := loadDataFromYAML(scriptPath, repo.script); err != nil {
+	scriptPath := filepath.Join(dataDir, "scripts", scriptID+".json")
+	if err := loadDataFromJSON(scriptPath, repo.script); err != nil {
 		return nil, fmt.Errorf("failed to load script '%s': %w", scriptID, err)
 	}
 
@@ -72,23 +61,17 @@ func LoadConfig(dataDir, scriptID string, modelId int32) (ScriptConfig, error) {
 	return repo, nil
 }
 
-// loadDataFromYAML is a generic function that loads and decodes data from a YAML file
+// loadDataFromJSON is a generic function that loads and decodes data from a JSON file
 // into a given protocol buffer message.
-func loadDataFromYAML(filePath string, data proto.Message) error {
+func loadDataFromJSON(filePath string, data proto.Message) error {
 	absPath, err := filepath.Abs(filePath)
 	if err != nil {
 		return fmt.Errorf("failed to get absolute path for %s: %w", filePath, err)
 	}
 
-	yamlBytes, err := os.ReadFile(absPath)
+	jsonBytes, err := os.ReadFile(absPath)
 	if err != nil {
-		return fmt.Errorf("failed to read YAML file %s: %w", absPath, err)
-	}
-
-	// Convert YAML to JSON first, as protobuf has no direct YAML unmarshaler.
-	jsonBytes, err := yaml.YAMLToJSON(yamlBytes)
-	if err != nil {
-		return fmt.Errorf("failed to convert YAML to JSON for %s: %w", absPath, err)
+		return fmt.Errorf("failed to read JSON file %s: %w", absPath, err)
 	}
 
 	// Using protojson to unmarshal is safer for protobuf messages.

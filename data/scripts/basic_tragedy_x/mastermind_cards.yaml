@@ -1,0 +1,68 @@
+mastermind_cards:
+  6001:
+    id: 6001
+    name: "Move"
+    type: CARD_TYPE_MOVE_HORIZONTALLY
+    owner_role: PLAYER_ROLE_MASTERMIND
+    effect:
+      sub_effects:
+        - move_character: { }
+  6002:
+    id: 6002
+    name: "Add Paranoia"
+    type: CARD_TYPE_PARANOIA_PLUS
+    owner_role: PLAYER_ROLE_MASTERMIND
+    effect:
+      sub_effects:
+        - adjust_stat:
+            stat_type: STAT_TYPE_PARANOIA
+            amount: 1
+  6003:
+    id: 6003
+    name: "Add Goodwill"
+    type: CARD_TYPE_GOODWILL_PLUS
+    owner_role: PLAYER_ROLE_MASTERMIND
+    effect:
+      sub_effects:
+        - adjust_stat:
+            stat_type: STAT_TYPE_GOODWILL
+            amount: 1
+  6004:
+    id: 6004
+    name: "Add Intrigue"
+    type: CARD_TYPE_INTRIGUE_PLUS
+    owner_role: PLAYER_ROLE_MASTERMIND
+    effect:
+      sub_effects:
+        - adjust_stat:
+            stat_type: STAT_TYPE_INTRIGUE
+            amount: 1
+  6005:
+    id: 6005
+    name: "Forbid Goodwill"
+    type: CARD_TYPE_FORBID_GOODWILL_INCREASE
+    owner_role: PLAYER_ROLE_MASTERMIND
+    effect:
+      sub_effects:
+        - forbid:
+            forbid_type: FORBID_TYPE_GOODWILL_CHANGE
+  6006:
+    id: 6006
+    name: "Forbid Paranoia"
+    type: CARD_TYPE_FORBID_PARANOIA_INCREASE
+    owner_role: PLAYER_ROLE_MASTERMIND
+    effect:
+      sub_effects:
+        - forbid:
+            forbid_type: FORBID_TYPE_PARANOIA_CHANGE
+  6007:
+    id: 6007
+    name: "Add Intrigue +2"
+    type: CARD_TYPE_INTRIGUE_PLUS
+    owner_role: PLAYER_ROLE_MASTERMIND
+    effect:
+      sub_effects:
+        - adjust_stat:
+            stat_type: STAT_TYPE_INTRIGUE
+            amount: 2
+    once_per_loop: true

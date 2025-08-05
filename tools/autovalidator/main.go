@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -12,128 +11,135 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func main() {
-	dataDir := "data"
-	schemaDir := filepath.Join(dataDir, "schemas")
+const (
+	dataDir      = "data"
+	schemaDir    = "data/schemas"
+	scriptsDir   = "data/scripts"
+	scriptSchema = "ScriptConfig.json"
+)
 
+func main() {
 	fmt.Println("Starting validation...")
-	if err := discoverAndValidate(dataDir, schemaDir); err != nil {
-		fmt.Println("validation stopped with error:", err)
+	if err := discoverAndValidate(); err != nil {
+		fmt.Printf("Validation stopped with error: %v\n", err)
+		os.Exit(1)
 	}
 	fmt.Println("Validation finished.")
 }
 
-// discoverAndValidate 遍历 dataDir（递归），
-// • 如果是文件则直接校验；
-// • 如果是目录则校验其内部的 *.json, *.yaml, *.yml；
-// schema 的路径规则见上文说明。
-// 注意：schemaDir 自身及其子目录会被完全跳过。
-func discoverAndValidate(dataDir, schemaDir string) error {
-	var validatedCount int
+func discoverAndValidate() error {
 	schemaDirAbs, _ := filepath.Abs(schemaDir)
 
-	walkFn := func(path string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-
-		if insideSchemaDir(path, schemaDirAbs) {
-			return handleSchemaDir(d)
-		}
-
-		if d.IsDir() {
-			return processDirectory(path, schemaDirAbs, &validatedCount)
-		}
-
-		return processFile(path, d.Name(), schemaDirAbs, &validatedCount)
+	fmt.Println("--- Validating Script Packages ---")
+	scriptDirs, err := os.ReadDir(scriptsDir)
+	if err != nil {
+		return fmt.Errorf("could not read scripts directory '%s': %w", scriptsDir, err)
 	}
 
-	if err := filepath.WalkDir(dataDir, walkFn); err != nil {
-		return err
+	schemaPath := filepath.Join(schemaDirAbs, scriptSchema)
+	if !fileExists(schemaPath) {
+		return fmt.Errorf("script schema not found at %s", schemaPath)
+	}
+
+	validatedCount := 0
+	for _, entry := range scriptDirs {
+		if entry.IsDir() {
+			dirPath := filepath.Join(scriptsDir, entry.Name())
+			fmt.Printf("Processing script package: %s\n", dirPath)
+
+			assembledData, err := validateScriptPackage(dirPath, schemaPath)
+			if err != nil {
+				fmt.Printf("FAIL: Validation failed for package %s: %v\n", entry.Name(), err)
+			} else {
+				outputJSONPath := filepath.Join(scriptsDir, entry.Name()+".json")
+				err = writeAssembledDataAsJSON(assembledData, outputJSONPath)
+				if err != nil {
+					fmt.Printf("WARN: Could not write validated json for package %s: %v\n", entry.Name(), err)
+				} else {
+					fmt.Printf("OK  : Package %s is valid and JSON written to %s\n", entry.Name(), outputJSONPath)
+					validatedCount++
+				}
+			}
+		}
 	}
 
 	if validatedCount == 0 {
-		fmt.Println("No data files were found to validate.")
+		fmt.Println("No script packages were found to validate.")
 	}
 	return nil
 }
 
-func handleSchemaDir(d fs.DirEntry) error {
-	if d.IsDir() {
-		return filepath.SkipDir
-	}
-	return nil
-}
-
-func processDirectory(path, schemaDirAbs string, validatedCount *int) error {
-	dirName := filepath.Base(path)
-	schemaPath := filepath.Join(schemaDirAbs, dirName+".json")
-	if !fileExists(schemaPath) {
-		return nil // No schema, no validation
-	}
-
-	entries, _ := os.ReadDir(path)
-	for _, e := range entries {
-		if e.IsDir() || !isSupportedDataFile(e.Name()) {
-			continue
-		}
-		dataPath := filepath.Join(path, e.Name())
-		validate(schemaPath, dataPath)
-		*validatedCount++
-	}
-	return nil
-}
-
-func processFile(path, name, schemaDirAbs string, validatedCount *int) error {
-	if isSupportedDataFile(name) {
-		var schemaPath string
-		if name == "basic_tragedy_x.yaml" {
-			schemaPath = filepath.Join(schemaDirAbs, "ScriptConfig.json")
-		} else {
-			schemaPath = filepath.Join(schemaDirAbs, strings.TrimSuffix(name, filepath.Ext(name))+".json")
-		}
-
-		if fileExists(schemaPath) {
-			validate(schemaPath, path)
-			*validatedCount++
-		}
-	}
-	return nil
-}
-
-func validate(schemaPath, dataPath string) {
-	schemaAbs, _ := filepath.Abs(schemaPath)
-
-	schemaLoader := gojsonschema.NewReferenceLoader("file://" + filepath.ToSlash(schemaAbs))
-
-	var dataToValidate interface{}
-	var err error
-	if strings.HasSuffix(dataPath, ".yaml") || strings.HasSuffix(dataPath, ".yml") {
-		dataToValidate, err = loadYamlFile(dataPath)
-	} else {
-		dataToValidate, err = loadJsonFile(dataPath)
-	}
+func validateScriptPackage(dirPath, schemaPath string) (map[string]interface{}, error) {
+	assembledData, err := assembleScriptData(dirPath)
 	if err != nil {
-		fmt.Printf("Error loading data from %s: %v\n", dataPath, err)
-		return
+		return nil, fmt.Errorf("could not assemble data: %w", err)
 	}
 
-	dataLoader := gojsonschema.NewGoLoader(dataToValidate)
+	schemaLoader := gojsonschema.NewReferenceLoader("file://" + filepath.ToSlash(schemaPath))
+	dataLoader := gojsonschema.NewGoLoader(assembledData)
 
 	result, err := gojsonschema.Validate(schemaLoader, dataLoader)
 	if err != nil {
-		fmt.Printf("Error validating %s against %s: %v\n", dataPath, schemaPath, err)
-		return
+		return nil, fmt.Errorf("validation error: %w", err)
 	}
 
-	if result.Valid() {
-		fmt.Printf("OK  : %s is valid\n", dataPath)
-	} else {
-		fmt.Printf("FAIL: %s is not valid. Errors:\n", dataPath)
+	if !result.Valid() {
+		var errs []string
 		for _, desc := range result.Errors() {
-			fmt.Printf("  - %s\n", desc)
+			errs = append(errs, fmt.Sprintf("  - %s", desc))
+		}
+		return nil, fmt.Errorf("script is not valid. Errors:\n%s", strings.Join(errs, "\n"))
+	}
+
+	return assembledData, nil
+}
+
+func assembleScriptData(dirPath string) (map[string]interface{}, error) {
+	assembled := make(map[string]interface{})
+	files, err := os.ReadDir(dirPath)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, file := range files {
+		if file.IsDir() || !strings.HasSuffix(file.Name(), ".yaml") {
+			continue
+		}
+
+		filePath := filepath.Join(dirPath, file.Name())
+		content, err := loadYamlFile(filePath)
+		if err != nil {
+			return nil, fmt.Errorf("failed to load %s: %w", filePath, err)
+		}
+
+		key := strings.TrimSuffix(file.Name(), ".yaml")
+		assembled[key] = content
+	}
+
+	baseConfigPath := dirPath + ".yaml"
+	if fileExists(baseConfigPath) {
+		baseContent, err := loadYamlFile(baseConfigPath)
+		if err != nil {
+			return nil, fmt.Errorf("failed to load base config %s: %w", baseConfigPath, err)
+		}
+		if baseMap, ok := baseContent.(map[string]interface{}); ok {
+			for k, v := range baseMap {
+				if _, exists := assembled[k]; !exists {
+					assembled[k] = v
+				}
+			}
 		}
 	}
+
+	return assembled, nil
+}
+
+func writeAssembledDataAsJSON(data map[string]interface{}, path string) error {
+	jsonData, err := json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		return fmt.Errorf("failed to marshal data to JSON: %w", err)
+	}
+	return os.WriteFile(path, jsonData, 0644)
 }
 
 func loadYamlFile(path string) (interface{}, error) {
@@ -163,30 +169,6 @@ func convertMapKeysToStrings(i interface{}) interface{} {
 		}
 	}
 	return i
-}
-
-func loadJsonFile(path string) (interface{}, error) {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-	var out interface{}
-	err = json.Unmarshal(data, &out)
-	return out, err
-}
-
-func isSupportedDataFile(name string) bool {
-	return strings.HasSuffix(name, ".json") || strings.HasSuffix(name, ".yaml") || strings.HasSuffix(name, ".yml")
-}
-
-// insideSchemaDir 判断 path 是否位于 schemaDir（含其子目录）内部。
-func insideSchemaDir(path, schemaDirAbs string) bool {
-	abs, _ := filepath.Abs(path)
-	if abs == schemaDirAbs {
-		return true
-	}
-	rel, err := filepath.Rel(schemaDirAbs, abs)
-	return err == nil && !strings.HasPrefix(rel, ".."+string(os.PathSeparator)) && rel != ".."
 }
 
 func fileExists(p string) bool {

@@ -1,0 +1,52 @@
+sub_plots:
+  2004:
+    id: 2004
+    name: "An Unsettling Rumor"
+    type: PLOT_TYPE_SUB_PLOT
+    role_assignments:
+      3007: 1
+    description: "Optional Mastermind Ability (1/loop): You may place 1 intrigue on any location."
+  2011:
+    id: 2011
+    name: "Circle of Friends"
+    type: PLOT_TYPE_SUB_PLOT
+    role_assignments:
+      3006: 2
+      3007: 1
+    description: ""
+  2012:
+    id: 2012
+    name: "A Love Affair"
+    type: PLOT_TYPE_SUB_PLOT
+    role_assignments:
+      3008: 1
+      3009: 1
+    description: ""
+  2013:
+    id: 2013
+    name: "The Hidden Freak"
+    type: PLOT_TYPE_SUB_PLOT
+    role_assignments:
+      3010: 1
+      3006: 1
+    description: ""
+  2014:
+    id: 2014
+    name: "Paranoia Virus"
+    type: PLOT_TYPE_SUB_PLOT
+    role_assignments:
+      3007: 1
+    description: "Mandatory Always: All persons with at least 3 paranoia turn into Serial Killers."
+  2015:
+    id: 2015
+    name: "Threads of Fate"
+    type: PLOT_TYPE_SUB_PLOT
+    role_assignments: { }
+    description: "Mandatory Loop Start: Place 2 paranoia on all characters who had goodwill last loop."
+  2016:
+    id: 2016
+    name: "Unknown Factor X"
+    type: PLOT_TYPE_SUB_PLOT
+    role_assignments:
+      3011: 1
+    description: ""

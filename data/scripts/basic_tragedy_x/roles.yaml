@@ -1,0 +1,437 @@
+# Assumption: Character death is represented by adding a "Dead" trait.
+# Placeholder logic is used where the protobuf definitions do not directly support the desired game mechanic.
+# These sections are marked with comments and require engine-side implementation.
+roles:
+  # Key Person (ID: 3001)
+  3001:
+    id: 3001
+    name: "Key Person"
+    limit: 1
+    abilities:
+      # Loss condition: Tragedy Always
+      # [This character dies.] ⇒ The loop ends immediately.
+      300101:
+        id: 300101
+        name: "Tragedy Always: Death of the Key Person"
+        description: "If this character dies, the loop ends immediately."
+        trigger_type: TRIGGER_TYPE_ON_GAME_EVENT
+        event_filters: [ GAME_EVENT_TYPE_TRAIT_ADDED ]
+        is_mandatory: true
+        conditions:
+          - compound_condition:
+              operator: OPERATOR_AND
+              sub_conditions:
+                - trait_condition:
+                    target: { triggering_character: { } }
+                    trait: "Dead"
+                - role_condition:
+                    target: { triggering_character: { } }
+                    role_id: 3001 # Key Person
+        effect:
+          end_game:
+            winner: PLAYER_ROLE_MASTERMIND
+            reason: "The Key Person has died."
+
+  # Killer (ID: 3002)
+  3002:
+    id: 3002
+    name: "Killer"
+    limit: 1
+    abilities:
+      # [Optional Day End] [The Key Person has at least 2 Intrigue and is in this character‘s location] ⇒ Kill the Key Person
+      300201:
+        id: 300201
+        name: "Optional Day End: Assassinate"
+        description: "At the end of the day, if the Key Person has 2+ Intrigue and is at your location, you may kill them."
+        trigger_type: TRIGGER_TYPE_ON_DAY_END
+        refusal_role: PLAYER_ROLE_MASTERMIND
+        conditions:
+          - stat_condition:
+              target: { character_with_role_id: 3001 } # Key Person
+              stat_type: STAT_TYPE_INTRIGUE
+              comparator: GREATER_THAN_OR_EQUAL_TO
+              value: 2
+          - location_condition:
+              target: { character_with_role_id: 3001 } # Key Person
+              # ENGINE-SIDE LOGIC: The engine must resolve the action_user's location
+              # and check if the Key Person is there.
+              # Placeholder for: location == action_user.location
+        effect:
+          add_trait:
+            target: { character_with_role_id: 3001 } # Key Person
+            trait: "Dead"
+      # [Optional Loss condition: Protagonists Death Day End] [This character has at least 4 Intrigue]
+      300202:
+        id: 300202
+        name: "Loss Condition: Uncontrollable Urges"
+        description: "If this character has 4 or more Intrigue at the end of the day, the Protagonists lose."
+        trigger_type: TRIGGER_TYPE_ON_DAY_END
+        is_mandatory: true
+        conditions:
+          - stat_condition:
+              target: { action_user: { } } # The Killer
+              stat_type: STAT_TYPE_INTRIGUE
+              comparator: GREATER_THAN_OR_EQUAL_TO
+              value: 4
+        effect:
+          end_game:
+            winner: PLAYER_ROLE_MASTERMIND
+            reason: "The Killer was consumed by their urges."
+
+  # Brain (ID: 3003)
+  3003:
+    id: 3003
+    name: "Brain"
+    limit: 1
+    abilities:
+      # [Optional Mastermind Ability] You may place 1 Intrigue on this location or on any character in this location.
+      300301:
+        id: 300301
+        name: "Mastermind Ability: Scheme"
+        description: "You may place 1 Intrigue on this location or on any character in this location."
+        trigger_type: TRIGGER_TYPE_ON_PHASE_START
+
+        refusal_role: PLAYER_ROLE_MASTERMIND
+        requires_choice: true
+        effect:
+          compound_effect:
+            operator: OPERATOR_CHOOSE_ONE
+            sub_effects:
+              - adjust_stat: # On location
+                  # ENGINE-SIDE LOGIC: The engine must interpret this as adding intrigue to the location itself.
+                  target: { action_user: { } }
+                  stat_type: STAT_TYPE_INTRIGUE
+                  amount: 1
+              - adjust_stat: # On character at location
+                  # ENGINE-SIDE LOGIC: The engine will present a choice of characters at the user's location.
+                  target: { action_user: { } }
+                  stat_type: STAT_TYPE_INTRIGUE
+                  amount: 1
+
+  # Cultist (ID: 3004)
+  3004:
+    id: 3004
+    name: "Cultist"
+    limit: 1
+    abilities:
+      # [Optional Card resolve] You may ignore all Forbid Intrigue effects on this location and on all characters in this location.
+      300401:
+        id: 300401
+        name: "Card Resolve: Fanatical Devotion"
+        description: "You may ignore all Forbid Intrigue effects on this location and on all characters in this location."
+        trigger_type: TRIGGER_TYPE_ON_PHASE_START
+
+        refusal_role: PLAYER_ROLE_PROTAGONIST
+        # ENGINE-SIDE LOGIC: This is a rule-modifying ability. The engine must recognize this trait.
+        effect:
+          add_trait:
+            target: { action_user: { } }
+            trait: "IgnoresForbidIntrigueThisTurn"
+
+  # Time Traveler (ID: 3005)
+  3005:
+    id: 3005
+    name: "Time Traveler"
+    limit: 1
+    abilities:
+      # [Mandatory Card resolve] Ignore Forbid Goodwill on this character.
+      300501:
+        id: 300501
+        name: "Mandatory Card Resolve: Paradox Shield"
+        description: "Ignore Forbid Goodwill on this character."
+        trigger_type: TRIGGER_TYPE_ON_PASSIVE
+        is_mandatory: true
+        is_passive: true
+        # ENGINE-SIDE LOGIC: This is a rule-modifying ability. The engine must recognize this trait.
+        effect:
+          add_trait:
+            target: { action_user: { } }
+            trait: "IgnoresForbidGoodwill"
+      # [Loss condition: Tragedy Day End, Last Day] [There is 2 or less Goodwill on this character.] ⇒ Loop ends
+      300502:
+        id: 300502
+        name: "Loss Condition: Fading Existence"
+        description: "On the last day, if this character has 2 or less Goodwill, the loop ends."
+        trigger_type: TRIGGER_TYPE_ON_DAY_END
+        is_mandatory: true
+        conditions:
+          - day_condition:
+              comparator: EQUAL_TO
+              day: -1 # ENGINE-SIDE LOGIC: Special value for the last day.
+          - stat_condition:
+              target: { action_user: { } }
+              stat_type: STAT_TYPE_GOODWILL
+              comparator: LESS_THAN_OR_EQUAL_TO
+              value: 2
+        effect:
+          end_game:
+            winner: PLAYER_ROLE_MASTERMIND
+            reason: "The Time Traveler faded from existence."
+
+  # Friend (ID: 3006)
+  3006:
+    id: 3006
+    name: "Friend"
+    limit: 1
+    abilities:
+      # [Loss condition: Tragedy Loop End] [This character is dead.] ⇒ Reveal its role.
+      300601:
+        id: 300601
+        name: "Tragedy Loop End: A Friend's Truth"
+        description: "If this character is dead at the end of the loop, their role is revealed."
+        trigger_type: TRIGGER_TYPE_ON_LOOP_END
+        is_mandatory: true
+        conditions:
+          - trait_condition:
+              target: { action_user: { } }
+              trait: "Dead"
+        effect:
+          reveal_role:
+            target: { action_user: { } }
+      # [Mandatory Loop Start] [This role has been revealed] ⇒ This character gets 1 Goodwill.
+      300602:
+        id: 300602
+        name: "Loop Start: Revealed Friendship"
+        description: "If this character's role has been revealed, they start the loop with 1 extra Goodwill."
+        trigger_type: TRIGGER_TYPE_ON_LOOP_START
+        is_mandatory: true
+        conditions:
+          - event_history_condition:
+              event_type: GAME_EVENT_TYPE_ROLE_REVEALED
+              lookback_days: 100 # Look back across all previous loops
+              event_target: { action_user: { } }
+              count: 1
+              comparator: GREATER_THAN_OR_EQUAL_TO
+        effect:
+          adjust_stat:
+            target: { action_user: { } }
+            stat_type: STAT_TYPE_GOODWILL
+            amount: 1
+
+  # Conspiracy Theorist (ID: 3007)
+  3007:
+    id: 3007
+    name: "Conspiracy Theorist"
+    limit: 1
+    abilities:
+      # [Optional Mastermind Ability] You may place 1 Paranoia on any character in this location.
+      300701:
+        id: 300701
+        name: "Mastermind Ability: Spread Paranoia"
+        description: "You may place 1 Paranoia on any character in this location."
+        trigger_type: TRIGGER_TYPE_ON_PHASE_START
+
+        refusal_role: PLAYER_ROLE_MASTERMIND
+        requires_choice: true
+        effect:
+          adjust_stat:
+            # ENGINE-SIDE LOGIC: The engine will present a choice of characters at the user's location.
+            target: { action_user: { } }
+            stat_type: STAT_TYPE_PARANOIA
+            amount: 1
+
+  # Lover (ID: 3008)
+  3008:
+    id: 3008
+    name: "Lover"
+    limit: 1
+    abilities:
+      # [Mandatory Always] [The Loved One dies] ⇒ This character gets 6 Paranoia.
+      300801:
+        id: 300801
+        name: "Mandatory Always: Heartbreak"
+        description: "If the Loved One dies, this character gains 6 Paranoia."
+        trigger_type: TRIGGER_TYPE_ON_GAME_EVENT
+        event_filters: [ GAME_EVENT_TYPE_TRAIT_ADDED ]
+        is_mandatory: true
+        conditions:
+          - compound_condition:
+              operator: OPERATOR_AND
+              sub_conditions:
+                - trait_condition:
+                    target: { triggering_character: { } }
+                    trait: "Dead"
+                - role_condition:
+                    target: { triggering_character: { } }
+                    role_id: 3009 # Loved One's role ID
+        effect:
+          adjust_stat:
+            target: { character_with_role_id: 3008 } # The Lover
+            stat_type: STAT_TYPE_PARANOIA
+            amount: 6
+
+  # Loved One (ID: 3009)
+  3009:
+    id: 3009
+    name: "Loved One"
+    limit: 1
+    abilities:
+      # [Mandatory Always] [The Lover dies] ⇒ This character gets 6 Paranoia.
+      300901:
+        id: 300901
+        name: "Mandatory Always: Grief"
+        description: "If the Lover dies, this character gains 6 Paranoia."
+        trigger_type: TRIGGER_TYPE_ON_GAME_EVENT
+        event_filters: [ GAME_EVENT_TYPE_TRAIT_ADDED ]
+        is_mandatory: true
+        conditions:
+          - compound_condition:
+              operator: OPERATOR_AND
+              sub_conditions:
+                - trait_condition:
+                    target: { triggering_character: { } }
+                    trait: "Dead"
+                - role_condition:
+                    target: { triggering_character: { } }
+                    role_id: 3008 # Lover's role ID
+        effect:
+          adjust_stat:
+            target: { character_with_role_id: 3009 } # The Loved One
+            stat_type: STAT_TYPE_PARANOIA
+            amount: 6
+      # [Optional Loss condition: Protagonists Death Day End] [This character has at least 3 Paranoia and at least 1 Intrigue.]
+      300902:
+        id: 300902
+        name: "Loss Condition: Despair"
+        description: "If this character has 3+ Paranoia and 1+ Intrigue at the end of the day, the Protagonists lose."
+        trigger_type: TRIGGER_TYPE_ON_DAY_END
+        is_mandatory: true
+        conditions:
+          - compound_condition:
+              operator: OPERATOR_AND
+              sub_conditions:
+                - stat_condition:
+                    target: { action_user: { } }
+                    stat_type: STAT_TYPE_PARANOIA
+                    comparator: GREATER_THAN_OR_EQUAL_TO
+                    value: 3
+                - stat_condition:
+                    target: { action_user: { } }
+                    stat_type: STAT_TYPE_INTRIGUE
+                    comparator: GREATER_THAN_OR_EQUAL_TO
+                    value: 1
+        effect:
+          end_game:
+            winner: PLAYER_ROLE_MASTERMIND
+            reason: "The Loved One fell into despair."
+
+  # Serial Killer (ID: 3010)
+  3010:
+    id: 3010
+    name: "Serial Killer"
+    limit: 1
+    abilities:
+      # [Mandatory Day End] [There is exactly 1 other (living) character in this location] ⇒ That character dies.
+      301001:
+        id: 301001
+        name: "Mandatory Day End: Hunt"
+        description: "If there is exactly one other living character at your location at the end of the day, that character dies."
+        trigger_type: TRIGGER_TYPE_ON_DAY_END
+        is_mandatory: true
+        conditions:
+          - location_character_count_condition:
+              # ENGINE-SIDE LOGIC: The engine must resolve the action_user's location dynamically.
+              location: LOCATION_TYPE_UNSPECIFIED # Placeholder for action_user's location
+              comparator: EQUAL_TO
+              count: 2 # Serial Killer + 1 other
+        effect:
+          add_trait:
+            # ENGINE-SIDE LOGIC: The engine must resolve who the "other" character is (not the action_user).
+            target: { action_user: { } } # Placeholder
+            trait: "Dead"
+
+  # Factor (ID: 3011)
+  3011:
+    id: 3011
+    name: "Factor"
+    limit: 1
+    abilities:
+      # [Mandatory Always] [There is at least 2 Intrigue on the School] ⇒ This character gains the Conspiracy Theorist‘s ability, but not its role.
+      301101:
+        id: 301101
+        name: "Always: Absorb Conspiracy"
+        description: "If there is 2+ Intrigue on the School, this character gains the Conspiracy Theorist's ability."
+        trigger_type: TRIGGER_TYPE_ON_PASSIVE
+        is_mandatory: true
+        conditions:
+          - stat_condition:
+              # ENGINE-SIDE LOGIC: This requires checking a stat on a location, not a character.
+              target: { all_characters_at_location: "LOCATION_TYPE_SCHOOL" }
+              stat_type: STAT_TYPE_INTRIGUE
+              comparator: GREATER_THAN_OR_EQUAL_TO
+              value: 2
+        effect:
+          grant_ability:
+            target: { action_user: { } }
+            ability_id: 300701 # Conspiracy Theorist's ability ID
+      # [Mandatory Always] [There is at least 2 Intrigue on the City] ⇒ This character gains the Key Person’s ability, but not its role.
+      301102:
+        id: 301102
+        name: "Always: Absorb Importance"
+        description: "If there is 2+ Intrigue on the City, this character gains the Key Person's ability."
+        trigger_type: TRIGGER_TYPE_ON_PASSIVE
+        is_mandatory: true
+        conditions:
+          - stat_condition:
+              # ENGINE-SIDE LOGIC: This requires checking a stat on a location.
+              target: { all_characters_at_location: "LOCATION_TYPE_CITY" }
+              stat_type: STAT_TYPE_INTRIGUE
+              comparator: GREATER_THAN_OR_EQUAL_TO
+              value: 2
+        effect:
+          grant_ability:
+            target: { action_user: { } }
+            ability_id: 300101 # Key Person's ability ID
+
+  # Curmudgeon (ID: 3012)
+  3012:
+    id: 3012
+    name: "Curmudgeon"
+    limit: 2
+    abilities:
+      # [Mandatory Always] [This character has 2 or more Goodwill] ⇒ They lose all Goodwill and gain 1 Paranoia.
+      301201:
+        id: 301201
+        name: "Always: Grumpy Demeanor"
+        description: "If this character has 2 or more Goodwill, they lose all Goodwill and gain 1 Paranoia."
+        trigger_type: TRIGGER_TYPE_ON_PASSIVE
+        is_mandatory: true
+        conditions:
+          - stat_condition:
+              target: { action_user: { } }
+              stat_type: STAT_TYPE_GOODWILL
+              comparator: GREATER_THAN_OR_EQUAL_TO
+              value: 2
+        effect:
+          compound_effect:
+            operator: OPERATOR_SEQUENCE
+            sub_effects:
+              - adjust_stat:
+                  target: { action_user: { } }
+                  stat_type: STAT_TYPE_GOODWILL
+                  amount: -100 # Effectively remove all goodwill
+              - adjust_stat:
+                  target: { action_user: { } }
+                  stat_type: STAT_TYPE_PARANOIA
+                  amount: 1
+
+  # Witch (ID: 3013)
+  3013:
+    id: 3013
+    name: "Witch"
+    limit: 1
+    abilities:
+      # [Optional Mastermind Ability] You may place 1 Intrigue on this location.
+      301301:
+        id: 301301
+        name: "Mastermind Ability: Curse"
+        description: "You may place 1 Intrigue on this location."
+        trigger_type: TRIGGER_TYPE_ON_PHASE_START
+
+        refusal_role: PLAYER_ROLE_MASTERMIND
+        effect:
+          adjust_stat:
+            # ENGINE-SIDE LOGIC: The engine must interpret this as adding intrigue to the location itself.
+            target: { action_user: { } }
+            stat_type: STAT_TYPE_INTRIGUE
+            amount: 1

@@ -1,0 +1,77 @@
+protagonist_cards:
+  7001:
+    id: 7001
+    name: "Move"
+    type: CARD_TYPE_MOVE_HORIZONTALLY
+    owner_role: PLAYER_ROLE_PROTAGONIST
+    effect:
+      sub_effects:
+        - move_character: { }
+  7002:
+    id: 7002
+    name: "Add Paranoia"
+    type: CARD_TYPE_PARANOIA_MINUS
+    owner_role: PLAYER_ROLE_PROTAGONIST
+    effect:
+      sub_effects:
+        - adjust_stat:
+            stat_type: STAT_TYPE_PARANOIA
+            amount: -1
+  7003:
+    id: 7003
+    name: "Add Goodwill"
+    type: CARD_TYPE_GOODWILL_PLUS
+    owner_role: PLAYER_ROLE_PROTAGONIST
+    effect:
+      sub_effects:
+        - adjust_stat:
+            stat_type: STAT_TYPE_GOODWILL
+            amount: 1
+  7004:
+    id: 7004
+    name: "Add Intrigue"
+    type: CARD_TYPE_INTRIGUE_PLUS
+    owner_role: PLAYER_ROLE_PROTAGONIST
+    effect:
+      sub_effects:
+        - adjust_stat:
+            stat_type: STAT_TYPE_INTRIGUE
+            amount: 1
+  7005:
+    id: 7005
+    name: "Forbid MOVEMENT"
+    type: CARD_TYPE_FORBID_MOVEMENT
+    owner_role: PLAYER_ROLE_PROTAGONIST
+    effect:
+      sub_effects:
+        - forbid:
+            forbid_type: FORBID_TYPE_MOVEMENT
+  7006:
+    id: 7006
+    name: "Forbid Paranoia"
+    type: CARD_TYPE_FORBID_PARANOIA_INCREASE
+    owner_role: PLAYER_ROLE_PROTAGONIST
+    effect:
+      sub_effects:
+        - forbid:
+            forbid_type: FORBID_TYPE_PARANOIA_CHANGE
+  7007:
+    id: 7007
+    name: "Forbid Intrigue"
+    type: CARD_TYPE_FORBID_INTRIGUE_INCREASE
+    owner_role: PLAYER_ROLE_PROTAGONIST
+    effect:
+      sub_effects:
+        - forbid:
+            forbid_type: FORBID_TYPE_INTRIGUE_CHANGE
+  7008:
+    id: 7008
+    name: "Add Goodwill +2"
+    type: CARD_TYPE_GOODWILL_PLUS
+    owner_role: PLAYER_ROLE_PROTAGONIST
+    effect:
+      sub_effects:
+        - adjust_stat:
+            stat_type: STAT_TYPE_GOODWILL
+            amount: 2
+    once_per_loop: true
