@@ -158,21 +158,485 @@ func (x *ScriptConfig) GetScriptModels() map[int32]*ScriptModel {
 	return nil
 }
 
-// ScriptConfig defines the configuration for a specific script.
+type ScriptSet struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Number        int32                  `protobuf:"varint,2,opt,name=number,proto3" json:"number,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ScriptSet) Reset() {
+	*x = ScriptSet{}
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ScriptSet) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ScriptSet) ProtoMessage() {}
+
+func (x *ScriptSet) ProtoReflect() protoreflect.Message {
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ScriptSet.ProtoReflect.Descriptor instead.
+func (*ScriptSet) Descriptor() ([]byte, []int) {
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ScriptSet) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ScriptSet) GetNumber() int32 {
+	if x != nil {
+		return x.Number
+	}
+	return 0
+}
+
+type DifficultySet struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	NumberOfLoops int32                  `protobuf:"varint,1,opt,name=number_of_loops,json=numberOfLoops,proto3" json:"number_of_loops,omitempty"`
+	Difficulty    int32                  `protobuf:"varint,2,opt,name=difficulty,proto3" json:"difficulty,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DifficultySet) Reset() {
+	*x = DifficultySet{}
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DifficultySet) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DifficultySet) ProtoMessage() {}
+
+func (x *DifficultySet) ProtoReflect() protoreflect.Message {
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DifficultySet.ProtoReflect.Descriptor instead.
+func (*DifficultySet) Descriptor() ([]byte, []int) {
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *DifficultySet) GetNumberOfLoops() int32 {
+	if x != nil {
+		return x.NumberOfLoops
+	}
+	return 0
+}
+
+func (x *DifficultySet) GetDifficulty() int32 {
+	if x != nil {
+		return x.Difficulty
+	}
+	return 0
+}
+
+type IncidentInstance struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Day           int32                  `protobuf:"varint,1,opt,name=day,proto3" json:"day,omitempty"`
+	Incident      string                 `protobuf:"bytes,2,opt,name=incident,proto3" json:"incident,omitempty"`
+	Culprit       string                 `protobuf:"bytes,3,opt,name=culprit,proto3" json:"culprit,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *IncidentInstance) Reset() {
+	*x = IncidentInstance{}
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *IncidentInstance) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*IncidentInstance) ProtoMessage() {}
+
+func (x *IncidentInstance) ProtoReflect() protoreflect.Message {
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use IncidentInstance.ProtoReflect.Descriptor instead.
+func (*IncidentInstance) Descriptor() ([]byte, []int) {
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *IncidentInstance) GetDay() int32 {
+	if x != nil {
+		return x.Day
+	}
+	return 0
+}
+
+func (x *IncidentInstance) GetIncident() string {
+	if x != nil {
+		return x.Incident
+	}
+	return ""
+}
+
+func (x *IncidentInstance) GetCulprit() string {
+	if x != nil {
+		return x.Culprit
+	}
+	return ""
+}
+
+type CastRole struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Role          string                 `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
+	ExtraInfo     map[string]string      `protobuf:"bytes,2,rep,name=extra_info,json=extraInfo,proto3" json:"extra_info,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CastRole) Reset() {
+	*x = CastRole{}
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CastRole) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CastRole) ProtoMessage() {}
+
+func (x *CastRole) ProtoReflect() protoreflect.Message {
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CastRole.ProtoReflect.Descriptor instead.
+func (*CastRole) Descriptor() ([]byte, []int) {
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *CastRole) GetRole() string {
+	if x != nil {
+		return x.Role
+	}
+	return ""
+}
+
+func (x *CastRole) GetExtraInfo() map[string]string {
+	if x != nil {
+		return x.ExtraInfo
+	}
+	return nil
+}
+
+type CastAssignment struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Assignment:
+	//
+	//	*CastAssignment_RoleName
+	//	*CastAssignment_RoleWithExtra
+	Assignment    isCastAssignment_Assignment `protobuf_oneof:"assignment"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CastAssignment) Reset() {
+	*x = CastAssignment{}
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CastAssignment) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CastAssignment) ProtoMessage() {}
+
+func (x *CastAssignment) ProtoReflect() protoreflect.Message {
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CastAssignment.ProtoReflect.Descriptor instead.
+func (*CastAssignment) Descriptor() ([]byte, []int) {
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *CastAssignment) GetAssignment() isCastAssignment_Assignment {
+	if x != nil {
+		return x.Assignment
+	}
+	return nil
+}
+
+func (x *CastAssignment) GetRoleName() string {
+	if x != nil {
+		if x, ok := x.Assignment.(*CastAssignment_RoleName); ok {
+			return x.RoleName
+		}
+	}
+	return ""
+}
+
+func (x *CastAssignment) GetRoleWithExtra() *CastRole {
+	if x != nil {
+		if x, ok := x.Assignment.(*CastAssignment_RoleWithExtra); ok {
+			return x.RoleWithExtra
+		}
+	}
+	return nil
+}
+
+type isCastAssignment_Assignment interface {
+	isCastAssignment_Assignment()
+}
+
+type CastAssignment_RoleName struct {
+	RoleName string `protobuf:"bytes,1,opt,name=role_name,json=roleName,proto3,oneof"`
+}
+
+type CastAssignment_RoleWithExtra struct {
+	RoleWithExtra *CastRole `protobuf:"bytes,2,opt,name=role_with_extra,json=roleWithExtra,proto3,oneof"`
+}
+
+func (*CastAssignment_RoleName) isCastAssignment_Assignment() {}
+
+func (*CastAssignment_RoleWithExtra) isCastAssignment_Assignment() {}
+
+type ScriptMetadata struct {
+	state             protoimpl.MessageState     `protogen:"open.v1"`
+	Title             string                     `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
+	Creator           string                     `protobuf:"bytes,2,opt,name=creator,proto3" json:"creator,omitempty"`
+	Set               []*ScriptSet               `protobuf:"bytes,3,rep,name=set,proto3" json:"set,omitempty"`
+	TragedySet        string                     `protobuf:"bytes,4,opt,name=tragedy_set,json=tragedySet,proto3" json:"tragedy_set,omitempty"`
+	DaysPerLoop       int32                      `protobuf:"varint,5,opt,name=days_per_loop,json=daysPerLoop,proto3" json:"days_per_loop,omitempty"`
+	DifficultySets    []*DifficultySet           `protobuf:"bytes,6,rep,name=difficulty_sets,json=difficultySets,proto3" json:"difficulty_sets,omitempty"`
+	MainPlot          []string                   `protobuf:"bytes,7,rep,name=main_plot,json=mainPlot,proto3" json:"main_plot,omitempty"`
+	SubPlots          []string                   `protobuf:"bytes,8,rep,name=sub_plots,json=subPlots,proto3" json:"sub_plots,omitempty"`
+	Cast              map[string]*CastAssignment `protobuf:"bytes,9,rep,name=cast,proto3" json:"cast,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Incidents         []*IncidentInstance        `protobuf:"bytes,10,rep,name=incidents,proto3" json:"incidents,omitempty"`
+	VictoryConditions string                     `protobuf:"bytes,11,opt,name=victory_conditions,json=victoryConditions,proto3" json:"victory_conditions,omitempty"`
+	Story             string                     `protobuf:"bytes,12,opt,name=story,proto3" json:"story,omitempty"`
+	MastermindHints   string                     `protobuf:"bytes,13,opt,name=mastermind_hints,json=mastermindHints,proto3" json:"mastermind_hints,omitempty"`
+	Description       string                     `protobuf:"bytes,14,opt,name=description,proto3" json:"description,omitempty"`
+	SpecialRules      []string                   `protobuf:"bytes,15,rep,name=special_rules,json=specialRules,proto3" json:"special_rules,omitempty"`
+	Source            string                     `protobuf:"bytes,16,opt,name=source,proto3" json:"source,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *ScriptMetadata) Reset() {
+	*x = ScriptMetadata{}
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ScriptMetadata) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ScriptMetadata) ProtoMessage() {}
+
+func (x *ScriptMetadata) ProtoReflect() protoreflect.Message {
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ScriptMetadata.ProtoReflect.Descriptor instead.
+func (*ScriptMetadata) Descriptor() ([]byte, []int) {
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ScriptMetadata) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *ScriptMetadata) GetCreator() string {
+	if x != nil {
+		return x.Creator
+	}
+	return ""
+}
+
+func (x *ScriptMetadata) GetSet() []*ScriptSet {
+	if x != nil {
+		return x.Set
+	}
+	return nil
+}
+
+func (x *ScriptMetadata) GetTragedySet() string {
+	if x != nil {
+		return x.TragedySet
+	}
+	return ""
+}
+
+func (x *ScriptMetadata) GetDaysPerLoop() int32 {
+	if x != nil {
+		return x.DaysPerLoop
+	}
+	return 0
+}
+
+func (x *ScriptMetadata) GetDifficultySets() []*DifficultySet {
+	if x != nil {
+		return x.DifficultySets
+	}
+	return nil
+}
+
+func (x *ScriptMetadata) GetMainPlot() []string {
+	if x != nil {
+		return x.MainPlot
+	}
+	return nil
+}
+
+func (x *ScriptMetadata) GetSubPlots() []string {
+	if x != nil {
+		return x.SubPlots
+	}
+	return nil
+}
+
+func (x *ScriptMetadata) GetCast() map[string]*CastAssignment {
+	if x != nil {
+		return x.Cast
+	}
+	return nil
+}
+
+func (x *ScriptMetadata) GetIncidents() []*IncidentInstance {
+	if x != nil {
+		return x.Incidents
+	}
+	return nil
+}
+
+func (x *ScriptMetadata) GetVictoryConditions() string {
+	if x != nil {
+		return x.VictoryConditions
+	}
+	return ""
+}
+
+func (x *ScriptMetadata) GetStory() string {
+	if x != nil {
+		return x.Story
+	}
+	return ""
+}
+
+func (x *ScriptMetadata) GetMastermindHints() string {
+	if x != nil {
+		return x.MastermindHints
+	}
+	return ""
+}
+
+func (x *ScriptMetadata) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *ScriptMetadata) GetSpecialRules() []string {
+	if x != nil {
+		return x.SpecialRules
+	}
+	return nil
+}
+
+func (x *ScriptMetadata) GetSource() string {
+	if x != nil {
+		return x.Source
+	}
+	return ""
+}
+
+// ScriptModel defines the configuration for a specific script.
 type ScriptModel struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Id    int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// Private information for the script.
 	PrivateInfo *PrivateInfo `protobuf:"bytes,2,opt,name=private_info,json=privateInfo,proto3" json:"private_info,omitempty"`
 	// Public information for the script.
-	PublicInfo    *PublicInfo `protobuf:"bytes,3,opt,name=public_info,json=publicInfo,proto3" json:"public_info,omitempty"`
+	PublicInfo *PublicInfo `protobuf:"bytes,3,opt,name=public_info,json=publicInfo,proto3" json:"public_info,omitempty"`
+	// Descriptive metadata for the script.
+	Metadata      *ScriptMetadata `protobuf:"bytes,4,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ScriptModel) Reset() {
 	*x = ScriptModel{}
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[1]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -184,7 +648,7 @@ func (x *ScriptModel) String() string {
 func (*ScriptModel) ProtoMessage() {}
 
 func (x *ScriptModel) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[1]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -197,7 +661,7 @@ func (x *ScriptModel) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScriptModel.ProtoReflect.Descriptor instead.
 func (*ScriptModel) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{1}
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ScriptModel) GetId() int32 {
@@ -221,6 +685,13 @@ func (x *ScriptModel) GetPublicInfo() *PublicInfo {
 	return nil
 }
 
+func (x *ScriptModel) GetMetadata() *ScriptMetadata {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
 // PrivateInfo defines the private information for a script.
 type PrivateInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -240,7 +711,7 @@ type PrivateInfo struct {
 
 func (x *PrivateInfo) Reset() {
 	*x = PrivateInfo{}
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[2]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -252,7 +723,7 @@ func (x *PrivateInfo) String() string {
 func (*PrivateInfo) ProtoMessage() {}
 
 func (x *PrivateInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[2]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -265,7 +736,7 @@ func (x *PrivateInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PrivateInfo.ProtoReflect.Descriptor instead.
 func (*PrivateInfo) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{2}
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *PrivateInfo) GetMainPlotId() int32 {
@@ -326,7 +797,7 @@ type PublicInfo struct {
 
 func (x *PublicInfo) Reset() {
 	*x = PublicInfo{}
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -338,7 +809,7 @@ func (x *PublicInfo) String() string {
 func (*PublicInfo) ProtoMessage() {}
 
 func (x *PublicInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[3]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -351,7 +822,7 @@ func (x *PublicInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PublicInfo.ProtoReflect.Descriptor instead.
 func (*PublicInfo) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{3}
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *PublicInfo) GetScriptConfigId() int32 {
@@ -417,7 +888,7 @@ type RoleConfig struct {
 
 func (x *RoleConfig) Reset() {
 	*x = RoleConfig{}
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[4]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -429,7 +900,7 @@ func (x *RoleConfig) String() string {
 func (*RoleConfig) ProtoMessage() {}
 
 func (x *RoleConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[4]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -442,7 +913,7 @@ func (x *RoleConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleConfig.ProtoReflect.Descriptor instead.
 func (*RoleConfig) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{4}
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *RoleConfig) GetId() int32 {
@@ -508,7 +979,7 @@ type PlotConfig struct {
 
 func (x *PlotConfig) Reset() {
 	*x = PlotConfig{}
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[5]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -520,7 +991,7 @@ func (x *PlotConfig) String() string {
 func (*PlotConfig) ProtoMessage() {}
 
 func (x *PlotConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_tragedylooper_v1_script_proto_msgTypes[5]
+	mi := &file_tragedylooper_v1_script_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -533,7 +1004,7 @@ func (x *PlotConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlotConfig.ProtoReflect.Descriptor instead.
 func (*PlotConfig) Descriptor() ([]byte, []int) {
-	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{5}
+	return file_tragedylooper_v1_script_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *PlotConfig) GetId() int32 {
@@ -631,12 +1102,59 @@ const file_tragedylooper_v1_script_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\v2\x1c.tragedylooper.v1.CardConfigR\x05value:\x028\x01\x1a^\n" +
 	"\x11ScriptModelsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x123\n" +
-	"\x05value\x18\x02 \x01(\v2\x1d.tragedylooper.v1.ScriptModelR\x05value:\x028\x01\"\xa7\x01\n" +
+	"\x05value\x18\x02 \x01(\v2\x1d.tragedylooper.v1.ScriptModelR\x05value:\x028\x01\"7\n" +
+	"\tScriptSet\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
+	"\x06number\x18\x02 \x01(\x05R\x06number\"W\n" +
+	"\rDifficultySet\x12&\n" +
+	"\x0fnumber_of_loops\x18\x01 \x01(\x05R\rnumberOfLoops\x12\x1e\n" +
+	"\n" +
+	"difficulty\x18\x02 \x01(\x05R\n" +
+	"difficulty\"Z\n" +
+	"\x10IncidentInstance\x12\x10\n" +
+	"\x03day\x18\x01 \x01(\x05R\x03day\x12\x1a\n" +
+	"\bincident\x18\x02 \x01(\tR\bincident\x12\x18\n" +
+	"\aculprit\x18\x03 \x01(\tR\aculprit\"\xa6\x01\n" +
+	"\bCastRole\x12\x12\n" +
+	"\x04role\x18\x01 \x01(\tR\x04role\x12H\n" +
+	"\n" +
+	"extra_info\x18\x02 \x03(\v2).tragedylooper.v1.CastRole.ExtraInfoEntryR\textraInfo\x1a<\n" +
+	"\x0eExtraInfoEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x83\x01\n" +
+	"\x0eCastAssignment\x12\x1d\n" +
+	"\trole_name\x18\x01 \x01(\tH\x00R\broleName\x12D\n" +
+	"\x0frole_with_extra\x18\x02 \x01(\v2\x1a.tragedylooper.v1.CastRoleH\x00R\rroleWithExtraB\f\n" +
+	"\n" +
+	"assignment\"\xe4\x05\n" +
+	"\x0eScriptMetadata\x12\x14\n" +
+	"\x05title\x18\x01 \x01(\tR\x05title\x12\x18\n" +
+	"\acreator\x18\x02 \x01(\tR\acreator\x12-\n" +
+	"\x03set\x18\x03 \x03(\v2\x1b.tragedylooper.v1.ScriptSetR\x03set\x12\x1f\n" +
+	"\vtragedy_set\x18\x04 \x01(\tR\n" +
+	"tragedySet\x12\"\n" +
+	"\rdays_per_loop\x18\x05 \x01(\x05R\vdaysPerLoop\x12H\n" +
+	"\x0fdifficulty_sets\x18\x06 \x03(\v2\x1f.tragedylooper.v1.DifficultySetR\x0edifficultySets\x12\x1b\n" +
+	"\tmain_plot\x18\a \x03(\tR\bmainPlot\x12\x1b\n" +
+	"\tsub_plots\x18\b \x03(\tR\bsubPlots\x12>\n" +
+	"\x04cast\x18\t \x03(\v2*.tragedylooper.v1.ScriptMetadata.CastEntryR\x04cast\x12@\n" +
+	"\tincidents\x18\n" +
+	" \x03(\v2\".tragedylooper.v1.IncidentInstanceR\tincidents\x12-\n" +
+	"\x12victory_conditions\x18\v \x01(\tR\x11victoryConditions\x12\x14\n" +
+	"\x05story\x18\f \x01(\tR\x05story\x12)\n" +
+	"\x10mastermind_hints\x18\r \x01(\tR\x0fmastermindHints\x12 \n" +
+	"\vdescription\x18\x0e \x01(\tR\vdescription\x12#\n" +
+	"\rspecial_rules\x18\x0f \x03(\tR\fspecialRules\x12\x16\n" +
+	"\x06source\x18\x10 \x01(\tR\x06source\x1aY\n" +
+	"\tCastEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x126\n" +
+	"\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.CastAssignmentR\x05value:\x028\x01\"\xe5\x01\n" +
 	"\vScriptModel\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x02id\x12@\n" +
 	"\fprivate_info\x18\x02 \x01(\v2\x1d.tragedylooper.v1.PrivateInfoR\vprivateInfo\x12=\n" +
 	"\vpublic_info\x18\x03 \x01(\v2\x1c.tragedylooper.v1.PublicInfoR\n" +
-	"publicInfo\"\xc0\x02\n" +
+	"publicInfo\x12<\n" +
+	"\bmetadata\x18\x04 \x01(\v2 .tragedylooper.v1.ScriptMetadataR\bmetadata\"\xc0\x02\n" +
 	"\vPrivateInfo\x12 \n" +
 	"\fmain_plot_id\x18\x01 \x01(\x05R\n" +
 	"mainPlotId\x12\"\n" +
@@ -696,65 +1214,81 @@ func file_tragedylooper_v1_script_proto_rawDescGZIP() []byte {
 	return file_tragedylooper_v1_script_proto_rawDescData
 }
 
-var file_tragedylooper_v1_script_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_tragedylooper_v1_script_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
 var file_tragedylooper_v1_script_proto_goTypes = []any{
-	(*ScriptConfig)(nil),    // 0: tragedylooper.v1.ScriptConfig
-	(*ScriptModel)(nil),     // 1: tragedylooper.v1.ScriptModel
-	(*PrivateInfo)(nil),     // 2: tragedylooper.v1.PrivateInfo
-	(*PublicInfo)(nil),      // 3: tragedylooper.v1.PublicInfo
-	(*RoleConfig)(nil),      // 4: tragedylooper.v1.RoleConfig
-	(*PlotConfig)(nil),      // 5: tragedylooper.v1.PlotConfig
-	nil,                     // 6: tragedylooper.v1.ScriptConfig.MainPlotsEntry
-	nil,                     // 7: tragedylooper.v1.ScriptConfig.SubPlotsEntry
-	nil,                     // 8: tragedylooper.v1.ScriptConfig.RolesEntry
-	nil,                     // 9: tragedylooper.v1.ScriptConfig.IncidentsEntry
-	nil,                     // 10: tragedylooper.v1.ScriptConfig.CharactersEntry
-	nil,                     // 11: tragedylooper.v1.ScriptConfig.MastermindCardsEntry
-	nil,                     // 12: tragedylooper.v1.ScriptConfig.ProtagonistCardsEntry
-	nil,                     // 13: tragedylooper.v1.ScriptConfig.ScriptModelsEntry
-	nil,                     // 14: tragedylooper.v1.PrivateInfo.RoleAssignmentsEntry
-	nil,                     // 15: tragedylooper.v1.RoleConfig.AbilitiesEntry
-	nil,                     // 16: tragedylooper.v1.PlotConfig.IncidentIdsEntry
-	nil,                     // 17: tragedylooper.v1.PlotConfig.RoleAssignmentsEntry
-	(GoodwillRuleType)(0),   // 18: tragedylooper.v1.GoodwillRuleType
-	(PlotType)(0),           // 19: tragedylooper.v1.PlotType
-	(*IncidentConfig)(nil),  // 20: tragedylooper.v1.IncidentConfig
-	(*CharacterConfig)(nil), // 21: tragedylooper.v1.CharacterConfig
-	(*CardConfig)(nil),      // 22: tragedylooper.v1.CardConfig
-	(*AbilityConfig)(nil),   // 23: tragedylooper.v1.AbilityConfig
+	(*ScriptConfig)(nil),     // 0: tragedylooper.v1.ScriptConfig
+	(*ScriptSet)(nil),        // 1: tragedylooper.v1.ScriptSet
+	(*DifficultySet)(nil),    // 2: tragedylooper.v1.DifficultySet
+	(*IncidentInstance)(nil), // 3: tragedylooper.v1.IncidentInstance
+	(*CastRole)(nil),         // 4: tragedylooper.v1.CastRole
+	(*CastAssignment)(nil),   // 5: tragedylooper.v1.CastAssignment
+	(*ScriptMetadata)(nil),   // 6: tragedylooper.v1.ScriptMetadata
+	(*ScriptModel)(nil),      // 7: tragedylooper.v1.ScriptModel
+	(*PrivateInfo)(nil),      // 8: tragedylooper.v1.PrivateInfo
+	(*PublicInfo)(nil),       // 9: tragedylooper.v1.PublicInfo
+	(*RoleConfig)(nil),       // 10: tragedylooper.v1.RoleConfig
+	(*PlotConfig)(nil),       // 11: tragedylooper.v1.PlotConfig
+	nil,                      // 12: tragedylooper.v1.ScriptConfig.MainPlotsEntry
+	nil,                      // 13: tragedylooper.v1.ScriptConfig.SubPlotsEntry
+	nil,                      // 14: tragedylooper.v1.ScriptConfig.RolesEntry
+	nil,                      // 15: tragedylooper.v1.ScriptConfig.IncidentsEntry
+	nil,                      // 16: tragedylooper.v1.ScriptConfig.CharactersEntry
+	nil,                      // 17: tragedylooper.v1.ScriptConfig.MastermindCardsEntry
+	nil,                      // 18: tragedylooper.v1.ScriptConfig.ProtagonistCardsEntry
+	nil,                      // 19: tragedylooper.v1.ScriptConfig.ScriptModelsEntry
+	nil,                      // 20: tragedylooper.v1.CastRole.ExtraInfoEntry
+	nil,                      // 21: tragedylooper.v1.ScriptMetadata.CastEntry
+	nil,                      // 22: tragedylooper.v1.PrivateInfo.RoleAssignmentsEntry
+	nil,                      // 23: tragedylooper.v1.RoleConfig.AbilitiesEntry
+	nil,                      // 24: tragedylooper.v1.PlotConfig.IncidentIdsEntry
+	nil,                      // 25: tragedylooper.v1.PlotConfig.RoleAssignmentsEntry
+	(GoodwillRuleType)(0),    // 26: tragedylooper.v1.GoodwillRuleType
+	(PlotType)(0),            // 27: tragedylooper.v1.PlotType
+	(*IncidentConfig)(nil),   // 28: tragedylooper.v1.IncidentConfig
+	(*CharacterConfig)(nil),  // 29: tragedylooper.v1.CharacterConfig
+	(*CardConfig)(nil),       // 30: tragedylooper.v1.CardConfig
+	(*AbilityConfig)(nil),    // 31: tragedylooper.v1.AbilityConfig
 }
 var file_tragedylooper_v1_script_proto_depIdxs = []int32{
-	6,  // 0: tragedylooper.v1.ScriptConfig.main_plots:type_name -> tragedylooper.v1.ScriptConfig.MainPlotsEntry
-	7,  // 1: tragedylooper.v1.ScriptConfig.sub_plots:type_name -> tragedylooper.v1.ScriptConfig.SubPlotsEntry
-	8,  // 2: tragedylooper.v1.ScriptConfig.roles:type_name -> tragedylooper.v1.ScriptConfig.RolesEntry
-	9,  // 3: tragedylooper.v1.ScriptConfig.incidents:type_name -> tragedylooper.v1.ScriptConfig.IncidentsEntry
-	10, // 4: tragedylooper.v1.ScriptConfig.characters:type_name -> tragedylooper.v1.ScriptConfig.CharactersEntry
-	11, // 5: tragedylooper.v1.ScriptConfig.mastermind_cards:type_name -> tragedylooper.v1.ScriptConfig.MastermindCardsEntry
-	12, // 6: tragedylooper.v1.ScriptConfig.protagonist_cards:type_name -> tragedylooper.v1.ScriptConfig.ProtagonistCardsEntry
-	13, // 7: tragedylooper.v1.ScriptConfig.script_models:type_name -> tragedylooper.v1.ScriptConfig.ScriptModelsEntry
-	2,  // 8: tragedylooper.v1.ScriptModel.private_info:type_name -> tragedylooper.v1.PrivateInfo
-	3,  // 9: tragedylooper.v1.ScriptModel.public_info:type_name -> tragedylooper.v1.PublicInfo
-	14, // 10: tragedylooper.v1.PrivateInfo.role_assignments:type_name -> tragedylooper.v1.PrivateInfo.RoleAssignmentsEntry
-	15, // 11: tragedylooper.v1.RoleConfig.abilities:type_name -> tragedylooper.v1.RoleConfig.AbilitiesEntry
-	18, // 12: tragedylooper.v1.RoleConfig.goodwill_rule:type_name -> tragedylooper.v1.GoodwillRuleType
-	19, // 13: tragedylooper.v1.PlotConfig.type:type_name -> tragedylooper.v1.PlotType
-	16, // 14: tragedylooper.v1.PlotConfig.incident_ids:type_name -> tragedylooper.v1.PlotConfig.IncidentIdsEntry
-	17, // 15: tragedylooper.v1.PlotConfig.role_assignments:type_name -> tragedylooper.v1.PlotConfig.RoleAssignmentsEntry
-	5,  // 16: tragedylooper.v1.ScriptConfig.MainPlotsEntry.value:type_name -> tragedylooper.v1.PlotConfig
-	5,  // 17: tragedylooper.v1.ScriptConfig.SubPlotsEntry.value:type_name -> tragedylooper.v1.PlotConfig
-	4,  // 18: tragedylooper.v1.ScriptConfig.RolesEntry.value:type_name -> tragedylooper.v1.RoleConfig
-	20, // 19: tragedylooper.v1.ScriptConfig.IncidentsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
-	21, // 20: tragedylooper.v1.ScriptConfig.CharactersEntry.value:type_name -> tragedylooper.v1.CharacterConfig
-	22, // 21: tragedylooper.v1.ScriptConfig.MastermindCardsEntry.value:type_name -> tragedylooper.v1.CardConfig
-	22, // 22: tragedylooper.v1.ScriptConfig.ProtagonistCardsEntry.value:type_name -> tragedylooper.v1.CardConfig
-	1,  // 23: tragedylooper.v1.ScriptConfig.ScriptModelsEntry.value:type_name -> tragedylooper.v1.ScriptModel
-	23, // 24: tragedylooper.v1.RoleConfig.AbilitiesEntry.value:type_name -> tragedylooper.v1.AbilityConfig
-	20, // 25: tragedylooper.v1.PlotConfig.IncidentIdsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
-	26, // [26:26] is the sub-list for method output_type
-	26, // [26:26] is the sub-list for method input_type
-	26, // [26:26] is the sub-list for extension type_name
-	26, // [26:26] is the sub-list for extension extendee
-	0,  // [0:26] is the sub-list for field type_name
+	12, // 0: tragedylooper.v1.ScriptConfig.main_plots:type_name -> tragedylooper.v1.ScriptConfig.MainPlotsEntry
+	13, // 1: tragedylooper.v1.ScriptConfig.sub_plots:type_name -> tragedylooper.v1.ScriptConfig.SubPlotsEntry
+	14, // 2: tragedylooper.v1.ScriptConfig.roles:type_name -> tragedylooper.v1.ScriptConfig.RolesEntry
+	15, // 3: tragedylooper.v1.ScriptConfig.incidents:type_name -> tragedylooper.v1.ScriptConfig.IncidentsEntry
+	16, // 4: tragedylooper.v1.ScriptConfig.characters:type_name -> tragedylooper.v1.ScriptConfig.CharactersEntry
+	17, // 5: tragedylooper.v1.ScriptConfig.mastermind_cards:type_name -> tragedylooper.v1.ScriptConfig.MastermindCardsEntry
+	18, // 6: tragedylooper.v1.ScriptConfig.protagonist_cards:type_name -> tragedylooper.v1.ScriptConfig.ProtagonistCardsEntry
+	19, // 7: tragedylooper.v1.ScriptConfig.script_models:type_name -> tragedylooper.v1.ScriptConfig.ScriptModelsEntry
+	20, // 8: tragedylooper.v1.CastRole.extra_info:type_name -> tragedylooper.v1.CastRole.ExtraInfoEntry
+	4,  // 9: tragedylooper.v1.CastAssignment.role_with_extra:type_name -> tragedylooper.v1.CastRole
+	1,  // 10: tragedylooper.v1.ScriptMetadata.set:type_name -> tragedylooper.v1.ScriptSet
+	2,  // 11: tragedylooper.v1.ScriptMetadata.difficulty_sets:type_name -> tragedylooper.v1.DifficultySet
+	21, // 12: tragedylooper.v1.ScriptMetadata.cast:type_name -> tragedylooper.v1.ScriptMetadata.CastEntry
+	3,  // 13: tragedylooper.v1.ScriptMetadata.incidents:type_name -> tragedylooper.v1.IncidentInstance
+	8,  // 14: tragedylooper.v1.ScriptModel.private_info:type_name -> tragedylooper.v1.PrivateInfo
+	9,  // 15: tragedylooper.v1.ScriptModel.public_info:type_name -> tragedylooper.v1.PublicInfo
+	6,  // 16: tragedylooper.v1.ScriptModel.metadata:type_name -> tragedylooper.v1.ScriptMetadata
+	22, // 17: tragedylooper.v1.PrivateInfo.role_assignments:type_name -> tragedylooper.v1.PrivateInfo.RoleAssignmentsEntry
+	23, // 18: tragedylooper.v1.RoleConfig.abilities:type_name -> tragedylooper.v1.RoleConfig.AbilitiesEntry
+	26, // 19: tragedylooper.v1.RoleConfig.goodwill_rule:type_name -> tragedylooper.v1.GoodwillRuleType
+	27, // 20: tragedylooper.v1.PlotConfig.type:type_name -> tragedylooper.v1.PlotType
+	24, // 21: tragedylooper.v1.PlotConfig.incident_ids:type_name -> tragedylooper.v1.PlotConfig.IncidentIdsEntry
+	25, // 22: tragedylooper.v1.PlotConfig.role_assignments:type_name -> tragedylooper.v1.PlotConfig.RoleAssignmentsEntry
+	11, // 23: tragedylooper.v1.ScriptConfig.MainPlotsEntry.value:type_name -> tragedylooper.v1.PlotConfig
+	11, // 24: tragedylooper.v1.ScriptConfig.SubPlotsEntry.value:type_name -> tragedylooper.v1.PlotConfig
+	10, // 25: tragedylooper.v1.ScriptConfig.RolesEntry.value:type_name -> tragedylooper.v1.RoleConfig
+	28, // 26: tragedylooper.v1.ScriptConfig.IncidentsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
+	29, // 27: tragedylooper.v1.ScriptConfig.CharactersEntry.value:type_name -> tragedylooper.v1.CharacterConfig
+	30, // 28: tragedylooper.v1.ScriptConfig.MastermindCardsEntry.value:type_name -> tragedylooper.v1.CardConfig
+	30, // 29: tragedylooper.v1.ScriptConfig.ProtagonistCardsEntry.value:type_name -> tragedylooper.v1.CardConfig
+	7,  // 30: tragedylooper.v1.ScriptConfig.ScriptModelsEntry.value:type_name -> tragedylooper.v1.ScriptModel
+	5,  // 31: tragedylooper.v1.ScriptMetadata.CastEntry.value:type_name -> tragedylooper.v1.CastAssignment
+	31, // 32: tragedylooper.v1.RoleConfig.AbilitiesEntry.value:type_name -> tragedylooper.v1.AbilityConfig
+	28, // 33: tragedylooper.v1.PlotConfig.IncidentIdsEntry.value:type_name -> tragedylooper.v1.IncidentConfig
+	34, // [34:34] is the sub-list for method output_type
+	34, // [34:34] is the sub-list for method input_type
+	34, // [34:34] is the sub-list for extension type_name
+	34, // [34:34] is the sub-list for extension extendee
+	0,  // [0:34] is the sub-list for field type_name
 }
 
 func init() { file_tragedylooper_v1_script_proto_init() }
@@ -767,13 +1301,17 @@ func file_tragedylooper_v1_script_proto_init() {
 	file_tragedylooper_v1_character_proto_init()
 	file_tragedylooper_v1_card_proto_init()
 	file_tragedylooper_v1_ability_proto_init()
+	file_tragedylooper_v1_script_proto_msgTypes[5].OneofWrappers = []any{
+		(*CastAssignment_RoleName)(nil),
+		(*CastAssignment_RoleWithExtra)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_script_proto_rawDesc), len(file_tragedylooper_v1_script_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   18,
+			NumMessages:   26,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -165,6 +165,13 @@ func (s *scriptConfig) GetCardMap() map[int32]*v1.CardConfig {
 }
 
 func (s *scriptConfig) GetAbility(id int32) *v1.AbilityConfig {
+	for _, char := range s.script.GetCharacters() {
+		for _, ability := range char.GetAbilities() {
+			if ability.GetId() == id {
+				return ability
+			}
+		}
+	}
 	for _, role := range s.script.GetRoles() {
 		if ability, ok := role.GetAbilities()[id]; ok {
 			return ability
@@ -175,6 +182,11 @@ func (s *scriptConfig) GetAbility(id int32) *v1.AbilityConfig {
 
 func (s *scriptConfig) GetAbilityMap() map[int32]*v1.AbilityConfig {
 	abilities := make(map[int32]*v1.AbilityConfig)
+	for _, char := range s.script.GetCharacters() {
+		for _, ability := range char.GetAbilities() {
+			abilities[ability.GetId()] = ability
+		}
+	}
 	for _, role := range s.script.GetRoles() {
 		for id, ability := range role.GetAbilities() {
 			abilities[id] = ability

@@ -22,7 +22,7 @@ message CharacterConfig {
   // The intrigue limit for the character.
   int32 intrigue_limit = 6;
   // A list of ability IDs that the character possesses.
-  repeated int32 ability_ids = 7;
+  repeated AbilityConfig abilities = 7;
   // A list of special rules for the character.
   repeated CharacterRule rules = 8;
   // A description of the character.

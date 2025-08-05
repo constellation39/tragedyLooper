@@ -8,8 +8,10 @@
           "type": "ABILITY_TYPE_ACTIVE"
         }
       ],
+      "goodwill_limit": 5,
       "id": 5001,
       "initial_location": "LOCATION_TYPE_SCHOOL",
+      "intrigue_limit": 5,
       "name": "Boy Student",
       "paranoia_limit": 2,
       "traits": [
@@ -25,8 +27,10 @@
           "type": "ABILITY_TYPE_ACTIVE"
         }
       ],
+      "goodwill_limit": 5,
       "id": 5002,
       "initial_location": "LOCATION_TYPE_SCHOOL",
+      "intrigue_limit": 5,
       "name": "Girl Student",
       "paranoia_limit": 3,
       "traits": [
@@ -46,8 +50,10 @@
           "type": "ABILITY_TYPE_ACTIVE"
         }
       ],
+      "goodwill_limit": 5,
       "id": 5003,
       "initial_location": "LOCATION_TYPE_SCHOOL",
+      "intrigue_limit": 5,
       "name": "Rich Man’s Daughter",
       "paranoia_limit": 1,
       "traits": [
@@ -64,8 +70,10 @@
           "type": "ABILITY_TYPE_ACTIVE"
         }
       ],
+      "goodwill_limit": 5,
       "id": 5004,
       "initial_location": "LOCATION_TYPE_SCHOOL",
+      "intrigue_limit": 5,
       "name": "Class Rep",
       "paranoia_limit": 2,
       "traits": [
@@ -86,8 +94,10 @@
           "type": "ABILITY_TYPE_ACTIVE"
         }
       ],
+      "goodwill_limit": 5,
       "id": 5005,
       "initial_location": "LOCATION_TYPE_SCHOOL",
+      "intrigue_limit": 5,
       "name": "Mystery Boy",
       "paranoia_limit": 3,
       "rules": [
@@ -121,8 +131,10 @@
       "blocked_locations": [
         "LOCATION_TYPE_CITY"
       ],
+      "goodwill_limit": 5,
       "id": 5006,
       "initial_location": "LOCATION_TYPE_SHRINE",
+      "intrigue_limit": 5,
       "name": "Shrine Maiden",
       "paranoia_limit": 2,
       "traits": [
@@ -148,8 +160,10 @@
       "blocked_locations": [
         "LOCATION_TYPE_HOSPITAL"
       ],
+      "goodwill_limit": 5,
       "id": 5007,
       "initial_location": "LOCATION_TYPE_SHRINE",
+      "intrigue_limit": 5,
       "name": "Alien",
       "paranoia_limit": 2,
       "traits": [
@@ -174,8 +188,10 @@
           "type": "ABILITY_TYPE_ACTIVE"
         }
       ],
+      "goodwill_limit": 5,
       "id": 5008,
       "initial_location": "LOCATION_TYPE_SHRINE",
+      "intrigue_limit": 5,
       "name": "Godly Being",
       "paranoia_limit": 3,
       "rules": [
@@ -206,8 +222,10 @@
           "type": "ABILITY_TYPE_ACTIVE"
         }
       ],
+      "goodwill_limit": 5,
       "id": 5009,
       "initial_location": "LOCATION_TYPE_CITY",
+      "intrigue_limit": 5,
       "name": "Police Officer",
       "paranoia_limit": 3,
       "traits": [
@@ -226,8 +244,10 @@
       "blocked_locations": [
         "LOCATION_TYPE_SCHOOL"
       ],
+      "goodwill_limit": 5,
       "id": 5010,
       "initial_location": "LOCATION_TYPE_CITY",
+      "intrigue_limit": 5,
       "name": "Office Worker",
       "paranoia_limit": 2,
       "traits": [
@@ -244,8 +264,10 @@
           "type": "ABILITY_TYPE_ACTIVE"
         }
       ],
+      "goodwill_limit": 5,
       "id": 5011,
       "initial_location": "LOCATION_TYPE_CITY",
+      "intrigue_limit": 5,
       "name": "Informer",
       "paranoia_limit": 3,
       "traits": [
@@ -266,8 +288,10 @@
           "type": "ABILITY_TYPE_ACTIVE"
         }
       ],
+      "goodwill_limit": 5,
       "id": 5012,
       "initial_location": "LOCATION_TYPE_CITY",
+      "intrigue_limit": 5,
       "name": "Pop Idol",
       "paranoia_limit": 2,
       "traits": [
@@ -288,8 +312,10 @@
           "type": "ABILITY_TYPE_ACTIVE"
         }
       ],
+      "goodwill_limit": 5,
       "id": 5013,
       "initial_location": "LOCATION_TYPE_CITY",
+      "intrigue_limit": 5,
       "name": "Journalist",
       "paranoia_limit": 2,
       "traits": [
@@ -310,8 +336,10 @@
           "type": "ABILITY_TYPE_ACTIVE"
         }
       ],
+      "goodwill_limit": 5,
       "id": 5014,
       "initial_location": "LOCATION_TYPE_CITY",
+      "intrigue_limit": 5,
       "name": "Boss",
       "paranoia_limit": 4,
       "rules": [
@@ -345,8 +373,10 @@
           "type": "ABILITY_TYPE_ACTIVE"
         }
       ],
+      "goodwill_limit": 5,
       "id": 5015,
       "initial_location": "LOCATION_TYPE_HOSPITAL",
+      "intrigue_limit": 5,
       "name": "Doctor",
       "paranoia_limit": 2,
       "traits": [
@@ -361,8 +391,10 @@
         "LOCATION_TYPE_SCHOOL",
         "LOCATION_TYPE_SHRINE"
       ],
+      "goodwill_limit": 5,
       "id": 5016,
       "initial_location": "LOCATION_TYPE_HOSPITAL",
+      "intrigue_limit": 5,
       "name": "Patient",
       "paranoia_limit": 2,
       "traits": [
@@ -378,8 +410,10 @@
           "type": "ABILITY_TYPE_ACTIVE"
         }
       ],
+      "goodwill_limit": 5,
       "id": 5017,
       "initial_location": "LOCATION_TYPE_HOSPITAL",
+      "intrigue_limit": 5,
       "name": "Nurse",
       "paranoia_limit": 3,
       "traits": [
@@ -399,8 +433,10 @@
           "type": "ABILITY_TYPE_ACTIVE"
         }
       ],
+      "goodwill_limit": 5,
       "id": 5018,
       "initial_location": "LOCATION_TYPE_CITY",
+      "intrigue_limit": 5,
       "name": "Henchman",
       "paranoia_limit": 1,
       "rules": [

@@ -4,6 +4,8 @@ characters:
     name: "Boy Student"
     traits: [ "student", "boy" ]
     paranoia_limit: 2
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_SCHOOL
     abilities:
       - type: ABILITY_TYPE_ACTIVE
@@ -14,6 +16,8 @@ characters:
     name: "Girl Student"
     traits: [ "student", "girl" ]
     paranoia_limit: 3
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_SCHOOL
     abilities:
       - type: ABILITY_TYPE_ACTIVE
@@ -24,6 +28,8 @@ characters:
     name: "Rich Man’s Daughter"
     traits: [ "student", "girl" ]
     paranoia_limit: 1
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_SCHOOL
     abilities:
       - type: ABILITY_TYPE_ACTIVE
@@ -35,6 +41,8 @@ characters:
     name: "Class Rep"
     traits: [ "student", "girl" ]
     paranoia_limit: 2
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_SCHOOL
     abilities:
       - type: ABILITY_TYPE_ACTIVE
@@ -46,10 +54,9 @@ characters:
     name: "Mystery Boy"
     traits: [ "student", "boy" ]
     paranoia_limit: 3
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_SCHOOL
-    rules:
-      - name: "Not in Plots"
-        description: "Always has a role not associated with current plot."
     abilities:
       - type: ABILITY_TYPE_PASSIVE
         description: "Always has a role not associated with current plot."
@@ -62,6 +69,8 @@ characters:
     name: "Shrine Maiden"
     traits: [ "student", "girl" ]
     paranoia_limit: 2
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_SHRINE
     blocked_locations: [ LOCATION_TYPE_CITY ]
     abilities:
@@ -78,6 +87,8 @@ characters:
     name: "Alien"
     traits: [ "girl" ]
     paranoia_limit: 2
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_SHRINE
     blocked_locations: [ LOCATION_TYPE_HOSPITAL ]
     abilities:
@@ -94,9 +105,12 @@ characters:
     name: "Godly Being"
     traits: [ "man", "woman" ]
     paranoia_limit: 3
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_SHRINE
     rules:
       - name: "Enters on Loop"
+        description: "Enters game on predefined loop"
         delayed_entry_effect:
           day_of_entry: 1 # Placeholder, should be script-specified
     abilities:
@@ -114,6 +128,8 @@ characters:
     name: "Police Officer"
     traits: [ "man", "adult" ]
     paranoia_limit: 3
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_CITY
     abilities:
       - type: ABILITY_TYPE_ACTIVE
@@ -129,6 +145,8 @@ characters:
     name: "Office Worker"
     traits: [ "man", "adult" ]
     paranoia_limit: 2
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_CITY
     blocked_locations: [ LOCATION_TYPE_SCHOOL ]
     abilities:
@@ -140,6 +158,8 @@ characters:
     name: "Informer"
     traits: [ "woman", "adult" ]
     paranoia_limit: 3
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_CITY
     abilities:
       - type: ABILITY_TYPE_ACTIVE
@@ -151,6 +171,8 @@ characters:
     name: "Pop Idol"
     traits: [ "girl", "student" ]
     paranoia_limit: 2
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_CITY
     abilities:
       - type: ABILITY_TYPE_ACTIVE
@@ -164,6 +186,8 @@ characters:
     name: "Journalist"
     traits: [ "adult", "man" ]
     paranoia_limit: 2
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_CITY
     abilities:
       - type: ABILITY_TYPE_ACTIVE
@@ -177,9 +201,12 @@ characters:
     name: "Boss"
     traits: [ "adult", "man" ]
     paranoia_limit: 4
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_CITY
     rules:
       - name: "Turf"
+        description: "May be regarded as in his turf."
         turf_selection_effect:
           possible_locations: [ LOCATION_TYPE_CITY, LOCATION_TYPE_SCHOOL, LOCATION_TYPE_SHRINE, LOCATION_TYPE_HOSPITAL ]
     abilities:
@@ -194,6 +221,8 @@ characters:
     name: "Doctor"
     traits: [ "adult", "man" ]
     paranoia_limit: 2
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_HOSPITAL
     abilities:
       - type: ABILITY_TYPE_ACTIVE
@@ -207,6 +236,8 @@ characters:
     name: "Patient"
     traits: [ "boy" ]
     paranoia_limit: 2
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_HOSPITAL
     blocked_locations: [ LOCATION_TYPE_CITY, LOCATION_TYPE_SCHOOL, LOCATION_TYPE_SHRINE ]
     abilities: [ ]
@@ -215,6 +246,8 @@ characters:
     name: "Nurse"
     traits: [ "adult", "woman" ]
     paranoia_limit: 3
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_HOSPITAL
     abilities:
       - type: ABILITY_TYPE_ACTIVE
@@ -226,9 +259,12 @@ characters:
     name: "Henchman"
     traits: [ "adult", "man" ]
     paranoia_limit: 1
+    goodwill_limit: 5
+    intrigue_limit: 5
     initial_location: LOCATION_TYPE_CITY
     rules:
       - name: "Mastermind Chooses Start"
+        description: "Mastermind chooses start location each loop"
         special_movement_rule:
           description: "Mastermind chooses start location each loop"
     abilities:

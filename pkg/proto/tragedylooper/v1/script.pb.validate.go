@@ -598,6 +598,846 @@ var _ interface {
 	ErrorName() string
 } = ScriptConfigValidationError{}
 
+// Validate checks the field values on ScriptSet with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *ScriptSet) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ScriptSet with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in ScriptSetMultiError, or nil
+// if none found.
+func (m *ScriptSet) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ScriptSet) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Name
+
+	// no validation rules for Number
+
+	if len(errors) > 0 {
+		return ScriptSetMultiError(errors)
+	}
+
+	return nil
+}
+
+// ScriptSetMultiError is an error wrapping multiple validation errors returned
+// by ScriptSet.ValidateAll() if the designated constraints aren't met.
+type ScriptSetMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ScriptSetMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ScriptSetMultiError) AllErrors() []error { return m }
+
+// ScriptSetValidationError is the validation error returned by
+// ScriptSet.Validate if the designated constraints aren't met.
+type ScriptSetValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ScriptSetValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ScriptSetValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ScriptSetValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ScriptSetValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ScriptSetValidationError) ErrorName() string { return "ScriptSetValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ScriptSetValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sScriptSet.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ScriptSetValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ScriptSetValidationError{}
+
+// Validate checks the field values on DifficultySet with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *DifficultySet) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DifficultySet with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in DifficultySetMultiError, or
+// nil if none found.
+func (m *DifficultySet) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DifficultySet) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for NumberOfLoops
+
+	// no validation rules for Difficulty
+
+	if len(errors) > 0 {
+		return DifficultySetMultiError(errors)
+	}
+
+	return nil
+}
+
+// DifficultySetMultiError is an error wrapping multiple validation errors
+// returned by DifficultySet.ValidateAll() if the designated constraints
+// aren't met.
+type DifficultySetMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DifficultySetMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DifficultySetMultiError) AllErrors() []error { return m }
+
+// DifficultySetValidationError is the validation error returned by
+// DifficultySet.Validate if the designated constraints aren't met.
+type DifficultySetValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DifficultySetValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DifficultySetValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DifficultySetValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DifficultySetValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DifficultySetValidationError) ErrorName() string { return "DifficultySetValidationError" }
+
+// Error satisfies the builtin error interface
+func (e DifficultySetValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDifficultySet.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DifficultySetValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DifficultySetValidationError{}
+
+// Validate checks the field values on IncidentInstance with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *IncidentInstance) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on IncidentInstance with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// IncidentInstanceMultiError, or nil if none found.
+func (m *IncidentInstance) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *IncidentInstance) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Day
+
+	// no validation rules for Incident
+
+	// no validation rules for Culprit
+
+	if len(errors) > 0 {
+		return IncidentInstanceMultiError(errors)
+	}
+
+	return nil
+}
+
+// IncidentInstanceMultiError is an error wrapping multiple validation errors
+// returned by IncidentInstance.ValidateAll() if the designated constraints
+// aren't met.
+type IncidentInstanceMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m IncidentInstanceMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m IncidentInstanceMultiError) AllErrors() []error { return m }
+
+// IncidentInstanceValidationError is the validation error returned by
+// IncidentInstance.Validate if the designated constraints aren't met.
+type IncidentInstanceValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e IncidentInstanceValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e IncidentInstanceValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e IncidentInstanceValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e IncidentInstanceValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e IncidentInstanceValidationError) ErrorName() string { return "IncidentInstanceValidationError" }
+
+// Error satisfies the builtin error interface
+func (e IncidentInstanceValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sIncidentInstance.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = IncidentInstanceValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = IncidentInstanceValidationError{}
+
+// Validate checks the field values on CastRole with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *CastRole) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CastRole with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in CastRoleMultiError, or nil
+// if none found.
+func (m *CastRole) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CastRole) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Role
+
+	// no validation rules for ExtraInfo
+
+	if len(errors) > 0 {
+		return CastRoleMultiError(errors)
+	}
+
+	return nil
+}
+
+// CastRoleMultiError is an error wrapping multiple validation errors returned
+// by CastRole.ValidateAll() if the designated constraints aren't met.
+type CastRoleMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CastRoleMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CastRoleMultiError) AllErrors() []error { return m }
+
+// CastRoleValidationError is the validation error returned by
+// CastRole.Validate if the designated constraints aren't met.
+type CastRoleValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CastRoleValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CastRoleValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CastRoleValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CastRoleValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CastRoleValidationError) ErrorName() string { return "CastRoleValidationError" }
+
+// Error satisfies the builtin error interface
+func (e CastRoleValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCastRole.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CastRoleValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CastRoleValidationError{}
+
+// Validate checks the field values on CastAssignment with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *CastAssignment) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CastAssignment with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in CastAssignmentMultiError,
+// or nil if none found.
+func (m *CastAssignment) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CastAssignment) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	switch v := m.Assignment.(type) {
+	case *CastAssignment_RoleName:
+		if v == nil {
+			err := CastAssignmentValidationError{
+				field:  "Assignment",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for RoleName
+	case *CastAssignment_RoleWithExtra:
+		if v == nil {
+			err := CastAssignmentValidationError{
+				field:  "Assignment",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if all {
+			switch v := interface{}(m.GetRoleWithExtra()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, CastAssignmentValidationError{
+						field:  "RoleWithExtra",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, CastAssignmentValidationError{
+						field:  "RoleWithExtra",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetRoleWithExtra()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CastAssignmentValidationError{
+					field:  "RoleWithExtra",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	default:
+		_ = v // ensures v is used
+	}
+
+	if len(errors) > 0 {
+		return CastAssignmentMultiError(errors)
+	}
+
+	return nil
+}
+
+// CastAssignmentMultiError is an error wrapping multiple validation errors
+// returned by CastAssignment.ValidateAll() if the designated constraints
+// aren't met.
+type CastAssignmentMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CastAssignmentMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CastAssignmentMultiError) AllErrors() []error { return m }
+
+// CastAssignmentValidationError is the validation error returned by
+// CastAssignment.Validate if the designated constraints aren't met.
+type CastAssignmentValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CastAssignmentValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CastAssignmentValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CastAssignmentValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CastAssignmentValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CastAssignmentValidationError) ErrorName() string { return "CastAssignmentValidationError" }
+
+// Error satisfies the builtin error interface
+func (e CastAssignmentValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCastAssignment.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CastAssignmentValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CastAssignmentValidationError{}
+
+// Validate checks the field values on ScriptMetadata with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *ScriptMetadata) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ScriptMetadata with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in ScriptMetadataMultiError,
+// or nil if none found.
+func (m *ScriptMetadata) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ScriptMetadata) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Title
+
+	// no validation rules for Creator
+
+	for idx, item := range m.GetSet() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ScriptMetadataValidationError{
+						field:  fmt.Sprintf("Set[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ScriptMetadataValidationError{
+						field:  fmt.Sprintf("Set[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ScriptMetadataValidationError{
+					field:  fmt.Sprintf("Set[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	// no validation rules for TragedySet
+
+	// no validation rules for DaysPerLoop
+
+	for idx, item := range m.GetDifficultySets() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ScriptMetadataValidationError{
+						field:  fmt.Sprintf("DifficultySets[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ScriptMetadataValidationError{
+						field:  fmt.Sprintf("DifficultySets[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ScriptMetadataValidationError{
+					field:  fmt.Sprintf("DifficultySets[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	{
+		sorted_keys := make([]string, len(m.GetCast()))
+		i := 0
+		for key := range m.GetCast() {
+			sorted_keys[i] = key
+			i++
+		}
+		sort.Slice(sorted_keys, func(i, j int) bool { return sorted_keys[i] < sorted_keys[j] })
+		for _, key := range sorted_keys {
+			val := m.GetCast()[key]
+			_ = val
+
+			// no validation rules for Cast[key]
+
+			if all {
+				switch v := interface{}(val).(type) {
+				case interface{ ValidateAll() error }:
+					if err := v.ValidateAll(); err != nil {
+						errors = append(errors, ScriptMetadataValidationError{
+							field:  fmt.Sprintf("Cast[%v]", key),
+							reason: "embedded message failed validation",
+							cause:  err,
+						})
+					}
+				case interface{ Validate() error }:
+					if err := v.Validate(); err != nil {
+						errors = append(errors, ScriptMetadataValidationError{
+							field:  fmt.Sprintf("Cast[%v]", key),
+							reason: "embedded message failed validation",
+							cause:  err,
+						})
+					}
+				}
+			} else if v, ok := interface{}(val).(interface{ Validate() error }); ok {
+				if err := v.Validate(); err != nil {
+					return ScriptMetadataValidationError{
+						field:  fmt.Sprintf("Cast[%v]", key),
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		}
+	}
+
+	for idx, item := range m.GetIncidents() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ScriptMetadataValidationError{
+						field:  fmt.Sprintf("Incidents[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ScriptMetadataValidationError{
+						field:  fmt.Sprintf("Incidents[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ScriptMetadataValidationError{
+					field:  fmt.Sprintf("Incidents[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	// no validation rules for VictoryConditions
+
+	// no validation rules for Story
+
+	// no validation rules for MastermindHints
+
+	// no validation rules for Description
+
+	// no validation rules for Source
+
+	if len(errors) > 0 {
+		return ScriptMetadataMultiError(errors)
+	}
+
+	return nil
+}
+
+// ScriptMetadataMultiError is an error wrapping multiple validation errors
+// returned by ScriptMetadata.ValidateAll() if the designated constraints
+// aren't met.
+type ScriptMetadataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ScriptMetadataMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ScriptMetadataMultiError) AllErrors() []error { return m }
+
+// ScriptMetadataValidationError is the validation error returned by
+// ScriptMetadata.Validate if the designated constraints aren't met.
+type ScriptMetadataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ScriptMetadataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ScriptMetadataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ScriptMetadataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ScriptMetadataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ScriptMetadataValidationError) ErrorName() string { return "ScriptMetadataValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ScriptMetadataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sScriptMetadata.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ScriptMetadataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ScriptMetadataValidationError{}
+
 // Validate checks the field values on ScriptModel with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -683,6 +1523,35 @@ func (m *ScriptModel) validate(all bool) error {
 		if err := v.Validate(); err != nil {
 			return ScriptModelValidationError{
 				field:  "PublicInfo",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetMetadata()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ScriptModelValidationError{
+					field:  "Metadata",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ScriptModelValidationError{
+					field:  "Metadata",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetMetadata()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ScriptModelValidationError{
+				field:  "Metadata",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}

@@ -17,7 +17,7 @@ message AbilityConfig {
   // A description of the ability.
   string description = 3;
   // The trigger type for the ability.
-  TriggerType trigger_type = 4;
+  TriggerType type = 4;
   // Optional: filters for game event triggers.
   repeated GameEventType event_filters = 5;
   // The effect of the ability.
@@ -36,6 +36,8 @@ message AbilityConfig {
   repeated Condition conditions = 12;
   // Whether the ability requires a choice to be made.
   bool requires_choice = 13;
+  // The goodwill rank required to use the ability.
+  int32 goodwill_rank = 14;
 }
 
 // CompoundAbility defines a combination of multiple abilities.

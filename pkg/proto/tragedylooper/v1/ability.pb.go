@@ -103,8 +103,10 @@ type AbilityConfig struct {
 	Conditions []*Condition `protobuf:"bytes,12,rep,name=conditions,proto3" json:"conditions,omitempty"`
 	// Whether the ability requires a choice to be made.
 	RequiresChoice bool `protobuf:"varint,13,opt,name=requires_choice,json=requiresChoice,proto3" json:"requires_choice,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// The goodwill rank required to use the ability.
+	GoodwillRank  int32 `protobuf:"varint,14,opt,name=goodwill_rank,json=goodwillRank,proto3" json:"goodwill_rank,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *AbilityConfig) Reset() {
@@ -226,6 +228,13 @@ func (x *AbilityConfig) GetRequiresChoice() bool {
 		return x.RequiresChoice
 	}
 	return false
+}
+
+func (x *AbilityConfig) GetGoodwillRank() int32 {
+	if x != nil {
+		return x.GoodwillRank
+	}
+	return 0
 }
 
 // CompoundAbility defines a combination of multiple abilities.
@@ -351,7 +360,7 @@ var File_tragedylooper_v1_ability_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_ability_proto_rawDesc = "" +
 	"\n" +
-	"\x1etragedylooper/v1/ability.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\"\xb8\x04\n" +
+	"\x1etragedylooper/v1/ability.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1dtragedylooper/v1/effect.proto\x1a\x1ctragedylooper/v1/enums.proto\"\xdd\x04\n" +
 	"\rAbilityConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -369,7 +378,8 @@ const file_tragedylooper_v1_ability_proto_rawDesc = "" +
 	"\n" +
 	"conditions\x18\f \x03(\v2\x1b.tragedylooper.v1.ConditionR\n" +
 	"conditions\x12'\n" +
-	"\x0frequires_choice\x18\r \x01(\bR\x0erequiresChoice\"\xe8\x01\n" +
+	"\x0frequires_choice\x18\r \x01(\bR\x0erequiresChoice\x12#\n" +
+	"\rgoodwill_rank\x18\x0e \x01(\x05R\fgoodwillRank\"\xe8\x01\n" +
 	"\x0fCompoundAbility\x12F\n" +
 	"\boperator\x18\x01 \x01(\x0e2*.tragedylooper.v1.CompoundAbility.OperatorR\boperator\x12D\n" +
 	"\rsub_abilities\x18\x02 \x03(\v2\x1f.tragedylooper.v1.AbilityConfigR\fsubAbilities\"G\n" +

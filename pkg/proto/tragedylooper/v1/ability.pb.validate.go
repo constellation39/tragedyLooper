@@ -140,6 +140,8 @@ func (m *AbilityConfig) validate(all bool) error {
 
 	// no validation rules for RequiresChoice
 
+	// no validation rules for GoodwillRank
+
 	if len(errors) > 0 {
 		return AbilityConfigMultiError(errors)
 	}

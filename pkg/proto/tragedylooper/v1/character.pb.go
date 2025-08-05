@@ -37,7 +37,7 @@ type CharacterConfig struct {
 	// The intrigue limit for the character.
 	IntrigueLimit int32 `protobuf:"varint,6,opt,name=intrigue_limit,json=intrigueLimit,proto3" json:"intrigue_limit,omitempty"`
 	// A list of ability IDs that the character possesses.
-	AbilityIds []int32 `protobuf:"varint,7,rep,packed,name=ability_ids,json=abilityIds,proto3" json:"ability_ids,omitempty"`
+	Abilities []*AbilityConfig `protobuf:"bytes,7,rep,name=abilities,proto3" json:"abilities,omitempty"`
 	// A list of special rules for the character.
 	Rules []*CharacterRule `protobuf:"bytes,8,rep,name=rules,proto3" json:"rules,omitempty"`
 	// A description of the character.
@@ -122,9 +122,9 @@ func (x *CharacterConfig) GetIntrigueLimit() int32 {
 	return 0
 }
 
-func (x *CharacterConfig) GetAbilityIds() []int32 {
+func (x *CharacterConfig) GetAbilities() []*AbilityConfig {
 	if x != nil {
-		return x.AbilityIds
+		return x.Abilities
 	}
 	return nil
 }
@@ -584,16 +584,15 @@ var File_tragedylooper_v1_character_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_character_proto_rawDesc = "" +
 	"\n" +
-	" tragedylooper/v1/character.proto\x12\x10tragedylooper.v1\x1a\x1etragedylooper/v1/ability.proto\x1a\x1ctragedylooper/v1/enums.proto\"\xd4\x03\n" +
+	" tragedylooper/v1/character.proto\x12\x10tragedylooper.v1\x1a\x1etragedylooper/v1/ability.proto\x1a\x1ctragedylooper/v1/enums.proto\"\xf2\x03\n" +
 	"\x0fCharacterConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
 	"\x06traits\x18\x03 \x03(\tR\x06traits\x12%\n" +
 	"\x0eparanoia_limit\x18\x04 \x01(\x05R\rparanoiaLimit\x12%\n" +
 	"\x0egoodwill_limit\x18\x05 \x01(\x05R\rgoodwillLimit\x12%\n" +
-	"\x0eintrigue_limit\x18\x06 \x01(\x05R\rintrigueLimit\x12\x1f\n" +
-	"\vability_ids\x18\a \x03(\x05R\n" +
-	"abilityIds\x125\n" +
+	"\x0eintrigue_limit\x18\x06 \x01(\x05R\rintrigueLimit\x12=\n" +
+	"\tabilities\x18\a \x03(\v2\x1f.tragedylooper.v1.AbilityConfigR\tabilities\x125\n" +
 	"\x05rules\x18\b \x03(\v2\x1f.tragedylooper.v1.CharacterRuleR\x05rules\x12 \n" +
 	"\vdescription\x18\t \x01(\tR\vdescription\x12I\n" +
 	"\x10initial_location\x18\n" +
@@ -651,29 +650,31 @@ var file_tragedylooper_v1_character_proto_goTypes = []any{
 	(*TurfSelectionEffect)(nil), // 3: tragedylooper.v1.TurfSelectionEffect
 	(*DelayedEntryEffect)(nil),  // 4: tragedylooper.v1.DelayedEntryEffect
 	(*SpecialMovementRule)(nil), // 5: tragedylooper.v1.SpecialMovementRule
-	(LocationType)(0),           // 6: tragedylooper.v1.LocationType
-	(*Ability)(nil),             // 7: tragedylooper.v1.Ability
-	(TriggerType)(0),            // 8: tragedylooper.v1.TriggerType
+	(*AbilityConfig)(nil),       // 6: tragedylooper.v1.AbilityConfig
+	(LocationType)(0),           // 7: tragedylooper.v1.LocationType
+	(*Ability)(nil),             // 8: tragedylooper.v1.Ability
+	(TriggerType)(0),            // 9: tragedylooper.v1.TriggerType
 }
 var file_tragedylooper_v1_character_proto_depIdxs = []int32{
-	2,  // 0: tragedylooper.v1.CharacterConfig.rules:type_name -> tragedylooper.v1.CharacterRule
-	6,  // 1: tragedylooper.v1.CharacterConfig.initial_location:type_name -> tragedylooper.v1.LocationType
-	6,  // 2: tragedylooper.v1.CharacterConfig.blocked_locations:type_name -> tragedylooper.v1.LocationType
-	0,  // 3: tragedylooper.v1.Character.config:type_name -> tragedylooper.v1.CharacterConfig
-	6,  // 4: tragedylooper.v1.Character.current_location:type_name -> tragedylooper.v1.LocationType
-	7,  // 5: tragedylooper.v1.Character.abilities:type_name -> tragedylooper.v1.Ability
-	8,  // 6: tragedylooper.v1.CharacterRule.trigger:type_name -> tragedylooper.v1.TriggerType
-	3,  // 7: tragedylooper.v1.CharacterRule.turf_selection_effect:type_name -> tragedylooper.v1.TurfSelectionEffect
-	4,  // 8: tragedylooper.v1.CharacterRule.delayed_entry_effect:type_name -> tragedylooper.v1.DelayedEntryEffect
-	5,  // 9: tragedylooper.v1.CharacterRule.special_movement_rule:type_name -> tragedylooper.v1.SpecialMovementRule
-	6,  // 10: tragedylooper.v1.TurfSelectionEffect.possible_locations:type_name -> tragedylooper.v1.LocationType
-	6,  // 11: tragedylooper.v1.DelayedEntryEffect.entry_location:type_name -> tragedylooper.v1.LocationType
-	6,  // 12: tragedylooper.v1.SpecialMovementRule.restricted_locations:type_name -> tragedylooper.v1.LocationType
-	13, // [13:13] is the sub-list for method output_type
-	13, // [13:13] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	6,  // 0: tragedylooper.v1.CharacterConfig.abilities:type_name -> tragedylooper.v1.AbilityConfig
+	2,  // 1: tragedylooper.v1.CharacterConfig.rules:type_name -> tragedylooper.v1.CharacterRule
+	7,  // 2: tragedylooper.v1.CharacterConfig.initial_location:type_name -> tragedylooper.v1.LocationType
+	7,  // 3: tragedylooper.v1.CharacterConfig.blocked_locations:type_name -> tragedylooper.v1.LocationType
+	0,  // 4: tragedylooper.v1.Character.config:type_name -> tragedylooper.v1.CharacterConfig
+	7,  // 5: tragedylooper.v1.Character.current_location:type_name -> tragedylooper.v1.LocationType
+	8,  // 6: tragedylooper.v1.Character.abilities:type_name -> tragedylooper.v1.Ability
+	9,  // 7: tragedylooper.v1.CharacterRule.trigger:type_name -> tragedylooper.v1.TriggerType
+	3,  // 8: tragedylooper.v1.CharacterRule.turf_selection_effect:type_name -> tragedylooper.v1.TurfSelectionEffect
+	4,  // 9: tragedylooper.v1.CharacterRule.delayed_entry_effect:type_name -> tragedylooper.v1.DelayedEntryEffect
+	5,  // 10: tragedylooper.v1.CharacterRule.special_movement_rule:type_name -> tragedylooper.v1.SpecialMovementRule
+	7,  // 11: tragedylooper.v1.TurfSelectionEffect.possible_locations:type_name -> tragedylooper.v1.LocationType
+	7,  // 12: tragedylooper.v1.DelayedEntryEffect.entry_location:type_name -> tragedylooper.v1.LocationType
+	7,  // 13: tragedylooper.v1.SpecialMovementRule.restricted_locations:type_name -> tragedylooper.v1.LocationType
+	14, // [14:14] is the sub-list for method output_type
+	14, // [14:14] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_tragedylooper_v1_character_proto_init() }
