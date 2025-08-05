@@ -71,7 +71,6 @@ script_models:
       story: "See Tragedy Looper Mastermind Handbook"
       mastermind_hints: "See Tragedy Looper Mastermind Handbook"
   8002:
-    8002:
     id: 8002
     private_info:
       main_plot_id: 1003

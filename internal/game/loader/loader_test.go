@@ -14,7 +14,7 @@ func TestLoadConfig(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Load the config for the "first_steps" script
-	config, err := LoadConfig(dataDir, "first_steps")
+	config, err := LoadConfig(dataDir, "first_steps", 101)
 
 	// Assertions
 	assert.NoError(t, err)
