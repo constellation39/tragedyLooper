@@ -1,6 +1,35 @@
 script_models:
   8001:
     id: 8001
+    private_info:
+      main_plot_id: 1003
+      sub_plots_ids:
+        - 2001
+        - 2004
+      characters_ids:
+        - 5002
+        - 5001
+        - 5010
+        - 5004
+        - 5007
+        - 5008
+        - 5011
+        - 5009
+        - 5005
+      incident_ids:
+        - 4006
+        - 4002
+        - 4001
+      role_assignments:
+        5001: 3002
+        5002: 3000
+        5004: 3001
+        5005: 3000
+        5007: 3000
+        5008: 3004
+        5009: 3000
+        5010: 3003
+        5011: 3008
     metadata:
       title: "Young Women’s Battlefield"
       set:
@@ -42,28 +71,36 @@ script_models:
       story: "See Tragedy Looper Mastermind Handbook"
       mastermind_hints: "See Tragedy Looper Mastermind Handbook"
   8002:
+    8002:
     id: 8002
     private_info:
       main_plot_id: 1003
       sub_plots_ids:
-        - 2004
         - 2013
+        - 2004
       characters_ids:
         - 5012
-      incident_ids: []
+        - 5005
+        - 5002
+        - 5009
+        - 5006
+        - 5003
+        - 5004
+      incident_ids:
+        - 4002
+        - 4005
+        - 4004
       role_assignments:
+        5002: 3008
+        5003: 3000
+        5004: 3002
+        5005: 3011
+        5006: 3000
+        5009: 3000
         5012: 3001
-        #        5015:
-        #        - doctor: { role_name: "conspiracyTheorist" }
-        #        - boyStudent: { role_name: "serialKiller" }
-        #        - patient: { role_name: "person" }
-        #        - teacher: { role_name: "person" }
-        #        - richStudent: { role_name: "person" }
-        #        - shrineMaiden: { role_name: "friend" }
-
     public_info: { }
     metadata:
-      title: "Magical Girls' Superiority"
+      title: "Magical Girls'' Superiority"
       creator: "M.Hydrome"
       set:
         - name: "New Tragedies"
@@ -74,6 +111,7 @@ script_models:
         - number_of_loops: 3
           difficulty: 3
       tragedy_set: "basicTragedy"
+      description: "This is a script recommended for those who are playing :basicTragedy: for the first time. This is where it begins for real. Now you have 2 Subplots and seven people in the cast. Also, there are 5 days each loop"
       main_plot:
         - "signWithMe"
       sub_plots:
@@ -137,6 +175,31 @@ script_models:
         6. At the end of day 3, have at least 2 :intrigue: on the Hospital, at least 2 :paranoia: on the shrineMaiden, triggering the Hospital :horror: killing the Protagonists.
   8003:
     id: 8003
+    private_info:
+      main_plot_id: 1001
+      sub_plots_ids:
+        - 2001
+        - 2005
+      characters_ids:
+        - 5005
+        - 5013
+        - 5008
+        - 5014
+        - 5003
+        - 5012
+        - 5015
+      incident_ids:
+        - 4001
+        - 4004
+        - 4004
+      role_assignments:
+        5003: 3000
+        5005: 3005
+        5008: 3003
+        5012: 3000
+        5013: 3004
+        5014: 3006
+        5015: 3000
     metadata:
       title: "The Cat Box"
       creator: "GEnd"
