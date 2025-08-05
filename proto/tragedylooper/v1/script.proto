@@ -44,8 +44,6 @@ message ScriptConfig {
   map<int32, ScriptModel> script_models = 11 [ (validate.rules).map.keys.int32 = { gte: 8000, lt: 9000 } ];
 }
 
-
-
 message ScriptSet {
   string name = 1;
   int32 number = 2;
@@ -63,15 +61,15 @@ message IncidentInstance {
 }
 
 message CastRole {
-    string role = 1;
-    map<string, string> extra_info = 2;
+  string role = 1;
+  map<string, string> extra_info = 2;
 }
 
 message CastAssignment {
-    oneof assignment {
-        string role_name = 1;
-        CastRole role_with_extra = 2;
-    }
+  oneof assignment {
+    string role_name = 1;
+    CastRole role_with_extra = 2;
+  }
 }
 
 message ScriptMetadata {
