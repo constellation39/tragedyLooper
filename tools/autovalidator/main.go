@@ -113,6 +113,12 @@ func assembleScriptData(dirPath string) (map[string]interface{}, error) {
 		}
 
 		key := strings.TrimSuffix(file.Name(), ".yaml")
+		if contentMap, ok := content.(map[string]interface{}); ok {
+			if _, exists := contentMap[key]; exists {
+				assembled[key] = contentMap[key]
+				continue
+			}
+		}
 		assembled[key] = content
 	}
 

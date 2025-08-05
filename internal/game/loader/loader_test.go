@@ -14,7 +14,7 @@ func TestLoadConfig(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Load the config for the "first_steps" script
-	config, err := LoadConfig(dataDir, "first_steps", 101)
+	config, err := LoadConfig(dataDir, "basic_tragedy_x", 101)
 
 	// Assertions
 	assert.NoError(t, err)
@@ -28,11 +28,11 @@ func TestLoadConfig(t *testing.T) {
 	// assert.Equal(t, int32(4), script.DaysPerLoop)
 
 	// Check abilities
-	abilities := config.GetAbilities()
+	abilities := config.GetAbilityMap()
 	assert.NotEmpty(t, abilities)
 
 	// Check cards
-	cards := config.GetCards()
+	cards := config.GetCardMap()
 	assert.Len(t, cards, 15)
 	card1 := cards[1]
 	assert.Equal(t, "Move", card1.Name)
@@ -40,10 +40,10 @@ func TestLoadConfig(t *testing.T) {
 	assert.Equal(t, v1.PlayerRole_PLAYER_ROLE_PROTAGONIST, card1.OwnerRole)
 
 	// Check characters
-	characters := config.GetCharacters()
+	characters := config.GetCharacterMap()
 	assert.NotEmpty(t, characters)
 
 	// Check incidents
-	incidents := config.GetIncidents()
+	incidents := config.GetIncidentMap()
 	assert.NotEmpty(t, incidents)
 }
