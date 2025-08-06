@@ -8,43 +8,43 @@ import "tragedylooper/v1/common.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
-// CardConfig defines the static, immutable properties of a card.
-// This represents a card as it is defined in the game's rulebook or script.
+// CardConfig 定义了卡牌的静态、不可变属性。
+// 这表示卡牌在游戏规则书或脚本中的定义。
 message CardConfig {
-  // The unique identifier for this type of card.
+  // 此类卡牌的唯一标识符。
   int32 id = 1;
-  // The name of the card.
+  // 卡牌的名称。
   string name = 2;
-  // A user-facing description of the card's effect.
+  // 卡牌效果的用户描述。
   string description = 3;
-  // The type of the card, used for categorization and resolution order.
+  // 卡牌的类型，用于分类和结算顺序。
   CardType card_type = 4 [json_name = "type"];
-  // The role that is allowed to use this card.
+  // 允许使用此卡牌的角色。
   PlayerRole owner_role = 5;
-  // The effect or chain of effects the card produces when played.
+  // 卡牌打出时产生的效果或效果链。
   CompoundEffect effect = 6;
-  // If true, this card can only be successfully played once per loop.
+  // 如果为真，此卡牌每循环只能成功打出一次。
   bool once_per_loop = 7;
-  // The priority of the card, used to determine resolution order among cards of the same type.
+  // 卡牌的优先级，用于确定同类型卡牌的结算顺序。
   int32 priority = 8;
 }
 
-// Card represents an instance of a card in a player's hand or in play.
-// It combines the static configuration with dynamic, mutable state.
+// Card 表示玩家手牌中或场上的卡牌实例。
+// 它结合了静态配置和动态、可变的状态。
 message Card {
-  // The unique ID of the card, copied from its config for convenience.
+  // 卡牌的唯一ID，为方便起见从其配置中复制。
   int32 id = 1;
-  // The static configuration of the card.
+  // 卡牌的静态配置。
   CardConfig config = 2;
-  // Whether the card has been used in the current loop.
+  // 该卡牌是否在当前循环中使用过。
   bool used_this_loop = 3;
-  // The final, confirmed target for the card's effect, set after any required player choices.
+  // 卡牌效果的最终确认目标，在任何所需的玩家选择后设置。
   Choice resolved_target = 4;
 }
 
-// CardList is a collection of card instances, typically representing a player's hand.
+// CardList 是卡牌实例的集合，通常代表玩家的手牌。
 message CardList {
-  // A list of card instances.
+  // 卡片实例列表。
   repeated Card cards = 1;
 }
 

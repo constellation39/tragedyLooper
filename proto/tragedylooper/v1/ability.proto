@@ -8,68 +8,68 @@ import "tragedylooper/v1/enums.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
-// AbilityConfig defines the configuration for a character's ability.
+// AbilityConfig 定义了角色能力的配置。
 message AbilityConfig {
-  // The unique identifier for the ability.
+  // 能力的唯一标识符。
   int32 id = 1;
-  // The name of the ability.
+  // 能力的名称。
   string name = 2;
-  // A description of the ability.
+  // 能力的描述。
   string description = 3;
-  // The trigger type for the ability.
+  // 能力的触发类型。
   TriggerType ability_type = 4 [json_name = "type"];
-  // Optional: filters for game event triggers.
+  // 可选：游戏事件触发器的过滤器。
   repeated GameEventType event_filters = 5;
-  // The effect of the ability.
+  // 能力的效果。
   Effect effect = 6;
-  // Whether the ability can only be used once per loop.
+  // 该能力是否每循环只能使用一次。
   bool once_per_loop = 7;
-  // The player role that can refuse this ability.
+  // 可以拒绝此能力的玩家角色。
   PlayerRole refusal_role = 8;
-  // Whether the ability is passive.
+  // 该能力是否为被动能力。
   bool is_passive = 9;
-  // Whether the ability is mandatory (cannot be refused).
+  // 该能力是否为强制（不可拒绝）能力。
   bool is_mandatory = 10;
-  // The priority of the ability's resolution.
+  // 能力的结算优先级。
   int32 priority = 11;
-  // A list of conditions that must be met to use the ability.
+  // 使用能力必须满足的条件列表。
   repeated Condition conditions = 12;
-  // Whether the ability requires a choice to be made.
+  // 该能力是否需要做出选择。
   bool requires_choice = 13;
-  // The goodwill rank required to use the ability.
+  // 使用能力所需的善意等级。
   int32 goodwill_rank = 14;
-  // A list of locations that the ability is restricted to.
+  // 该能力受限制的地点列表。
   repeated LocationType restricted_to_locations = 15 [json_name = "restricted_to_location"];
-  // The number of times the ability can be used per loop.
+  // 该能力每循环可使用的次数。
   int32 times_per_loop = 16 [json_name = "times_per_loop"];
-  // Whether the ability is immune to goodwill refusal.
+  // 该能力是否不受善意拒绝的影响。
   bool immune_to_goodwill_refusal = 17 [json_name = "immune_to_goodwill_refusal"];
 }
 
-// CompoundAbility defines a combination of multiple abilities.
+// CompoundAbility 定义了多种能力的组合。
 message CompoundAbility {
-  // The operator to use when combining abilities.
+  // 组合能力时使用的操作符。
   enum Operator {
-    // Unspecified operator.
+    // 未指定的操作符。
     OPERATOR_UNSPECIFIED = 0;
-    // The AND operator.
+    // 与操作符。
     OPERATOR_AND = 1;
-    // The OR operator.
+    // 或操作符。
     OPERATOR_OR = 2;
   }
-  // The operator to use when combining abilities.
+  // 组合能力时使用的操作符。
   Operator operator = 1;
-  // The sub-abilities to combine.
+  // 要组合的子能力。
   repeated AbilityConfig sub_abilities = 2;
 }
 
-// Ability defines a character's ability at runtime.
+// Ability 定义了角色在运行时的能力。
 message Ability {
-  // The configuration for the ability.
+  // 能力的配置。
   AbilityConfig config = 1;
-  // Whether the ability has been used in the current loop.
+  // 该能力是否在当前循环中使用过。
   bool used_this_loop = 2;
-  // The ID of the character that owns the ability.
+  // 拥有该能力的角色ID。
   int32 owner_character_id = 3;
 }
 

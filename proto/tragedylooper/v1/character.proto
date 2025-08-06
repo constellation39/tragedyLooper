@@ -7,87 +7,87 @@ import "tragedylooper/v1/enums.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
-// CharacterConfig defines the configuration for a character in the global character library.
+// CharacterConfig 定义了全局角色库中角色的配置。
 message CharacterConfig {
-  // The unique identifier for the character.
+  // 角色的唯一标识符。
   int32 id = 1;
-  // The name of the character.
+  // 角色的名称。
   string name = 2;
-  // A list of character traits (e.g., "Student", "Reporter").
+  // 角色特征列表（例如，“学生”，“记者”）。
   repeated string traits = 3;
-  // A map of stat limits for the character.
+  // 角色的属性上限。
   map<int32, int32> stat_limits = 4;
-  // A list of ability IDs that the character possesses.
+  // 角色拥有的能力ID列表。
   repeated AbilityConfig abilities = 7;
-  // A list of special rules for the character.
+  // 角色的特殊规则列表。
   repeated CharacterRule rules = 8;
-  // A description of the character.
+  // 角色的描述。
   string description = 9;
-  // The initial location of the character.
+  // 角色的初始位置。
   LocationType initial_location = 10;
-  // A list of locations that the character cannot go to.
+  // 角色不能进入的地点列表。
   repeated LocationType blocked_locations = 11;
 }
 
-// Character defines a character instance at runtime.
+// Character 定义了运行时的角色实例。
 message Character {
-  // The configuration for the character.
+  // 角色的配置。
   CharacterConfig config = 1;
-  // The current location of the character.
+  // 角色的当前位置。
   LocationType current_location = 2;
-  // The current stat levels of the character.
+  // 角色的当前属性水平。
   map<int32, int32> stats = 3;
-  // The hidden role of the character (assigned by the script).
+  // 角色的隐藏角色（由剧本分配）。
   int32 hidden_role_id = 6;
-  // A list of ability instances that the character possesses.
+  // 角色拥有的能力实例列表。
   repeated Ability abilities = 7;
-  // Whether the character is alive.
+  // 角色是否存活。
   bool is_alive = 8;
-  // Whether the character is in panic mode.
+  // 角色是否处于恐慌状态。
   bool in_panic_mode = 9;
-  // A list of dynamic traits for the character.
+  // 角色的动态特征列表。
   repeated string traits = 10;
 }
 
-// CharacterRule defines a special rule for a character.
+// CharacterRule 定义了角色的特殊规则。
 message CharacterRule {
-  // The name of the rule.
+  // 规则的名称。
   string name = 1;
-  // A description of the rule.
+  // 规则的描述。
   string description = 2;
-  // The trigger for the rule.
+  // 规则的触发器。
   TriggerType trigger = 3;
-  // The effect of the rule.
+  // 规则的效果。
   oneof effect {
-    // A turf selection effect.
+    // 地盘选择效果。
     TurfSelectionEffect turf_selection_effect = 4;
-    // A delayed entry effect.
+    // 延迟进入效果。
     DelayedEntryEffect delayed_entry_effect = 5;
-    // A special movement rule.
+    // 特殊移动规则。
     SpecialMovementRule special_movement_rule = 6;
   }
 }
 
-// TurfSelectionEffect defines an effect for selecting a turf.
+// TurfSelectionEffect 定义了选择地盘的效果。
 message TurfSelectionEffect {
-  // A list of possible locations to choose from.
+  // 可供选择的地点列表。
   repeated LocationType possible_locations = 1;
-  // The prompt to show to the player.
+  // 显示给玩家的提示。
   string prompt = 2;
 }
 
-// DelayedEntryEffect defines an effect for a delayed entry.
+// DelayedEntryEffect 定义了延迟进入的效果。
 message DelayedEntryEffect {
-  // The day of entry.
+  // 进入的日期。
   int32 day_of_entry = 1;
-  // The location of entry.
+  // 进入的地点。
   LocationType entry_location = 2;
 }
 
-// SpecialMovementRule defines a special movement rule.
+// SpecialMovementRule 定义了特殊移动规则。
 message SpecialMovementRule {
-  // A list of restricted locations.
+  // 受限地点列表。
   repeated LocationType restricted_locations = 1;
-  // A description of the rule.
+  // 规则的描述。
   string description = 2;
 }

@@ -7,181 +7,181 @@ import "tragedylooper/v1/enums.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
-// Condition defines a condition for triggering rules, events, and effects.
-// It uses a oneof to ensure that only one type of condition can be set at a time.
-// For logical negation, use a CompoundCondition with the NOT operator.
+// Condition 定义了触发规则、事件和效果的条件。
+// 它使用 oneof 来确保一次只能设置一种类型的条件。
+// 对于逻辑否定，请使用带有 NOT 操作符的 CompoundCondition。
 message Condition {
-  // The type of the condition.
+  // 条件的类型。
   oneof condition_type {
-    // A stat condition.
+    // 属性条件。
     StatCondition stat_condition = 1;
-    // A location condition.
+    // 位置条件。
     LocationCondition location_condition = 2;
-    // A role condition.
+    // 角色条件。
     RoleCondition role_condition = 3;
-    // A trait condition.
+    // 特征条件。
     TraitCondition trait_condition = 4;
-    // A day condition.
+    // 日期条件。
     DayCondition day_condition = 5;
-    // A player condition.
+    // 玩家条件。
     PlayerCondition player_condition = 6;
-    // A compound condition (AND/OR/NOT).
+    // 复合条件（AND/OR/NOT）。
     CompoundCondition compound_condition = 7;
-    // A phase condition.
+    // 阶段条件。
     PhaseCondition phase_condition = 8;
-    // An event history condition.
+    // 事件历史条件。
     EventHistoryCondition event_history_condition = 9;
-    // A location character count condition.
+    // 地点角色数量条件。
     LocationCharacterCountCondition location_character_count_condition = 11;
   }
 }
 
-// EventHistoryCondition defines a condition based on past game events.
+// EventHistoryCondition 定义了基于过去游戏事件的条件。
 message EventHistoryCondition {
-  // The type of event to look for.
+  // 要查找的事件类型。
   GameEventType event_type = 1;
-  // How many days into the past to look. 0 means today, 1 means today and yesterday, etc.
+  // 回溯天数。0 表示今天，1 表示今天和昨天，依此类推。
   int32 lookback_days = 2;
-  // Optional: Further filter by the character involved in the event.
+  // 可选：根据事件中涉及的角色进一步过滤。
   TargetSelector event_target = 3;
-  // The number of times the event must have occurred.
+  // 事件必须发生的次数。
   int32 count = 4;
-  // The comparator for the count.
+  // 计数的比较操作符。
   Comparator comparator = 5;
 
-  // Optional: A filter for the event payload.
+  // 可选：事件有效载荷的过滤器。
   oneof event_filter {
     StatAdjustedEventFilter stat_adjusted_event_filter = 6;
   }
 }
 
-// StatAdjustedEventFilter provides a filter for StatAdjustedEvent.
+// StatAdjustedEventFilter 为 StatAdjustedEvent 提供过滤器。
 message StatAdjustedEventFilter {
-  // Optional: The stat type to match.
+  // 可选：要匹配的属性类型。
   optional StatType stat_type = 1;
-  // Optional: The amount to compare against.
+  // 可选：要比较的金额。
   optional int32 amount = 2;
-  // Optional: The comparator for the amount.
+  // 可选：金额的比较操作符。
   optional Comparator amount_comparator = 3;
 }
 
-// PhaseCondition defines a condition based on the current game phase.
+// PhaseCondition 定义了基于当前游戏阶段的条件。
 message PhaseCondition {
-  // The comparator to use.
+  // 要使用的比较操作符。
   Comparator comparator = 1;
-  // The target game phase.
+  // 目标游戏阶段。
   GamePhase phase = 2;
 }
 
-// CompoundCondition defines a combination of multiple conditions.
-// For NOT, provide exactly one sub-condition.
+// CompoundCondition 定义了多个条件的组合。
+// 对于 NOT，只提供一个子条件。
 message CompoundCondition {
-  // The operator to use when combining conditions.
+  // 组合条件时使用的操作符。
   enum Operator {
-    // Unspecified operator.
+    // 未指定的操作符。
     OPERATOR_UNSPECIFIED = 0;
-    // The logical AND operator.
+    // 逻辑 AND 操作符。
     OPERATOR_AND = 1;
-    // The logical OR operator.
+    // 逻辑 OR 操作符。
     OPERATOR_OR = 2;
-    // The logical NOT operator.
+    // 逻辑 NOT 操作符。
     OPERATOR_NOT = 3;
   }
-  // The logical operator to use.
+  // 要使用的逻辑操作符。
   Operator operator = 1;
-  // A list of sub-conditions.
+  // 子条件列表。
   repeated Condition sub_conditions = 2;
 }
 
-// StatCondition defines a condition based on a character's stats.
+// StatCondition 定义了基于角色属性的条件。
 message StatCondition {
-  // The target character selector.
+  // 目标角色选择器。
   TargetSelector target = 1;
-  // The type of stat to check.
+  // 要检查的属性类型。
   StatType stat_type = 2;
-  // The comparator to use.
+  // 要使用的比较操作符。
   Comparator comparator = 3;
-  // The value to compare against.
+  // 要比较的值。
   int32 value = 4;
-  // Optional: A second target to compare against.
-  // If set, the condition compares the stat of 'target' with the stat of 'target_to_compare'.
+  // 可选：第二个要比较的目标。
+  // 如果设置，条件将比较“target”的属性与“target_to_compare”的属性。
   TargetSelector target_to_compare = 5;
 }
 
-// LocationCondition defines a condition that checks if a character is at a specific location.
-// To check if a character is NOT at a location, use a CompoundCondition with the NOT operator.
+// LocationCondition 定义了检查角色是否在特定地点的条件。
+// 要检查角色是否不在某个地点，请使用带有 NOT 操作符的 CompoundCondition。
 message LocationCondition {
-  // The target character selector.
+  // 目标角色选择器。
   TargetSelector target = 1;
-  // The target location.
+  // 目标地点。
   LocationType location = 2;
 }
 
-// LocationCharacterCountCondition defines a condition based on the number of characters at a location.
+// LocationCharacterCountCondition 定义了基于地点角色数量的条件。
 message LocationCharacterCountCondition {
-  // The target location.
+  // 目标地点。
   LocationType location = 1;
-  // The comparator to use.
+  // 要使用的比较操作符。
   Comparator comparator = 2;
-  // The number of characters to compare against.
+  // 要比较的角色数量。
   int32 count = 3;
 }
 
-// RoleCondition defines a condition based on a character's role.
-// To check if a character does NOT have a role, use a CompoundCondition with the NOT operator.
+// RoleCondition 定义了基于角色扮演的条件。
+// 要检查角色是否没有某个角色，请使用带有 NOT 操作符的 CompoundCondition。
 message RoleCondition {
-  // The target character selector.
+  // 目标角色选择器。
   TargetSelector target = 1;
-  // The role to check.
+  // 要检查的角色。
   int32 role_id = 2;
 }
 
-// TraitCondition defines a condition based on a character's traits.
-// To check if a character does NOT have a trait, use a CompoundCondition with the NOT operator.
+// TraitCondition 定义了基于角色特征的条件。
+// 要检查角色是否没有某个特征，请使用带有 NOT 操作符的 CompoundCondition。
 message TraitCondition {
-  // The target character selector.
+  // 目标角色选择器。
   TargetSelector target = 1;
-  // The target trait.
+  // 目标特征。
   string trait = 2;
 }
 
-// DayCondition defines a condition based on the current day.
+// DayCondition 定义了基于当前日期的条件。
 message DayCondition {
-  // The comparator to use.
+  // 要使用的比较操作符。
   Comparator comparator = 1;
-  // The target day.
+  // 目标日期。
   int32 day = 2;
 }
 
-// PlayerCondition defines a condition based on a player's state.
+// PlayerCondition 定义了基于玩家状态的条件。
 message PlayerCondition {
-  // The target player role.
+  // 目标玩家角色。
   PlayerRole player_role = 1;
-  // Extensible: e.g., check if the player has used a certain card.
+  // 可扩展：例如，检查玩家是否使用过某张卡牌。
 }
 
-// TargetSelector defines a dynamic target for conditions or effects.
-// It uses a oneof to ensure that only one type of selector can be set at a time.
-// When a selector can potentially match multiple characters (e.g., all_characters_at_location),
-// and it is used in a context that evaluates a condition (like StatCondition),
-// the condition is considered true if *any* of the matched characters satisfy the condition.
+// TargetSelector 定义了条件或效果的动态目标。
+// 它使用 oneof 来确保一次只能设置一种类型的选择器。
+// 当选择器可能匹配多个角色（例如 all_characters_at_location）时，
+// 并且它在评估条件（如 StatCondition）的上下文中使用时，
+// 如果任何匹配的角色满足条件，则条件为真。
 message TargetSelector {
   oneof selector {
-    // A specific character by ID.
+    // 按 ID 指定特定角色。
     int32 specific_character = 1;
-    // The character that triggered the event.
+    // 触发事件的角色。
     Empty triggering_character = 2;
-    // The culprit of the event.
+    // 事件的罪魁祸首。
     Empty culprit = 3;
-    // The victim of the event.
+    // 事件的受害者。
     Empty victim = 4;
-    // Any character with a specific role.
+    // 具有特定角色的任何角色。
     int32 character_with_role_id = 5;
-    // All characters at a specific location.
+    // 特定地点所有角色。
     LocationType all_characters_at_location = 6;
-    // The user of the action (card or ability).
+    // 动作（卡牌或能力）的使用者。
     Empty action_user = 7;
-    // The target of the action (card or ability).
+    // 动作（卡牌或能力）的目标。
     Empty action_target = 8;
     // All characters.
     Empty all_characters = 9;

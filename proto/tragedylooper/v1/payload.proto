@@ -9,9 +9,9 @@ option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 // 玩家打出卡牌的操作负载
 message PlayCardPayload {
   int32 card_id = 1; // 打出的卡牌ID
-  // Optional: Pre-chosen options to streamline the interaction.
-  // Key: request_id from a potential ChoiceRequiredEvent
-  // Value: chosen_option_id from that event
+  // 可选：预先选择的选项，用于简化交互。
+  // 键：来自潜在 ChoiceRequiredEvent 的 request_id
+  // 值：来自该事件的 chosen_option_id
   map<string, string> pre_chosen_options = 2;
 }
 
@@ -29,7 +29,7 @@ message MakeGuessPayload {
 
 // 玩家进行选择的操作负载（例如，在需要选择地盘或目标时）
 message ChooseOptionPayload {
-  string request_id = 1; // The ID from the event we are responding to
+  string request_id = 1; // 我们正在响应的事件ID
   optional int32 character_id = 2; // 做出选择的角色（如果选择与角色相关）
   string chosen_option_id = 3; // 选择项的ID
 }

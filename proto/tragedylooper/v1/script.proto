@@ -12,57 +12,57 @@ import "tragedylooper/v1/ability.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
-// Script defines the configuration for a tragedy looper script.
+// Script 定义了悲剧循环剧本的配置。
 message ScriptConfig {
-  // The unique identifier for the script.
+  // 剧本的唯一标识符。
   int32 id = 1 [ (validate.rules).int32.gt = 0 ];
-  // The name of the script.
+  // 剧本的名称。
   string name = 2 [ (validate.rules).string.min_len = 1 ];
-  // A description of the script.
+  // 剧本的描述。
   string description = 3;
 
-  // Main plot configurations. ID range: 1000-1999
+  // 主线剧情配置。ID 范围：1000-1999
   map<int32, PlotConfig> main_plots = 4 [ (validate.rules).map = { min_pairs: 1, keys: { int32: { gte: 1000, lt: 2000 } } } ];
-  // Sub plot configurations. ID range: 2000-2999
+  // 支线剧情配置。ID 范围：2000-2999
   map<int32, PlotConfig> sub_plots = 5 [ (validate.rules).map.keys.int32 = { gte: 2000, lt: 3000 } ];
 
-  // Role configurations. ID range: 3000-3999
+  // 角色配置。ID 范围：3000-3999
   map<int32, RoleConfig> roles = 6 [ (validate.rules).map.keys.int32 = { gte: 3000, lt: 4000 } ];
 
-  // Incident configurations. ID range: 4000-4999
+  // 事件配置。ID 范围：4000-4999
   map<int32, IncidentConfig> incidents = 7 [ (validate.rules).map.keys.int32 = { gte: 4000, lt: 5000 } ];
 
-  // Character configurations. ID range: 5000-5999
+  // 角色配置。ID 范围：5000-5999
   map<int32, CharacterConfig> characters = 8 [ (validate.rules).map.keys.int32 = { gte: 5000, lt: 6000 } ];
 
-  // Mastermind card configurations. ID range: 6000-6999
+  // 主谋卡牌配置。ID 范围：6000-6999
   map<int32, CardConfig> mastermind_cards = 9 [ (validate.rules).map.keys.int32 = { gte: 6000, lt: 7000 } ];
-  // Protagonist card configurations. ID range: 7000-7999
+  // 主角卡牌配置。ID 范围：7000-7999
   map<int32, CardConfig> protagonist_cards = 10 [ (validate.rules).map.keys.int32 = { gte: 7000, lt: 8000 } ];
 
-  // A map of script configurations. ID range: 8000-8999
+  // 剧本模型配置的映射。ID 范围：8000-8999
   map<int32, ScriptModel> script_models = 11 [ (validate.rules).map.keys.int32 = { gte: 8000, lt: 9000 } ];
 }
 
 message ScriptSet {
-  string name = 1;
-  int32 number = 2;
+  string name = 1; // 剧本集名称
+  int32 number = 2; // 剧本集编号
 }
 
 message DifficultySet {
-  int32 number_of_loops = 1;
-  int32 difficulty = 2;
+  int32 number_of_loops = 1; // 循环次数
+  int32 difficulty = 2; // 难度等级
 }
 
 message IncidentInstance {
-  int32 day = 1;
-  string incident = 2;
-  string culprit = 3;
+  int32 day = 1; // 日期
+  string incident = 2; // 事件
+  string culprit = 3; // 罪魁祸首
 }
 
 message CastRole {
-  string role = 1;
-  map<string, string> extra_info = 2;
+  string role = 1; // 角色
+  map<string, string> extra_info = 2; // 额外信息
 }
 
 message CastAssignment {
@@ -91,80 +91,80 @@ message ScriptMetadata {
   string source = 16;
 }
 
-// ScriptModel defines the configuration for a specific script.
+// ScriptModel 定义了特定剧本的配置。
 message ScriptModel {
   int32 id = 1 [ (validate.rules).int32.gt = 0 ];
-  // Private information for the script.
+  // 剧本的私有信息。
   PrivateInfo private_info = 2 [ (validate.rules).message.required = true ];
-  // Public information for the script.
+  // 剧本的公共信息。
   PublicInfo public_info = 3 [ (validate.rules).message.required = true ];
-  // Descriptive metadata for the script.
+  // 剧本的描述性元数据。
   ScriptMetadata metadata = 4 [ (validate.rules).message.required = true ];
 }
 
-// PrivateInfo defines the private information for a script.
+// PrivateInfo 定义了剧本的私有信息。
 message PrivateInfo {
-  // The main plot of the script.
+  // 剧本的主线剧情。
   int32 main_plot_id = 1 [ (validate.rules).int32.gt = 0 ];
-  // A list of sub plots for the script.
+  // 剧本的支线剧情列表。
   repeated int32 sub_plots_ids = 2 [ (validate.rules).repeated.min_items = 1 ];
-  // A map of characters in the script.
+  // 剧本中的角色映射。
   repeated int32 characters_ids = 3 [ (validate.rules).repeated.min_items = 1 ];
-  // A map of incidents in the script.
+  // 剧本中的事件映射。
   repeated int32 incident_ids = 4 [ (validate.rules).repeated.min_items = 1 ];
-  // A map of character to role assignments, derived from the selected plots.
+  // 角色到身份分配的映射，源自选定的剧情。
   map<int32, int32> role_assignments = 5 [ (validate.rules).map.min_pairs = 1 ];
 }
 
 
-// PublicInfo defines the public information for a script.
+// PublicInfo 定义了剧本的公共信息。
 message PublicInfo {
-  // The unique identifier for the script configuration.
+  // 剧本配置的唯一标识符。
   int32 script_config_id = 1 [ (validate.rules).int32.gt = 0 ];
 
-  // Game rules.
-  // The number of loops in the game.
+  // 游戏规则。
+  // 游戏中的循环次数。
   int32 loop_count = 2 [ (validate.rules).int32.gt = 0 ];
-  // The number of days per loop.
+  // 每个循环的天数。
   int32 days_per_loop = 3 [ (validate.rules).int32.gt = 0 ];
-  // Whether players can discuss information.
+  // 玩家是否可以讨论信息。
   bool can_discuss = 4;
 
-  // Special rules.
-  // A map of special incidents.
+  // 特殊规则。
+  // 特殊事件的映射。
   repeated int32 special_incident_ids = 5;
-  // A map of scheduled incidents.
+  // 预定事件的映射。
   repeated int32 scheduled_incident_ids = 6 [ (validate.rules).repeated.min_items = 1 ];
 }
 
-// RoleConfig defines the configuration for a role.
+// RoleConfig 定义了角色的配置。
 message RoleConfig {
-  // The unique identifier for the role.
+  // 角色的唯一标识符。
   int32 id = 1 [ (validate.rules).int32.gt = 0 ];
-  // The name of the role.
+  // 角色的名称。
   string name = 2 [ (validate.rules).string.min_len = 1 ];
-  // The limit of characters that can have this role.
+  // 可以拥有此角色的角色数量限制。
   int32 limit = 3 [ (validate.rules).int32.gte = 1 ];
-  // A map of abilities for this role.
+  // 此角色的能力映射。
   map<int32, AbilityConfig> abilities = 4;
-  // Defines the character's goodwill status.
+  // 定义角色的好感状态。
   GoodwillRuleType goodwill_rule = 5;
-  // Defines if the character can be made invincible.
+  // 定义角色是否可以变为无敌。
   bool can_be_invincible = 6;
 }
 
-// PlotConfig defines a story plot.
+// PlotConfig 定义了一个故事剧情。
 message PlotConfig {
-  // The unique identifier for the plot.
+  // 剧情的唯一标识符。
   int32 id = 1 [ (validate.rules).int32.gt = 0 ];
-  // The type of the plot.
+  // 剧情的类型。
   PlotType plot_type = 2 [ json_name = "type" ];
-  // The name of the plot.
+  // 剧情的名称。
   string name = 3 [ (validate.rules).string.min_len = 1 ];
-  // A description of the plot.
+  // 剧情的描述。
   string description = 4;
-  // A map of incident identifiers for this plot.
+  // 此剧情的事件标识符映射。
   map<int32, IncidentConfig> incident_ids = 5;
-  // A map of role assignments for this plot.
+  // 此剧情的角色分配映射。
   map<int32, int32> role_assignments = 6;
 }

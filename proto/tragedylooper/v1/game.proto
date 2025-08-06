@@ -10,81 +10,81 @@ import "tragedylooper/v1/event.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
-// GameState represents the complete, authoritative state of a game at a specific moment.
-// It is the single source of truth, intended for server-side use and persistence.
-// It should not contain historical data like event logs, which should be handled separately.
+// GameState 表示游戏在特定时刻的完整、权威状态。
+// 它是单一事实来源，用于服务器端使用和持久化。
+// 它不应包含事件日志等历史数据，这些数据应单独处理。
 message GameState {
-  string game_id = 1; // Unique identifier for the game session.
-  int64 tick = 2; // A monotonic clock representing the finest-grained unit of game time.
-  int32 current_loop = 3; // The current loop number.
-  int32 days_per_loop = 4; // The total number of days in a single loop.
-  int32 current_day = 5; // The current day within the loop.
-  GamePhase current_phase = 6; // The current phase within the day.
+  string game_id = 1; // 游戏会话的唯一标识符。
+  int64 tick = 2; // 表示游戏时间最细粒度单位的单调时钟。
+  int32 current_loop = 3; // 当前循环数。
+  int32 days_per_loop = 4; // 单个循环中的总天数。
+  int32 current_day = 5; // 循环中的当前天数。
+  GamePhase current_phase = 6; // 当天中的当前阶段。
 
-  map<int32, Character> characters = 7; // Map of all characters, keyed by character_id.
-  map<int32, Player> players = 8; // Map of all players, keyed by player_id.
+  map<int32, Character> characters = 7; // 所有角色的映射，以 character_id 为键。
+  map<int32, Player> players = 8; // 所有玩家的映射，以 player_id 为键。
 
-  map<int32, bool> triggered_incidents = 9; // Set of incidents that have been triggered this loop, keyed by incident name.
+  map<int32, bool> triggered_incidents = 9; // 本循环中已触发的事件集合，以事件名称为键。
 }
 
-// Player represents a participant in the game.
+// Player 表示游戏的参与者。
 message Player {
-  int32 id = 1; // Unique identifier for the player.
-  string name = 2; // Player's display name.
-  PlayerRole role = 3; // The player's role (Mastermind or Protagonist).
-  bool is_llm = 4; // True if the player is controlled by an AI.
-  CardList hand = 5; // The player's current hand of cards.
-  string llm_session_id = 6; // Session ID for the LLM, if applicable.
-  PlayerDeductionKnowledge deduction_knowledge = 7; // Deduction state for Protagonists.
+  int32 id = 1; // 玩家的唯一标识符。
+  string name = 2; // 玩家的显示名称。
+  PlayerRole role = 3; // 玩家的角色（主谋或主角）。
+  bool is_llm = 4; // 如果玩家由 AI 控制，则为 true。
+  CardList hand = 5; // 玩家当前的手牌。
+  string llm_session_id = 6; // LLM 的会话 ID（如果适用）。
+  PlayerDeductionKnowledge deduction_knowledge = 7; // 主角的推理状态。
 }
 
-// PlayerDeductionKnowledge holds the information and guesses a Protagonist player has made.
+// PlayerDeductionKnowledge 包含了主角玩家所做出的信息和猜测。
 message PlayerDeductionKnowledge {
-  map<int32, int32> guessed_roles = 1; // Guesses about character roles, keyed by character_id.
-  repeated string clues = 2; // List of collected clues.
-  repeated string theories = 3; // List of formulated theories.
+  map<int32, int32> guessed_roles = 1; // 关于角色身份的猜测，以 character_id 为键。
+  repeated string clues = 2; // 收集到的线索列表。
+  repeated string theories = 3; // 形成理论的列表。
 }
 
-// PlayerView is a tailored, client-facing representation of the game state for a specific player.
-// It includes only the information that the player is permitted to see, hiding sensitive data.
+// PlayerView 是针对特定玩家定制的客户端游戏状态表示。
+// 它只包含玩家被允许查看的信息，隐藏敏感数据。
 message PlayerView {
-  string game_id = 1; // Unique identifier for the game session.
-  int64 tick = 2; // The current game time tick.
-  int32 current_loop = 3; // The current loop number.
-  int32 current_day = 4; // The current day within the loop.
-  GamePhase current_phase = 5; // The current phase within the day.
+  string game_id = 1; // 游戏会话的唯一标识符。
+  int64 tick = 2; // 当前游戏时间戳。
+  int32 current_loop = 3; // 当前循环数。
+  int32 current_day = 4; // 循环中的当前天数。
+  GamePhase current_phase = 5; // 当天中的当前阶段。
 
-  map<int32, PlayerViewCharacter> characters = 6; // Visible state of all characters.
-  map<int32, PlayerViewPlayer> players = 7; // Visible state of all players.
+  map<int32, PlayerViewCharacter> characters = 6; // 所有角色的可见状态。
+  map<int32, PlayerViewPlayer> players = 7; // 所有玩家的可见状态。
 
-  repeated Card your_hand = 8; // The hand of the player receiving this view.
-  PlayerDeductionKnowledge your_deductions = 9; // The deduction state of the player receiving this view.
+  repeated Card your_hand = 8; // 接收此视图的玩家的手牌。
+  PlayerDeductionKnowledge your_deductions = 9; // 接收此视图的玩家的推理状态。
 
-  // Note: Public events are now streamed to the client, not included in the view.
+  // 注意：公共事件现在已流式传输到客户端，不包含在视图中。
   // repeated GameEvent public_events = 12;
 }
 
-// PlayerViewCharacter is a sanitized version of a Character for client display.
-// It omits hidden information like the true role (for opponents).
+// PlayerViewCharacter 是用于客户端显示的角色清理版本。
+// 它省略了隐藏信息，例如真实角色（对于对手）。
 message PlayerViewCharacter {
-  int32 id = 1; // Character's unique ID.
-  string name = 2; // Character's name.
-  repeated string traits = 3; // Character's current traits.
-  LocationType current_location = 4; // Character's current location.
-  int32 paranoia = 5; // Current paranoia stat.
-  int32 goodwill = 6; // Current goodwill stat.
-  int32 intrigue = 7; // Current intrigue stat.
-  repeated Ability abilities = 8; // List of abilities.
-  bool is_alive = 9; // Whether the character is alive.
-  bool in_panic_mode = 10; // Whether the character is in panic.
-  repeated CharacterRule rules = 11; // List of special rules.
-  PlayerRole revealed_role = 12; // The character's role if it has been revealed, otherwise UNKNOWN.
+  int32 id = 1; // 角色的唯一 ID。
+  string name = 2; // 角色的名称。
+  repeated string traits = 3; // 角色的当前特征。
+  LocationType current_location = 4; // 角色的当前位置。
+  int32 paranoia = 5; // 当前妄想属性。
+  int32 goodwill = 6; // 当前好感属性。
+  int32 intrigue = 7; // 当前阴谋属性。
+  repeated Ability abilities = 8; // 能力列表。
+  bool is_alive = 9; // 角色是否存活。
+  bool in_panic_mode = 10; // 角色是否处于恐慌模式。
+  repeated CharacterRule rules = 11; // 特殊规则列表。
+  PlayerRole revealed_role = 12; // 如果角色身份已揭示，则为该身份，否则为 UNKNOWN。
 }
 
-// PlayerViewPlayer is a sanitized version of a Player for client display.
-// It omits private information like the other player's hand.
+// PlayerViewPlayer 是用于客户端显示的玩家清理版本。
+// 它省略了私人信息，例如其他玩家的手牌。
 message PlayerViewPlayer {
-  int32 id = 1; // Player's unique ID.
-  string name = 2; // Player's name.
-  PlayerRole role = 3; // Player's role.
+  int32 id = 1; // 玩家的唯一 ID。
+  string name = 2; // 玩家的名称。
+  PlayerRole role = 3; // 玩家的角色。
 }

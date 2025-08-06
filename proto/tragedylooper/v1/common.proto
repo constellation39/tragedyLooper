@@ -6,7 +6,7 @@ import "tragedylooper/v1/enums.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
-// Empty is a placeholder for messages that have no data.
+// Empty 是没有数据消息的占位符。
 message Empty {}
 
 // Choice 表示玩家可以做出的选择。
@@ -22,21 +22,21 @@ message Choice {
   }
 }
 
-// Comparator defines a universal set of comparison operators.
-// This is used across various condition types to ensure consistency.
+// Comparator 定义了一组通用的比较操作符。
+// 这用于各种条件类型以确保一致性。
 enum Comparator {
-  // Unspecified comparator.
+  // 未指定的比较操作符。
   COMPARATOR_UNSPECIFIED = 0;
-  // Equal to.
+  // 等于。
   EQUAL_TO = 1;
-  // Not equal to.
+  // 不等于。
   NOT_EQUAL_TO = 2;
-  // Greater than.
+  // 大于。
   GREATER_THAN = 3;
-  // Less than.
+  // 小于。
   LESS_THAN = 4;
-  // Greater than or equal to.
+  // 大于或等于。
   GREATER_THAN_OR_EQUAL_TO = 5;
-  // Less than or equal to.
+  // 小于或等于。
   LESS_THAN_OR_EQUAL_TO = 6;
 }

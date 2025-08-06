@@ -16,23 +16,23 @@ message GameEvent {
   GameEventType type = 1; // 事件类型
   google.protobuf.Timestamp timestamp = 2; // 事件发生的时间戳
   EventPayload payload = 3;
-  optional Cause cause = 4; // The cause of the event
+  optional Cause cause = 4; // 事件的起因
 }
 
-// Cause defines the source of an event.
+// Cause 定义了事件的来源。
 message Cause {
   oneof cause_type {
     int32 card_id = 1;
     int32 ability_id = 2;
     int32 incident_id = 3;
-    // Could also add GameEngineTick, PlayerChoice, etc.
+    // 也可以添加 GameEngineTick, PlayerChoice 等。
   }
 }
 
 message EventPayload {
   oneof payload {
     CharacterMovedEvent character_moved = 1;
-    StatAdjustedEvent stat_adjusted = 2; // Replaces Paranoia, Goodwill, Intrigue events
+    StatAdjustedEvent stat_adjusted = 2; // 替换了妄想、好感、阴谋事件
     LoopLossEvent loop_loss = 5;
     LoopWinEvent loop_win = 6;
     AbilityUsedEvent ability_used = 7;
@@ -44,7 +44,7 @@ message EventPayload {
     ChoiceRequiredEvent choice_required = 13;
     IncidentTriggeredEvent incident_triggered = 14;
     TragedyTriggeredEvent tragedy_triggered = 15;
-    TraitAdjustedEvent trait_adjusted = 16; // Replaces TraitAdded, TraitRemoved events
+    TraitAdjustedEvent trait_adjusted = 16; // 替换了特性添加、移除事件
     PlayerActionTakenEvent player_action_taken = 18;
   }
 }
@@ -116,7 +116,7 @@ message GameEndedEvent {
 
 // 需要玩家做出选择的事件
 message ChoiceRequiredEvent {
-  string request_id = 1; // A unique ID for this choice request, e.g. "card_22_target"
+  string request_id = 1; // 此选择请求的唯一ID，例如 "card_22_target"
   int32 player_id = 2; // 需要做选择的玩家
   repeated Choice choices = 3; // 提供给玩家的选项列表
 }

@@ -7,153 +7,153 @@ import "tragedylooper/v1/enums.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
-// Effect defines the specific action of an ability, card, or rule.
+// Effect 定义了能力、卡牌或规则的具体行动。
 message Effect {
-  // The type of the effect.
+  // 效果的类型。
   oneof effect_type {
-    // Adjusts a character's stat.
+    // 调整角色的属性。
     AdjustStatEffect adjust_stat = 1;
-    // Moves a character to a different location.
+    // 将角色移动到不同的地点。
     MoveCharacterEffect move_character = 2;
-    // Forbids a character from performing an action.
+    // 禁止角色执行某个动作。
     ForbidEffect forbid = 3;
-    // Grants an ability to a character.
+    // 授予角色能力。
     GrantAbilityEffect grant_ability = 4;
-    // Reveals a character's role.
+    // 揭示角色的角色。
     RevealRoleEffect reveal_role = 5;
-    // Changes a character's role.
+    // 改变角色的角色。
     ChangeRoleEffect change_role = 6;
-    // Triggers an incident.
+    // 触发事件。
     TriggerIncidentEffect trigger_incident = 7;
-    // Ends the game.
+    // 结束游戏。
     EndGameEffect end_game = 8;
-    // Adds a trait to a character.
+    // 为角色添加特征。
     AddTraitEffect add_trait = 9;
-    // Removes a trait from a character.
+    // 从角色中移除特征。
     RemoveTraitEffect remove_trait = 10;
-    // A compound effect.
+    // 复合效果。
     CompoundEffect compound_effect = 11;
-    // A conditional effect.
+    // 条件效果。
     ConditionalEffect conditional_effect = 12;
   }
 }
 
-// ConditionalEffect defines an effect that only runs if a condition is met.
+// ConditionalEffect 定义了只有在满足条件时才运行的效果。
 message ConditionalEffect {
-  // The condition to check.
+  // 要检查的条件。
   Condition condition = 1;
-  // The effect to execute if the condition is true.
+  // 如果条件为真，则执行的效果。
   Effect then_effect = 2;
-  // Optional: The effect to execute if the condition is false.
+  // 可选：如果条件为假时执行的效果。
   optional Effect else_effect = 3;
 }
 
-// CompoundEffect defines a combination of multiple effects.
+// CompoundEffect 定义了多个效果的组合。
 message CompoundEffect {
-  // The operator to use when combining effects.
+  // 组合效果时使用的操作符。
   enum Operator {
-    // Unspecified operator.
+    // 未指定的操作符。
     OPERATOR_UNSPECIFIED = 0;
-    // Executes all effects in sequence.
+    // 按顺序执行所有效果。
     OPERATOR_SEQUENCE = 1;
-    // The player chooses one effect to execute.
+    // 玩家选择一个效果执行。
     OPERATOR_CHOOSE_ONE = 2;
   }
-  // The operator for combining effects.
+  // 组合效果的操作符。
   Operator operator = 1;
-  // A list of sub-effects.
+  // 子效果列表。
   repeated Effect sub_effects = 2;
 }
 
-// AdjustStatEffect defines an effect that adjusts a character's stat.
+// AdjustStatEffect 定义了调整角色属性的效果。
 message AdjustStatEffect {
-  // The target character.
+  // 目标角色。
   TargetSelector target = 1;
-  // The type of stat to adjust.
+  // 要调整的属性类型。
   StatType stat_type = 2;
-  // The amount to adjust the stat by (positive for increase, negative for decrease).
+  // 调整属性的量（正数增加，负数减少）。
   int32 amount = 3;
 }
 
-// MoveCharacterEffect defines an effect that moves a character.
+// MoveCharacterEffect 定义了移动角色的效果。
 message MoveCharacterEffect {
-  // The target character.
+  // 目标角色。
   TargetSelector target = 1;
-  // The destination location.
+  // 目的地。
   LocationType destination = 2;
 }
 
-// ForbidEffect defines an effect that forbids an action.
+// ForbidEffect 定义了禁止动作的效果。
 message ForbidEffect {
-  // The target character.
+  // 目标角色。
   TargetSelector target = 1;
-  // The type of action to forbid.
+  // 要禁止的动作类型。
   enum ForbidType {
-    // Unspecified forbid type.
+    // 未指定的禁止类型。
     FORBID_TYPE_UNSPECIFIED = 0;
-    // Forbids movement.
+    // 禁止移动。
     FORBID_TYPE_MOVEMENT = 1;
-    // Forbids paranoia changes.
+    // 禁止妄想变化。
     FORBID_TYPE_PARANOIA_CHANGE = 2;
-    // Forbids goodwill changes.
+    // 禁止善意变化。
     FORBID_TYPE_GOODWILL_CHANGE = 3;
-    // Forbids intrigue changes.
+    // 禁止诡计变化。
     FORBID_TYPE_INTRIGUE_CHANGE = 4;
   }
-  // The type of action to forbid.
+  // 要禁止的动作类型。
   ForbidType forbid_type = 2;
 }
 
-// GrantAbilityEffect defines an effect that grants an ability.
+// GrantAbilityEffect 定义了授予能力的效果。
 message GrantAbilityEffect {
-  // The target character.
+  // 目标角色。
   TargetSelector target = 1;
-  // The ID of the ability to grant.
+  // 要授予的能力 ID。
   int32 ability_id = 2;
-  // Whether the ability is temporary (e.g., lasts for one day or one loop).
+  // 该能力是否是临时的（例如，持续一天或一个循环）。
   bool is_temporary = 3;
 }
 
-// RevealRoleEffect defines an effect that reveals a character's role.
+// RevealRoleEffect 定义了揭示角色身份的效果。
 message RevealRoleEffect {
-  // The target character.
+  // 目标角色。
   TargetSelector target = 1;
 }
 
-// ChangeRoleEffect defines an effect that changes a character's role.
+// ChangeRoleEffect 定义了改变角色身份的效果。
 message ChangeRoleEffect {
-  // The target character.
+  // 目标角色。
   TargetSelector target = 1;
-  // The new role.
+  // 新的角色。
   int32 new_role = 2;
 }
 
-// TriggerIncidentEffect defines an effect that triggers an incident.
+// TriggerIncidentEffect 定义了触发事件的效果。
 message TriggerIncidentEffect {
-  // The ID of the incident to trigger (references an IncidentConfig in the ScriptConfig).
+  // 要触发的事件 ID（引用 ScriptConfig 中的 IncidentConfig）。
   int32 incident_id = 1;
 }
 
-// EndGameEffect defines an effect that ends the game.
+// EndGameEffect 定义了结束游戏的效果。
 message EndGameEffect {
-  // The winning player role.
+  // 获胜的玩家角色。
   PlayerRole winner = 1;
-  // The reason for the game ending.
+  // 游戏结束的原因。
   string reason = 2;
 }
 
-// AddTraitEffect defines an effect that adds a trait to a character.
+// AddTraitEffect 定义了为角色添加特征的效果。
 message AddTraitEffect {
-  // The target character.
+  // 目标角色。
   TargetSelector target = 1;
-  // The trait to add.
+  // 要添加的特征。
   string trait = 2;
 }
 
-// RemoveTraitEffect defines an effect that removes a trait from a character.
+// RemoveTraitEffect 定义了从角色中移除特征的效果。
 message RemoveTraitEffect {
-  // The target character.
+  // 目标角色。
   TargetSelector target = 1;
-  // The trait to remove.
+  // 要移除的特征。
   string trait = 2;
 }

@@ -122,7 +122,7 @@ enum GameEventType {
   GAME_EVENT_TYPE_PLAYER_ACTION = 24; // 玩家行动事件
 }
 
-// StatType defines the type of character stat.
+// StatType 定义了角色属性的类型。
 enum StatType {
   STAT_TYPE_UNSPECIFIED = 0;
   STAT_TYPE_PARANOIA = 1;
@@ -130,12 +130,12 @@ enum StatType {
   STAT_TYPE_INTRIGUE = 3;
 }
 
-// GoodwillRuleType defines how goodwill is handled for a character.
+// GoodwillRuleType 定义了如何处理角色的好感度。
 enum GoodwillRuleType {
-  // The default behavior.
+  // 默认行为。
   GOODWILL_RULE_TYPE_UNSPECIFIED = 0;
-  // The character ignores goodwill checks.
+  // 角色忽略好感度检查。
   GOODWILL_RULE_TYPE_IGNORE_CHECKS = 1;
-  // The character always ignores goodwill checks, and cannot be targeted by goodwill-related effects.
+  // 角色总是忽略好感度检查，并且不能成为好感度相关效果的目标。
   GOODWILL_RULE_TYPE_ALWAYS_IGNORE = 2;
 }
