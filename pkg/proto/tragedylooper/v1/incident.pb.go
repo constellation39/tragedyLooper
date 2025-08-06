@@ -24,10 +24,7 @@ const (
 // 事件实例，在游戏运行时创建
 type Incident struct {
 	state                protoimpl.MessageState `protogen:"open.v1"`
-	Config               *IncidentConfig        `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`           // 事件唯一ID
-	Name                 string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`               // 事件名称
-	Day                  int32                  `protobuf:"varint,3,opt,name=day,proto3" json:"day,omitempty"`                // 事件发生的日期
-	Description          string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"` // 事件描述
+	Config               *IncidentConfig        `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"` // 事件唯一ID
 	HasTriggeredThisLoop bool                   `protobuf:"varint,7,opt,name=has_triggered_this_loop,json=hasTriggeredThisLoop,proto3" json:"has_triggered_this_loop,omitempty"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
@@ -68,27 +65,6 @@ func (x *Incident) GetConfig() *IncidentConfig {
 		return x.Config
 	}
 	return nil
-}
-
-func (x *Incident) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *Incident) GetDay() int32 {
-	if x != nil {
-		return x.Day
-	}
-	return 0
-}
-
-func (x *Incident) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
 }
 
 func (x *Incident) GetHasTriggeredThisLoop() bool {
@@ -211,12 +187,9 @@ var File_tragedylooper_v1_incident_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_incident_proto_rawDesc = "" +
 	"\n" +
-	"\x1ftragedylooper/v1/incident.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1dtragedylooper/v1/effect.proto\"\xc3\x01\n" +
+	"\x1ftragedylooper/v1/incident.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1dtragedylooper/v1/effect.proto\"{\n" +
 	"\bIncident\x128\n" +
-	"\x06config\x18\x01 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x06config\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x10\n" +
-	"\x03day\x18\x03 \x01(\x05R\x03day\x12 \n" +
-	"\vdescription\x18\x06 \x01(\tR\vdescription\x125\n" +
+	"\x06config\x18\x01 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x06config\x125\n" +
 	"\x17has_triggered_this_loop\x18\a \x01(\bR\x14hasTriggeredThisLoop\"\xd3\x02\n" +
 	"\x0eIncidentConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +

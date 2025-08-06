@@ -609,109 +609,6 @@ var _ interface {
 	ErrorName() string
 } = ScriptConfigValidationError{}
 
-// Validate checks the field values on ScriptSet with the rules defined in the
-// proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *ScriptSet) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ScriptSet with the rules defined in
-// the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in ScriptSetMultiError, or nil
-// if none found.
-func (m *ScriptSet) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ScriptSet) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Name
-
-	// no validation rules for Number
-
-	if len(errors) > 0 {
-		return ScriptSetMultiError(errors)
-	}
-
-	return nil
-}
-
-// ScriptSetMultiError is an error wrapping multiple validation errors returned
-// by ScriptSet.ValidateAll() if the designated constraints aren't met.
-type ScriptSetMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ScriptSetMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ScriptSetMultiError) AllErrors() []error { return m }
-
-// ScriptSetValidationError is the validation error returned by
-// ScriptSet.Validate if the designated constraints aren't met.
-type ScriptSetValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ScriptSetValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ScriptSetValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ScriptSetValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ScriptSetValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ScriptSetValidationError) ErrorName() string { return "ScriptSetValidationError" }
-
-// Error satisfies the builtin error interface
-func (e ScriptSetValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sScriptSet.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ScriptSetValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ScriptSetValidationError{}
-
 // Validate checks the field values on DifficultySet with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -1227,40 +1124,6 @@ func (m *ScriptMetadata) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	for idx, item := range m.GetSet() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ScriptMetadataValidationError{
-						field:  fmt.Sprintf("Set[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ScriptMetadataValidationError{
-						field:  fmt.Sprintf("Set[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ScriptMetadataValidationError{
-					field:  fmt.Sprintf("Set[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
 	// no validation rules for TragedySet
 
 	if m.GetDaysPerLoop() <= 0 {
@@ -1542,9 +1405,9 @@ func (m *ScriptModel) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetPrivateInfo() == nil {
+	if m.GetPrivateConfig() == nil {
 		err := ScriptModelValidationError{
-			field:  "PrivateInfo",
+			field:  "PrivateConfig",
 			reason: "value is required",
 		}
 		if !all {
@@ -1554,11 +1417,11 @@ func (m *ScriptModel) validate(all bool) error {
 	}
 
 	if all {
-		switch v := interface{}(m.GetPrivateInfo()).(type) {
+		switch v := interface{}(m.GetPrivateConfig()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, ScriptModelValidationError{
-					field:  "PrivateInfo",
+					field:  "PrivateConfig",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -1566,25 +1429,25 @@ func (m *ScriptModel) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, ScriptModelValidationError{
-					field:  "PrivateInfo",
+					field:  "PrivateConfig",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetPrivateInfo()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetPrivateConfig()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return ScriptModelValidationError{
-				field:  "PrivateInfo",
+				field:  "PrivateConfig",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
 		}
 	}
 
-	if m.GetPublicInfo() == nil {
+	if m.GetPublicConfig() == nil {
 		err := ScriptModelValidationError{
-			field:  "PublicInfo",
+			field:  "PublicConfig",
 			reason: "value is required",
 		}
 		if !all {
@@ -1594,11 +1457,11 @@ func (m *ScriptModel) validate(all bool) error {
 	}
 
 	if all {
-		switch v := interface{}(m.GetPublicInfo()).(type) {
+		switch v := interface{}(m.GetPublicConfig()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, ScriptModelValidationError{
-					field:  "PublicInfo",
+					field:  "PublicConfig",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -1606,16 +1469,16 @@ func (m *ScriptModel) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, ScriptModelValidationError{
-					field:  "PublicInfo",
+					field:  "PublicConfig",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetPublicInfo()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetPublicConfig()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return ScriptModelValidationError{
-				field:  "PublicInfo",
+				field:  "PublicConfig",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -1739,22 +1602,22 @@ var _ interface {
 	ErrorName() string
 } = ScriptModelValidationError{}
 
-// Validate checks the field values on PrivateInfo with the rules defined in
+// Validate checks the field values on PrivateConfig with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *PrivateInfo) Validate() error {
+func (m *PrivateConfig) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on PrivateInfo with the rules defined in
-// the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in PrivateInfoMultiError, or
+// ValidateAll checks the field values on PrivateConfig with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in PrivateConfigMultiError, or
 // nil if none found.
-func (m *PrivateInfo) ValidateAll() error {
+func (m *PrivateConfig) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *PrivateInfo) validate(all bool) error {
+func (m *PrivateConfig) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1762,7 +1625,7 @@ func (m *PrivateInfo) validate(all bool) error {
 	var errors []error
 
 	if m.GetMainPlotId() <= 0 {
-		err := PrivateInfoValidationError{
+		err := PrivateConfigValidationError{
 			field:  "MainPlotId",
 			reason: "value must be greater than 0",
 		}
@@ -1773,7 +1636,7 @@ func (m *PrivateInfo) validate(all bool) error {
 	}
 
 	if len(m.GetSubPlotsIds()) < 1 {
-		err := PrivateInfoValidationError{
+		err := PrivateConfigValidationError{
 			field:  "SubPlotsIds",
 			reason: "value must contain at least 1 item(s)",
 		}
@@ -1784,7 +1647,7 @@ func (m *PrivateInfo) validate(all bool) error {
 	}
 
 	if len(m.GetCharactersIds()) < 1 {
-		err := PrivateInfoValidationError{
+		err := PrivateConfigValidationError{
 			field:  "CharactersIds",
 			reason: "value must contain at least 1 item(s)",
 		}
@@ -1795,7 +1658,7 @@ func (m *PrivateInfo) validate(all bool) error {
 	}
 
 	if len(m.GetIncidentIds()) < 1 {
-		err := PrivateInfoValidationError{
+		err := PrivateConfigValidationError{
 			field:  "IncidentIds",
 			reason: "value must contain at least 1 item(s)",
 		}
@@ -1806,7 +1669,7 @@ func (m *PrivateInfo) validate(all bool) error {
 	}
 
 	if len(m.GetRoleAssignments()) < 1 {
-		err := PrivateInfoValidationError{
+		err := PrivateConfigValidationError{
 			field:  "RoleAssignments",
 			reason: "value must contain at least 1 pair(s)",
 		}
@@ -1817,18 +1680,19 @@ func (m *PrivateInfo) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return PrivateInfoMultiError(errors)
+		return PrivateConfigMultiError(errors)
 	}
 
 	return nil
 }
 
-// PrivateInfoMultiError is an error wrapping multiple validation errors
-// returned by PrivateInfo.ValidateAll() if the designated constraints aren't met.
-type PrivateInfoMultiError []error
+// PrivateConfigMultiError is an error wrapping multiple validation errors
+// returned by PrivateConfig.ValidateAll() if the designated constraints
+// aren't met.
+type PrivateConfigMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m PrivateInfoMultiError) Error() string {
+func (m PrivateConfigMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1837,11 +1701,11 @@ func (m PrivateInfoMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m PrivateInfoMultiError) AllErrors() []error { return m }
+func (m PrivateConfigMultiError) AllErrors() []error { return m }
 
-// PrivateInfoValidationError is the validation error returned by
-// PrivateInfo.Validate if the designated constraints aren't met.
-type PrivateInfoValidationError struct {
+// PrivateConfigValidationError is the validation error returned by
+// PrivateConfig.Validate if the designated constraints aren't met.
+type PrivateConfigValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1849,22 +1713,22 @@ type PrivateInfoValidationError struct {
 }
 
 // Field function returns field value.
-func (e PrivateInfoValidationError) Field() string { return e.field }
+func (e PrivateConfigValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e PrivateInfoValidationError) Reason() string { return e.reason }
+func (e PrivateConfigValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e PrivateInfoValidationError) Cause() error { return e.cause }
+func (e PrivateConfigValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e PrivateInfoValidationError) Key() bool { return e.key }
+func (e PrivateConfigValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e PrivateInfoValidationError) ErrorName() string { return "PrivateInfoValidationError" }
+func (e PrivateConfigValidationError) ErrorName() string { return "PrivateConfigValidationError" }
 
 // Error satisfies the builtin error interface
-func (e PrivateInfoValidationError) Error() string {
+func (e PrivateConfigValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1876,14 +1740,14 @@ func (e PrivateInfoValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sPrivateInfo.%s: %s%s",
+		"invalid %sPrivateConfig.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = PrivateInfoValidationError{}
+var _ error = PrivateConfigValidationError{}
 
 var _ interface {
 	Field() string
@@ -1891,24 +1755,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = PrivateInfoValidationError{}
+} = PrivateConfigValidationError{}
 
-// Validate checks the field values on PublicInfo with the rules defined in the
-// proto definition for this message. If any rules are violated, the first
+// Validate checks the field values on PublicConfig with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *PublicInfo) Validate() error {
+func (m *PublicConfig) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on PublicInfo with the rules defined in
-// the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in PublicInfoMultiError, or
+// ValidateAll checks the field values on PublicConfig with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in PublicConfigMultiError, or
 // nil if none found.
-func (m *PublicInfo) ValidateAll() error {
+func (m *PublicConfig) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *PublicInfo) validate(all bool) error {
+func (m *PublicConfig) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1916,7 +1780,7 @@ func (m *PublicInfo) validate(all bool) error {
 	var errors []error
 
 	if m.GetScriptConfigId() <= 0 {
-		err := PublicInfoValidationError{
+		err := PublicConfigValidationError{
 			field:  "ScriptConfigId",
 			reason: "value must be greater than 0",
 		}
@@ -1927,7 +1791,7 @@ func (m *PublicInfo) validate(all bool) error {
 	}
 
 	if m.GetLoopCount() <= 0 {
-		err := PublicInfoValidationError{
+		err := PublicConfigValidationError{
 			field:  "LoopCount",
 			reason: "value must be greater than 0",
 		}
@@ -1938,7 +1802,7 @@ func (m *PublicInfo) validate(all bool) error {
 	}
 
 	if m.GetDaysPerLoop() <= 0 {
-		err := PublicInfoValidationError{
+		err := PublicConfigValidationError{
 			field:  "DaysPerLoop",
 			reason: "value must be greater than 0",
 		}
@@ -1951,7 +1815,7 @@ func (m *PublicInfo) validate(all bool) error {
 	// no validation rules for CanDiscuss
 
 	if len(m.GetScheduledIncidentIds()) < 1 {
-		err := PublicInfoValidationError{
+		err := PublicConfigValidationError{
 			field:  "ScheduledIncidentIds",
 			reason: "value must contain at least 1 item(s)",
 		}
@@ -1962,18 +1826,18 @@ func (m *PublicInfo) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return PublicInfoMultiError(errors)
+		return PublicConfigMultiError(errors)
 	}
 
 	return nil
 }
 
-// PublicInfoMultiError is an error wrapping multiple validation errors
-// returned by PublicInfo.ValidateAll() if the designated constraints aren't met.
-type PublicInfoMultiError []error
+// PublicConfigMultiError is an error wrapping multiple validation errors
+// returned by PublicConfig.ValidateAll() if the designated constraints aren't met.
+type PublicConfigMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m PublicInfoMultiError) Error() string {
+func (m PublicConfigMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1982,11 +1846,11 @@ func (m PublicInfoMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m PublicInfoMultiError) AllErrors() []error { return m }
+func (m PublicConfigMultiError) AllErrors() []error { return m }
 
-// PublicInfoValidationError is the validation error returned by
-// PublicInfo.Validate if the designated constraints aren't met.
-type PublicInfoValidationError struct {
+// PublicConfigValidationError is the validation error returned by
+// PublicConfig.Validate if the designated constraints aren't met.
+type PublicConfigValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1994,22 +1858,22 @@ type PublicInfoValidationError struct {
 }
 
 // Field function returns field value.
-func (e PublicInfoValidationError) Field() string { return e.field }
+func (e PublicConfigValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e PublicInfoValidationError) Reason() string { return e.reason }
+func (e PublicConfigValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e PublicInfoValidationError) Cause() error { return e.cause }
+func (e PublicConfigValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e PublicInfoValidationError) Key() bool { return e.key }
+func (e PublicConfigValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e PublicInfoValidationError) ErrorName() string { return "PublicInfoValidationError" }
+func (e PublicConfigValidationError) ErrorName() string { return "PublicConfigValidationError" }
 
 // Error satisfies the builtin error interface
-func (e PublicInfoValidationError) Error() string {
+func (e PublicConfigValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -2021,14 +1885,14 @@ func (e PublicInfoValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sPublicInfo.%s: %s%s",
+		"invalid %sPublicConfig.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = PublicInfoValidationError{}
+var _ error = PublicConfigValidationError{}
 
 var _ interface {
 	Field() string
@@ -2036,7 +1900,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = PublicInfoValidationError{}
+} = PublicConfigValidationError{}
 
 // Validate checks the field values on RoleConfig with the rules defined in the
 // proto definition for this message. If any rules are violated, the first

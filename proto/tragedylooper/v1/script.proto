@@ -46,7 +46,6 @@ message ScriptConfig {
 
 
 message DifficultySet {
-  // 游戏中的循环次数
   int32 number_of_loops = 1; // 循环次数
   // 难度等级
   int32 difficulty = 2; // 难度等级

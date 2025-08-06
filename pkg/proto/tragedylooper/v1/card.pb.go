@@ -135,8 +135,6 @@ func (x *CardConfig) GetPriority() int32 {
 // 它结合了静态配置和动态、可变的状态。
 type Card struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 卡牌的唯一ID，为方便起见从其配置中复制。
-	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// 卡牌的静态配置。
 	Config *CardConfig `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"`
 	// 该卡牌是否在当前循环中使用过。
@@ -175,13 +173,6 @@ func (x *Card) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Card.ProtoReflect.Descriptor instead.
 func (*Card) Descriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_card_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *Card) GetId() int32 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
 }
 
 func (x *Card) GetConfig() *CardConfig {
@@ -266,9 +257,8 @@ const file_tragedylooper_v1_card_proto_rawDesc = "" +
 	"owner_role\x18\x05 \x01(\x0e2\x1c.tragedylooper.v1.PlayerRoleR\townerRole\x128\n" +
 	"\x06effect\x18\x06 \x01(\v2 .tragedylooper.v1.CompoundEffectR\x06effect\x12\"\n" +
 	"\ronce_per_loop\x18\a \x01(\bR\voncePerLoop\x12\x1a\n" +
-	"\bpriority\x18\b \x01(\x05R\bpriority\"\xb5\x01\n" +
-	"\x04Card\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id\x124\n" +
+	"\bpriority\x18\b \x01(\x05R\bpriority\"\xa5\x01\n" +
+	"\x04Card\x124\n" +
 	"\x06config\x18\x02 \x01(\v2\x1c.tragedylooper.v1.CardConfigR\x06config\x12$\n" +
 	"\x0eused_this_loop\x18\x03 \x01(\bR\fusedThisLoop\x12A\n" +
 	"\x0fresolved_target\x18\x04 \x01(\v2\x18.tragedylooper.v1.ChoiceR\x0eresolvedTarget\"8\n" +

@@ -32,8 +32,6 @@ message CardConfig {
 // Card 表示玩家手牌中或场上的卡牌实例。
 // 它结合了静态配置和动态、可变的状态。
 message Card {
-  // 卡牌的唯一ID，为方便起见从其配置中复制。
-  int32 id = 1;
   // 卡牌的静态配置。
   CardConfig config = 2;
   // 该卡牌是否在当前循环中使用过。

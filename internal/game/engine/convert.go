@@ -2,24 +2,28 @@
 package engine
 
 import (
+	"github.com/constellation39/tragedyLooper/internal/game/loader"
 	pb "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 	"github.com/google/uuid"
 )
 
 // InitializeGameStateFromScript converts a ScriptConfig and ScriptModel protobuf message to a GameState message.
-func InitializeGameStateFromScript(script *pb.ScriptModel, config *pb.ScriptConfig) *pb.GameState {
-	if config == nil || script == nil {
+func InitializeGameStateFromScript(players []*pb.Player, gameConfig loader.ScriptConfig) *pb.GameState {
+	script := gameConfig.GetScript()
+	model := gameConfig.GetModel()
+
+	if model == nil || script == nil {
 		return nil
 	}
 
-	characters := make(map[int32]*pb.Character, len(script.PrivateInfo.CharactersIds))
-	for _, charID := range script.PrivateInfo.CharactersIds {
-		charConfig, ok := config.Characters[charID]
+	characters := make(map[int32]*pb.Character, len(model.PrivateConfig.CharactersIds))
+	for _, charID := range model.PrivateConfig.CharactersIds {
+		charConfig, ok := script.Characters[charID]
 		if !ok {
-			// Handle error: character config not found for ID
+			// Handle error: character model not found for ID
 			continue
 		}
-		roleID, ok := script.PrivateInfo.RoleAssignments[charID]
+		roleID, ok := model.PrivateConfig.RoleAssignments[charID]
 		if !ok {
 			// Handle error: role assignment not found for character
 			// Assign a default or unknown role
@@ -31,17 +35,41 @@ func InitializeGameStateFromScript(script *pb.ScriptModel, config *pb.ScriptConf
 	// Incidents, cards etc. would be initialized and held by the engine, not directly in the active GameState
 	// The GameState holds the *current* state, not the library of all possible items.
 
+	for _, player := range players {
+		if player.Role == pb.PlayerRole_PLAYER_ROLE_MASTERMIND {
+
+		}
+
+		switch player.Role {
+		case pb.PlayerRole_PLAYER_ROLE_PROTAGONIST:
+			player.Hand = &pb.CardList{Cards: make([]*pb.Card, 0)}
+			player.Hand.Cards = newCardsFromConfig(script.ProtagonistCards)
+		case pb.PlayerRole_PLAYER_ROLE_MASTERMIND:
+			player.Hand = &pb.CardList{Cards: make([]*pb.Card, 0)}
+			player.Hand.Cards = newCardsFromConfig(script.MastermindCards)
+		}
+
+	}
+
 	return &pb.GameState{
 		GameId:             uuid.New().String(),
 		Tick:               0,
 		CurrentLoop:        1, // Game starts on Loop 1
-		DaysPerLoop:        script.PublicInfo.DaysPerLoop,
+		DaysPerLoop:        model.PublicConfig.DaysPerLoop,
 		CurrentDay:         0, // Starts before Day 1 begins
 		CurrentPhase:       pb.GamePhase_GAME_PHASE_SETUP,
 		Characters:         characters,
 		Players:            make(map[int32]*pb.Player), // Players will be added later
 		TriggeredIncidents: make(map[int32]bool),
 	}
+}
+
+func newCardsFromConfig(configs map[int32]*pb.CardConfig) []*pb.Card {
+	cards := make([]*pb.Card, 0, len(configs))
+	for _, cardConfig := range configs {
+		cards = append(cards, NewCardFromConfig(cardConfig))
+	}
+	return cards
 }
 
 // NewCharacterFromConfig converts a CharacterConfig protobuf message to a Character runtime instance.
@@ -89,18 +117,8 @@ func NewIncidentFromConfig(config *pb.IncidentConfig) *pb.Incident {
 		return nil
 	}
 
-	effects := make([]*pb.Effect, len(config.Effect))
-	for i, effectConfig := range config.Effects {
-		effects[i] = NewEffectFromConfig(effectConfig)
-	}
-
 	return &pb.Incident{
 		Config:               config,
-		Name:                 config.Name,
-		Day:                  0,
-		Culprit:              config.Culprit,
-		Victim:               "",
-		Description:          "",
 		HasTriggeredThisLoop: false,
 	}
 }
@@ -111,20 +129,10 @@ func NewCardFromConfig(config *pb.CardConfig) *pb.Card {
 		return nil
 	}
 
-	abilities := make([]*pb.Ability, len(config.Abilities))
-	for i, abilityConfig := range config.Abilities {
-		abilities[i] = NewAbilityFromConfig(abilityConfig)
-	}
-
 	return &pb.Card{
-		Name:         config.Name,
-		Type:         config.Type,
-		SerialNumber: config.SerialNumber,
-		Text:         config.Text,
-		Traits:       config.Traits,
-		Abilities:    abilities,
-		FlavorText:   config.FlavorText,
-		Cost:         config.Cost,
+		Config:         config,
+		UsedThisLoop:   false,
+		ResolvedTarget: nil,
 	}
 }
 
@@ -134,27 +142,9 @@ func NewAbilityFromConfig(config *pb.AbilityConfig) *pb.Ability {
 		return nil
 	}
 
-	effects := make([]*pb.Effect, len(config.Effects))
-	for i, effectConfig := range config.Effects {
-		effects[i] = NewEffectFromConfig(effectConfig)
-	}
-
 	return &pb.Ability{
-		Text:         config.Text,
-		Trigger:      config.Trigger,
-		Effects:      effects,
-		IsMandatory:  config.IsMandatory,
-		TargetFilter: config.TargetFilter,
-		Cost:         config.Cost,
-	}
-}
-
-// NewEffectFromConfig converts an EffectConfig protobuf message to an Effect message.
-func NewEffectFromConfig(config *pb.EffectConfig) *pb.Effect {
-	if config == nil {
-		return nil
-	}
-	return &pb.Effect{
-		Effect: config.Effect,
+		Config:           config,
+		UsedThisLoop:     false,
+		OwnerCharacterId: 0,
 	}
 }

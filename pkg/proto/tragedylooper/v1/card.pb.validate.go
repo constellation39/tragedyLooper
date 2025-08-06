@@ -198,8 +198,6 @@ func (m *Card) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
-
 	if all {
 		switch v := interface{}(m.GetConfig()).(type) {
 		case interface{ ValidateAll() error }:

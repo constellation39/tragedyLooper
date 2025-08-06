@@ -10,9 +10,6 @@ option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 // 事件实例，在游戏运行时创建
 message Incident {
   IncidentConfig config = 1; // 事件唯一ID
-  string name = 2; // 事件名称
-  int32 day = 3; // 事件发生的日期
-  string description = 6; // 事件描述
   bool has_triggered_this_loop = 7;
 }
 

@@ -86,12 +86,6 @@ func (m *Incident) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for Name
-
-	// no validation rules for Day
-
-	// no validation rules for Description
-
 	// no validation rules for HasTriggeredThisLoop
 
 	if len(errors) > 0 {

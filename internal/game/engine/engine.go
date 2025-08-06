@@ -116,19 +116,6 @@ func (ge *GameEngine) initializeGameState(players []*model.Player) {
 	ge.GameState.Players = playerMap
 }
 
-func (ge *GameEngine) dealInitialCards() {
-	cardConfigs := ge.scriptConfig.GetCards()
-
-	for _, player := range ge.GameState.Players {
-		player.Hand = &model.CardList{Cards: make([]*model.Card, 0, len(cardConfigs))}
-		for _, cardConfig := range cardConfigs {
-			if cardConfig.OwnerRole == player.Role {
-				player.Hand.Cards = append(player.Hand.Cards, &model.Card{Config: cardConfig})
-			}
-		}
-	}
-}
-
 // Start 启动游戏主循环。
 func (ge *GameEngine) Start() {
 	go ge.runGameLoop()
