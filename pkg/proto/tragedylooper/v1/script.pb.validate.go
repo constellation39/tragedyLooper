@@ -81,6 +81,17 @@ func (m *ScriptConfig) validate(all bool) error {
 
 	// no validation rules for Description
 
+	if len(m.GetMainPlots()) < 1 {
+		err := ScriptConfigValidationError{
+			field:  "MainPlots",
+			reason: "value must contain at least 1 pair(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	{
 		sorted_keys := make([]int32, len(m.GetMainPlots()))
 		i := 0
@@ -1194,9 +1205,27 @@ func (m *ScriptMetadata) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Title
+	if utf8.RuneCountInString(m.GetTitle()) < 1 {
+		err := ScriptMetadataValidationError{
+			field:  "Title",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for Creator
+	if utf8.RuneCountInString(m.GetCreator()) < 1 {
+		err := ScriptMetadataValidationError{
+			field:  "Creator",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	for idx, item := range m.GetSet() {
 		_, _ = idx, item
@@ -1234,7 +1263,27 @@ func (m *ScriptMetadata) validate(all bool) error {
 
 	// no validation rules for TragedySet
 
-	// no validation rules for DaysPerLoop
+	if m.GetDaysPerLoop() <= 0 {
+		err := ScriptMetadataValidationError{
+			field:  "DaysPerLoop",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(m.GetDifficultySets()) < 1 {
+		err := ScriptMetadataValidationError{
+			field:  "DifficultySets",
+			reason: "value must contain at least 1 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	for idx, item := range m.GetDifficultySets() {
 		_, _ = idx, item
@@ -1268,6 +1317,28 @@ func (m *ScriptMetadata) validate(all bool) error {
 			}
 		}
 
+	}
+
+	if len(m.GetMainPlot()) < 1 {
+		err := ScriptMetadataValidationError{
+			field:  "MainPlot",
+			reason: "value must contain at least 1 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(m.GetCast()) < 1 {
+		err := ScriptMetadataValidationError{
+			field:  "Cast",
+			reason: "value must contain at least 1 pair(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
 	{
@@ -1471,6 +1542,17 @@ func (m *ScriptModel) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if m.GetPrivateInfo() == nil {
+		err := ScriptModelValidationError{
+			field:  "PrivateInfo",
+			reason: "value is required",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if all {
 		switch v := interface{}(m.GetPrivateInfo()).(type) {
 		case interface{ ValidateAll() error }:
@@ -1500,6 +1582,17 @@ func (m *ScriptModel) validate(all bool) error {
 		}
 	}
 
+	if m.GetPublicInfo() == nil {
+		err := ScriptModelValidationError{
+			field:  "PublicInfo",
+			reason: "value is required",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if all {
 		switch v := interface{}(m.GetPublicInfo()).(type) {
 		case interface{ ValidateAll() error }:
@@ -1527,6 +1620,17 @@ func (m *ScriptModel) validate(all bool) error {
 				cause:  err,
 			}
 		}
+	}
+
+	if m.GetMetadata() == nil {
+		err := ScriptModelValidationError{
+			field:  "Metadata",
+			reason: "value is required",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
 	if all {
@@ -1657,9 +1761,60 @@ func (m *PrivateInfo) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for MainPlotId
+	if m.GetMainPlotId() <= 0 {
+		err := PrivateInfoValidationError{
+			field:  "MainPlotId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for RoleAssignments
+	if len(m.GetSubPlotsIds()) < 1 {
+		err := PrivateInfoValidationError{
+			field:  "SubPlotsIds",
+			reason: "value must contain at least 1 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(m.GetCharactersIds()) < 1 {
+		err := PrivateInfoValidationError{
+			field:  "CharactersIds",
+			reason: "value must contain at least 1 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(m.GetIncidentIds()) < 1 {
+		err := PrivateInfoValidationError{
+			field:  "IncidentIds",
+			reason: "value must contain at least 1 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(m.GetRoleAssignments()) < 1 {
+		err := PrivateInfoValidationError{
+			field:  "RoleAssignments",
+			reason: "value must contain at least 1 pair(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return PrivateInfoMultiError(errors)
@@ -1794,6 +1949,17 @@ func (m *PublicInfo) validate(all bool) error {
 	}
 
 	// no validation rules for CanDiscuss
+
+	if len(m.GetScheduledIncidentIds()) < 1 {
+		err := PublicInfoValidationError{
+			field:  "ScheduledIncidentIds",
+			reason: "value must contain at least 1 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return PublicInfoMultiError(errors)

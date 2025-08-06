@@ -22,7 +22,7 @@ message ScriptConfig {
   string description = 3;
 
   // Main plot configurations. ID range: 1000-1999
-  map<int32, PlotConfig> main_plots = 4 [ (validate.rules).map.keys.int32 = { gte: 1000, lt: 2000 } ];
+  map<int32, PlotConfig> main_plots = 4 [ (validate.rules).map = { min_pairs: 1, keys: { int32: { gte: 1000, lt: 2000 } } } ];
   // Sub plot configurations. ID range: 2000-2999
   map<int32, PlotConfig> sub_plots = 5 [ (validate.rules).map.keys.int32 = { gte: 2000, lt: 3000 } ];
 
@@ -73,15 +73,15 @@ message CastAssignment {
 }
 
 message ScriptMetadata {
-  string title = 1;
-  string creator = 2;
+  string title = 1 [ (validate.rules).string.min_len = 1 ];
+  string creator = 2 [ (validate.rules).string.min_len = 1 ];
   repeated ScriptSet set = 3;
   string tragedy_set = 4;
-  int32 days_per_loop = 5;
-  repeated DifficultySet difficulty_sets = 6;
-  repeated string main_plot = 7;
+  int32 days_per_loop = 5 [ (validate.rules).int32.gt = 0 ];
+  repeated DifficultySet difficulty_sets = 6 [ (validate.rules).repeated.min_items = 1 ];
+  repeated string main_plot = 7 [ (validate.rules).repeated.min_items = 1 ];
   repeated string sub_plots = 8;
-  map<string, CastAssignment> cast = 9;
+  map<string, CastAssignment> cast = 9 [ (validate.rules).map.min_pairs = 1 ];
   repeated IncidentInstance incidents = 10;
   string victory_conditions = 11;
   string story = 12;
@@ -95,25 +95,25 @@ message ScriptMetadata {
 message ScriptModel {
   int32 id = 1 [ (validate.rules).int32.gt = 0 ];
   // Private information for the script.
-  PrivateInfo private_info = 2;
+  PrivateInfo private_info = 2 [ (validate.rules).message.required = true ];
   // Public information for the script.
-  PublicInfo public_info = 3;
+  PublicInfo public_info = 3 [ (validate.rules).message.required = true ];
   // Descriptive metadata for the script.
-  ScriptMetadata metadata = 4;
+  ScriptMetadata metadata = 4 [ (validate.rules).message.required = true ];
 }
 
 // PrivateInfo defines the private information for a script.
 message PrivateInfo {
   // The main plot of the script.
-  int32 main_plot_id = 1;
+  int32 main_plot_id = 1 [ (validate.rules).int32.gt = 0 ];
   // A list of sub plots for the script.
-  repeated int32 sub_plots_ids = 2;
+  repeated int32 sub_plots_ids = 2 [ (validate.rules).repeated.min_items = 1 ];
   // A map of characters in the script.
-  repeated int32 characters_ids = 3;
+  repeated int32 characters_ids = 3 [ (validate.rules).repeated.min_items = 1 ];
   // A map of incidents in the script.
-  repeated int32 incident_ids = 4;
+  repeated int32 incident_ids = 4 [ (validate.rules).repeated.min_items = 1 ];
   // A map of character to role assignments, derived from the selected plots.
-  map<int32, int32> role_assignments = 5;
+  map<int32, int32> role_assignments = 5 [ (validate.rules).map.min_pairs = 1 ];
 }
 
 
@@ -134,7 +134,7 @@ message PublicInfo {
   // A map of special incidents.
   repeated int32 special_incident_ids = 5;
   // A map of scheduled incidents.
-  repeated int32 scheduled_incident_ids = 6;
+  repeated int32 scheduled_incident_ids = 6 [ (validate.rules).repeated.min_items = 1 ];
 }
 
 // RoleConfig defines the configuration for a role.
@@ -158,7 +158,7 @@ message PlotConfig {
   // The unique identifier for the plot.
   int32 id = 1 [ (validate.rules).int32.gt = 0 ];
   // The type of the plot.
-  PlotType plot_type = 2 [json_name = "type"];
+  PlotType plot_type = 2 [ json_name = "type" ];
   // The name of the plot.
   string name = 3 [ (validate.rules).string.min_len = 1 ];
   // A description of the plot.

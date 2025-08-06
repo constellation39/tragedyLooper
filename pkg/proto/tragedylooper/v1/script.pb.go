@@ -1053,14 +1053,13 @@ var File_tragedylooper_v1_script_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_script_proto_rawDesc = "" +
 	"\n" +
-	"\x1dtragedylooper/v1/script.proto\x12\x10tragedylooper.v1\x1a\x17validate/validate.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1ftragedylooper/v1/incident.proto\x1a tragedylooper/v1/character.proto\x1a\x1btragedylooper/v1/card.proto\x1a\x1etragedylooper/v1/ability.proto\"\xfd\f\n" +
+	"\x1dtragedylooper/v1/script.proto\x12\x10tragedylooper.v1\x1a\x17validate/validate.proto\x1a\x1ctragedylooper/v1/enums.proto\x1a\x1ftragedylooper/v1/incident.proto\x1a tragedylooper/v1/character.proto\x1a\x1btragedylooper/v1/card.proto\x1a\x1etragedylooper/v1/ability.proto\"\xff\f\n" +
 	"\fScriptConfig\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x02id\x12\x1b\n" +
 	"\x04name\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12^\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12`\n" +
 	"\n" +
-	"main_plots\x18\x04 \x03(\v2-.tragedylooper.v1.ScriptConfig.MainPlotsEntryB\x10\xfaB\r\x9a\x01\n" +
-	"\"\b\x1a\x06\x10\xd0\x0f(\xe8\aR\tmainPlots\x12[\n" +
+	"main_plots\x18\x04 \x03(\v2-.tragedylooper.v1.ScriptConfig.MainPlotsEntryB\x12\xfaB\x0f\x9a\x01\f\b\x01\"\b\x1a\x06\x10\xd0\x0f(\xe8\aR\tmainPlots\x12[\n" +
 	"\tsub_plots\x18\x05 \x03(\v2,.tragedylooper.v1.ScriptConfig.SubPlotsEntryB\x10\xfaB\r\x9a\x01\n" +
 	"\"\b\x1a\x06\x10\xb8\x17(\xd0\x0fR\bsubPlots\x12Q\n" +
 	"\x05roles\x18\x06 \x03(\v2).tragedylooper.v1.ScriptConfig.RolesEntryB\x10\xfaB\r\x9a\x01\n" +
@@ -1126,18 +1125,18 @@ const file_tragedylooper_v1_script_proto_rawDesc = "" +
 	"\trole_name\x18\x01 \x01(\tH\x00R\broleName\x12D\n" +
 	"\x0frole_with_extra\x18\x02 \x01(\v2\x1a.tragedylooper.v1.CastRoleH\x00R\rroleWithExtraB\f\n" +
 	"\n" +
-	"assignment\"\xe4\x05\n" +
-	"\x0eScriptMetadata\x12\x14\n" +
-	"\x05title\x18\x01 \x01(\tR\x05title\x12\x18\n" +
-	"\acreator\x18\x02 \x01(\tR\acreator\x12-\n" +
+	"assignment\"\x9d\x06\n" +
+	"\x0eScriptMetadata\x12\x1d\n" +
+	"\x05title\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x05title\x12!\n" +
+	"\acreator\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\acreator\x12-\n" +
 	"\x03set\x18\x03 \x03(\v2\x1b.tragedylooper.v1.ScriptSetR\x03set\x12\x1f\n" +
 	"\vtragedy_set\x18\x04 \x01(\tR\n" +
-	"tragedySet\x12\"\n" +
-	"\rdays_per_loop\x18\x05 \x01(\x05R\vdaysPerLoop\x12H\n" +
-	"\x0fdifficulty_sets\x18\x06 \x03(\v2\x1f.tragedylooper.v1.DifficultySetR\x0edifficultySets\x12\x1b\n" +
-	"\tmain_plot\x18\a \x03(\tR\bmainPlot\x12\x1b\n" +
-	"\tsub_plots\x18\b \x03(\tR\bsubPlots\x12>\n" +
-	"\x04cast\x18\t \x03(\v2*.tragedylooper.v1.ScriptMetadata.CastEntryR\x04cast\x12@\n" +
+	"tragedySet\x12+\n" +
+	"\rdays_per_loop\x18\x05 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\vdaysPerLoop\x12R\n" +
+	"\x0fdifficulty_sets\x18\x06 \x03(\v2\x1f.tragedylooper.v1.DifficultySetB\b\xfaB\x05\x92\x01\x02\b\x01R\x0edifficultySets\x12%\n" +
+	"\tmain_plot\x18\a \x03(\tB\b\xfaB\x05\x92\x01\x02\b\x01R\bmainPlot\x12\x1b\n" +
+	"\tsub_plots\x18\b \x03(\tR\bsubPlots\x12H\n" +
+	"\x04cast\x18\t \x03(\v2*.tragedylooper.v1.ScriptMetadata.CastEntryB\b\xfaB\x05\x9a\x01\x02\b\x01R\x04cast\x12@\n" +
 	"\tincidents\x18\n" +
 	" \x03(\v2\".tragedylooper.v1.IncidentInstanceR\tincidents\x12-\n" +
 	"\x12victory_conditions\x18\v \x01(\tR\x11victoryConditions\x12\x14\n" +
@@ -1148,23 +1147,23 @@ const file_tragedylooper_v1_script_proto_rawDesc = "" +
 	"\x06source\x18\x10 \x01(\tR\x06source\x1aY\n" +
 	"\tCastEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x126\n" +
-	"\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.CastAssignmentR\x05value:\x028\x01\"\xe5\x01\n" +
+	"\x05value\x18\x02 \x01(\v2 .tragedylooper.v1.CastAssignmentR\x05value:\x028\x01\"\x83\x02\n" +
 	"\vScriptModel\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x02id\x12@\n" +
-	"\fprivate_info\x18\x02 \x01(\v2\x1d.tragedylooper.v1.PrivateInfoR\vprivateInfo\x12=\n" +
-	"\vpublic_info\x18\x03 \x01(\v2\x1c.tragedylooper.v1.PublicInfoR\n" +
-	"publicInfo\x12<\n" +
-	"\bmetadata\x18\x04 \x01(\v2 .tragedylooper.v1.ScriptMetadataR\bmetadata\"\xc0\x02\n" +
-	"\vPrivateInfo\x12 \n" +
-	"\fmain_plot_id\x18\x01 \x01(\x05R\n" +
-	"mainPlotId\x12\"\n" +
-	"\rsub_plots_ids\x18\x02 \x03(\x05R\vsubPlotsIds\x12%\n" +
-	"\x0echaracters_ids\x18\x03 \x03(\x05R\rcharactersIds\x12!\n" +
-	"\fincident_ids\x18\x04 \x03(\x05R\vincidentIds\x12]\n" +
-	"\x10role_assignments\x18\x05 \x03(\v22.tragedylooper.v1.PrivateInfo.RoleAssignmentsEntryR\x0froleAssignments\x1aB\n" +
+	"\x02id\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x02id\x12J\n" +
+	"\fprivate_info\x18\x02 \x01(\v2\x1d.tragedylooper.v1.PrivateInfoB\b\xfaB\x05\x8a\x01\x02\x10\x01R\vprivateInfo\x12G\n" +
+	"\vpublic_info\x18\x03 \x01(\v2\x1c.tragedylooper.v1.PublicInfoB\b\xfaB\x05\x8a\x01\x02\x10\x01R\n" +
+	"publicInfo\x12F\n" +
+	"\bmetadata\x18\x04 \x01(\v2 .tragedylooper.v1.ScriptMetadataB\b\xfaB\x05\x8a\x01\x02\x10\x01R\bmetadata\"\xf1\x02\n" +
+	"\vPrivateInfo\x12)\n" +
+	"\fmain_plot_id\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\n" +
+	"mainPlotId\x12,\n" +
+	"\rsub_plots_ids\x18\x02 \x03(\x05B\b\xfaB\x05\x92\x01\x02\b\x01R\vsubPlotsIds\x12/\n" +
+	"\x0echaracters_ids\x18\x03 \x03(\x05B\b\xfaB\x05\x92\x01\x02\b\x01R\rcharactersIds\x12+\n" +
+	"\fincident_ids\x18\x04 \x03(\x05B\b\xfaB\x05\x92\x01\x02\b\x01R\vincidentIds\x12g\n" +
+	"\x10role_assignments\x18\x05 \x03(\v22.tragedylooper.v1.PrivateInfo.RoleAssignmentsEntryB\b\xfaB\x05\x9a\x01\x02\b\x01R\x0froleAssignments\x1aB\n" +
 	"\x14RoleAssignmentsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\x9d\x02\n" +
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\xa7\x02\n" +
 	"\n" +
 	"PublicInfo\x121\n" +
 	"\x10script_config_id\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x0escriptConfigId\x12&\n" +
@@ -1173,8 +1172,8 @@ const file_tragedylooper_v1_script_proto_rawDesc = "" +
 	"\rdays_per_loop\x18\x03 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\vdaysPerLoop\x12\x1f\n" +
 	"\vcan_discuss\x18\x04 \x01(\bR\n" +
 	"canDiscuss\x120\n" +
-	"\x14special_incident_ids\x18\x05 \x03(\x05R\x12specialIncidentIds\x124\n" +
-	"\x16scheduled_incident_ids\x18\x06 \x03(\x05R\x14scheduledIncidentIds\"\x80\x03\n" +
+	"\x14special_incident_ids\x18\x05 \x03(\x05R\x12specialIncidentIds\x12>\n" +
+	"\x16scheduled_incident_ids\x18\x06 \x03(\x05B\b\xfaB\x05\x92\x01\x02\b\x01R\x14scheduledIncidentIds\"\x80\x03\n" +
 	"\n" +
 	"RoleConfig\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x02id\x12\x1b\n" +
