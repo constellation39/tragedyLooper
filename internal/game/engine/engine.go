@@ -101,32 +101,51 @@ func (ge *GameEngine) initializePlayers(players []*model.Player) map[int32]*mode
 func (ge *GameEngine) initializeGameStateFromScript(players []*model.Player) {
 	playerMap := ge.initializePlayers(players)
 
-	characterConfigs, err := loader.All[*model.CharacterConfig](ge.scriptConfig)
-	if err != nil {
-		return
+	characterConfigMap := ge.scriptConfig.GetCharacterMap()
+	if characterConfigMap == nil {
+
 	}
 
-	all, err := loader.All[*model.IncidentConfig](ge.scriptConfig)
-	if err != nil {
-		return
+	mainPlot := ge.scriptConfig.GetMainPlot()
+	if mainPlot == nil {
+		ge.logger.Error("No main plot found")
 	}
 
-	characterConfigs := ge.scriptConfig.GetCharacters()
-	incidentConfigs := ge.scriptConfig.GetIncidents()
+	subPlotMap := ge.scriptConfig.GetSubPlotMap()
+	if subPlotMap == nil {
+		ge.logger.Error("No sub plots found")
+	}
 
-	// 将脚本事件合并到主事件配置列表中
-	for _, incident := range script.Incidents {
-		incidentConfigs[incident.Id] = incident
+	incidentMap := ge.scriptConfig.GetIncidentMap()
+	if incidentMap == nil {
+		ge.logger.Error("No incidents found")
+	}
+
+	characterMap := make(map[int32]*model.Character)
+	for _, config := range characterConfigMap {
+		character := &model.Character{
+			Config:          config,
+			CurrentLocation: config.InitialLocation,
+			Stats:           make(map[int32]int32),
+			HiddenRoleId:    0,
+			Abilities:       nil,
+			IsAlive:         false,
+			InPanicMode:     false,
+			Traits:          nil,
+		}
+		if ge.scriptConfig.GetScript().
 	}
 
 	ge.GameState = &model.GameState{
-		CurrentLoop:         1,
-		CurrentDay:          1,
-		Players:             playerMap,
-		Characters:          make(map[int32]*model.Character),
-		PlayedCardsThisLoop: make(map[int32]bool),
-		PlayedCardsThisDay:  make(map[int32]*model.CardList),
-		TriggeredIncidents:  make(map[string]bool),
+		GameId:             "",
+		Tick:               0,
+		CurrentLoop:        0,
+		DaysPerLoop:        0,
+		CurrentDay:         0,
+		CurrentPhase:       0,
+		Characters:         make(map[int32]*model.Character),
+		Players:            nil,
+		TriggeredIncidents: nil,
 	}
 
 	for _, charInScript := range script.Characters {

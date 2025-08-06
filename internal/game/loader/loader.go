@@ -24,8 +24,6 @@ type ScriptConfig interface {
 	GetRoleMap() map[int32]*v1.RoleConfig
 	GetCard(id int32) *v1.CardConfig
 	GetCardMap() map[int32]*v1.CardConfig
-	GetAbility(id int32) *v1.AbilityConfig
-	GetAbilityMap() map[int32]*v1.AbilityConfig
 
 	GetMainPlot() *v1.PlotConfig
 	GetSubPlot(id int32) *v1.PlotConfig
@@ -261,54 +259,4 @@ func (s *scriptConfig) GetCanDiscuss() bool {
 		return publicInfo.GetCanDiscuss()
 	}
 	return false
-}
-
-// Global access functions
-
-type cfgPtr interface {
-	*v1.AbilityConfig |
-		*v1.CardConfig |
-		*v1.CharacterConfig |
-		*v1.IncidentConfig |
-		*v1.PlotConfig |
-		*v1.RoleConfig
-}
-
-func Get[T cfgPtr](r ScriptConfig, id int32) (T, error) {
-	m, err := pickMap[T](r)
-	if err != nil {
-		var zero T
-		return zero, err
-	}
-	v, ok := m[id]
-	if !ok {
-		var zero T
-		return zero, fmt.Errorf("id=%d not found", id)
-	}
-	return v, nil
-}
-
-func All[T cfgPtr](r ScriptConfig) (map[int32]T, error) {
-	return pickMap[T](r)
-}
-
-func pickMap[T cfgPtr](r ScriptConfig) (map[int32]T, error) {
-	var zero T
-	switch any(zero).(type) {
-	case *v1.AbilityConfig:
-		return any(r.GetAbilityMap()).(map[int32]T), nil
-	case *v1.CardConfig:
-		return any(r.GetCardMap()).(map[int32]T), nil
-	case *v1.CharacterConfig:
-		return any(r.GetCharacterMap()).(map[int32]T), nil
-	case *v1.IncidentConfig:
-		return any(r.GetIncidentMap()).(map[int32]T), nil
-	case *v1.PlotConfig:
-		return any(r.GetPlotMap()).(map[int32]T), nil
-	case *v1.RoleConfig:
-		return any(r.GetRoleMap()).(map[int32]T), nil
-	default:
-		var t T
-		return nil, fmt.Errorf("unsupported config type: %T", t)
-	}
 }

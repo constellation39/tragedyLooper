@@ -30,12 +30,8 @@ type CharacterConfig struct {
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	// A list of character traits (e.g., "Student", "Reporter").
 	Traits []string `protobuf:"bytes,3,rep,name=traits,proto3" json:"traits,omitempty"`
-	// The paranoia limit for the character.
-	ParanoiaLimit int32 `protobuf:"varint,4,opt,name=paranoia_limit,json=paranoiaLimit,proto3" json:"paranoia_limit,omitempty"`
-	// The goodwill limit for the character.
-	GoodwillLimit int32 `protobuf:"varint,5,opt,name=goodwill_limit,json=goodwillLimit,proto3" json:"goodwill_limit,omitempty"`
-	// The intrigue limit for the character.
-	IntrigueLimit int32 `protobuf:"varint,6,opt,name=intrigue_limit,json=intrigueLimit,proto3" json:"intrigue_limit,omitempty"`
+	// A map of stat limits for the character.
+	StatLimits map[int32]int32 `protobuf:"bytes,4,rep,name=stat_limits,json=statLimits,proto3" json:"stat_limits,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
 	// A list of ability IDs that the character possesses.
 	Abilities []*AbilityConfig `protobuf:"bytes,7,rep,name=abilities,proto3" json:"abilities,omitempty"`
 	// A list of special rules for the character.
@@ -101,25 +97,11 @@ func (x *CharacterConfig) GetTraits() []string {
 	return nil
 }
 
-func (x *CharacterConfig) GetParanoiaLimit() int32 {
+func (x *CharacterConfig) GetStatLimits() map[int32]int32 {
 	if x != nil {
-		return x.ParanoiaLimit
+		return x.StatLimits
 	}
-	return 0
-}
-
-func (x *CharacterConfig) GetGoodwillLimit() int32 {
-	if x != nil {
-		return x.GoodwillLimit
-	}
-	return 0
-}
-
-func (x *CharacterConfig) GetIntrigueLimit() int32 {
-	if x != nil {
-		return x.IntrigueLimit
-	}
-	return 0
+	return nil
 }
 
 func (x *CharacterConfig) GetAbilities() []*AbilityConfig {
@@ -164,12 +146,8 @@ type Character struct {
 	Config *CharacterConfig `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
 	// The current location of the character.
 	CurrentLocation LocationType `protobuf:"varint,2,opt,name=current_location,json=currentLocation,proto3,enum=tragedylooper.v1.LocationType" json:"current_location,omitempty"`
-	// The current paranoia level of the character.
-	Paranoia int32 `protobuf:"varint,3,opt,name=paranoia,proto3" json:"paranoia,omitempty"`
-	// The current goodwill level of the character.
-	Goodwill int32 `protobuf:"varint,4,opt,name=goodwill,proto3" json:"goodwill,omitempty"`
-	// The current intrigue level of the character.
-	Intrigue int32 `protobuf:"varint,5,opt,name=intrigue,proto3" json:"intrigue,omitempty"`
+	// The current stat levels of the character.
+	Stats map[int32]int32 `protobuf:"bytes,3,rep,name=stats,proto3" json:"stats,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
 	// The hidden role of the character (assigned by the script).
 	HiddenRoleId int32 `protobuf:"varint,6,opt,name=hidden_role_id,json=hiddenRoleId,proto3" json:"hidden_role_id,omitempty"`
 	// A list of ability instances that the character possesses.
@@ -228,25 +206,11 @@ func (x *Character) GetCurrentLocation() LocationType {
 	return LocationType_LOCATION_TYPE_UNSPECIFIED
 }
 
-func (x *Character) GetParanoia() int32 {
+func (x *Character) GetStats() map[int32]int32 {
 	if x != nil {
-		return x.Paranoia
+		return x.Stats
 	}
-	return 0
-}
-
-func (x *Character) GetGoodwill() int32 {
-	if x != nil {
-		return x.Goodwill
-	}
-	return 0
-}
-
-func (x *Character) GetIntrigue() int32 {
-	if x != nil {
-		return x.Intrigue
-	}
-	return 0
+	return nil
 }
 
 func (x *Character) GetHiddenRoleId() int32 {
@@ -584,32 +548,36 @@ var File_tragedylooper_v1_character_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_character_proto_rawDesc = "" +
 	"\n" +
-	" tragedylooper/v1/character.proto\x12\x10tragedylooper.v1\x1a\x1etragedylooper/v1/ability.proto\x1a\x1ctragedylooper/v1/enums.proto\"\xf2\x03\n" +
+	" tragedylooper/v1/character.proto\x12\x10tragedylooper.v1\x1a\x1etragedylooper/v1/ability.proto\x1a\x1ctragedylooper/v1/enums.proto\"\x90\x04\n" +
 	"\x0fCharacterConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
-	"\x06traits\x18\x03 \x03(\tR\x06traits\x12%\n" +
-	"\x0eparanoia_limit\x18\x04 \x01(\x05R\rparanoiaLimit\x12%\n" +
-	"\x0egoodwill_limit\x18\x05 \x01(\x05R\rgoodwillLimit\x12%\n" +
-	"\x0eintrigue_limit\x18\x06 \x01(\x05R\rintrigueLimit\x12=\n" +
+	"\x06traits\x18\x03 \x03(\tR\x06traits\x12R\n" +
+	"\vstat_limits\x18\x04 \x03(\v21.tragedylooper.v1.CharacterConfig.StatLimitsEntryR\n" +
+	"statLimits\x12=\n" +
 	"\tabilities\x18\a \x03(\v2\x1f.tragedylooper.v1.AbilityConfigR\tabilities\x125\n" +
 	"\x05rules\x18\b \x03(\v2\x1f.tragedylooper.v1.CharacterRuleR\x05rules\x12 \n" +
 	"\vdescription\x18\t \x01(\tR\vdescription\x12I\n" +
 	"\x10initial_location\x18\n" +
 	" \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeR\x0finitialLocation\x12K\n" +
-	"\x11blocked_locations\x18\v \x03(\x0e2\x1e.tragedylooper.v1.LocationTypeR\x10blockedLocations\"\x9b\x03\n" +
+	"\x11blocked_locations\x18\v \x03(\x0e2\x1e.tragedylooper.v1.LocationTypeR\x10blockedLocations\x1a=\n" +
+	"\x0fStatLimitsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\xbf\x03\n" +
 	"\tCharacter\x129\n" +
 	"\x06config\x18\x01 \x01(\v2!.tragedylooper.v1.CharacterConfigR\x06config\x12I\n" +
-	"\x10current_location\x18\x02 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeR\x0fcurrentLocation\x12\x1a\n" +
-	"\bparanoia\x18\x03 \x01(\x05R\bparanoia\x12\x1a\n" +
-	"\bgoodwill\x18\x04 \x01(\x05R\bgoodwill\x12\x1a\n" +
-	"\bintrigue\x18\x05 \x01(\x05R\bintrigue\x12$\n" +
+	"\x10current_location\x18\x02 \x01(\x0e2\x1e.tragedylooper.v1.LocationTypeR\x0fcurrentLocation\x12<\n" +
+	"\x05stats\x18\x03 \x03(\v2&.tragedylooper.v1.Character.StatsEntryR\x05stats\x12$\n" +
 	"\x0ehidden_role_id\x18\x06 \x01(\x05R\fhiddenRoleId\x127\n" +
 	"\tabilities\x18\a \x03(\v2\x19.tragedylooper.v1.AbilityR\tabilities\x12\x19\n" +
 	"\bis_alive\x18\b \x01(\bR\aisAlive\x12\"\n" +
 	"\rin_panic_mode\x18\t \x01(\bR\vinPanicMode\x12\x16\n" +
 	"\x06traits\x18\n" +
-	" \x03(\tR\x06traits\"\x9c\x03\n" +
+	" \x03(\tR\x06traits\x1a8\n" +
+	"\n" +
+	"StatsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\x9c\x03\n" +
 	"\rCharacterRule\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x127\n" +
@@ -642,7 +610,7 @@ func file_tragedylooper_v1_character_proto_rawDescGZIP() []byte {
 	return file_tragedylooper_v1_character_proto_rawDescData
 }
 
-var file_tragedylooper_v1_character_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_tragedylooper_v1_character_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_tragedylooper_v1_character_proto_goTypes = []any{
 	(*CharacterConfig)(nil),     // 0: tragedylooper.v1.CharacterConfig
 	(*Character)(nil),           // 1: tragedylooper.v1.Character
@@ -650,31 +618,35 @@ var file_tragedylooper_v1_character_proto_goTypes = []any{
 	(*TurfSelectionEffect)(nil), // 3: tragedylooper.v1.TurfSelectionEffect
 	(*DelayedEntryEffect)(nil),  // 4: tragedylooper.v1.DelayedEntryEffect
 	(*SpecialMovementRule)(nil), // 5: tragedylooper.v1.SpecialMovementRule
-	(*AbilityConfig)(nil),       // 6: tragedylooper.v1.AbilityConfig
-	(LocationType)(0),           // 7: tragedylooper.v1.LocationType
-	(*Ability)(nil),             // 8: tragedylooper.v1.Ability
-	(TriggerType)(0),            // 9: tragedylooper.v1.TriggerType
+	nil,                         // 6: tragedylooper.v1.CharacterConfig.StatLimitsEntry
+	nil,                         // 7: tragedylooper.v1.Character.StatsEntry
+	(*AbilityConfig)(nil),       // 8: tragedylooper.v1.AbilityConfig
+	(LocationType)(0),           // 9: tragedylooper.v1.LocationType
+	(*Ability)(nil),             // 10: tragedylooper.v1.Ability
+	(TriggerType)(0),            // 11: tragedylooper.v1.TriggerType
 }
 var file_tragedylooper_v1_character_proto_depIdxs = []int32{
-	6,  // 0: tragedylooper.v1.CharacterConfig.abilities:type_name -> tragedylooper.v1.AbilityConfig
-	2,  // 1: tragedylooper.v1.CharacterConfig.rules:type_name -> tragedylooper.v1.CharacterRule
-	7,  // 2: tragedylooper.v1.CharacterConfig.initial_location:type_name -> tragedylooper.v1.LocationType
-	7,  // 3: tragedylooper.v1.CharacterConfig.blocked_locations:type_name -> tragedylooper.v1.LocationType
-	0,  // 4: tragedylooper.v1.Character.config:type_name -> tragedylooper.v1.CharacterConfig
-	7,  // 5: tragedylooper.v1.Character.current_location:type_name -> tragedylooper.v1.LocationType
-	8,  // 6: tragedylooper.v1.Character.abilities:type_name -> tragedylooper.v1.Ability
-	9,  // 7: tragedylooper.v1.CharacterRule.trigger:type_name -> tragedylooper.v1.TriggerType
-	3,  // 8: tragedylooper.v1.CharacterRule.turf_selection_effect:type_name -> tragedylooper.v1.TurfSelectionEffect
-	4,  // 9: tragedylooper.v1.CharacterRule.delayed_entry_effect:type_name -> tragedylooper.v1.DelayedEntryEffect
-	5,  // 10: tragedylooper.v1.CharacterRule.special_movement_rule:type_name -> tragedylooper.v1.SpecialMovementRule
-	7,  // 11: tragedylooper.v1.TurfSelectionEffect.possible_locations:type_name -> tragedylooper.v1.LocationType
-	7,  // 12: tragedylooper.v1.DelayedEntryEffect.entry_location:type_name -> tragedylooper.v1.LocationType
-	7,  // 13: tragedylooper.v1.SpecialMovementRule.restricted_locations:type_name -> tragedylooper.v1.LocationType
-	14, // [14:14] is the sub-list for method output_type
-	14, // [14:14] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	6,  // 0: tragedylooper.v1.CharacterConfig.stat_limits:type_name -> tragedylooper.v1.CharacterConfig.StatLimitsEntry
+	8,  // 1: tragedylooper.v1.CharacterConfig.abilities:type_name -> tragedylooper.v1.AbilityConfig
+	2,  // 2: tragedylooper.v1.CharacterConfig.rules:type_name -> tragedylooper.v1.CharacterRule
+	9,  // 3: tragedylooper.v1.CharacterConfig.initial_location:type_name -> tragedylooper.v1.LocationType
+	9,  // 4: tragedylooper.v1.CharacterConfig.blocked_locations:type_name -> tragedylooper.v1.LocationType
+	0,  // 5: tragedylooper.v1.Character.config:type_name -> tragedylooper.v1.CharacterConfig
+	9,  // 6: tragedylooper.v1.Character.current_location:type_name -> tragedylooper.v1.LocationType
+	7,  // 7: tragedylooper.v1.Character.stats:type_name -> tragedylooper.v1.Character.StatsEntry
+	10, // 8: tragedylooper.v1.Character.abilities:type_name -> tragedylooper.v1.Ability
+	11, // 9: tragedylooper.v1.CharacterRule.trigger:type_name -> tragedylooper.v1.TriggerType
+	3,  // 10: tragedylooper.v1.CharacterRule.turf_selection_effect:type_name -> tragedylooper.v1.TurfSelectionEffect
+	4,  // 11: tragedylooper.v1.CharacterRule.delayed_entry_effect:type_name -> tragedylooper.v1.DelayedEntryEffect
+	5,  // 12: tragedylooper.v1.CharacterRule.special_movement_rule:type_name -> tragedylooper.v1.SpecialMovementRule
+	9,  // 13: tragedylooper.v1.TurfSelectionEffect.possible_locations:type_name -> tragedylooper.v1.LocationType
+	9,  // 14: tragedylooper.v1.DelayedEntryEffect.entry_location:type_name -> tragedylooper.v1.LocationType
+	9,  // 15: tragedylooper.v1.SpecialMovementRule.restricted_locations:type_name -> tragedylooper.v1.LocationType
+	16, // [16:16] is the sub-list for method output_type
+	16, // [16:16] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_tragedylooper_v1_character_proto_init() }
@@ -695,7 +667,7 @@ func file_tragedylooper_v1_character_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tragedylooper_v1_character_proto_rawDesc), len(file_tragedylooper_v1_character_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

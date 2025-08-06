@@ -61,11 +61,7 @@ func (m *CharacterConfig) validate(all bool) error {
 
 	// no validation rules for Name
 
-	// no validation rules for ParanoiaLimit
-
-	// no validation rules for GoodwillLimit
-
-	// no validation rules for IntrigueLimit
+	// no validation rules for StatLimits
 
 	for idx, item := range m.GetAbilities() {
 		_, _ = idx, item
@@ -270,11 +266,7 @@ func (m *Character) validate(all bool) error {
 
 	// no validation rules for CurrentLocation
 
-	// no validation rules for Paranoia
-
-	// no validation rules for Goodwill
-
-	// no validation rules for Intrigue
+	// no validation rules for Stats
 
 	// no validation rules for HiddenRoleId
 

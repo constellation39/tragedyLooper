@@ -15,12 +15,8 @@ message CharacterConfig {
   string name = 2;
   // A list of character traits (e.g., "Student", "Reporter").
   repeated string traits = 3;
-  // The paranoia limit for the character.
-  int32 paranoia_limit = 4;
-  // The goodwill limit for the character.
-  int32 goodwill_limit = 5;
-  // The intrigue limit for the character.
-  int32 intrigue_limit = 6;
+  // A map of stat limits for the character.
+  map<int32, int32> stat_limits = 4;
   // A list of ability IDs that the character possesses.
   repeated AbilityConfig abilities = 7;
   // A list of special rules for the character.
@@ -39,12 +35,8 @@ message Character {
   CharacterConfig config = 1;
   // The current location of the character.
   LocationType current_location = 2;
-  // The current paranoia level of the character.
-  int32 paranoia = 3;
-  // The current goodwill level of the character.
-  int32 goodwill = 4;
-  // The current intrigue level of the character.
-  int32 intrigue = 5;
+  // The current stat levels of the character.
+  map<int32, int32> stats = 3;
   // The hidden role of the character (assigned by the script).
   int32 hidden_role_id = 6;
   // A list of ability instances that the character possesses.
