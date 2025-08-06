@@ -9,6 +9,7 @@ import (
 	"github.com/constellation39/tragedyLooper/internal/game/engine/character"
 	"github.com/constellation39/tragedyLooper/internal/game/engine/effecthandler"
 	"github.com/constellation39/tragedyLooper/internal/game/engine/eventhandler"
+	"github.com/constellation39/tragedyLooper/internal/game/engine/instantiator"
 	"github.com/constellation39/tragedyLooper/internal/game/engine/phasehandler"
 	"github.com/constellation39/tragedyLooper/internal/game/engine/target"
 	"github.com/constellation39/tragedyLooper/internal/game/loader"
@@ -46,8 +47,8 @@ type GameEngine struct {
 
 	actionGenerator ai.ActionGenerator
 	scriptConfig    loader.ScriptConfig
-	pm              *phasehandler.Manager
-	em              *eventhandler.Manager
+	phaseManager    *phasehandler.Manager
+	eventManager    *eventhandler.Manager
 
 	engineChan chan engineAction
 	stopChan   chan struct{}
@@ -70,11 +71,9 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator 
 		mastermindPlayerID:   0,
 		protagonistPlayerIDs: nil,
 	}
-	ge.pm = phasehandler.NewManager(ge)
-	ge.em = eventhandler.NewManager(ge)
-
-	ge.initializeGameState(players)
-	ge.dealInitialCards()
+	ge.phaseManager = phasehandler.NewManager(ge)
+	ge.eventManager = eventhandler.NewManager(ge)
+	ge.GameState = instantiator.NewGameState(players, gameConfig)
 
 	return ge, nil
 }
@@ -96,24 +95,6 @@ func (ge *GameEngine) initializePlayers(players []*model.Player) map[int32]*mode
 		playerMap[player.Id] = player
 	}
 	return playerMap
-}
-
-func (ge *GameEngine) initializeGameState(players []*model.Player) {
-	playerMap := ge.initializePlayers(players)
-
-	scriptModel := ge.scriptConfig.getModel()
-	scriptCfg := ge.scriptConfig.GetScript()
-
-	// Use the centralized conversion function to create the initial game state.
-	ge.GameState = InitializeGameStateFromScript(scriptModel, scriptCfg)
-	if ge.GameState == nil {
-		// This would be a critical error, as the game cannot start without a valid state.
-		ge.logger.Fatal("Failed to initialize game state from script.")
-		return
-	}
-
-	// Add players to the newly created game state.
-	ge.GameState.Players = playerMap
 }
 
 // Start 启动游戏主循环。
@@ -141,7 +122,7 @@ func (ge *GameEngine) SubmitPlayerAction(playerID int32, action *model.PlayerAct
 
 // GetGameEvents 返回游戏事件的只读通道。
 func (ge *GameEngine) GetGameEvents() <-chan *model.GameEvent {
-	return ge.em.EventsChannel()
+	return ge.eventManager.EventsChannel()
 }
 
 // GetPlayerView 获取指定玩家的游戏状态视图。
@@ -174,9 +155,9 @@ func (ge *GameEngine) runGameLoop() {
 	defer ge.logger.Info("Game loop stopped.")
 
 	// 阶段管理器已启动，它将启动第一个阶段转换。
-	ge.pm.Start()
+	ge.phaseManager.Start()
 	ge.ResetPlayerReadiness()
-	defer ge.em.Close()
+	defer ge.eventManager.Close()
 
 	// 创建一个定期触发器来驱动游戏状态（例如，用于超时）。
 	ticker := time.NewTicker(time.Second / ticker.TicksPerSecond)
@@ -189,7 +170,7 @@ func (ge *GameEngine) runGameLoop() {
 		case <-ticker.C:
 			ge.GameState.Tick++
 			ge.processPendingRequests()
-			ge.pm.OnTick()
+			ge.phaseManager.OnTick()
 		}
 	}
 }
@@ -217,13 +198,13 @@ func (ge *GameEngine) handleEngineRequest(req engineAction) {
 			return
 		}
 		ge.SetPlayerReady(r.playerID)
-		if ge.pm.HandleAction(player, r.action) == phasehandler.PhaseComplete {
-			ge.pm.Advance()
+		if ge.phaseManager.HandleAction(player, r.action) == phasehandler.PhaseComplete {
+			ge.phaseManager.Advance()
 		}
 	case *getPlayerViewRequest:
 		r.responseChan <- ge.GeneratePlayerView(r.playerID)
 	case *getCurrentPhaseRequest:
-		r.responseChan <- ge.pm.CurrentPhase().Type()
+		r.responseChan <- ge.phaseManager.CurrentPhase().Type()
 	default:
 		ge.logger.Warn("Unhandled request type in engine channel")
 	}
@@ -237,7 +218,7 @@ func (ge *GameEngine) TriggerEvent(eventType model.GameEventType, payload *model
 	}
 
 	// Step 1: Apply the event to the game state through the appropriate handler.
-	if err := ge.em.ApplyEvent(event); err != nil {
+	if err := ge.eventManager.ApplyEvent(event); err != nil {
 		ge.logger.Error("failed to apply event", zap.String("event", event.Type.String()), zap.Error(err))
 		return
 	}
@@ -246,8 +227,8 @@ func (ge *GameEngine) TriggerEvent(eventType model.GameEventType, payload *model
 	// 这是一个重要的钩子，允许一个阶段根据发生的事件来改变游戏流程（例如，转换到不同的阶段）。
 	// 注意：大多数阶段使用默认的空实现，因此这个调用通常不执行任何操作。
 	// 但它为需要响应特定事件的阶段提供了必要的扩展点。
-	if ge.pm.HandleEvent(event) == phasehandler.PhaseComplete {
-		ge.pm.Advance()
+	if ge.phaseManager.HandleEvent(event) == phasehandler.PhaseComplete {
+		ge.phaseManager.Advance()
 	}
 
 	// Step 3: Record the event in the game state for player review.
@@ -256,7 +237,7 @@ func (ge *GameEngine) TriggerEvent(eventType model.GameEventType, payload *model
 	gs.LoopEvents = append(gs.LoopEvents, event)
 
 	// Step 4: Publish the event to external listeners.
-	ge.em.Dispatch(event)
+	ge.eventManager.Dispatch(event)
 }
 
 // ResetPlayerReadiness 重置所有玩家的准备状态。
@@ -280,7 +261,19 @@ func (ge *GameEngine) MoveCharacter(char *model.Character, dx, dy int) {
 }
 
 func (ge *GameEngine) ResolveSelectorToCharacters(gs *model.GameState, sel *model.TargetSelector, ctx *effecthandler.EffectContext) ([]int32, error) {
-	return target.ResolveSelectorToCharacters(gs, sel, ctx)
+	characters, err := target.ResolveCharacters(gs, sel)
+	if err != nil {
+		return nil, err
+	}
+
+	charIDs := make([]int32, 0, len(characters))
+	for _, char := range characters {
+		// Make sure char and its Id are not nil before dereferencing
+		if char != nil {
+			charIDs = append(charIDs, char.Config.Id)
+		}
+	}
+	return charIDs, nil
 }
 
 // getPlayerByID 根据玩家ID获取玩家对象。
@@ -415,14 +408,15 @@ func (ge *GameEngine) GeneratePlayerView(playerID int32) *model.PlayerView {
 	}
 
 	view := &model.PlayerView{
-		GameId:             ge.GameState.GameId,
-		CurrentDay:         ge.GameState.CurrentDay,
-		CurrentLoop:        ge.GameState.CurrentLoop,
-		CurrentPhase:       ge.GameState.CurrentPhase,
-		ActiveTragedies:    ge.GameState.ActiveTragedies,
-		PreventedTragedies: ge.GameState.PreventedTragedies,
-		PublicEvents:       ge.GameState.DayEvents,
-		Tick:               ge.GameState.Tick,
+		GameId:         ge.GameState.GameId,
+		Tick:           ge.GameState.Tick,
+		CurrentLoop:    ge.GameState.CurrentLoop,
+		CurrentDay:     ge.GameState.CurrentDay,
+		CurrentPhase:   ge.GameState.CurrentPhase,
+		Characters:     map[int32]*model.PlayerViewCharacter{},
+		Players:        make(map[int32]*model.PlayerViewPlayer),
+		YourHand:       nil,
+		YourDeductions: nil,
 	}
 
 	// Filter character information based on player role
@@ -433,19 +427,15 @@ func (ge *GameEngine) GeneratePlayerView(playerID int32) *model.PlayerView {
 			Name:            char.Config.Name,
 			Traits:          char.Traits,
 			CurrentLocation: char.CurrentLocation,
-			Paranoia:        char.Paranoia,
-			Goodwill:        char.Goodwill,
-			Intrigue:        char.Intrigue,
+			Stats:           map[int32]int32{},
 			Abilities:       char.Abilities,
 			IsAlive:         char.IsAlive,
 			InPanicMode:     char.InPanicMode,
 			Rules:           char.Config.Rules,
+			RevealedRole:    0,
 		}
 		if player.Role == model.PlayerRole_PLAYER_ROLE_PROTAGONIST {
 			// Hide the true role from protagonists, show as unknown.
-			playerViewChar.Role = model.RoleType_ROLE_TYPE_ROLE_UNKNOWN
-		} else {
-			playerViewChar.Role = char.HiddenRole
 		}
 		view.Characters[id] = playerViewChar
 	}

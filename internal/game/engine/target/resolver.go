@@ -6,18 +6,7 @@ import (
 	v1 "github.com/constellation39/tragedyLooper/pkg/proto/tragedylooper/v1"
 )
 
-// Resolver is responsible for resolving TargetSelectors into concrete game entities.
-type Resolver struct {
-	// Dependencies can be added here, e.g., a logger.
-}
-
-// NewResolver creates a new target resolver.
-func NewResolver() *Resolver {
-	return &Resolver{}
-}
-
-// ResolveCharacters resolves a TargetSelector to a list of characters.
-func (r *Resolver) ResolveCharacters(gs *v1.GameState, selector *v1.TargetSelector) ([]*v1.Character, error) {
+func ResolveCharacters(gs *v1.GameState, selector *v1.TargetSelector) ([]*v1.Character, error) {
 	if selector == nil {
 		return nil, fmt.Errorf("target selector is nil")
 	}
@@ -33,7 +22,7 @@ func (r *Resolver) ResolveCharacters(gs *v1.GameState, selector *v1.TargetSelect
 	case *v1.TargetSelector_CharacterWithRoleId:
 		var matched []*v1.Character
 		for _, char := range gs.Characters {
-			if char.Role.Id == s.CharacterWithRoleId {
+			if char.Config.Id == s.CharacterWithRoleId {
 				matched = append(matched, char)
 			}
 		}
@@ -42,7 +31,7 @@ func (r *Resolver) ResolveCharacters(gs *v1.GameState, selector *v1.TargetSelect
 	case *v1.TargetSelector_AllCharactersAtLocation:
 		var matched []*v1.Character
 		for _, char := range gs.Characters {
-			if char.Location == s.AllCharactersAtLocation {
+			if char.CurrentLocation == s.AllCharactersAtLocation {
 				matched = append(matched, char)
 			}
 		}

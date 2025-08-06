@@ -25,6 +25,10 @@ message GameState {
   map<int32, Player> players = 8; // 所有玩家的映射，以 player_id 为键。
 
   map<int32, bool> triggered_incidents = 9; // 本循环中已触发的事件集合，以事件名称为键。
+
+  // LoopEvents
+  repeated GameEvent loop_events = 10;
+  repeated GameEvent day_events = 11;
 }
 
 // Player 表示游戏的参与者。
@@ -71,9 +75,7 @@ message PlayerViewCharacter {
   string name = 2; // 角色的名称。
   repeated string traits = 3; // 角色的当前特征。
   LocationType current_location = 4; // 角色的当前位置。
-  int32 paranoia = 5; // 当前妄想属性。
-  int32 goodwill = 6; // 当前好感属性。
-  int32 intrigue = 7; // 当前阴谋属性。
+  map<int32, int32> stats = 5;
   repeated Ability abilities = 8; // 能力列表。
   bool is_alive = 9; // 角色是否存活。
   bool in_panic_mode = 10; // 角色是否处于恐慌模式。

@@ -1,5 +1,5 @@
-// Package engine handles game state initialization and management.
-package engine
+// Package instantiator handles the creation of the initial game state from script configurations.
+package instantiator
 
 import (
 	"github.com/constellation39/tragedyLooper/internal/game/loader"
@@ -7,8 +7,8 @@ import (
 	"github.com/google/uuid"
 )
 
-// InitializeGameStateFromScript converts a ScriptConfig and ScriptModel protobuf message to a GameState message.
-func InitializeGameStateFromScript(players []*pb.Player, gameConfig loader.ScriptConfig) *pb.GameState {
+// NewGameState converts a ScriptConfig and ScriptModel protobuf message to a GameState message.
+func NewGameState(players []*pb.Player, gameConfig loader.ScriptConfig) *pb.GameState {
 	script := gameConfig.GetScript()
 	model := gameConfig.GetModel()
 
@@ -20,35 +20,22 @@ func InitializeGameStateFromScript(players []*pb.Player, gameConfig loader.Scrip
 	for _, charID := range model.PrivateConfig.CharactersIds {
 		charConfig, ok := script.Characters[charID]
 		if !ok {
-			// Handle error: character model not found for ID
 			continue
 		}
 		roleID, ok := model.PrivateConfig.RoleAssignments[charID]
 		if !ok {
-			// Handle error: role assignment not found for character
-			// Assign a default or unknown role
 			roleID = 0 // Assuming 0 is an invalid/unknown role ID
 		}
-		characters[charID] = NewCharacterFromConfig(charConfig, roleID)
+		characters[charID] = newCharacterFromConfig(charConfig, roleID)
 	}
 
-	// Incidents, cards etc. would be initialized and held by the engine, not directly in the active GameState
-	// The GameState holds the *current* state, not the library of all possible items.
-
 	for _, player := range players {
-		if player.Role == pb.PlayerRole_PLAYER_ROLE_MASTERMIND {
-
-		}
-
 		switch player.Role {
 		case pb.PlayerRole_PLAYER_ROLE_PROTAGONIST:
-			player.Hand = &pb.CardList{Cards: make([]*pb.Card, 0)}
-			player.Hand.Cards = newCardsFromConfig(script.ProtagonistCards)
+			player.Hand = &pb.CardList{Cards: newCardsFromConfig(script.ProtagonistCards)}
 		case pb.PlayerRole_PLAYER_ROLE_MASTERMIND:
-			player.Hand = &pb.CardList{Cards: make([]*pb.Card, 0)}
-			player.Hand.Cards = newCardsFromConfig(script.MastermindCards)
+			player.Hand = &pb.CardList{Cards: newCardsFromConfig(script.MastermindCards)}
 		}
-
 	}
 
 	return &pb.GameState{
@@ -64,37 +51,29 @@ func InitializeGameStateFromScript(players []*pb.Player, gameConfig loader.Scrip
 	}
 }
 
+// newCardsFromConfig converts a map of CardConfig protos to a slice of Card runtime instances.
 func newCardsFromConfig(configs map[int32]*pb.CardConfig) []*pb.Card {
 	cards := make([]*pb.Card, 0, len(configs))
 	for _, cardConfig := range configs {
-		cards = append(cards, NewCardFromConfig(cardConfig))
+		cards = append(cards, newCardFromConfig(cardConfig))
 	}
 	return cards
 }
 
-// NewCharacterFromConfig converts a CharacterConfig protobuf message to a Character runtime instance.
-func NewCharacterFromConfig(config *pb.CharacterConfig, roleId int32) *pb.Character {
+// newCharacterFromConfig converts a CharacterConfig protobuf message to a Character runtime instance.
+func newCharacterFromConfig(config *pb.CharacterConfig, roleId int32) *pb.Character {
 	if config == nil {
 		return nil
 	}
 
 	abilities := make([]*pb.Ability, len(config.Abilities))
 	for i, abilityConfig := range config.Abilities {
-		abilities[i] = NewAbilityFromConfig(abilityConfig)
+		abilities[i] = newAbilityFromConfig(abilityConfig)
 	}
 
-	// Initialize stats map
 	stats := make(map[int32]int32)
-	// You might want to define constants for these stat types in your enums.proto
-	// For now, let's assume Paranoia=1, Intrigue=2, Goodwill=3 based on common usage.
-	// This part is a bit of a guess and should be standardized.
-	// Let's assume CharacterConfig has initial values, if not, they are 0.
-	// The current proto has no initial values in config, so let's check stat_limits
 	if config.StatLimits != nil {
 		for stat := range config.StatLimits {
-			// This is also a guess, assuming stats start at 0 and we are just copying limits for now.
-			// A better approach would be to have initial stats in the CharacterConfig.
-			// Let's assume stats start at 0 unless specified.
 			stats[stat] = 0
 		}
 	}
@@ -111,8 +90,8 @@ func NewCharacterFromConfig(config *pb.CharacterConfig, roleId int32) *pb.Charac
 	}
 }
 
-// NewIncidentFromConfig converts an IncidentConfig protobuf message to an Incident message.
-func NewIncidentFromConfig(config *pb.IncidentConfig) *pb.Incident {
+// newIncidentFromConfig converts an IncidentConfig protobuf message to an Incident message.
+func newIncidentFromConfig(config *pb.IncidentConfig) *pb.Incident {
 	if config == nil {
 		return nil
 	}
@@ -123,8 +102,8 @@ func NewIncidentFromConfig(config *pb.IncidentConfig) *pb.Incident {
 	}
 }
 
-// NewCardFromConfig converts a CardConfig protobuf message to a Card message.
-func NewCardFromConfig(config *pb.CardConfig) *pb.Card {
+// newCardFromConfig converts a CardConfig protobuf message to a Card message.
+func newCardFromConfig(config *pb.CardConfig) *pb.Card {
 	if config == nil {
 		return nil
 	}
@@ -136,8 +115,8 @@ func NewCardFromConfig(config *pb.CardConfig) *pb.Card {
 	}
 }
 
-// NewAbilityFromConfig converts an AbilityConfig protobuf message to an Ability message.
-func NewAbilityFromConfig(config *pb.AbilityConfig) *pb.Ability {
+// newAbilityFromConfig converts an AbilityConfig protobuf message to an Ability message.
+func newAbilityFromConfig(config *pb.AbilityConfig) *pb.Ability {
 	if config == nil {
 		return nil
 	}
