@@ -22,30 +22,30 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Script defines the configuration for a tragedy looper script.
+// Script 定义了悲剧循环剧本的配置。
 type ScriptConfig struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The unique identifier for the script.
+	// 剧本的唯一标识符。
 	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// The name of the script.
+	// 剧本的名称。
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// A description of the script.
+	// 剧本的描述。
 	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	// Main plot configurations. ID range: 1000-1999
+	// 主线剧情配置。ID 范围：1000-1999
 	MainPlots map[int32]*PlotConfig `protobuf:"bytes,4,rep,name=main_plots,json=mainPlots,proto3" json:"main_plots,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	// Sub plot configurations. ID range: 2000-2999
+	// 支线剧情配置。ID 范围：2000-2999
 	SubPlots map[int32]*PlotConfig `protobuf:"bytes,5,rep,name=sub_plots,json=subPlots,proto3" json:"sub_plots,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	// Role configurations. ID range: 3000-3999
+	// 角色配置。ID 范围：3000-3999
 	Roles map[int32]*RoleConfig `protobuf:"bytes,6,rep,name=roles,proto3" json:"roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	// Incident configurations. ID range: 4000-4999
+	// 事件配置。ID 范围：4000-4999
 	Incidents map[int32]*IncidentConfig `protobuf:"bytes,7,rep,name=incidents,proto3" json:"incidents,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	// Character configurations. ID range: 5000-5999
+	// 角色配置。ID 范围：5000-5999
 	Characters map[int32]*CharacterConfig `protobuf:"bytes,8,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	// Mastermind card configurations. ID range: 6000-6999
+	// 主谋卡牌配置。ID 范围：6000-6999
 	MastermindCards map[int32]*CardConfig `protobuf:"bytes,9,rep,name=mastermind_cards,json=mastermindCards,proto3" json:"mastermind_cards,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	// Protagonist card configurations. ID range: 7000-7999
+	// 主角卡牌配置。ID 范围：7000-7999
 	ProtagonistCards map[int32]*CardConfig `protobuf:"bytes,10,rep,name=protagonist_cards,json=protagonistCards,proto3" json:"protagonist_cards,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	// A map of script configurations. ID range: 8000-8999
+	// 剧本模型配置的映射。ID 范围：8000-8999
 	ScriptModels  map[int32]*ScriptModel `protobuf:"bytes,11,rep,name=script_models,json=scriptModels,proto3" json:"script_models,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -160,8 +160,8 @@ func (x *ScriptConfig) GetScriptModels() map[int32]*ScriptModel {
 
 type ScriptSet struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Number        int32                  `protobuf:"varint,2,opt,name=number,proto3" json:"number,omitempty"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`      // 剧本集名称
+	Number        int32                  `protobuf:"varint,2,opt,name=number,proto3" json:"number,omitempty"` // 剧本集编号
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -212,8 +212,8 @@ func (x *ScriptSet) GetNumber() int32 {
 
 type DifficultySet struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	NumberOfLoops int32                  `protobuf:"varint,1,opt,name=number_of_loops,json=numberOfLoops,proto3" json:"number_of_loops,omitempty"`
-	Difficulty    int32                  `protobuf:"varint,2,opt,name=difficulty,proto3" json:"difficulty,omitempty"`
+	NumberOfLoops int32                  `protobuf:"varint,1,opt,name=number_of_loops,json=numberOfLoops,proto3" json:"number_of_loops,omitempty"` // 循环次数
+	Difficulty    int32                  `protobuf:"varint,2,opt,name=difficulty,proto3" json:"difficulty,omitempty"`                              // 难度等级
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -264,9 +264,9 @@ func (x *DifficultySet) GetDifficulty() int32 {
 
 type IncidentInstance struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Day           int32                  `protobuf:"varint,1,opt,name=day,proto3" json:"day,omitempty"`
-	Incident      string                 `protobuf:"bytes,2,opt,name=incident,proto3" json:"incident,omitempty"`
-	Culprit       string                 `protobuf:"bytes,3,opt,name=culprit,proto3" json:"culprit,omitempty"`
+	Day           int32                  `protobuf:"varint,1,opt,name=day,proto3" json:"day,omitempty"`          // 日期
+	Incident      string                 `protobuf:"bytes,2,opt,name=incident,proto3" json:"incident,omitempty"` // 事件
+	Culprit       string                 `protobuf:"bytes,3,opt,name=culprit,proto3" json:"culprit,omitempty"`   // 罪魁祸首
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -324,8 +324,8 @@ func (x *IncidentInstance) GetCulprit() string {
 
 type CastRole struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Role          string                 `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
-	ExtraInfo     map[string]string      `protobuf:"bytes,2,rep,name=extra_info,json=extraInfo,proto3" json:"extra_info,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Role          string                 `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`                                                                                                      // 角色
+	ExtraInfo     map[string]string      `protobuf:"bytes,2,rep,name=extra_info,json=extraInfo,proto3" json:"extra_info,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 额外信息
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -620,15 +620,15 @@ func (x *ScriptMetadata) GetSource() string {
 	return ""
 }
 
-// ScriptModel defines the configuration for a specific script.
+// ScriptModel 定义了特定剧本的配置。
 type ScriptModel struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Id    int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// Private information for the script.
+	// 剧本的私有信息。
 	PrivateInfo *PrivateInfo `protobuf:"bytes,2,opt,name=private_info,json=privateInfo,proto3" json:"private_info,omitempty"`
-	// Public information for the script.
+	// 剧本的公共信息。
 	PublicInfo *PublicInfo `protobuf:"bytes,3,opt,name=public_info,json=publicInfo,proto3" json:"public_info,omitempty"`
-	// Descriptive metadata for the script.
+	// 剧本的描述性元数据。
 	Metadata      *ScriptMetadata `protobuf:"bytes,4,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -692,18 +692,18 @@ func (x *ScriptModel) GetMetadata() *ScriptMetadata {
 	return nil
 }
 
-// PrivateInfo defines the private information for a script.
+// PrivateInfo 定义了剧本的私有信息。
 type PrivateInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The main plot of the script.
+	// 剧本的主线剧情。
 	MainPlotId int32 `protobuf:"varint,1,opt,name=main_plot_id,json=mainPlotId,proto3" json:"main_plot_id,omitempty"`
-	// A list of sub plots for the script.
+	// 剧本的支线剧情列表。
 	SubPlotsIds []int32 `protobuf:"varint,2,rep,packed,name=sub_plots_ids,json=subPlotsIds,proto3" json:"sub_plots_ids,omitempty"`
-	// A map of characters in the script.
+	// 剧本中的角色映射。
 	CharactersIds []int32 `protobuf:"varint,3,rep,packed,name=characters_ids,json=charactersIds,proto3" json:"characters_ids,omitempty"`
-	// A map of incidents in the script.
+	// 剧本中的事件映射。
 	IncidentIds []int32 `protobuf:"varint,4,rep,packed,name=incident_ids,json=incidentIds,proto3" json:"incident_ids,omitempty"`
-	// A map of character to role assignments, derived from the selected plots.
+	// 角色到身份分配的映射，源自选定的剧情。
 	RoleAssignments map[int32]int32 `protobuf:"bytes,5,rep,name=role_assignments,json=roleAssignments,proto3" json:"role_assignments,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
@@ -774,22 +774,22 @@ func (x *PrivateInfo) GetRoleAssignments() map[int32]int32 {
 	return nil
 }
 
-// PublicInfo defines the public information for a script.
+// PublicInfo 定义了剧本的公共信息。
 type PublicInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The unique identifier for the script configuration.
+	// 剧本配置的唯一标识符。
 	ScriptConfigId int32 `protobuf:"varint,1,opt,name=script_config_id,json=scriptConfigId,proto3" json:"script_config_id,omitempty"`
-	// Game rules.
-	// The number of loops in the game.
+	// 游戏规则。
+	// 游戏中的循环次数。
 	LoopCount int32 `protobuf:"varint,2,opt,name=loop_count,json=loopCount,proto3" json:"loop_count,omitempty"`
-	// The number of days per loop.
+	// 每个循环的天数。
 	DaysPerLoop int32 `protobuf:"varint,3,opt,name=days_per_loop,json=daysPerLoop,proto3" json:"days_per_loop,omitempty"`
-	// Whether players can discuss information.
+	// 玩家是否可以讨论信息。
 	CanDiscuss bool `protobuf:"varint,4,opt,name=can_discuss,json=canDiscuss,proto3" json:"can_discuss,omitempty"`
-	// Special rules.
-	// A map of special incidents.
+	// 特殊规则。
+	// 特殊事件的映射。
 	SpecialIncidentIds []int32 `protobuf:"varint,5,rep,packed,name=special_incident_ids,json=specialIncidentIds,proto3" json:"special_incident_ids,omitempty"`
-	// A map of scheduled incidents.
+	// 预定事件的映射。
 	ScheduledIncidentIds []int32 `protobuf:"varint,6,rep,packed,name=scheduled_incident_ids,json=scheduledIncidentIds,proto3" json:"scheduled_incident_ids,omitempty"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
@@ -867,20 +867,20 @@ func (x *PublicInfo) GetScheduledIncidentIds() []int32 {
 	return nil
 }
 
-// RoleConfig defines the configuration for a role.
+// RoleConfig 定义了角色的配置。
 type RoleConfig struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The unique identifier for the role.
+	// 角色的唯一标识符。
 	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// The name of the role.
+	// 角色的名称。
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// The limit of characters that can have this role.
+	// 可以拥有此角色的角色数量限制。
 	Limit int32 `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
-	// A map of abilities for this role.
+	// 此角色的能力映射。
 	Abilities map[int32]*AbilityConfig `protobuf:"bytes,4,rep,name=abilities,proto3" json:"abilities,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	// Defines the character's goodwill status.
+	// 定义角色的好感状态。
 	GoodwillRule GoodwillRuleType `protobuf:"varint,5,opt,name=goodwill_rule,json=goodwillRule,proto3,enum=tragedylooper.v1.GoodwillRuleType" json:"goodwill_rule,omitempty"`
-	// Defines if the character can be made invincible.
+	// 定义角色是否可以变为无敌。
 	CanBeInvincible bool `protobuf:"varint,6,opt,name=can_be_invincible,json=canBeInvincible,proto3" json:"can_be_invincible,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
@@ -958,20 +958,20 @@ func (x *RoleConfig) GetCanBeInvincible() bool {
 	return false
 }
 
-// PlotConfig defines a story plot.
+// PlotConfig 定义了一个故事剧情。
 type PlotConfig struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The unique identifier for the plot.
+	// 剧情的唯一标识符。
 	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// The type of the plot.
+	// 剧情的类型。
 	PlotType PlotType `protobuf:"varint,2,opt,name=plot_type,json=type,proto3,enum=tragedylooper.v1.PlotType" json:"plot_type,omitempty"`
-	// The name of the plot.
+	// 剧情的名称。
 	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	// A description of the plot.
+	// 剧情的描述。
 	Description string `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
-	// A map of incident identifiers for this plot.
+	// 此剧情的事件标识符映射。
 	IncidentIds map[int32]*IncidentConfig `protobuf:"bytes,5,rep,name=incident_ids,json=incidentIds,proto3" json:"incident_ids,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	// A map of role assignments for this plot.
+	// 此剧情的角色分配映射。
 	RoleAssignments map[int32]int32 `protobuf:"bytes,6,rep,name=role_assignments,json=roleAssignments,proto3" json:"role_assignments,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache

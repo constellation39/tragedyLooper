@@ -21,15 +21,15 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// The operator to use when combining effects.
+// 组合效果时使用的操作符。
 type CompoundEffect_Operator int32
 
 const (
-	// Unspecified operator.
+	// 未指定的操作符。
 	CompoundEffect_OPERATOR_UNSPECIFIED CompoundEffect_Operator = 0
-	// Executes all effects in sequence.
+	// 按顺序执行所有效果。
 	CompoundEffect_OPERATOR_SEQUENCE CompoundEffect_Operator = 1
-	// The player chooses one effect to execute.
+	// 玩家选择一个效果执行。
 	CompoundEffect_OPERATOR_CHOOSE_ONE CompoundEffect_Operator = 2
 )
 
@@ -74,19 +74,19 @@ func (CompoundEffect_Operator) EnumDescriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{2, 0}
 }
 
-// The type of action to forbid.
+// 要禁止的动作类型。
 type ForbidEffect_ForbidType int32
 
 const (
-	// Unspecified forbid type.
+	// 未指定的禁止类型。
 	ForbidEffect_FORBID_TYPE_UNSPECIFIED ForbidEffect_ForbidType = 0
-	// Forbids movement.
+	// 禁止移动。
 	ForbidEffect_FORBID_TYPE_MOVEMENT ForbidEffect_ForbidType = 1
-	// Forbids paranoia changes.
+	// 禁止妄想变化。
 	ForbidEffect_FORBID_TYPE_PARANOIA_CHANGE ForbidEffect_ForbidType = 2
-	// Forbids goodwill changes.
+	// 禁止善意变化。
 	ForbidEffect_FORBID_TYPE_GOODWILL_CHANGE ForbidEffect_ForbidType = 3
-	// Forbids intrigue changes.
+	// 禁止诡计变化。
 	ForbidEffect_FORBID_TYPE_INTRIGUE_CHANGE ForbidEffect_ForbidType = 4
 )
 
@@ -135,10 +135,10 @@ func (ForbidEffect_ForbidType) EnumDescriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_effect_proto_rawDescGZIP(), []int{5, 0}
 }
 
-// Effect defines the specific action of an ability, card, or rule.
+// Effect 定义了能力、卡牌或规则的具体行动。
 type Effect struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The type of the effect.
+	// 效果的类型。
 	//
 	// Types that are valid to be assigned to EffectType:
 	//
@@ -309,62 +309,62 @@ type isEffect_EffectType interface {
 }
 
 type Effect_AdjustStat struct {
-	// Adjusts a character's stat.
+	// 调整角色的属性。
 	AdjustStat *AdjustStatEffect `protobuf:"bytes,1,opt,name=adjust_stat,json=adjustStat,proto3,oneof"`
 }
 
 type Effect_MoveCharacter struct {
-	// Moves a character to a different location.
+	// 将角色移动到不同的地点。
 	MoveCharacter *MoveCharacterEffect `protobuf:"bytes,2,opt,name=move_character,json=moveCharacter,proto3,oneof"`
 }
 
 type Effect_Forbid struct {
-	// Forbids a character from performing an action.
+	// 禁止角色执行某个动作。
 	Forbid *ForbidEffect `protobuf:"bytes,3,opt,name=forbid,proto3,oneof"`
 }
 
 type Effect_GrantAbility struct {
-	// Grants an ability to a character.
+	// 授予角色能力。
 	GrantAbility *GrantAbilityEffect `protobuf:"bytes,4,opt,name=grant_ability,json=grantAbility,proto3,oneof"`
 }
 
 type Effect_RevealRole struct {
-	// Reveals a character's role.
+	// 揭示角色的角色。
 	RevealRole *RevealRoleEffect `protobuf:"bytes,5,opt,name=reveal_role,json=revealRole,proto3,oneof"`
 }
 
 type Effect_ChangeRole struct {
-	// Changes a character's role.
+	// 改变角色的角色。
 	ChangeRole *ChangeRoleEffect `protobuf:"bytes,6,opt,name=change_role,json=changeRole,proto3,oneof"`
 }
 
 type Effect_TriggerIncident struct {
-	// Triggers an incident.
+	// 触发事件。
 	TriggerIncident *TriggerIncidentEffect `protobuf:"bytes,7,opt,name=trigger_incident,json=triggerIncident,proto3,oneof"`
 }
 
 type Effect_EndGame struct {
-	// Ends the game.
+	// 结束游戏。
 	EndGame *EndGameEffect `protobuf:"bytes,8,opt,name=end_game,json=endGame,proto3,oneof"`
 }
 
 type Effect_AddTrait struct {
-	// Adds a trait to a character.
+	// 为角色添加特征。
 	AddTrait *AddTraitEffect `protobuf:"bytes,9,opt,name=add_trait,json=addTrait,proto3,oneof"`
 }
 
 type Effect_RemoveTrait struct {
-	// Removes a trait from a character.
+	// 从角色中移除特征。
 	RemoveTrait *RemoveTraitEffect `protobuf:"bytes,10,opt,name=remove_trait,json=removeTrait,proto3,oneof"`
 }
 
 type Effect_CompoundEffect struct {
-	// A compound effect.
+	// 复合效果。
 	CompoundEffect *CompoundEffect `protobuf:"bytes,11,opt,name=compound_effect,json=compoundEffect,proto3,oneof"`
 }
 
 type Effect_ConditionalEffect struct {
-	// A conditional effect.
+	// 条件效果。
 	ConditionalEffect *ConditionalEffect `protobuf:"bytes,12,opt,name=conditional_effect,json=conditionalEffect,proto3,oneof"`
 }
 
@@ -392,14 +392,14 @@ func (*Effect_CompoundEffect) isEffect_EffectType() {}
 
 func (*Effect_ConditionalEffect) isEffect_EffectType() {}
 
-// ConditionalEffect defines an effect that only runs if a condition is met.
+// ConditionalEffect 定义了只有在满足条件时才运行的效果。
 type ConditionalEffect struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The condition to check.
+	// 要检查的条件。
 	Condition *Condition `protobuf:"bytes,1,opt,name=condition,proto3" json:"condition,omitempty"`
-	// The effect to execute if the condition is true.
+	// 如果条件为真，则执行的效果。
 	ThenEffect *Effect `protobuf:"bytes,2,opt,name=then_effect,json=thenEffect,proto3" json:"then_effect,omitempty"`
-	// Optional: The effect to execute if the condition is false.
+	// 可选：如果条件为假时执行的效果。
 	ElseEffect    *Effect `protobuf:"bytes,3,opt,name=else_effect,json=elseEffect,proto3,oneof" json:"else_effect,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -456,12 +456,12 @@ func (x *ConditionalEffect) GetElseEffect() *Effect {
 	return nil
 }
 
-// CompoundEffect defines a combination of multiple effects.
+// CompoundEffect 定义了多个效果的组合。
 type CompoundEffect struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The operator for combining effects.
+	// 组合效果的操作符。
 	Operator CompoundEffect_Operator `protobuf:"varint,1,opt,name=operator,proto3,enum=tragedylooper.v1.CompoundEffect_Operator" json:"operator,omitempty"`
-	// A list of sub-effects.
+	// 子效果列表。
 	SubEffects    []*Effect `protobuf:"bytes,2,rep,name=sub_effects,json=subEffects,proto3" json:"sub_effects,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -511,14 +511,14 @@ func (x *CompoundEffect) GetSubEffects() []*Effect {
 	return nil
 }
 
-// AdjustStatEffect defines an effect that adjusts a character's stat.
+// AdjustStatEffect 定义了调整角色属性的效果。
 type AdjustStatEffect struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The target character.
+	// 目标角色。
 	Target *TargetSelector `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
-	// The type of stat to adjust.
+	// 要调整的属性类型。
 	StatType StatType `protobuf:"varint,2,opt,name=stat_type,json=statType,proto3,enum=tragedylooper.v1.StatType" json:"stat_type,omitempty"`
-	// The amount to adjust the stat by (positive for increase, negative for decrease).
+	// 调整属性的量（正数增加，负数减少）。
 	Amount        int32 `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -575,12 +575,12 @@ func (x *AdjustStatEffect) GetAmount() int32 {
 	return 0
 }
 
-// MoveCharacterEffect defines an effect that moves a character.
+// MoveCharacterEffect 定义了移动角色的效果。
 type MoveCharacterEffect struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The target character.
+	// 目标角色。
 	Target *TargetSelector `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
-	// The destination location.
+	// 目的地。
 	Destination   LocationType `protobuf:"varint,2,opt,name=destination,proto3,enum=tragedylooper.v1.LocationType" json:"destination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -630,12 +630,12 @@ func (x *MoveCharacterEffect) GetDestination() LocationType {
 	return LocationType_LOCATION_TYPE_UNSPECIFIED
 }
 
-// ForbidEffect defines an effect that forbids an action.
+// ForbidEffect 定义了禁止动作的效果。
 type ForbidEffect struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The target character.
+	// 目标角色。
 	Target *TargetSelector `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
-	// The type of action to forbid.
+	// 要禁止的动作类型。
 	ForbidType    ForbidEffect_ForbidType `protobuf:"varint,2,opt,name=forbid_type,json=forbidType,proto3,enum=tragedylooper.v1.ForbidEffect_ForbidType" json:"forbid_type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -685,14 +685,14 @@ func (x *ForbidEffect) GetForbidType() ForbidEffect_ForbidType {
 	return ForbidEffect_FORBID_TYPE_UNSPECIFIED
 }
 
-// GrantAbilityEffect defines an effect that grants an ability.
+// GrantAbilityEffect 定义了授予能力的效果。
 type GrantAbilityEffect struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The target character.
+	// 目标角色。
 	Target *TargetSelector `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
-	// The ID of the ability to grant.
+	// 要授予的能力 ID。
 	AbilityId int32 `protobuf:"varint,2,opt,name=ability_id,json=abilityId,proto3" json:"ability_id,omitempty"`
-	// Whether the ability is temporary (e.g., lasts for one day or one loop).
+	// 该能力是否是临时的（例如，持续一天或一个循环）。
 	IsTemporary   bool `protobuf:"varint,3,opt,name=is_temporary,json=isTemporary,proto3" json:"is_temporary,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -749,10 +749,10 @@ func (x *GrantAbilityEffect) GetIsTemporary() bool {
 	return false
 }
 
-// RevealRoleEffect defines an effect that reveals a character's role.
+// RevealRoleEffect 定义了揭示角色身份的效果。
 type RevealRoleEffect struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The target character.
+	// 目标角色。
 	Target        *TargetSelector `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -795,12 +795,12 @@ func (x *RevealRoleEffect) GetTarget() *TargetSelector {
 	return nil
 }
 
-// ChangeRoleEffect defines an effect that changes a character's role.
+// ChangeRoleEffect 定义了改变角色身份的效果。
 type ChangeRoleEffect struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The target character.
+	// 目标角色。
 	Target *TargetSelector `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
-	// The new role.
+	// 新的角色。
 	NewRole       int32 `protobuf:"varint,2,opt,name=new_role,json=newRole,proto3" json:"new_role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -850,10 +850,10 @@ func (x *ChangeRoleEffect) GetNewRole() int32 {
 	return 0
 }
 
-// TriggerIncidentEffect defines an effect that triggers an incident.
+// TriggerIncidentEffect 定义了触发事件的效果。
 type TriggerIncidentEffect struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The ID of the incident to trigger (references an IncidentConfig in the ScriptConfig).
+	// 要触发的事件 ID（引用 ScriptConfig 中的 IncidentConfig）。
 	IncidentId    int32 `protobuf:"varint,1,opt,name=incident_id,json=incidentId,proto3" json:"incident_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -896,12 +896,12 @@ func (x *TriggerIncidentEffect) GetIncidentId() int32 {
 	return 0
 }
 
-// EndGameEffect defines an effect that ends the game.
+// EndGameEffect 定义了结束游戏的效果。
 type EndGameEffect struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The winning player role.
+	// 获胜的玩家角色。
 	Winner PlayerRole `protobuf:"varint,1,opt,name=winner,proto3,enum=tragedylooper.v1.PlayerRole" json:"winner,omitempty"`
-	// The reason for the game ending.
+	// 游戏结束的原因。
 	Reason        string `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -951,12 +951,12 @@ func (x *EndGameEffect) GetReason() string {
 	return ""
 }
 
-// AddTraitEffect defines an effect that adds a trait to a character.
+// AddTraitEffect 定义了为角色添加特征的效果。
 type AddTraitEffect struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The target character.
+	// 目标角色。
 	Target *TargetSelector `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
-	// The trait to add.
+	// 要添加的特征。
 	Trait         string `protobuf:"bytes,2,opt,name=trait,proto3" json:"trait,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1006,12 +1006,12 @@ func (x *AddTraitEffect) GetTrait() string {
 	return ""
 }
 
-// RemoveTraitEffect defines an effect that removes a trait from a character.
+// RemoveTraitEffect 定义了从角色中移除特征的效果。
 type RemoveTraitEffect struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The target character.
+	// 目标角色。
 	Target *TargetSelector `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
-	// The trait to remove.
+	// 要移除的特征。
 	Trait         string `protobuf:"bytes,2,opt,name=trait,proto3" json:"trait,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

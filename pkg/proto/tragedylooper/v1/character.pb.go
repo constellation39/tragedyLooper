@@ -21,26 +21,26 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// CharacterConfig defines the configuration for a character in the global character library.
+// CharacterConfig 定义了全局角色库中角色的配置。
 type CharacterConfig struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The unique identifier for the character.
+	// 角色的唯一标识符。
 	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// The name of the character.
+	// 角色的名称。
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// A list of character traits (e.g., "Student", "Reporter").
+	// 角色特征列表（例如，“学生”，“记者”）。
 	Traits []string `protobuf:"bytes,3,rep,name=traits,proto3" json:"traits,omitempty"`
-	// A map of stat limits for the character.
+	// 角色的属性上限。
 	StatLimits map[int32]int32 `protobuf:"bytes,4,rep,name=stat_limits,json=statLimits,proto3" json:"stat_limits,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	// A list of ability IDs that the character possesses.
+	// 角色拥有的能力ID列表。
 	Abilities []*AbilityConfig `protobuf:"bytes,7,rep,name=abilities,proto3" json:"abilities,omitempty"`
-	// A list of special rules for the character.
+	// 角色的特殊规则列表。
 	Rules []*CharacterRule `protobuf:"bytes,8,rep,name=rules,proto3" json:"rules,omitempty"`
-	// A description of the character.
+	// 角色的描述。
 	Description string `protobuf:"bytes,9,opt,name=description,proto3" json:"description,omitempty"`
-	// The initial location of the character.
+	// 角色的初始位置。
 	InitialLocation LocationType `protobuf:"varint,10,opt,name=initial_location,json=initialLocation,proto3,enum=tragedylooper.v1.LocationType" json:"initial_location,omitempty"`
-	// A list of locations that the character cannot go to.
+	// 角色不能进入的地点列表。
 	BlockedLocations []LocationType `protobuf:"varint,11,rep,packed,name=blocked_locations,json=blockedLocations,proto3,enum=tragedylooper.v1.LocationType" json:"blocked_locations,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
@@ -139,24 +139,24 @@ func (x *CharacterConfig) GetBlockedLocations() []LocationType {
 	return nil
 }
 
-// Character defines a character instance at runtime.
+// Character 定义了运行时的角色实例。
 type Character struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The configuration for the character.
+	// 角色的配置。
 	Config *CharacterConfig `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	// The current location of the character.
+	// 角色的当前位置。
 	CurrentLocation LocationType `protobuf:"varint,2,opt,name=current_location,json=currentLocation,proto3,enum=tragedylooper.v1.LocationType" json:"current_location,omitempty"`
-	// The current stat levels of the character.
+	// 角色的当前属性水平。
 	Stats map[int32]int32 `protobuf:"bytes,3,rep,name=stats,proto3" json:"stats,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	// The hidden role of the character (assigned by the script).
+	// 角色的隐藏角色（由剧本分配）。
 	HiddenRoleId int32 `protobuf:"varint,6,opt,name=hidden_role_id,json=hiddenRoleId,proto3" json:"hidden_role_id,omitempty"`
-	// A list of ability instances that the character possesses.
+	// 角色拥有的能力实例列表。
 	Abilities []*Ability `protobuf:"bytes,7,rep,name=abilities,proto3" json:"abilities,omitempty"`
-	// Whether the character is alive.
+	// 角色是否存活。
 	IsAlive bool `protobuf:"varint,8,opt,name=is_alive,json=isAlive,proto3" json:"is_alive,omitempty"`
-	// Whether the character is in panic mode.
+	// 角色是否处于恐慌状态。
 	InPanicMode bool `protobuf:"varint,9,opt,name=in_panic_mode,json=inPanicMode,proto3" json:"in_panic_mode,omitempty"`
-	// A list of dynamic traits for the character.
+	// 角色的动态特征列表。
 	Traits        []string `protobuf:"bytes,10,rep,name=traits,proto3" json:"traits,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -248,16 +248,16 @@ func (x *Character) GetTraits() []string {
 	return nil
 }
 
-// CharacterRule defines a special rule for a character.
+// CharacterRule 定义了角色的特殊规则。
 type CharacterRule struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The name of the rule.
+	// 规则的名称。
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// A description of the rule.
+	// 规则的描述。
 	Description string `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
-	// The trigger for the rule.
+	// 规则的触发器。
 	Trigger TriggerType `protobuf:"varint,3,opt,name=trigger,proto3,enum=tragedylooper.v1.TriggerType" json:"trigger,omitempty"`
-	// The effect of the rule.
+	// 规则的效果。
 	//
 	// Types that are valid to be assigned to Effect:
 	//
@@ -359,17 +359,17 @@ type isCharacterRule_Effect interface {
 }
 
 type CharacterRule_TurfSelectionEffect struct {
-	// A turf selection effect.
+	// 地盘选择效果。
 	TurfSelectionEffect *TurfSelectionEffect `protobuf:"bytes,4,opt,name=turf_selection_effect,json=turfSelectionEffect,proto3,oneof"`
 }
 
 type CharacterRule_DelayedEntryEffect struct {
-	// A delayed entry effect.
+	// 延迟进入效果。
 	DelayedEntryEffect *DelayedEntryEffect `protobuf:"bytes,5,opt,name=delayed_entry_effect,json=delayedEntryEffect,proto3,oneof"`
 }
 
 type CharacterRule_SpecialMovementRule struct {
-	// A special movement rule.
+	// 特殊移动规则。
 	SpecialMovementRule *SpecialMovementRule `protobuf:"bytes,6,opt,name=special_movement_rule,json=specialMovementRule,proto3,oneof"`
 }
 
@@ -379,12 +379,12 @@ func (*CharacterRule_DelayedEntryEffect) isCharacterRule_Effect() {}
 
 func (*CharacterRule_SpecialMovementRule) isCharacterRule_Effect() {}
 
-// TurfSelectionEffect defines an effect for selecting a turf.
+// TurfSelectionEffect 定义了选择地盘的效果。
 type TurfSelectionEffect struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// A list of possible locations to choose from.
+	// 可供选择的地点列表。
 	PossibleLocations []LocationType `protobuf:"varint,1,rep,packed,name=possible_locations,json=possibleLocations,proto3,enum=tragedylooper.v1.LocationType" json:"possible_locations,omitempty"`
-	// The prompt to show to the player.
+	// 显示给玩家的提示。
 	Prompt        string `protobuf:"bytes,2,opt,name=prompt,proto3" json:"prompt,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -434,12 +434,12 @@ func (x *TurfSelectionEffect) GetPrompt() string {
 	return ""
 }
 
-// DelayedEntryEffect defines an effect for a delayed entry.
+// DelayedEntryEffect 定义了延迟进入的效果。
 type DelayedEntryEffect struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The day of entry.
+	// 进入的日期。
 	DayOfEntry int32 `protobuf:"varint,1,opt,name=day_of_entry,json=dayOfEntry,proto3" json:"day_of_entry,omitempty"`
-	// The location of entry.
+	// 进入的地点。
 	EntryLocation LocationType `protobuf:"varint,2,opt,name=entry_location,json=entryLocation,proto3,enum=tragedylooper.v1.LocationType" json:"entry_location,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -489,12 +489,12 @@ func (x *DelayedEntryEffect) GetEntryLocation() LocationType {
 	return LocationType_LOCATION_TYPE_UNSPECIFIED
 }
 
-// SpecialMovementRule defines a special movement rule.
+// SpecialMovementRule 定义了特殊移动规则。
 type SpecialMovementRule struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// A list of restricted locations.
+	// 受限地点列表。
 	RestrictedLocations []LocationType `protobuf:"varint,1,rep,packed,name=restricted_locations,json=restrictedLocations,proto3,enum=tragedylooper.v1.LocationType" json:"restricted_locations,omitempty"`
-	// A description of the rule.
+	// 规则的描述。
 	Description   string `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

@@ -21,17 +21,17 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// The operator to use when combining conditions.
+// 组合条件时使用的操作符。
 type CompoundCondition_Operator int32
 
 const (
-	// Unspecified operator.
+	// 未指定的操作符。
 	CompoundCondition_OPERATOR_UNSPECIFIED CompoundCondition_Operator = 0
-	// The logical AND operator.
+	// 逻辑 AND 操作符。
 	CompoundCondition_OPERATOR_AND CompoundCondition_Operator = 1
-	// The logical OR operator.
+	// 逻辑 OR 操作符。
 	CompoundCondition_OPERATOR_OR CompoundCondition_Operator = 2
-	// The logical NOT operator.
+	// 逻辑 NOT 操作符。
 	CompoundCondition_OPERATOR_NOT CompoundCondition_Operator = 3
 )
 
@@ -78,12 +78,12 @@ func (CompoundCondition_Operator) EnumDescriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_condition_proto_rawDescGZIP(), []int{4, 0}
 }
 
-// Condition defines a condition for triggering rules, events, and effects.
-// It uses a oneof to ensure that only one type of condition can be set at a time.
-// For logical negation, use a CompoundCondition with the NOT operator.
+// Condition 定义了触发规则、事件和效果的条件。
+// 它使用 oneof 来确保一次只能设置一种类型的条件。
+// 对于逻辑否定，请使用带有 NOT 操作符的 CompoundCondition。
 type Condition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The type of the condition.
+	// 条件的类型。
 	//
 	// Types that are valid to be assigned to ConditionType:
 	//
@@ -234,52 +234,52 @@ type isCondition_ConditionType interface {
 }
 
 type Condition_StatCondition struct {
-	// A stat condition.
+	// 属性条件。
 	StatCondition *StatCondition `protobuf:"bytes,1,opt,name=stat_condition,json=statCondition,proto3,oneof"`
 }
 
 type Condition_LocationCondition struct {
-	// A location condition.
+	// 位置条件。
 	LocationCondition *LocationCondition `protobuf:"bytes,2,opt,name=location_condition,json=locationCondition,proto3,oneof"`
 }
 
 type Condition_RoleCondition struct {
-	// A role condition.
+	// 角色条件。
 	RoleCondition *RoleCondition `protobuf:"bytes,3,opt,name=role_condition,json=roleCondition,proto3,oneof"`
 }
 
 type Condition_TraitCondition struct {
-	// A trait condition.
+	// 特征条件。
 	TraitCondition *TraitCondition `protobuf:"bytes,4,opt,name=trait_condition,json=traitCondition,proto3,oneof"`
 }
 
 type Condition_DayCondition struct {
-	// A day condition.
+	// 日期条件。
 	DayCondition *DayCondition `protobuf:"bytes,5,opt,name=day_condition,json=dayCondition,proto3,oneof"`
 }
 
 type Condition_PlayerCondition struct {
-	// A player condition.
+	// 玩家条件。
 	PlayerCondition *PlayerCondition `protobuf:"bytes,6,opt,name=player_condition,json=playerCondition,proto3,oneof"`
 }
 
 type Condition_CompoundCondition struct {
-	// A compound condition (AND/OR/NOT).
+	// 复合条件（AND/OR/NOT）。
 	CompoundCondition *CompoundCondition `protobuf:"bytes,7,opt,name=compound_condition,json=compoundCondition,proto3,oneof"`
 }
 
 type Condition_PhaseCondition struct {
-	// A phase condition.
+	// 阶段条件。
 	PhaseCondition *PhaseCondition `protobuf:"bytes,8,opt,name=phase_condition,json=phaseCondition,proto3,oneof"`
 }
 
 type Condition_EventHistoryCondition struct {
-	// An event history condition.
+	// 事件历史条件。
 	EventHistoryCondition *EventHistoryCondition `protobuf:"bytes,9,opt,name=event_history_condition,json=eventHistoryCondition,proto3,oneof"`
 }
 
 type Condition_LocationCharacterCountCondition struct {
-	// A location character count condition.
+	// 地点角色数量条件。
 	LocationCharacterCountCondition *LocationCharacterCountCondition `protobuf:"bytes,11,opt,name=location_character_count_condition,json=locationCharacterCountCondition,proto3,oneof"`
 }
 
@@ -303,20 +303,20 @@ func (*Condition_EventHistoryCondition) isCondition_ConditionType() {}
 
 func (*Condition_LocationCharacterCountCondition) isCondition_ConditionType() {}
 
-// EventHistoryCondition defines a condition based on past game events.
+// EventHistoryCondition 定义了基于过去游戏事件的条件。
 type EventHistoryCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The type of event to look for.
+	// 要查找的事件类型。
 	EventType GameEventType `protobuf:"varint,1,opt,name=event_type,json=eventType,proto3,enum=tragedylooper.v1.GameEventType" json:"event_type,omitempty"`
-	// How many days into the past to look. 0 means today, 1 means today and yesterday, etc.
+	// 回溯天数。0 表示今天，1 表示今天和昨天，依此类推。
 	LookbackDays int32 `protobuf:"varint,2,opt,name=lookback_days,json=lookbackDays,proto3" json:"lookback_days,omitempty"`
-	// Optional: Further filter by the character involved in the event.
+	// 可选：根据事件中涉及的角色进一步过滤。
 	EventTarget *TargetSelector `protobuf:"bytes,3,opt,name=event_target,json=eventTarget,proto3" json:"event_target,omitempty"`
-	// The number of times the event must have occurred.
+	// 事件必须发生的次数。
 	Count int32 `protobuf:"varint,4,opt,name=count,proto3" json:"count,omitempty"`
-	// The comparator for the count.
+	// 计数的比较操作符。
 	Comparator Comparator `protobuf:"varint,5,opt,name=comparator,proto3,enum=tragedylooper.v1.Comparator" json:"comparator,omitempty"`
-	// Optional: A filter for the event payload.
+	// 可选：事件有效载荷的过滤器。
 	//
 	// Types that are valid to be assigned to EventFilter:
 	//
@@ -417,14 +417,14 @@ type EventHistoryCondition_StatAdjustedEventFilter struct {
 
 func (*EventHistoryCondition_StatAdjustedEventFilter) isEventHistoryCondition_EventFilter() {}
 
-// StatAdjustedEventFilter provides a filter for StatAdjustedEvent.
+// StatAdjustedEventFilter 为 StatAdjustedEvent 提供过滤器。
 type StatAdjustedEventFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Optional: The stat type to match.
+	// 可选：要匹配的属性类型。
 	StatType *StatType `protobuf:"varint,1,opt,name=stat_type,json=statType,proto3,enum=tragedylooper.v1.StatType,oneof" json:"stat_type,omitempty"`
-	// Optional: The amount to compare against.
+	// 可选：要比较的金额。
 	Amount *int32 `protobuf:"varint,2,opt,name=amount,proto3,oneof" json:"amount,omitempty"`
-	// Optional: The comparator for the amount.
+	// 可选：金额的比较操作符。
 	AmountComparator *Comparator `protobuf:"varint,3,opt,name=amount_comparator,json=amountComparator,proto3,enum=tragedylooper.v1.Comparator,oneof" json:"amount_comparator,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
@@ -481,12 +481,12 @@ func (x *StatAdjustedEventFilter) GetAmountComparator() Comparator {
 	return Comparator_COMPARATOR_UNSPECIFIED
 }
 
-// PhaseCondition defines a condition based on the current game phase.
+// PhaseCondition 定义了基于当前游戏阶段的条件。
 type PhaseCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The comparator to use.
+	// 要使用的比较操作符。
 	Comparator Comparator `protobuf:"varint,1,opt,name=comparator,proto3,enum=tragedylooper.v1.Comparator" json:"comparator,omitempty"`
-	// The target game phase.
+	// 目标游戏阶段。
 	Phase         GamePhase `protobuf:"varint,2,opt,name=phase,proto3,enum=tragedylooper.v1.GamePhase" json:"phase,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -536,13 +536,13 @@ func (x *PhaseCondition) GetPhase() GamePhase {
 	return GamePhase_GAME_PHASE_UNSPECIFIED
 }
 
-// CompoundCondition defines a combination of multiple conditions.
-// For NOT, provide exactly one sub-condition.
+// CompoundCondition 定义了多个条件的组合。
+// 对于 NOT，只提供一个子条件。
 type CompoundCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The logical operator to use.
+	// 要使用的逻辑操作符。
 	Operator CompoundCondition_Operator `protobuf:"varint,1,opt,name=operator,proto3,enum=tragedylooper.v1.CompoundCondition_Operator" json:"operator,omitempty"`
-	// A list of sub-conditions.
+	// 子条件列表。
 	SubConditions []*Condition `protobuf:"bytes,2,rep,name=sub_conditions,json=subConditions,proto3" json:"sub_conditions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -592,19 +592,19 @@ func (x *CompoundCondition) GetSubConditions() []*Condition {
 	return nil
 }
 
-// StatCondition defines a condition based on a character's stats.
+// StatCondition 定义了基于角色属性的条件。
 type StatCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The target character selector.
+	// 目标角色选择器。
 	Target *TargetSelector `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
-	// The type of stat to check.
+	// 要检查的属性类型。
 	StatType StatType `protobuf:"varint,2,opt,name=stat_type,json=statType,proto3,enum=tragedylooper.v1.StatType" json:"stat_type,omitempty"`
-	// The comparator to use.
+	// 要使用的比较操作符。
 	Comparator Comparator `protobuf:"varint,3,opt,name=comparator,proto3,enum=tragedylooper.v1.Comparator" json:"comparator,omitempty"`
-	// The value to compare against.
+	// 要比较的值。
 	Value int32 `protobuf:"varint,4,opt,name=value,proto3" json:"value,omitempty"`
-	// Optional: A second target to compare against.
-	// If set, the condition compares the stat of 'target' with the stat of 'target_to_compare'.
+	// 可选：第二个要比较的目标。
+	// 如果设置，条件将比较“target”的属性与“target_to_compare”的属性。
 	TargetToCompare *TargetSelector `protobuf:"bytes,5,opt,name=target_to_compare,json=targetToCompare,proto3" json:"target_to_compare,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
@@ -675,13 +675,13 @@ func (x *StatCondition) GetTargetToCompare() *TargetSelector {
 	return nil
 }
 
-// LocationCondition defines a condition that checks if a character is at a specific location.
-// To check if a character is NOT at a location, use a CompoundCondition with the NOT operator.
+// LocationCondition 定义了检查角色是否在特定地点的条件。
+// 要检查角色是否不在某个地点，请使用带有 NOT 操作符的 CompoundCondition。
 type LocationCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The target character selector.
+	// 目标角色选择器。
 	Target *TargetSelector `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
-	// The target location.
+	// 目标地点。
 	Location      LocationType `protobuf:"varint,2,opt,name=location,proto3,enum=tragedylooper.v1.LocationType" json:"location,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -731,14 +731,14 @@ func (x *LocationCondition) GetLocation() LocationType {
 	return LocationType_LOCATION_TYPE_UNSPECIFIED
 }
 
-// LocationCharacterCountCondition defines a condition based on the number of characters at a location.
+// LocationCharacterCountCondition 定义了基于地点角色数量的条件。
 type LocationCharacterCountCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The target location.
+	// 目标地点。
 	Location LocationType `protobuf:"varint,1,opt,name=location,proto3,enum=tragedylooper.v1.LocationType" json:"location,omitempty"`
-	// The comparator to use.
+	// 要使用的比较操作符。
 	Comparator Comparator `protobuf:"varint,2,opt,name=comparator,proto3,enum=tragedylooper.v1.Comparator" json:"comparator,omitempty"`
-	// The number of characters to compare against.
+	// 要比较的角色数量。
 	Count         int32 `protobuf:"varint,3,opt,name=count,proto3" json:"count,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -795,13 +795,13 @@ func (x *LocationCharacterCountCondition) GetCount() int32 {
 	return 0
 }
 
-// RoleCondition defines a condition based on a character's role.
-// To check if a character does NOT have a role, use a CompoundCondition with the NOT operator.
+// RoleCondition 定义了基于角色扮演的条件。
+// 要检查角色是否没有某个角色，请使用带有 NOT 操作符的 CompoundCondition。
 type RoleCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The target character selector.
+	// 目标角色选择器。
 	Target *TargetSelector `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
-	// The role to check.
+	// 要检查的角色。
 	RoleId        int32 `protobuf:"varint,2,opt,name=role_id,json=roleId,proto3" json:"role_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -851,13 +851,13 @@ func (x *RoleCondition) GetRoleId() int32 {
 	return 0
 }
 
-// TraitCondition defines a condition based on a character's traits.
-// To check if a character does NOT have a trait, use a CompoundCondition with the NOT operator.
+// TraitCondition 定义了基于角色特征的条件。
+// 要检查角色是否没有某个特征，请使用带有 NOT 操作符的 CompoundCondition。
 type TraitCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The target character selector.
+	// 目标角色选择器。
 	Target *TargetSelector `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
-	// The target trait.
+	// 目标特征。
 	Trait         string `protobuf:"bytes,2,opt,name=trait,proto3" json:"trait,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -907,12 +907,12 @@ func (x *TraitCondition) GetTrait() string {
 	return ""
 }
 
-// DayCondition defines a condition based on the current day.
+// DayCondition 定义了基于当前日期的条件。
 type DayCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The comparator to use.
+	// 要使用的比较操作符。
 	Comparator Comparator `protobuf:"varint,1,opt,name=comparator,proto3,enum=tragedylooper.v1.Comparator" json:"comparator,omitempty"`
-	// The target day.
+	// 目标日期。
 	Day           int32 `protobuf:"varint,2,opt,name=day,proto3" json:"day,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -962,11 +962,11 @@ func (x *DayCondition) GetDay() int32 {
 	return 0
 }
 
-// PlayerCondition defines a condition based on a player's state.
+// PlayerCondition 定义了基于玩家状态的条件。
 type PlayerCondition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The target player role.
-	PlayerRole    PlayerRole `protobuf:"varint,1,opt,name=player_role,json=playerRole,proto3,enum=tragedylooper.v1.PlayerRole" json:"player_role,omitempty"` // Extensible: e.g., check if the player has used a certain card.
+	// 目标玩家角色。
+	PlayerRole    PlayerRole `protobuf:"varint,1,opt,name=player_role,json=playerRole,proto3,enum=tragedylooper.v1.PlayerRole" json:"player_role,omitempty"` // 可扩展：例如，检查玩家是否使用过某张卡牌。
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1008,11 +1008,11 @@ func (x *PlayerCondition) GetPlayerRole() PlayerRole {
 	return PlayerRole_PLAYER_ROLE_UNSPECIFIED
 }
 
-// TargetSelector defines a dynamic target for conditions or effects.
-// It uses a oneof to ensure that only one type of selector can be set at a time.
-// When a selector can potentially match multiple characters (e.g., all_characters_at_location),
-// and it is used in a context that evaluates a condition (like StatCondition),
-// the condition is considered true if *any* of the matched characters satisfy the condition.
+// TargetSelector 定义了条件或效果的动态目标。
+// 它使用 oneof 来确保一次只能设置一种类型的选择器。
+// 当选择器可能匹配多个角色（例如 all_characters_at_location）时，
+// 并且它在评估条件（如 StatCondition）的上下文中使用时，
+// 如果任何匹配的角色满足条件，则条件为真。
 type TargetSelector struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Types that are valid to be assigned to Selector:
@@ -1154,42 +1154,42 @@ type isTargetSelector_Selector interface {
 }
 
 type TargetSelector_SpecificCharacter struct {
-	// A specific character by ID.
+	// 按 ID 指定特定角色。
 	SpecificCharacter int32 `protobuf:"varint,1,opt,name=specific_character,json=specificCharacter,proto3,oneof"`
 }
 
 type TargetSelector_TriggeringCharacter struct {
-	// The character that triggered the event.
+	// 触发事件的角色。
 	TriggeringCharacter *Empty `protobuf:"bytes,2,opt,name=triggering_character,json=triggeringCharacter,proto3,oneof"`
 }
 
 type TargetSelector_Culprit struct {
-	// The culprit of the event.
+	// 事件的罪魁祸首。
 	Culprit *Empty `protobuf:"bytes,3,opt,name=culprit,proto3,oneof"`
 }
 
 type TargetSelector_Victim struct {
-	// The victim of the event.
+	// 事件的受害者。
 	Victim *Empty `protobuf:"bytes,4,opt,name=victim,proto3,oneof"`
 }
 
 type TargetSelector_CharacterWithRoleId struct {
-	// Any character with a specific role.
+	// 具有特定角色的任何角色。
 	CharacterWithRoleId int32 `protobuf:"varint,5,opt,name=character_with_role_id,json=characterWithRoleId,proto3,oneof"`
 }
 
 type TargetSelector_AllCharactersAtLocation struct {
-	// All characters at a specific location.
+	// 特定地点所有角色。
 	AllCharactersAtLocation LocationType `protobuf:"varint,6,opt,name=all_characters_at_location,json=allCharactersAtLocation,proto3,enum=tragedylooper.v1.LocationType,oneof"`
 }
 
 type TargetSelector_ActionUser struct {
-	// The user of the action (card or ability).
+	// 动作（卡牌或能力）的使用者。
 	ActionUser *Empty `protobuf:"bytes,7,opt,name=action_user,json=actionUser,proto3,oneof"`
 }
 
 type TargetSelector_ActionTarget struct {
-	// The target of the action (card or ability).
+	// 动作（卡牌或能力）的目标。
 	ActionTarget *Empty `protobuf:"bytes,8,opt,name=action_target,json=actionTarget,proto3,oneof"`
 }
 

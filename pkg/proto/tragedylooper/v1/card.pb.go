@@ -21,25 +21,25 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// CardConfig defines the static, immutable properties of a card.
-// This represents a card as it is defined in the game's rulebook or script.
+// CardConfig 定义了卡牌的静态、不可变属性。
+// 这表示卡牌在游戏规则书或脚本中的定义。
 type CardConfig struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The unique identifier for this type of card.
+	// 此类卡牌的唯一标识符。
 	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// The name of the card.
+	// 卡牌的名称。
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// A user-facing description of the card's effect.
+	// 卡牌效果的用户描述。
 	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	// The type of the card, used for categorization and resolution order.
+	// 卡牌的类型，用于分类和结算顺序。
 	CardType CardType `protobuf:"varint,4,opt,name=card_type,json=type,proto3,enum=tragedylooper.v1.CardType" json:"card_type,omitempty"`
-	// The role that is allowed to use this card.
+	// 允许使用此卡牌的角色。
 	OwnerRole PlayerRole `protobuf:"varint,5,opt,name=owner_role,json=ownerRole,proto3,enum=tragedylooper.v1.PlayerRole" json:"owner_role,omitempty"`
-	// The effect or chain of effects the card produces when played.
+	// 卡牌打出时产生的效果或效果链。
 	Effect *CompoundEffect `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`
-	// If true, this card can only be successfully played once per loop.
+	// 如果为真，此卡牌每循环只能成功打出一次。
 	OncePerLoop bool `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`
-	// The priority of the card, used to determine resolution order among cards of the same type.
+	// 卡牌的优先级，用于确定同类型卡牌的结算顺序。
 	Priority      int32 `protobuf:"varint,8,opt,name=priority,proto3" json:"priority,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -131,17 +131,17 @@ func (x *CardConfig) GetPriority() int32 {
 	return 0
 }
 
-// Card represents an instance of a card in a player's hand or in play.
-// It combines the static configuration with dynamic, mutable state.
+// Card 表示玩家手牌中或场上的卡牌实例。
+// 它结合了静态配置和动态、可变的状态。
 type Card struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The unique ID of the card, copied from its config for convenience.
+	// 卡牌的唯一ID，为方便起见从其配置中复制。
 	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// The static configuration of the card.
+	// 卡牌的静态配置。
 	Config *CardConfig `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"`
-	// Whether the card has been used in the current loop.
+	// 该卡牌是否在当前循环中使用过。
 	UsedThisLoop bool `protobuf:"varint,3,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"`
-	// The final, confirmed target for the card's effect, set after any required player choices.
+	// 卡牌效果的最终确认目标，在任何所需的玩家选择后设置。
 	ResolvedTarget *Choice `protobuf:"bytes,4,opt,name=resolved_target,json=resolvedTarget,proto3" json:"resolved_target,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
@@ -205,10 +205,10 @@ func (x *Card) GetResolvedTarget() *Choice {
 	return nil
 }
 
-// CardList is a collection of card instances, typically representing a player's hand.
+// CardList 是卡牌实例的集合，通常代表玩家的手牌。
 type CardList struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// A list of card instances.
+	// 卡片实例列表。
 	Cards         []*Card `protobuf:"bytes,1,rep,name=cards,proto3" json:"cards,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

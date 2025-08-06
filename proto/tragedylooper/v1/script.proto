@@ -12,7 +12,7 @@ import "tragedylooper/v1/ability.proto";
 
 option go_package = "github.com/constellation39/tragedyLooper/pkg/proto/v1";
 
-// Script 定义了悲剧循环剧本的配置。
+// ScriptConfig 定义了悲剧循环剧本的配置。
 message ScriptConfig {
   // 剧本的唯一标识符。
   int32 id = 1 [ (validate.rules).int32.gt = 0 ];
@@ -44,81 +44,106 @@ message ScriptConfig {
   map<int32, ScriptModel> script_models = 11 [ (validate.rules).map.keys.int32 = { gte: 8000, lt: 9000 } ];
 }
 
-message ScriptSet {
-  string name = 1; // 剧本集名称
-  int32 number = 2; // 剧本集编号
-}
-
+// DifficultySet 定义了难度设置，包含循环次数和难度等级
 message DifficultySet {
+  // 游戏中的循环次数
   int32 number_of_loops = 1; // 循环次数
+  // 难度等级
   int32 difficulty = 2; // 难度等级
 }
 
+// IncidentInstance 定义了事件实例，包含日期、事件和罪魁祸首
 message IncidentInstance {
+  // 事件发生的日期
   int32 day = 1; // 日期
+  // 事件的名称或标识符
   string incident = 2; // 事件
+  // 事件的罪魁祸首
   string culprit = 3; // 罪魁祸首
 }
 
+// CastRole 定义了角色分配，包含角色和额外信息
 message CastRole {
+  // 角色名称
   string role = 1; // 角色
+  // 角色的额外信息映射
   map<string, string> extra_info = 2; // 额外信息
 }
 
+// CastAssignment 定义了角色分配方式，可以是简单角色名或带额外信息的角色
 message CastAssignment {
+  // 使用 oneof 确保只能设置一种分配方式
   oneof assignment {
+    // 简单角色名称分配
     string role_name = 1;
+    // 带额外信息的角色分配
     CastRole role_with_extra = 2;
   }
 }
 
+// ScriptMetadata 定义了剧本的元数据信息
 message ScriptMetadata {
+  // 剧本标题
   string title = 1 [ (validate.rules).string.min_len = 1 ];
+  // 剧本创作者
   string creator = 2 [ (validate.rules).string.min_len = 1 ];
-  repeated ScriptSet set = 3;
+  // 悲剧集名称
   string tragedy_set = 4;
+  // 每个循环的天数
   int32 days_per_loop = 5 [ (validate.rules).int32.gt = 0 ];
+  // 难度设置列表
   repeated DifficultySet difficulty_sets = 6 [ (validate.rules).repeated.min_items = 1 ];
+  // 主线剧情列表
   repeated string main_plot = 7 [ (validate.rules).repeated.min_items = 1 ];
+  // 支线剧情列表
   repeated string sub_plots = 8;
+  // 角色分配映射
   map<string, CastAssignment> cast = 9 [ (validate.rules).map.min_pairs = 1 ];
+  // 事件实例列表
   repeated IncidentInstance incidents = 10;
+  // 胜利条件描述
   string victory_conditions = 11;
+  // 剧本故事情节
   string story = 12;
+  // 主谋提示信息
   string mastermind_hints = 13;
+  // 剧本详细描述
   string description = 14;
+  // 特殊规则列表
   repeated string special_rules = 15;
+  // 剧本来源信息
   string source = 16;
 }
 
 // ScriptModel 定义了特定剧本的配置。
 message ScriptModel {
+  // 剧本模型的唯一标识符
   int32 id = 1 [ (validate.rules).int32.gt = 0 ];
   // 剧本的私有信息。
-  PrivateInfo private_info = 2 [ (validate.rules).message.required = true ];
+  PrivateConfig private_config = 2 [ (validate.rules).message.required = true ];
   // 剧本的公共信息。
-  PublicInfo public_info = 3 [ (validate.rules).message.required = true ];
+  PublicConfig public_config = 3 [ (validate.rules).message.required = true ];
   // 剧本的描述性元数据。
   ScriptMetadata metadata = 4 [ (validate.rules).message.required = true ];
 }
 
-// PrivateInfo 定义了剧本的私有信息。
-message PrivateInfo {
-  // 剧本的主线剧情。
+// PrivateConfig 定义了剧本的私有信息。
+message PrivateConfig {
+  // 剧本的主线剧情ID。
   int32 main_plot_id = 1 [ (validate.rules).int32.gt = 0 ];
-  // 剧本的支线剧情列表。
+  // 剧本的支线剧情ID列表。
   repeated int32 sub_plots_ids = 2 [ (validate.rules).repeated.min_items = 1 ];
-  // 剧本中的角色映射。
+  // 剧本中使用的角色ID列表。
   repeated int32 characters_ids = 3 [ (validate.rules).repeated.min_items = 1 ];
-  // 剧本中的事件映射。
+  // 剧本中使用的事件ID列表。
   repeated int32 incident_ids = 4 [ (validate.rules).repeated.min_items = 1 ];
   // 角色到身份分配的映射，源自选定的剧情。
   map<int32, int32> role_assignments = 5 [ (validate.rules).map.min_pairs = 1 ];
 }
 
 
-// PublicInfo 定义了剧本的公共信息。
-message PublicInfo {
+// PublicConfig 定义了剧本的公共信息。
+message PublicConfig {
   // 剧本配置的唯一标识符。
   int32 script_config_id = 1 [ (validate.rules).int32.gt = 0 ];
 
@@ -131,9 +156,9 @@ message PublicInfo {
   bool can_discuss = 4;
 
   // 特殊规则。
-  // 特殊事件的映射。
+  // 特殊事件的ID列表。
   repeated int32 special_incident_ids = 5;
-  // 预定事件的映射。
+  // 预定事件的ID列表。
   repeated int32 scheduled_incident_ids = 6 [ (validate.rules).repeated.min_items = 1 ];
 }
 
@@ -145,11 +170,11 @@ message RoleConfig {
   string name = 2 [ (validate.rules).string.min_len = 1 ];
   // 可以拥有此角色的角色数量限制。
   int32 limit = 3 [ (validate.rules).int32.gte = 1 ];
-  // 此角色的能力映射。
+  // 此角色的能力映射，键为能力ID，值为能力配置。
   map<int32, AbilityConfig> abilities = 4;
-  // 定义角色的好感状态。
+  // 定义角色的好感状态规则类型。
   GoodwillRuleType goodwill_rule = 5;
-  // 定义角色是否可以变为无敌。
+  // 定义角色是否可以变为无敌状态。
   bool can_be_invincible = 6;
 }
 
@@ -163,7 +188,7 @@ message PlotConfig {
   string name = 3 [ (validate.rules).string.min_len = 1 ];
   // 剧情的描述。
   string description = 4;
-  // 此剧情的事件标识符映射。
+  // 此剧情包含的事件标识符映射。
   map<int32, IncidentConfig> incident_ids = 5;
   // 此剧情的角色分配映射。
   map<int32, int32> role_assignments = 6;

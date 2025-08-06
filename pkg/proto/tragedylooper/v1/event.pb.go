@@ -28,7 +28,7 @@ type GameEvent struct {
 	Type          GameEventType          `protobuf:"varint,1,opt,name=type,proto3,enum=tragedylooper.v1.GameEventType" json:"type,omitempty"` // 事件类型
 	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`                            // 事件发生的时间戳
 	Payload       *EventPayload          `protobuf:"bytes,3,opt,name=payload,proto3" json:"payload,omitempty"`
-	Cause         *Cause                 `protobuf:"bytes,4,opt,name=cause,proto3,oneof" json:"cause,omitempty"` // The cause of the event
+	Cause         *Cause                 `protobuf:"bytes,4,opt,name=cause,proto3,oneof" json:"cause,omitempty"` // 事件的起因
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -91,7 +91,7 @@ func (x *GameEvent) GetCause() *Cause {
 	return nil
 }
 
-// Cause defines the source of an event.
+// Cause 定义了事件的来源。
 type Cause struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Types that are valid to be assigned to CauseType:
@@ -181,7 +181,7 @@ type Cause_AbilityId struct {
 }
 
 type Cause_IncidentId struct {
-	IncidentId int32 `protobuf:"varint,3,opt,name=incident_id,json=incidentId,proto3,oneof"` // Could also add GameEngineTick, PlayerChoice, etc.
+	IncidentId int32 `protobuf:"varint,3,opt,name=incident_id,json=incidentId,proto3,oneof"` // 也可以添加 GameEngineTick, PlayerChoice 等。
 }
 
 func (*Cause_CardId) isCause_CauseType() {}
@@ -395,7 +395,7 @@ type EventPayload_CharacterMoved struct {
 }
 
 type EventPayload_StatAdjusted struct {
-	StatAdjusted *StatAdjustedEvent `protobuf:"bytes,2,opt,name=stat_adjusted,json=statAdjusted,proto3,oneof"` // Replaces Paranoia, Goodwill, Intrigue events
+	StatAdjusted *StatAdjustedEvent `protobuf:"bytes,2,opt,name=stat_adjusted,json=statAdjusted,proto3,oneof"` // 替换了妄想、好感、阴谋事件
 }
 
 type EventPayload_LoopLoss struct {
@@ -443,7 +443,7 @@ type EventPayload_TragedyTriggered struct {
 }
 
 type EventPayload_TraitAdjusted struct {
-	TraitAdjusted *TraitAdjustedEvent `protobuf:"bytes,16,opt,name=trait_adjusted,json=traitAdjusted,proto3,oneof"` // Replaces TraitAdded, TraitRemoved events
+	TraitAdjusted *TraitAdjustedEvent `protobuf:"bytes,16,opt,name=trait_adjusted,json=traitAdjusted,proto3,oneof"` // 替换了特性添加、移除事件
 }
 
 type EventPayload_PlayerActionTaken struct {
@@ -1050,7 +1050,7 @@ func (x *GameEndedEvent) GetReason() string {
 // 需要玩家做出选择的事件
 type ChoiceRequiredEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	RequestId     string                 `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"` // A unique ID for this choice request, e.g. "card_22_target"
+	RequestId     string                 `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"` // 此选择请求的唯一ID，例如 "card_22_target"
 	PlayerId      int32                  `protobuf:"varint,2,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`   // 需要做选择的玩家
 	Choices       []*Choice              `protobuf:"bytes,3,rep,name=choices,proto3" json:"choices,omitempty"`                      // 提供给玩家的选项列表
 	unknownFields protoimpl.UnknownFields

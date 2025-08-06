@@ -25,9 +25,9 @@ const (
 type PlayCardPayload struct {
 	state  protoimpl.MessageState `protogen:"open.v1"`
 	CardId int32                  `protobuf:"varint,1,opt,name=card_id,json=cardId,proto3" json:"card_id,omitempty"` // 打出的卡牌ID
-	// Optional: Pre-chosen options to streamline the interaction.
-	// Key: request_id from a potential ChoiceRequiredEvent
-	// Value: chosen_option_id from that event
+	// 可选：预先选择的选项，用于简化交互。
+	// 键：来自潜在 ChoiceRequiredEvent 的 request_id
+	// 值：来自该事件的 chosen_option_id
 	PreChosenOptions map[string]string `protobuf:"bytes,2,rep,name=pre_chosen_options,json=preChosenOptions,proto3" json:"pre_chosen_options,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
@@ -186,7 +186,7 @@ func (x *MakeGuessPayload) GetGuessedRoles() map[int32]int32 {
 // 玩家进行选择的操作负载（例如，在需要选择地盘或目标时）
 type ChooseOptionPayload struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	RequestId      string                 `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`                  // The ID from the event we are responding to
+	RequestId      string                 `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`                  // 我们正在响应的事件ID
 	CharacterId    *int32                 `protobuf:"varint,2,opt,name=character_id,json=characterId,proto3,oneof" json:"character_id,omitempty"`     // 做出选择的角色（如果选择与角色相关）
 	ChosenOptionId string                 `protobuf:"bytes,3,opt,name=chosen_option_id,json=chosenOptionId,proto3" json:"chosen_option_id,omitempty"` // 选择项的ID
 	unknownFields  protoimpl.UnknownFields

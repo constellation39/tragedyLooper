@@ -604,7 +604,7 @@ func (GameEventType) EnumDescriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_enums_proto_rawDescGZIP(), []int{7}
 }
 
-// StatType defines the type of character stat.
+// StatType 定义了角色属性的类型。
 type StatType int32
 
 const (
@@ -657,15 +657,15 @@ func (StatType) EnumDescriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_enums_proto_rawDescGZIP(), []int{8}
 }
 
-// GoodwillRuleType defines how goodwill is handled for a character.
+// GoodwillRuleType 定义了如何处理角色的好感度。
 type GoodwillRuleType int32
 
 const (
-	// The default behavior.
+	// 默认行为。
 	GoodwillRuleType_GOODWILL_RULE_TYPE_UNSPECIFIED GoodwillRuleType = 0
-	// The character ignores goodwill checks.
+	// 角色忽略好感度检查。
 	GoodwillRuleType_GOODWILL_RULE_TYPE_IGNORE_CHECKS GoodwillRuleType = 1
-	// The character always ignores goodwill checks, and cannot be targeted by goodwill-related effects.
+	// 角色总是忽略好感度检查，并且不能成为好感度相关效果的目标。
 	GoodwillRuleType_GOODWILL_RULE_TYPE_ALWAYS_IGNORE GoodwillRuleType = 2
 )
 

@@ -21,24 +21,24 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Comparator defines a universal set of comparison operators.
-// This is used across various condition types to ensure consistency.
+// Comparator 定义了一组通用的比较操作符。
+// 这用于各种条件类型以确保一致性。
 type Comparator int32
 
 const (
-	// Unspecified comparator.
+	// 未指定的比较操作符。
 	Comparator_COMPARATOR_UNSPECIFIED Comparator = 0
-	// Equal to.
+	// 等于。
 	Comparator_EQUAL_TO Comparator = 1
-	// Not equal to.
+	// 不等于。
 	Comparator_NOT_EQUAL_TO Comparator = 2
-	// Greater than.
+	// 大于。
 	Comparator_GREATER_THAN Comparator = 3
-	// Less than.
+	// 小于。
 	Comparator_LESS_THAN Comparator = 4
-	// Greater than or equal to.
+	// 大于或等于。
 	Comparator_GREATER_THAN_OR_EQUAL_TO Comparator = 5
-	// Less than or equal to.
+	// 小于或等于。
 	Comparator_LESS_THAN_OR_EQUAL_TO Comparator = 6
 )
 
@@ -91,7 +91,7 @@ func (Comparator) EnumDescriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_common_proto_rawDescGZIP(), []int{0}
 }
 
-// Empty is a placeholder for messages that have no data.
+// Empty 是没有数据消息的占位符。
 type Empty struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields

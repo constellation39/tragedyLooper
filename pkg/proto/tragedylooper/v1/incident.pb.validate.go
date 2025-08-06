@@ -90,10 +90,6 @@ func (m *Incident) validate(all bool) error {
 
 	// no validation rules for Day
 
-	// no validation rules for Culprit
-
-	// no validation rules for Victim
-
 	// no validation rules for Description
 
 	// no validation rules for HasTriggeredThisLoop
@@ -203,8 +199,6 @@ func (m *IncidentConfig) validate(all bool) error {
 
 	// no validation rules for Description
 
-	// no validation rules for IncidentId
-
 	// no validation rules for Day
 
 	if all {
@@ -266,12 +260,6 @@ func (m *IncidentConfig) validate(all bool) error {
 	}
 
 	// no validation rules for IsMandatory
-
-	// no validation rules for CulpritCharacterId
-
-	// no validation rules for VictimCharacterId
-
-	// no validation rules for LocationId
 
 	// no validation rules for IsMainPlotIncident
 

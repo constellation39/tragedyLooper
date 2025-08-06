@@ -27,8 +27,6 @@ type Incident struct {
 	Config               *IncidentConfig        `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`           // 事件唯一ID
 	Name                 string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`               // 事件名称
 	Day                  int32                  `protobuf:"varint,3,opt,name=day,proto3" json:"day,omitempty"`                // 事件发生的日期
-	Culprit              string                 `protobuf:"bytes,4,opt,name=culprit,proto3" json:"culprit,omitempty"`         // 犯人（角色名称或描述）
-	Victim               string                 `protobuf:"bytes,5,opt,name=victim,proto3" json:"victim,omitempty"`           // 受害者（角色名称或描述）
 	Description          string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"` // 事件描述
 	HasTriggeredThisLoop bool                   `protobuf:"varint,7,opt,name=has_triggered_this_loop,json=hasTriggeredThisLoop,proto3" json:"has_triggered_this_loop,omitempty"`
 	unknownFields        protoimpl.UnknownFields
@@ -86,20 +84,6 @@ func (x *Incident) GetDay() int32 {
 	return 0
 }
 
-func (x *Incident) GetCulprit() string {
-	if x != nil {
-		return x.Culprit
-	}
-	return ""
-}
-
-func (x *Incident) GetVictim() string {
-	if x != nil {
-		return x.Victim
-	}
-	return ""
-}
-
 func (x *Incident) GetDescription() string {
 	if x != nil {
 		return x.Description
@@ -120,14 +104,10 @@ type IncidentConfig struct {
 	Id                 int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                // 事件唯一ID（剧本内）
 	Name               string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                             // 事件名称
 	Description        string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                               // 事件描述
-	IncidentId         int32                  `protobuf:"varint,4,opt,name=incident_id,json=incidentId,proto3" json:"incident_id,omitempty"`                              // 事件类型
 	Day                int32                  `protobuf:"varint,5,opt,name=day,proto3" json:"day,omitempty"`                                                              // 预定发生日期
 	Condition          *Condition             `protobuf:"bytes,6,opt,name=condition,proto3" json:"condition,omitempty"`                                                   // 触发条件列表
 	Effect             *Effect                `protobuf:"bytes,7,opt,name=effect,proto3" json:"effect,omitempty"`                                                         // 事件触发时产生的效果
 	IsMandatory        bool                   `protobuf:"varint,8,opt,name=is_mandatory,json=isMandatory,proto3" json:"is_mandatory,omitempty"`                           // 是否为必发事件
-	CulpritCharacterId int32                  `protobuf:"varint,9,opt,name=culprit_character_id,json=culpritCharacterId,proto3" json:"culprit_character_id,omitempty"`    // 事件主谋角色ID（如适用）
-	VictimCharacterId  int32                  `protobuf:"varint,10,opt,name=victim_character_id,json=victimCharacterId,proto3" json:"victim_character_id,omitempty"`      // 事件受害者角色ID（如适用）
-	LocationId         int32                  `protobuf:"varint,11,opt,name=location_id,json=locationId,proto3" json:"location_id,omitempty"`                             // 事件发生地点ID（如适用）
 	IsMainPlotIncident bool                   `protobuf:"varint,12,opt,name=is_main_plot_incident,json=isMainPlotIncident,proto3" json:"is_main_plot_incident,omitempty"` // 是否是主线剧情的事件
 	IsSpecialRule      bool                   `protobuf:"varint,13,opt,name=is_special_rule,json=isSpecialRule,proto3" json:"is_special_rule,omitempty"`                  // 是否是特殊规则的事件
 	unknownFields      protoimpl.UnknownFields
@@ -185,13 +165,6 @@ func (x *IncidentConfig) GetDescription() string {
 	return ""
 }
 
-func (x *IncidentConfig) GetIncidentId() int32 {
-	if x != nil {
-		return x.IncidentId
-	}
-	return 0
-}
-
 func (x *IncidentConfig) GetDay() int32 {
 	if x != nil {
 		return x.Day
@@ -220,27 +193,6 @@ func (x *IncidentConfig) GetIsMandatory() bool {
 	return false
 }
 
-func (x *IncidentConfig) GetCulpritCharacterId() int32 {
-	if x != nil {
-		return x.CulpritCharacterId
-	}
-	return 0
-}
-
-func (x *IncidentConfig) GetVictimCharacterId() int32 {
-	if x != nil {
-		return x.VictimCharacterId
-	}
-	return 0
-}
-
-func (x *IncidentConfig) GetLocationId() int32 {
-	if x != nil {
-		return x.LocationId
-	}
-	return 0
-}
-
 func (x *IncidentConfig) GetIsMainPlotIncident() bool {
 	if x != nil {
 		return x.IsMainPlotIncident
@@ -259,30 +211,21 @@ var File_tragedylooper_v1_incident_proto protoreflect.FileDescriptor
 
 const file_tragedylooper_v1_incident_proto_rawDesc = "" +
 	"\n" +
-	"\x1ftragedylooper/v1/incident.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1dtragedylooper/v1/effect.proto\"\xf5\x01\n" +
+	"\x1ftragedylooper/v1/incident.proto\x12\x10tragedylooper.v1\x1a tragedylooper/v1/condition.proto\x1a\x1dtragedylooper/v1/effect.proto\"\xc3\x01\n" +
 	"\bIncident\x128\n" +
 	"\x06config\x18\x01 \x01(\v2 .tragedylooper.v1.IncidentConfigR\x06config\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x10\n" +
-	"\x03day\x18\x03 \x01(\x05R\x03day\x12\x18\n" +
-	"\aculprit\x18\x04 \x01(\tR\aculprit\x12\x16\n" +
-	"\x06victim\x18\x05 \x01(\tR\x06victim\x12 \n" +
+	"\x03day\x18\x03 \x01(\x05R\x03day\x12 \n" +
 	"\vdescription\x18\x06 \x01(\tR\vdescription\x125\n" +
-	"\x17has_triggered_this_loop\x18\a \x01(\bR\x14hasTriggeredThisLoop\"\xf7\x03\n" +
+	"\x17has_triggered_this_loop\x18\a \x01(\bR\x14hasTriggeredThisLoop\"\xd3\x02\n" +
 	"\x0eIncidentConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1f\n" +
-	"\vincident_id\x18\x04 \x01(\x05R\n" +
-	"incidentId\x12\x10\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x10\n" +
 	"\x03day\x18\x05 \x01(\x05R\x03day\x129\n" +
 	"\tcondition\x18\x06 \x01(\v2\x1b.tragedylooper.v1.ConditionR\tcondition\x120\n" +
 	"\x06effect\x18\a \x01(\v2\x18.tragedylooper.v1.EffectR\x06effect\x12!\n" +
-	"\fis_mandatory\x18\b \x01(\bR\visMandatory\x120\n" +
-	"\x14culprit_character_id\x18\t \x01(\x05R\x12culpritCharacterId\x12.\n" +
-	"\x13victim_character_id\x18\n" +
-	" \x01(\x05R\x11victimCharacterId\x12\x1f\n" +
-	"\vlocation_id\x18\v \x01(\x05R\n" +
-	"locationId\x121\n" +
+	"\fis_mandatory\x18\b \x01(\bR\visMandatory\x121\n" +
 	"\x15is_main_plot_incident\x18\f \x01(\bR\x12isMainPlotIncident\x12&\n" +
 	"\x0fis_special_rule\x18\r \x01(\bR\risSpecialRuleB\xbd\x01\n" +
 	"\x14com.tragedylooper.v1B\rIncidentProtoP\x01Z5github.com/constellation39/tragedyLooper/pkg/proto/v1\xa2\x02\x03TXX\xaa\x02\x10Tragedylooper.V1\xca\x02\x10Tragedylooper\\V1\xe2\x02\x1cTragedylooper\\V1\\GPBMetadata\xea\x02\x11Tragedylooper::V1b\x06proto3"

@@ -21,20 +21,20 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// GameState represents the complete, authoritative state of a game at a specific moment.
-// It is the single source of truth, intended for server-side use and persistence.
-// It should not contain historical data like event logs, which should be handled separately.
+// GameState 表示游戏在特定时刻的完整、权威状态。
+// 它是单一事实来源，用于服务器端使用和持久化。
+// 它不应包含事件日志等历史数据，这些数据应单独处理。
 type GameState struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
-	GameId             string                 `protobuf:"bytes,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`                                                                                                                 // Unique identifier for the game session.
-	Tick               int64                  `protobuf:"varint,2,opt,name=tick,proto3" json:"tick,omitempty"`                                                                                                                                  // A monotonic clock representing the finest-grained unit of game time.
-	CurrentLoop        int32                  `protobuf:"varint,3,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                                                                 // The current loop number.
-	DaysPerLoop        int32                  `protobuf:"varint,4,opt,name=days_per_loop,json=daysPerLoop,proto3" json:"days_per_loop,omitempty"`                                                                                               // The total number of days in a single loop.
-	CurrentDay         int32                  `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                                                                    // The current day within the loop.
-	CurrentPhase       GamePhase              `protobuf:"varint,6,opt,name=current_phase,json=currentPhase,proto3,enum=tragedylooper.v1.GamePhase" json:"current_phase,omitempty"`                                                              // The current phase within the day.
-	Characters         map[int32]*Character   `protobuf:"bytes,7,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                            // Map of all characters, keyed by character_id.
-	Players            map[int32]*Player      `protobuf:"bytes,8,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                  // Map of all players, keyed by player_id.
-	TriggeredIncidents map[int32]bool         `protobuf:"bytes,9,rep,name=triggered_incidents,json=triggeredIncidents,proto3" json:"triggered_incidents,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // Set of incidents that have been triggered this loop, keyed by incident name.
+	GameId             string                 `protobuf:"bytes,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`                                                                                                                 // 游戏会话的唯一标识符。
+	Tick               int64                  `protobuf:"varint,2,opt,name=tick,proto3" json:"tick,omitempty"`                                                                                                                                  // 表示游戏时间最细粒度单位的单调时钟。
+	CurrentLoop        int32                  `protobuf:"varint,3,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                                                                 // 当前循环数。
+	DaysPerLoop        int32                  `protobuf:"varint,4,opt,name=days_per_loop,json=daysPerLoop,proto3" json:"days_per_loop,omitempty"`                                                                                               // 单个循环中的总天数。
+	CurrentDay         int32                  `protobuf:"varint,5,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                                                                    // 循环中的当前天数。
+	CurrentPhase       GamePhase              `protobuf:"varint,6,opt,name=current_phase,json=currentPhase,proto3,enum=tragedylooper.v1.GamePhase" json:"current_phase,omitempty"`                                                              // 当天中的当前阶段。
+	Characters         map[int32]*Character   `protobuf:"bytes,7,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                            // 所有角色的映射，以 character_id 为键。
+	Players            map[int32]*Player      `protobuf:"bytes,8,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`                                                  // 所有玩家的映射，以 player_id 为键。
+	TriggeredIncidents map[int32]bool         `protobuf:"bytes,9,rep,name=triggered_incidents,json=triggeredIncidents,proto3" json:"triggered_incidents,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 本循环中已触发的事件集合，以事件名称为键。
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -132,16 +132,16 @@ func (x *GameState) GetTriggeredIncidents() map[int32]bool {
 	return nil
 }
 
-// Player represents a participant in the game.
+// Player 表示游戏的参与者。
 type Player struct {
 	state              protoimpl.MessageState    `protogen:"open.v1"`
-	Id                 int32                     `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                          // Unique identifier for the player.
-	Name               string                    `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                       // Player's display name.
-	Role               PlayerRole                `protobuf:"varint,3,opt,name=role,proto3,enum=tragedylooper.v1.PlayerRole" json:"role,omitempty"`                     // The player's role (Mastermind or Protagonist).
-	IsLlm              bool                      `protobuf:"varint,4,opt,name=is_llm,json=isLlm,proto3" json:"is_llm,omitempty"`                                       // True if the player is controlled by an AI.
-	Hand               *CardList                 `protobuf:"bytes,5,opt,name=hand,proto3" json:"hand,omitempty"`                                                       // The player's current hand of cards.
-	LlmSessionId       string                    `protobuf:"bytes,6,opt,name=llm_session_id,json=llmSessionId,proto3" json:"llm_session_id,omitempty"`                 // Session ID for the LLM, if applicable.
-	DeductionKnowledge *PlayerDeductionKnowledge `protobuf:"bytes,7,opt,name=deduction_knowledge,json=deductionKnowledge,proto3" json:"deduction_knowledge,omitempty"` // Deduction state for Protagonists.
+	Id                 int32                     `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                          // 玩家的唯一标识符。
+	Name               string                    `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                       // 玩家的显示名称。
+	Role               PlayerRole                `protobuf:"varint,3,opt,name=role,proto3,enum=tragedylooper.v1.PlayerRole" json:"role,omitempty"`                     // 玩家的角色（主谋或主角）。
+	IsLlm              bool                      `protobuf:"varint,4,opt,name=is_llm,json=isLlm,proto3" json:"is_llm,omitempty"`                                       // 如果玩家由 AI 控制，则为 true。
+	Hand               *CardList                 `protobuf:"bytes,5,opt,name=hand,proto3" json:"hand,omitempty"`                                                       // 玩家当前的手牌。
+	LlmSessionId       string                    `protobuf:"bytes,6,opt,name=llm_session_id,json=llmSessionId,proto3" json:"llm_session_id,omitempty"`                 // LLM 的会话 ID（如果适用）。
+	DeductionKnowledge *PlayerDeductionKnowledge `protobuf:"bytes,7,opt,name=deduction_knowledge,json=deductionKnowledge,proto3" json:"deduction_knowledge,omitempty"` // 主角的推理状态。
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -225,12 +225,12 @@ func (x *Player) GetDeductionKnowledge() *PlayerDeductionKnowledge {
 	return nil
 }
 
-// PlayerDeductionKnowledge holds the information and guesses a Protagonist player has made.
+// PlayerDeductionKnowledge 包含了主角玩家所做出的信息和猜测。
 type PlayerDeductionKnowledge struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	GuessedRoles  map[int32]int32        `protobuf:"bytes,1,rep,name=guessed_roles,json=guessedRoles,proto3" json:"guessed_roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // Guesses about character roles, keyed by character_id.
-	Clues         []string               `protobuf:"bytes,2,rep,name=clues,proto3" json:"clues,omitempty"`                                                                                                               // List of collected clues.
-	Theories      []string               `protobuf:"bytes,3,rep,name=theories,proto3" json:"theories,omitempty"`                                                                                                         // List of formulated theories.
+	GuessedRoles  map[int32]int32        `protobuf:"bytes,1,rep,name=guessed_roles,json=guessedRoles,proto3" json:"guessed_roles,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 关于角色身份的猜测，以 character_id 为键。
+	Clues         []string               `protobuf:"bytes,2,rep,name=clues,proto3" json:"clues,omitempty"`                                                                                                               // 收集到的线索列表。
+	Theories      []string               `protobuf:"bytes,3,rep,name=theories,proto3" json:"theories,omitempty"`                                                                                                         // 形成理论的列表。
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -286,19 +286,19 @@ func (x *PlayerDeductionKnowledge) GetTheories() []string {
 	return nil
 }
 
-// PlayerView is a tailored, client-facing representation of the game state for a specific player.
-// It includes only the information that the player is permitted to see, hiding sensitive data.
+// PlayerView 是针对特定玩家定制的客户端游戏状态表示。
+// 它只包含玩家被允许查看的信息，隐藏敏感数据。
 type PlayerView struct {
 	state          protoimpl.MessageState         `protogen:"open.v1"`
-	GameId         string                         `protobuf:"bytes,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`                                                                      // Unique identifier for the game session.
-	Tick           int64                          `protobuf:"varint,2,opt,name=tick,proto3" json:"tick,omitempty"`                                                                                       // The current game time tick.
-	CurrentLoop    int32                          `protobuf:"varint,3,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                      // The current loop number.
-	CurrentDay     int32                          `protobuf:"varint,4,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                         // The current day within the loop.
-	CurrentPhase   GamePhase                      `protobuf:"varint,5,opt,name=current_phase,json=currentPhase,proto3,enum=tragedylooper.v1.GamePhase" json:"current_phase,omitempty"`                   // The current phase within the day.
-	Characters     map[int32]*PlayerViewCharacter `protobuf:"bytes,6,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // Visible state of all characters.
-	Players        map[int32]*PlayerViewPlayer    `protobuf:"bytes,7,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`       // Visible state of all players.
-	YourHand       []*Card                        `protobuf:"bytes,8,rep,name=your_hand,json=yourHand,proto3" json:"your_hand,omitempty"`                                                                // The hand of the player receiving this view.
-	YourDeductions *PlayerDeductionKnowledge      `protobuf:"bytes,9,opt,name=your_deductions,json=yourDeductions,proto3" json:"your_deductions,omitempty"`                                              // The deduction state of the player receiving this view.
+	GameId         string                         `protobuf:"bytes,1,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`                                                                      // 游戏会话的唯一标识符。
+	Tick           int64                          `protobuf:"varint,2,opt,name=tick,proto3" json:"tick,omitempty"`                                                                                       // 当前游戏时间戳。
+	CurrentLoop    int32                          `protobuf:"varint,3,opt,name=current_loop,json=currentLoop,proto3" json:"current_loop,omitempty"`                                                      // 当前循环数。
+	CurrentDay     int32                          `protobuf:"varint,4,opt,name=current_day,json=currentDay,proto3" json:"current_day,omitempty"`                                                         // 循环中的当前天数。
+	CurrentPhase   GamePhase                      `protobuf:"varint,5,opt,name=current_phase,json=currentPhase,proto3,enum=tragedylooper.v1.GamePhase" json:"current_phase,omitempty"`                   // 当天中的当前阶段。
+	Characters     map[int32]*PlayerViewCharacter `protobuf:"bytes,6,rep,name=characters,proto3" json:"characters,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 所有角色的可见状态。
+	Players        map[int32]*PlayerViewPlayer    `protobuf:"bytes,7,rep,name=players,proto3" json:"players,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`       // 所有玩家的可见状态。
+	YourHand       []*Card                        `protobuf:"bytes,8,rep,name=your_hand,json=yourHand,proto3" json:"your_hand,omitempty"`                                                                // 接收此视图的玩家的手牌。
+	YourDeductions *PlayerDeductionKnowledge      `protobuf:"bytes,9,opt,name=your_deductions,json=yourDeductions,proto3" json:"your_deductions,omitempty"`                                              // 接收此视图的玩家的推理状态。
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -396,22 +396,22 @@ func (x *PlayerView) GetYourDeductions() *PlayerDeductionKnowledge {
 	return nil
 }
 
-// PlayerViewCharacter is a sanitized version of a Character for client display.
-// It omits hidden information like the true role (for opponents).
+// PlayerViewCharacter 是用于客户端显示的角色清理版本。
+// 它省略了隐藏信息，例如真实角色（对于对手）。
 type PlayerViewCharacter struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	Id              int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                     // Character's unique ID.
-	Name            string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                                  // Character's name.
-	Traits          []string               `protobuf:"bytes,3,rep,name=traits,proto3" json:"traits,omitempty"`                                                                              // Character's current traits.
-	CurrentLocation LocationType           `protobuf:"varint,4,opt,name=current_location,json=currentLocation,proto3,enum=tragedylooper.v1.LocationType" json:"current_location,omitempty"` // Character's current location.
-	Paranoia        int32                  `protobuf:"varint,5,opt,name=paranoia,proto3" json:"paranoia,omitempty"`                                                                         // Current paranoia stat.
-	Goodwill        int32                  `protobuf:"varint,6,opt,name=goodwill,proto3" json:"goodwill,omitempty"`                                                                         // Current goodwill stat.
-	Intrigue        int32                  `protobuf:"varint,7,opt,name=intrigue,proto3" json:"intrigue,omitempty"`                                                                         // Current intrigue stat.
-	Abilities       []*Ability             `protobuf:"bytes,8,rep,name=abilities,proto3" json:"abilities,omitempty"`                                                                        // List of abilities.
-	IsAlive         bool                   `protobuf:"varint,9,opt,name=is_alive,json=isAlive,proto3" json:"is_alive,omitempty"`                                                            // Whether the character is alive.
-	InPanicMode     bool                   `protobuf:"varint,10,opt,name=in_panic_mode,json=inPanicMode,proto3" json:"in_panic_mode,omitempty"`                                             // Whether the character is in panic.
-	Rules           []*CharacterRule       `protobuf:"bytes,11,rep,name=rules,proto3" json:"rules,omitempty"`                                                                               // List of special rules.
-	RevealedRole    PlayerRole             `protobuf:"varint,12,opt,name=revealed_role,json=revealedRole,proto3,enum=tragedylooper.v1.PlayerRole" json:"revealed_role,omitempty"`           // The character's role if it has been revealed, otherwise UNKNOWN.
+	Id              int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                     // 角色的唯一 ID。
+	Name            string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                                  // 角色的名称。
+	Traits          []string               `protobuf:"bytes,3,rep,name=traits,proto3" json:"traits,omitempty"`                                                                              // 角色的当前特征。
+	CurrentLocation LocationType           `protobuf:"varint,4,opt,name=current_location,json=currentLocation,proto3,enum=tragedylooper.v1.LocationType" json:"current_location,omitempty"` // 角色的当前位置。
+	Paranoia        int32                  `protobuf:"varint,5,opt,name=paranoia,proto3" json:"paranoia,omitempty"`                                                                         // 当前妄想属性。
+	Goodwill        int32                  `protobuf:"varint,6,opt,name=goodwill,proto3" json:"goodwill,omitempty"`                                                                         // 当前好感属性。
+	Intrigue        int32                  `protobuf:"varint,7,opt,name=intrigue,proto3" json:"intrigue,omitempty"`                                                                         // 当前阴谋属性。
+	Abilities       []*Ability             `protobuf:"bytes,8,rep,name=abilities,proto3" json:"abilities,omitempty"`                                                                        // 能力列表。
+	IsAlive         bool                   `protobuf:"varint,9,opt,name=is_alive,json=isAlive,proto3" json:"is_alive,omitempty"`                                                            // 角色是否存活。
+	InPanicMode     bool                   `protobuf:"varint,10,opt,name=in_panic_mode,json=inPanicMode,proto3" json:"in_panic_mode,omitempty"`                                             // 角色是否处于恐慌模式。
+	Rules           []*CharacterRule       `protobuf:"bytes,11,rep,name=rules,proto3" json:"rules,omitempty"`                                                                               // 特殊规则列表。
+	RevealedRole    PlayerRole             `protobuf:"varint,12,opt,name=revealed_role,json=revealedRole,proto3,enum=tragedylooper.v1.PlayerRole" json:"revealed_role,omitempty"`           // 如果角色身份已揭示，则为该身份，否则为 UNKNOWN。
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -530,13 +530,13 @@ func (x *PlayerViewCharacter) GetRevealedRole() PlayerRole {
 	return PlayerRole_PLAYER_ROLE_UNSPECIFIED
 }
 
-// PlayerViewPlayer is a sanitized version of a Player for client display.
-// It omits private information like the other player's hand.
+// PlayerViewPlayer 是用于客户端显示的玩家清理版本。
+// 它省略了私人信息，例如其他玩家的手牌。
 type PlayerViewPlayer struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                      // Player's unique ID.
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                   // Player's name.
-	Role          PlayerRole             `protobuf:"varint,3,opt,name=role,proto3,enum=tragedylooper.v1.PlayerRole" json:"role,omitempty"` // Player's role.
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                      // 玩家的唯一 ID。
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                   // 玩家的名称。
+	Role          PlayerRole             `protobuf:"varint,3,opt,name=role,proto3,enum=tragedylooper.v1.PlayerRole" json:"role,omitempty"` // 玩家的角色。
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

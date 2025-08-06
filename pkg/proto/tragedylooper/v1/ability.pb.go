@@ -21,15 +21,15 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// The operator to use when combining abilities.
+// 组合能力时使用的操作符。
 type CompoundAbility_Operator int32
 
 const (
-	// Unspecified operator.
+	// 未指定的操作符。
 	CompoundAbility_OPERATOR_UNSPECIFIED CompoundAbility_Operator = 0
-	// The AND operator.
+	// 与操作符。
 	CompoundAbility_OPERATOR_AND CompoundAbility_Operator = 1
-	// The OR operator.
+	// 或操作符。
 	CompoundAbility_OPERATOR_OR CompoundAbility_Operator = 2
 )
 
@@ -74,42 +74,42 @@ func (CompoundAbility_Operator) EnumDescriptor() ([]byte, []int) {
 	return file_tragedylooper_v1_ability_proto_rawDescGZIP(), []int{1, 0}
 }
 
-// AbilityConfig defines the configuration for a character's ability.
+// AbilityConfig 定义了角色能力的配置。
 type AbilityConfig struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The unique identifier for the ability.
+	// 能力的唯一标识符。
 	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// The name of the ability.
+	// 能力的名称。
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// A description of the ability.
+	// 能力的描述。
 	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	// The trigger type for the ability.
+	// 能力的触发类型。
 	AbilityType TriggerType `protobuf:"varint,4,opt,name=ability_type,json=type,proto3,enum=tragedylooper.v1.TriggerType" json:"ability_type,omitempty"`
-	// Optional: filters for game event triggers.
+	// 可选：游戏事件触发器的过滤器。
 	EventFilters []GameEventType `protobuf:"varint,5,rep,packed,name=event_filters,json=eventFilters,proto3,enum=tragedylooper.v1.GameEventType" json:"event_filters,omitempty"`
-	// The effect of the ability.
+	// 能力的效果。
 	Effect *Effect `protobuf:"bytes,6,opt,name=effect,proto3" json:"effect,omitempty"`
-	// Whether the ability can only be used once per loop.
+	// 该能力是否每循环只能使用一次。
 	OncePerLoop bool `protobuf:"varint,7,opt,name=once_per_loop,json=oncePerLoop,proto3" json:"once_per_loop,omitempty"`
-	// The player role that can refuse this ability.
+	// 可以拒绝此能力的玩家角色。
 	RefusalRole PlayerRole `protobuf:"varint,8,opt,name=refusal_role,json=refusalRole,proto3,enum=tragedylooper.v1.PlayerRole" json:"refusal_role,omitempty"`
-	// Whether the ability is passive.
+	// 该能力是否为被动能力。
 	IsPassive bool `protobuf:"varint,9,opt,name=is_passive,json=isPassive,proto3" json:"is_passive,omitempty"`
-	// Whether the ability is mandatory (cannot be refused).
+	// 该能力是否为强制（不可拒绝）能力。
 	IsMandatory bool `protobuf:"varint,10,opt,name=is_mandatory,json=isMandatory,proto3" json:"is_mandatory,omitempty"`
-	// The priority of the ability's resolution.
+	// 能力的结算优先级。
 	Priority int32 `protobuf:"varint,11,opt,name=priority,proto3" json:"priority,omitempty"`
-	// A list of conditions that must be met to use the ability.
+	// 使用能力必须满足的条件列表。
 	Conditions []*Condition `protobuf:"bytes,12,rep,name=conditions,proto3" json:"conditions,omitempty"`
-	// Whether the ability requires a choice to be made.
+	// 该能力是否需要做出选择。
 	RequiresChoice bool `protobuf:"varint,13,opt,name=requires_choice,json=requiresChoice,proto3" json:"requires_choice,omitempty"`
-	// The goodwill rank required to use the ability.
+	// 使用能力所需的善意等级。
 	GoodwillRank int32 `protobuf:"varint,14,opt,name=goodwill_rank,json=goodwillRank,proto3" json:"goodwill_rank,omitempty"`
-	// A list of locations that the ability is restricted to.
+	// 该能力受限制的地点列表。
 	RestrictedToLocations []LocationType `protobuf:"varint,15,rep,packed,name=restricted_to_locations,json=restricted_to_location,proto3,enum=tragedylooper.v1.LocationType" json:"restricted_to_locations,omitempty"`
-	// The number of times the ability can be used per loop.
+	// 该能力每循环可使用的次数。
 	TimesPerLoop int32 `protobuf:"varint,16,opt,name=times_per_loop,proto3" json:"times_per_loop,omitempty"`
-	// Whether the ability is immune to goodwill refusal.
+	// 该能力是否不受善意拒绝的影响。
 	ImmuneToGoodwillRefusal bool `protobuf:"varint,17,opt,name=immune_to_goodwill_refusal,proto3" json:"immune_to_goodwill_refusal,omitempty"`
 	unknownFields           protoimpl.UnknownFields
 	sizeCache               protoimpl.SizeCache
@@ -264,12 +264,12 @@ func (x *AbilityConfig) GetImmuneToGoodwillRefusal() bool {
 	return false
 }
 
-// CompoundAbility defines a combination of multiple abilities.
+// CompoundAbility 定义了多种能力的组合。
 type CompoundAbility struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The operator to use when combining abilities.
+	// 组合能力时使用的操作符。
 	Operator CompoundAbility_Operator `protobuf:"varint,1,opt,name=operator,proto3,enum=tragedylooper.v1.CompoundAbility_Operator" json:"operator,omitempty"`
-	// The sub-abilities to combine.
+	// 要组合的子能力。
 	SubAbilities  []*AbilityConfig `protobuf:"bytes,2,rep,name=sub_abilities,json=subAbilities,proto3" json:"sub_abilities,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -319,14 +319,14 @@ func (x *CompoundAbility) GetSubAbilities() []*AbilityConfig {
 	return nil
 }
 
-// Ability defines a character's ability at runtime.
+// Ability 定义了角色在运行时的能力。
 type Ability struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The configuration for the ability.
+	// 能力的配置。
 	Config *AbilityConfig `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	// Whether the ability has been used in the current loop.
+	// 该能力是否在当前循环中使用过。
 	UsedThisLoop bool `protobuf:"varint,2,opt,name=used_this_loop,json=usedThisLoop,proto3" json:"used_this_loop,omitempty"`
-	// The ID of the character that owns the ability.
+	// 拥有该能力的角色ID。
 	OwnerCharacterId int32 `protobuf:"varint,3,opt,name=owner_character_id,json=ownerCharacterId,proto3" json:"owner_character_id,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
