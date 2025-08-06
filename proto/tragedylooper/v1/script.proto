@@ -44,7 +44,7 @@ message ScriptConfig {
   map<int32, ScriptModel> script_models = 11 [ (validate.rules).map.keys.int32 = { gte: 8000, lt: 9000 } ];
 }
 
-// DifficultySet 定义了难度设置，包含循环次数和难度等级
+
 message DifficultySet {
   // 游戏中的循环次数
   int32 number_of_loops = 1; // 循环次数
