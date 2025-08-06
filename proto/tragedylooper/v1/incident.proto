@@ -12,8 +12,6 @@ message Incident {
   IncidentConfig config = 1; // 事件唯一ID
   string name = 2; // 事件名称
   int32 day = 3; // 事件发生的日期
-  string culprit = 4; // 犯人（角色名称或描述）
-  string victim = 5; // 受害者（角色名称或描述）
   string description = 6; // 事件描述
   bool has_triggered_this_loop = 7;
 }
@@ -23,14 +21,10 @@ message IncidentConfig {
   int32 id = 1; // 事件唯一ID（剧本内）
   string name = 2; // 事件名称
   string description = 3; // 事件描述
-  int32 incident_id = 4; // 事件类型
   int32 day = 5; // 预定发生日期
   Condition condition = 6; // 触发条件列表
   Effect effect = 7; // 事件触发时产生的效果
   bool is_mandatory = 8; // 是否为必发事件
-  int32 culprit_character_id = 9; // 事件主谋角色ID（如适用）
-  int32 victim_character_id = 10; // 事件受害者角色ID（如适用）
-  int32 location_id = 11; // 事件发生地点ID（如适用）
   bool is_main_plot_incident = 12; // 是否是主线剧情的事件
   bool is_special_rule = 13; // 是否是特殊规则的事件
 }

@@ -14,6 +14,7 @@ import (
 // ScriptConfig defines the interface for accessing all loaded game configuration data.
 type ScriptConfig interface {
 	GetScript() *v1.ScriptConfig
+	GetModel() *v1.ScriptModel
 
 	PrivateInfo() *v1.PrivateInfo
 	PublicInfo() *v1.PublicInfo
@@ -100,19 +101,19 @@ func (s *scriptConfig) GetScript() *v1.ScriptConfig {
 	return s.script
 }
 
-func (s *scriptConfig) getModel() *v1.ScriptModel {
+func (s *scriptConfig) GetModel() *v1.ScriptModel {
 	return s.script.GetScriptModels()[s.modelId]
 }
 
 func (s *scriptConfig) PrivateInfo() *v1.PrivateInfo {
-	if model := s.getModel(); model != nil {
+	if model := s.GetModel(); model != nil {
 		return model.GetPrivateInfo()
 	}
 	return nil
 }
 
 func (s *scriptConfig) PublicInfo() *v1.PublicInfo {
-	if model := s.getModel(); model != nil {
+	if model := s.GetModel(); model != nil {
 		return model.GetPublicInfo()
 	}
 	return nil

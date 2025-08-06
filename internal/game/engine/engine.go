@@ -73,7 +73,7 @@ func NewGameEngine(logger *zap.Logger, players []*model.Player, actionGenerator 
 	ge.pm = phasehandler.NewManager(ge)
 	ge.em = eventhandler.NewManager(ge)
 
-	ge.initializeGameStateFromScript(players)
+	ge.initializeGameState(players)
 	ge.dealInitialCards()
 
 	return ge, nil
@@ -98,69 +98,22 @@ func (ge *GameEngine) initializePlayers(players []*model.Player) map[int32]*mode
 	return playerMap
 }
 
-func (ge *GameEngine) initializeGameStateFromScript(players []*model.Player) {
+func (ge *GameEngine) initializeGameState(players []*model.Player) {
 	playerMap := ge.initializePlayers(players)
 
-	characterConfigMap := ge.scriptConfig.GetCharacterMap()
-	if characterConfigMap == nil {
+	scriptModel := ge.scriptConfig.getModel()
+	scriptCfg := ge.scriptConfig.GetScript()
 
+	// Use the centralized conversion function to create the initial game state.
+	ge.GameState = InitializeGameStateFromScript(scriptModel, scriptCfg)
+	if ge.GameState == nil {
+		// This would be a critical error, as the game cannot start without a valid state.
+		ge.logger.Fatal("Failed to initialize game state from script.")
+		return
 	}
 
-	mainPlot := ge.scriptConfig.GetMainPlot()
-	if mainPlot == nil {
-		ge.logger.Error("No main plot found")
-	}
-
-	subPlotMap := ge.scriptConfig.GetSubPlotMap()
-	if subPlotMap == nil {
-		ge.logger.Error("No sub plots found")
-	}
-
-	incidentMap := ge.scriptConfig.GetIncidentMap()
-	if incidentMap == nil {
-		ge.logger.Error("No incidents found")
-	}
-
-	characterMap := make(map[int32]*model.Character)
-	for _, config := range characterConfigMap {
-		character := &model.Character{
-			Config:          config,
-			CurrentLocation: config.InitialLocation,
-			Stats:           make(map[int32]int32),
-			HiddenRoleId:    0,
-			Abilities:       nil,
-			IsAlive:         false,
-			InPanicMode:     false,
-			Traits:          nil,
-		}
-		if ge.scriptConfig.GetScript().
-	}
-
-	ge.GameState = &model.GameState{
-		GameId:             "",
-		Tick:               0,
-		CurrentLoop:        0,
-		DaysPerLoop:        0,
-		CurrentDay:         0,
-		CurrentPhase:       0,
-		Characters:         make(map[int32]*model.Character),
-		Players:            nil,
-		TriggeredIncidents: nil,
-	}
-
-	for _, charInScript := range script.Characters {
-		charConfig, ok := characterConfigs[charInScript.Id]
-		if !ok {
-			ge.logger.Warn("Character in script not found in character config", zap.Int32("charID", charInScript.Id))
-			continue
-		}
-
-		ge.GameState.Characters[charInScript.Id] = &model.Character{
-			Config:          charConfig,
-			HiddenRoleId:    charInScript.Id,
-			CurrentLocation: charInScript.InitialLocation,
-		}
-	}
+	// Add players to the newly created game state.
+	ge.GameState.Players = playerMap
 }
 
 func (ge *GameEngine) dealInitialCards() {
